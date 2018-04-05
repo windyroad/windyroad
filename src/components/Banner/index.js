@@ -2,8 +2,8 @@ import React from 'react'
 import Link from 'gatsby-link'
 import Img from "gatsby-image";
 import FontAwesome from 'react-fontawesome';
-import "./index.css"
 import Button from '../Button'
+import './index.css'
 
 import banner20 from './banner-20.jpeg'
 import banner45 from './banner-45.jpeg'
@@ -89,9 +89,7 @@ class Banner extends React.Component {
         <div className="content">
             <header>
                 <h2>
-                    <img src={logo} style={{
-                        width: '400px'
-                    }}/>
+                    <img src={logo} className="logo"/>
                 </h2>
                 <p>We help you stay on course</p>
                 <Button style={{
