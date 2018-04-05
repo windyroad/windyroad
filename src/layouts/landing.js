@@ -52,7 +52,7 @@ class TemplateWrapper extends React.Component {
     </Helmet>
     <div id="page-wrapper">
       <Header/>
-      <Banner/>
+      <Banner />
       <Spotlight images={this.images} className="style1 bottom">
         <div className="3u 12u$(medium)">
             <header>
