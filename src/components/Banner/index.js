@@ -4,9 +4,7 @@ import Img from "gatsby-image";
 import FontAwesome from 'react-fontawesome';
 import "./index.css"
 import Button from '../Button'
-// banner-xsmall.svg contains banner-xsmall.jpg and has burring applied.
-// could probably automate this.
-import bannerXsmallSvg from './banner-xsmall.svg'
+
 import banner20 from './banner-20.jpeg'
 import banner45 from './banner-45.jpeg'
 import banner90 from './banner-90.jpeg'
@@ -32,7 +30,6 @@ class Banner extends React.Component {
             2880: banner2880,
         };
 
-        console.log("banner", this.images);
         this.state = {
             size: 20,
             image: this.images[20],
@@ -42,24 +39,11 @@ class Banner extends React.Component {
     getImage(window, pixelRatio) {
         var currentSize = this.state.size;
         for(var key in this.images) {
-            console.log("key", key);
-            console.log("this.state.size ", this.state.size );
-            console.log("window.innerWidth * pixelRatio", window.innerWidth * pixelRatio );
-            console.log("window.innerWidth * pixelRatio > this.state.size", window.innerWidth * pixelRatio > this.state.size);
-            console.log("Number(key) > this.state.size", Number(key) > this.state.size);
             if( window.innerWidth * pixelRatio > this.state.size && 
             key > this.state.size ) {
-                console.log("Size:", key);
                return Number(key);
             }
         }
-        // for(var key in this.images) {
-        //     if( window.innerWidth * pixelRatio < key) {
-        //        return this.images[key];
-        //     }
-        //     image = this.images[key];
-        // }
-        console.log("no size change needed");
         return currentSize;
     }
 
