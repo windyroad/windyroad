@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import Link from 'gatsby-link'
-
 import { withPrefix } from 'gatsby-link'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 
 import themeCss from './css/main.css'
 
@@ -51,30 +51,50 @@ class TemplateWrapper extends React.Component {
         </Helmet>
         <div id="page-wrapper">
           <Header />
-          <Banner next="one"/>
+          <Banner next="one" />
           <Spotlight id="one" images={this.images} className="style1 bottom">
-            <div className="3u 12u$(medium)">
-              <header>
-                <h2>A Little About Us</h2>
-                <p />
-              </header>
-            </div>
-            <div className="5u 12u$(medium)" style={{ fontSize: 'larger' }}>
-              <p>
-                Windy Road Technology is a passionate, Sydney based, consulting
-                company that can help you navigate the complexities of software
-                and product development.
-              </p>
-            </div>
-            <div className="4u$ 12u$(medium)">
-              <p>
-                We are experts in high quality, efficient, and high velocity
-                software and product delivery. We have many years of experience
-                in <i>Continuous Integration</i>, <i>Continuous Delivery</i>,{' '}
-                <i>Test Automation</i>, <i>Agile</i>, <i>Lean</i> and{' '}
-                <i>Lean Start-up</i> and we have repeatedly, successfully
-                pioneered their use within the organisations we work with.
-              </p>
+            <div style={{
+              paddingLeft: '5%',
+              paddingRight: '5%'
+            }}>
+              <Row between="xs">
+                <Col xs={3} sm={3} md={4} lg={3}>
+                  <header>
+                    <h2>A Little About Us</h2>
+                  </header>
+                </Col>
+                <Col
+                  xs
+                  style={{
+                    fontSize: 'larger',
+                  }}
+                >
+                  <p>
+                    Windy Road Technology is a passionate, Sydney based,
+                    consulting company that can help you navigate the
+                    complexities of software and product development.
+                  </p>
+                </Col>
+              </Row>
+              <Row between="xs">
+                <Col xs={12} md={7}>
+                  <p>
+                    We are experts in high quality, efficient, and high velocity
+                    software and product delivery. We have many years of
+                    experience in <i>Continuous Integration</i>,{' '}
+                    <i>Continuous Delivery</i>, <i>Test Automation</i>,{' '}
+                    <i>Agile</i>, <i>Lean</i> and <i>Lean Start-up</i> and we
+                    have repeatedly, successfully pioneered their use within the
+                    organisations we work with.
+                  </p>
+                </Col>
+                <Col xs={12} mdOffset={1} md={4}>
+                  <p>
+                    Our experience can help you avoid the many potholes along
+                    the way to <i>FAST</i> software and product delivery.
+                  </p>
+                </Col>
+              </Row>
             </div>
           </Spotlight>
           <Services />
