@@ -135,7 +135,7 @@ class Banner extends React.Component {
         </div>
         <Link
           className="goto-next"
-          to="one"
+          to={this.props.next}
           spy={true}
           smooth={true}
           hashSpy={true}

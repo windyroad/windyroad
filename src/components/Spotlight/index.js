@@ -60,7 +60,7 @@ class SpotlightBottom extends React.Component {
     }
 
     render() {    
-        return <section id="one" className={this.props.className + " spotlight"} style={{
+        return <section id={this.props.id} className={this.props.className + " spotlight"} style={{
             backgroundImage: `url(${this.state.image})`,
         }}>
         <div className="content">
