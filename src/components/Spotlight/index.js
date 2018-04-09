@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'gatsby-link'
+import "./index.css"
 
 class SpotlightBottom extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class SpotlightBottom extends React.Component {
       this.state = {
         size: key,
         image: this.images[key],
+        active: '',
       }
       break
     }
@@ -39,7 +41,8 @@ class SpotlightBottom extends React.Component {
         this.setState({
           size: size,
           image: this.images[size],
-        })
+          active: this.state.active,
+        });
         console.log('state', this.state)
         this.handleResize(window)
       }
@@ -51,12 +54,35 @@ class SpotlightBottom extends React.Component {
     }
   }
 
+  handleSetActive() {
+    this.setState({
+      size: this.state.size,
+      image: this.state.image,
+      active: "",
+    });
+
+  }
+
+  handleSetInactive() {
+    this.setState({
+      size: this.state.size,
+      image: this.state.image,
+      active: 'inactive',
+    });
+
+  }
+
   componentDidMount() {
     window.addEventListener('resize', e => this.handleResize(window))
     this.handleResize(window)
   }
 
   componentWillUnmount() {
+    this.setState({
+      size: this.state.size,
+      image: this.state.image,
+      active: true,
+    });
     window.removeEventListener('resize', e => this.handleResize(window))
   }
 
@@ -64,7 +90,7 @@ class SpotlightBottom extends React.Component {
     return (
       <section
         id={this.props.id}
-        className={this.props.className + ' spotlight'}
+        className={this.props.className + ' spotlight ' + this.state.active}
         style={{
           backgroundImage: `url(${this.state.image})`,
         }}

@@ -140,6 +140,8 @@ class Banner extends React.Component {
           smooth={true}
           hashSpy={true}
           duration={1000}
+          onSetActive={this.props.nextActive}
+          onSetInactive={this.props.nextInactive}
         >
           next
         </Link>

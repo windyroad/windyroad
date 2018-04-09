@@ -4,12 +4,14 @@ import Helmet from 'react-helmet'
 import Link from 'gatsby-link'
 import { withPrefix } from 'gatsby-link'
 import { Grid, Row, Col } from 'react-flexbox-grid'
+import FontAwesome from 'react-fontawesome'
 
 import themeCss from './css/main.css'
 
 import Header from '../components/Header'
 import Banner from '../components/Banner'
 import Spotlight from '../components/Spotlight'
+import Button from '../components/Button'
 import Services from '../components/Services'
 import Special from '../components/Special'
 import Footer from '../components/Footer'
@@ -36,6 +38,14 @@ class TemplateWrapper extends React.Component {
     }
   }
 
+  handleOneActive() {
+    this.one.handleSetActive();
+  }
+
+  handleOneInactive() {
+    this.one.handleSetInactive();
+  }
+
   render() {
     return (
       <div>
@@ -51,12 +61,14 @@ class TemplateWrapper extends React.Component {
         </Helmet>
         <div id="page-wrapper">
           <Header />
-          <Banner next="one" />
-          <Spotlight id="one" images={this.images} className="style1 bottom">
-            <div style={{
-              paddingLeft: '5%',
-              paddingRight: '5%'
-            }}>
+          <Banner next='one' nextActive={() => this.handleOneActive()} nextInactive={() => this.handleOneInactive()}/>
+          <Spotlight ref={(section) => { this.one = section; }} id="one" images={this.images} className="style1 bottom">
+            <div
+              style={{
+                paddingLeft: '5%',
+                paddingRight: '5%',
+              }}
+            >
               <Row between="xs">
                 <Col xs={3} sm={3} md={4} lg={3}>
                   <header>
@@ -92,6 +104,20 @@ class TemplateWrapper extends React.Component {
                   <p>
                     Our experience can help you avoid the many potholes along
                     the way to <i>FAST</i> software and product delivery.
+                    <Button
+                      style={{
+                        fontWeight: '900',
+                        verticalAlign: 'middle',
+                      }}
+                    >
+                      Find your navigator{' '}
+                      <FontAwesome
+                        name="random"
+                        style={{
+                          verticalAlign: 'middle',
+                        }}
+                      />
+                    </Button>
                   </p>
                 </Col>
               </Row>
