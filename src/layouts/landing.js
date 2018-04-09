@@ -39,11 +39,11 @@ class TemplateWrapper extends React.Component {
   }
 
   handleOneActive() {
-    this.one.handleSetActive();
+    this.one.handleSetActive()
   }
 
   handleOneInactive() {
-    this.one.handleSetInactive();
+    this.one.handleSetInactive()
   }
 
   render() {
@@ -61,8 +61,19 @@ class TemplateWrapper extends React.Component {
         </Helmet>
         <div id="page-wrapper">
           <Header />
-          <Banner next='one' nextActive={() => this.handleOneActive()} nextInactive={() => this.handleOneInactive()}/>
-          <Spotlight ref={(section) => { this.one = section; }} id="one" images={this.images} className="style1 bottom">
+          <Banner
+            next="one"
+            nextActive={() => this.handleOneActive()}
+            nextInactive={() => this.handleOneInactive()}
+          />
+          <Spotlight
+            ref={section => {
+              this.one = section
+            }}
+            id="one"
+            images={this.images}
+            className="style1 bottom"
+          >
             <div
               style={{
                 paddingLeft: '5%',
@@ -104,6 +115,10 @@ class TemplateWrapper extends React.Component {
                   <p>
                     Our experience can help you avoid the many potholes along
                     the way to <i>FAST</i> software and product delivery.
+                  </p>
+                  <div style={{
+                    textAlign: 'center'
+                  }}>
                     <Button
                       style={{
                         fontWeight: '900',
@@ -118,7 +133,7 @@ class TemplateWrapper extends React.Component {
                         }}
                       />
                     </Button>
-                  </p>
+                  </div>
                 </Col>
               </Row>
             </div>
