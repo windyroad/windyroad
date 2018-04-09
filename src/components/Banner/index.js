@@ -103,7 +103,6 @@ class Banner extends React.Component {
   }
 
   render() {
-    console.log(`props:`, this.props)
     return (
       <section
         id="banner"

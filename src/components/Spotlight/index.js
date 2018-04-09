@@ -2,10 +2,11 @@ import React from 'react'
 import Link from 'gatsby-link'
 import "./index.css"
 
-class SpotlightBottom extends React.Component {
+class Spotlight extends React.Component {
   constructor(props) {
     super(props)
     this.images = props.images
+    console.log(this.images);
 
     for (var key in this.images) {
       this.state = {
@@ -58,7 +59,7 @@ class SpotlightBottom extends React.Component {
     this.setState({
       size: this.state.size,
       image: this.state.image,
-      active: "",
+      active: '',
     });
 
   }
@@ -104,4 +105,4 @@ class SpotlightBottom extends React.Component {
   }
 }
 
-export default SpotlightBottom
+export default Spotlight
