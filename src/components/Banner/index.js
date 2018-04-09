@@ -2,7 +2,7 @@ import React from 'react'
 //import Link from 'gatsby-link'
 import Img from 'gatsby-image'
 import FontAwesome from 'react-fontawesome'
-import Button from '../Button'
+import FindYourNavigator from '../FindYourNavigator'
 import {
   Link,
   DirectLink,
@@ -117,20 +117,7 @@ class Banner extends React.Component {
               <img src={logo} className="logo" />
             </h2>
             <p>We help you stay on course</p>
-            <Button
-              style={{
-                fontWeight: '900',
-                verticalAlign: 'middle',
-              }}
-            >
-              Find your navigator{' '}
-              <FontAwesome
-                name="random"
-                style={{
-                  verticalAlign: 'middle',
-                }}
-              />
-            </Button>
+            <FindYourNavigator/>
           </header>
         </div>
         <Link

@@ -12,6 +12,7 @@ import Header from '../components/Header'
 import Banner from '../components/Banner'
 import Spotlight from '../components/Spotlight'
 import Button from '../components/Button'
+import FindYourNavigator from '../components/FindYourNavigator'
 import Services from '../components/Services'
 import Special from '../components/Special'
 import Footer from '../components/Footer'
@@ -38,12 +39,12 @@ class TemplateWrapper extends React.Component {
     }
   }
 
-  handleOneActive() {
-    this.one.handleSetActive()
+  handleAboutActive() {
+    this.about.handleSetActive()
   }
 
-  handleOneInactive() {
-    this.one.handleSetInactive()
+  handleAboutInactive() {
+    this.about.handleSetInactive()
   }
 
   render() {
@@ -62,15 +63,15 @@ class TemplateWrapper extends React.Component {
         <div id="page-wrapper">
           <Header />
           <Banner
-            next="one"
-            nextActive={() => this.handleOneActive()}
-            nextInactive={() => this.handleOneInactive()}
+            next="about"
+            nextActive={() => this.handleAboutActive()}
+            nextInactive={() => this.handleAboutInactive()}
           />
           <Spotlight
             ref={section => {
-              this.one = section
+              this.about = section
             }}
-            id="one"
+            id="about"
             images={this.images}
             className="style1 bottom"
           >
@@ -119,20 +120,7 @@ class TemplateWrapper extends React.Component {
                   <div style={{
                     textAlign: 'center'
                   }}>
-                    <Button
-                      style={{
-                        fontWeight: '900',
-                        verticalAlign: 'middle',
-                      }}
-                    >
-                      Find your navigator{' '}
-                      <FontAwesome
-                        name="random"
-                        style={{
-                          verticalAlign: 'middle',
-                        }}
-                      />
-                    </Button>
+                    <FindYourNavigator/>
                   </div>
                 </Col>
               </Row>
