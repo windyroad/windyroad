@@ -17,6 +17,7 @@ import Services from '../components/Services'
 import Special from '../components/Special'
 import Footer from '../components/Footer'
 import About from '../components/About'
+import Contact from '../components/Contact'
 
 class TemplateWrapper extends React.Component {
   constructor(props) {
@@ -54,9 +55,8 @@ class TemplateWrapper extends React.Component {
           <About id="about" ref={section => {
               this.about = section
             }}/>
-          <Services />
-          <Special />
-          {this.props.children()}
+          <Contact id="contact"/>
+
           <Footer />
         </div>
       </div>
