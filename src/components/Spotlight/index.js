@@ -1,6 +1,14 @@
 import React from 'react'
-import Link from 'gatsby-link'
 import "./index.css"
+import {
+  Link,
+  DirectLink,
+  Element,
+  Events,
+  animateScroll as scroll,
+  scrollSpy,
+  scroller,
+} from 'react-scroll'
 
 class Spotlight extends React.Component {
   constructor(props) {
@@ -97,9 +105,18 @@ class Spotlight extends React.Component {
         }}
       >
         <div className="content">{this.props.children}</div>
-        <a href="#two" className="goto-next scrolly">
-          Next
-        </a>
+        <Link
+          className="goto-next"
+          to={this.props.next}
+          spy={true}
+          smooth={true}
+          hashSpy={true}
+          duration={1000}
+          onSetActive={this.props.nextActive}
+          onSetInactive={this.props.nextInactive}
+        >
+          next
+        </Link>
       </section>
     )
   }

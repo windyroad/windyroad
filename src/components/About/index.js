@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'gatsby-link'
 import './index.css'
 import Spotlight from '../Spotlight'
 import FindYourNavigator from '../FindYourNavigator'
@@ -12,7 +11,6 @@ import whiteboard360 from './whiteboard-360.jpeg'
 import whiteboard720 from './whiteboard-720.jpeg'
 import whiteboard1440 from './whiteboard-1440.jpeg'
 import whiteboard2880 from './whiteboard-2880.jpeg'
-
 
 class About extends React.Component {
   constructor(props) {
@@ -29,11 +27,11 @@ class About extends React.Component {
   }
 
   handleSetActive() {
-    this.spotlight.handleSetActive();
+    this.spotlight.handleSetActive()
   }
 
   handleSetInactive() {
-    this.spotlight.handleSetInactive();
+    this.spotlight.handleSetInactive()
   }
 
   render() {
@@ -45,6 +43,9 @@ class About extends React.Component {
         id={this.props.id}
         images={this.images}
         className="style1 bottom"
+        next={this.props.next}
+        nextActive={this.props.nextActive}
+        nextInactive={this.props.nextInactive}
       >
         <div
           style={{

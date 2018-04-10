@@ -32,6 +32,14 @@ class TemplateWrapper extends React.Component {
     this.about.handleSetInactive()
   }
 
+  handleContactActive() {
+    this.contact.handleSetActive()
+  }
+
+  handleContactInactive() {
+    this.contact.handleSetInactive()
+  }
+
   render() {
     return (
       <div>
@@ -52,10 +60,19 @@ class TemplateWrapper extends React.Component {
             nextActive={() => this.handleAboutActive()}
             nextInactive={() => this.handleAboutInactive()}
           />
-          <About id="about" ref={section => {
+          <About
+            id="about"
+            ref={section => {
               this.about = section
-            }}/>
-          <Contact id="contact"/>
+            }}
+            next="contact"
+            nextActive={() => this.handleContactActive()}
+            nextInactive={() => this.handleContactInactive()}
+          />
+          <Contact id="contact" 
+          ref={section => {
+            this.contact = section
+          }}/>
 
           <Footer />
         </div>

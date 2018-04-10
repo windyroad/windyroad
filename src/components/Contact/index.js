@@ -5,8 +5,31 @@ import FontAwesome from 'react-fontawesome'
 import Button from '../Button'
 
 class Contact extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            email: '',
+            message: 'Hello',
+        }
+    }
+  handleSetActive() {
+  }
+
+  handleSetInactive() {
+  }
+
   contact() {
+    console.log('submit');
     return false
+  }
+
+  reset() {
+      this.setState({
+        name: '',
+        email: '',
+        message: '',
+      });
   }
 
   render() {
@@ -16,7 +39,7 @@ class Contact extends React.Component {
           <header>
             <h2>Find Your Navigator</h2>
           </header>
-          <form method="post" onClick={() => this.contact()}>
+          <form method="post" onSubmit={() => this.contact()}>
             <Row between="xs">
               <Col
                 xs={12}
@@ -29,7 +52,7 @@ class Contact extends React.Component {
                   type="text"
                   name="name"
                   id="name"
-                  value=""
+                  value={this.state.name}
                   placeholder="Name"
                 />
               </Col>
@@ -44,7 +67,7 @@ class Contact extends React.Component {
                   type="email"
                   name="email"
                   id="email"
-                  value=""
+                  value={this.state.email}
                   placeholder="Email"
                 />
               </Col>
@@ -57,12 +80,9 @@ class Contact extends React.Component {
                 }}
               >
                 <div class="select-wrapper">
-                  <select name="category" id="category">
+                  <select name="category" id="category" value="1">
                     <option value="">- Category -</option>
-                    <option value="1">Manufacturing</option>
-                    <option value="1">Shipping</option>
-                    <option value="1">Administration</option>
-                    <option value="1">Human Resources</option>
+                    <option value="1">General Enquiry</option>
                   </select>
                 </div>
               </Col>
@@ -118,6 +138,7 @@ class Contact extends React.Component {
                   id="message"
                   placeholder="Enter your message"
                   rows="6"
+                  value={this.state.message}
                 />
               </Col>
             </Row>
@@ -134,17 +155,19 @@ class Contact extends React.Component {
                     fontWeight: '900',
                     verticalAlign: 'middle',
                   }}
+                  onClick={() => this.contact()}
                 >
-                  Send Message{' '}
+                  Send Message
                   <FontAwesome
                     name="envelope"
                     style={{
                       verticalAlign: 'middle',
+                      paddingLeft: '1em'
                     }}
                   />
                 </Button>
               </Col>
-              <Col 
+              <Col
                 xs={2}
                 xsOffset={3}
                 style={{
@@ -153,7 +176,7 @@ class Contact extends React.Component {
                   height: '100%',
                 }}
               >
-                <a className="button">reset</a>
+                <a className="button" onClick={() => this.reset()}>reset</a>
               </Col>
             </Row>
           </form>
