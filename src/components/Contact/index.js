@@ -11,7 +11,7 @@ class Contact extends React.Component {
       name: '',
       email: '',
       message: '',
-      priority: 'priority-normal',
+      priority: 'normal',
       category: 'general-enquiry',
     }
 
@@ -26,6 +26,20 @@ class Contact extends React.Component {
     console.log('submit', event)
     event.preventDefault()
     // TODO: Validate Input
+    // TODO: build request
+    const body = {
+      request: {
+        requester: {
+          name: this.state.name,
+          email: this.state.email,
+        },
+        subject: this.state.category,
+        comment: { body: this.state.message },
+        priority: this.state.priority,
+        type: 'question',
+      },
+    }
+    console.log(body)
     // TODO: post to zendesk
     // TODO: render result
   }
@@ -35,7 +49,7 @@ class Contact extends React.Component {
       name: '',
       email: '',
       message: '',
-      priority: 'priority-normal',
+      priority: 'normal',
       category: 'general-enquiry',
     })
   }
@@ -125,8 +139,8 @@ class Contact extends React.Component {
                   type="radio"
                   id="priority-low"
                   name="priority"
-                  value="priority-low"
-                  checked={this.state.priority == 'priority-low'}
+                  value="low"
+                  checked={this.state.priority == 'low'}
                   onChange={this.handleChange}
                 />
                 <label htmlFor="priority-low">Low Priority</label>
@@ -142,8 +156,8 @@ class Contact extends React.Component {
                   type="radio"
                   id="priority-normal"
                   name="priority"
-                  value="priority-normal"
-                  checked={this.state.priority == 'priority-normal'}
+                  value="normal"
+                  checked={this.state.priority == 'normal'}
                   onChange={this.handleChange}
                 />
                 <label htmlFor="priority-normal">Normal Priority</label>
@@ -159,8 +173,8 @@ class Contact extends React.Component {
                   type="radio"
                   id="priority-high"
                   name="priority"
-                  value="priority-high"
-                  checked={this.state.priority == 'priority-high'}
+                  value="high"
+                  checked={this.state.priority == 'high'}
                   onChange={this.handleChange}
                 />
                 <label htmlFor="priority-high">High Priority</label>
