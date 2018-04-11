@@ -12,6 +12,7 @@ class Contact extends React.Component {
       email: '',
       message: '',
       priority: 'priority-normal',
+      category: 'general-enquiry',
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -24,6 +25,9 @@ class Contact extends React.Component {
   handleSubmit(event) {
     console.log('submit', event)
     event.preventDefault()
+    // TODO: Validate Input
+    // TODO: post to zendesk
+    // TODO: render result
   }
 
   reset() {
@@ -31,6 +35,8 @@ class Contact extends React.Component {
       name: '',
       email: '',
       message: '',
+      priority: 'priority-normal',
+      category: 'general-enquiry',
     })
   }
   handleChange(event, elem) {
@@ -102,7 +108,7 @@ class Contact extends React.Component {
                     onChange={this.handleChange}
                   >
                     <option value="">- Category -</option>
-                    <option value="1">General Enquiry</option>
+                    <option value="general-enquiry">General Enquiry</option>
                   </select>
                 </div>
               </Col>
