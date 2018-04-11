@@ -15,7 +15,7 @@ class Footer extends React.Component {
             <li><a href="#" className="icon alt fa-envelope"><span className="label">Email</span></a></li>
         </ul>
         <ul className="copyright">
-            <li>&copy; Windy Road. All rights reserved.</li>
+            <li>&copy; {(new Date()).getFullYear()} Windy Road Technology. All rights reserved.</li>
         </ul>
     </footer>
     }
