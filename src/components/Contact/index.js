@@ -5,7 +5,8 @@ import FontAwesome from 'react-fontawesome'
 import Button from '../Button'
 import axios from 'axios'
 import validator from 'email-validator'
-import Input from '../Input'
+import Input from './Input'
+import Select from './Select'
 import './index.css'
 
 let FormStateEnum = Object.freeze({
@@ -459,17 +460,7 @@ class Contact extends React.Component {
                   padding: '1.25em 0.5em 0 0.5em',
                 }}
               >
-                <div className="select-wrapper">
-                  <select
-                    name="category"
-                    id="category"
-                    value={this.state.category}
-                    onChange={this.handleChange}
-                  >
-                    <option value="">- Category -</option>
-                    <option value="general-enquiry">General Enquiry</option>
-                  </select>
-                </div>
+                <Select/>
               </Col>
             </Row>
             <Row between="xs" start="xs" center="sm">
