@@ -5,8 +5,8 @@ import FontAwesome from 'react-fontawesome'
 import Button from '../Button'
 import axios from 'axios'
 import validator from 'email-validator'
+import Input from '../Input'
 import './index.css'
-
 
 let FormStateEnum = Object.freeze({
   READY: 'READY',
@@ -23,6 +23,18 @@ let FormStateEnum = Object.freeze({
   REQUEST_ERROR: 'REQUEST_ERROR',
   GENERAL_ERROR: 'GENERAL_ERROR',
 })
+
+const required = (name, value) => {
+  if (!value.toString().trim().length) {
+    return `${name} is required`
+  }
+}
+
+const email = (name, value) => {
+  if (!validator.isEmail(value)) {
+    return `'${value}' is not a valid email.`
+  }
+}
 
 class Contact extends React.Component {
   constructor(props) {
@@ -288,7 +300,7 @@ class Contact extends React.Component {
     })
   }
   handleChange(event, elem) {
-    console.log("event:", event)
+    console.log('event:', event)
     console.log(event.target.name)
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
@@ -296,8 +308,8 @@ class Contact extends React.Component {
     this.setState({
       [name]: value,
     })
-    if(this.state.validations[name]) {
-        this.handleBlur(event, elem);
+    if (this.state.validations[name]) {
+      this.handleBlur(event, elem)
     }
   }
 
@@ -305,26 +317,24 @@ class Contact extends React.Component {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
-    console.log(name, value);
-    let errorMsg = null;
-    let prevErrorMsg = this.state.validations[name];
+    console.log(name, value)
+    let errorMsg = null
+    let prevErrorMsg = this.state.validations[name]
     if (!value.toString().trim().length) {
       errorMsg = target.placeholder + ' is required'
+    } else if (name == 'email' && !validator.validate(value)) {
+      errorMsg = "'" + value + "' is not a valid email address"
     }
-    else if( name == 'email' && !validator.validate(value)) {
-        errorMsg = '\'' + value + '\' is not a valid email address';
-    }
-    console.log(name, errorMsg);
+    console.log(name, errorMsg)
     // OOPS This is clearing the other errors
-    let prevValidations = this.state.prevValidations;
-    prevValidations[name]=this.state.validations[name];
-    let validations = this.state.validations;
-    validations[name]=errorMsg;
+    let prevValidations = this.state.prevValidations
+    prevValidations[name] = this.state.validations[name]
+    let validations = this.state.validations
+    validations[name] = errorMsg
     this.setState({
       validations: validations,
       prevValidations: prevValidations,
     })
-      
   }
 
   render() {
@@ -384,6 +394,8 @@ class Contact extends React.Component {
                   padding: '1.25em 0.5em 0 0.5em',
                 }}
               >
+                <Input type="text" name="name" placeholder="Name" validations={[required]}/>
+
                 <input
                   type="text"
                   name="name"
@@ -394,7 +406,11 @@ class Contact extends React.Component {
                   className={this.state.validations.name ? 'error' : ''}
                   onBlur={this.handleBlur}
                 />
-                <div className="error-msg">{this.state.validations.name ? this.state.validations.name : this.state.prevValidations.name}&nbsp;</div>
+                <div className="error-msg">
+                  {this.state.validations.name
+                    ? this.state.validations.name
+                    : this.state.prevValidations.name}&nbsp;
+                </div>
               </Col>
               <Col
                 xs={12}
@@ -413,7 +429,11 @@ class Contact extends React.Component {
                   className={this.state.validations.email ? 'error' : ''}
                   onBlur={this.handleBlur}
                 />
-                <div className="error-msg">{this.state.validations.email ? this.state.validations.email : this.state.prevValidations.email}&nbsp;</div>
+                <div className="error-msg">
+                  {this.state.validations.email
+                    ? this.state.validations.email
+                    : this.state.prevValidations.email}&nbsp;
+                </div>
               </Col>
             </Row>
             <Row>
@@ -506,7 +526,11 @@ class Contact extends React.Component {
                   className={this.state.validations.message ? 'error' : ''}
                   onBlur={this.handleBlur}
                 />
-                <div className="error-msg">{this.state.validations.message ? this.state.validations.message : this.state.prevValidations.message}&nbsp;</div>
+                <div className="error-msg">
+                  {this.state.validations.message
+                    ? this.state.validations.message
+                    : this.state.prevValidations.message}&nbsp;
+                </div>
               </Col>
             </Row>
             <Row end="xs" between="xs">
