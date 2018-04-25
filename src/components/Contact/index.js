@@ -377,6 +377,42 @@ class Contact extends React.Component {
           <header>
             <h2>Find Your Navigator</h2>
           </header>
+          <Row style={{
+              marginBottom: '3ex'
+          }}>
+            <Col
+              xs={12}
+              sm={6}
+              smOffset={3}
+              md={4}
+              mdOffset={4}
+              lg={4}
+              lgOffset={4}
+              style={{
+                padding: '1.25em 0.5em 0 0.5em',
+              }}
+            >
+                
+              <Button
+                style={{
+                  fontWeight: '900',
+                  verticalAlign: 'middle',
+                  width: '100%',
+                }}
+                href="tel:+61285203165"
+              >
+              <FontAwesome
+                  name="phone"
+                  style={{
+                    verticalAlign: 'middle',
+                    paddingRight: '1em',
+                  }}
+                />
+                 02 8520 3165
+              </Button>
+            </Col>
+          </Row>
+          
           <form
             method="post"
             onSubmit={this.handleSubmit}
@@ -496,21 +532,13 @@ class Contact extends React.Component {
                   padding: '1.25em 0.5em 0 0.5em',
                 }}
               >
-                <textarea
+                <Input
+                  type="textarea"
                   name="message"
-                  id="message"
                   placeholder="Message"
+                  validations={[required]}
                   rows="6"
-                  value={this.state.message}
-                  onChange={this.handleChange}
-                  className={this.state.validations.message ? 'error' : ''}
-                  onBlur={this.handleBlur}
                 />
-                <div className="error-msg">
-                  {this.state.validations.message
-                    ? this.state.validations.message
-                    : this.state.prevValidations.message}&nbsp;
-                </div>
               </Col>
             </Row>
             <Row end="xs" between="xs">

@@ -80,8 +80,19 @@ class Input extends React.Component {
   }
 
   render() {
-    return (
-      <div>
+    const field =
+      this.props.type == 'textarea' ? (
+        <textarea
+          type={this.props.type}
+          name={this.props.name}
+          value={this.state.value}
+          placeholder={this.props.placeholder}
+          rows={this.props.rows}
+          onChange={this.handleChange}
+          className={this.state.failedValidationMsg ? 'error' : ''}
+          onBlur={this.handleBlur}
+        />
+      ) : (
         <input
           type={this.props.type}
           name={this.props.name}
@@ -91,6 +102,10 @@ class Input extends React.Component {
           className={this.state.failedValidationMsg ? 'error' : ''}
           onBlur={this.handleBlur}
         />
+      )
+    return (
+      <div>
+        {field}
         <div className="error-msg">
           {this.state.failedValidationMsg
             ? this.state.failedValidationMsg

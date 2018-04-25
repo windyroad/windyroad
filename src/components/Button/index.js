@@ -4,7 +4,7 @@ import './index.css'
 
 export default props => (
   <a
-    href="#contact"
+    href={props.href ? props.href : '#contact'}
     className="button special"
     style={props.style}
     onClick={props.onClick}
