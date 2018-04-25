@@ -31,7 +31,7 @@ const required = (name, value) => {
 }
 
 const email = (name, value) => {
-  if (!validator.isEmail(value)) {
+  if (!validator.validate(value)) {
     return `'${value}' is not a valid email.`
   }
 }
@@ -394,23 +394,12 @@ class Contact extends React.Component {
                   padding: '1.25em 0.5em 0 0.5em',
                 }}
               >
-                <Input type="text" name="name" placeholder="Name" validations={[required]}/>
-
-                <input
+                <Input
                   type="text"
                   name="name"
-                  id="name"
-                  value={this.state.name}
                   placeholder="Name"
-                  onChange={this.handleChange}
-                  className={this.state.validations.name ? 'error' : ''}
-                  onBlur={this.handleBlur}
+                  validations={[required]}
                 />
-                <div className="error-msg">
-                  {this.state.validations.name
-                    ? this.state.validations.name
-                    : this.state.prevValidations.name}&nbsp;
-                </div>
               </Col>
               <Col
                 xs={12}
@@ -419,21 +408,12 @@ class Contact extends React.Component {
                   padding: '1.25em 0.5em 0 0.5em',
                 }}
               >
-                <input
-                  type="email"
+                <Input
+                  type="text"
                   name="email"
-                  id="email"
-                  value={this.state.email}
                   placeholder="Email"
-                  onChange={this.handleChange}
-                  className={this.state.validations.email ? 'error' : ''}
-                  onBlur={this.handleBlur}
+                  validations={[required, email]}
                 />
-                <div className="error-msg">
-                  {this.state.validations.email
-                    ? this.state.validations.email
-                    : this.state.prevValidations.email}&nbsp;
-                </div>
               </Col>
             </Row>
             <Row>

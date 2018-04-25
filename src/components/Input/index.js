@@ -39,7 +39,6 @@ class Input extends React.Component {
         this.setState({
           prevValidationMsg: this.state.failedValidationMsg,
           failedValidationMsg: errorMsg,
-          failedValidationMethod: validationMethod,
         })
       } else {
         this.setState({
