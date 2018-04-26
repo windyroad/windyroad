@@ -469,47 +469,7 @@ class Contact extends React.Component {
             <RadioGroup name='priority' ref={c => {
                 !this.state.priortyGroup && this.setState({ priortyGroup: c })
             }}>
-              <Row between="xs" start="xs" center="sm">
-                <Col
-                  xs={12}
-                  sm={4}
-                  style={{
-                    padding: '1.25em 0.5em 0 0.5em',
-                  }}
-                >
-                <Radio
-                    value="low"
-                    placeholder='Low Priority'
-                    group={this.state.priortyGroup}
-                  />
-                </Col>
-                <Col
-                  xs={12}
-                  sm={4}
-                  style={{
-                    padding: '1.25em 0.5em 0 0.5em',
-                  }}
-                >
-                <Radio
-                    value="normal"
-                    placeholder='Normal Priority'
-                    group={this.state.priortyGroup}
-                  />
-                </Col>
-                <Col
-                  xs={12}
-                  sm={4}
-                  style={{
-                    padding: '1.25em 0.5em 0 0.5em',
-                  }}
-                >
-                <Radio
-                    value="high"
-                    placeholder='High Priority'
-                    group={this.state.priortyGroup}
-                  />
-                </Col>
-              </Row>
+
             </RadioGroup>
             <Row>
               <Col

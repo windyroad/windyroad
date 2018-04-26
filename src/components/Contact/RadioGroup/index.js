@@ -2,7 +2,7 @@ import React from 'react'
 import Input from '../Input'
 import './index.css'
 import { Grid, Row, Col } from 'react-flexbox-grid'
-import Radio from '../Radio'
+import Radio from './Radio'
 
 const DefaultState = Object.freeze({
   value: 'normal',
@@ -16,9 +16,7 @@ class RadioGroup extends React.Component {
   }
 
   handleChange(event, elem) {
-    console.log('RadioGroup', event)
     let value = event.target.value
-    console.log('RadioGroup value', event.target.value)
     this.setState({
       value: value,
     })
