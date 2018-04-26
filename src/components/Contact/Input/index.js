@@ -33,26 +33,28 @@ class Input extends React.Component {
         value,
       )
       if (errorMsg) {
-        this.setState({
-          prevValidationMsg: this.state.failedValidationMsg,
+        this.setState((prevState) => ({
+          prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
-        })
+        }))
+        this.props.onValidationChange(event.target.name, false, event, elem);
       } else {
-        this.setState({
-          prevValidationMsg: this.state.failedValidationMsg,
+        this.setState((prevState) => ({
+          prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: null,
           failedValidationMethod: null,
-        })
+        }))
+        this.props.onValidationChange(event.target.name, true, event, elem);
       }
     }
     this.props.onChange(event,elem);
   }
 
   handleBlur(event, elem) {
-    this.validate(event.target.value)
+    this.validate(event.target.value, event, elem)
   }
 
-  validate(value) {
+  validate(value, event, elem) {
     for (
       let index = 0;
       this.props.validations && index < this.props.validations.length;
@@ -61,19 +63,21 @@ class Input extends React.Component {
       const validationMethod = this.props.validations[index]
       let errorMsg = validationMethod(this.props.placeholder, value)
       if (errorMsg) {
-        this.setState({
-          prevValidationMsg: this.state.failedValidationMsg,
+        this.setState((prevState) => ({
+          prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
           failedValidationMethod: validationMethod,
-        })
+        }))
+        this.props.onValidationChange(event.target.name, false, event, elem);
         return false
       }
     }
-    this.setState({
-      prevValidationMsg: this.state.failedValidationMsg,
+    this.setState((prevState) => ({
+      prevValidationMsg: prevState.failedValidationMsg,
       failedValidationMsg: null,
       failedValidationMethod: null,
-    })
+    }))
+    this.props.onValidationChange(event.target.name, true, event, elem);
     return true
   }
 

@@ -142,6 +142,7 @@ class Contact extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleRadioChange = this.handleRadioChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleValidationChange = this.handleValidationChange.bind(this)
     this.cancelBeforeSend = false
   }
   handleSetActive() {}
@@ -315,6 +316,15 @@ class Contact extends React.Component {
     })
   }
 
+  handleValidationChange(name, valid, event, elem) {
+    console.log(name, valid)
+    const target = event.target
+    const stateName = `validation-${target.name}`
+    this.setState({
+      [stateName]: valid,
+    })
+  }
+
   handleRadioChange(value, event, elem) {
     const target = event.target
     const name = target.name
@@ -434,6 +444,7 @@ class Contact extends React.Component {
                   value={this.state.name}
                   onChange={this.handleChange}
                   validations={[required]}
+                  onValidationChange={this.handleValidationChange}
                 />
               </Col>
               <Col
@@ -450,6 +461,7 @@ class Contact extends React.Component {
                   value={this.state.email}
                   onChange={this.handleChange}
                   validations={[required, email]}
+                  onValidationChange={this.handleValidationChange}
                 />
               </Col>
             </Row>
@@ -485,6 +497,7 @@ class Contact extends React.Component {
                   validations={[required]}
                   value={this.state.message}
                   onChange={this.handleChange}
+                  onValidationChange={this.handleValidationChange}
                   rows="6"
                 />
               </Col>
