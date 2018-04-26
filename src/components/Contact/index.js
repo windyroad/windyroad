@@ -7,6 +7,8 @@ import axios from 'axios'
 import validator from 'email-validator'
 import Input from './Input'
 import Select from './Select'
+import Radio from './Radio'
+import RadioGroup from './RadioGroup'
 import './index.css'
 
 let FormStateEnum = Object.freeze({
@@ -378,9 +380,11 @@ class Contact extends React.Component {
           <header>
             <h2>Find Your Navigator</h2>
           </header>
-          <Row style={{
-              marginBottom: '3ex'
-          }}>
+          <Row
+            style={{
+              marginBottom: '3ex',
+            }}
+          >
             <Col
               xs={12}
               sm={6}
@@ -393,7 +397,6 @@ class Contact extends React.Component {
                 padding: '1.25em 0.5em 0 0.5em',
               }}
             >
-                
               <Button
                 style={{
                   fontWeight: '900',
@@ -402,18 +405,18 @@ class Contact extends React.Component {
                 }}
                 href="tel:+61285203165"
               >
-              <FontAwesome
+                <FontAwesome
                   name="phone"
                   style={{
                     verticalAlign: 'middle',
                     paddingRight: '1em',
                   }}
                 />
-                 02 8520 3165
+                02 8520 3165
               </Button>
             </Col>
           </Row>
-          
+
           <form
             method="post"
             onSubmit={this.handleSubmit}
@@ -460,62 +463,54 @@ class Contact extends React.Component {
                   padding: '1.25em 0.5em 0 0.5em',
                 }}
               >
-                <Select/>
+                <Select />
               </Col>
             </Row>
-            <Row between="xs" start="xs" center="sm">
-              <Col
-                xs={12}
-                sm={4}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <input
-                  type="radio"
-                  id="priority-low"
-                  name="priority"
-                  value="low"
-                  checked={this.state.priority == 'low'}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="priority-low">Low Priority</label>
-              </Col>
-              <Col
-                xs={12}
-                sm={4}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <input
-                  type="radio"
-                  id="priority-normal"
-                  name="priority"
-                  value="normal"
-                  checked={this.state.priority == 'normal'}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="priority-normal">Normal Priority</label>
-              </Col>
-              <Col
-                xs={12}
-                sm={4}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <input
-                  type="radio"
-                  id="priority-high"
-                  name="priority"
-                  value="high"
-                  checked={this.state.priority == 'high'}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="priority-high">High Priority</label>
-              </Col>
-            </Row>
+            <RadioGroup name='priority' ref={c => {
+                !this.state.priortyGroup && this.setState({ priortyGroup: c })
+            }}>
+              <Row between="xs" start="xs" center="sm">
+                <Col
+                  xs={12}
+                  sm={4}
+                  style={{
+                    padding: '1.25em 0.5em 0 0.5em',
+                  }}
+                >
+                <Radio
+                    value="low"
+                    placeholder='Low Priority'
+                    group={this.state.priortyGroup}
+                  />
+                </Col>
+                <Col
+                  xs={12}
+                  sm={4}
+                  style={{
+                    padding: '1.25em 0.5em 0 0.5em',
+                  }}
+                >
+                <Radio
+                    value="normal"
+                    placeholder='Normal Priority'
+                    group={this.state.priortyGroup}
+                  />
+                </Col>
+                <Col
+                  xs={12}
+                  sm={4}
+                  style={{
+                    padding: '1.25em 0.5em 0 0.5em',
+                  }}
+                >
+                <Radio
+                    value="high"
+                    placeholder='High Priority'
+                    group={this.state.priortyGroup}
+                  />
+                </Col>
+              </Row>
+            </RadioGroup>
             <Row>
               <Col
                 xs={12}
