@@ -7,7 +7,7 @@ import axios from 'axios'
 import validator from 'email-validator'
 import Input from './Input'
 import Select from './Select'
-import Radio from './Radio'
+import Radio from './RadioGroup/Radio'
 import RadioGroup from './RadioGroup'
 import './index.css'
 
@@ -39,6 +39,90 @@ const email = (name, value) => {
   }
 }
 
+const exampleNetworkError = {
+  config: {
+    transformRequest: {},
+    transformResponse: {},
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    method: 'post',
+    url: 'https://windyroad.zendesk.com/api/v2/requests.json',
+    data:
+      '{"request":{"requester":{"name":"Tom Howard","email":"tom@windyroad.com.au"},"subject":"general-enquiry","comment":{"body":"asasdasd"},"priority":"normal","type":"question"}}',
+  },
+  request: {},
+}
+
+const exampleApiError = {
+  config: {
+    transformRequest: {},
+    transformResponse: {},
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    method: 'post',
+    url: 'https://windyroad.zendesk.com/api/v2/requests.json',
+    data:
+      '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
+  },
+  request: {},
+  response: {
+    data: {
+      error: 'RecordInvalid',
+      description: 'Record validation errors',
+      details: {
+        base: [
+          {
+            description: 'Description: cannot be blank',
+            error: 'BlankValue',
+            field_key: 'description',
+          },
+          {
+            description: 'Subject: cannot be blank',
+            error: 'BlankValue',
+            field_key: 'subject',
+          },
+        ],
+        requester: [{ description: 'Requester: Email:  cannot be blank' }],
+      },
+    },
+    status: 422,
+    statusText: 'Unprocessable Entity',
+    headers: {
+      'content-type': 'application/json; charset=UTF-8',
+      'cache-control': 'no-cache',
+    },
+    config: {
+      transformRequest: {},
+      transformResponse: {},
+      timeout: 0,
+      xsrfCookieName: 'XSRF-TOKEN',
+      xsrfHeaderName: 'X-XSRF-TOKEN',
+      maxContentLength: -1,
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      method: 'post',
+      url: 'https://windyroad.zendesk.com/api/v2/requests.json',
+      data:
+        '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
+    },
+    request: {},
+  },
+}
+
 class Contact extends React.Component {
   constructor(props) {
     super(props)
@@ -54,91 +138,10 @@ class Contact extends React.Component {
       validations: {},
       prevValidations: {},
     }
-    let exampleNetworkError = {
-      config: {
-        transformRequest: {},
-        transformResponse: {},
-        timeout: 0,
-        xsrfCookieName: 'XSRF-TOKEN',
-        xsrfHeaderName: 'X-XSRF-TOKEN',
-        maxContentLength: -1,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        method: 'post',
-        url: 'https://windyroad.zendesk.com/api/v2/requests.json',
-        data:
-          '{"request":{"requester":{"name":"Tom Howard","email":"tom@windyroad.com.au"},"subject":"general-enquiry","comment":{"body":"asasdasd"},"priority":"normal","type":"question"}}',
-      },
-      request: {},
-    }
-    let exampleApiError = {
-      config: {
-        transformRequest: {},
-        transformResponse: {},
-        timeout: 0,
-        xsrfCookieName: 'XSRF-TOKEN',
-        xsrfHeaderName: 'X-XSRF-TOKEN',
-        maxContentLength: -1,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        method: 'post',
-        url: 'https://windyroad.zendesk.com/api/v2/requests.json',
-        data:
-          '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
-      },
-      request: {},
-      response: {
-        data: {
-          error: 'RecordInvalid',
-          description: 'Record validation errors',
-          details: {
-            base: [
-              {
-                description: 'Description: cannot be blank',
-                error: 'BlankValue',
-                field_key: 'description',
-              },
-              {
-                description: 'Subject: cannot be blank',
-                error: 'BlankValue',
-                field_key: 'subject',
-              },
-            ],
-            requester: [{ description: 'Requester: Email:  cannot be blank' }],
-          },
-        },
-        status: 422,
-        statusText: 'Unprocessable Entity',
-        headers: {
-          'content-type': 'application/json; charset=UTF-8',
-          'cache-control': 'no-cache',
-        },
-        config: {
-          transformRequest: {},
-          transformResponse: {},
-          timeout: 0,
-          xsrfCookieName: 'XSRF-TOKEN',
-          xsrfHeaderName: 'X-XSRF-TOKEN',
-          maxContentLength: -1,
-          headers: {
-            Accept: 'application/json, text/plain, */*',
-            'Content-Type': 'application/json;charset=utf-8',
-          },
-          method: 'post',
-          url: 'https://windyroad.zendesk.com/api/v2/requests.json',
-          data:
-            '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
-        },
-        request: {},
-      },
-    }
+
     this.handleChange = this.handleChange.bind(this)
+    this.handleRadioChange = this.handleRadioChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleBlur = this.handleBlur.bind(this)
     this.cancelBeforeSend = false
   }
   handleSetActive() {}
@@ -302,41 +305,21 @@ class Contact extends React.Component {
       prevValidations: {},
     })
   }
+
   handleChange(event, elem) {
-    console.log('event:', event)
-    console.log(event.target.name)
     const target = event.target
-    const value = target.type === 'checkbox' ? target.checked : target.value
+    const value = target.value
     const name = target.name
     this.setState({
       [name]: value,
     })
-    if (this.state.validations[name]) {
-      this.handleBlur(event, elem)
-    }
   }
 
-  handleBlur(event, elem) {
+  handleRadioChange(value, event, elem) {
     const target = event.target
-    const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
-    console.log(name, value)
-    let errorMsg = null
-    let prevErrorMsg = this.state.validations[name]
-    if (!value.toString().trim().length) {
-      errorMsg = target.placeholder + ' is required'
-    } else if (name == 'email' && !validator.validate(value)) {
-      errorMsg = "'" + value + "' is not a valid email address"
-    }
-    console.log(name, errorMsg)
-    // OOPS This is clearing the other errors
-    let prevValidations = this.state.prevValidations
-    prevValidations[name] = this.state.validations[name]
-    let validations = this.state.validations
-    validations[name] = errorMsg
     this.setState({
-      validations: validations,
-      prevValidations: prevValidations,
+      [name]: value,
     })
   }
 
@@ -380,11 +363,7 @@ class Contact extends React.Component {
           <header>
             <h2>Find Your Navigator</h2>
           </header>
-          <Row
-            style={{
-              marginBottom: '3ex',
-            }}
-          >
+          <Row>
             <Col
               xs={12}
               sm={6}
@@ -416,7 +395,21 @@ class Contact extends React.Component {
               </Button>
             </Col>
           </Row>
-
+          <Col
+            xs={12}
+            sm={6}
+            smOffset={3}
+            md={4}
+            mdOffset={4}
+            lg={4}
+            lgOffset={4}
+            style={{
+              padding: '1.25em 0.5em 0 0.5em',
+            }}
+          >
+            or
+          </Col>
+          <Row />
           <form
             method="post"
             onSubmit={this.handleSubmit}
@@ -438,6 +431,8 @@ class Contact extends React.Component {
                   type="text"
                   name="name"
                   placeholder="Name"
+                  value={this.state.name}
+                  onChange={this.handleChange}
                   validations={[required]}
                 />
               </Col>
@@ -452,6 +447,8 @@ class Contact extends React.Component {
                   type="text"
                   name="email"
                   placeholder="Email"
+                  value={this.state.email}
+                  onChange={this.handleChange}
                   validations={[required, email]}
                 />
               </Col>
@@ -463,14 +460,17 @@ class Contact extends React.Component {
                   padding: '1.25em 0.5em 0 0.5em',
                 }}
               >
-                <Select />
+                <Select
+                  value={this.state.category}
+                  onChange={this.handleChange}
+                />
               </Col>
             </Row>
-            <RadioGroup name='priority' ref={c => {
-                !this.state.priortyGroup && this.setState({ priortyGroup: c })
-            }}>
-
-            </RadioGroup>
+            <RadioGroup
+              name="priority"
+              value={this.state.priority}
+              onChange={this.handleRadioChange}
+            />
             <Row>
               <Col
                 xs={12}
@@ -483,6 +483,8 @@ class Contact extends React.Component {
                   name="message"
                   placeholder="Message"
                   validations={[required]}
+                  value={this.state.message}
+                  onChange={this.handleChange}
                   rows="6"
                 />
               </Col>

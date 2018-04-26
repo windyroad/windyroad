@@ -25,9 +25,6 @@ class Input extends React.Component {
     const target = event.target
     const value = target.value
     const name = target.name
-    this.setState({
-      value: value,
-    })
     // if their are validation errors, check validation now,
     // otherwise we'll revalidate after blur
     if (this.state.failedValidationMethod) {
@@ -48,6 +45,7 @@ class Input extends React.Component {
         })
       }
     }
+    this.props.onChange(event,elem);
   }
 
   handleBlur(event, elem) {
@@ -85,7 +83,7 @@ class Input extends React.Component {
         <textarea
           type={this.props.type}
           name={this.props.name}
-          value={this.state.value}
+          value={this.props.value}
           placeholder={this.props.placeholder}
           rows={this.props.rows}
           onChange={this.handleChange}
@@ -96,7 +94,7 @@ class Input extends React.Component {
         <input
           type={this.props.type}
           name={this.props.name}
-          value={this.state.value}
+          value={this.props.value}
           placeholder={this.props.placeholder}
           onChange={this.handleChange}
           className={this.state.failedValidationMsg ? 'error' : ''}

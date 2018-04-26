@@ -59,20 +59,19 @@ class Banner extends React.Component {
   }
 
   handleResize(window) {
-    console.log('in resize')
     var pixelRatio = window.devicePixelRatio
     var size = this.getImage(window, pixelRatio)
     if (size != this.state.size) {
-      const image = new Image() // create an image object programmatically
+      const image = new Image()
+      // only show the image once it's loaded
       image.onload = () => {
-        // use arrow function here
         this.setState({
           size: size,
           image: this.images[size],
         })
-        console.log('state', this.state)
         this.handleResize(window)
       }
+      // load the image
       image.src = this.images[size]
     } else {
       if (pixelRatio != window.devicePixelRatio) {

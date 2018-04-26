@@ -2,17 +2,9 @@ import React from 'react'
 import Input from '../Input'
 import './index.css'
 
-const DefaultState = Object.freeze({
-  failedValidationMsg: null,
-  failedValidationMethod: null,
-  prevValidationMsg: null,
-  value: 'general-enquiry',
-})
-
 class Select extends Input {
   constructor(props) {
     super(props)
-    this.state = DefaultState
     this.handleChange = this.handleChange.bind(this)
   }
 
@@ -29,7 +21,7 @@ class Select extends Input {
         <select
           name="category"
           id="category"
-          value={this.state.value}
+          value={this.props.value}
           onChange={this.handleChange}
         >
           <option value="">- Category -</option>
