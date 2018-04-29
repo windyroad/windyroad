@@ -139,6 +139,8 @@ class Contact extends React.Component {
       prevValidations: {},
     }
 
+    this.resetters = {};
+
     this.handleChange = this.handleChange.bind(this)
     this.handleRadioChange = this.handleRadioChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -293,6 +295,10 @@ class Contact extends React.Component {
   }
 
   reset() {
+    let resetterKeys = Object.keys(this.resetters);
+    for( let i = 0; i < resetterKeys.length; ++i) {
+        this.resetters[resetterKeys[i]]();
+    }
     this.setState({
       name: '',
       email: '',
@@ -445,6 +451,7 @@ class Contact extends React.Component {
                   onChange={this.handleChange}
                   validations={[required]}
                   onValidationChange={this.handleValidationChange}
+                  setResetter={resetter => this.resetters['name'] = resetter}
                 />
               </Col>
               <Col
@@ -462,6 +469,7 @@ class Contact extends React.Component {
                   onChange={this.handleChange}
                   validations={[required, email]}
                   onValidationChange={this.handleValidationChange}
+                  setResetter={resetter => this.resetters['email'] = resetter}
                 />
               </Col>
             </Row>
@@ -475,6 +483,7 @@ class Contact extends React.Component {
                 <Select
                   value={this.state.category}
                   onChange={this.handleChange}
+                  setResetter={resetter => this.resetters['category'] = resetter}
                 />
               </Col>
             </Row>
@@ -482,7 +491,8 @@ class Contact extends React.Component {
               name="priority"
               value={this.state.priority}
               onChange={this.handleRadioChange}
-            />
+              setResetter={resetter => this.resetters['priority'] = resetter}
+              />
             <Row>
               <Col
                 xs={12}
@@ -499,6 +509,7 @@ class Contact extends React.Component {
                   onChange={this.handleChange}
                   onValidationChange={this.handleValidationChange}
                   rows="6"
+                  setResetter={resetter => this.resetters['message'] = resetter}
                 />
               </Col>
             </Row>

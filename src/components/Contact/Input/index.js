@@ -14,10 +14,23 @@ class Input extends React.Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleBlur = this.handleBlur.bind(this)
-    //this.reset = this.rest.bind(this)
+    this.reset = this.reset.bind(this)
+  }
+
+  componentDidMount() {
+    if (this.props.setResetter) {
+      this.props.setResetter(this.reset)
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.setResetter) {
+      this.props.setResetter(null)
+    }
   }
 
   reset() {
+    console.log("resetting")
     this.setState(DefaultState)
   }
 
@@ -33,21 +46,21 @@ class Input extends React.Component {
         value,
       )
       if (errorMsg) {
-        this.setState((prevState) => ({
+        this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
         }))
-        this.props.onValidationChange(event.target.name, false, event, elem);
+        this.props.onValidationChange(event.target.name, false, event, elem)
       } else {
-        this.setState((prevState) => ({
+        this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: null,
           failedValidationMethod: null,
         }))
-        this.props.onValidationChange(event.target.name, true, event, elem);
+        this.props.onValidationChange(event.target.name, true, event, elem)
       }
     }
-    this.props.onChange(event,elem);
+    this.props.onChange(event, elem)
   }
 
   handleBlur(event, elem) {
@@ -63,21 +76,21 @@ class Input extends React.Component {
       const validationMethod = this.props.validations[index]
       let errorMsg = validationMethod(this.props.placeholder, value)
       if (errorMsg) {
-        this.setState((prevState) => ({
+        this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
           failedValidationMethod: validationMethod,
         }))
-        this.props.onValidationChange(event.target.name, false, event, elem);
+        this.props.onValidationChange(event.target.name, false, event, elem)
         return false
       }
     }
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       prevValidationMsg: prevState.failedValidationMsg,
       failedValidationMsg: null,
       failedValidationMethod: null,
     }))
-    this.props.onValidationChange(event.target.name, true, event, elem);
+    this.props.onValidationChange(event.target.name, true, event, elem)
     return true
   }
 
