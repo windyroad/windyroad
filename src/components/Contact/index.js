@@ -123,21 +123,24 @@ const exampleApiError = {
   },
 }
 
+const DefaultState = Object.freeze({
+  name: '',
+  email: '',
+  message: '',
+  priority: 'normal',
+  category: 'general-enquiry',
+  'validation-name': true,
+  'validation-email': true,
+  'validation-message': true,
+  'validation-priority': true,
+  'validation-category': true,
+  formState: FormStateEnum.READY,
+});
+
 class Contact extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      name: '',
-      email: '',
-      message: '',
-      priority: 'normal',
-      category: 'general-enquiry',
-      form: {
-        state: FormStateEnum.READY,
-      },
-      validations: {},
-      prevValidations: {},
-    }
+    this.state = DefaultState;
 
     this.resetters = {};
 
@@ -152,8 +155,8 @@ class Contact extends React.Component {
   handleSetInactive() {}
 
   handleCancel(event) {
-    if (this.state.form.cancel) {
-      this.state.form.cancel('user cancelled')
+    if (this.state.formCancel) {
+      this.state.formCancel('user cancelled')
     } else {
       // cancelled, but not sent yet
       this.cancelBeforeSend = true
@@ -163,7 +166,9 @@ class Contact extends React.Component {
   handleSubmit(event) {
     console.log('submit', event)
     event.preventDefault()
-    // TODO: Validate Input
+    // TODO: Check validation
+
+
     if (this.cancelBeforeSend) {
       this.cancelBeforeSend = false
       return
@@ -215,7 +220,7 @@ class Contact extends React.Component {
               state: progressEvent.cancelable
                 ? FormStateEnum.UPLOADING
                 : FormStateEnum.UPLOADED,
-              cancel: progressEvent.cancelable ? prevstate.form.cancel : null,
+              cancel: progressEvent.cancelable ? prevstate.formCancel : null,
             },
           }))
           console.log('progressUploadEvent', progressEvent)
@@ -299,18 +304,7 @@ class Contact extends React.Component {
     for( let i = 0; i < resetterKeys.length; ++i) {
         this.resetters[resetterKeys[i]]();
     }
-    this.setState({
-      name: '',
-      email: '',
-      message: '',
-      priority: 'normal',
-      category: 'general-enquiry',
-      form: {
-        state: 'ready',
-      },
-      validations: {},
-      prevValidations: {},
-    })
+    this.setState(DefaultState);
   }
 
   handleChange(event, elem) {
@@ -432,7 +426,7 @@ class Contact extends React.Component {
             className={
               'contactForm ' +
               (this.state.ticket ? 'submitted ' : '') +
-              this.state.form.state
+              this.state.formState
             }
           >
             <Row between="xs">

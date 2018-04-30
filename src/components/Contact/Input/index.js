@@ -31,7 +31,13 @@ class Input extends React.Component {
 
   reset() {
     console.log("resetting")
-    this.setState(DefaultState)
+    this.setState((prevState) => {
+      return {
+        failedValidationMsg: null,
+        failedValidationMethod: null,
+        prevValidationMsg: prevState.failedValidationMsg,
+      }
+    })
   }
 
   handleChange(event, elem) {
