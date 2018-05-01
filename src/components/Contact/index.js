@@ -27,16 +27,43 @@ let FormStateEnum = Object.freeze({
   GENERAL_ERROR: 'GENERAL_ERROR',
 })
 
-const required = (name, value) => {
+const requiredValidation = (name, value) => {
   if (!value.toString().trim().length) {
     return `${name} is required`
   }
 }
 
-const email = (name, value) => {
+const emailValidation = (name, value) => {
   if (!validator.validate(value)) {
     return `'${value}' is not a valid email.`
   }
+}
+
+const exampleSuccess = {
+  request: {
+    url: 'https://windyroad.zendesk.com/api/v2/requests/1482.json',
+    id: 1482,
+    status: 'new',
+    priority: null,
+    type: null,
+    subject: 'general-enquiry',
+    description: 'sdsd',
+    organization_id: null,
+    via: { channel: 'api', source: { from: {}, to: {}, rel: null } },
+    custom_fields: [],
+    requester_id: 368173136,
+    collaborator_ids: [],
+    email_cc_ids: [],
+    is_public: true,
+    due_at: null,
+    can_be_solved_by_me: false,
+    created_at: '2018-04-30T21:22:20Z',
+    updated_at: '2018-04-30T21:22:20Z',
+    recipient: null,
+    followup_source_id: null,
+    assignee_id: null,
+    fields: [],
+  },
 }
 
 const exampleNetworkError = {
@@ -135,14 +162,15 @@ const DefaultState = Object.freeze({
   'validation-priority': true,
   'validation-category': true,
   formState: FormStateEnum.READY,
-});
+  ticket: null,
+})
 
 class Contact extends React.Component {
   constructor(props) {
     super(props)
-    this.state = DefaultState;
+    this.state = DefaultState
 
-    this.resetters = {};
+    this.resetters = {}
 
     this.handleChange = this.handleChange.bind(this)
     this.handleRadioChange = this.handleRadioChange.bind(this)
@@ -167,7 +195,6 @@ class Contact extends React.Component {
     console.log('submit', event)
     event.preventDefault()
     // TODO: Check validation
-
 
     if (this.cancelBeforeSend) {
       this.cancelBeforeSend = false
@@ -300,11 +327,29 @@ class Contact extends React.Component {
   }
 
   reset() {
-    let resetterKeys = Object.keys(this.resetters);
-    for( let i = 0; i < resetterKeys.length; ++i) {
-        this.resetters[resetterKeys[i]]();
+    let resetterKeys = Object.keys(this.resetters)
+    for (let i = 0; i < resetterKeys.length; ++i) {
+      this.resetters[resetterKeys[i]]()
     }
-    this.setState(DefaultState);
+    this.setState(prevState => {
+      return {
+        name: '',
+        email: '',
+        message: '',
+        priority: 'normal',
+        category: 'general-enquiry',
+        'validation-name': true,
+        'validation-email': true,
+        'validation-message': true,
+        'validation-priority': true,
+        'validation-category': true,
+        formState: FormStateEnum.READY,
+        ticket: null,
+        prevTicket: prevState.ticket,
+        prevName: prevState.name,
+        prevEmail: prevState.email,
+      }
+    })
   }
 
   handleChange(event, elem) {
@@ -367,204 +412,279 @@ class Contact extends React.Component {
       </Button>
     )
 
+    let ticket = this.state.ticket
+      ? this.state.ticket
+      : this.state.prevTicket
+        ? this.state.prevTicket
+        : {
+            id: null,
+            subject: null,
+            description: null,
+          };
+    let name = this.state.name ? this.state.name : this.state.prevName;
+    let email = this.state.email ? this.state.email : this.state.prevEmail;
+
     return (
       <section id={this.props.id} className="wrapper style1 special fade">
         <div className="container">
           <header>
             <h2>Find Your Navigator</h2>
           </header>
-          <Row>
-            <Col
-              xs={12}
-              sm={6}
-              smOffset={3}
-              md={4}
-              mdOffset={4}
-              lg={4}
-              lgOffset={4}
-              style={{
-                padding: '1.25em 0.5em 0 0.5em',
-              }}
-            >
-              <Button
-                style={{
-                  fontWeight: '900',
-                  verticalAlign: 'middle',
-                  width: '100%',
-                }}
-                href="tel:+61285203165"
-              >
-                <FontAwesome
-                  name="phone"
-                  style={{
-                    verticalAlign: 'middle',
-                    paddingRight: '1em',
-                  }}
-                />
-                02 8520 3165
-              </Button>
-            </Col>
-          </Row>
-          <Col
-            xs={12}
-            sm={6}
-            smOffset={3}
-            md={4}
-            mdOffset={4}
-            lg={4}
-            lgOffset={4}
-            style={{
-              padding: '1.25em 0.5em 0 0.5em',
-            }}
-          >
-            or
-          </Col>
-          <Row />
-          <form
-            method="post"
-            onSubmit={this.handleSubmit}
+          <div
             className={
               'contactForm ' +
               (this.state.ticket ? 'submitted ' : '') +
               this.state.formState
             }
           >
-            <Row between="xs">
-              <Col
-                xs={12}
-                sm={6}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <Input
-                  type="text"
-                  name="name"
-                  placeholder="Name"
-                  value={this.state.name}
-                  onChange={this.handleChange}
-                  validations={[required]}
-                  onValidationChange={this.handleValidationChange}
-                  setResetter={resetter => this.resetters['name'] = resetter}
-                />
-              </Col>
-              <Col
-                xs={12}
-                sm={6}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <Input
-                  type="text"
-                  name="email"
-                  placeholder="Email"
-                  value={this.state.email}
-                  onChange={this.handleChange}
-                  validations={[required, email]}
-                  onValidationChange={this.handleValidationChange}
-                  setResetter={resetter => this.resetters['email'] = resetter}
-                />
-              </Col>
-            </Row>
             <Row>
-              <Col
-                xs={12}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <Select
-                  value={this.state.category}
-                  onChange={this.handleChange}
-                  setResetter={resetter => this.resetters['category'] = resetter}
-                />
-              </Col>
-            </Row>
-            <RadioGroup
-              name="priority"
-              value={this.state.priority}
-              onChange={this.handleRadioChange}
-              setResetter={resetter => this.resetters['priority'] = resetter}
-              />
-            <Row>
-              <Col
-                xs={12}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <Input
-                  type="textarea"
-                  name="message"
-                  placeholder="Message"
-                  validations={[required]}
-                  value={this.state.message}
-                  onChange={this.handleChange}
-                  onValidationChange={this.handleValidationChange}
-                  rows="6"
-                  setResetter={resetter => this.resetters['message'] = resetter}
-                />
-              </Col>
-            </Row>
-            <Row end="xs" between="xs">
-              <Col
-                xs={8}
-                sm={6}
-                smOffset={3}
-                md={4}
-                mdOffset={4}
-                lg={4}
-                lgOffset={4}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                }}
-              >
-                <Button
-                  style={{
-                    fontWeight: '900',
-                    verticalAlign: 'middle',
-                    width: '100%',
-                  }}
-                  onClick={this.handleSubmit}
-                >
-                  Send Message
-                  <FontAwesome
-                    name="envelope"
+              <Col xs={5}>
+                <Row>
+                  <Col
+                    xs={12}
+                    sm={6}
+                    smOffset={3}
+                    md={4}
+                    mdOffset={4}
+                    lg={4}
+                    lgOffset={4}
                     style={{
-                      verticalAlign: 'middle',
-                      paddingLeft: '1em',
+                      padding: '1.25em 0.5em 0 0.5em',
                     }}
-                  />
-                </Button>
-              </Col>
-              <Col
-                xs={4}
-                sm={3}
-                md={3}
-                mdOffset={1}
-                lg={2}
-                lgOffset={2}
-                style={{
-                  padding: '1.25em 0.5em 0 0.5em',
-                  verticalAlign: 'middle',
-                  height: '100%',
-                }}
-              >
-                <a
-                  className="button"
-                  onClick={() => this.reset()}
+                  >
+                    <Button
+                      style={{
+                        fontWeight: '900',
+                        verticalAlign: 'middle',
+                        width: '100%',
+                      }}
+                      href="tel:+61285203165"
+                    >
+                      <FontAwesome
+                        name="phone"
+                        style={{
+                          verticalAlign: 'middle',
+                          paddingRight: '1em',
+                        }}
+                      />
+                      02 8520 3165
+                    </Button>
+                  </Col>
+                </Row>
+                <Col
+                  xs={12}
+                  sm={6}
+                  smOffset={3}
+                  md={4}
+                  mdOffset={4}
+                  lg={4}
+                  lgOffset={4}
                   style={{
-                    width: '100%',
+                    padding: '1.25em 0.5em 0 0.5em',
                   }}
                 >
-                  reset
-                </a>
+                  or
+                </Col>
+                <Row />
+                <form method="post" onSubmit={this.handleSubmit}>
+                  <Row between="xs">
+                    <Col
+                      xs={12}
+                      sm={6}
+                      style={{
+                        padding: '1.25em 0.5em 0 0.5em',
+                      }}
+                    >
+                      <Input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        value={this.state.name}
+                        onChange={this.handleChange}
+                        validations={[requiredValidation]}
+                        onValidationChange={this.handleValidationChange}
+                        setResetter={resetter =>
+                          (this.resetters['name'] = resetter)
+                        }
+                      />
+                    </Col>
+                    <Col
+                      xs={12}
+                      sm={6}
+                      style={{
+                        padding: '1.25em 0.5em 0 0.5em',
+                      }}
+                    >
+                      <Input
+                        type="text"
+                        name="email"
+                        placeholder="Email"
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                        validations={[requiredValidation, emailValidation]}
+                        onValidationChange={this.handleValidationChange}
+                        setResetter={resetter =>
+                          (this.resetters['email'] = resetter)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col
+                      xs={12}
+                      style={{
+                        padding: '1.25em 0.5em 0 0.5em',
+                      }}
+                    >
+                      <Select
+                        value={this.state.category}
+                        onChange={this.handleChange}
+                        setResetter={resetter =>
+                          (this.resetters['category'] = resetter)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <RadioGroup
+                    name="priority"
+                    value={this.state.priority}
+                    onChange={this.handleRadioChange}
+                    setResetter={resetter =>
+                      (this.resetters['priority'] = resetter)
+                    }
+                  />
+                  <Row>
+                    <Col
+                      xs={12}
+                      style={{
+                        padding: '1.25em 0.5em 0 0.5em',
+                      }}
+                    >
+                      <Input
+                        type="textarea"
+                        name="message"
+                        placeholder="Message"
+                        validations={[requiredValidation]}
+                        value={this.state.message}
+                        onChange={this.handleChange}
+                        onValidationChange={this.handleValidationChange}
+                        rows="6"
+                        setResetter={resetter =>
+                          (this.resetters['message'] = resetter)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row end="xs" between="xs">
+                    <Col
+                      xs={8}
+                      sm={6}
+                      smOffset={3}
+                      md={4}
+                      mdOffset={4}
+                      lg={4}
+                      lgOffset={4}
+                      style={{
+                        padding: '1.25em 0.5em 0 0.5em',
+                      }}
+                    >
+                      <Button
+                        style={{
+                          fontWeight: '900',
+                          verticalAlign: 'middle',
+                          width: '100%',
+                        }}
+                        onClick={this.handleSubmit}
+                      >
+                        Send Message
+                        <FontAwesome
+                          name="envelope"
+                          style={{
+                            verticalAlign: 'middle',
+                            paddingLeft: '1em',
+                          }}
+                        />
+                      </Button>
+                    </Col>
+                    <Col
+                      xs={4}
+                      sm={3}
+                      md={3}
+                      mdOffset={1}
+                      lg={2}
+                      lgOffset={2}
+                      style={{
+                        padding: '1.25em 0.5em 0 0.5em',
+                        verticalAlign: 'middle',
+                        height: '100%',
+                      }}
+                    >
+                      <a
+                        className="button"
+                        onClick={() => this.reset()}
+                        style={{
+                          width: '100%',
+                        }}
+                      >
+                        reset
+                      </a>
+                    </Col>
+                  </Row>
+                </form>
+              </Col>
+              <Col xs={5} xsOffset={2}>
+                <div
+                  className={this.state.ticket ? 'ticket submitted' : 'ticket'}
+                >
+                  <h3>Request Sent Successfully</h3>
+                  <p>Thanks! We'll respond to your request ASAP.</p>
+
+                  <div className="table-wrapper" style={{ textAlign: 'left' }}>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <th>Request&nbsp;ID:</th>
+                          <td>
+                            <a
+                              href={`https://windyroad.zendesk.com/hc/requests/${ticket.id}`}
+                            >
+                              {ticket.id}
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Name:</th>
+                          <td>{name}</td>
+                        </tr>
+                        <tr>
+                          <th>Email:</th>
+                          <td>{email}</td>
+                        </tr>
+                        <tr>
+                          <th>Catagory:</th>
+                          <td>{ticket.subject}</td>
+                        </tr>
+                        <tr>
+                          <th>Message:</th>
+                          <td>{ticket.description}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p>
+                    A copy of your reqest has also been emailed to{' '}
+                    {email}.
+                  </p>
+                  <p>
+                    If you would like to provide us with more information, you
+                    can simply reply to that email.
+                  </p>
+                  <a className="button" onClick={() => this.reset()}>
+                    reset
+                  </a>
+                </div>
               </Col>
             </Row>
-          </form>
-          <div className={this.state.ticket ? 'ticket submitted' : 'ticket'}>
-            Woohoo!
           </div>
         </div>
       </section>

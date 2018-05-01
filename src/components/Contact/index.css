@@ -1,20 +1,11 @@
-form.contactForm.submitted {
-  overflow: hidden;
-  max-height: 0;
+.contactForm.submitted {
+    right: 140%;
 }
 
-form.contactForm {
-    max-height: 1000px;
-    transition: max-height 1s ease-in;
-}
-
-div.ticket {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 1s ease-in;
-}
-
-div.ticket.submitted {
-    max-height: 1000px;    
+.contactForm {
+    position: relative;
+    right: 0%;
+    transition: right 1s ease-in;
+    width: 240%;
 }
 
