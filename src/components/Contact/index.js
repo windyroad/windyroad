@@ -295,7 +295,8 @@ class Contact extends React.Component {
           console.log('status', error.response.status)
           console.log('headers', error.response.headers)
           this.setState({
-            ticket: response.data.request,
+            ticket: null,
+            error: error.response,
             form: {
               state: FormStateEnum.RESPONSE_ERROR,
             },
@@ -306,7 +307,8 @@ class Contact extends React.Component {
           // http.ClientRequest in node.js
           console.log(error.request)
           this.setState({
-            ticket: response.data.request,
+            ticket: null,
+            error: error.request,
             form: {
               state: FormStateEnum.REQUEST_ERROR,
             },
@@ -314,7 +316,8 @@ class Contact extends React.Component {
         } else {
           // Something happened in setting up the request that triggered an Error
           this.setState({
-            ticket: response.data.request,
+            ticket: null,
+            error: error,
             form: {
               state: FormStateEnum.GENERAL_ERROR,
             },
@@ -588,7 +591,7 @@ class Contact extends React.Component {
                         padding: '1.25em 0.5em 0 0.5em',
                       }}
                     >
-                      <Button
+                      <Button className=""
                         style={{
                           fontWeight: '900',
                           verticalAlign: 'middle',
