@@ -1,11 +1,65 @@
-.contactForm.submitted {
-    right: 140%;
+
+
+section#contact {
+    padding: 0px;
+}
+
+section#contact > div.container {
+    padding: 0px;
+    width: 100% !important;
+    margin: 0px;
 }
 
 .contactForm {
     position: relative;
     right: 0%;
-    transition: right 1s ease-in;
-    width: 240%;
+    transition: right 0.5s ease-in;
+    width: 300%;
+    
 }
 
+.contactForm.READY, .contactForm.CANCELED {
+    right: 0%;
+}
+
+.contactForm.REQUEST_ERROR,
+.contactForm.VALIDATING,
+.contactForm.PRESENDING,
+.contactForm.SENDING,
+.contactForm.UPLOADING,
+.contactForm.UPLOADED,
+.contactForm.DONWLOADING,
+.contactForm.DOWNLOADED,
+.contactForm.RESPONSE_ERROR,
+.contactForm.REQUEST_ERROR,
+.contactForm.GENERAL_ERROR
+{
+    right: 100%;
+}
+
+.contactForm.SENT {
+    right: 200%;
+}
+
+
+.contactForm > div > div {
+    padding: 1.5%;
+}
+
+div.form-error-msg {
+    border: solid #ff8c8c79 1px;
+    text-align: left;
+    font-weight: bold;
+    margin-top: 1.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.25ex;
+    padding-bottom: 0.25ex;
+    border-radius: 4px;
+    background-color: #ff000033;
+    margin-bottom: 1em;
+}
+
+div.form-error-msg p {
+    margin-bottom: 1em;
+}

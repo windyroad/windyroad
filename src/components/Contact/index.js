@@ -9,7 +9,13 @@ import Input from './Input'
 import Select from './Select'
 import Radio from './RadioGroup/Radio'
 import RadioGroup from './RadioGroup'
+import noInternet from 'no-internet'
 import './index.css'
+
+const ZD_HOST = 'windyroad.zendesk.com:443'
+const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`
+
+const OTHER_HOST = 'google.com.au:443'
 
 let FormStateEnum = Object.freeze({
   READY: 'READY',
@@ -38,6 +44,9 @@ const emailValidation = (name, value) => {
     return `'${value}' is not a valid email.`
   }
 }
+
+const DEFAULT_PRIORITY = 'normal'
+const DEFAULT_CATEGORY = 'general-enquiry'
 
 const exampleSuccess = {
   request: {
@@ -79,9 +88,10 @@ const exampleNetworkError = {
       'Content-Type': 'application/json;charset=utf-8',
     },
     method: 'post',
+    cancelToken: { promise: {} },
     url: 'https://windyroad.zendesk.com/api/v2/requests.json',
     data:
-      '{"request":{"requester":{"name":"Tom Howard","email":"tom@windyroad.com.au"},"subject":"general-enquiry","comment":{"body":"asasdasd"},"priority":"normal","type":"question"}}',
+      '{"request":{"requester":{"name":"Tom Howard","email":"tom@windyroad.com.au"},"subject":"general-enquiry","comment":{"body":"Test"},"priority":"low","type":"question"}}',
   },
   request: {},
 }
@@ -150,25 +160,26 @@ const exampleApiError = {
   },
 }
 
-const DefaultState = Object.freeze({
-  name: '',
-  email: '',
-  message: '',
-  priority: 'normal',
-  category: 'general-enquiry',
-  'validation-name': true,
-  'validation-email': true,
-  'validation-message': true,
-  'validation-priority': true,
-  'validation-category': true,
-  formState: FormStateEnum.READY,
-  ticket: null,
-})
-
 class Contact extends React.Component {
   constructor(props) {
     super(props)
-    this.state = DefaultState
+    this.state = {
+      name: '',
+      email: '',
+      message: '',
+      priority: null,
+      category: null,
+      'validation-name': true,
+      'validation-email': true,
+      'validation-message': true,
+      'validation-priority': true,
+      'validation-category': true,
+      form: {
+        state: FormStateEnum.READY,
+      },
+      ticket: null,
+      error: null,
+    }
 
     this.resetters = {}
 
@@ -176,8 +187,21 @@ class Contact extends React.Component {
     this.handleRadioChange = this.handleRadioChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleValidationChange = this.handleValidationChange.bind(this)
+    this.noInternetCallback = this.noInternetCallback.bind(this)
     this.cancelBeforeSend = false
+
+    noInternet({
+      callback: this.noInternetCallback,
+    })
   }
+
+  noInternetCallback(offline) {
+    console.log('offline?', offline)
+    this.setState({
+      offline: offline,
+    })
+  }
+
   handleSetActive() {}
 
   handleSetInactive() {}
@@ -192,6 +216,12 @@ class Contact extends React.Component {
   }
 
   handleSubmit(event) {
+    this.setState(prevState => {
+      return {
+        category: prevState.category || DEFAULT_CATEGORY,
+        priority: prevState.priority || DEFAULT_PRIORITY,
+      }
+    })
     console.log('submit', event)
     event.preventDefault()
     // TODO: Check validation
@@ -232,7 +262,7 @@ class Contact extends React.Component {
       },
     })
     axios
-      .post('https://windyroad.zendesk.com/api/v2/requests.json', body, {
+      .post(ZD_API, body, {
         cancelToken: new axios.CancelToken(c => {
           this.setState({
             form: {
@@ -305,7 +335,8 @@ class Contact extends React.Component {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          console.log(error.request)
+          console.log('Request Error', JSON.stringify(error))
+          error.request.offline = this.state.offline
           this.setState({
             ticket: null,
             error: error.request,
@@ -339,18 +370,27 @@ class Contact extends React.Component {
         name: '',
         email: '',
         message: '',
-        priority: 'normal',
-        category: 'general-enquiry',
+        priority: null,
+        category: null,
         'validation-name': true,
         'validation-email': true,
         'validation-message': true,
         'validation-priority': true,
         'validation-category': true,
-        formState: FormStateEnum.READY,
+        form: {
+          state: FormStateEnum.READY,
+        },
         ticket: null,
         prevTicket: prevState.ticket,
         prevName: prevState.name,
         prevEmail: prevState.email,
+        prevMessage: prevState.message,
+        prevCatagory: prevState.category,
+        prevPriority: prevState.priority,
+        prevError: prevState.error,
+        error: null,
+        prevFormState: prevState.form.state,
+        prevError: prevState.error,
       }
     })
   }
@@ -383,37 +423,99 @@ class Contact extends React.Component {
 
   render() {
     console.log('state', this.state)
-    const button = this.state.ticket ? (
-      <Button
-        className="disabled"
-        style={{
-          fontWeight: '900',
-          verticalAlign: 'middle',
-          width: '100%',
-        }}
-        onClick={this.handleSubmit}
-      >
-        Message Sent
-      </Button>
-    ) : (
-      <Button
-        style={{
-          fontWeight: '900',
-          verticalAlign: 'middle',
-          width: '100%',
-        }}
-        onClick={this.handleSubmit}
-      >
-        Send Message
-        <FontAwesome
-          name="envelope"
-          style={{
-            verticalAlign: 'middle',
-            paddingLeft: '1em',
-          }}
-        />
-      </Button>
-    )
+
+    let errorConent = ''
+    let sendingHeading = 'Sending...';
+    if (this.state.error || this.state.prevError) {
+      sendingHeading = 'Sending Failed';
+      if (
+        this.state.form.state == FormStateEnum.REQUEST_ERROR ||
+        this.state.prevFormState == FormStateEnum.REQUEST_ERROR
+      ) {
+        let cause = (
+          <div>
+            <p>We'll this is a litte embarrasing 😳</p>
+            <p>
+              Please try calling us on{' '}
+              <a href="tel:+61285203165">02 8520 3165</a>
+            </p>
+          </div>
+        )
+        if (
+          this.state.error
+            ? this.state.error.offline
+            : this.state.prevError.offline
+        ) {
+          cause = (
+            <p>
+              From what we can tell, you don't have an internet connection at
+              the moment. Please check you connection and try again.
+            </p>
+          )
+        }
+        errorConent = (
+          <div>
+            <div className="form-error-msg">
+              <h3>Sorry, something's gone wrong sending your request.</h3>
+              {cause}
+            </div>
+            <Row end="xs" between="xs">
+              <Col
+                xs={8}
+                sm={6}
+                smOffset={3}
+                md={4}
+                mdOffset={4}
+                lg={4}
+                lgOffset={4}
+                style={{
+                  padding: '1.25em 0.5em 0 0.5em',
+                }}
+              >
+                <Button
+                  className=""
+                  style={{
+                    fontWeight: '900',
+                    verticalAlign: 'middle',
+                    width: '100%',
+                  }}
+                  onClick={this.handleSubmit}
+                >
+                  Retry
+                </Button>
+              </Col>
+              <Col
+                xs={4}
+                sm={3}
+                md={3}
+                mdOffset={1}
+                lg={2}
+                lgOffset={2}
+                style={{
+                  padding: '1.25em 0.5em 0 0.5em',
+                  verticalAlign: 'middle',
+                  height: '100%',
+                }}
+              >
+                <a
+                  className="button"
+                  onClick={() =>
+                    this.setState({ form: { state: FormStateEnum.READY } })
+                  }
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  edit
+                </a>
+              </Col>
+            </Row>
+          </div>
+        )
+      } else if (this.state.form.state == FormStateEnum.RESPONSE_ERROR) {
+      } else {
+      }
+    }
 
     let ticket = this.state.ticket
       ? this.state.ticket
@@ -423,9 +525,9 @@ class Contact extends React.Component {
             id: null,
             subject: null,
             description: null,
-          };
-    let name = this.state.name ? this.state.name : this.state.prevName;
-    let email = this.state.email ? this.state.email : this.state.prevEmail;
+          }
+    let name = this.state.name ? this.state.name : this.state.prevName
+    let email = this.state.email ? this.state.email : this.state.prevEmail
 
     return (
       <section id={this.props.id} className="wrapper style1 special fade">
@@ -437,11 +539,11 @@ class Contact extends React.Component {
             className={
               'contactForm ' +
               (this.state.ticket ? 'submitted ' : '') +
-              this.state.formState
+              this.state.form.state
             }
           >
             <Row>
-              <Col xs={5}>
+              <Col xs={4}>
                 <Row>
                   <Col
                     xs={12}
@@ -540,7 +642,7 @@ class Contact extends React.Component {
                       }}
                     >
                       <Select
-                        value={this.state.category}
+                        value={this.state.category || DEFAULT_CATEGORY}
                         onChange={this.handleChange}
                         setResetter={resetter =>
                           (this.resetters['category'] = resetter)
@@ -550,7 +652,7 @@ class Contact extends React.Component {
                   </Row>
                   <RadioGroup
                     name="priority"
-                    value={this.state.priority}
+                    value={this.state.priority || DEFAULT_PRIORITY}
                     onChange={this.handleRadioChange}
                     setResetter={resetter =>
                       (this.resetters['priority'] = resetter)
@@ -591,7 +693,8 @@ class Contact extends React.Component {
                         padding: '1.25em 0.5em 0 0.5em',
                       }}
                     >
-                      <Button className=""
+                      <Button
+                        className=""
                         style={{
                           fontWeight: '900',
                           verticalAlign: 'middle',
@@ -635,7 +738,41 @@ class Contact extends React.Component {
                   </Row>
                 </form>
               </Col>
-              <Col xs={5} xsOffset={2}>
+              <Col xs={4}>
+                <h3>{sendingHeading}</h3>
+                <div className="table-wrapper" style={{ textAlign: 'left' }}>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Name:</th>
+                        <td>{this.state.name || this.state.prevName}</td>
+                      </tr>
+                      <tr>
+                        <th>Email:</th>
+                        <td>{this.state.email || this.state.prevEmail}</td>
+                      </tr>
+                      <tr>
+                        <th>Catagory:</th>
+                        <td>
+                          {this.state.category || this.state.prevCatagory}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Priority:</th>
+                        <td>
+                          {this.state.priority || this.state.prevPriority}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Message:</th>
+                        <td>{this.state.message || this.state.prevMessage}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                {errorConent}{' '}
+              </Col>
+              <Col xs={4}>
                 <div
                   className={this.state.ticket ? 'ticket submitted' : 'ticket'}
                 >
@@ -649,7 +786,9 @@ class Contact extends React.Component {
                           <th>Request&nbsp;ID:</th>
                           <td>
                             <a
-                              href={`https://windyroad.zendesk.com/hc/requests/${ticket.id}`}
+                              href={`https://windyroad.zendesk.com/hc/requests/${
+                                ticket.id
+                              }`}
                             >
                               {ticket.id}
                             </a>
@@ -674,10 +813,7 @@ class Contact extends React.Component {
                       </tbody>
                     </table>
                   </div>
-                  <p>
-                    A copy of your reqest has also been emailed to{' '}
-                    {email}.
-                  </p>
+                  <p>A copy of your reqest has also been emailed to {email}.</p>
                   <p>
                     If you would like to provide us with more information, you
                     can simply reply to that email.
