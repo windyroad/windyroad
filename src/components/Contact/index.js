@@ -9,8 +9,15 @@ import Input from './Input'
 import Select from './Select'
 import Radio from './RadioGroup/Radio'
 import RadioGroup from './RadioGroup'
-import noInternet from 'no-internet'
+import noInternet from './no-internet.js'
+import Error422 from './Error/Error422'
 import './index.css'
+
+function uuid(a) {
+  return a
+    ? (a ^ ((Math.random() * 16) >> (a / 4))).toString(16)
+    : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, uuid)
+}
 
 const ZD_HOST = 'windyroad.zendesk.com:443'
 const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`
@@ -175,10 +182,10 @@ class Contact extends React.Component {
       'validation-priority': true,
       'validation-category': true,
       form: {
-        state: FormStateEnum.READY,
+        state: /*FormStateEnum.READY, //*/ FormStateEnum.VALIDATING,
       },
       ticket: null,
-      error: null,
+      error: null, //*/ exampleApiError,
     }
 
     this.resetters = {}
@@ -189,17 +196,54 @@ class Contact extends React.Component {
     this.handleValidationChange = this.handleValidationChange.bind(this)
     this.noInternetCallback = this.noInternetCallback.bind(this)
     this.cancelBeforeSend = false
+  }
 
-    noInternet({
-      callback: this.noInternetCallback,
+  componentDidMount() {
+    this.checkNetworkStatus()
+  }
+
+  async checkNetworkStatus() {
+    let offline = await noInternet({
+      url: 'https://graph.facebook.com',
+      method: 'OPTIONS',
     })
+    console.log('offline?', offline)
+    if (offline) {
+      this.setState({
+        offline: true,
+        zendeskOffline: true,
+      })
+    } else {
+      let zendeskOffline = await oInternet({
+        url: ZD_API,
+        method: 'POST',
+      })
+      console.log('zendeskOffline?', zendeskOffline)
+      this.setState({
+        offline: false,
+        zendeskOffline: zendeskOffline,
+      })
+    }
   }
 
   noInternetCallback(offline) {
     console.log('offline?', offline)
-    this.setState({
-      offline: offline,
-    })
+    if (offline) {
+      this.setState({
+        offline: offline,
+      })
+    } else {
+      noInternet({
+        url: ZD_API,
+        method: 'OPTIONS',
+      }).then(zendeskOffline => {
+        console.log('zendeskOffline?', zendeskOffline)
+        this.setState({
+          offline: offline,
+          zendeskOffline: zendeskOffline,
+        })
+      })
+    }
   }
 
   handleSetActive() {}
@@ -216,14 +260,27 @@ class Contact extends React.Component {
   }
 
   handleSubmit(event) {
+    console.log('submit', event)
+    event.preventDefault()
+
+    this.checkNetworkStatus()
+
     this.setState(prevState => {
       return {
         category: prevState.category || DEFAULT_CATEGORY,
         priority: prevState.priority || DEFAULT_PRIORITY,
+        prevTicket: null,
+        prevFormState: null,
+        prevError: null,
+        prevName: null,
+        prevEmail: null,
+        prevMessage: null,
+        prevCatagory: null,
+        prevPriority: null,
+        prevError: null,
+        xRequestId: uuid(),
       }
     })
-    console.log('submit', event)
-    event.preventDefault()
     // TODO: Check validation
 
     if (this.cancelBeforeSend) {
@@ -308,7 +365,7 @@ class Contact extends React.Component {
           },
         })
       })
-      .catch(error => {
+      .catch(async error => {
         if (axios.isCancel(error)) {
           console.log('Request canceled', error.message)
           this.setState({
@@ -336,7 +393,9 @@ class Contact extends React.Component {
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
           console.log('Request Error', JSON.stringify(error))
+          await this.checkNetworkStatus()
           error.request.offline = this.state.offline
+          error.request.zendeskOffline = this.state.zendeskOffline
           this.setState({
             ticket: null,
             error: error.request,
@@ -382,6 +441,8 @@ class Contact extends React.Component {
         },
         ticket: null,
         prevTicket: prevState.ticket,
+        prevFormState: prevState.form.state,
+        prevError: prevState.error,
         prevName: prevState.name,
         prevEmail: prevState.email,
         prevMessage: prevState.message,
@@ -389,8 +450,6 @@ class Contact extends React.Component {
         prevPriority: prevState.priority,
         prevError: prevState.error,
         error: null,
-        prevFormState: prevState.form.state,
-        prevError: prevState.error,
       }
     })
   }
@@ -425,9 +484,9 @@ class Contact extends React.Component {
     console.log('state', this.state)
 
     let errorConent = ''
-    let sendingHeading = 'Sending...';
+    let sendingHeading = 'Sending...'
     if (this.state.error || this.state.prevError) {
-      sendingHeading = 'Sending Failed';
+      sendingHeading = 'Sending Failed'
       if (
         this.state.form.state == FormStateEnum.REQUEST_ERROR ||
         this.state.prevFormState == FormStateEnum.REQUEST_ERROR
@@ -442,6 +501,21 @@ class Contact extends React.Component {
           </div>
         )
         if (
+          !(this.state.error
+            ? this.state.error.offline
+            : this.state.prevError.offline) &&
+          (this.state.error
+            ? this.state.error.zendeskOffline
+            : this.state.prevError.zendeskOffline)
+        ) {
+          cause = (
+            <p>
+              From what we can tell, our request system is offline. Please try
+              again or call us on <a href="tel:+61285203165">02 8520 3165</a>
+            </p>
+          )
+        }
+        if (
           this.state.error
             ? this.state.error.offline
             : this.state.prevError.offline
@@ -449,7 +523,8 @@ class Contact extends React.Component {
           cause = (
             <p>
               From what we can tell, you don't have an internet connection at
-              the moment. Please check you connection and try again.
+              the moment. Please check you connection and try again, or call us
+              on <a href="tel:+61285203165">02 8520 3165</a>
             </p>
           )
         }
@@ -512,8 +587,49 @@ class Contact extends React.Component {
             </Row>
           </div>
         )
-      } else if (this.state.form.state == FormStateEnum.RESPONSE_ERROR) {
+      } else if (
+        this.state.form.state == FormStateEnum.RESPONSE_ERROR ||
+        this.state.prevFormState == FormStateEnum.RESPONSE_ERROR
+      ) {
+        console.log('Respone Error')
+        console.log(
+          '422?',
+          this.state.error.response.status == 422 ||
+            this.state.prevError.response.status == 422,
+        )
+
+        if (
+          this.state.error.response.status == 422 ||
+          this.state.prevError.response.status == 422
+        ) {
+          errorConent = (
+            <Error422
+              onEdit={() =>
+                this.setState(prevState => {
+                  return {
+                    form: { state: FormStateEnum.READY },
+                    prevFormState: prevState.form.state,
+                  }
+                })
+              }
+            />
+          )
+        }
       } else {
+        // we should handle the different response codes
+        // here, but we'll do that later.
+        errorConent = (
+          <Error422
+            onEdit={() =>
+              this.setState(prevState => {
+                return {
+                  form: { state: FormStateEnum.READY },
+                  prevFormState: prevState.form.state,
+                }
+              })
+            }
+          />
+        )
       }
     }
 
