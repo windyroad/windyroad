@@ -194,12 +194,12 @@ class Contact extends React.Component {
     this.handleRadioChange = this.handleRadioChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleValidationChange = this.handleValidationChange.bind(this)
-    this.noInternetCallback = this.noInternetCallback.bind(this)
+    //this.noInternetCallback = this.noInternetCallback.bind(this)
     this.cancelBeforeSend = false
   }
 
   componentDidMount() {
-    this.checkNetworkStatus()
+    //this.checkNetworkStatus()
   }
 
   async checkNetworkStatus() {
@@ -208,43 +208,46 @@ class Contact extends React.Component {
       method: 'OPTIONS',
     })
     console.log('offline?', offline)
+    let offlineState = {}
     if (offline) {
-      this.setState({
+      offlineState = {
         offline: true,
         zendeskOffline: true,
-      })
+      }
     } else {
-      let zendeskOffline = await oInternet({
+      let zendeskOffline = await noInternet({
         url: ZD_API,
         method: 'POST',
       })
       console.log('zendeskOffline?', zendeskOffline)
-      this.setState({
+      offlineState = {
         offline: false,
         zendeskOffline: zendeskOffline,
-      })
+      }
     }
+    this.setState(offlineState)
+    return offlineState
   }
 
-  noInternetCallback(offline) {
-    console.log('offline?', offline)
-    if (offline) {
-      this.setState({
-        offline: offline,
-      })
-    } else {
-      noInternet({
-        url: ZD_API,
-        method: 'OPTIONS',
-      }).then(zendeskOffline => {
-        console.log('zendeskOffline?', zendeskOffline)
-        this.setState({
-          offline: offline,
-          zendeskOffline: zendeskOffline,
-        })
-      })
-    }
-  }
+  // noInternetCallback(offline) {
+  //   console.log('offline?', offline)
+  //   if (offline) {
+  //     this.setState({
+  //       offline: offline,
+  //     })
+  //   } else {
+  //     noInternet({
+  //       url: ZD_API,
+  //       method: 'OPTIONS',
+  //     }).then(zendeskOffline => {
+  //       console.log('zendeskOffline?', zendeskOffline)
+  //       this.setState({
+  //         offline: offline,
+  //         zendeskOffline: zendeskOffline,
+  //       })
+  //     })
+  //   }
+  // }
 
   handleSetActive() {}
 
@@ -259,11 +262,22 @@ class Contact extends React.Component {
     }
   }
 
+  isValid() {
+    let validationKeys = Object.keys(this.state).filter(key =>
+      key.startsWith('validation-'),
+    )
+    return validationKeys
+      .map(key => this.state[key])
+      .reduce((previousValue, currentValue) => {
+        return previousValue && currentValue
+      }, true)
+  }
+
   handleSubmit(event) {
     console.log('submit', event)
     event.preventDefault()
 
-    this.checkNetworkStatus()
+    //this.checkNetworkStatus()
 
     this.setState(prevState => {
       return {
@@ -281,7 +295,9 @@ class Contact extends React.Component {
         xRequestId: uuid(),
       }
     })
-    // TODO: Check validation
+    if (!this.isValid()) {
+      // TODO: handle invalid submit
+    }
 
     if (this.cancelBeforeSend) {
       this.cancelBeforeSend = false
@@ -366,6 +382,7 @@ class Contact extends React.Component {
         })
       })
       .catch(async error => {
+        console.log('Error', JSON.stringify(error))
         if (axios.isCancel(error)) {
           console.log('Request canceled', error.message)
           this.setState({
@@ -392,10 +409,9 @@ class Contact extends React.Component {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          console.log('Request Error', JSON.stringify(error))
-          await this.checkNetworkStatus()
-          error.request.offline = this.state.offline
-          error.request.zendeskOffline = this.state.zendeskOffline
+          let offlineState = await this.checkNetworkStatus()
+          error.request.offline = offlineState.offline
+          error.request.zendeskOffline = offlineState.zendeskOffline
           this.setState({
             ticket: null,
             error: error.request,
@@ -591,16 +607,15 @@ class Contact extends React.Component {
         this.state.form.state == FormStateEnum.RESPONSE_ERROR ||
         this.state.prevFormState == FormStateEnum.RESPONSE_ERROR
       ) {
-        console.log('Respone Error')
+        console.log('Respone Error', this.state.error)
         console.log(
           '422?',
-          this.state.error.response.status == 422 ||
-            this.state.prevError.response.status == 422,
+          this.state.error.status == 422 || this.state.prevError.status == 422,
         )
 
         if (
-          this.state.error.response.status == 422 ||
-          this.state.prevError.response.status == 422
+          this.state.error.status == 422 ||
+          this.state.prevError.status == 422
         ) {
           errorConent = (
             <Error422
@@ -810,7 +825,7 @@ class Contact extends React.Component {
                       }}
                     >
                       <Button
-                        className=""
+                        className={this.isValid() ? 'valid' : 'disabled'}
                         style={{
                           fontWeight: '900',
                           verticalAlign: 'middle',
