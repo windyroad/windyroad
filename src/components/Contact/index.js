@@ -176,8 +176,8 @@ class Contact extends React.Component {
       name: '',
       email: '',
       message: '',
-      priority: null,
-      category: null,
+      priority: DEFAULT_PRIORITY,
+      category: DEFAULT_CATEGORY,
       form: {
         state: FormStateEnum.READY, //*/ FormStateEnum.VALIDATING,
       },
@@ -254,13 +254,13 @@ class Contact extends React.Component {
     return true;
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     console.log('submit', event)
     event.preventDefault()
 
     //this.checkNetworkStatus()
 
-    this.setState(prevState => {
+    await this.setState(prevState => {
       return {
         category: prevState.category || DEFAULT_CATEGORY,
         priority: prevState.priority || DEFAULT_PRIORITY,
@@ -280,7 +280,7 @@ class Contact extends React.Component {
       }
     })
     if (!this.isValid(FormStateEnum.VALIDATING)) {
-      this.setState({
+      await this.setState({
         form: {
           state: FormStateEnum.VALIDATION_FAILED,
         },
@@ -289,10 +289,6 @@ class Contact extends React.Component {
       return
     }
 
-    if (this.cancelBeforeSend) {
-      this.cancelBeforeSend = false
-      return
-    }
     if (this.cancelBeforeSend) {
       this.cancelBeforeSend = false
       return
