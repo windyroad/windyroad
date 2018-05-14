@@ -5,11 +5,16 @@ input[type="text"], input[type="password"], input[type="email"], select, textare
     position:relative;
 }
 
+.button {
+    z-index: 100;
+    position:relative;
+}
+
 input.error, textarea.error {
     border-color: #ff8c8c;
 }
 
-input.error ~div, textarea.error ~div {
+input.error ~div, textarea.error ~div, .button.error ~div {
     top: 0;
     margin-bottom: 0;
 }

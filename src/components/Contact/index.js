@@ -27,6 +27,7 @@ const OTHER_HOST = 'google.com.au:443'
 let FormStateEnum = Object.freeze({
   READY: 'READY',
   VALIDATING: 'VALIDATING',
+  VALIDATION_FAILED: 'VALIDATION_FAILED',
   PRESENDING: 'PRESENDING',
   SENDING: 'SENDING',
   UPLOADING: 'UPLOADING',
@@ -41,6 +42,7 @@ let FormStateEnum = Object.freeze({
 })
 
 const requiredValidation = (name, value) => {
+  console.log(name, 'has length', value.toString().trim().length);
   if (!value.toString().trim().length) {
     return `${name} is required`
   }
@@ -176,25 +178,19 @@ class Contact extends React.Component {
       message: '',
       priority: null,
       category: null,
-      'validation-name': true,
-      'validation-email': true,
-      'validation-message': true,
-      'validation-priority': true,
-      'validation-category': true,
       form: {
-        state: /*FormStateEnum.READY, //*/ FormStateEnum.VALIDATING,
+        state: FormStateEnum.READY, //*/ FormStateEnum.VALIDATING,
       },
       ticket: null,
       error: null, //*/ exampleApiError,
     }
 
     this.resetters = {}
+    this.isValids = {}
 
     this.handleChange = this.handleChange.bind(this)
     this.handleRadioChange = this.handleRadioChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleValidationChange = this.handleValidationChange.bind(this)
-    //this.noInternetCallback = this.noInternetCallback.bind(this)
     this.cancelBeforeSend = false
   }
 
@@ -229,26 +225,6 @@ class Contact extends React.Component {
     return offlineState
   }
 
-  // noInternetCallback(offline) {
-  //   console.log('offline?', offline)
-  //   if (offline) {
-  //     this.setState({
-  //       offline: offline,
-  //     })
-  //   } else {
-  //     noInternet({
-  //       url: ZD_API,
-  //       method: 'OPTIONS',
-  //     }).then(zendeskOffline => {
-  //       console.log('zendeskOffline?', zendeskOffline)
-  //       this.setState({
-  //         offline: offline,
-  //         zendeskOffline: zendeskOffline,
-  //       })
-  //     })
-  //   }
-  // }
-
   handleSetActive() {}
 
   handleSetInactive() {}
@@ -262,15 +238,20 @@ class Contact extends React.Component {
     }
   }
 
-  isValid() {
-    let validationKeys = Object.keys(this.state).filter(key =>
-      key.startsWith('validation-'),
-    )
-    return validationKeys
-      .map(key => this.state[key])
-      .reduce((previousValue, currentValue) => {
-        return previousValue && currentValue
-      }, true)
+  isValid(formState) {
+    let currformState = formState || this.state.form.state;
+    if( currformState == FormStateEnum.READY ) {
+      return true;
+    }
+    let keys = Object.keys(this.isValids)
+    console.log('validation checks', keys.length);
+    for (let i = 0; i < keys.length; ++i) {
+      if(!this.isValids[keys[i]]())
+      {
+        return false;
+      }
+    }
+    return true;
   }
 
   handleSubmit(event) {
@@ -293,21 +274,25 @@ class Contact extends React.Component {
         prevPriority: null,
         prevError: null,
         xRequestId: uuid(),
+        form: {
+          state: FormStateEnum.VALIDATING,
+        },
       }
     })
-    if (!this.isValid()) {
-      // TODO: handle invalid submit
+    if (!this.isValid(FormStateEnum.VALIDATING)) {
+      this.setState({
+        form: {
+          state: FormStateEnum.VALIDATION_FAILED,
+        },
+      })
+      console.log('Form Invalid')
+      return
     }
 
     if (this.cancelBeforeSend) {
       this.cancelBeforeSend = false
       return
     }
-    this.setState({
-      form: {
-        state: FormStateEnum.VALIDATING,
-      },
-    })
     if (this.cancelBeforeSend) {
       this.cancelBeforeSend = false
       return
@@ -435,23 +420,14 @@ class Contact extends React.Component {
     // TODO: render result
   }
 
-  reset() {
-    let resetterKeys = Object.keys(this.resetters)
-    for (let i = 0; i < resetterKeys.length; ++i) {
-      this.resetters[resetterKeys[i]]()
-    }
-    this.setState(prevState => {
+  async reset() {
+    await this.setState(prevState => {
       return {
         name: '',
         email: '',
         message: '',
         priority: null,
         category: null,
-        'validation-name': true,
-        'validation-email': true,
-        'validation-message': true,
-        'validation-priority': true,
-        'validation-category': true,
         form: {
           state: FormStateEnum.READY,
         },
@@ -468,23 +444,20 @@ class Contact extends React.Component {
         error: null,
       }
     })
+    let resetterKeys = Object.keys(this.resetters)
+    for (let i = 0; i < resetterKeys.length; ++i) {
+      this.resetters[resetterKeys[i]]()
+    }
   }
 
   handleChange(event, elem) {
     const target = event.target
     const value = target.value
     const name = target.name
+    const fieldStateName = `${name}HasNotChanged`;
     this.setState({
       [name]: value,
-    })
-  }
-
-  handleValidationChange(name, valid, event, elem) {
-    console.log(name, valid)
-    const target = event.target
-    const stateName = `validation-${target.name}`
-    this.setState({
-      [stateName]: valid,
+      [fieldStateName]: false,
     })
   }
 
@@ -738,10 +711,11 @@ class Contact extends React.Component {
                         value={this.state.name}
                         onChange={this.handleChange}
                         validations={[requiredValidation]}
-                        onValidationChange={this.handleValidationChange}
+                        formIsInit={this.state.form.state == FormStateEnum.READY}
                         setResetter={resetter =>
                           (this.resetters['name'] = resetter)
                         }
+                        setGetIsValid={isValid => (this.isValids['name'] = isValid)}
                       />
                     </Col>
                     <Col
@@ -758,10 +732,11 @@ class Contact extends React.Component {
                         value={this.state.email}
                         onChange={this.handleChange}
                         validations={[requiredValidation, emailValidation]}
-                        onValidationChange={this.handleValidationChange}
+                        formIsInit={this.state.form.state == FormStateEnum.READY}
                         setResetter={resetter =>
                           (this.resetters['email'] = resetter)
                         }
+                        setGetIsValid={isValid => (this.isValids['email'] = isValid)}
                       />
                     </Col>
                   </Row>
@@ -803,11 +778,12 @@ class Contact extends React.Component {
                         validations={[requiredValidation]}
                         value={this.state.message}
                         onChange={this.handleChange}
-                        onValidationChange={this.handleValidationChange}
+                        formIsInit={this.state.form.state == FormStateEnum.READY}
                         rows="6"
                         setResetter={resetter =>
                           (this.resetters['message'] = resetter)
                         }
+                        setGetIsValid={isValid => (this.isValids['message'] = isValid)}
                       />
                     </Col>
                   </Row>
@@ -825,12 +801,12 @@ class Contact extends React.Component {
                       }}
                     >
                       <Button
-                        className={this.isValid() ? 'valid' : 'disabled'}
                         style={{
                           fontWeight: '900',
                           verticalAlign: 'middle',
                           width: '100%',
                         }}
+                        className={this.isValid() ? '' : 'error'}
                         onClick={this.handleSubmit}
                       >
                         Send Message
@@ -842,6 +818,9 @@ class Contact extends React.Component {
                           }}
                         />
                       </Button>
+                      <div className="error-msg">
+                        Please fix the errors above.
+                      </div>
                     </Col>
                     <Col
                       xs={4}

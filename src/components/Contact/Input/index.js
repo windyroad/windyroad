@@ -5,6 +5,8 @@ const DefaultState = Object.freeze({
   failedValidationMsg: null,
   failedValidationMethod: null,
   prevValidationMsg: null,
+  hasNotChanged: true,
+  isValid: true,
 })
 
 class Input extends React.Component {
@@ -15,12 +17,21 @@ class Input extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleBlur = this.handleBlur.bind(this)
     this.reset = this.reset.bind(this)
+    this.isValid = this.isValid.bind(this)
   }
 
   componentDidMount() {
+    this.validate(this.props.value);
     if (this.props.setResetter) {
       this.props.setResetter(this.reset)
     }
+    if( this.props.setGetIsValid) {
+      this.props.setGetIsValid(this.isValid);
+    }
+  }
+
+  isValid() {
+    return this.state.isValid;
   }
 
   componentWillUnmount() {
@@ -30,14 +41,17 @@ class Input extends React.Component {
   }
 
   reset() {
-    console.log("resetting")
-    this.setState((prevState) => {
+    console.log('resetting')
+    this.setState(prevState => {
       return {
         failedValidationMsg: null,
         failedValidationMethod: null,
         prevValidationMsg: prevState.failedValidationMsg,
+        hasNotChanged: true,
+        isValid: true,
       }
-    })
+    });
+    this.validate(this.props.value);
   }
 
   handleChange(event, elem) {
@@ -55,25 +69,34 @@ class Input extends React.Component {
         this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
+          hasNotChanged: false,
+          isValid: false,
         }))
-        this.props.onValidationChange(event.target.name, false, event, elem)
       } else {
         this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: null,
           failedValidationMethod: null,
+          hasNotChanged: false,
+          isValid: true,
         }))
-        this.props.onValidationChange(event.target.name, true, event, elem)
       }
     }
     this.props.onChange(event, elem)
   }
 
   handleBlur(event, elem) {
-    this.validate(event.target.value, event, elem)
+    this.validate(event.target.value)
   }
 
-  validate(value, event, elem) {
+  showError() {
+    return (
+      !this.state.isValid && !(this.props.formIsInit && this.state.hasNotChanged)
+    )
+  }
+
+  validate(value) {
+    console.log('validating', this.props.name, value);
     for (
       let index = 0;
       this.props.validations && index < this.props.validations.length;
@@ -82,21 +105,25 @@ class Input extends React.Component {
       const validationMethod = this.props.validations[index]
       let errorMsg = validationMethod(this.props.placeholder, value)
       if (errorMsg) {
+        console.log(this.props.name, validationMethod, errorMsg)
         this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
           failedValidationMethod: validationMethod,
+          isValid: false,
         }))
-        this.props.onValidationChange(event.target.name, false, event, elem)
         return false
+      }
+      else {
+        console.log(this.props.name, validationMethod, 'passed validation')
       }
     }
     this.setState(prevState => ({
       prevValidationMsg: prevState.failedValidationMsg,
       failedValidationMsg: null,
       failedValidationMethod: null,
+      isValid: true,
     }))
-    this.props.onValidationChange(event.target.name, true, event, elem)
     return true
   }
 
@@ -110,7 +137,7 @@ class Input extends React.Component {
           placeholder={this.props.placeholder}
           rows={this.props.rows}
           onChange={this.handleChange}
-          className={this.state.failedValidationMsg ? 'error' : ''}
+          className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
         />
       ) : (
@@ -120,7 +147,7 @@ class Input extends React.Component {
           value={this.props.value}
           placeholder={this.props.placeholder}
           onChange={this.handleChange}
-          className={this.state.failedValidationMsg ? 'error' : ''}
+          className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
         />
       )
