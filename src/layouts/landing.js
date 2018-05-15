@@ -18,6 +18,8 @@ import Special from '../components/Special'
 import Footer from '../components/Footer'
 import About from '../components/About'
 import Contact from '../components/Contact'
+import './inspectlet'
+import './optimizely'
 
 class TemplateWrapper extends React.Component {
   constructor(props) {

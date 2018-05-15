@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'gatsby-link'
 import { Grid, Row, Col } from 'react-flexbox-grid'
 import FontAwesome from 'react-fontawesome'
 import Button from '../Button'

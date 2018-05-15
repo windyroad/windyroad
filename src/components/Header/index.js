@@ -9,12 +9,12 @@ const Header = (props) => (
      <header id="header">
         <h1 id="logo">
             <Link to="/" >
-                <img src={logo} style={{ verticalAlign: 'middle' }}/>
+                <img src={logo} style={{ verticalAlign: 'middle', position: 'relative', bottom: '0.2em' }}/>
             </Link>
         </h1>
         <nav id="nav">
             <ul>
-
+                <li><Link to="/articles/">Archive</Link></li>
             </ul>
         </nav>
     </header>
