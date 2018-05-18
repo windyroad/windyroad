@@ -49,7 +49,7 @@ class TemplateWrapper extends React.Component {
             { name: 'keywords', content: 'consulting, IT, scrum' },
           ]}
         >
-          <script src="https://cdn.optimizely.com/js/105401733.js" />
+          {/* <script src="https://cdn.optimizely.com/js/105401733.js" /> */}
           <script type="text/javascript" id="inspectletjs">
             {(function() {
               if (typeof window !== 'undefined') {
