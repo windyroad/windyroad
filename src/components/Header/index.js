@@ -14,7 +14,7 @@ const Header = (props) => (
         </h1>
         <nav id="nav">
             <ul>
-                <li><Link to="/articles/">Archive</Link></li>
+                <li><a href="https://windyroad.com.au/articles/">Archive</a></li>
             </ul>
         </nav>
     </header>
