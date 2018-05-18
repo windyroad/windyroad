@@ -707,6 +707,7 @@ class Contact extends React.Component {
                         onChange={this.handleChange}
                         validations={[requiredValidation]}
                         formIsInit={this.state.form.state == FormStateEnum.READY}
+                        autocomplete='name'
                         setResetter={resetter =>
                           (this.resetters['name'] = resetter)
                         }
@@ -728,6 +729,7 @@ class Contact extends React.Component {
                         onChange={this.handleChange}
                         validations={[requiredValidation, emailValidation]}
                         formIsInit={this.state.form.state == FormStateEnum.READY}
+                        autocomplete='email'
                         setResetter={resetter =>
                           (this.resetters['email'] = resetter)
                         }

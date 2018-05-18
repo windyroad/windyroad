@@ -139,6 +139,7 @@ class Input extends React.Component {
           onChange={this.handleChange}
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
+          autocomplete={this.props.autocomplete}
         />
       ) : (
         <input
@@ -149,6 +150,7 @@ class Input extends React.Component {
           onChange={this.handleChange}
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
+          autocomplete={this.props.autocomplete}
         />
       )
     return (
