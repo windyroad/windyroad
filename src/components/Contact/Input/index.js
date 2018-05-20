@@ -1,5 +1,5 @@
-import React from 'react'
-import './index.css'
+import React from 'react';
+import './index.css';
 
 const DefaultState = Object.freeze({
   failedValidationMsg: null,
@@ -139,7 +139,7 @@ class Input extends React.Component {
           onChange={this.handleChange}
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
-          autocomplete={this.props.autocomplete}
+          autoComplete={this.props.autoComplete}
         />
       ) : (
         <input
@@ -150,7 +150,7 @@ class Input extends React.Component {
           onChange={this.handleChange}
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
-          autocomplete={this.props.autocomplete}
+          autoComplete={this.props.autoComplete}
         />
       )
     return (

@@ -1,16 +1,15 @@
-import React from 'react'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import FontAwesome from 'react-fontawesome'
-import Button from '../Button'
-import axios from 'axios'
-import validator from 'email-validator'
-import Input from './Input'
-import Select from './Select'
-import Radio from './RadioGroup/Radio'
-import RadioGroup from './RadioGroup'
-import noInternet from './no-internet.js'
-import Error422 from './Error/Error422'
-import './index.css'
+import axios from 'axios';
+import validator from 'email-validator';
+import React from 'react';
+import { Col, Row } from 'react-flexbox-grid';
+import FontAwesome from 'react-fontawesome';
+import Button from '../Button';
+import Error422 from './Error/Error422';
+import Input from './Input';
+import RadioGroup from './RadioGroup';
+import Select from './Select';
+import './index.css';
+import noInternet from './no-internet.js';
 
 function uuid(a) {
   return a
@@ -707,7 +706,7 @@ class Contact extends React.Component {
                         onChange={this.handleChange}
                         validations={[requiredValidation]}
                         formIsInit={this.state.form.state == FormStateEnum.READY}
-                        autocomplete='name'
+                        autoComplete='name'
                         setResetter={resetter =>
                           (this.resetters['name'] = resetter)
                         }
@@ -729,7 +728,7 @@ class Contact extends React.Component {
                         onChange={this.handleChange}
                         validations={[requiredValidation, emailValidation]}
                         formIsInit={this.state.form.state == FormStateEnum.READY}
-                        autocomplete='email'
+                        autoComplete='email'
                         setResetter={resetter =>
                           (this.resetters['email'] = resetter)
                         }
