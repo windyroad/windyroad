@@ -16,6 +16,7 @@ class Input extends React.Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleBlur = this.handleBlur.bind(this)
+    this.handleFocus = this.handleFocus.bind(this)
     this.reset = this.reset.bind(this)
     this.isValid = this.isValid.bind(this)
   }
@@ -86,10 +87,20 @@ class Input extends React.Component {
   }
 
   handleBlur(event, elem) {
+    this.setState({
+      hasNotChanged: false,
+    });
     this.validate(event.target.value)
   }
 
+  handleFocus(event, elem) {
+  }
+
   showError() {
+    console.log('!this.state.isValid', !this.state.isValid);
+    console.log('this.props.formIsInit', this.props.formIsInit);
+    console.log('this.state.hasNotChanged', this.state.hasNotChanged);
+    console.log('!(this.props.formIsInit && this.state.hasNotChanged)', !(this.props.formIsInit && this.state.hasNotChanged));
     return (
       !this.state.isValid && !(this.props.formIsInit && this.state.hasNotChanged)
     )
@@ -139,6 +150,7 @@ class Input extends React.Component {
           onChange={this.handleChange}
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
+          onFocus={this.handleFocus}
           autoComplete={this.props.autoComplete}
         />
       ) : (
@@ -150,6 +162,7 @@ class Input extends React.Component {
           onChange={this.handleChange}
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
+          onFocus={this.handleFocus}
           autoComplete={this.props.autoComplete}
         />
       )
