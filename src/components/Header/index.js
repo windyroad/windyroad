@@ -1,9 +1,8 @@
-import React from 'react'
-import Link from 'gatsby-link'
-import Img from "gatsby-image";
+import Link from 'gatsby-link';
+import React from 'react';
+import logo from "../../img/logo-white.svg";
+import "./index.css";
 
-import "./index.css"
-import logo from "./logo-white.svg"
 
 const Header = (props) => (
      <header id="header">

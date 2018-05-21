@@ -1,28 +1,18 @@
-import React from 'react'
-import Img from 'gatsby-image'
-import FontAwesome from 'react-fontawesome'
-import FindYourNavigator from '../FindYourNavigator'
-import {
-  Link,
-  DirectLink,
-  Element,
-  Events,
-  animateScroll as scroll,
-  scrollSpy,
-  scroller,
-} from 'react-scroll'
+import React from 'react';
+import { Events, Link, scrollSpy } from 'react-scroll';
+import logo from '../../img/logo-white.svg';
+import FindYourNavigator from '../FindYourNavigator';
+import banner1440 from './banner-1440.jpeg';
+import banner180 from './banner-180.jpeg';
+import banner20 from './banner-20.jpeg';
+import banner2880 from './banner-2880.jpeg';
+import banner360 from './banner-360.jpeg';
+import banner45 from './banner-45.jpeg';
+import banner720 from './banner-720.jpeg';
+import banner90 from './banner-90.jpeg';
+import './index.css';
 
-import './index.css'
 
-import banner20 from './banner-20.jpeg'
-import banner45 from './banner-45.jpeg'
-import banner90 from './banner-90.jpeg'
-import banner180 from './banner-180.jpeg'
-import banner360 from './banner-360.jpeg'
-import banner720 from './banner-720.jpeg'
-import banner1440 from './banner-1440.jpeg'
-import banner2880 from './banner-2880.jpeg'
-import logo from './logo-white.svg'
 
 class Banner extends React.Component {
   constructor(props) {
