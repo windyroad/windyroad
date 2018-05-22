@@ -64,8 +64,5 @@ workflows:
           requires:
             - build
       - release:
-          filters:
-            branches:
-              ignore: /.*/
           requires:
             - package
