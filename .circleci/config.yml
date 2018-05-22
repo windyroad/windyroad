@@ -44,13 +44,15 @@ jobs:
 
   release:
     docker:
-      - image: circleci/node:9
+      - image: circleci/golang:latest
+    tag: /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)/
     steps:
       - checkout
       - attach_workspace:
-          at: ~/public
+          at: ~/
       - run: |
-          ls
+          go get -u github.com/tcnksm/ghr
+          ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` output/
 
 workflows:
   version: 2
@@ -62,5 +64,8 @@ workflows:
           requires:
             - build
       - release:
+          filters:
+            branches:
+              ignore: /.*/
           requires:
             - package
