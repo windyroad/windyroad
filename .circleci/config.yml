@@ -22,7 +22,7 @@ jobs:
           command: |
             npm build
       - persist_to_workspace:
-          root: ~/public
+          root: public
           paths:
             - ./*
   package:
@@ -30,10 +30,10 @@ jobs:
       - image: circleci/node:9
     steps:
       - attach_workspace:
-          at: ~/public
+          at: public
       - run:
           command: |
-            tar -czf ../windyroad.tar.gz *
+            tar -czf ~/windyroad.tar.gz *
       - store_artifacts:
           path: ~/windyroad.tar.gz
           destination: windyroad.tar.gz
