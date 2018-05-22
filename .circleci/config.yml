@@ -20,7 +20,7 @@ jobs:
           key: dependencies-{{ checksum "package.json" }}
       - run:
           command: |
-            npm build
+            npm run build
       - persist_to_workspace:
           root: public
           paths:
