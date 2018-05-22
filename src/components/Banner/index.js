@@ -97,6 +97,7 @@ class Banner extends React.Component {
         style={{
           backgroundImage: `url(${this.state.image})`,
         }}
+        className="backdropped"
       >
         <div className="content">
           <header>

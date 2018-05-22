@@ -1,14 +1,6 @@
-import React from 'react'
-import "./index.css"
-import {
-  Link,
-  DirectLink,
-  Element,
-  Events,
-  animateScroll as scroll,
-  scrollSpy,
-  scroller,
-} from 'react-scroll'
+import React from 'react';
+import { Link } from 'react-scroll';
+import "./index.css";
 
 class Spotlight extends React.Component {
   constructor(props) {
@@ -20,7 +12,7 @@ class Spotlight extends React.Component {
       this.state = {
         size: key,
         image: this.images[key],
-        active: '',
+        active: 'inactive',
       }
       break
     }
@@ -98,7 +90,7 @@ class Spotlight extends React.Component {
     return (
       <section
         id={this.props.id}
-        className={this.props.className + ' spotlight ' + this.state.active}
+        className={this.props.className + ' backdropped spotlightx ' + this.state.active}
         style={{
           backgroundImage: `url(${this.state.image})`,
         }}
