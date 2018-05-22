@@ -1,5 +1,11 @@
 # Windy Road
 
+[![CircleCI](https://img.shields.io/circleci/project/github/windyroad/windyroad.svg)](https://circleci.com/gh/windyroad/workflows/windyroad)
+[![GitHub release](https://img.shields.io/github/release/windyroad/windyroad.svg)](https://github.com/windyroad/windyroad/releases/latest)
+[![license](https://img.shields.io/github/license/windyroad/windyroad.svg)](https://github.com/windyroad/windyroad/blob/master/LICENSE)
+[![Github All Releases](https://img.shields.io/github/downloads/windyroad/windyroad/total.svg)](https://github.com/windyroad/windyroad/releases)
+
+
 Static Web Site generated using Gatsby.
 
 For an overview of the project structure please refer to the [Gatsby documentation - Building with Components](https://www.gatsbyjs.org/docs/building-with-components/).
@@ -30,6 +36,3 @@ gatsby server
 
 Open http://localhost:9000
 
-## Deploy
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-default)
