@@ -1,3 +1,7 @@
+.spotlightx {
+  min-height: 100vh;
+}
+
 .spotlightx .content {
   border-color: #59b377;
   border-style: solid;
@@ -41,8 +45,9 @@
 .spotlightx.bottom .content {
   left: 0;
   width: 100%;
-  min-height: 100vh;
   margin-top: 20vh;
+  position: absolute;
+  bottom: 0;
 }
 
 .spotlight.top .content {
@@ -122,6 +127,11 @@
 @media screen and (max-width: 980px) {
 
 
+  .spotlightx .content {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 7em;
+  }
 
   .spotlight .goto-next {
     height: 7em;
@@ -144,6 +154,10 @@
 }
 
 @media screen and (max-width: 736px) {
+  .backdropped.spotlightx .content {
+    padding-bottom: 7em;
+  } 
+ 
   .backdropped.spotlightx:before {
     height: 50vh;
   }
@@ -161,10 +175,6 @@
     padding: 4.0625em 1.5em 4.875em 1.5em;
   }
 
-  .spotlight .content header h2 {
-    font-size: 1.5em;
-  }
-
   .spotlight .content .image {
     height: 9em;
     width: 9em;
@@ -175,6 +185,29 @@
   /* Banner */
 
   .spotlightx .content {
-    padding: 3em 0em 7em 0em;
+    padding: 3em 0.5em 7em 0.5em;
+  }
+
+  .spotlightx p {
+    margin-bottom: 1em;
+  }
+
+  .goto-next {
+    height: 4em;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .goto-next {
+    height: 4em;
+    left: 90%;
+  }
+
+  .spotlightx.bottom .content {
+    padding-bottom: 0.5em;
+  }
+
+  .spotlightx.bottom p.verbose {
+    display: none;
   }
 }

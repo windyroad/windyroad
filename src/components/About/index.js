@@ -69,7 +69,7 @@ class About extends React.Component {
           </Row>
           <Row between="xs">
             <Col xs={12} md={7}>
-              <p>
+              <p className="verbose">
                 We are experts in high quality, efficient, and high velocity
                 software and product delivery. We have many years of experience
                 in <i>Continuous Integration</i>, <i>Continuous Delivery</i>,{' '}
