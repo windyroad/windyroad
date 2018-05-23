@@ -21,24 +21,9 @@ jobs:
       - run:
           command: |
             npm run build
+            cd public && tar zcvf ../windyroad.tar.gz *
       - persist_to_workspace:
-          root: public
-          paths:
-            - ./*
-  package:
-    docker:
-      - image: circleci/node:9
-    steps:
-      - attach_workspace:
-          at: public
-      - run:
-          command: |
-            tar -czf ~/windyroad.tar.gz *
-      - store_artifacts:
-          path: ~/windyroad.tar.gz
-          destination: windyroad.tar.gz
-      - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
             - windyroad.tar.gz
 
@@ -63,6 +48,3 @@ workflows:
       - package:
           requires:
             - build
-      - release:
-          requires:
-            - package
