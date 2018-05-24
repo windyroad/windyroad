@@ -21,23 +21,23 @@ jobs:
       - run:
           command: |
             npm run build
-            cd public && tar zcvf ../windyroad.tar.gz *
+            cd public && tar zcvf ../target/windyroad.tar.gz *
       - persist_to_workspace:
           root: .
           paths:
-            - windyroad.tar.gz
+            - '*'
+      - store_artifacts:
+          path: ~/windyroad.tar.gz
+          destination: windyroad.tar.gz
 
-  release:
+  prerelease:
     docker:
-      - image: circleci/golang:latest
-    tag: /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)/
+      - image: circleci/node:9
     steps:
-      - checkout
       - attach_workspace:
-          at: ~/
+          at: .
       - run: |
-          go get -u github.com/tcnksm/ghr
-          ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` output/
+          npm run prerelease
 
 workflows:
   version: 2
@@ -45,6 +45,6 @@ workflows:
   ci:
     jobs:
       - build
-      - package:
+      - prerelease:
           requires:
             - build

@@ -25,7 +25,8 @@
     "react-fontawesome": "^1.6.1",
     "react-helmet": "^5.2.0",
     "react-scroll": "^1.7.8",
-    "react-validation": "^3.0.7"
+    "react-validation": "^3.0.7",
+    "url-template": "^2.0.8"
   },
   "keywords": [
     "gatsby"
@@ -36,7 +37,9 @@
     "develop": "gatsby develop",
     "start": "gatsby serve",
     "format": "prettier --write 'src/**/*.js'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
+    "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz"
   },
   "devDependencies": {
     "prettier": "^1.11.1"
