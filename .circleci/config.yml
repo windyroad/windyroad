@@ -21,14 +21,14 @@ jobs:
       - run:
           command: |
             npm run build
-            cd public && tar zcvf ../target/windyroad.tar.gz *
+            npm run package
       - persist_to_workspace:
           root: .
           paths:
             - '*'
       - store_artifacts:
-          path: ~/windyroad.tar.gz
-          destination: windyroad.tar.gz
+          path: ./target/
+          
 
   prerelease:
     docker:
