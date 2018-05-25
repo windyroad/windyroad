@@ -53,6 +53,7 @@ jobs:
           fingerprints:
             - "8c:a5:d5:3a:2c:f3:f3:be:fb:05:c8:e3:3d:bc:68:c0"
       - run: |
+          ssh-keyscan s25627.gridserver.com >> ~/.ssh/known_hosts
           npm run deploy -- stg.windyroad.org `cat ./target/releaseVersion.txt` `cat ./target/artifactUrl.txt`
 
 workflows:
