@@ -38,6 +38,22 @@ jobs:
           at: .
       - run: |
           npm run prerelease
+      - persist_to_workspace:
+          root: target
+          paths:
+            - '*.txt'
+
+  stg-deploy:
+    docker:
+      - image: circleci/node:9
+    steps:
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "8c:a5:d5:3a:2c:f3:f3:be:fb:05:c8:e3:3d:bc:68:c0"
+      - deploy: |
+          npm run deploy -- stg.windyroad.org `cat ./target/releaseVersion.txt` `cat ./target/artifactUrl.txt`
 
 workflows:
   version: 2
@@ -48,3 +64,6 @@ workflows:
       - prerelease:
           requires:
             - build
+      - stg-deploy:
+          requires:
+            - prerelease

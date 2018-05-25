@@ -18,7 +18,7 @@ async function getReleases(owner, repo) {
     }
 }
 
-async function cretePreRelease(owner, repo, file) {
+async function cretePreRelease(owner, repo, artifactFile, outputVersionFile, outputArtifactUrl) {
     try {
         let releases = await getReleases(owner, repo);
         let nextVersion = '1.0.0'
@@ -35,6 +35,7 @@ async function cretePreRelease(owner, repo, file) {
             }
             nextVersion = `${major}.${minor}.${point}`;
         }
+        fs.writeFileSync(outputVersionFile, nextVersion);
         let createResponse = await axios.post(`/repos/${owner}/${repo}/releases`, {
             "tag_name": nextVersion,
             "name": `v${nextVersion}`,
@@ -45,9 +46,9 @@ async function cretePreRelease(owner, repo, file) {
         console.log(createResponse.data);
         let uploadUrl = urlTemplate
             .parse(createResponse.data.upload_url)
-            .expand({'name': path.basename(file), 'label': '' });
+            .expand({'name': path.basename(artifactFile), 'label': '' });
         let formData = new FormData();
-        fs.readFile(file, async(err, data) => {
+        fs.readFile(artifactFile, async(err, data) => {
             try {
                 if (err) 
                     throw err;
@@ -57,7 +58,9 @@ async function cretePreRelease(owner, repo, file) {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-                console.log(uploadResponse);
+                console.log(uploadResponse.data);
+                fs.writeFileSync(outputArtifactUrl, uploadResponse.data.url);
+                return uploadResponse.data ? uploadResponse.data.url : null;
             } catch (err) {
                 console.error(err);
                 throw new Error(err);

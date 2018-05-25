@@ -49,4 +49,5 @@ jspm_packages
 .cache
 
 public
-target/windyroad.tar.gz
+target
+domains
