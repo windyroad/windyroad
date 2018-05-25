@@ -37,7 +37,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          npm run prerelease
+          npm run prerelease -- ./target/releaseVersion.txt ./target/artifactUrl.txt
       - persist_to_workspace:
           root: target
           paths:
