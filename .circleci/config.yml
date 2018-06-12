@@ -76,6 +76,7 @@ jobs:
           cat ./target/releaseVersion.txt
           cat ./target/artifactUrl.txt
           npm run deploy -- windyroad.com.au `cat ./target/releaseVersion.txt` `cat ./target/artifactUrl.txt`
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/eb9b56f3ea8fc63280e7fc53013ec674/purge_cache" -H "X-Auth-Email: tom@windyroad.org" -H "X-Auth-Key: $CF_AUTH_KEY" -H "Content-Type: application/json" --data '{"purge_everything":true}'
 
 workflows:
   version: 2
