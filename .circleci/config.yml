@@ -60,6 +60,7 @@ jobs:
           cat ./target/releaseVersion.txt
           cat ./target/artifactUrl.txt
           npm run deploy -- stg.windyroad.org `cat ./target/releaseVersion.txt` `cat ./target/artifactUrl.txt`
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/49f90854f8a0df6112770ba9dcfd4cf7/purge_cache" -H "X-Auth-Email: tom@windyroad.org" -H "X-Auth-Key: $CF_AUTH_KEY" -H "Content-Type: application/json" --data '{"purge_everything":true}'
 
   prod-deploy:
     docker:

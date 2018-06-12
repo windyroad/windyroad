@@ -40,7 +40,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
     "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz",
-    "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'"
+    "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'",
   },
   "devDependencies": {
     "prettier": "^1.11.1"
