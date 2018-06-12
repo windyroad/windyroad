@@ -3,6 +3,7 @@ import validator from 'email-validator';
 import React from 'react';
 import { Col, Row } from 'react-flexbox-grid';
 import FontAwesome from 'react-fontawesome';
+import scrollToComponent from 'react-scroll-to-component';
 import Button from '../Button';
 import Error422 from './Error/Error422';
 import Input from './Input';
@@ -313,6 +314,13 @@ class Contact extends React.Component {
         state: FormStateEnum.PRESENDING,
       },
     })
+    // at this point we also want to scroll to #contact as the client may have scrolled down on smaller browsers
+    scrollToComponent(this.section, {
+      offset: -20,
+      align: 'top',
+      duration: 500,
+      ease: 'in-cube'
+    });
     axios
       .post(ZD_API, body, {
         cancelToken: new axios.CancelToken(c => {
@@ -845,7 +853,7 @@ class Contact extends React.Component {
                 </form>
               </Col>
               <Col xs={4}>
-                <h3>{sendingHeading}</h3>
+                <h3 ref={(section) => { this.section = section; }}>{sendingHeading}</h3>
                 <div className="table-wrapper" style={{ textAlign: 'left' }}>
                   <table>
                     <tbody>
