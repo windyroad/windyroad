@@ -3,7 +3,7 @@ import validator from 'email-validator';
 import React from 'react';
 import { Col, Row } from 'react-flexbox-grid';
 import FontAwesome from 'react-fontawesome';
-import scrollToComponent from 'react-scroll-to-component';
+//import scrollToComponent from 'react-scroll-to-component';
 import Button from '../Button';
 import Error422 from './Error/Error422';
 import Input from './Input';
@@ -315,12 +315,12 @@ class Contact extends React.Component {
       },
     })
     // at this point we also want to scroll to #contact as the client may have scrolled down on smaller browsers
-    scrollToComponent(this.section, {
-      offset: -20,
-      align: 'top',
-      duration: 500,
-      ease: 'in-cube'
-    });
+    // scrollToComponent(this.section, {
+    //   offset: -20,
+    //   align: 'top',
+    //   duration: 500,
+    //   ease: 'in-cube'
+    // });
     axios
       .post(ZD_API, body, {
         cancelToken: new axios.CancelToken(c => {
