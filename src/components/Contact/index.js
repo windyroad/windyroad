@@ -1,8 +1,10 @@
 import axios from 'axios';
 import validator from 'email-validator';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Col, Row } from 'react-flexbox-grid';
 import FontAwesome from 'react-fontawesome';
+import { animateScroll as scroll } from 'react-scroll';
 //import scrollToComponent from 'react-scroll-to-component';
 import Button from '../Button';
 import Error422 from './Error/Error422';
@@ -12,11 +14,43 @@ import Select from './Select';
 import './index.css';
 import noInternet from './no-internet.js';
 
+
+
 function uuid(a) {
   return a
     ? (a ^ ((Math.random() * 16) >> (a / 4))).toString(16)
     : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, uuid)
 }
+
+function calculateScrollOffset(element, offset, alignment) {
+  var body = document.body,
+      html = document.documentElement;
+  var elementRect = element.getBoundingClientRect();
+  var clientHeight = html.clientHeight;
+  var documentHeight = Math.max( body.scrollHeight, body.offsetHeight, 
+                                 html.clientHeight, html.scrollHeight, html.offsetHeight );
+  offset = offset || 0; // additional offset to top
+  var scrollPosition;
+  switch(alignment) {
+      case 'top': scrollPosition = elementRect.top; break;
+      case 'middle': scrollPosition = elementRect.bottom - clientHeight / 2 - elementRect.height / 2; break;
+      case 'bottom': scrollPosition = elementRect.bottom - clientHeight; break;
+      default: scrollPosition = elementRect.bottom - clientHeight / 2 - elementRect.height / 2; break; //defaul to middle
+    }
+  var maxScrollPosition = documentHeight - clientHeight;
+  return Math.min(scrollPosition + offset + window.pageYOffset,
+                  maxScrollPosition);
+}
+
+function scrollToComponent(ref, options) {
+  options = options || {
+    offset: 0,
+    align: 'middle'
+  };
+  var element = ReactDOM.findDOMNode(ref);
+  if (element === null) return 0;
+  return scroll.scrollTo(calculateScrollOffset(element, options.offset, options.align), options);
+};
 
 const ZD_HOST = 'windyroad.zendesk.com:443'
 const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`
@@ -315,12 +349,13 @@ class Contact extends React.Component {
       },
     })
     // at this point we also want to scroll to #contact as the client may have scrolled down on smaller browsers
-    // scrollToComponent(this.section, {
-    //   offset: -20,
-    //   align: 'top',
-    //   duration: 500,
-    //   ease: 'in-cube'
-    // });
+    scrollToComponent(this.section, {
+      offset: -20,
+      align: 'top',
+      duration: 500,
+      ease: 'in-cube'
+    });
+
     axios
       .post(ZD_API, body, {
         cancelToken: new axios.CancelToken(c => {
