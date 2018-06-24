@@ -1,0 +1,52 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch via NPM",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script",
+                "test"
+            ],
+            "port": 9229
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test",
+            "runtimeArgs": [
+                "--inspect-brk=5858",
+                "./node_modules/.bin/wdio",
+                "wdio.conf.js",
+            ],
+            "port": 5858
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Develop",
+            "runtimeArgs": [
+                "--inspect-brk=5959",
+                "./node_modules/gatsby/dist/commands/develop.js",
+            ],
+            "port": 5959
+            
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Build",
+            "runtimeArgs": [
+                "--inspect-brk=5757",
+                "./node_modules/gatsby/dist/commands/build.js",
+            ],
+            "port": 5757
+            
+        }
+    ]
+}

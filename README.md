@@ -13,7 +13,7 @@ For an overview of the project structure please refer to the [Gatsby documentati
 ## Development Mode
 
 ```sh
-cd gatsby-example-site
+cd windyroad
 npm run develop
 ```
 
@@ -22,7 +22,7 @@ Open http://localhost:8000
 ## Build
 
 ```sh
-cd gatsby-example-site
+cd windyroad
 npm run build
 ```
 
@@ -31,8 +31,23 @@ The content in the public site can then be deployed
 ## Serve
 
 ``` sh
-gatsby server
+npm start
 ```
 
 Open http://localhost:9000
 
+## Test
+
+WOrking on it.
+
+## TODO
+
+- [ ] Automated testing
+- [ ] Fix loading flicker
+- [ ] Fix landscape mode
+- [ ] Services Section
+- [ ] Services Sub-pages
+- [ ] Service specific enquiry form
+- [ ] Add posts capability
+- [ ] Migrate old posts
+- [ ] Show content when loading, then hide, so it appears in inspectlet
