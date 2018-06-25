@@ -30,6 +30,18 @@ jobs:
           path: ./target/
           
 
+  test-headless:
+    docker:
+      - image: circleci/node:9
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          npm run test:headless
+      - store_test_results:
+          path: ./target/reports/junit
+
+
   prerelease:
     docker:
       - image: circleci/node:9
@@ -84,9 +96,13 @@ workflows:
   ci:
     jobs:
       - build
+      - test-headless
+          requires:
+            - build
       - prerelease:
           requires:
             - build
+            - test-headless
       - stg-deploy:
           requires:
             - prerelease
