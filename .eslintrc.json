@@ -5,7 +5,8 @@
       "import/core-modules": ["gatsby"]
     },
     "globals": {
-      "graphql": true
+      "graphql": true,
+      "browser": true,
     },
     "rules": {
       "jsx-a11y/anchor-is-valid": [

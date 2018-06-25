@@ -169,6 +169,7 @@ exports.config = {
       './test/steps/given.js',
       './test/steps/then.js',
       './test/steps/when.js',
+      './test/steps/steps.js',
     ], // <string[]> (file/dir) require files before executing features
     backtrace: false, // <boolean> show full backtrace for errors
     compiler: ['js:babel-register'], // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)

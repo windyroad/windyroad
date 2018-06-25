@@ -21,17 +21,6 @@ import isVisible from '../support/check/isVisible'
 
 const { Given, When, Then } = require('cucumber')
 
-When(/^I open the Windy Road site$/, () => openWebsite('site', '/'))
-
-Then(/^the title will( not)* be "([^"]*)"$/, checkTitle)
-
-Then(
-  /^there will be a header bar at the top of the page$/,
-  () =>
-    // Write code here that turns the phrase above into concrete actions
-    'pending',
-)
-
 Given(/^I open the (url|site) "([^"]*)?"$/, openWebsite)
 
 Given(/^the element "([^"]*)?" is( not)* visible$/, isVisible)
