@@ -43,6 +43,7 @@
     "format": "prettier --write 'src/**/*.js'",
     "test:wip": "wdio wdio.wip.conf.js",
     "test:dev": "wdio wdio.dev.conf.js",
+    "test:headless": "gatsby build && forever start -v ./node_modules/.bin/gatsby serve & (wdio wdio.headless.conf.js; wdio_ret=$?; forever stop ./node_modules/.bin/gatsby; exit $wdio_ret)",
     "test:build": "gatsby build && forever start -v ./node_modules/.bin/gatsby serve & (wdio wdio.conf.js; wdio_ret=$?; forever stop ./node_modules/.bin/gatsby; exit $wdio_ret)",
     "package": "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
     "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz",
