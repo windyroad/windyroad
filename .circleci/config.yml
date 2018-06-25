@@ -96,7 +96,7 @@ workflows:
   ci:
     jobs:
       - build
-      - test-headless
+      - test-headless:
           requires:
             - build
       - prerelease:
