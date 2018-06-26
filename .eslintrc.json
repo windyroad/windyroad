@@ -6,7 +6,7 @@
     },
     "globals": {
       "graphql": true,
-      "browser": true,
+      "browser": true
     },
     "rules": {
       "jsx-a11y/anchor-is-valid": [
