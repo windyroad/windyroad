@@ -25,6 +25,7 @@
     "react-helmet": "^5.2.0",
     "react-scroll": "^1.7.8",
     "react-validation": "^3.0.7",
+    "set-interval": "^2.0.1",
     "url-template": "^2.0.8"
   },
   "keywords": [
@@ -44,9 +45,10 @@
     "test:continuous": "nodemon --exec npm run test:continuous-sub",
     "test:wip": "node --inspect ./node_modules/.bin/wdio wdio.wip.conf.js",
     "test:dev": "wdio wdio.dev.conf.js",
+    "pre-commit": "npm run test:build",
     "test:headless-prebuilt": "forever start -v ./node_modules/.bin/gatsby serve & (wdio wdio.headless.conf.js; wdio_ret=$?; forever stop ./node_modules/.bin/gatsby; exit $wdio_ret)",
     "test:headless": "gatsby build; forever start -v ./node_modules/.bin/gatsby serve & (wdio wdio.headless.conf.js; wdio_ret=$?; forever stop ./node_modules/.bin/gatsby; exit $wdio_ret)",
-    "test:build": "gatsby build && forever start -v ./node_modules/.bin/gatsby serve & (wdio wdio.conf.js; wdio_ret=$?; forever stop ./node_modules/.bin/gatsby; exit $wdio_ret)",
+    "test:build": "gatsby build; forever start -v ./node_modules/.bin/gatsby serve & (wdio wdio.conf.js; wdio_ret=$?; forever stop ./node_modules/.bin/gatsby; exit $wdio_ret)",
     "package": "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
     "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz",
     "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'"

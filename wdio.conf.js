@@ -46,6 +46,13 @@ exports.config = {
       maxInstances: 5,
       browserName: 'chrome',
       chromeOptions: {
+        args: ['--window-size=667,375'],
+      },
+    },
+    {
+      maxInstances: 5,
+      browserName: 'chrome',
+      chromeOptions: {
         mobileEmulation: {
           deviceName: 'Pixel 2',
         },
