@@ -1,4 +1,3 @@
-import waitFor from './waitFor';
 
 /**
  * Open the given URL
@@ -13,5 +12,4 @@ module.exports = (type, page) => {
     const url = (type === 'url') ? page : browser.options.baseUrl + page;
 
     browser.url(url);
-    waitFor('#___gatsby div');
 }

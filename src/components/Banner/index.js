@@ -32,6 +32,8 @@ class Banner extends React.Component {
       size: 20,
       image: this.images[20],
     }
+
+    this.scrollDuration = 1000;
   }
 
   getImage(window, pixelRatio) {
@@ -108,15 +110,17 @@ class Banner extends React.Component {
             <FindYourNavigator/>
           </header>
         </div>
+        
         <Link
           className="goto-next"
           to={this.props.next}
           spy={true}
           smooth={true}
           hashSpy={true}
-          duration={1000}
+          duration={this.scrollDuration}
           onSetActive={this.props.nextActive}
           onSetInactive={this.props.nextInactive}
+          data-duration={this.scrollDuration}
         >
           next
         </Link>

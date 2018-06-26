@@ -22,7 +22,7 @@
             "runtimeArgs": [
                 "--inspect-brk=5858",
                 "./node_modules/.bin/wdio",
-                "wdio.conf.js",
+                "wdio.wip.conf.js",
             ],
             "port": 5858
         },

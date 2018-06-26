@@ -1210,7 +1210,6 @@
 /* Goto Next */
 
 	.goto-next {
-		border: 0;
 		bottom: 0;
 		display: block;
 		height: 5em;
@@ -1221,7 +1220,7 @@
 		text-indent: 10em;
 		white-space: nowrap;
 		width: 10em;
-		z-index: 1;
+		z-index: 100;
 	}
 
 		.goto-next:before {

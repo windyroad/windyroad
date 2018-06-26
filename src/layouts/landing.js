@@ -1,26 +1,25 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Helmet from 'react-helmet'
-import Link from 'gatsby-link'
-import { withPrefix } from 'gatsby-link'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import FontAwesome from 'react-fontawesome'
-
-import themeCss from './css/main.css'
-
-import Header from '../components/Header'
-import Banner from '../components/Banner'
-import Spotlight from '../components/Spotlight'
-import Button from '../components/Button'
+import Link from 'gatsby-link';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Helmet from 'react-helmet';
+import About from '../components/About';
+import Banner from '../components/Banner';
+import Contact from '../components/Contact';
 // import Services from '../components/Services'
 // import Special from '../components/Special'
-import Footer from '../components/Footer'
-import About from '../components/About'
-import Contact from '../components/Contact'
+import Footer from '../components/Footer';
+import Header from '../components/Header';
+import themeCss from './css/main.css';
+
+
 
 class TemplateWrapper extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      loadState: 'is-loading'
+    }
   }
 
   handleAboutActive() {
@@ -37,6 +36,15 @@ class TemplateWrapper extends React.Component {
 
   handleContactInactive() {
     this.contact.handleSetInactive()
+  }
+
+  componentDidMount() {
+    this.setState({
+      loadState: 'is-loaded'
+    })
+  }
+
+  componentWillUnmount() {
   }
 
   render() {
@@ -100,7 +108,7 @@ class TemplateWrapper extends React.Component {
             })()}
           </script>
           <Link to={themeCss} rel="stylesheet" type="text/css" />
-          <body className="landing" />
+          <body className={'landing ' + this.state.loadState} />
         </Helmet>
         <div id="page-wrapper">
           <Header />
