@@ -1,3 +1,6 @@
+/* global window */
+/* eslint no-undef: "error" */
+
 import Link from 'gatsby-link'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -5,8 +8,8 @@ import Helmet from 'react-helmet'
 import About from '../components/About'
 import Banner from '../components/Banner'
 import Contact from '../components/Contact'
-// import Services from '../components/Services'
-// import Special from '../components/Special'
+// import Services from '../components/Services' import Special from
+// '../components/Special'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import themeCss from './css/main.css'
@@ -18,15 +21,21 @@ class TemplateWrapper extends React.Component {
     this.state = {
       loadState: 'is-loading',
     }
+
+    this.handleLoad = this.handleLoad.bind(this)
   }
 
   componentDidMount() {
-    this.setState({
-      loadState: 'is-loaded',
-    })
+    window.addEventListener('load', this.handleLoad)
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    window.removeEventListener('load', this.handleLoad)
+  }
+
+  handleLoad() {
+    this.setState({ loadState: 'is-loaded' })
+  }
 
   handleAboutActive() {
     this.about.handleSetActive()
@@ -50,49 +59,54 @@ class TemplateWrapper extends React.Component {
         <Helmet
           title="Windy Road"
           meta={[
-            { name: 'description', content: 'Windy Road' },
-            { name: 'keywords', content: 'consulting, IT, scrum' },
+            {
+              name: 'description',
+              content: 'Windy Road',
+            },
+            {
+              name: 'keywords',
+              content: 'consulting, IT, scrum',
+            },
           ]}
         >
           {/* <script src="https://cdn.optimizely.com/js/105401733.js" /> */}
           <script type="text/javascript" id="inspectletjs">
             {(function() {
               if (typeof window !== 'undefined') {
-                let insp_ab_loader = true // set this boolean to false to disable the A/B testing loader
+                const insp_ab_loader = true // set this boolean to false to disable the A/B testing loader
                 window.__insp = window.__insp || []
                 __insp.push(['wid', 1654706623])
-                let ldinsp = function() {
+                const ldinsp = function() {
                   if (typeof window.__inspld !== 'undefined') return
                   window.__inspld = 1
-                  let insp = document.createElement('script')
+                  const insp = document.createElement('script')
                   insp.type = 'text/javascript'
                   insp.async = true
                   insp.id = 'inspsync'
-                  insp.src =
-                    `${'https:' == document.location.protocol
-                      ? 'https'
-                      : 'http' 
-                    }://cdn.inspectlet.com/inspectlet.js?wid=1654706623&r=${ 
-                    Math.floor(new Date().getTime() / 3600000)}`
-                  let x = document.getElementsByTagName('script')[0]
+                  insp.src = `${
+                    document.location.protocol == 'https:' ? 'https' : 'http'
+                  }://cdn.inspectlet.com/inspectlet.js?wid=1654706623&r=${Math.floor(
+                    new Date().getTime() / 3600000,
+                  )}`
+                  const x = document.getElementsByTagName('script')[0]
                   x.parentNode.insertBefore(insp, x)
                   if (typeof insp_ab_loader !== 'undefined' && insp_ab_loader) {
-                    let adlt = function() {
-                      let e = document.getElementById('insp_abl')
+                    const adlt = function() {
+                      const e = document.getElementById('insp_abl')
                       if (e) {
                         e.parentNode.removeChild(e)
                         __insp.push(['ab_timeout'])
                       }
                     }
-                    let adlc = 'body{ visibility: hidden !important; }'
-                    let adln =
+                    const adlc = 'body{ visibility: hidden !important; }'
+                    const adln =
                       typeof insp_ab_loader_t !== 'undefined'
                         ? insp_ab_loader_t
                         : 1200
                     insp.onerror = adlt
-                    let abti = setTimeout(adlt, adln)
+                    const abti = setTimeout(adlt, adln)
                     window.__insp_abt = abti
-                    let abl = document.createElement('style')
+                    const abl = document.createElement('style')
                     abl.id = 'insp_abl'
                     abl.type = 'text/css'
                     if (abl.styleSheet) abl.styleSheet.cssText = adlc
@@ -105,7 +119,7 @@ class TemplateWrapper extends React.Component {
             })()}
           </script>
           <Link to={themeCss} rel="stylesheet" type="text/css" />
-          <body className={`landing ${  this.state.loadState}`} />
+          <body className={`landing ${this.state.loadState}`} />
         </Helmet>
         <div id="page-wrapper">
           <Header />
