@@ -49,18 +49,6 @@ jobs:
       - store_test_results:
           path: ./target/reports/junit
 
-  package:
-    docker:
-      - image: circleci/node:9
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          command: |
-            npm run package
-      - store_artifacts:
-          path: ./target/
-
   prerelease:
     docker:
       - image: circleci/node:9
@@ -68,6 +56,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
+          npm run package
           npm run prerelease -- ./target/releaseVersion.txt ./target/artifactUrl.txt
       - persist_to_workspace:
           root: .
@@ -121,13 +110,10 @@ workflows:
       - test-headless:
           requires:
             - build
-      - package:
+      - prerelease:
           requires:
             - build
             - test-headless
-      - prerelease:
-          requires:
-            - package
       - stg-deploy:
           requires:
             - prerelease
