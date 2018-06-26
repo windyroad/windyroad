@@ -32,13 +32,10 @@ jobs:
       - run:
           command: |
             npm run build
-            npm run package
       - persist_to_workspace:
           root: .
           paths:
             - '*'
-      - store_artifacts:
-          path: ./target/
           
 
   test-headless:
@@ -48,10 +45,21 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          npm run test:headless
+          npm run test:headless-prebuilt
       - store_test_results:
           path: ./target/reports/junit
 
+  package:
+    docker:
+      - image: circleci/node:9
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          command: |
+            npm run package
+      - store_artifacts:
+          path: ./target/
 
   prerelease:
     docker:
@@ -112,11 +120,14 @@ workflows:
             - dependencies
       - test-headless:
           requires:
-            - dependencies
-      - prerelease:
+            - build
+      - package:
           requires:
             - build
             - test-headless
+      - prerelease:
+          requires:
+            - package
       - stg-deploy:
           requires:
             - prerelease
