@@ -62,10 +62,10 @@ class Footer extends React.Component {
             </a>
           </li>
         </ul>
-        <ul className="copyright" style={{ lineHeight: '1.5em'}}>
+        <ul className="copyright" style={{ lineHeight: '1.5em' }}>
           <li>
             <Row>
-              <Col xs={12} style={{ marginBottom: '0.5em'}}>
+              <Col xs={12} style={{ marginBottom: '0.5em' }}>
                 &copy; {new Date().getFullYear()} Windy Road Technology. All
                 rights reserved.
               </Col>

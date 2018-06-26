@@ -1,20 +1,18 @@
-import axios from 'axios';
-import validator from 'email-validator';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Col, Row } from 'react-flexbox-grid';
-import FontAwesome from 'react-fontawesome';
-import { animateScroll as scroll } from 'react-scroll';
+import axios from 'axios'
+import validator from 'email-validator'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Col, Row } from 'react-flexbox-grid'
+import FontAwesome from 'react-fontawesome'
+import { animateScroll as scroll } from 'react-scroll'
 //import scrollToComponent from 'react-scroll-to-component';
-import Button from '../Button';
-import Error422 from './Error/Error422';
-import Input from './Input';
-import RadioGroup from './RadioGroup';
-import Select from './Select';
-import './index.css';
-import noInternet from './no-internet.js';
-
-
+import Button from '../Button'
+import Error422 from './Error/Error422'
+import Input from './Input'
+import RadioGroup from './RadioGroup'
+import Select from './Select'
+import './index.css'
+import noInternet from './no-internet.js'
 
 function uuid(a) {
   return a
@@ -24,33 +22,53 @@ function uuid(a) {
 
 function calculateScrollOffset(element, offset, alignment) {
   var body = document.body,
-      html = document.documentElement;
-  var elementRect = element.getBoundingClientRect();
-  var clientHeight = html.clientHeight;
-  var documentHeight = Math.max( body.scrollHeight, body.offsetHeight, 
-                                 html.clientHeight, html.scrollHeight, html.offsetHeight );
-  offset = offset || 0; // additional offset to top
-  var scrollPosition;
-  switch(alignment) {
-      case 'top': scrollPosition = elementRect.top; break;
-      case 'middle': scrollPosition = elementRect.bottom - clientHeight / 2 - elementRect.height / 2; break;
-      case 'bottom': scrollPosition = elementRect.bottom - clientHeight; break;
-      default: scrollPosition = elementRect.bottom - clientHeight / 2 - elementRect.height / 2; break; //defaul to middle
-    }
-  var maxScrollPosition = documentHeight - clientHeight;
-  return Math.min(scrollPosition + offset + window.pageYOffset,
-                  maxScrollPosition);
+    html = document.documentElement
+  var elementRect = element.getBoundingClientRect()
+  var clientHeight = html.clientHeight
+  var documentHeight = Math.max(
+    body.scrollHeight,
+    body.offsetHeight,
+    html.clientHeight,
+    html.scrollHeight,
+    html.offsetHeight,
+  )
+  offset = offset || 0 // additional offset to top
+  var scrollPosition
+  switch (alignment) {
+    case 'top':
+      scrollPosition = elementRect.top
+      break
+    case 'middle':
+      scrollPosition =
+        elementRect.bottom - clientHeight / 2 - elementRect.height / 2
+      break
+    case 'bottom':
+      scrollPosition = elementRect.bottom - clientHeight
+      break
+    default:
+      scrollPosition =
+        elementRect.bottom - clientHeight / 2 - elementRect.height / 2
+      break //defaul to middle
+  }
+  var maxScrollPosition = documentHeight - clientHeight
+  return Math.min(
+    scrollPosition + offset + window.pageYOffset,
+    maxScrollPosition,
+  )
 }
 
 function scrollToComponent(ref, options) {
   options = options || {
     offset: 0,
-    align: 'middle'
-  };
-  var element = ReactDOM.findDOMNode(ref);
-  if (element === null) return 0;
-  return scroll.scrollTo(calculateScrollOffset(element, options.offset, options.align), options);
-};
+    align: 'middle',
+  }
+  var element = ReactDOM.findDOMNode(ref)
+  if (element === null) return 0
+  return scroll.scrollTo(
+    calculateScrollOffset(element, options.offset, options.align),
+    options,
+  )
+}
 
 const ZD_HOST = 'windyroad.zendesk.com:443'
 const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`
@@ -75,7 +93,7 @@ let FormStateEnum = Object.freeze({
 })
 
 const requiredValidation = (name, value) => {
-  console.log(name, 'has length', value.toString().trim().length);
+  console.log(name, 'has length', value.toString().trim().length)
   if (!value.toString().trim().length) {
     return `${name} is required`
   }
@@ -272,19 +290,18 @@ class Contact extends React.Component {
   }
 
   isValid(formState) {
-    let currformState = formState || this.state.form.state;
-    if( currformState == FormStateEnum.READY ) {
-      return true;
+    let currformState = formState || this.state.form.state
+    if (currformState == FormStateEnum.READY) {
+      return true
     }
     let keys = Object.keys(this.isValids)
-    console.log('validation checks', keys.length);
+    console.log('validation checks', keys.length)
     for (let i = 0; i < keys.length; ++i) {
-      if(!this.isValids[keys[i]]())
-      {
-        return false;
+      if (!this.isValids[keys[i]]()) {
+        return false
       }
     }
-    return true;
+    return true
   }
 
   async handleSubmit(event) {
@@ -353,8 +370,8 @@ class Contact extends React.Component {
       offset: -20,
       align: 'top',
       duration: 500,
-      ease: 'in-cube'
-    });
+      ease: 'in-cube',
+    })
 
     axios
       .post(ZD_API, body, {
@@ -491,7 +508,7 @@ class Contact extends React.Component {
     const target = event.target
     const value = target.value
     const name = target.name
-    const fieldStateName = `${name}HasNotChanged`;
+    const fieldStateName = `${name}HasNotChanged`
     this.setState({
       [name]: value,
       [fieldStateName]: false,
@@ -748,12 +765,16 @@ class Contact extends React.Component {
                         value={this.state.name}
                         onChange={this.handleChange}
                         validations={[requiredValidation]}
-                        formIsInit={this.state.form.state == FormStateEnum.READY}
-                        autoComplete='name'
+                        formIsInit={
+                          this.state.form.state == FormStateEnum.READY
+                        }
+                        autoComplete="name"
                         setResetter={resetter =>
                           (this.resetters['name'] = resetter)
                         }
-                        setGetIsValid={isValid => (this.isValids['name'] = isValid)}
+                        setGetIsValid={isValid =>
+                          (this.isValids['name'] = isValid)
+                        }
                       />
                     </Col>
                     <Col
@@ -770,12 +791,16 @@ class Contact extends React.Component {
                         value={this.state.email}
                         onChange={this.handleChange}
                         validations={[requiredValidation, emailValidation]}
-                        formIsInit={this.state.form.state == FormStateEnum.READY}
-                        autoComplete='email'
+                        formIsInit={
+                          this.state.form.state == FormStateEnum.READY
+                        }
+                        autoComplete="email"
                         setResetter={resetter =>
                           (this.resetters['email'] = resetter)
                         }
-                        setGetIsValid={isValid => (this.isValids['email'] = isValid)}
+                        setGetIsValid={isValid =>
+                          (this.isValids['email'] = isValid)
+                        }
                       />
                     </Col>
                   </Row>
@@ -817,12 +842,16 @@ class Contact extends React.Component {
                         validations={[requiredValidation]}
                         value={this.state.message}
                         onChange={this.handleChange}
-                        formIsInit={this.state.form.state == FormStateEnum.READY}
+                        formIsInit={
+                          this.state.form.state == FormStateEnum.READY
+                        }
                         rows="6"
                         setResetter={resetter =>
                           (this.resetters['message'] = resetter)
                         }
-                        setGetIsValid={isValid => (this.isValids['message'] = isValid)}
+                        setGetIsValid={isValid =>
+                          (this.isValids['message'] = isValid)
+                        }
                       />
                     </Col>
                   </Row>
@@ -888,7 +917,13 @@ class Contact extends React.Component {
                 </form>
               </Col>
               <Col xs={4}>
-                <h3 ref={(section) => { this.section = section; }}>{sendingHeading}</h3>
+                <h3
+                  ref={section => {
+                    this.section = section
+                  }}
+                >
+                  {sendingHeading}
+                </h3>
                 <div className="table-wrapper" style={{ textAlign: 'left' }}>
                   <table>
                     <tbody>

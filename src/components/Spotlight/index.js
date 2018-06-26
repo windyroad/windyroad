@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link } from 'react-scroll';
-import "./index.css";
+import React from 'react'
+import { Link } from 'react-scroll'
+import './index.css'
 
 class Spotlight extends React.Component {
   constructor(props) {
     super(props)
     this.images = props.images
-    console.log(this.images);
+    console.log(this.images)
 
     for (var key in this.images) {
       this.state = {
@@ -35,14 +35,14 @@ class Spotlight extends React.Component {
     var pixelRatio = window.devicePixelRatio
     var size = this.getImage(window, pixelRatio)
     if (size != this.state.size) {
-      const image = new Image() 
+      const image = new Image()
       // only display the image once it's loaded
       image.onload = () => {
         this.setState({
           size: size,
           image: this.images[size],
           active: this.state.active,
-        });
+        })
         this.handleResize(window)
       }
       // load the image
@@ -59,8 +59,7 @@ class Spotlight extends React.Component {
       size: this.state.size,
       image: this.state.image,
       active: '',
-    });
-
+    })
   }
 
   handleSetInactive() {
@@ -68,8 +67,7 @@ class Spotlight extends React.Component {
       size: this.state.size,
       image: this.state.image,
       active: 'inactive',
-    });
-
+    })
   }
 
   componentDidMount() {
@@ -82,7 +80,7 @@ class Spotlight extends React.Component {
       size: this.state.size,
       image: this.state.image,
       active: true,
-    });
+    })
     window.removeEventListener('resize', e => this.handleResize(window))
   }
 
@@ -90,7 +88,9 @@ class Spotlight extends React.Component {
     return (
       <section
         id={this.props.id}
-        className={this.props.className + ' backdropped spotlightx ' + this.state.active}
+        className={
+          this.props.className + ' backdropped spotlightx ' + this.state.active
+        }
         style={{
           backgroundImage: `url(${this.state.image})`,
         }}

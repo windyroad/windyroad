@@ -38,14 +38,14 @@ export default props => (
         }}
       >
         <a
-                className="button"
-                onClick={props.onEdit}
-                style={{
-                  width: '100%',
-                }}
-              >
-                edit
-              </a>
+          className="button"
+          onClick={props.onEdit}
+          style={{
+            width: '100%',
+          }}
+        >
+          edit
+        </a>
       </Col>
     </Row>
   </div>

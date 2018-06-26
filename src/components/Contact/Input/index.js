@@ -1,5 +1,5 @@
-import React from 'react';
-import './index.css';
+import React from 'react'
+import './index.css'
 
 const DefaultState = Object.freeze({
   failedValidationMsg: null,
@@ -22,17 +22,17 @@ class Input extends React.Component {
   }
 
   componentDidMount() {
-    this.validate(this.props.value);
+    this.validate(this.props.value)
     if (this.props.setResetter) {
       this.props.setResetter(this.reset)
     }
-    if( this.props.setGetIsValid) {
-      this.props.setGetIsValid(this.isValid);
+    if (this.props.setGetIsValid) {
+      this.props.setGetIsValid(this.isValid)
     }
   }
 
   isValid() {
-    return this.state.isValid;
+    return this.state.isValid
   }
 
   componentWillUnmount() {
@@ -51,8 +51,8 @@ class Input extends React.Component {
         hasNotChanged: true,
         isValid: true,
       }
-    });
-    this.validate(this.props.value);
+    })
+    this.validate(this.props.value)
   }
 
   handleChange(event, elem) {
@@ -89,25 +89,28 @@ class Input extends React.Component {
   handleBlur(event, elem) {
     this.setState({
       hasNotChanged: false,
-    });
+    })
     this.validate(event.target.value)
   }
 
-  handleFocus(event, elem) {
-  }
+  handleFocus(event, elem) {}
 
   showError() {
-    console.log('!this.state.isValid', !this.state.isValid);
-    console.log('this.props.formIsInit', this.props.formIsInit);
-    console.log('this.state.hasNotChanged', this.state.hasNotChanged);
-    console.log('!(this.props.formIsInit && this.state.hasNotChanged)', !(this.props.formIsInit && this.state.hasNotChanged));
+    console.log('!this.state.isValid', !this.state.isValid)
+    console.log('this.props.formIsInit', this.props.formIsInit)
+    console.log('this.state.hasNotChanged', this.state.hasNotChanged)
+    console.log(
+      '!(this.props.formIsInit && this.state.hasNotChanged)',
+      !(this.props.formIsInit && this.state.hasNotChanged),
+    )
     return (
-      !this.state.isValid && !(this.props.formIsInit && this.state.hasNotChanged)
+      !this.state.isValid &&
+      !(this.props.formIsInit && this.state.hasNotChanged)
     )
   }
 
   validate(value) {
-    console.log('validating', this.props.name, value);
+    console.log('validating', this.props.name, value)
     for (
       let index = 0;
       this.props.validations && index < this.props.validations.length;
@@ -124,8 +127,7 @@ class Input extends React.Component {
           isValid: false,
         }))
         return false
-      }
-      else {
+      } else {
         console.log(this.props.name, validationMethod, 'passed validation')
       }
     }

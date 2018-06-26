@@ -14,10 +14,9 @@ class Radio extends React.Component {
     this.state = DefaultState
   }
 
-
   render() {
-    const groupName = this.props.group.props.name;
-    const groupValue = this.props.group.props.value;
+    const groupName = this.props.group.props.name
+    const groupValue = this.props.group.props.value
     return (
       <div>
         <input
@@ -28,7 +27,9 @@ class Radio extends React.Component {
           checked={groupValue == this.props.value}
           onChange={this.props.group.handleChange}
         />
-        <label htmlFor={`${groupName}-${this.props.value}`}>{this.props.placeholder}</label>
+        <label htmlFor={`${groupName}-${this.props.value}`}>
+          {this.props.placeholder}
+        </label>
       </div>
     )
   }

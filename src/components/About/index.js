@@ -1,16 +1,15 @@
-import React from 'react';
-import { Col, Row } from 'react-flexbox-grid';
-import FindYourNavigator from '../FindYourNavigator';
-import Spotlight from '../Spotlight';
-import './index.css';
-import whiteboard1440 from './whiteboard-1440.jpeg';
-import whiteboard180 from './whiteboard-180.jpeg';
-import whiteboard2880 from './whiteboard-2880.jpeg';
-import whiteboard360 from './whiteboard-360.jpeg';
-import whiteboard45 from './whiteboard-45.jpeg';
-import whiteboard720 from './whiteboard-720.jpeg';
-import whiteboard90 from './whiteboard-90.jpeg';
-
+import React from 'react'
+import { Col, Row } from 'react-flexbox-grid'
+import FindYourNavigator from '../FindYourNavigator'
+import Spotlight from '../Spotlight'
+import './index.css'
+import whiteboard1440 from './whiteboard-1440.jpeg'
+import whiteboard180 from './whiteboard-180.jpeg'
+import whiteboard2880 from './whiteboard-2880.jpeg'
+import whiteboard360 from './whiteboard-360.jpeg'
+import whiteboard45 from './whiteboard-45.jpeg'
+import whiteboard720 from './whiteboard-720.jpeg'
+import whiteboard90 from './whiteboard-90.jpeg'
 
 class About extends React.Component {
   constructor(props) {
