@@ -1,5 +1,5 @@
 const waitPort = require('wait-port')
-const extractTarget = require('./node_modules/wait-port/lib/extract-target.js')
+const extractTarget = require('../../node_modules/wait-port/lib/extract-target.js')
 
 exports.config = {
   //

@@ -1,7 +1,7 @@
 const defaults = require('./wdio.conf.js').config
 
 // clone prod config and add new properties/overrides
-let localConfig = Object.assign(defaults, {
+const localConfig = Object.assign(defaults, {
   // capabilities: [{
   //     browserName: 'chrome'
   // }],
