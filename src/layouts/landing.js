@@ -22,19 +22,26 @@ class TemplateWrapper extends React.Component {
       loadState: 'is-loading',
     }
 
-    this.handleLoad = this.handleLoad.bind(this)
+    this.setLoaded = this.setLoaded.bind(this)
   }
 
   componentDidMount() {
-    window.addEventListener('load', this.handleLoad)
+    console.log('Landing Page Mounted')
+    window.addEventListener('load', this.setLoaded)
+    // if the load event doesn't fire after a few of seconds,
+    // trigger in anyway
+    setTimeout(this.setLoaded, 3000)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('load', this.handleLoad)
+    window.removeEventListener('load', this.setLoaded)
   }
 
-  handleLoad() {
-    this.setState({ loadState: 'is-loaded' })
+  setLoaded() {
+    console.log('Landing Page Loaded')
+    if (this.state.loadState == 'is-loading') {
+      this.setState({ loadState: 'is-loaded' })
+    }
   }
 
   handleAboutActive() {
