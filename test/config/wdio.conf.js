@@ -290,7 +290,14 @@ exports.config = {
    * @param {Number} result 0 - command success, 1 - command error
    * @param {Object} error error object if any
    */
-  // afterCommand: function (commandName, args, result, error) { },
+  afterCommand: (commandName, args, result, error) => {
+    const logs = browser.log('browser')
+    console.log('BROWSER LOGS:')
+    for (let i = 0; i < logs.value.length; i += 1) {
+      console.log('\t>>', logs.value[i].message)
+    }
+    console.log('END BROWSER LOGS')
+  },
   /**
    * Gets executed after all tests are done. You still have access to all global variables from
    * the test.
