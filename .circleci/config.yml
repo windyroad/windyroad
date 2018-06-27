@@ -48,6 +48,9 @@ jobs:
           npm run test:headless-prebuilt
       - store_test_results:
           path: ./target/reports/junit
+      - store_artifacts:
+          path: ./target/errorShots
+
 
   prerelease:
     docker:
