@@ -1210,20 +1210,46 @@
 /* Goto Next */
 
 	.goto-next {
+		font-size: 200%;
+		color: #ffffff;
 		bottom: 0;
 		display: block;
 		height: 5em;
 		left: 50%;
-		margin: 0 0 0 -5em;
-		overflow: hidden;
+		margin: 0 0 0 -1em;
 		position: absolute;
-		text-indent: 10em;
-		white-space: nowrap;
-		width: 10em;
+		/* overflow: hidden;
+		 */
+		/* text-indent: 10em;
+		white-space: nowrap; */
+		width: 2em;
 		z-index: 100;
-	}
+		height: 1.5em;
+		/* background-image: url("images/arrow.svg");
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: contain; */
+		border: none;
+		/* background-color: #59b37700;
+		-moz-transition: width 0.5s ease, margin 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+		-webkit-transition: width 0.5s ease, margin 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+		-ms-transition: width 0.5s ease, margin 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+		transition: width 0.5s ease, margin 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+		padding: 0;
+		border-radius: 0.25em;
+		border: solid 5px;
+		border-color:  #59b37700; */
+}
 
-		.goto-next:before {
+.goto-next:hover {
+	/* width: 2.2em;
+	margin: 0 0 0 -1.1em; */
+	/* background-color: #59b37738;
+	border-color:  #59b37738; */
+
+}
+
+		/* .goto-next:before {
 			background-image: url("images/arrow.svg");
 			background-position: center center;
 			background-repeat: no-repeat;
@@ -1237,7 +1263,7 @@
 			top: 50%;
 			width: 2em;
 			z-index: 1;
-		}
+		} */
 
 
 /* Wrapper */
@@ -1600,11 +1626,11 @@
 
 		/* Goto Next */
 
-			.goto-next:before {
+			/* .goto-next:before {
 				height: 0.8em;
 				margin: -0.4em 0 0 -0.6em;
 				width: 1.2em;
-			}
+			} */
 
 		
 

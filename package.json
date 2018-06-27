@@ -36,7 +36,7 @@
     "lint:js": "eslint \"**/*.{js,jsx}\"",
     "precommit": "lint-staged",
     "build": "gatsby build",
-    "develop": "gatsby develop",
+    "develop": "node --inspect ./node_modules/.bin/gatsby develop",
     "start": "gatsby serve",
     "build-and-start": "npm run build; npm run start",
     "format": "prettier --write 'src/**/*.js'",
@@ -50,6 +50,9 @@
     "test:headless:prebuilt": "start-server-and-test start http://localhost:9000 test:headless:child",
     "test:build:child": "wdio test/config/wdio.conf.js",
     "test:build": "start-server-and-test build-and-start http://localhost:9000 test:build:child",
+    "test:safari:child": "wdio test/config/wdio.safari.conf.js",
+    "test:safari:wip": "wdio test/config/wdio.safari.wip.conf.js",
+    "test:safari": "start-server-and-test build-and-start http://localhost:9000 test:safari:child",
     "package": "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
     "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz",
     "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'"

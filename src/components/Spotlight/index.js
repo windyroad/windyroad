@@ -1,4 +1,5 @@
 import React from 'react'
+import FontAwesome from 'react-fontawesome'
 import { Link } from 'react-scroll'
 import './index.css'
 
@@ -8,7 +9,7 @@ class Spotlight extends React.Component {
     this.images = props.images
     console.log(this.images)
 
-    for (var key in this.images) {
+    for (let key in this.images) {
       this.state = {
         size: key,
         image: this.images[key],
@@ -19,8 +20,8 @@ class Spotlight extends React.Component {
   }
 
   getImage(window, pixelRatio) {
-    var currentSize = this.state.size
-    for (var key in this.images) {
+    let currentSize = this.state.size
+    for (let key in this.images) {
       if (
         window.innerWidth * pixelRatio > this.state.size &&
         key > this.state.size
@@ -32,14 +33,14 @@ class Spotlight extends React.Component {
   }
 
   handleResize(window) {
-    var pixelRatio = window.devicePixelRatio
-    var size = this.getImage(window, pixelRatio)
+    let pixelRatio = window.devicePixelRatio
+    let size = this.getImage(window, pixelRatio)
     if (size != this.state.size) {
       const image = new Image()
       // only display the image once it's loaded
       image.onload = () => {
         this.setState({
-          size: size,
+          size,
           image: this.images[size],
           active: this.state.active,
         })
@@ -47,11 +48,9 @@ class Spotlight extends React.Component {
       }
       // load the image
       image.src = this.images[size]
-    } else {
-      if (pixelRatio != window.devicePixelRatio) {
+    } else if (pixelRatio != window.devicePixelRatio) {
         this.handleResize(window, window.devicePixelRatio)
       }
-    }
   }
 
   handleSetActive() {
@@ -89,7 +88,7 @@ class Spotlight extends React.Component {
       <section
         id={this.props.id}
         className={
-          this.props.className + ' backdropped spotlightx ' + this.state.active
+          `${this.props.className  } backdropped spotlightx ${  this.state.active}`
         }
         style={{
           backgroundImage: `url(${this.state.image})`,
@@ -99,14 +98,20 @@ class Spotlight extends React.Component {
         <Link
           className="goto-next"
           to={this.props.next}
-          spy={true}
-          smooth={true}
-          hashSpy={true}
+          spy
+          smooth
+          hashSpy
           duration={1000}
           onSetActive={this.props.nextActive}
           onSetInactive={this.props.nextInactive}
         >
-          next
+          <FontAwesome
+            name="angle-down"
+            style={{
+              verticalAlign: 'middle',
+              paddingLeft: '0.5em',
+            }}
+          />
         </Link>
       </section>
     )

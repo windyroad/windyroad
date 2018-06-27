@@ -1,4 +1,5 @@
 import React from 'react'
+import FontAwesome from 'react-fontawesome'
 import { Events, Link, scrollSpy } from 'react-scroll'
 import logo from '../../img/logo-white.svg'
 import FindYourNavigator from '../FindYourNavigator'
@@ -35,8 +36,8 @@ class Banner extends React.Component {
   }
 
   getImage(window, pixelRatio) {
-    var currentSize = this.state.size
-    for (var key in this.images) {
+    const currentSize = this.state.size
+    for (const key in this.images) {
       if (
         window.innerWidth * pixelRatio > this.state.size &&
         key > this.state.size
@@ -48,24 +49,19 @@ class Banner extends React.Component {
   }
 
   handleResize(window) {
-    var pixelRatio = window.devicePixelRatio
-    var size = this.getImage(window, pixelRatio)
+    const pixelRatio = window.devicePixelRatio
+    const size = this.getImage(window, pixelRatio)
     if (size != this.state.size) {
       const image = new Image()
       // only show the image once it's loaded
       image.onload = () => {
-        this.setState({
-          size: size,
-          image: this.images[size],
-        })
+        this.setState({ size, image: this.images[size] })
         this.handleResize(window)
       }
       // load the image
       image.src = this.images[size]
-    } else {
-      if (pixelRatio != window.devicePixelRatio) {
-        this.handleResize(window, window.devicePixelRatio)
-      }
+    } else if (pixelRatio != window.devicePixelRatio) {
+      this.handleResize(window, window.devicePixelRatio)
     }
   }
 
@@ -112,15 +108,21 @@ class Banner extends React.Component {
         <Link
           className="goto-next"
           to={this.props.next}
-          spy={true}
-          smooth={true}
-          hashSpy={true}
+          spy
+          smooth
+          hashSpy
           duration={this.scrollDuration}
           onSetActive={this.props.nextActive}
           onSetInactive={this.props.nextInactive}
           data-duration={this.scrollDuration}
         >
-          next
+          <FontAwesome
+            name="angle-down"
+            style={{
+              verticalAlign: 'middle',
+              paddingLeft: '0.5em',
+            }}
+          />
         </Link>
       </section>
     )

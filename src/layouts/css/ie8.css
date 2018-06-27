@@ -120,7 +120,7 @@
 /* Goto Next */
 
 	.goto-next {
-		display: none;
+		/* display: none; */
 	}
 
 /* Spotlight */
