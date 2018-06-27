@@ -116,13 +116,7 @@ class Banner extends React.Component {
           onSetInactive={this.props.nextInactive}
           data-duration={this.scrollDuration}
         >
-          <FontAwesome
-            name="angle-down"
-            style={{
-              verticalAlign: 'middle',
-              paddingLeft: '0.5em',
-            }}
-          />
+          <FontAwesome name="angle-down" />
         </Link>
       </section>
     )

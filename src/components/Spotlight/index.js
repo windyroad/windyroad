@@ -9,7 +9,7 @@ class Spotlight extends React.Component {
     this.images = props.images
     console.log(this.images)
 
-    for (let key in this.images) {
+    for (const key in this.images) {
       this.state = {
         size: key,
         image: this.images[key],
@@ -20,8 +20,8 @@ class Spotlight extends React.Component {
   }
 
   getImage(window, pixelRatio) {
-    let currentSize = this.state.size
-    for (let key in this.images) {
+    const currentSize = this.state.size
+    for (const key in this.images) {
       if (
         window.innerWidth * pixelRatio > this.state.size &&
         key > this.state.size
@@ -33,8 +33,8 @@ class Spotlight extends React.Component {
   }
 
   handleResize(window) {
-    let pixelRatio = window.devicePixelRatio
-    let size = this.getImage(window, pixelRatio)
+    const pixelRatio = window.devicePixelRatio
+    const size = this.getImage(window, pixelRatio)
     if (size != this.state.size) {
       const image = new Image()
       // only display the image once it's loaded
@@ -49,8 +49,8 @@ class Spotlight extends React.Component {
       // load the image
       image.src = this.images[size]
     } else if (pixelRatio != window.devicePixelRatio) {
-        this.handleResize(window, window.devicePixelRatio)
-      }
+      this.handleResize(window, window.devicePixelRatio)
+    }
   }
 
   handleSetActive() {
@@ -87,9 +87,9 @@ class Spotlight extends React.Component {
     return (
       <section
         id={this.props.id}
-        className={
-          `${this.props.className  } backdropped spotlightx ${  this.state.active}`
-        }
+        className={`${this.props.className} backdropped spotlightx ${
+          this.state.active
+        }`}
         style={{
           backgroundImage: `url(${this.state.image})`,
         }}
@@ -105,13 +105,7 @@ class Spotlight extends React.Component {
           onSetActive={this.props.nextActive}
           onSetInactive={this.props.nextInactive}
         >
-          <FontAwesome
-            name="angle-down"
-            style={{
-              verticalAlign: 'middle',
-              paddingLeft: '0.5em',
-            }}
-          />
+          <FontAwesome name="angle-down" />
         </Link>
       </section>
     )
