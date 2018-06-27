@@ -68,6 +68,8 @@ jobs:
             - ./target/artifactUrl.txt
       - store_artifacts:
           path: ./target/
+      - store_artifacts:
+          path: package-lock.json
 
   stg-deploy:
     docker:
