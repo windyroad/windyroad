@@ -50,7 +50,8 @@
     "test:headless": "start-server-and-test build-and-start http://localhost:9000 test:headless:child",
     "test:headless:child": "wdio test/config/wdio.headless.conf.js",
     "test:headless:prebuilt": "start-server-and-test start http://localhost:9000 test:headless:child",
-    "test:build": "gatsby build; forever start -v ./node_modules/.bin/gatsby serve & (wdio test/config/wdio.conf.js; wdio_ret=$?; forever stop --killTree ./node_modules/.bin/gatsby; exit $wdio_ret)",
+    "test:build:child": "wdio test/config/wdio.conf.js",
+    "test:build": "start-server-and-test build-and-start http://localhost:9000 test:build:child",
     "package": "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
     "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz",
     "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'"
@@ -71,7 +72,6 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.9.1",
-    "forever": "~0.15.3",
     "gatsby-plugin-eslint": "^1.0.3",
     "nodemon": "^1.17.5",
     "npm-run-all": "^4.1.3",
