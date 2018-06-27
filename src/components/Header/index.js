@@ -20,7 +20,7 @@ const Header = props => (
     <nav id="nav">
       <ul>
         <li>
-          <a href="https://windyroad.com.au/articles/">Archive</a>
+          <a href="https://windyroad.com.au/articles/">Posts</a>
         </li>
       </ul>
     </nav>
