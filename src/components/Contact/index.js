@@ -5,14 +5,14 @@ import ReactDOM from 'react-dom'
 import { Col, Row } from 'react-flexbox-grid'
 import FontAwesome from 'react-fontawesome'
 import { animateScroll as scroll } from 'react-scroll'
-//import scrollToComponent from 'react-scroll-to-component';
+// import scrollToComponent from 'react-scroll-to-component';
 import Button from '../Button'
 import Error422 from './Error/Error422'
+import './index.css'
 import Input from './Input'
+import noInternet from './no-internet.js'
 import RadioGroup from './RadioGroup'
 import Select from './Select'
-import './index.css'
-import noInternet from './no-internet.js'
 
 function uuid(a) {
   return a
@@ -21,11 +21,11 @@ function uuid(a) {
 }
 
 function calculateScrollOffset(element, offset, alignment) {
-  var body = document.body,
+  let body = document.body,
     html = document.documentElement
-  var elementRect = element.getBoundingClientRect()
-  var clientHeight = html.clientHeight
-  var documentHeight = Math.max(
+  let elementRect = element.getBoundingClientRect()
+  let clientHeight = html.clientHeight
+  let documentHeight = Math.max(
     body.scrollHeight,
     body.offsetHeight,
     html.clientHeight,
@@ -33,7 +33,7 @@ function calculateScrollOffset(element, offset, alignment) {
     html.offsetHeight,
   )
   offset = offset || 0 // additional offset to top
-  var scrollPosition
+  let scrollPosition
   switch (alignment) {
     case 'top':
       scrollPosition = elementRect.top
@@ -48,9 +48,9 @@ function calculateScrollOffset(element, offset, alignment) {
     default:
       scrollPosition =
         elementRect.bottom - clientHeight / 2 - elementRect.height / 2
-      break //defaul to middle
+      break // defaul to middle
   }
-  var maxScrollPosition = documentHeight - clientHeight
+  let maxScrollPosition = documentHeight - clientHeight
   return Math.min(
     scrollPosition + offset + window.pageYOffset,
     maxScrollPosition,
@@ -62,7 +62,7 @@ function scrollToComponent(ref, options) {
     offset: 0,
     align: 'middle',
   }
-  var element = ReactDOM.findDOMNode(ref)
+  let element = ReactDOM.findDOMNode(ref)
   if (element === null) return 0
   return scroll.scrollTo(
     calculateScrollOffset(element, options.offset, options.align),
@@ -75,7 +75,7 @@ const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`
 
 const OTHER_HOST = 'google.com.au:443'
 
-let FormStateEnum = Object.freeze({
+const FormStateEnum = Object.freeze({
   READY: 'READY',
   VALIDATING: 'VALIDATING',
   VALIDATION_FAILED: 'VALIDATION_FAILED',
@@ -230,10 +230,10 @@ class Contact extends React.Component {
       priority: DEFAULT_PRIORITY,
       category: DEFAULT_CATEGORY,
       form: {
-        state: FormStateEnum.READY, //*/ FormStateEnum.VALIDATING,
+        state: FormStateEnum.READY, //* / FormStateEnum.VALIDATING,
       },
       ticket: null,
-      error: null, //*/ exampleApiError,
+      error: null, //* / exampleApiError,
     }
 
     this.resetters = {}
@@ -246,11 +246,11 @@ class Contact extends React.Component {
   }
 
   componentDidMount() {
-    //this.checkNetworkStatus()
+    // this.checkNetworkStatus()
   }
 
   async checkNetworkStatus() {
-    let offline = await noInternet({
+    const offline = await noInternet({
       url: 'https://graph.facebook.com',
       method: 'OPTIONS',
     })
@@ -262,14 +262,14 @@ class Contact extends React.Component {
         zendeskOffline: true,
       }
     } else {
-      let zendeskOffline = await noInternet({
+      const zendeskOffline = await noInternet({
         url: ZD_API,
         method: 'POST',
       })
       console.log('zendeskOffline?', zendeskOffline)
       offlineState = {
         offline: false,
-        zendeskOffline: zendeskOffline,
+        zendeskOffline,
       }
     }
     this.setState(offlineState)
@@ -290,11 +290,11 @@ class Contact extends React.Component {
   }
 
   isValid(formState) {
-    let currformState = formState || this.state.form.state
+    const currformState = formState || this.state.form.state
     if (currformState == FormStateEnum.READY) {
       return true
     }
-    let keys = Object.keys(this.isValids)
+    const keys = Object.keys(this.isValids)
     console.log('validation checks', keys.length)
     for (let i = 0; i < keys.length; ++i) {
       if (!this.isValids[keys[i]]()) {
@@ -308,10 +308,9 @@ class Contact extends React.Component {
     console.log('submit', event)
     event.preventDefault()
 
-    //this.checkNetworkStatus()
+    // this.checkNetworkStatus()
 
-    await this.setState(prevState => {
-      return {
+    await this.setState(prevState => ({
         category: prevState.category || DEFAULT_CATEGORY,
         priority: prevState.priority || DEFAULT_PRIORITY,
         prevTicket: null,
@@ -327,8 +326,7 @@ class Contact extends React.Component {
         form: {
           state: FormStateEnum.VALIDATING,
         },
-      }
-    })
+      }))
     if (!this.isValid(FormStateEnum.VALIDATING)) {
       await this.setState({
         form: {
@@ -412,7 +410,7 @@ class Contact extends React.Component {
         console.log(response)
         console.log(response.data.request.url)
         console.log(response.data.request.id)
-        //let ticketUrl = `https://windyroad.zendesk.com/hc/requests/${response.data.request.id}`
+        // let ticketUrl = `https://windyroad.zendesk.com/hc/requests/${response.data.request.id}`
         this.setState({
           ticket: response.data.request,
           form: {
@@ -448,7 +446,7 @@ class Contact extends React.Component {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          let offlineState = await this.checkNetworkStatus()
+          const offlineState = await this.checkNetworkStatus()
           error.request.offline = offlineState.offline
           error.request.zendeskOffline = offlineState.zendeskOffline
           this.setState({
@@ -462,7 +460,7 @@ class Contact extends React.Component {
           // Something happened in setting up the request that triggered an Error
           this.setState({
             ticket: null,
-            error: error,
+            error,
             form: {
               state: FormStateEnum.GENERAL_ERROR,
             },
@@ -475,8 +473,7 @@ class Contact extends React.Component {
   }
 
   async reset() {
-    await this.setState(prevState => {
-      return {
+    await this.setState(prevState => ({
         name: '',
         email: '',
         message: '',
@@ -496,9 +493,8 @@ class Contact extends React.Component {
         prevPriority: prevState.priority,
         prevError: prevState.error,
         error: null,
-      }
-    })
-    let resetterKeys = Object.keys(this.resetters)
+      }))
+    const resetterKeys = Object.keys(this.resetters)
     for (let i = 0; i < resetterKeys.length; ++i) {
       this.resetters[resetterKeys[i]]()
     }
@@ -647,12 +643,10 @@ class Contact extends React.Component {
           errorConent = (
             <Error422
               onEdit={() =>
-                this.setState(prevState => {
-                  return {
+                this.setState(prevState => ({
                     form: { state: FormStateEnum.READY },
                     prevFormState: prevState.form.state,
-                  }
-                })
+                  }))
               }
             />
           )
@@ -663,19 +657,17 @@ class Contact extends React.Component {
         errorConent = (
           <Error422
             onEdit={() =>
-              this.setState(prevState => {
-                return {
+              this.setState(prevState => ({
                   form: { state: FormStateEnum.READY },
                   prevFormState: prevState.form.state,
-                }
-              })
+                }))
             }
           />
         )
       }
     }
 
-    let ticket = this.state.ticket
+    const ticket = this.state.ticket
       ? this.state.ticket
       : this.state.prevTicket
         ? this.state.prevTicket
@@ -684,20 +676,26 @@ class Contact extends React.Component {
             subject: null,
             description: null,
           }
-    let name = this.state.name ? this.state.name : this.state.prevName
-    let email = this.state.email ? this.state.email : this.state.prevEmail
+    const name = this.state.name ? this.state.name : this.state.prevName
+    const email = this.state.email ? this.state.email : this.state.prevEmail
 
     return (
-      <section id={this.props.id} className="wrapper style1 special fade">
+      <section
+id={this.props.id}
+className="wrapper style1 special fade"
+style={{
+        zIndex: 400
+      }}
+      >
         <div className="container">
           <header>
             <h2>Find Your Navigator</h2>
           </header>
           <div
             className={
-              'contactForm ' +
-              (this.state.ticket ? 'submitted ' : '') +
-              this.state.form.state
+              `contactForm ${ 
+              this.state.ticket ? 'submitted ' : '' 
+              }${this.state.form.state}`
             }
           >
             <Row>
@@ -770,10 +768,10 @@ class Contact extends React.Component {
                         }
                         autoComplete="name"
                         setResetter={resetter =>
-                          (this.resetters['name'] = resetter)
+                          (this.resetters.name = resetter)
                         }
                         setGetIsValid={isValid =>
-                          (this.isValids['name'] = isValid)
+                          (this.isValids.name = isValid)
                         }
                       />
                     </Col>
@@ -796,10 +794,10 @@ class Contact extends React.Component {
                         }
                         autoComplete="email"
                         setResetter={resetter =>
-                          (this.resetters['email'] = resetter)
+                          (this.resetters.email = resetter)
                         }
                         setGetIsValid={isValid =>
-                          (this.isValids['email'] = isValid)
+                          (this.isValids.email = isValid)
                         }
                       />
                     </Col>
@@ -815,7 +813,7 @@ class Contact extends React.Component {
                         value={this.state.category || DEFAULT_CATEGORY}
                         onChange={this.handleChange}
                         setResetter={resetter =>
-                          (this.resetters['category'] = resetter)
+                          (this.resetters.category = resetter)
                         }
                       />
                     </Col>
@@ -825,7 +823,7 @@ class Contact extends React.Component {
                     value={this.state.priority || DEFAULT_PRIORITY}
                     onChange={this.handleRadioChange}
                     setResetter={resetter =>
-                      (this.resetters['priority'] = resetter)
+                      (this.resetters.priority = resetter)
                     }
                   />
                   <Row>
@@ -847,10 +845,10 @@ class Contact extends React.Component {
                         }
                         rows="6"
                         setResetter={resetter =>
-                          (this.resetters['message'] = resetter)
+                          (this.resetters.message = resetter)
                         }
                         setGetIsValid={isValid =>
-                          (this.isValids['message'] = isValid)
+                          (this.isValids.message = isValid)
                         }
                       />
                     </Col>

@@ -130,12 +130,8 @@
   .spotlightx .content {
     padding-left: 1em;
     padding-right: 1em;
-    padding-bottom: 7em;
   }
 
-  .spotlight .goto-next {
-    height: 7em;
-  }
 
   .spotlight .content {
     padding: 9em 0;
@@ -155,7 +151,7 @@
 
 @media screen and (max-width: 736px) {
   .backdropped.spotlightx .content {
-    padding-bottom: 7em;
+    padding-bottom: 5.5em;
   } 
  
   .backdropped.spotlightx:before {
@@ -185,7 +181,7 @@
   /* Banner */
 
   .spotlightx .content {
-    padding: 3em 0.5em 7em 0.5em;
+    padding-top: 1.5em;
   }
 
   .spotlightx p {
@@ -194,13 +190,14 @@
 
   .goto-next {
     height: 4em;
+    right: 0;
+    left: auto;
   }
 }
 
 @media screen and (max-width: 320px) {
   .goto-next {
-    height: 4em;
-    left: 90%;
+    height: 1.5em;
   }
 
   .spotlightx.bottom .content {

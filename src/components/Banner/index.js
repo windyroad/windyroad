@@ -116,7 +116,7 @@ class Banner extends React.Component {
           onSetInactive={this.props.nextInactive}
           data-duration={this.scrollDuration}
         >
-          <FontAwesome name="angle-down" />
+          <FontAwesome name="arrow-circle-o-down" />
         </Link>
       </section>
     )

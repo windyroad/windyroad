@@ -105,7 +105,7 @@ class Spotlight extends React.Component {
           onSetActive={this.props.nextActive}
           onSetInactive={this.props.nextInactive}
         >
-          <FontAwesome name="angle-down" />
+          <FontAwesome name="arrow-circle-o-down" />
         </Link>
       </section>
     )
