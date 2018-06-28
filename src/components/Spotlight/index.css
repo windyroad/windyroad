@@ -189,17 +189,19 @@
   }
 
   .goto-next {
-    height: 4em;
     right: 0;
+    top: 1em;
     left: auto;
+    bottom: auto;
+  }
+
+  .goto-next:hover {
+    right: 0px;
+    top: calc(1em - 1px);
   }
 }
 
 @media screen and (max-width: 320px) {
-  .goto-next {
-    height: 1.5em;
-  }
-
   .spotlightx.bottom .content {
     padding-bottom: 0.5em;
   }
