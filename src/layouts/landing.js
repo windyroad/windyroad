@@ -1,6 +1,7 @@
 /* global window */
 /* eslint no-undef: "error" */
 
+// import fontAwesomeCss from '@fortawesome/fontawesome-free/css/all.css'
 import Link from 'gatsby-link'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -125,6 +126,7 @@ class TemplateWrapper extends React.Component {
               }
             })()}
           </script>
+          {/* <Link to={fontAwesomeCss} rel="stylesheet" type="text/css" /> */}
           <Link to={themeCss} rel="stylesheet" type="text/css" />
           <body className={`landing ${this.state.loadState}`} />
         </Helmet>

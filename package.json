@@ -9,6 +9,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "email-validator": "^2.0.3",
+    "font-awesome": "^4.7.0",
     "gatsby": "^1.9.232",
     "gatsby-image": "^1.0.42",
     "gatsby-link": "^1.6.39",
@@ -60,7 +61,6 @@
     "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.1.0",
     "babel-core": "~6.26.3",
     "babel-jest": "~23.0.1",
     "babel-preset-env": "~1.7.0",
@@ -85,8 +85,8 @@
     "wdio-cucumber-framework": "^2.1.0",
     "wdio-cucumber-snippet-reporter": "0.0.4",
     "wdio-firefox-profile-service": "^0.1.1",
-    "wdio-junit-reporter": "^0.4.3",
     "wdio-sauce-service": "^0.4.9",
+    "wdio-junit-reporter": "^0.4.3",
     "wdio-selenium-standalone-service": "0.0.10",
     "webdriverio": "^4.12.0"
   },
