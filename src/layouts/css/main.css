@@ -1207,47 +1207,6 @@
 
 
 
-/* Goto Next */
-
-	.goto-next {
-		font-size: 32px;
-		color: #ffffff;
-		bottom: 1em;
-		display: block;
-		left: 50%;
-		margin: 0 0 0 -1em;
-		position: absolute;
-		width: 2em;
-		z-index: 100;
-		border: none;
-		padding: 0;
-
-		-moz-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
-		-webkit-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
-		-ms-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
-		transition: font-size 0.1s ease,  top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
-
-}
-
-
-.goto-next:hover {
-	text-shadow: 0 1px 5px #000000;
-}
-
-.goto-next:hover .fa {
-	-moz-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease;
-	-webkit-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease;
-	-ms-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease;
-	transition: font-size 0.1s ease,  top 0.1s ease, right 0.1s ease;
-
-}
-
-.goto-next:active .fa {
-	font-size: 10%;
-}
-
-
-
 
 /* Wrapper */
 
@@ -1606,14 +1565,6 @@
 			header.major {
 				margin: 0 0 2em 0;
 			}
-
-		/* Goto Next */
-
-			/* .goto-next:before {
-				height: 0.8em;
-				margin: -0.4em 0 0 -0.6em;
-				width: 1.2em;
-			} */
 
 		
 

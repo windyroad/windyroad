@@ -48,6 +48,8 @@
   margin-top: 20vh;
   position: absolute;
   bottom: 0;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .spotlight.top .content {
@@ -184,17 +186,6 @@
     margin-bottom: 1em;
   }
 
-  .goto-next {
-    right: 0;
-    top: 1em;
-    left: auto;
-    bottom: auto;
-  }
-
-  .goto-next:hover {
-    right: 0px;
-    top: calc(1em - 1px);
-  }
 }
 
 @media screen and (max-width: 320px) {

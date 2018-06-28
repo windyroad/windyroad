@@ -1,6 +1,5 @@
 import React from 'react'
-import FontAwesome from 'react-fontawesome'
-import { Link } from 'react-scroll'
+import GotoNext from '../GotoNext'
 import './index.css'
 
 class Spotlight extends React.Component {
@@ -95,18 +94,11 @@ class Spotlight extends React.Component {
         }}
       >
         <div className="content">{this.props.children}</div>
-        <Link
-          className="goto-next"
+        <GotoNext
           to={this.props.next}
-          spy
-          smooth
-          hashSpy
-          duration={1000}
           onSetActive={this.props.nextActive}
           onSetInactive={this.props.nextInactive}
-        >
-          <FontAwesome name="arrow-circle-o-down" />
-        </Link>
+        />
       </section>
     )
   }

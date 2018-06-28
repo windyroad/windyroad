@@ -1,0 +1,68 @@
+
+
+
+.goto-next {
+  font-size: 32px;
+  color: #ffffff;
+  bottom: 1em;
+  display: block;
+  left: 50%;
+  margin: 0 0 0 -1em;
+  position: absolute;
+  width: 2em;
+  z-index: 100;
+  border: none;
+  padding: 0;
+
+  -moz-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
+  -webkit-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
+  -ms-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
+  transition: font-size 0.1s ease,  top 0.1s ease, right 0.1s ease, text-shadow 0.1s ease;
+
+}
+
+
+.goto-next:hover {
+text-shadow: 0 1px 5px #000000;
+}
+
+.goto-next .fa {
+-moz-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease;
+-webkit-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease;
+-ms-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease;
+transition: font-size 0.1s ease,  top 0.1s ease, right 0.1s ease;
+
+}
+
+.goto-next.click .fa {
+  font-size: 10%;
+}
+
+@media screen and (max-width: 980px) {
+
+
+}
+
+@media screen and (max-width: 736px) {
+  
+}
+
+@media screen and (max-width: 480px) {
+ 
+
+  .goto-next {
+    right: 0;
+    top: 1em;
+    left: auto;
+    bottom: auto;
+  }
+
+  .goto-next:hover {
+    right: 0px;
+    top: calc(1em - 1px);
+  }
+}
+
+@media screen and (max-width: 320px) {
+ 
+}

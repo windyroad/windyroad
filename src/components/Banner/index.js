@@ -1,8 +1,8 @@
 import React from 'react'
-import FontAwesome from 'react-fontawesome'
-import { Events, Link, scrollSpy } from 'react-scroll'
+import { Events, scrollSpy } from 'react-scroll'
 import logo from '../../img/logo-white.svg'
 import FindYourNavigator from '../FindYourNavigator'
+import GotoNext from '../GotoNext'
 import banner1440 from './banner-1440.jpeg'
 import banner180 from './banner-180.jpeg'
 import banner20 from './banner-20.jpeg'
@@ -105,19 +105,11 @@ class Banner extends React.Component {
           </header>
         </div>
 
-        <Link
-          className="goto-next"
+        <GotoNext
           to={this.props.next}
-          spy
-          smooth
-          hashSpy
-          duration={this.scrollDuration}
           onSetActive={this.props.nextActive}
           onSetInactive={this.props.nextInactive}
-          data-duration={this.scrollDuration}
-        >
-          <FontAwesome name="arrow-circle-o-down" />
-        </Link>
+        />
       </section>
     )
   }
