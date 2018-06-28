@@ -128,8 +128,6 @@
 
 
   .spotlightx .content {
-    padding-left: 1em;
-    padding-right: 1em;
   }
 
 
@@ -151,7 +149,6 @@
 
 @media screen and (max-width: 736px) {
   .backdropped.spotlightx .content {
-    padding-bottom: 5.5em;
   } 
  
   .backdropped.spotlightx:before {
@@ -181,7 +178,6 @@
   /* Banner */
 
   .spotlightx .content {
-    padding-top: 1.5em;
   }
 
   .spotlightx p {
