@@ -197,3 +197,18 @@
     display: none;
   }
 }
+
+@media screen and (orientation: landscape) and (max-height: 480px) {
+  .spotlightx.bottom  {
+    min-height: 150vh;
+  }
+  .spotlightx.bottom .content {
+    padding-bottom: 1em;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-height: 320px) {
+  .spotlightx.bottom  {
+    min-height: 200vh;
+  }
+}

@@ -43,8 +43,8 @@ WOrking on it.
 ## TODO
 
 - [ ] Automated testing
-- [ ] Fix loading flicker
-- [ ] Fix landscape mode
+- [x] Fix loading flicker
+- [x] Fix landscape mode
 - [ ] Services Section
 - [ ] Services Sub-pages
 - [ ] Service specific enquiry form

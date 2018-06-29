@@ -66,3 +66,20 @@ transition: font-size 0.1s ease,  top 0.1s ease, right 0.1s ease;
 @media screen and (max-width: 320px) {
  
 }
+
+@media screen and (orientation: landscape) and (max-height: 480px) {
+  .goto-next {
+    right: 0;
+    top: 2em;
+    left: auto;
+    bottom: auto;
+  }
+
+  .goto-next:hover {
+    right: 0px;
+    top: calc(2em - 1px);
+  }
+}
+
+@media screen and (orientation: landscape) and (max-height: 320px) {
+}
