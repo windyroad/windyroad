@@ -1,6 +1,10 @@
 const waitPort = require('wait-port')
 const extractTarget = require('../../node_modules/wait-port/lib/extract-target.js')
 
+const chromeCapability = require('./capabilities/chrome.js').config
+const landscapeCapability = require('./capabilities/landscape.js').config
+const pixel2Capability = require('./capabilities/pixel2.js').config
+
 exports.config = {
   //
   // ================== Specify Test Files ================== Define which test
@@ -35,29 +39,9 @@ exports.config = {
   // capabilities: https://docs.saucelabs.com/reference/platforms-configurator
   //
   capabilities: [
-    {
-      maxInstances: 5,
-      browserName: 'chrome',
-      chromeOptions: {
-        args: ['--window-size=1280,800'],
-      },
-    },
-    {
-      maxInstances: 5,
-      browserName: 'chrome',
-      chromeOptions: {
-        args: ['--window-size=667,375'],
-      },
-    },
-    {
-      maxInstances: 5,
-      browserName: 'chrome',
-      chromeOptions: {
-        mobileEmulation: {
-          deviceName: 'Pixel 2',
-        },
-      },
-    },
+    chromeCapability,
+    landscapeCapability,
+    pixel2Capability,
     {
       maxInstances: 5,
       browserName: 'chrome',

@@ -42,10 +42,11 @@ WOrking on it.
 
 ## TODO
 
-- [ ] Automated testing
+- [x] Automated testing
 - [x] Fix loading flicker
 - [x] Fix landscape mode
 - [ ] Services Section
+- [ ] Customers section
 - [ ] Services Sub-pages
 - [ ] Service specific enquiry form
 - [ ] Add posts capability

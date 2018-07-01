@@ -1,4 +1,3 @@
-import clickElement from '../support/action/clickElement'
 import openWebsite from '../support/action/openWebsite'
 import waitForVisible from '../support/action/waitForVisible'
 import checkTitle from '../support/check/checkTitle'
@@ -39,7 +38,12 @@ Given(
 )
 
 When(/^I click on the down arror$/, () => {
-  clickElement('click', 'element', 'section#banner a.goto-next')
+  // clickElement('click', 'element', 'section#banner a.goto-next')
+  // browser.touchAction('section#banner a.goto-next', 'tap')
+  browser.execute(
+    "clickEvent = document.createEvent('MouseEvent'); clickEvent.initEvent('click', true, true); document.querySelector('section#banner a.goto-next').dispatchEvent(clickEvent);",
+  )
+
   browser.pause(
     browser.getAttribute('section#banner a.goto-next', 'data-duration'),
   )
