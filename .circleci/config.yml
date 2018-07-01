@@ -51,6 +51,31 @@ jobs:
       - store_artifacts:
           path: ./target/errorShots
 
+  test-saucelabs:
+    docker:
+      - image: circleci/node:9
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          npm run test:saucelabs:start:prebuilt
+      - store_test_results:
+          path: ./target/reports/junit
+      - store_artifacts:
+          path: ./target/errorShots
+  
+  test-saucelabs-stg:
+    docker:
+      - image: circleci/node:9
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          npm run test:saucelabs:stg
+      - store_test_results:
+          path: ./target/reports/junit
+      - store_artifacts:
+          path: ./target/errorShots
 
   prerelease:
     docker:
@@ -115,18 +140,27 @@ workflows:
       - test-headless:
           requires:
             - build
+      - test-saucelabs:
+          requires:
+            - build
       - prerelease:
           requires:
             - build
             - test-headless
+            - test-saucelabs
       - stg-deploy:
           requires:
             - prerelease
+
+      - test-saucelabs-stg:
+          requires:
+            - stg-deploy
 
       - approve-prod-deploy:
           type: approval
           requires:
             - stg-deploy
+            - test-saucelabs-stg
 
       - prod-deploy:
           requires:

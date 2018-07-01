@@ -47,6 +47,7 @@
     "precommit:test": "npm run test:build:start",
     "test:saucelabs:start": "start-server-and-test build-and-start http://localhost:9000 test:saucelabs:no-start",
     "test:saucelabs:no-start": "wdio test/config/wdio.saucelabs.conf.js",
+    "test:saucelabs:stg": "wdio test/config/wdio.saucelabs.stg.conf.js",
     "test:saucelabs:start:prebuilt": "start-server-and-test start http://localhost:9000 test:saucelabs:no-start",
     "test:headless:start": "start-server-and-test build-and-start http://localhost:9000 test:headless:no-start",
     "test:headless:no-start": "wdio test/config/wdio.headless.conf.js",

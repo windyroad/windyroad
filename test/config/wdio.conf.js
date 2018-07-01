@@ -213,8 +213,11 @@ exports.config = {
     global.assert = chai.assert
     global.should = chai.should()
 
+    const target = extractTarget(this.baseUrl)
+    console.log('TARGET!!!!!!!!!!!!!!', target)
+    process.exit()
     try {
-      const open = await waitPort(extractTarget(this.baseUrl))
+      const open = await waitPort(target)
 
       if (open) {
         console.log('The port is now open!')
