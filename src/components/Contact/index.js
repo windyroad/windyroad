@@ -311,22 +311,22 @@ class Contact extends React.Component {
     // this.checkNetworkStatus()
 
     await this.setState(prevState => ({
-        category: prevState.category || DEFAULT_CATEGORY,
-        priority: prevState.priority || DEFAULT_PRIORITY,
-        prevTicket: null,
-        prevFormState: null,
-        prevError: null,
-        prevName: null,
-        prevEmail: null,
-        prevMessage: null,
-        prevCatagory: null,
-        prevPriority: null,
-        prevError: null,
-        xRequestId: uuid(),
-        form: {
-          state: FormStateEnum.VALIDATING,
-        },
-      }))
+      category: prevState.category || DEFAULT_CATEGORY,
+      priority: prevState.priority || DEFAULT_PRIORITY,
+      prevTicket: null,
+      prevFormState: null,
+      prevError: null,
+      prevName: null,
+      prevEmail: null,
+      prevMessage: null,
+      prevCatagory: null,
+      prevPriority: null,
+      prevError: null,
+      xRequestId: uuid(),
+      form: {
+        state: FormStateEnum.VALIDATING,
+      },
+    }))
     if (!this.isValid(FormStateEnum.VALIDATING)) {
       await this.setState({
         form: {
@@ -474,26 +474,26 @@ class Contact extends React.Component {
 
   async reset() {
     await this.setState(prevState => ({
-        name: '',
-        email: '',
-        message: '',
-        priority: null,
-        category: null,
-        form: {
-          state: FormStateEnum.READY,
-        },
-        ticket: null,
-        prevTicket: prevState.ticket,
-        prevFormState: prevState.form.state,
-        prevError: prevState.error,
-        prevName: prevState.name,
-        prevEmail: prevState.email,
-        prevMessage: prevState.message,
-        prevCatagory: prevState.category,
-        prevPriority: prevState.priority,
-        prevError: prevState.error,
-        error: null,
-      }))
+      name: '',
+      email: '',
+      message: '',
+      priority: null,
+      category: null,
+      form: {
+        state: FormStateEnum.READY,
+      },
+      ticket: null,
+      prevTicket: prevState.ticket,
+      prevFormState: prevState.form.state,
+      prevError: prevState.error,
+      prevName: prevState.name,
+      prevEmail: prevState.email,
+      prevMessage: prevState.message,
+      prevCatagory: prevState.category,
+      prevPriority: prevState.priority,
+      prevError: prevState.error,
+      error: null,
+    }))
     const resetterKeys = Object.keys(this.resetters)
     for (let i = 0; i < resetterKeys.length; ++i) {
       this.resetters[resetterKeys[i]]()
@@ -644,9 +644,9 @@ class Contact extends React.Component {
             <Error422
               onEdit={() =>
                 this.setState(prevState => ({
-                    form: { state: FormStateEnum.READY },
-                    prevFormState: prevState.form.state,
-                  }))
+                  form: { state: FormStateEnum.READY },
+                  prevFormState: prevState.form.state,
+                }))
               }
             />
           )
@@ -658,9 +658,9 @@ class Contact extends React.Component {
           <Error422
             onEdit={() =>
               this.setState(prevState => ({
-                  form: { state: FormStateEnum.READY },
-                  prevFormState: prevState.form.state,
-                }))
+                form: { state: FormStateEnum.READY },
+                prevFormState: prevState.form.state,
+              }))
             }
           />
         )
@@ -681,22 +681,20 @@ class Contact extends React.Component {
 
     return (
       <section
-id={this.props.id}
-className="wrapper style1 special fade"
-style={{
-        zIndex: 400
-      }}
+        id={this.props.id}
+        className="wrapper style1 special fade"
+        style={{
+          zIndex: 400,
+        }}
       >
         <div className="container">
           <header>
             <h2>Find Your Navigator</h2>
           </header>
           <div
-            className={
-              `contactForm ${ 
-              this.state.ticket ? 'submitted ' : '' 
-              }${this.state.form.state}`
-            }
+            className={`contactForm ${this.state.ticket ? 'submitted ' : ''}${
+              this.state.form.state
+            }`}
           >
             <Row>
               <Col xs={4}>

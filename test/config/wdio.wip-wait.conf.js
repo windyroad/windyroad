@@ -4,7 +4,7 @@ const defaults = require('./wdio.wip.conf.js').config
 const localConfig = Object.assign(defaults, {
   after: () => {
     browser.debug()
-  }
+  },
 })
 
 exports.config = localConfig
