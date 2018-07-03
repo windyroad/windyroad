@@ -27,7 +27,6 @@ class TemplateWrapper extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Landing Page Mounted')
     window.addEventListener('load', this.setLoaded)
     // if the load event doesn't fire after a few of seconds,
     // trigger in anyway

@@ -214,8 +214,6 @@ exports.config = {
     global.should = chai.should()
 
     const target = extractTarget(this.baseUrl)
-    console.log('TARGET!!!!!!!!!!!!!!', target)
-    process.exit()
     try {
       const open = await waitPort(target)
 
