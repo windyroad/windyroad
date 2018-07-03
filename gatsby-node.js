@@ -1,13 +1,14 @@
-const fm = require('./front-matter')
-const fs = require(`fs-extra`)
+// const fm = require('./front-matter')
+
+// const fs = require(`fs-extra`)
 const path = require('path')
 
-exports.onCreatePage = async function({ page }) {
-  const { attributes: { layout } } = fm(
-    await fs.readFile(page.component, 'utf8'),
-  )
-  page.layout = layout || 'index'
-}
+// exports.onCreatePage = async function({ page }) {
+//   const { attributes: { layout } } = fm(
+//     await fs.readFile(page.component, 'utf8'),
+//   )
+//   page.layout = 'index'
+// }
 
 exports.createPages = ({ boundActionCreators, graphql }) => {
   const { createPage } = boundActionCreators
@@ -44,10 +45,12 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
   })
 }
 
-
 exports.modifyBabelrc = ({ babelrc }) => ({
   ...babelrc,
-  ...process.env.NODE_ENV !== 'development' && {
-    plugins: babelrc.plugins.concat(['transform-regenerator', 'transform-runtime']),
-  },
-});
+  ...(process.env.NODE_ENV !== 'development' && {
+    plugins: babelrc.plugins.concat([
+      'transform-regenerator',
+      'transform-runtime',
+    ]),
+  }),
+})

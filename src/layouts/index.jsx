@@ -6,9 +6,6 @@ import Link from 'gatsby-link'
 import PropTypes from 'prop-types'
 import React from 'react'
 import Helmet from 'react-helmet'
-import About from '../components/About'
-import Banner from '../components/Banner'
-import Contact from '../components/Contact'
 // import Services from '../components/Services' import Special from
 // '../components/Special'
 import Footer from '../components/Footer'
@@ -44,22 +41,6 @@ class TemplateWrapper extends React.Component {
     }
   }
 
-  handleAboutActive() {
-    this.about.handleSetActive()
-  }
-
-  handleAboutInactive() {
-    this.about.handleSetInactive()
-  }
-
-  handleContactActive() {
-    this.contact.handleSetActive()
-  }
-
-  handleContactInactive() {
-    this.contact.handleSetInactive()
-  }
-
   render() {
     return (
       <div>
@@ -79,7 +60,10 @@ class TemplateWrapper extends React.Component {
           {/* <script src="https://cdn.optimizely.com/js/105401733.js" /> */}
           <script type="text/javascript" id="inspectletjs">
             {(function() {
-              if (typeof window !== 'undefined') {
+              if (
+                typeof window !== 'undefined' &&
+                document.location.hostname == 'windyroad.com.au'
+              ) {
                 const insp_ab_loader = true // set this boolean to false to disable the A/B testing loader
                 window.__insp = window.__insp || []
                 __insp.push(['wid', 1654706623])
@@ -131,27 +115,7 @@ class TemplateWrapper extends React.Component {
         </Helmet>
         <div id="page-wrapper">
           <Header />
-          <Banner
-            next="about"
-            nextActive={() => this.handleAboutActive()}
-            nextInactive={() => this.handleAboutInactive()}
-          />
-          <About
-            id="about"
-            ref={section => {
-              this.about = section
-            }}
-            next="contact"
-            nextActive={() => this.handleContactActive()}
-            nextInactive={() => this.handleContactInactive()}
-          />
-          <Contact
-            id="contact"
-            ref={section => {
-              this.contact = section
-            }}
-          />
-
+          {this.props.children()}
           <Footer />
         </div>
       </div>
