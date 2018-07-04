@@ -1,13 +1,13 @@
 module.exports = {
   siteMetadata: {
     title: 'Windy Road',
-    siteUrl: 'https://windyroad.com.au'
+    siteUrl: 'https://windyroad.com.au',
   },
   plugins: [
     {
       resolve: `gatsby-plugin-favicon`,
       options: {
-        logo: "./src/windyroad-square-1500x937.png",
+        logo: './src/windyroad-square-1500x937.png',
         injectHTML: true,
         icons: {
           android: true,
@@ -18,9 +18,9 @@ module.exports = {
           firefox: true,
           twitter: false,
           yandex: false,
-          windows: false
-        }
-      }
+          windows: false,
+        },
+      },
     },
     'gatsby-plugin-react-helmet',
     `gatsby-transformer-remark`,
@@ -28,15 +28,15 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/md`,
-        name: "markdown-pages",
+        name: 'markdown-pages',
       },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `img`,
-        path: `${__dirname}/src/img/`
-      }
+        path: `${__dirname}/src/img/`,
+      },
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
@@ -55,4 +55,4 @@ module.exports = {
       },
     },
   ],
-};
+}
