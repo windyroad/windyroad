@@ -8,27 +8,29 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
-    "email-validator": "^2.0.3",
+    "email-validator": "^2.0.4",
     "font-awesome": "^4.7.0",
-    "gatsby": "^1.9.232",
-    "gatsby-image": "^1.0.42",
-    "gatsby-link": "^1.6.39",
+    "gatsby": "^1.9.273",
+    "gatsby-image": "^1.0.54",
+    "gatsby-link": "^1.6.45",
     "gatsby-plugin-favicon": "^2.1.1",
     "gatsby-plugin-google-analytics": "^1.0.31",
-    "gatsby-plugin-react-helmet": "^2.0.7",
-    "gatsby-plugin-sharp": "^1.6.41",
-    "gatsby-source-filesystem": "^1.5.27",
-    "gatsby-transformer-remark": "^1.7.37",
-    "gatsby-transformer-sharp": "^1.6.22",
-    "react-flexbox-grid": "^2.0.0",
+    "gatsby-plugin-react-helmet": "^2.0.11",
+    "gatsby-plugin-sharp": "^1.6.48",
+    "gatsby-source-filesystem": "^1.5.39",
+    "gatsby-transformer-remark": "^1.7.44",
+    "gatsby-transformer-sharp": "^1.6.27",
+    "react-flexbox-grid": "^2.1.2",
     "react-fontawesome": "^1.6.1",
     "react-helmet": "^5.2.0",
-    "react-scroll": "^1.7.8",
+    "react-scroll": "^1.7.9",
     "react-validation": "^3.0.7",
-    "set-interval": "^2.0.1",
+    "set-interval": "^2.0.3",
     "url-template": "^2.0.8"
   },
-  "keywords": ["gatsby"],
+  "keywords": [
+    "gatsby"
+  ],
   "license": "MIT",
   "scripts": {
     "lint:js": "eslint \"**/*.{js,jsx}\"",
@@ -43,59 +45,43 @@
     "test:wip": "wdio test/config/wdio.wip.conf.js",
     "test:dev": "wdio test/config/wdio.dev.conf.js",
     "precommit:test": "npm run test:build:start",
-    "test:saucelabs:start":
-      "start-server-and-test build-and-start http://localhost:9000 test:saucelabs:no-start",
+    "test:saucelabs:start": "start-server-and-test build-and-start http://localhost:9000 test:saucelabs:no-start",
     "test:saucelabs:no-start": "wdio test/config/wdio.saucelabs.conf.js",
     "test:saucelabs:stg": "wdio test/config/wdio.saucelabs.stg.conf.js",
-    "test:saucelabs:start:prebuilt":
-      "start-server-and-test start http://localhost:9000 test:saucelabs:no-start",
-    "test:headless:start":
-      "start-server-and-test build-and-start http://localhost:9000 test:headless:no-start",
+    "test:saucelabs:start:prebuilt": "start-server-and-test start http://localhost:9000 test:saucelabs:no-start",
+    "test:headless:start": "start-server-and-test build-and-start http://localhost:9000 test:headless:no-start",
     "test:headless:no-start": "wdio test/config/wdio.headless.conf.js",
-    "test:headless:start:prebuilt":
-      "start-server-and-test start http://localhost:9000 test:headless:no-start",
+    "test:headless:start:prebuilt": "start-server-and-test start http://localhost:9000 test:headless:no-start",
     "test:build:no-start": "wdio test/config/wdio.conf.js",
-    "test:build:start":
-      "start-server-and-test build-and-start http://localhost:9000 test:build:no-start",
-    "test:build:start:prebuilt":
-      "start-server-and-test start http://localhost:9000 test:build:no-start",
-    "test:chrome:on-dev":
-      "node --inspect ./node_modules/.bin/wdio test/config/wdio.chrome.dev.conf.js",
+    "test:build:start": "start-server-and-test build-and-start http://localhost:9000 test:build:no-start",
+    "test:build:start:prebuilt": "start-server-and-test start http://localhost:9000 test:build:no-start",
+    "test:chrome:on-dev": "node --inspect ./node_modules/.bin/wdio test/config/wdio.chrome.dev.conf.js",
     "test:chrome:no-start": "wdio test/config/wdio.chrome.conf.js",
-    "test:chrome:start":
-      "start-server-and-test build-and-start http://localhost:9000 test:chrome:no-start",
-    "test:chrome:start:prebuilt":
-      "start-server-and-test start http://localhost:9000 test:chrome:no-start",
-    "test:landscape:on-dev":
-      "node --inspect ./node_modules/.bin/wdio test/config/wdio.landscape.dev.conf.js",
+    "test:chrome:start": "start-server-and-test build-and-start http://localhost:9000 test:chrome:no-start",
+    "test:chrome:start:prebuilt": "start-server-and-test start http://localhost:9000 test:chrome:no-start",
+    "test:landscape:on-dev": "node --inspect ./node_modules/.bin/wdio test/config/wdio.landscape.dev.conf.js",
     "test:landscape:no-start": "wdio test/config/wdio.landscape.conf.js",
-    "test:landscape:start":
-      "start-server-and-test build-and-start http://localhost:9000 test:landscape:no-start",
-    "test:landscape:start:prebuilt":
-      "start-server-and-test start http://localhost:9000 test:landscape:no-start",
-    "test:pixel2:on-dev":
-      "node --inspect ./node_modules/.bin/wdio test/config/wdio.pixel2.dev.conf.js",
+    "test:landscape:start": "start-server-and-test build-and-start http://localhost:9000 test:landscape:no-start",
+    "test:landscape:start:prebuilt": "start-server-and-test start http://localhost:9000 test:landscape:no-start",
+    "test:pixel2:on-dev": "node --inspect ./node_modules/.bin/wdio test/config/wdio.pixel2.dev.conf.js",
     "test:pixel2:no-start": "wdio test/config/wdio.pixel2.conf.js",
-    "test:pixel2:start":
-      "start-server-and-test build-and-start http://localhost:9000 test:pixel2:no-start",
-    "test:pixel2:start:prebuilt":
-      "start-server-and-test start http://localhost:9000 test:pixel2:no-start",
+    "test:pixel2:start": "start-server-and-test build-and-start http://localhost:9000 test:pixel2:no-start",
+    "test:pixel2:start:prebuilt": "start-server-and-test start http://localhost:9000 test:pixel2:no-start",
     "test:safari:no-start": "wdio test/config/wdio.safari.conf.js",
     "test:safari:wip": "wdio test/config/wdio.safari.wip.conf.js",
-    "test:safari:start:prebuilt":
-      "start-server-and-test start http://localhost:9000 test:safari:no-start",
-    "test:safari:start":
-      "start-server-and-test build-and-start http://localhost:9000 test:safari:no-start",
-    "package":
-      "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
+    "test:safari:start:prebuilt": "start-server-and-test start http://localhost:9000 test:safari:no-start",
+    "test:safari:start": "start-server-and-test build-and-start http://localhost:9000 test:safari:no-start",
+    "package": "mkdir target && cd public && tar zcvf ../target/windyroad.tar.gz *",
     "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz",
-    "deploy":
-      "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'",
-    "npm-check": "npm-check  --skip-unused"
+    "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'",
+    "npm-check": "npm-check  --skip-unused",
+    "npm-check:interactive": "npm-check  --skip-unused -u ",
+    "npm-check-unused": "npm-check"
   },
   "devDependencies": {
     "babel-core": "~6.26.3",
-    "babel-jest": "~23.0.1",
+    "babel-eslint": "^8.2.5",
+    "babel-jest": "^23.2.0",
     "babel-preset-env": "~1.7.0",
     "babel-register": "~6.26.0",
     "chai": "~4.1.2",
@@ -105,31 +91,43 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-react": "^7.9.1",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.0",
+    "eslint-plugin-prettier": "^2.6.1",
+    "eslint-plugin-react": "^7.10.0",
     "gatsby-plugin-eslint": "^1.0.3",
     "husky": "^0.14.3",
     "imagemin-lint-staged": "^0.3.0",
     "lint-staged": "^7.2.0",
-    "prettier": "^1.11.1",
+    "prettier": "^1.13.7",
     "selenium-standalone": "^6.15.1",
     "start-server-and-test": "^1.5.0",
     "wait-port": "^0.2.2",
     "wdio-chromedriver-service": "^0.1.3",
     "wdio-cucumber-framework": "^2.1.0",
     "wdio-cucumber-snippet-reporter": "0.0.4",
-    "wdio-firefox-profile-service": "^0.1.1",
-    "wdio-junit-reporter": "^0.4.3",
-    "wdio-sauce-service": "^0.4.9",
+    "wdio-firefox-profile-service": "^0.1.2",
+    "wdio-junit-reporter": "^0.4.4",
+    "wdio-sauce-service": "^0.4.10",
     "wdio-selenium-standalone-service": "0.0.10",
-    "webdriverio": "^4.12.0"
+    "webdriverio": "^4.13.1"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css,md}": ["prettier --write", "git add"],
-    "test/**/*.{js,jsx,json,css,md}": ["prettier --write", "git add"],
-    "*.{js,jsx,json,css,md}": ["prettier --write", "git add"],
-    "*.{png,jpeg,jpg,gif,svg}": ["imagemin-lint-staged", "git add"]
+    "src/**/*.{js,jsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "test/**/*.{js,jsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{js,jsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{png,jpeg,jpg,gif,svg}": [
+      "imagemin-lint-staged",
+      "git add"
+    ]
   }
 }

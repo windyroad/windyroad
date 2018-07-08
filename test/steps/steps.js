@@ -37,3 +37,11 @@ Given(/^I've scrolled to the about us section$/, () => {
 Given(/^the page will scroll to the services section$/, () =>
   LandingPage.servicesSection.checkWithinViewport(),
 )
+
+Given(/^I've scrolled to the services section$/, () =>
+  LandingPage.servicesSection.scrollTo(),
+)
+
+Given(/^the page will scroll to the contact section$/, () =>
+  LandingPage.contactSection.checkWithinViewport(),
+)

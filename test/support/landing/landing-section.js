@@ -15,6 +15,10 @@ class LandingSection extends Page {
   checkWithinViewport() {
     checkWithinViewport(this.selector)
   }
+
+  scrollTo() {
+    browser.scroll(this.selector)
+  }
 }
 
 export default LandingSection

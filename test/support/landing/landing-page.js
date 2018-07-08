@@ -7,15 +7,24 @@ class LandingPage extends Page {
   constructor() {
     super()
     this.header = Header
+
+    this.aboutUs = new LandingSection(`section#about`)
+    this.services = new LandingSection(`section#services`)
+    this.contact = new LandingSection(`section#contact`)
   }
 
   get aboutUsSection() {
-    this.currentSection = new LandingSection(`section#about`)
+    this.currentSection = this.aboutUs
     return this.currentSection
   }
 
   get servicesSection() {
-    this.currentSection = new LandingSection(`section#services`)
+    this.currentSection = this.services
+    return this.currentSection
+  }
+
+  get contactSection() {
+    this.currentSection = this.contact
     return this.currentSection
   }
 

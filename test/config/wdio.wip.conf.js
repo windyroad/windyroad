@@ -1,24 +1,7 @@
-const defaults = require('./wdio.conf.js').config
+const defaults = require('./wdio.chrome.dev.conf.js').config
 
 // clone prod config and add new properties/overrides
-const localConfig = Object.assign(defaults, {
-  capabilities: [
-    {
-      browserName: 'chrome',
-      chromeOptions: {
-        args: [
-          '--window-size=1280,800',
-          '-disable-dev-shm-usage',
-          '--no-sandbox',
-        ],
-      },
-    },
-  ],
-  baseUrl: 'http://localhost:8000',
-  path: '/',
-  port: '9515',
-  services: ['chromedriver'],
-})
+const localConfig = Object.assign(defaults, {})
 
 localConfig.cucumberOpts.tags = '@wip'
 

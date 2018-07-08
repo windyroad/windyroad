@@ -1,4 +1,4 @@
-@landing @wip
+@landing 
 Feature: Landing Page
     
 
@@ -24,10 +24,20 @@ Feature: Landing Page
         When I click on the down arror
         Then the page will scroll to the about us section
         
-    # @nav 
-    # Scenario: Scoll to Services Section
-    #     Given I've opened the Windy Road site
-    #     And I've scrolled to the about us section
-    #     And I've waited for the down arror to appear
-    #     When I click on the down arror
-    #     Then the page will scroll to the services section
+# test 733px viewpport width. GotoNext in wrong spot
+
+    @nav
+    Scenario: Scoll to Services Section
+        Given I've opened the Windy Road site
+        And I've scrolled to the about us section
+        And I've waited for the down arror to appear
+        When I click on the down arror
+        Then the page will scroll to the services section
+
+    @nav 
+    Scenario: Scoll to Contact Section
+        Given I've opened the Windy Road site
+        And I've scrolled to the services section
+        And I've waited for the down arror to appear
+        When I click on the down arror
+        Then the page will scroll to the contact section
