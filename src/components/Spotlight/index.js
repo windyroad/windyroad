@@ -6,7 +6,6 @@ class Spotlight extends React.Component {
   constructor(props) {
     super(props)
     this.images = props.images
-    console.log(this.images)
 
     for (const key in this.images) {
       this.state = {

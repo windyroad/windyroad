@@ -69,13 +69,9 @@ class Banner extends React.Component {
     window.addEventListener('resize', e => this.handleResize(window))
     this.handleResize(window)
 
-    Events.scrollEvent.register('begin', function(to, element) {
-      console.log('begin', arguments)
-    })
+    Events.scrollEvent.register('begin', function(to, element) {})
 
-    Events.scrollEvent.register('end', function(to, element) {
-      console.log('end', arguments)
-    })
+    Events.scrollEvent.register('end', function(to, element) {})
 
     scrollSpy.update()
   }

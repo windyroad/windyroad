@@ -38,10 +38,16 @@ Given(/^the page will scroll to the services section$/, () =>
   LandingPage.servicesSection.checkWithinViewport(),
 )
 
-Given(/^I've scrolled to the services section$/, () =>
-  LandingPage.servicesSection.scrollTo(),
-)
+Given(/^I've scrolled to the services section$/, () => {
+  browser.debug()
+  LandingPage.servicesSection.scrollTo()
+})
 
 Given(/^the page will scroll to the contact section$/, () =>
   LandingPage.contactSection.checkWithinViewport(),
 )
+
+Given(/^there will be a heading with the text "([^"]*)"$/, heading => {
+  // Write code here that turns the phrase above into concrete actions
+  return 'pending'
+})

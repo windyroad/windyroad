@@ -13,7 +13,9 @@
   "globals": {
     "graphql": true,
     "browser": true,
-    "expect": true
+    "expect": true,
+    "document": true,
+    "window": true
   },
   "rules": {
     "strict": 0,

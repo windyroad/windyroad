@@ -3,13 +3,13 @@
 
 // import fontAwesomeCss from '@fortawesome/fontawesome-free/css/all.css'
 import Link from 'gatsby-link'
-import PropTypes from 'prop-types'
-import React from 'react'
+import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
+import queryString from 'query-string'
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import Helmet from 'react-helmet'
-// import Services from '../components/Services' import Special from
-// '../components/Special'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import defaultFeatures from '../features'
 import themeCss from './css/main.css'
 
 class TemplateWrapper extends React.Component {
@@ -24,6 +24,7 @@ class TemplateWrapper extends React.Component {
   }
 
   componentDidMount() {
+    // console.log('features: ', this.state.features)
     window.addEventListener('load', this.setLoaded)
     // if the load event doesn't fire after a few of seconds,
     // trigger in anyway
@@ -34,14 +35,27 @@ class TemplateWrapper extends React.Component {
     window.removeEventListener('load', this.setLoaded)
   }
 
+  // static get propTypes() {
+  //   return {
+  //     location: PropTypes.shape({
+  //       search: PropTypes.string.isRequired,
+  //     }).isRequired,
+  //     children: PropTypes.func.isRequired,
+  //   }
+  // }
+
   setLoaded() {
-    console.log('Landing Page Loaded')
     if (this.state.loadState == 'is-loading') {
       this.setState({ loadState: 'is-loaded' })
     }
   }
 
   render() {
+    const features = Object.assign(
+      defaultFeatures,
+      queryString.parse(this.props.location.search),
+    )
+
     return (
       <div>
         <Helmet
@@ -66,7 +80,7 @@ class TemplateWrapper extends React.Component {
               ) {
                 const insp_ab_loader = true // set this boolean to false to disable the A/B testing loader
                 window.__insp = window.__insp || []
-                __insp.push(['wid', 1654706623])
+                window.__insp.push(['wid', 1654706623])
                 const ldinsp = function() {
                   if (typeof window.__inspld !== 'undefined') return
                   window.__inspld = 1
@@ -86,13 +100,13 @@ class TemplateWrapper extends React.Component {
                       const e = document.getElementById('insp_abl')
                       if (e) {
                         e.parentNode.removeChild(e)
-                        __insp.push(['ab_timeout'])
+                        window.__insp.push(['ab_timeout'])
                       }
                     }
                     const adlc = 'body{ visibility: hidden !important; }'
                     const adln =
-                      typeof insp_ab_loader_t !== 'undefined'
-                        ? insp_ab_loader_t
+                      typeof window.insp_ab_loader_t !== 'undefined'
+                        ? window.insp_ab_loader_t
                         : 1200
                     insp.onerror = adlt
                     const abti = setTimeout(adlt, adln)
@@ -115,15 +129,19 @@ class TemplateWrapper extends React.Component {
         </Helmet>
         <div id="page-wrapper">
           <Header />
-          {this.props.children()}
+          {this.props.children({ ...this.props, features })}
           <Footer />
         </div>
       </div>
     )
   }
 }
+
 TemplateWrapper.propTypes = {
-  children: PropTypes.func,
+  children: PropTypes.func.isRequired,
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default TemplateWrapper

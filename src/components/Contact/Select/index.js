@@ -9,7 +9,6 @@ class Select extends Input {
   }
 
   handleChange(event, elem) {
-    console.log('select change', event.target.value.toString().trim().length)
     if (event.target.value.toString().trim().length) {
       super.handleChange(event, elem)
     }

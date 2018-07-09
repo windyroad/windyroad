@@ -172,7 +172,7 @@ exports.config = {
     source: true, // <boolean> hide source uris
     profile: [], // <string[]> (name) specify the profile to use
     strict: false, // <boolean> fail if there are any undefined or pending steps
-    tags: [], // <string[]> (expression) only execute the features or scenarios with tags matching the expression
+    tags: 'not(@pending)', // <string[]> (expression) only execute the features or scenarios with tags matching the expression
     timeout: 40000, // <number> timeout for step definitions
     ignoreUndefinedDefinitions: true, // <boolean> Enable this config to treat undefined definitions as warnings.
   },
@@ -197,6 +197,10 @@ exports.config = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
   // beforeSession: function (config, capabilities, specs) { },
+
+  setFeatures: function() {
+    global.features = { services: false }
+  },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.
@@ -229,6 +233,7 @@ exports.config = {
       )
       process.abort()
     }
+    this.setFeatures()
   },
   /**
    * Runs before a WebdriverIO command gets executed.
@@ -276,6 +281,9 @@ exports.config = {
    * @param {Object} error error object if any
    */
   afterCommand: (commandName, args, result, error) => {
+    browser.execute(`window.features = ${JSON.stringify(global.features)}`)
+    browser.execute(`console.log('features:', window.features)`)
+
     // const logs = browser.log('browser')
     // console.log('BROWSER LOGS:')
     // for (let i = 0; i < logs.value.length; i += 1) {

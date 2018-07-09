@@ -93,7 +93,6 @@ const FormStateEnum = Object.freeze({
 })
 
 const requiredValidation = (name, value) => {
-  console.log(name, 'has length', value.toString().trim().length)
   if (!value.toString().trim().length) {
     return `${name} is required`
   }
@@ -254,7 +253,6 @@ class Contact extends React.Component {
       url: 'https://graph.facebook.com',
       method: 'OPTIONS',
     })
-    console.log('offline?', offline)
     let offlineState = {}
     if (offline) {
       offlineState = {
@@ -266,7 +264,6 @@ class Contact extends React.Component {
         url: ZD_API,
         method: 'POST',
       })
-      console.log('zendeskOffline?', zendeskOffline)
       offlineState = {
         offline: false,
         zendeskOffline,
@@ -295,7 +292,6 @@ class Contact extends React.Component {
       return true
     }
     const keys = Object.keys(this.isValids)
-    console.log('validation checks', keys.length)
     for (let i = 0; i < keys.length; ++i) {
       if (!this.isValids[keys[i]]()) {
         return false
@@ -305,7 +301,6 @@ class Contact extends React.Component {
   }
 
   async handleSubmit(event) {
-    console.log('submit', event)
     event.preventDefault()
 
     // this.checkNetworkStatus()
@@ -321,7 +316,6 @@ class Contact extends React.Component {
       prevMessage: null,
       prevCatagory: null,
       prevPriority: null,
-      prevError: null,
       xRequestId: uuid(),
       form: {
         state: FormStateEnum.VALIDATING,
@@ -333,7 +327,6 @@ class Contact extends React.Component {
           state: FormStateEnum.VALIDATION_FAILED,
         },
       })
-      console.log('Form Invalid')
       return
     }
 
@@ -390,10 +383,8 @@ class Contact extends React.Component {
               cancel: progressEvent.cancelable ? prevstate.formCancel : null,
             },
           }))
-          console.log('progressUploadEvent', progressEvent)
         },
         onDownloadProgress: progressEvent => {
-          console.log('progressDownloadEvent', progressEvent)
           this.setState({
             form: {
               state:
@@ -407,10 +398,6 @@ class Contact extends React.Component {
         },
       })
       .then(response => {
-        console.log(response)
-        console.log(response.data.request.url)
-        console.log(response.data.request.id)
-        // let ticketUrl = `https://windyroad.zendesk.com/hc/requests/${response.data.request.id}`
         this.setState({
           ticket: response.data.request,
           form: {
@@ -419,9 +406,7 @@ class Contact extends React.Component {
         })
       })
       .catch(async error => {
-        console.log('Error', JSON.stringify(error))
         if (axios.isCancel(error)) {
-          console.log('Request canceled', error.message)
           this.setState({
             ticket: response.data.request,
             form: {
@@ -432,9 +417,6 @@ class Contact extends React.Component {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          console.log('data', error.response.data)
-          console.log('status', error.response.status)
-          console.log('headers', error.response.headers)
           this.setState({
             ticket: null,
             error: error.response,
@@ -465,9 +447,7 @@ class Contact extends React.Component {
               state: FormStateEnum.GENERAL_ERROR,
             },
           })
-          console.log('Error', error.message)
         }
-        console.log(error.config)
       })
     // TODO: render result
   }
@@ -491,7 +471,6 @@ class Contact extends React.Component {
       prevMessage: prevState.message,
       prevCatagory: prevState.category,
       prevPriority: prevState.priority,
-      prevError: prevState.error,
       error: null,
     }))
     const resetterKeys = Object.keys(this.resetters)
@@ -520,8 +499,6 @@ class Contact extends React.Component {
   }
 
   render() {
-    console.log('state', this.state)
-
     let errorConent = ''
     let sendingHeading = 'Sending...'
     if (this.state.error || this.state.prevError) {
@@ -630,12 +607,6 @@ class Contact extends React.Component {
         this.state.form.state == FormStateEnum.RESPONSE_ERROR ||
         this.state.prevFormState == FormStateEnum.RESPONSE_ERROR
       ) {
-        console.log('Respone Error', this.state.error)
-        console.log(
-          '422?',
-          this.state.error.status == 422 || this.state.prevError.status == 422,
-        )
-
         if (
           this.state.error.status == 422 ||
           this.state.prevError.status == 422

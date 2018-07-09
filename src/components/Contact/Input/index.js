@@ -42,7 +42,6 @@ class Input extends React.Component {
   }
 
   reset() {
-    console.log('resetting')
     this.setState(prevState => {
       return {
         failedValidationMsg: null,
@@ -96,13 +95,6 @@ class Input extends React.Component {
   handleFocus(event, elem) {}
 
   showError() {
-    console.log('!this.state.isValid', !this.state.isValid)
-    console.log('this.props.formIsInit', this.props.formIsInit)
-    console.log('this.state.hasNotChanged', this.state.hasNotChanged)
-    console.log(
-      '!(this.props.formIsInit && this.state.hasNotChanged)',
-      !(this.props.formIsInit && this.state.hasNotChanged),
-    )
     return (
       !this.state.isValid &&
       !(this.props.formIsInit && this.state.hasNotChanged)
@@ -110,7 +102,6 @@ class Input extends React.Component {
   }
 
   validate(value) {
-    console.log('validating', this.props.name, value)
     for (
       let index = 0;
       this.props.validations && index < this.props.validations.length;
@@ -119,7 +110,6 @@ class Input extends React.Component {
       const validationMethod = this.props.validations[index]
       let errorMsg = validationMethod(this.props.placeholder, value)
       if (errorMsg) {
-        console.log(this.props.name, validationMethod, errorMsg)
         this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
@@ -127,8 +117,6 @@ class Input extends React.Component {
           isValid: false,
         }))
         return false
-      } else {
-        console.log(this.props.name, validationMethod, 'passed validation')
       }
     }
     this.setState(prevState => ({
