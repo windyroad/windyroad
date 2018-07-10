@@ -4,7 +4,7 @@
 // import fontAwesomeCss from '@fortawesome/fontawesome-free/css/all.css'
 import Link from 'gatsby-link'
 import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import queryString from 'query-string'
+import queryString from 'querystring'
 import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import Helmet from 'react-helmet'
 import Footer from '../components/Footer'
