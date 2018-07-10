@@ -5,7 +5,9 @@ const chromeCapability = require('./capabilities/chrome.js').config
 const landscapeCapability = require('./capabilities/landscape.js').config
 const pixel2Capability = require('./capabilities/pixel2.js').config
 
-exports.config = {
+const defaultFeatures = require('../../src/features.js')
+
+let config = {
   //
   // ================== Specify Test Files ================== Define which test
   // specs should run. The pattern is relative to the directory from which `wdio`
@@ -152,6 +154,7 @@ exports.config = {
       outputDir: './target/reports/allure',
     },
   },
+
   //
   // If you are using Cucumber you need to specify the location of your step
   // definitions.
@@ -172,7 +175,7 @@ exports.config = {
     source: true, // <boolean> hide source uris
     profile: [], // <string[]> (name) specify the profile to use
     strict: false, // <boolean> fail if there are any undefined or pending steps
-    tags: 'not(@pending)', // <string[]> (expression) only execute the features or scenarios with tags matching the expression
+    tags: [], // <string[]> (expression) only execute the features or scenarios with tags matching the expression
     timeout: 40000, // <number> timeout for step definitions
     ignoreUndefinedDefinitions: true, // <boolean> Enable this config to treat undefined definitions as warnings.
   },
@@ -197,9 +200,34 @@ exports.config = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
   // beforeSession: function (config, capabilities, specs) { },
+  features: defaultFeatures,
+  getTags: function() {
+    const keys = Object.keys(this.features)
+    let enabled = keys
+      .map(key => {
+        if (this.features[key]) {
+          return `@${key}`
+        } else {
+          return `@not-${key}`
+        }
+      })
+      .join(' or ')
 
-  setFeatures: function() {
-    global.features = { services: false }
+    // not(a) and not(b)
+    // not(a or b)
+
+    let disabled = keys
+      .map(key => {
+        if (this.features[key]) {
+          return `@not-${key}`
+        } else {
+          return `@${key}`
+        }
+      })
+      .join(' or ')
+    let tags = `(${enabled}) and not(${disabled})`
+    console.log('TAGS:', tags)
+    return tags
   },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
@@ -233,7 +261,6 @@ exports.config = {
       )
       process.abort()
     }
-    this.setFeatures()
   },
   /**
    * Runs before a WebdriverIO command gets executed.
@@ -316,3 +343,7 @@ exports.config = {
    */
   //  onComplete: function(exitCode, config, capabilities) {  }
 }
+
+config.cucumberOpts.tags = config.getTags()
+
+exports.config = config

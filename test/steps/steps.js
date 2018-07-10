@@ -39,7 +39,6 @@ Given(/^the page will scroll to the services section$/, () =>
 )
 
 Given(/^I've scrolled to the services section$/, () => {
-  browser.debug()
   LandingPage.servicesSection.scrollTo()
 })
 

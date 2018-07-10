@@ -1,3 +1,4 @@
-export default {
+module.exports = {
+  landing: true,
   services: false,
 }

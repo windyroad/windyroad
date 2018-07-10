@@ -23,10 +23,19 @@ Feature: Landing Page
         And I've waited for the down arror to appear
         When I click on the down arror
         Then the page will scroll to the about us section
-        
+
+    @nav @not-services
+    Scenario: Scoll to Contact Section from About
+        Given I've opened the Windy Road site
+        And I've scrolled to the about us section
+        And I've waited for the down arror to appear
+        When I click on the down arror
+        Then the page will scroll to the contact section
+
+
 # test 733px viewpport width. GotoNext in wrong spot
 
-    @nav @pending
+    @nav @services
     Scenario: Scoll to Services Section
         Given I've opened the Windy Road site
         And I've scrolled to the about us section
@@ -34,7 +43,7 @@ Feature: Landing Page
         When I click on the down arror
         Then the page will scroll to the services section
 
-    @nav @pending
+    @nav @services
     Scenario: Scoll to Contact Section
         Given I've opened the Windy Road site
         And I've scrolled to the services section
@@ -42,7 +51,7 @@ Feature: Landing Page
         When I click on the down arror
         Then the page will scroll to the contact section
 
-    @content @pending @wip
+    @content @services @wip
     Scenario: Services Heading
         Given I've opened the Windy Road site
         And I've scrolled to the services section
