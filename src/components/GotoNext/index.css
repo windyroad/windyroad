@@ -40,6 +40,10 @@
 }
 
 @media screen and (max-width: 736px) {
+  .goto-next {
+    right: 0;
+    left: auto;
+  }
 }
 
 @media screen and (max-width: 480px) {

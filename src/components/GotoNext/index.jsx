@@ -1,4 +1,5 @@
-import React from 'react'
+import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import FontAwesome from 'react-fontawesome'
 import { Link } from 'react-scroll'
 import './index.css'
@@ -18,6 +19,14 @@ class GotoNext extends React.Component {
   componentDidMount() {}
 
   componentWillUnmount() {}
+
+  static get propTypes() {
+    return {
+      to: PropTypes.string.isRequired,
+      onSetActive: PropTypes.func.isRequired,
+      onSetInactive: PropTypes.func.isRequired,
+    }
+  }
 
   clickStart() {
     this.setState({ click: true })
@@ -40,7 +49,7 @@ class GotoNext extends React.Component {
         hashSpy
         duration={scrollDuration}
         onSetActive={this.props.onSetActive}
-        onSetInactive={this.props.onSetActive}
+        onSetInactive={this.props.onSetInactive}
         data-duration={scrollDuration}
         // onMouseDown={this.clickStart}
         onTouchStart={this.clickStart}
