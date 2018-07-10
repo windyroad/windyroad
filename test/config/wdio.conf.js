@@ -4,6 +4,7 @@ const extractTarget = require('../../node_modules/wait-port/lib/extract-target.j
 const chromeCapability = require('./capabilities/chrome.js').config
 const landscapeCapability = require('./capabilities/landscape.js').config
 const pixel2Capability = require('./capabilities/pixel2.js').config
+const chrome733Capability = require('./capabilities/chrome.733.js').config
 
 const defaultFeatures = require('../../src/features.js')
 
@@ -44,6 +45,7 @@ let config = {
     chromeCapability,
     landscapeCapability,
     pixel2Capability,
+    chrome733Capability,
     {
       maxInstances: 5,
       browserName: 'chrome',

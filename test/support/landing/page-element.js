@@ -1,3 +1,4 @@
+import clickElement from '../action/clickElement'
 import checkContainsText from '../check/checkContainsText'
 import checkWithinViewport from '../check/checkWithinViewport'
 import Page from './page'
@@ -6,6 +7,7 @@ class PageElement extends Page {
   constructor(selector) {
     super()
     this.selector = selector
+    this.element = browser.element(selector)
   }
 
   checkWithinViewport() {
@@ -23,6 +25,11 @@ class PageElement extends Page {
 
   scrollTo() {
     browser.scroll(this.selector)
+  }
+
+  click() {
+    clickElement('click', 'element', this.selector)
+    browser.pause(this.element.getAttribute('data-duration') || 0)
   }
 }
 

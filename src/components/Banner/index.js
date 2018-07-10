@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import { Events, scrollSpy } from 'react-scroll'
 import logo from '../../img/logo-white.svg'
 import FindYourNavigator from '../FindYourNavigator'

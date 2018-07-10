@@ -9,6 +9,10 @@ class LandingSection extends PageElement {
   get heading() {
     return new PageElement(this.selector + ' header')
   }
+
+  get cta() {
+    return new PageElement(this.selector + ' .cta')
+  }
 }
 
 export default LandingSection

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import { Col, Row } from 'react-flexbox-grid'
 import FindYourNavigator from '../FindYourNavigator'
 import Spotlight from '../Spotlight'

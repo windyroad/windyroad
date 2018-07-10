@@ -42,10 +42,18 @@ Given(/^I've scrolled to the services section$/, () => {
   LandingPage.servicesSection.scrollTo()
 })
 
-Given(/^the page will scroll to the contact section$/, () =>
-  LandingPage.contactSection.checkWithinViewport(),
-)
+Given(/^the page will scroll to the contact section$/, () => {
+  LandingPage.contactSection.checkWithinViewport()
+})
 
 Given(/^there will be a heading with the text "([^"]*)"$/, heading => {
   LandingPage.currentSection.heading.checkContent(heading)
+})
+
+Given(/^there will be a "([^"]*)" CTA$/, text => {
+  LandingPage.currentSection.cta.checkContent(text)
+})
+
+Given(/^I click on the CTA$/, () => {
+  LandingPage.currentSection.cta.click()
 })
