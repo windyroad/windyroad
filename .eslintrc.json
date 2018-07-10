@@ -15,7 +15,8 @@
     "browser": true,
     "expect": true,
     "document": true,
-    "window": true
+    "window": true,
+    "Image": true
   },
   "rules": {
     "strict": 0,

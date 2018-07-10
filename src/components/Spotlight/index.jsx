@@ -1,4 +1,5 @@
-import React from 'react'
+import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import GotoNext from '../GotoNext'
 import './index.css'
 
@@ -11,9 +12,35 @@ class Spotlight extends React.Component {
       this.state = {
         size: key,
         image: this.images[key],
-        active: 'inactive',
+        active: 'active',
       }
       break
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', () => this.handleResize(window))
+    this.handleResize(window)
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      size: this.state.size,
+      image: this.state.image,
+      active: 'active',
+    })
+    window.removeEventListener('resize', () => this.handleResize(window))
+  }
+
+  static get propTypes() {
+    return {
+      images: PropTypes.string.isRequired,
+      nextActive: PropTypes.func.isRequired,
+      nextInactive: PropTypes.func.isRequired,
+      next: PropTypes.string.isRequired,
+      children: PropTypes.node.isRequired,
+      id: PropTypes.string.isRequired,
+      className: PropTypes.string.isRequired,
     }
   }
 
@@ -55,7 +82,7 @@ class Spotlight extends React.Component {
     this.setState({
       size: this.state.size,
       image: this.state.image,
-      active: '',
+      active: 'active',
     })
   }
 
@@ -65,20 +92,6 @@ class Spotlight extends React.Component {
       image: this.state.image,
       active: 'inactive',
     })
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', e => this.handleResize(window))
-    this.handleResize(window)
-  }
-
-  componentWillUnmount() {
-    this.setState({
-      size: this.state.size,
-      image: this.state.image,
-      active: true,
-    })
-    window.removeEventListener('resize', e => this.handleResize(window))
   }
 
   render() {

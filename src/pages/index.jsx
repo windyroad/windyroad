@@ -31,19 +31,27 @@ class IndexPage extends React.Component {
   }
 
   handleAboutActive() {
-    this.about.handleSetActive()
+    if (this.about) {
+      this.about.handleSetActive()
+    }
   }
 
   handleAboutInactive() {
-    this.about.handleSetInactive()
+    if (this.about) {
+      this.about.handleSetInactive()
+    }
   }
 
   handleContactActive() {
-    this.contact.handleSetActive()
+    if (this.contact) {
+      this.contact.handleSetActive()
+    }
   }
 
   handleContactInactive() {
-    this.contact.handleSetInactive()
+    if (this.contact) {
+      this.contact.handleSetInactive()
+    }
   }
 
   render() {
