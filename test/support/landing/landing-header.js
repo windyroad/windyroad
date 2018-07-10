@@ -1,19 +1,8 @@
-import checkWithinViewport from '../check/checkWithinViewport'
-import Page from './page'
+import PageElement from './page-element'
 
-class LandingHeader extends Page {
+class LandingHeader extends PageElement {
   constructor() {
-    super()
-    this.selector = 'header#header'
-  }
-
-  checkWithinViewport() {
-    checkWithinViewport(this.selector)
-  }
-
-  checkAtTopOfPage() {
-    const location = browser.getLocation(this.selector)
-    expect(location.y).to.equal(0)
+    super('header#header')
   }
 }
 

@@ -47,6 +47,5 @@ Given(/^the page will scroll to the contact section$/, () =>
 )
 
 Given(/^there will be a heading with the text "([^"]*)"$/, heading => {
-  // Write code here that turns the phrase above into concrete actions
-  return 'pending'
+  LandingPage.currentSection.heading.checkContent(heading)
 })

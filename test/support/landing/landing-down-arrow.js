@@ -1,17 +1,12 @@
 import clickElement from '../action/clickElement'
 import waitForVisible from '../action/waitForVisible'
-import checkWithinViewport from '../check/checkWithinViewport'
-import Page from './page'
+import PageElement from './page-element'
 
-class LandingDownArrow extends Page {
+class LandingDownArrow extends PageElement {
   constructor(selector) {
-    super()
+    super(selector)
     waitForVisible(selector)
     this.element = browser.element(selector)
-  }
-
-  checkWithinViewport() {
-    checkWithinViewport(this.element.selector)
   }
 
   click() {

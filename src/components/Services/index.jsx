@@ -27,7 +27,11 @@ class Services extends React.Component {
         className="page-wrapper bot0 spotlightx backdropped"
         {...this.props}
       >
-        <div className="content">Services</div>
+        <div className="content">
+          <header>
+            <h2>Services</h2>
+          </header>
+        </div>
         <GotoNext
           to={this.props.next}
           onSetActive={this.props.nextActive}

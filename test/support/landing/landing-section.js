@@ -1,23 +1,13 @@
-import checkWithinViewport from '../check/checkWithinViewport'
 import LandingDownArrow from './landing-down-arrow'
-import Page from './page'
+import PageElement from './page-element'
 
-class LandingSection extends Page {
-  constructor(selector) {
-    super()
-    this.selector = selector
-  }
-
+class LandingSection extends PageElement {
   get downArrow() {
     return new LandingDownArrow(`${this.selector} a.goto-next`)
   }
 
-  checkWithinViewport() {
-    checkWithinViewport(this.selector)
-  }
-
-  scrollTo() {
-    browser.scroll(this.selector)
+  get heading() {
+    return new PageElement(this.selector + ' header')
   }
 }
 
