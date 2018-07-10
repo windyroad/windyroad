@@ -5,4 +5,6 @@ const localConfig = Object.assign(defaults, {
   baseUrl: 'http://localhost:8000',
 })
 
+console.log('ops3', localConfig.capabilities[0].chromeOptions)
+
 exports.config = localConfig

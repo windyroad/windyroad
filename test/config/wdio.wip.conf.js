@@ -17,10 +17,7 @@ const localConfig = Object.assign(defaults, {
   },
 })
 localConfig.cucumberOpts.tags = localConfig.getTags()
-// localConfig.cucumberOpts.tags =
-//   localConfig.cucumberOpts.tags == ''
-//     ? '@wip'
-//     : localConfig.cucumberOpts.tags + ' and @wip'
-// console.log('TAGS:', localConfig.cucumberOpts.tags)
+
+console.log('ops2', localConfig.capabilities[0].chromeOptions)
 
 exports.config = localConfig

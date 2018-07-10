@@ -1,7 +1,11 @@
-const chromeCapability = require('./chrome.js').config
+//const chromeCapability = require('./chrome.js').config
 
-const capability = Object.assign(chromeCapability, {})
-
-capability.chromeOptions.args = ['--window-size=733,768']
+const capability = {
+  maxInstances: 5,
+  browserName: 'chrome',
+  chromeOptions: {
+    args: ['--window-size=733,768'],
+  },
+}
 
 exports.config = capability

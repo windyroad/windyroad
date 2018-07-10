@@ -30,14 +30,21 @@ Feature: Landing Page
         And I've scrolled to the about us section
         Then there will be a "Find your navigator" CTA
 
-    @nav @about @wip
+    @nav @about 
     Scenario: CTA In About Us
         Given I've opened the Windy Road site
         And I've scrolled to the about us section
         When I click on the CTA
         Then the page will scroll to the contact section
 
-    @nav @not-services
+    @nav @about @wip
+    Scenario: Down Arror In About Us Does Not Overlap CTA
+        Given I've opened the Windy Road site
+        And I've scrolled to the about us section
+        And I've waited for the down arror to appear
+        Then down arror does not overlap the CTA
+
+    @nav @about @not-services
     Scenario: Scoll to Contact Section from About
         Given I've opened the Windy Road site
         And I've scrolled to the about us section
@@ -64,7 +71,7 @@ Feature: Landing Page
         When I click on the down arror
         Then the page will scroll to the contact section
 
-    @content @services
+    @content @services 
     Scenario: Services Heading
         Given I've opened the Windy Road site
         And I've scrolled to the services section

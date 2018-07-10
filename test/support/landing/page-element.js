@@ -1,3 +1,4 @@
+import assert from 'assert'
 import clickElement from '../action/clickElement'
 import checkContainsText from '../check/checkContainsText'
 import checkWithinViewport from '../check/checkWithinViewport'
@@ -30,6 +31,37 @@ class PageElement extends Page {
   click() {
     clickElement('click', 'element', this.selector)
     browser.pause(this.element.getAttribute('data-duration') || 0)
+  }
+
+  checkNotIn(pageElement) {
+    const locationStart = pageElement.element.getLocation()
+    const size = pageElement.element.getElementSize()
+    const locationEnd = {
+      x: locationStart.x + size.width,
+      y: locationStart.y + size.height,
+    }
+    const thisLocStart = this.element.getLocation()
+    console.log('start', locationStart)
+    console.log('end', locationEnd)
+    console.log('thisLocStart', thisLocStart)
+    assert(
+      thisLocStart.x < locationStart.x ||
+        thisLocStart.x > locationEnd.x ||
+        thisLocStart.y < locationStart.y ||
+        thisLocStart.y > locationEnd.y,
+    )
+    const thisSize = this.element.getElementSize()
+    const thisLocEnd = {
+      x: thisLocStart.x + thisSize.width,
+      y: thisLocStart.y + thisSize.height,
+    }
+    console.log('thisLocEnd', thisLocEnd)
+    assert(
+      thisLocEnd.x < locationStart.x ||
+        thisLocEnd.x > locationEnd.x ||
+        thisLocEnd.y < locationStart.y ||
+        thisLocEnd.y > locationEnd.y,
+    )
   }
 }
 

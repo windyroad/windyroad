@@ -42,18 +42,24 @@ Given(/^I've scrolled to the services section$/, () => {
   LandingPage.servicesSection.scrollTo()
 })
 
-Given(/^the page will scroll to the contact section$/, () => {
+Then(/^the page will scroll to the contact section$/, () => {
   LandingPage.contactSection.checkWithinViewport()
 })
 
-Given(/^there will be a heading with the text "([^"]*)"$/, heading => {
+Then(/^there will be a heading with the text "([^"]*)"$/, heading => {
   LandingPage.currentSection.heading.checkContent(heading)
 })
 
-Given(/^there will be a "([^"]*)" CTA$/, text => {
+Then(/^there will be a "([^"]*)" CTA$/, text => {
   LandingPage.currentSection.cta.checkContent(text)
 })
 
-Given(/^I click on the CTA$/, () => {
+When(/^I click on the CTA$/, () => {
   LandingPage.currentSection.cta.click()
+})
+
+Then(/^down arror does not overlap the CTA$/, () => {
+  LandingPage.currentSection.downArrow.checkNotIn(
+    LandingPage.currentSection.cta,
+  )
 })
