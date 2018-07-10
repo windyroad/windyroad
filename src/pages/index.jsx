@@ -13,7 +13,7 @@ class IndexPage extends React.Component {
   static get propTypes() {
     return {
       features: PropTypes.shape({
-        services: PropTypes.bool,
+        services: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
       }),
     }
   }

@@ -20,6 +20,17 @@ class TemplateWrapper extends React.Component {
       loadState: 'is-loading',
     }
 
+    const parsedfeatures = Object.assign(
+      defaultFeatures,
+      queryString.parse(this.props.location.search.substring(1)),
+    )
+    this.features = {}
+    const keys = Object.keys(parsedfeatures)
+    for (let i = 0; i < keys.length; i += 1) {
+      this.features[keys[i]] =
+        parsedfeatures[keys[i]] === true || parsedfeatures[keys[i]] === 'true'
+    }
+
     this.setLoaded = this.setLoaded.bind(this)
   }
 
@@ -35,15 +46,6 @@ class TemplateWrapper extends React.Component {
     window.removeEventListener('load', this.setLoaded)
   }
 
-  // static get propTypes() {
-  //   return {
-  //     location: PropTypes.shape({
-  //       search: PropTypes.string.isRequired,
-  //     }).isRequired,
-  //     children: PropTypes.func.isRequired,
-  //   }
-  // }
-
   setLoaded() {
     if (this.state.loadState == 'is-loading') {
       this.setState({ loadState: 'is-loaded' })
@@ -51,11 +53,7 @@ class TemplateWrapper extends React.Component {
   }
 
   render() {
-    const features = Object.assign(
-      defaultFeatures,
-      queryString.parse(this.props.location.search),
-    )
-
+    const features = this.features
     return (
       <div>
         <Helmet
