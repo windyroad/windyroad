@@ -1,14 +1,6 @@
 import React from 'react'
-import {
-  Link,
-  DirectLink,
-  Element,
-  Events,
-  animateScroll as scroll,
-  scrollSpy,
-  scroller,
-} from 'react-scroll'
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import { Col, Row } from 'react-flexbox-grid'
+import { Link } from 'react-scroll'
 
 class Footer extends React.Component {
   render() {
@@ -44,9 +36,9 @@ class Footer extends React.Component {
           <li>
             <Link
               to="contact"
-              spy={true}
-              smooth={true}
-              hashSpy={true}
+              spy
+              smooth
+              hashSpy
               duration={1000}
               className="icon alt fa-envelope"
             >

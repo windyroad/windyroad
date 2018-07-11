@@ -1,5 +1,5 @@
-import waitForVisible from '../action/waitForVisible'
-import PageElement from './page-element'
+import waitForVisible from '../../action/waitForVisible'
+import PageElement from '../page-element'
 
 class LandingDownArrow extends PageElement {
   constructor(selector) {

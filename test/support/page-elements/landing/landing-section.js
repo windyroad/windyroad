@@ -1,5 +1,5 @@
+import PageElement from '../page-element'
 import LandingDownArrow from './landing-down-arrow'
-import PageElement from './page-element'
 
 class LandingSection extends PageElement {
   get downArrow() {

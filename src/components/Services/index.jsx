@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
+import { Col, Row } from 'react-flexbox-grid'
 import GotoNext from '../GotoNext'
+import AgileAndLeanMentoringTile from './Tile/AgileAndLeanMentoringTile'
 
 class Services extends React.Component {
   constructor(props) {
@@ -31,6 +33,13 @@ class Services extends React.Component {
           <header>
             <h2>Services</h2>
           </header>
+          <div className="service-items">
+            <Row>
+              <Col xs={3} sm={3} md={4} lg={3}>
+                <AgileAndLeanMentoringTile />
+              </Col>
+            </Row>
+          </div>
         </div>
         <GotoNext
           to={this.props.next}

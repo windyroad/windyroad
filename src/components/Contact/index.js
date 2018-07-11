@@ -10,7 +10,7 @@ import Button from '../Button'
 import Error422 from './Error/Error422'
 import './index.css'
 import Input from './Input'
-import noInternet from './no-internet.js'
+import noInternet from './no-internet'
 import RadioGroup from './RadioGroup'
 import Select from './Select'
 

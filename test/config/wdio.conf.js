@@ -1,5 +1,5 @@
 const waitPort = require('wait-port')
-const extractTarget = require('../../node_modules/wait-port/lib/extract-target.js')
+const extractTarget = require('wait-port/lib/extract-target')
 
 const chromeCapability = require('./capabilities/chrome.js').config
 const landscapeCapability = require('./capabilities/landscape.js').config

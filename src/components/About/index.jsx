@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import { Col, Row } from 'react-flexbox-grid'
 import FindYourNavigator from '../FindYourNavigator'
@@ -22,6 +23,15 @@ class About extends React.Component {
       720: whiteboard720,
       1440: whiteboard1440,
       2880: whiteboard2880,
+    }
+  }
+
+  static get propTypes() {
+    return {
+      id: PropTypes.string.isRequired,
+      nextActive: PropTypes.func.isRequired,
+      nextInactive: PropTypes.func.isRequired,
+      next: PropTypes.string.isRequired,
     }
   }
 

@@ -1,5 +1,5 @@
 import checkTitle from '../support/check/checkTitle'
-import LandingPage from '../support/landing/landing-page'
+import LandingPage from '../support/page-elements/landing/landing-page'
 
 const { Given, When, Then } = require('cucumber')
 
@@ -61,5 +61,21 @@ When(/^I click on the CTA$/, () => {
 Then(/^down arror does not overlap the CTA$/, () => {
   LandingPage.currentSection.downArrow.checkNotIn(
     LandingPage.currentSection.cta,
+  )
+})
+
+Then(/^the services will be displayed$/, () => {
+  LandingPage.servicesSection.grid.checkWithinViewport()
+})
+
+Then(/^there will be a services tile for "([^"]*)"$/, title => {
+  LandingPage.currentSection.grid.agileAndLeanMentoring.heading.checkContent(
+    title,
+  )
+})
+
+Given(/^it will have an excerpt of$/, content => {
+  LandingPage.currentSection.grid.agileAndLeanMentoring.excerpt.checkContent(
+    content,
   )
 })

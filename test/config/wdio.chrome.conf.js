@@ -9,6 +9,4 @@ const localConfig = Object.assign(defaults, {
   services: ['chromedriver'],
 })
 
-console.log('ops4', localConfig.capabilities[0].chromeOptions)
-
 exports.config = localConfig

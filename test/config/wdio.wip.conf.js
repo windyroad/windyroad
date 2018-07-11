@@ -18,6 +18,4 @@ const localConfig = Object.assign(defaults, {
 })
 localConfig.cucumberOpts.tags = localConfig.getTags()
 
-console.log('ops2', localConfig.capabilities[0].chromeOptions)
-
 exports.config = localConfig

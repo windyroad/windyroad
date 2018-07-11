@@ -1,7 +1,8 @@
-import waitForVisible from '../action/waitForVisible'
+import waitForVisible from '../../action/waitForVisible'
+import Page from '../page'
+import ServicesSection from '../services/section'
 import Header from './landing-header'
 import LandingSection from './landing-section'
-import Page from './page'
 
 class LandingPage extends Page {
   constructor() {
@@ -9,7 +10,7 @@ class LandingPage extends Page {
     this.header = Header
 
     this.aboutUs = new LandingSection(`section#about`)
-    this.services = new LandingSection(`section#services`)
+    this.services = new ServicesSection(`section#services`)
     this.contact = new LandingSection(`section#contact`)
   }
 

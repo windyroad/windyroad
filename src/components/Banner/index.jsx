@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import { Events, scrollSpy } from 'react-scroll'
 import logo from '../../img/logo-white.svg'
@@ -35,6 +36,27 @@ class Banner extends React.Component {
     this.scrollDuration = 1000
   }
 
+  componentDidMount() {
+    window.addEventListener('resize', () => this.handleResize(window))
+    this.handleResize(window)
+
+    scrollSpy.update()
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', () => this.handleResize(window))
+    Events.scrollEvent.remove('begin')
+    Events.scrollEvent.remove('end')
+  }
+
+  static get propTypes() {
+    return {
+      nextActive: PropTypes.func.isRequired,
+      nextInactive: PropTypes.func.isRequired,
+      next: PropTypes.string.isRequired,
+    }
+  }
+
   getImage(window, pixelRatio) {
     const currentSize = this.state.size
     for (const key in this.images) {
@@ -65,23 +87,6 @@ class Banner extends React.Component {
     }
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', e => this.handleResize(window))
-    this.handleResize(window)
-
-    Events.scrollEvent.register('begin', function(to, element) {})
-
-    Events.scrollEvent.register('end', function(to, element) {})
-
-    scrollSpy.update()
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', e => this.handleResize(window))
-    Events.scrollEvent.remove('begin')
-    Events.scrollEvent.remove('end')
-  }
-
   render() {
     return (
       <section
@@ -94,7 +99,7 @@ class Banner extends React.Component {
         <div className="content">
           <header>
             <h2>
-              <img src={logo} className="logo" />
+              <img src={logo} className="logo" alt="Windy Road" />
             </h2>
             <p>We help you stay on course</p>
             <FindYourNavigator />

@@ -41,9 +41,6 @@ class PageElement extends Page {
       y: locationStart.y + size.height,
     }
     const thisLocStart = this.element.getLocation()
-    console.log('start', locationStart)
-    console.log('end', locationEnd)
-    console.log('thisLocStart', thisLocStart)
     assert(
       thisLocStart.x < locationStart.x ||
         thisLocStart.x > locationEnd.x ||
@@ -55,7 +52,6 @@ class PageElement extends Page {
       x: thisLocStart.x + thisSize.width,
       y: thisLocStart.y + thisSize.height,
     }
-    console.log('thisLocEnd', thisLocEnd)
     assert(
       thisLocEnd.x < locationStart.x ||
         thisLocEnd.x > locationEnd.x ||

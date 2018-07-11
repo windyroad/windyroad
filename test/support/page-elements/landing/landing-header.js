@@ -1,4 +1,4 @@
-import PageElement from './page-element'
+import PageElement from '../page-element'
 
 class LandingHeader extends PageElement {
   constructor() {
