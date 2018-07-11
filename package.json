@@ -113,6 +113,7 @@
     "wdio-cucumber-snippet-reporter": "0.0.4",
     "wdio-firefox-profile-service": "^0.1.2",
     "wdio-junit-reporter": "^0.4.4",
+    "wdio-logger": "^5.0.0-alpha.9",
     "wdio-sauce-service": "^0.4.10",
     "wdio-selenium-standalone-service": "0.0.10",
     "webdriverio": "^4.13.1"

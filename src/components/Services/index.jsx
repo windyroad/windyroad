@@ -3,6 +3,8 @@ import React from 'react' // eslint-disable-line import/no-extraneous-dependenci
 import { Col, Row } from 'react-flexbox-grid'
 import GotoNext from '../GotoNext'
 import AgileAndLeanMentoringTile from './Tile/AgileAndLeanMentoringTile'
+import ContinousIntegrationTile from './Tile/ContinousIntegrationTile'
+import ProductResharpeningTile from './Tile/ProductResharpeningTile'
 
 class Services extends React.Component {
   constructor(props) {
@@ -35,8 +37,14 @@ class Services extends React.Component {
           </header>
           <div className="service-items">
             <Row>
-              <Col xs={3} sm={3} md={4} lg={3}>
+              <Col>
                 <AgileAndLeanMentoringTile />
+              </Col>
+              <Col>
+                <ContinousIntegrationTile />
+              </Col>
+              <Col>
+                <ProductResharpeningTile />
               </Col>
             </Row>
           </div>

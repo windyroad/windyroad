@@ -69,13 +69,11 @@ Then(/^the services will be displayed$/, () => {
 })
 
 Then(/^there will be a services tile for "([^"]*)"$/, title => {
-  LandingPage.currentSection.grid.agileAndLeanMentoring.heading.checkContent(
-    title,
-  )
+  LandingPage.currentSection.grid
+    .getTileForTitle(title)
+    .heading.checkContent(title)
 })
 
 Given(/^it will have an excerpt of$/, content => {
-  LandingPage.currentSection.grid.agileAndLeanMentoring.excerpt.checkContent(
-    content,
-  )
+  LandingPage.currentSection.grid.currentTile.excerpt.checkContent(content)
 })

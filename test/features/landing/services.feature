@@ -39,3 +39,23 @@ Feature: Services Section
             """
             Need help or a refresher on your Agile or Lean journey?
             """
+
+    @content
+    Scenario: Continuous Integration & Continuous Delivery Service
+        Given I've opened the Windy Road site
+        And I've scrolled to the services section
+        Then there will be a services tile for "Continuous Integration & Continuous Delivery"
+        And it will have an excerpt of
+            """
+            Going live doesn't need to be expensive and risky.
+            """
+
+    @content @wip
+    Scenario: Product Resharpening Service
+        Given I've opened the Windy Road site
+        And I've scrolled to the services section
+        Then there will be a services tile for "Product Resharpening"
+        And it will have an excerpt of
+            """
+            Get your great idea moving again.
+            """
