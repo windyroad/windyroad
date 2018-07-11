@@ -5,6 +5,7 @@ import GotoNext from '../GotoNext'
 import AgileAndLeanMentoringTile from './Tile/AgileAndLeanMentoringTile'
 import ContinousIntegrationTile from './Tile/ContinousIntegrationTile'
 import ProductResharpeningTile from './Tile/ProductResharpeningTile'
+import TestAutomationTile from './Tile/TestAutomationTile'
 
 class Services extends React.Component {
   constructor(props) {
@@ -45,6 +46,9 @@ class Services extends React.Component {
               </Col>
               <Col>
                 <ProductResharpeningTile />
+              </Col>
+              <Col>
+                <TestAutomationTile />
               </Col>
             </Row>
           </div>

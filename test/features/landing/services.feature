@@ -50,7 +50,7 @@ Feature: Services Section
             Going live doesn't need to be expensive and risky.
             """
 
-    @content @wip
+    @content 
     Scenario: Product Resharpening Service
         Given I've opened the Windy Road site
         And I've scrolled to the services section
@@ -58,4 +58,14 @@ Feature: Services Section
         And it will have an excerpt of
             """
             Get your great idea moving again.
+            """
+
+    @content @wip
+    Scenario: BDD & Test Automation Service
+        Given I've opened the Windy Road site
+        And I've scrolled to the services section
+        Then there will be a services tile for "BDD & Test Automation"
+        And it will have an excerpt of
+            """
+            Get more from your test automation efforts.
             """

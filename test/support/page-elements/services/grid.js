@@ -7,36 +7,30 @@ class Grid extends PageElement {
   constructor(props) {
     super(props)
 
-    this.agileAndLeanMentoringElement = new Tile(
+    this.agileAndLeanMentoring = new Tile(
       `${this.selector} .agile-and-lean-mentoring`,
     )
-    this.continuousIntegrationElement = new Tile(
+    this.continuousIntegration = new Tile(
       `${this.selector} .continuous-integration`,
     )
-    this.productResharpeningElement = new Tile(
+    this.productResharpening = new Tile(
       `${this.selector} .product-resharpening`,
     )
-  }
 
-  get agileAndLeanMentoring() {
-    this.currentTile = this.agileAndLeanMentoringElement
-    return this.currentTile
-  }
-
-  get continuousIntegration() {
-    this.currentTile = this.continuousIntegrationElement
-    return this.currentTile
+    this.testAutomation = new Tile(`${this.selector} .test-automation`)
   }
 
   getTileForTitle(title) {
     const mapping = {
-      'Agile & Lean Mentoring': 'agileAndLeanMentoringElement',
-      'Continuous Integration & Continuous Delivery':
-        'continuousIntegrationElement',
-      'Product Resharpening': 'productResharpeningElement',
+      'Agile & Lean Mentoring': this.agileAndLeanMentoring,
+      'Continuous Integration & Continuous Delivery': this
+        .continuousIntegration,
+      'Product Resharpening': this.productResharpening,
+      'BDD & Test Automation': this.testAutomation,
     }
     expect(mapping).to.have.property(title)
-    this.currentTile = this[mapping[title]]
+    this.currentTile = mapping[title]
+    expect(this.currentTile).to.not.be.undefined
     log.setLevel('info')
     log.info('this.currentTile', this.currentTile)
     return this.currentTile
