@@ -7,7 +7,7 @@ const TestAutomationTile = function() {
     <Tile
       title="BDD &amp; Test Automation Service"
       className="test-automation"
-      excerpt="Get more from your test automation efforts."
+      excerpt="Get so much more from your test automation efforts."
     />
   )
 }

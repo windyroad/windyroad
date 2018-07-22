@@ -5,7 +5,6 @@
 [![license](https://img.shields.io/github/license/windyroad/windyroad.svg)](https://github.com/windyroad/windyroad/blob/master/LICENSE)
 [![Github All Releases](https://img.shields.io/github/downloads/windyroad/windyroad/total.svg)](https://github.com/windyroad/windyroad/releases)
 
-
 Static Web Site generated using Gatsby.
 
 For an overview of the project structure please refer to the [Gatsby documentation - Building with Components](https://www.gatsbyjs.org/docs/building-with-components/).
@@ -30,7 +29,7 @@ The content in the public site can then be deployed
 
 ## Serve
 
-``` sh
+```sh
 npm start
 ```
 
@@ -46,6 +45,7 @@ WOrking on it.
 - [x] Fix loading flicker
 - [x] Fix landscape mode
 - [ ] Services Section
+- [ ] Fix descrepancy between theme widths and flex box widths
 - [ ] Customers section
 - [ ] Services Sub-pages
 - [ ] Service specific enquiry form

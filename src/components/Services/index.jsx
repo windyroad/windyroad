@@ -38,16 +38,16 @@ class Services extends React.Component {
           </header>
           <div className="service-items">
             <Row>
-              <Col>
+              <Col xs={12} sm={12} md={6} lg={3}>
                 <AgileAndLeanMentoringTile />
               </Col>
-              <Col>
+              <Col xs={12} sm={12} md={6} lg={3}>
                 <ContinousIntegrationTile />
               </Col>
-              <Col>
+              <Col xs={12} sm={12} md={6} lg={3}>
                 <ProductResharpeningTile />
               </Col>
-              <Col>
+              <Col xs={12} sm={12} md={6} lg={3}>
                 <TestAutomationTile />
               </Col>
             </Row>

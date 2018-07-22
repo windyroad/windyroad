@@ -67,5 +67,5 @@ Feature: Services Section
         Then there will be a services tile for "BDD & Test Automation"
         And it will have an excerpt of
             """
-            Get more from your test automation efforts.
+            Get so much more from your test automation efforts.
             """
