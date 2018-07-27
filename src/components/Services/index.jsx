@@ -44,42 +44,23 @@ class Services extends React.Component {
           </header>
           <div className="service-items">
             <Row>
-              <Col
-                xs={12}
-                sm={12}
-                md={6}
-                lg={6}
-                xl={3}
-                style={{ padding: `0` }}
-              >
+              <Col xs={12} sm={6} md={6} lg={4} xl={3} style={{ padding: `0` }}>
                 <AgileAndLeanMentoringTile />
               </Col>
-              <Col
-                xs={12}
-                sm={12}
-                md={6}
-                lg={6}
-                xl={3}
-                style={{ padding: `0` }}
-              >
+              <Col xs={12} sm={6} md={6} lg={4} xl={3} style={{ padding: `0` }}>
                 <ContinousIntegrationTile />
               </Col>
-              <Col
-                xs={12}
-                sm={12}
-                md={6}
-                lg={6}
-                xl={3}
-                style={{ padding: `0` }}
-              >
+              <Col xs={12} sm={6} md={6} lg={4} xl={3} style={{ padding: `0` }}>
                 <ProductResharpeningTile />
               </Col>
               <Col
                 xs={12}
-                sm={12}
+                sm={6}
                 md={6}
-                lg={6}
+                lg={4}
                 xl={3}
+                lgOffset={4}
+                xlOffset={0}
                 style={{ padding: `0` }}
               >
                 <TestAutomationTile />

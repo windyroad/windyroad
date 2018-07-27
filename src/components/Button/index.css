@@ -95,7 +95,7 @@ input[type='reset'].special:hover,
 input[type='button'].special:hover,
 .button.special:hover {
   background-color: #7ec499;
-  box-shadow: 0 0 0.25em 0 #69ba84;
+  box-shadow: 0 0 0 0.1em #7ec499;
 }
 
 input[type='submit'].special:active,

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Link } from 'react-scroll'
 import './index.css'
 import FindYourNavigator from '../../FindYourNavigator'
 
@@ -16,15 +17,28 @@ class Tile extends React.Component {
   render() {
     return (
       <article className={`${this.props.className} service-item`}>
-        <img src={this.props.background} alt="" />
-        <div className="overlay">
-          <div className="overlay-child">
-            <FontAwesomeIcon icon={this.props.icon} size="2x" />
-            <h3>{this.props.title}</h3>
-            <span className="excerpt">{this.props.excerpt}</span>
-            <FindYourNavigator topic={this.props.topic} />
+        <Link
+          to="contact"
+          spy
+          smooth
+          hashSpy
+          duration={1000}
+          data-duration={1000}
+        >
+          <img src={this.props.background} alt="" />
+          <div className="overlay">
+            <div className="outside">
+              <div className="inside">
+                <div className="overlay-child">
+                  <FontAwesomeIcon icon={this.props.icon} size="2x" />
+                  <h3>{this.props.title}</h3>
+                  <span className="excerpt">{this.props.excerpt}</span>
+                </div>
+              </div>
+              <FindYourNavigator topic={this.props.topic} />
+            </div>
           </div>
-        </div>
+        </Link>
       </article>
     )
   }

@@ -12,7 +12,7 @@
   top: 0;
   left: 0;
   text-align: center;
-  padding: 2em 1em;
+  padding: 0.5em;
   opacity: 0;
   -moz-transform: scale(0.1);
   -ms-transform: scale(0.1);
@@ -30,18 +30,29 @@
   transform: scale(1);
 }
 
+.service-item .outside {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.service-item .inside {
+  height: calc(100% - 3em);
+  position: absolute;
+  width: 100%;
+}
 .service-item .overlay-child {
   position: absolute;
   top: 50%;
   left: 50%;
   margin-right: -55%;
   transform: translate(-50%, -50%);
-  padding: 0 2em;
+  /* padding: 0.5em 2em; */
   width: 100%;
 }
 
 /*hover*/
-.service-item .overlay-child {
+.service-item:hover .overlay-child {
 }
 
 .service-item {
@@ -61,6 +72,10 @@
   line-height: 1.5em;
   height: auto;
   white-space: normal;
+  position: absolute;
+  width: 100%;
+  bottom: 2px;
+  font-size: 90%;
 }
 
 .service-item a.button .fa {

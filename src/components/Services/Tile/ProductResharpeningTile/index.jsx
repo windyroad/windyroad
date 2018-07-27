@@ -12,7 +12,7 @@ const ProductResharpeningTile = function() {
       excerpt="Get your great idea moving again."
       background={background}
       icon={faCompass}
-      topic="product resharpening"
+      topic="product development"
     />
   )
 }
