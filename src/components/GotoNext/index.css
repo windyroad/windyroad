@@ -10,7 +10,7 @@
   z-index: 100;
   border: none;
   padding: 0;
-
+  text-align: center;
   -moz-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease,
     text-shadow 0.1s ease;
   -webkit-transition: font-size 0.1s ease, top 0.1s ease, right 0.1s ease,

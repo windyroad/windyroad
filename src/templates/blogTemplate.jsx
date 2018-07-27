@@ -5,6 +5,7 @@ export default function Template({
 }) {
   const { markdownRemark } = data // data.markdownRemark holds our post data
   const { frontmatter, html } = markdownRemark
+  console.log('DATA!!!', data)
   return (
     <div className="container">
       <header className="major">
@@ -24,6 +25,11 @@ export const pageQuery = graphql`
       frontmatter {
         date(formatString: "MMMM DD, YYYY")
         path
+        title
+      }
+    }
+    site {
+      siteMetadata {
         title
       }
     }

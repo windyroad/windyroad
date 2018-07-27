@@ -233,6 +233,7 @@ class Contact extends React.Component {
       },
       ticket: null,
       error: null, //* / exampleApiError,
+      active: 'active',
     }
 
     this.resetters = {}
@@ -273,9 +274,17 @@ class Contact extends React.Component {
     return offlineState
   }
 
-  handleSetActive() {}
+  handleSetActive() {
+    this.setState({
+      active: 'active',
+    })
+  }
 
-  handleSetInactive() {}
+  handleSetInactive() {
+    this.setState({
+      active: 'inactive',
+    })
+  }
 
   handleCancel(event) {
     if (this.state.formCancel) {

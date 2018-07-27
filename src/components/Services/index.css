@@ -1,0 +1,16 @@
+#services {
+  position: relative;
+  padding-bottom: 6em;
+  padding-top: 3em;
+}
+
+#services .content > header {
+  text-align: center;
+}
+.service-items {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: -1px;
+  font-size: 90%;
+}

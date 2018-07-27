@@ -25,8 +25,6 @@ class Spotlight extends React.Component {
 
   componentWillUnmount() {
     this.setState({
-      size: this.state.size,
-      image: this.state.image,
       active: 'active',
     })
     window.removeEventListener('resize', () => this.handleResize(window))
@@ -80,16 +78,12 @@ class Spotlight extends React.Component {
 
   handleSetActive() {
     this.setState({
-      size: this.state.size,
-      image: this.state.image,
       active: 'active',
     })
   }
 
   handleSetInactive() {
     this.setState({
-      size: this.state.size,
-      image: this.state.image,
       active: 'inactive',
     })
   }

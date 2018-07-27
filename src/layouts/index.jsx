@@ -1,15 +1,15 @@
 /* global window */
 /* eslint no-undef: "error" */
 
+import Footer from '../components/Footer'
+import Header from '../components/Header'
+import Helmet from 'react-helmet'
 // import fontAwesomeCss from '@fortawesome/fontawesome-free/css/all.css'
 import Link from 'gatsby-link'
 import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import queryString from 'querystring'
 import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import Helmet from 'react-helmet'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
 import defaultFeatures from '../features'
+import queryString from 'querystring'
 import themeCss from './css/main.css'
 
 class TemplateWrapper extends React.Component {

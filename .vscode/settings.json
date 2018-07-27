@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": false,
+  "eslint.alwaysShowStatus": true,
+  "eslint.autoFixOnSave": true,
+  "eslint.provideLintTask": true,
+  "editor.codeActionsOnSave": {},
+  "sort-imports.on-save": true,
+  "sort-imports.default-sort-style": "eslint"
+}

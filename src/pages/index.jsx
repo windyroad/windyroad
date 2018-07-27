@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import About from '../components/About'
 import Banner from '../components/Banner'
 import Contact from '../components/Contact'
+import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import Services from '../components/Services'
 
 class IndexPage extends React.Component {
@@ -64,8 +64,8 @@ class IndexPage extends React.Component {
         ref={section => {
           this.services = section
         }}
-        nextActive={() => this.services.handleSetActive()}
-        nextInactive={() => this.services.handleSetInactive()}
+        nextActive={() => this.contact.handleSetActive()}
+        nextInactive={() => this.contact.handleSetInactive()}
       />
     ) : (
       ''
@@ -86,8 +86,16 @@ class IndexPage extends React.Component {
             this.about = section
           }}
           next={aboutNext}
-          nextActive={() => this.handleContactActive()}
-          nextInactive={() => this.handleContactInactive()}
+          nextActive={() =>
+            servicesEnabled
+              ? this.services.handleSetActive()
+              : this.contact.handleSetActive()
+          }
+          nextInactive={() =>
+            servicesEnabled
+              ? this.services.handleSetInactive()
+              : this.contact.handleSetInactive()
+          }
         />
         {services}
         <Contact

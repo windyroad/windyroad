@@ -40,8 +40,8 @@ input[type='button']:hover,
 input[type='button']:active,
 .button:hover,
 .button:active {
-  box-shadow: inset 0 0 0 1px #59b377;
-  color: #59b377 !important;
+  box-shadow: inset 0 0 0 1px #69ba84;
+  color: #69ba84 !important;
 }
 
 input[type='submit']:active,

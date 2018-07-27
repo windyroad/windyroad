@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import FontAwesome from 'react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowAltCircleDown } from '@fortawesome/free-regular-svg-icons'
 import { Link } from 'react-scroll'
 import './index.css'
 
@@ -59,7 +60,7 @@ class GotoNext extends React.Component {
         //   console.log('clicked')
         // }}
       >
-        <FontAwesome name="arrow-circle-o-down" />
+        <FontAwesomeIcon icon={faArrowAltCircleDown} />
       </Link>
     )
   }

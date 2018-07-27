@@ -1,5 +1,4 @@
-@import url('../../../node_modules/font-awesome/css/font-awesome.min.css');
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,100italic,300italic');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,900');
 
 /*
 	Landed by Pixelarity
@@ -190,12 +189,12 @@ a {
   -ms-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
   transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
   border-bottom: dotted 1px;
-  color: #59b377;
+  color: #69ba84;
   text-decoration: none;
 }
 
 a:hover {
-  color: #59b377 !important;
+  color: #69ba84 !important;
   border-bottom-color: transparent;
 }
 
@@ -763,7 +762,7 @@ header.major {
 }
 
 header.major:after {
-  background: #59b377;
+  background: #69ba84;
   content: '';
   display: inline-block;
   height: 0.2em;
@@ -826,7 +825,7 @@ input[type='password']:focus,
 input[type='email']:focus,
 select:focus,
 textarea:focus {
-  border-color: #59b377;
+  border-color: #69ba84;
 }
 
 .select-wrapper {
@@ -943,7 +942,7 @@ input[type='radio']:checked + label:before {
 
 input[type='checkbox']:focus + label:before,
 input[type='radio']:focus + label:before {
-  border-color: #59b377;
+  border-color: #69ba84;
 }
 
 input[type='checkbox'] + label:before {
@@ -1338,7 +1337,7 @@ table.alt tfoot {
 }
 
 .wrapper.style2 {
-  background: #59b377;
+  background: #69ba84;
 }
 
 .wrapper.style2 input[type='text']:focus,
@@ -1374,7 +1373,7 @@ table.alt tfoot {
 .wrapper.style2 input[type='button'].special,
 .wrapper.style2 .button.special {
   background-color: #ffffff;
-  color: #59b377 !important;
+  color: #69ba84 !important;
 }
 
 .wrapper.style2 input[type='submit'].special:hover,
@@ -1483,7 +1482,7 @@ table.alt tfoot {
 .dropotron > li.active > span,
 .dropotron > li:hover > a,
 .dropotron > li:hover > span {
-  color: #59b377;
+  color: #69ba84;
 }
 
 .dropotron.level-0 {
@@ -1779,7 +1778,7 @@ body {
   }
 
   #titleBar .toggle:before {
-    background: #59b377;
+    background: #69ba84;
     color: rgba(255, 255, 255, 0.5);
     content: '\f0c9';
     display: block;

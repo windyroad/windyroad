@@ -3,10 +3,11 @@
   "root": true,
   "extends": [
     "airbnb",
-    "plugin:prettier/recommended",
+    "prettier",
     "eslint:recommended",
     "plugin:react/recommended"
   ],
+  "plugins": ["prettier"],
   "settings": {
     "import/core-modules": ["gatsby"]
   },
@@ -19,6 +20,7 @@
     "Image": true
   },
   "rules": {
+    "prettier/prettier": ["error"],
     "strict": 0,
     "jsx-a11y/anchor-is-valid": [
       "error",
