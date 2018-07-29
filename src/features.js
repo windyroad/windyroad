@@ -1,4 +1,4 @@
 module.exports = {
   landing: true,
-  services: false,
+  services: true,
 }
