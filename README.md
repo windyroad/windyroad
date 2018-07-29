@@ -44,7 +44,7 @@ WOrking on it.
 - [x] Automated testing
 - [x] Fix loading flicker
 - [x] Fix landscape mode
-- [ ] Services Section
+- [x] Services Section
 - [ ] Fix descrepancy between theme widths and flex box widths
 - [ ] Customers section
 - [ ] Services Sub-pages

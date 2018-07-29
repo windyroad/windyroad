@@ -1,7 +1,7 @@
 import axios from 'axios'
 import validator from 'email-validator'
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
+import ReactDOM from 'react-dom' // eslint-disable-line import/no-extraneous-dependencies
 import { Col, Row } from 'react-flexbox-grid'
 import FontAwesome from 'react-fontawesome'
 import { animateScroll as scroll } from 'react-scroll'

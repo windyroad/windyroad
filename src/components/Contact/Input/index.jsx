@@ -1,4 +1,5 @@
-import React from 'react'
+import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import './index.css'
 
 const DefaultState = Object.freeze({
@@ -31,14 +32,14 @@ class Input extends React.Component {
     }
   }
 
-  isValid() {
-    return this.state.isValid
-  }
-
   componentWillUnmount() {
     if (this.props.setResetter) {
       this.props.setResetter(null)
     }
+  }
+
+  isValid() {
+    return this.state.isValid
   }
 
   reset() {
@@ -57,7 +58,6 @@ class Input extends React.Component {
   handleChange(event, elem) {
     const target = event.target
     const value = target.value
-    const name = target.name
     // if their are validation errors, check validation now,
     // otherwise we'll revalidate after blur
     if (this.state.failedValidationMethod) {
@@ -85,14 +85,14 @@ class Input extends React.Component {
     this.props.onChange(event, elem)
   }
 
-  handleBlur(event, elem) {
+  handleBlur(event) {
     this.setState({
       hasNotChanged: false,
     })
     this.validate(event.target.value)
   }
 
-  handleFocus(event, elem) {}
+  handleFocus() {}
 
   showError() {
     return (
@@ -169,4 +169,22 @@ class Input extends React.Component {
   }
 }
 
+Input.propTypes = {
+  value: PropTypes.string.isRequired,
+  setResetter: PropTypes.func.isRequired,
+  setGetIsValid: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  formIsInit: PropTypes.bool.isRequired,
+  validations: PropTypes.arrayOf(PropTypes.func).isRequired,
+  placeholder: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  rows: PropTypes.number,
+  autoComplete: PropTypes.bool,
+}
+
+Input.defaultProps = {
+  rows: 5,
+  autoComplete: true,
+}
 export default Input

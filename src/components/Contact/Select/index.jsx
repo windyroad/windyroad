@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
 import Input from '../Input'
 import './index.css'
 
@@ -25,6 +25,14 @@ class Select extends Input {
         >
           <option value="">- Category -</option>
           <option value="general-enquiry">General Enquiry</option>
+          <option value="agile-&amp;-lean-mentoring">
+            Agile &amp; Lean Mentoring
+          </option>
+          <option value="ci/cd">
+            Continuous Integration &amp; Continuous Delivery
+          </option>
+          <option value="product-resharpening">Product Resharpening</option>
+          <option value="test-automation">Test Automation</option>
         </select>
       </div>
     )

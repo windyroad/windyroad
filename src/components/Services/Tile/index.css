@@ -85,3 +85,7 @@
 .service-item h3 {
   margin: 0;
 }
+
+.service-item a {
+  border-bottom: none;
+}

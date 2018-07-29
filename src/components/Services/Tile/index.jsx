@@ -24,6 +24,7 @@ class Tile extends React.Component {
           hashSpy
           duration={1000}
           data-duration={1000}
+          onClick={() => this.setTopic(this.props.topic)}
         >
           <img src={this.props.background} alt="" />
           <div className="overlay">
