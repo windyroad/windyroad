@@ -2,7 +2,7 @@ import PageElement from '../page-element'
 
 class Tile extends PageElement {
   get heading() {
-    return new PageElement(`${this.selector} header`)
+    return new PageElement(`${this.selector} h3`)
   }
 
   get excerpt() {

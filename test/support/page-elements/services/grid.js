@@ -33,6 +33,7 @@ class Grid extends PageElement {
     expect(this.currentTile).to.not.be.undefined
     log.setLevel('info')
     log.info('this.currentTile', this.currentTile)
+    this.currentTile.moveToObject()
     return this.currentTile
   }
 }

@@ -21,11 +21,20 @@ class PageElement extends Page {
   }
 
   checkContent(content) {
+    console.log(
+      'browser.element(this.selector).getText()',
+      browser.element(this.selector).getText(),
+    )
+
     checkContainsText('element', this.selector, false, content)
   }
 
   scrollTo() {
     browser.scroll(this.selector)
+  }
+
+  moveToObject(xoffset = 0, yoffset = 0) {
+    browser.moveToObject(this.selector, xoffset, yoffset).pause(500)
   }
 
   click() {
