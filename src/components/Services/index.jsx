@@ -1,37 +1,37 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { Col, Row } from 'react-flexbox-grid'
-import AgileAndLeanMentoringTile from './Tile/AgileAndLeanMentoringTile'
-import GotoNext from '../GotoNext'
-import ContinousIntegrationTile from './Tile/ContinousIntegrationTile'
-import ProductResharpeningTile from './Tile/ProductResharpeningTile'
-import TestAutomationTile from './Tile/TestAutomationTile'
-import './index.css'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { Col, Row } from 'react-flexbox-grid';
+import GotoNext from '../GotoNext';
+import './index.css';
+import AgileAndLeanMentoringTile from './Tile/AgileAndLeanMentoringTile';
+import ContinousIntegrationTile from './Tile/ContinousIntegrationTile';
+import ProductResharpeningTile from './Tile/ProductResharpeningTile';
+import TestAutomationTile from './Tile/TestAutomationTile';
 
 class Services extends React.Component {
   constructor(props) {
-    super(props)
-    this.id = props.id
+    super(props);
+    this.id = props.id;
     this.state = {
       active: 'active',
-    }
+    };
   }
 
   handleSetActive() {
     this.setState({
       active: 'active',
-    })
+    });
   }
 
   handleSetInactive() {
     this.setState({
       active: 'inactive',
-    })
+    });
   }
 
   render() {
-    const { className, ...props } = this.props
-    const classes = [this.state.active].concat(className).join(' ')
+    const { className, ...props } = this.props;
+    const classes = [this.state.active].concat(className).join(' ');
     return (
       <section
         className={`${classes}`}
@@ -74,7 +74,7 @@ class Services extends React.Component {
           onSetInactive={this.props.nextInactive}
         />
       </section>
-    )
+    );
   }
 }
 
@@ -84,10 +84,10 @@ Services.propTypes = {
   nextInactive: PropTypes.func.isRequired,
   next: PropTypes.string.isRequired,
   className: PropTypes.string,
-}
+};
 
 Services.defaultProps = {
   className: null,
-}
+};
 
-export default Services
+export default Services;

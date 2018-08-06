@@ -1,13 +1,13 @@
-import About from '../components/About'
-import Banner from '../components/Banner'
-import Contact from '../components/Contact'
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import Services from '../components/Services'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import About from '../components/About';
+import Banner from '../components/Banner';
+import Contact from '../components/Contact';
+import Services from '../components/Services';
 
 class IndexPage extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   static get propTypes() {
@@ -15,63 +15,63 @@ class IndexPage extends React.Component {
       features: PropTypes.shape({
         services: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
       }),
-    }
+    };
   }
 
   static get defaultProps() {
     return {
       features: {},
-    }
+    };
   }
 
   setLoaded() {
     if (this.state.loadState == 'is-loading') {
-      this.setState({ loadState: 'is-loaded' })
+      this.setState({ loadState: 'is-loaded' });
     }
   }
 
   handleAboutActive() {
     if (this.about) {
-      this.about.handleSetActive()
+      this.about.handleSetActive();
     }
   }
 
   handleAboutInactive() {
     if (this.about) {
-      this.about.handleSetInactive()
+      this.about.handleSetInactive();
     }
   }
 
   handleContactActive() {
     if (this.contact) {
-      this.contact.handleSetActive()
+      this.contact.handleSetActive();
     }
   }
 
   handleContactInactive() {
     if (this.contact) {
-      this.contact.handleSetInactive()
+      this.contact.handleSetInactive();
     }
   }
 
   render() {
-    const servicesEnabled = this.props.features.services
+    const servicesEnabled = this.props.features.services;
 
     const services = servicesEnabled ? (
       <Services
         id="services"
         next="contact"
         ref={section => {
-          this.services = section
+          this.services = section;
         }}
         nextActive={() => this.contact.handleSetActive()}
         nextInactive={() => this.contact.handleSetInactive()}
       />
     ) : (
       ''
-    )
+    );
 
-    const aboutNext = servicesEnabled ? 'services' : 'contact'
+    const aboutNext = servicesEnabled ? 'services' : 'contact';
 
     return (
       <div>
@@ -83,7 +83,7 @@ class IndexPage extends React.Component {
         <About
           id="about"
           ref={section => {
-            this.about = section
+            this.about = section;
           }}
           next={aboutNext}
           nextActive={() =>
@@ -101,12 +101,12 @@ class IndexPage extends React.Component {
         <Contact
           id="contact"
           ref={section => {
-            this.contact = section
+            this.contact = section;
           }}
         />
       </div>
-    )
+    );
   }
 }
 
-export default IndexPage
+export default IndexPage;

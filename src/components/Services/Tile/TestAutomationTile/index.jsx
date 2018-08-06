@@ -1,8 +1,8 @@
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { faVial } from '@fortawesome/free-solid-svg-icons'
-import Tile from '..'
-import './index.css'
-import background from './AdobeStock_95141032-1024x683.jpg'
+import { faVial } from '@fortawesome/free-solid-svg-icons';
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import Tile from '..';
+import background from './AdobeStock_95141032-1024x683.jpg';
+import './index.css';
 
 const TestAutomationTile = function() {
   return (
@@ -14,7 +14,7 @@ const TestAutomationTile = function() {
       icon={faVial}
       topic="test automation"
     />
-  )
-}
+  );
+};
 
-export default TestAutomationTile
+export default TestAutomationTile;

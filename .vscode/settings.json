@@ -1,9 +1,19 @@
 {
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "eslint.alwaysShowStatus": true,
   "eslint.autoFixOnSave": true,
   "eslint.provideLintTask": true,
   "editor.codeActionsOnSave": {},
-  "sort-imports.on-save": true,
-  "sort-imports.default-sort-style": "eslint"
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": false
+  },
+  "[javascriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": false
+  }
 }

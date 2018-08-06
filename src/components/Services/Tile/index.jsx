@@ -1,13 +1,12 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link } from 'react-scroll'
-import './index.css'
-import FindYourNavigator from '../../FindYourNavigator'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { Link } from 'react-scroll';
+import './index.css';
 
 class Tile extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {}
@@ -24,7 +23,7 @@ class Tile extends React.Component {
           hashSpy
           duration={1000}
           data-duration={1000}
-          onClick={() => this.setTopic(this.props.topic)}
+          // onClick={() => this.setTopic(this.props.topic)}
         >
           <img src={this.props.background} alt="" />
           <div className="overlay">
@@ -36,12 +35,12 @@ class Tile extends React.Component {
                   <span className="excerpt">{this.props.excerpt}</span>
                 </div>
               </div>
-              <FindYourNavigator topic={this.props.topic} />
+              {/* <FindYourNavigator topic={this.props.topic} /> */}
             </div>
           </div>
         </Link>
       </article>
-    )
+    );
   }
 }
 
@@ -53,7 +52,7 @@ export const pageQuery = graphql`
       }
     }
   }
-`
+`;
 
 // export const pageQuery = graphql`
 //   query SiteMetadataLookup($slug: String!) {
@@ -90,12 +89,12 @@ Tile.propTypes = {
   background: PropTypes.string.isRequired,
   icon: PropTypes.string,
   topic: PropTypes.string,
-}
+};
 
 Tile.defaultProps = {
   className: '',
   icon: 'random',
   topic: '',
-}
+};
 
-export default Tile
+export default Tile;
