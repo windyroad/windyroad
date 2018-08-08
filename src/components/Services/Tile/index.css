@@ -89,3 +89,7 @@
 .service-item .button {
   border-bottom: none;
 }
+
+.service-item a {
+  border: none;
+}

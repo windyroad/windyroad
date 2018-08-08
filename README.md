@@ -45,6 +45,7 @@ WOrking on it.
 - [x] Fix loading flicker
 - [x] Fix landscape mode
 - [x] Services Section
+- [ ] Fix firefox by reimplementing actions
 - [ ] Fix descrepancy between theme widths and flex box widths
 - [ ] Customers section
 - [ ] Services Sub-pages

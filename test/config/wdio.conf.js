@@ -1,12 +1,12 @@
-const waitPort = require('wait-port')
-const extractTarget = require('wait-port/lib/extract-target')
+const waitPort = require('wait-port');
+const extractTarget = require('wait-port/lib/extract-target');
 
-const chromeCapability = require('./capabilities/chrome.js').config
-const landscapeCapability = require('./capabilities/landscape.js').config
-const pixel2Capability = require('./capabilities/pixel2.js').config
-const chrome733Capability = require('./capabilities/chrome.733.js').config
+const chromeCapability = require('./capabilities/chrome.js').config;
+const landscapeCapability = require('./capabilities/landscape.js').config;
+const pixel2Capability = require('./capabilities/pixel2.js').config;
+const chrome733Capability = require('./capabilities/chrome.733.js').config;
 
-const defaultFeatures = require('../../src/features.js')
+const defaultFeatures = require('../../src/features.js');
 
 let config = {
   //
@@ -67,10 +67,6 @@ let config = {
     {
       maxInstances: 5,
       browserName: 'safari',
-    },
-    {
-      maxInstances: 5,
-      browserName: 'firefox',
     },
   ],
   //
@@ -204,16 +200,16 @@ let config = {
   // beforeSession: function (config, capabilities, specs) { },
   features: defaultFeatures,
   getTags: function() {
-    const keys = Object.keys(this.features)
+    const keys = Object.keys(this.features);
     let enabled = keys
       .map(key => {
         if (this.features[key]) {
-          return `@${key}`
+          return `@${key}`;
         } else {
-          return `@not-${key}`
+          return `@not-${key}`;
         }
       })
-      .join(' or ')
+      .join(' or ');
 
     // not(a) and not(b)
     // not(a or b)
@@ -221,15 +217,15 @@ let config = {
     let disabled = keys
       .map(key => {
         if (this.features[key]) {
-          return `@not-${key}`
+          return `@not-${key}`;
         } else {
-          return `@${key}`
+          return `@${key}`;
         }
       })
-      .join(' or ')
-    let tags = `(${enabled}) and not(${disabled})`
-    console.log('TAGS:', tags)
-    return tags
+      .join(' or ');
+    let tags = `(${enabled}) and not(${disabled})`;
+    console.log('TAGS:', tags);
+    return tags;
   },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
@@ -241,27 +237,27 @@ let config = {
     /**
      * Setup the Chai assertion framework
      */
-    const chai = require('chai')
+    const chai = require('chai');
 
-    global.expect = chai.expect
-    global.assert = chai.assert
-    global.should = chai.should()
+    global.expect = chai.expect;
+    global.assert = chai.assert;
+    global.should = chai.should();
 
-    const target = extractTarget(this.baseUrl)
+    const target = extractTarget(this.baseUrl);
     try {
-      const open = await waitPort(target)
+      const open = await waitPort(target);
 
       if (open) {
-        console.log('The port is now open!')
+        console.log('The port is now open!');
       } else {
-        console.error('The port did not open before the timeout...')
-        process.abort()
+        console.error('The port did not open before the timeout...');
+        process.abort();
       }
     } catch (err) {
       console.error(
         `An unknown error occured while waiting for the port: ${err}`,
-      )
-      process.abort()
+      );
+      process.abort();
     }
   },
   /**
@@ -310,8 +306,8 @@ let config = {
    * @param {Object} error error object if any
    */
   afterCommand: (commandName, args, result, error) => {
-    browser.execute(`window.features = ${JSON.stringify(global.features)}`)
-    browser.execute(`console.log('features:', window.features)`)
+    browser.execute(`window.features = ${JSON.stringify(global.features)}`);
+    browser.execute(`console.log('features:', window.features)`);
 
     // const logs = browser.log('browser')
     // console.log('BROWSER LOGS:')
@@ -344,8 +340,8 @@ let config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    */
   //  onComplete: function(exitCode, config, capabilities) {  }
-}
+};
 
-config.cucumberOpts.tags = config.getTags()
+config.cucumberOpts.tags = config.getTags();
 
-exports.config = config
+exports.config = config;

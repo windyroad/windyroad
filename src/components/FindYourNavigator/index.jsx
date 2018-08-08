@@ -5,7 +5,7 @@ import React from 'react'; // eslint-disable-line import/no-extraneous-dependenc
 import { Link } from 'react-scroll';
 import './index.css';
 
-const FindYourNavigator = function({ topic, duration, ...otherProps }) {
+const FindYourNavigator = function({ duration, ...otherProps }) {
   return (
     <Link
       className="special button cta"
@@ -17,7 +17,7 @@ const FindYourNavigator = function({ topic, duration, ...otherProps }) {
       data-duration={duration}
       {...otherProps}
     >
-      Find your {topic}{' '}
+      Find your{' '}
       <span style={{ whiteSpace: 'nowrap' }}>
         navigator<FontAwesomeIcon
           icon={faRandom}
