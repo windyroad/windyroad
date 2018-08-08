@@ -1,3 +1,4 @@
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
@@ -14,6 +15,7 @@ class Tile extends React.Component {
   componentWillUnmount() {}
 
   render() {
+    const duration = 1000;
     return (
       <article className={`${this.props.className} service-item`}>
         <Link
@@ -21,8 +23,9 @@ class Tile extends React.Component {
           spy
           smooth
           hashSpy
-          duration={1000}
-          data-duration={1000}
+          duration={duration}
+          data-duration={duration}
+          style={{ cursor: `pointer` }}
           // onClick={() => this.setTopic(this.props.topic)}
         >
           <img src={this.props.background} alt="" />
@@ -35,7 +38,19 @@ class Tile extends React.Component {
                   <span className="excerpt">{this.props.excerpt}</span>
                 </div>
               </div>
-              {/* <FindYourNavigator topic={this.props.topic} /> */}
+              <div className="special button cta">
+                Find your {this.props.topic}{' '}
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  navigator<FontAwesomeIcon
+                    icon={faRandom}
+                    size="1x"
+                    style={{
+                      verticalAlign: 'middle',
+                      marginLeft: '0.5em',
+                    }}
+                  />
+                </span>
+              </div>
             </div>
           </div>
         </Link>
@@ -43,44 +58,6 @@ class Tile extends React.Component {
     );
   }
 }
-
-export const pageQuery = graphql`
-  query SiteMetaDataQuery($path: String!) {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-  }
-`;
-
-// export const pageQuery = graphql`
-//   query SiteMetadataLookup($slug: String!) {
-//     site {
-//       siteMetadata {
-//         title
-//       }
-//     }
-//   }
-// `
-
-// export const query = graphql`
-//   query MyQuery {
-//     file(
-//       relativePath: {
-//         eq: "./AgileAndLeanMentoringTile/AdobeStock_90682313-1024x683"
-//       }
-//     ) {
-//       childImageSharp {
-//         # Specify the image processing specifications right in the query.
-//         # Makes it trivial to update as your page's design changes.
-//         fluid(maxWidth: 700) {
-//           ...GatsbyImageSharpFluid_noBase64
-//         }
-//       }
-//     }
-//   }
-// `
 
 Tile.propTypes = {
   title: PropTypes.string.isRequired,

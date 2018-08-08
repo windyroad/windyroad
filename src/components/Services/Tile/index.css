@@ -65,7 +65,7 @@
     font-size: 300%;
 } */
 
-.service-item a.button {
+.service-item .button {
   padding: 0.5em 1ex;
   display: block;
   white-space: normal;
@@ -78,7 +78,7 @@
   font-size: 90%;
 }
 
-.service-item a.button .fa {
+.service-item .button .fa {
   display: inline;
 }
 
@@ -86,6 +86,6 @@
   margin: 0;
 }
 
-.service-item a {
+.service-item .button {
   border-bottom: none;
 }

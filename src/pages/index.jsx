@@ -54,6 +54,18 @@ class IndexPage extends React.Component {
     }
   }
 
+  handleServicesActive() {
+    if (this.services) {
+      this.services.handleSetActive();
+    }
+  }
+
+  handleServicesInactive() {
+    if (this.services) {
+      this.services.handleSetInactive();
+    }
+  }
+
   render() {
     const servicesEnabled = this.props.features.services;
 
@@ -64,8 +76,8 @@ class IndexPage extends React.Component {
         ref={section => {
           this.services = section;
         }}
-        nextActive={() => this.contact.handleSetActive()}
-        nextInactive={() => this.contact.handleSetInactive()}
+        nextActive={() => this.handleContactActive()}
+        nextInactive={() => this.handleContactInactive()}
       />
     ) : (
       ''
@@ -88,13 +100,13 @@ class IndexPage extends React.Component {
           next={aboutNext}
           nextActive={() =>
             servicesEnabled
-              ? this.services.handleSetActive()
-              : this.contact.handleSetActive()
+              ? this.handleServicesActive()
+              : this.handleContactActive()
           }
           nextInactive={() =>
             servicesEnabled
-              ? this.services.handleSetInactive()
-              : this.contact.handleSetInactive()
+              ? this.handleServicesInactive()
+              : this.handleContactInactive()
           }
         />
         {services}
