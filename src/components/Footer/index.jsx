@@ -4,7 +4,6 @@ import {
   faLinkedin,
 } from '@fortawesome/free-brands-svg-icons';
 import { faAmbulance, faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
 import { Col, Row } from 'react-flexbox-grid';
 import { Link } from 'react-scroll';
@@ -17,25 +16,25 @@ const Footer = function() {
         <li>
           <a
             href="https://www.facebook.com/windyroadtechnology/"
-            className="icon alt"
+            className="icon alt brand"
           >
-            <FontAwesomeIcon icon={faFacebook} size="2x" />
+            {String.fromCharCode(parseInt('0x' + faFacebook.icon[3]))}
             <span className="label">Facebook</span>
           </a>
         </li>
         <li>
           <a
             href="https://www.linkedin.com/company/windy-road"
-            className="icon alt"
+            className="icon alt brand"
           >
-            <FontAwesomeIcon icon={faLinkedin} size="2x" />
+            {String.fromCharCode(parseInt('0x' + faLinkedin.icon[3]))}
             <span className="label">LinkedIn</span>
           </a>
         </li>
         {/* <li><a href="#" className="icon alt fa-instagram"><span className="label">Instagram</span></a></li> */}
         <li>
-          <a href="https://github.com/windyroad" className="icon alt">
-            <FontAwesomeIcon icon={faGithub} size="2x" />
+          <a href="https://github.com/windyroad" className="icon alt brand">
+            {String.fromCharCode(parseInt('0x' + faGithub.icon[3]))}
             <span className="label">GitHub</span>
           </a>
         </li>
@@ -47,15 +46,19 @@ const Footer = function() {
             hashSpy
             duration={1000}
             className="icon alt"
+            style={{}}
           >
-            <FontAwesomeIcon icon={faEnvelope} size="2x" />
+            {String.fromCharCode(parseInt('0x' + faEnvelope.icon[3]))}
             <span className="label">Email</span>
           </Link>
         </li>
         <li>
-          <a href="https://support.windyroad.com.au" className="icon alt">
-            <FontAwesomeIcon icon={faAmbulance} size="2x" />
-
+          <a
+            href="https://support.windyroad.com.au"
+            className="icon alt"
+            style={{ fontWeight: 900 }}
+          >
+            {String.fromCharCode(parseInt('0x' + faAmbulance.icon[3]))}
             <span className="label">Support</span>
           </a>
         </li>

@@ -1033,10 +1033,27 @@ input[type='radio'] + label:before {
   text-transform: none !important;
 }
 
+#footer .icon {
+  font-size: 200%;
+}
+
 .icon.alt {
-  color: #1c1d26 !important;
-  text-shadow: 1px 0 0 #ffffff, -1px 0 0 #ffffff, 0 1px 0 #ffffff,
-    0 -1px 0 #ffffff;
+  color: #272833 !important;
+  text-shadow: 1px 0 0 #ffffff80, -1px 0 0 #ffffff80, 0 1px 0 #ffffff80,
+    0 -1px 0 #ffffff80;
+}
+
+.icon.alt:hover {
+  color: #272833e5 !important;
+}
+
+.icon.alt.brand {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Font Awesome 5 Brands';
+  font-style: normal;
+  font-weight: 900;
+  text-transform: none !important;
 }
 
 .icon.major {
