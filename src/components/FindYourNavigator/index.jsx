@@ -23,7 +23,6 @@ const FindYourNavigator = function({ duration, ...otherProps }) {
           icon={faRandom}
           size="1x"
           style={{
-            verticalAlign: 'middle',
             marginLeft: '0.5em',
           }}
         />

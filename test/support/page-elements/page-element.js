@@ -34,6 +34,7 @@ class PageElement extends Page {
   }
 
   moveToObject(xoffset = 0, yoffset = 0) {
+    browser;
     browser.moveToObject(this.selector, xoffset, yoffset).pause(500);
   }
 

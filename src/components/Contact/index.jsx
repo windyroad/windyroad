@@ -1,79 +1,79 @@
-import axios from 'axios'
-import validator from 'email-validator'
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import ReactDOM from 'react-dom' // eslint-disable-line import/no-extraneous-dependencies
-import { Col, Row } from 'react-flexbox-grid'
-import FontAwesome from 'react-fontawesome'
-import { animateScroll as scroll } from 'react-scroll'
+import axios from 'axios';
+import validator from 'email-validator';
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import ReactDOM from 'react-dom'; // eslint-disable-line import/no-extraneous-dependencies
+import { Col, Row } from 'react-flexbox-grid';
+import FontAwesome from 'react-fontawesome';
+import { animateScroll as scroll } from 'react-scroll';
 // import scrollToComponent from 'react-scroll-to-component';
-import Button from '../Button'
-import Error422 from './Error/Error422'
-import './index.css'
-import Input from './Input'
-import noInternet from './no-internet'
-import RadioGroup from './RadioGroup'
-import Select from './Select'
+import Button from '../Button';
+import Error422 from './Error/Error422';
+import './index.css';
+import Input from './Input';
+import noInternet from './no-internet';
+import RadioGroup from './RadioGroup';
+import Select from './Select';
 
 function uuid(a) {
   return a
     ? (a ^ ((Math.random() * 16) >> (a / 4))).toString(16)
-    : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, uuid)
+    : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, uuid);
 }
 
 function calculateScrollOffset(element, offset, alignment) {
   let body = document.body,
-    html = document.documentElement
-  let elementRect = element.getBoundingClientRect()
-  let clientHeight = html.clientHeight
+    html = document.documentElement;
+  let elementRect = element.getBoundingClientRect();
+  let clientHeight = html.clientHeight;
   let documentHeight = Math.max(
     body.scrollHeight,
     body.offsetHeight,
     html.clientHeight,
     html.scrollHeight,
     html.offsetHeight,
-  )
-  offset = offset || 0 // additional offset to top
-  let scrollPosition
+  );
+  offset = offset || 0; // additional offset to top
+  let scrollPosition;
   switch (alignment) {
     case 'top':
-      scrollPosition = elementRect.top
-      break
+      scrollPosition = elementRect.top;
+      break;
     case 'middle':
       scrollPosition =
-        elementRect.bottom - clientHeight / 2 - elementRect.height / 2
-      break
+        elementRect.bottom - clientHeight / 2 - elementRect.height / 2;
+      break;
     case 'bottom':
-      scrollPosition = elementRect.bottom - clientHeight
-      break
+      scrollPosition = elementRect.bottom - clientHeight;
+      break;
     default:
       scrollPosition =
-        elementRect.bottom - clientHeight / 2 - elementRect.height / 2
-      break // defaul to middle
+        elementRect.bottom - clientHeight / 2 - elementRect.height / 2;
+      break; // defaul to middle
   }
-  let maxScrollPosition = documentHeight - clientHeight
+  let maxScrollPosition = documentHeight - clientHeight;
   return Math.min(
     scrollPosition + offset + window.pageYOffset,
     maxScrollPosition,
-  )
+  );
 }
 
 function scrollToComponent(ref, options) {
   options = options || {
     offset: 0,
     align: 'middle',
-  }
-  let element = ReactDOM.findDOMNode(ref)
-  if (element === null) return 0
+  };
+  let element = ReactDOM.findDOMNode(ref);
+  if (element === null) return 0;
   return scroll.scrollTo(
     calculateScrollOffset(element, options.offset, options.align),
     options,
-  )
+  );
 }
 
-const ZD_HOST = 'windyroad.zendesk.com:443'
-const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`
+const ZD_HOST = 'windyroad.zendesk.com:443';
+const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`;
 
-const OTHER_HOST = 'google.com.au:443'
+const OTHER_HOST = 'google.com.au:443';
 
 const FormStateEnum = Object.freeze({
   READY: 'READY',
@@ -90,22 +90,22 @@ const FormStateEnum = Object.freeze({
   RESPONSE_ERROR: 'RESPONSE_ERROR',
   REQUEST_ERROR: 'REQUEST_ERROR',
   GENERAL_ERROR: 'GENERAL_ERROR',
-})
+});
 
 const requiredValidation = (name, value) => {
   if (!value.toString().trim().length) {
-    return `${name} is required`
+    return `${name} is required`;
   }
-}
+};
 
 const emailValidation = (name, value) => {
   if (!validator.validate(value)) {
-    return `'${value}' is not a valid email.`
+    return `'${value}' is not a valid email.`;
   }
-}
+};
 
-const DEFAULT_PRIORITY = 'normal'
-const DEFAULT_CATEGORY = 'general-enquiry'
+const DEFAULT_PRIORITY = 'normal';
+const DEFAULT_CATEGORY = 'general-enquiry';
 
 const exampleSuccess = {
   request: {
@@ -132,7 +132,7 @@ const exampleSuccess = {
     assignee_id: null,
     fields: [],
   },
-}
+};
 
 const exampleNetworkError = {
   config: {
@@ -153,7 +153,7 @@ const exampleNetworkError = {
       '{"request":{"requester":{"name":"Tom Howard","email":"tom@windyroad.com.au"},"subject":"general-enquiry","comment":{"body":"Test"},"priority":"low","type":"question"}}',
   },
   request: {},
-}
+};
 
 const exampleApiError = {
   config: {
@@ -217,11 +217,11 @@ const exampleApiError = {
     },
     request: {},
   },
-}
+};
 
 class Contact extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       name: '',
       email: '',
@@ -234,15 +234,15 @@ class Contact extends React.Component {
       ticket: null,
       error: null, //* / exampleApiError,
       active: 'active',
-    }
+    };
 
-    this.resetters = {}
-    this.isValids = {}
+    this.resetters = {};
+    this.isValids = {};
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleRadioChange = this.handleRadioChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.cancelBeforeSend = false
+    this.handleChange = this.handleChange.bind(this);
+    this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.cancelBeforeSend = false;
   }
 
   componentDidMount() {
@@ -253,64 +253,64 @@ class Contact extends React.Component {
     const offline = await noInternet({
       url: 'https://graph.facebook.com',
       method: 'OPTIONS',
-    })
-    let offlineState = {}
+    });
+    let offlineState = {};
     if (offline) {
       offlineState = {
         offline: true,
         zendeskOffline: true,
-      }
+      };
     } else {
       const zendeskOffline = await noInternet({
         url: ZD_API,
         method: 'POST',
-      })
+      });
       offlineState = {
         offline: false,
         zendeskOffline,
-      }
+      };
     }
-    this.setState(offlineState)
-    return offlineState
+    this.setState(offlineState);
+    return offlineState;
   }
 
   handleSetActive() {
     this.setState({
       active: 'active',
-    })
+    });
   }
 
   handleSetInactive() {
     this.setState({
       active: 'inactive',
-    })
+    });
   }
 
   handleCancel(event) {
     if (this.state.formCancel) {
-      this.state.formCancel('user cancelled')
+      this.state.formCancel('user cancelled');
     } else {
       // cancelled, but not sent yet
-      this.cancelBeforeSend = true
+      this.cancelBeforeSend = true;
     }
   }
 
   isValid(formState) {
-    const currformState = formState || this.state.form.state
+    const currformState = formState || this.state.form.state;
     if (currformState == FormStateEnum.READY) {
-      return true
+      return true;
     }
-    const keys = Object.keys(this.isValids)
+    const keys = Object.keys(this.isValids);
     for (let i = 0; i < keys.length; ++i) {
       if (!this.isValids[keys[i]]()) {
-        return false
+        return false;
       }
     }
-    return true
+    return true;
   }
 
   async handleSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     // this.checkNetworkStatus()
 
@@ -329,19 +329,19 @@ class Contact extends React.Component {
       form: {
         state: FormStateEnum.VALIDATING,
       },
-    }))
+    }));
     if (!this.isValid(FormStateEnum.VALIDATING)) {
       await this.setState({
         form: {
           state: FormStateEnum.VALIDATION_FAILED,
         },
-      })
-      return
+      });
+      return;
     }
 
     if (this.cancelBeforeSend) {
-      this.cancelBeforeSend = false
-      return
+      this.cancelBeforeSend = false;
+      return;
     }
     // TODO: build request
     const body = {
@@ -355,23 +355,23 @@ class Contact extends React.Component {
         priority: this.state.priority,
         type: 'question',
       },
-    }
+    };
     if (this.cancelBeforeSend) {
-      this.cancelBeforeSend = false
-      return
+      this.cancelBeforeSend = false;
+      return;
     }
     this.setState({
       form: {
         state: FormStateEnum.PRESENDING,
       },
-    })
+    });
     // at this point we also want to scroll to #contact as the client may have scrolled down on smaller browsers
     scrollToComponent(this.section, {
       offset: -20,
       align: 'top',
       duration: 500,
       ease: 'in-cube',
-    })
+    });
 
     axios
       .post(ZD_API, body, {
@@ -381,7 +381,7 @@ class Contact extends React.Component {
               state: FormStateEnum.SENDING,
               cancel: c,
             },
-          })
+          });
         }),
         onUploadProgress: progressEvent => {
           this.setState((prevstate, props) => ({
@@ -391,7 +391,7 @@ class Contact extends React.Component {
                 : FormStateEnum.UPLOADED,
               cancel: progressEvent.cancelable ? prevstate.formCancel : null,
             },
-          }))
+          }));
         },
         onDownloadProgress: progressEvent => {
           this.setState({
@@ -403,7 +403,7 @@ class Contact extends React.Component {
                   : FormStateEnum.DOWNLOADING,
               cancel: null,
             },
-          })
+          });
         },
       })
       .then(response => {
@@ -412,7 +412,7 @@ class Contact extends React.Component {
           form: {
             state: FormStateEnum.SENT,
           },
-        })
+        });
       })
       .catch(async error => {
         if (axios.isCancel(error)) {
@@ -421,7 +421,7 @@ class Contact extends React.Component {
             form: {
               state: FormStateEnum.CANCELED,
             },
-          })
+          });
         }
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -432,21 +432,21 @@ class Contact extends React.Component {
             form: {
               state: FormStateEnum.RESPONSE_ERROR,
             },
-          })
+          });
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          const offlineState = await this.checkNetworkStatus()
-          error.request.offline = offlineState.offline
-          error.request.zendeskOffline = offlineState.zendeskOffline
+          const offlineState = await this.checkNetworkStatus();
+          error.request.offline = offlineState.offline;
+          error.request.zendeskOffline = offlineState.zendeskOffline;
           this.setState({
             ticket: null,
             error: error.request,
             form: {
               state: FormStateEnum.REQUEST_ERROR,
             },
-          })
+          });
         } else {
           // Something happened in setting up the request that triggered an Error
           this.setState({
@@ -455,9 +455,9 @@ class Contact extends React.Component {
             form: {
               state: FormStateEnum.GENERAL_ERROR,
             },
-          })
+          });
         }
-      })
+      });
     // TODO: render result
   }
 
@@ -481,37 +481,37 @@ class Contact extends React.Component {
       prevCatagory: prevState.category,
       prevPriority: prevState.priority,
       error: null,
-    }))
-    const resetterKeys = Object.keys(this.resetters)
+    }));
+    const resetterKeys = Object.keys(this.resetters);
     for (let i = 0; i < resetterKeys.length; ++i) {
-      this.resetters[resetterKeys[i]]()
+      this.resetters[resetterKeys[i]]();
     }
   }
 
   handleChange(event, elem) {
-    const target = event.target
-    const value = target.value
-    const name = target.name
-    const fieldStateName = `${name}HasNotChanged`
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    const fieldStateName = `${name}HasNotChanged`;
     this.setState({
       [name]: value,
       [fieldStateName]: false,
-    })
+    });
   }
 
   handleRadioChange(value, event, elem) {
-    const target = event.target
-    const name = target.name
+    const target = event.target;
+    const name = target.name;
     this.setState({
       [name]: value,
-    })
+    });
   }
 
   render() {
-    let errorConent = ''
-    let sendingHeading = 'Sending...'
+    let errorConent = '';
+    let sendingHeading = 'Sending...';
     if (this.state.error || this.state.prevError) {
-      sendingHeading = 'Sending Failed'
+      sendingHeading = 'Sending Failed';
       if (
         this.state.form.state == FormStateEnum.REQUEST_ERROR ||
         this.state.prevFormState == FormStateEnum.REQUEST_ERROR
@@ -524,7 +524,7 @@ class Contact extends React.Component {
               <a href="tel:+61285203165">02 8520 3165</a>
             </p>
           </div>
-        )
+        );
         if (
           !(this.state.error
             ? this.state.error.offline
@@ -538,7 +538,7 @@ class Contact extends React.Component {
               From what we can tell, our request system is offline. Please try
               again or call us on <a href="tel:+61285203165">02 8520 3165</a>
             </p>
-          )
+          );
         }
         if (
           this.state.error
@@ -551,7 +551,7 @@ class Contact extends React.Component {
               the moment. Please check you connection and try again, or call us
               on <a href="tel:+61285203165">02 8520 3165</a>
             </p>
-          )
+          );
         }
         errorConent = (
           <div>
@@ -611,7 +611,7 @@ class Contact extends React.Component {
               </Col>
             </Row>
           </div>
-        )
+        );
       } else if (
         this.state.form.state == FormStateEnum.RESPONSE_ERROR ||
         this.state.prevFormState == FormStateEnum.RESPONSE_ERROR
@@ -629,7 +629,7 @@ class Contact extends React.Component {
                 }))
               }
             />
-          )
+          );
         }
       } else {
         // we should handle the different response codes
@@ -643,7 +643,7 @@ class Contact extends React.Component {
               }))
             }
           />
-        )
+        );
       }
     }
 
@@ -655,9 +655,9 @@ class Contact extends React.Component {
             id: null,
             subject: null,
             description: null,
-          }
-    const name = this.state.name ? this.state.name : this.state.prevName
-    const email = this.state.email ? this.state.email : this.state.prevEmail
+          };
+    const name = this.state.name ? this.state.name : this.state.prevName;
+    const email = this.state.email ? this.state.email : this.state.prevEmail;
 
     return (
       <section
@@ -697,16 +697,15 @@ class Contact extends React.Component {
                         verticalAlign: 'middle',
                         width: '100%',
                       }}
-                      href="tel:+61285203165"
+                      href="tel:+61402756685"
                     >
                       <FontAwesome
                         name="phone"
                         style={{
-                          verticalAlign: 'middle',
                           paddingRight: '1em',
                         }}
                       />
-                      02 8520 3165
+                      0402 756 665
                     </Button>
                   </Col>
                 </Row>
@@ -857,7 +856,6 @@ class Contact extends React.Component {
                         <FontAwesome
                           name="envelope"
                           style={{
-                            verticalAlign: 'middle',
                             paddingLeft: '1em',
                           }}
                         />
@@ -895,7 +893,7 @@ class Contact extends React.Component {
               <Col xs={4}>
                 <h3
                   ref={section => {
-                    this.section = section
+                    this.section = section;
                   }}
                 >
                   {sendingHeading}
@@ -987,8 +985,8 @@ class Contact extends React.Component {
           </div>
         </div>
       </section>
-    )
+    );
   }
 }
 
-export default Contact
+export default Contact;
