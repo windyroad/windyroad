@@ -71,9 +71,9 @@ const Footer = function() {
               rights reserved.
             </Col>
             <Col xs={12}>
-              <em>'Windy Road'</em>, the Windy Road logo and{' '}
-              <em>'Find you navigator'</em> are trademarks of Windy Road
-              Technology
+              <em>&apos;Windy Road&apos;</em>, the Windy Road logo and{' '}
+              <em>&apos;Find you navigator&apos;</em> are trademarks of Windy
+              Road Technology
             </Col>
           </Row>
         </li>

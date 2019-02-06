@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import './index.css'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import './index.css';
 
 const Button = props => (
   <a
@@ -11,7 +11,7 @@ const Button = props => (
   >
     {props.children}
   </a>
-)
+);
 
 Button.propTypes = {
   href: PropTypes.string,
@@ -19,11 +19,11 @@ Button.propTypes = {
   style: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
-}
+};
 
 Button.defaultProps = {
   href: '#contact',
   className: '',
-}
+};
 
-export default Button
+export default Button;

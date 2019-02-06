@@ -1,8 +1,8 @@
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { faShippingFast } from '@fortawesome/free-solid-svg-icons'
-import Tile from '..'
-import './index.css'
-import background from './AdobeStock_151768108-1024x683.jpg'
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { faShippingFast } from '@fortawesome/free-solid-svg-icons';
+import Tile from '..';
+import './index.css';
+import background from './AdobeStock_151768108-1024x683.jpg';
 
 const ContinousIntegrationTile = function() {
   return (
@@ -14,7 +14,7 @@ const ContinousIntegrationTile = function() {
       icon={faShippingFast}
       topic="CI/CD"
     />
-  )
-}
+  );
+};
 
-export default ContinousIntegrationTile
+export default ContinousIntegrationTile;

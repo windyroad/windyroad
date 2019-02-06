@@ -1,18 +1,18 @@
-import React from 'react'
-import Input from '../Input'
-import './index.css'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import Radio from './Radio'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { Col, Row } from 'react-flexbox-grid';
+import './index.css';
+import Radio from './Radio';
 
 class RadioGroup extends React.Component {
   constructor(props) {
-    super(props)
-    this.handleChange = this.handleChange.bind(this)
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event, elem) {
-    let value = event.target.value
-    this.props.onChange(value, event, elem)
+    let value = event.target.value;
+    this.props.onChange(value, event, elem);
   }
 
   render() {
@@ -46,8 +46,14 @@ class RadioGroup extends React.Component {
           <Radio value="high" placeholder="High Priority" group={this} />
         </Col>
       </Row>
-    )
+    );
   }
 }
 
-export default RadioGroup
+RadioGroup.propTypes = {
+  onChange: PropTypes.func.isRequired,
+};
+
+RadioGroup.defaultProps = {};
+
+export default RadioGroup;

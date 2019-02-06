@@ -17,7 +17,7 @@ class TemplateWrapper extends React.Component {
     super(props);
 
     this.state = {
-      loadState: 'is-loading',
+      loadState: 'is-loaded',
     };
 
     const parsedfeatures = Object.assign(

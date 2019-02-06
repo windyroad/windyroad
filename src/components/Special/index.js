@@ -1,5 +1,4 @@
-import React from 'react'
-import Link from 'gatsby-link'
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
 
 class Special extends React.Component {
   render() {
@@ -33,8 +32,8 @@ class Special extends React.Component {
           </form>
         </div>
       </section>
-    )
+    );
   }
 }
 
-export default Special
+export default Special;

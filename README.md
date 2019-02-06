@@ -37,7 +37,7 @@ Open http://localhost:9000
 
 ## Test
 
-WOrking on it.
+Working on it.
 
 ## TODO
 

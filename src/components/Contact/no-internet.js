@@ -6,43 +6,43 @@
  UPDATES by Windy Road Tech:
   * removed default Cache-Control header
  */
-;(function(global, factory) {
+(function(global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined'
     ? (module.exports = factory(require('set-interval')))
     : typeof define === 'function' && define.amd
       ? define(['set-interval'], factory)
-      : (global.myBundle = factory(global.SetInterval))
+      : (global.myBundle = factory(global.SetInterval));
 })(this, function(SetInterval) {
-  'use strict'
+  'use strict';
 
   SetInterval =
     SetInterval && SetInterval.hasOwnProperty('default')
       ? SetInterval['default']
-      : SetInterval
+      : SetInterval;
 
-  var OFFLINE = true
-  var ONLINE = false
+  var OFFLINE = true;
+  var ONLINE = false;
   var defaultOptions = {
     milliseconds: 5000,
     timeout: 5000,
     url: '/favicon.ico',
     method: 'GET',
     headers: {},
-  }
+  };
 
   /**
    * @param {Object} options
    * @return {Promise|*}
    */
   function noInternet(options) {
-    options = options || {}
-    options.milliseconds = options.milliseconds || defaultOptions.milliseconds
-    options.timeout = options.timeout || defaultOptions.timeout
-    options.url = options.url || defaultOptions.url
-    options.headers = _extend(defaultOptions.headers, options.headers)
-    options.method = options.method || defaultOptions.method
+    options = options || {};
+    options.milliseconds = options.milliseconds || defaultOptions.milliseconds;
+    options.timeout = options.timeout || defaultOptions.timeout;
+    options.url = options.url || defaultOptions.url;
+    options.headers = _extend(defaultOptions.headers, options.headers);
+    options.method = options.method || defaultOptions.method;
 
-    if (!!!options.callback) {
+    if (!options.callback) {
       return new Promise(function(resolve) {
         _checkConnection(
           options.url,
@@ -50,11 +50,11 @@
           options.timeout,
           resolve,
           options.method,
-        )
-      })
+        );
+      });
     }
 
-    _initEventListeners(options.callback)
+    _initEventListeners(options.callback);
 
     SetInterval.start(
       _checkConnection.bind(
@@ -67,12 +67,12 @@
       ),
       options.milliseconds,
       'checkConnection',
-    )
+    );
   }
 
   noInternet.clearInterval = function() {
-    SetInterval.clear('checkConnection')
-  }
+    SetInterval.clear('checkConnection');
+  };
 
   /**
    * @param {String} url
@@ -81,12 +81,12 @@
    * @private
    */
   function _checkConnection(url, headers, timeout, callback, method) {
-    url = _buildURL(url)
+    url = _buildURL(url);
 
     if (navigator.onLine) {
-      _sendRequest(url, headers, timeout, callback, method)
+      _sendRequest(url, headers, timeout, callback, method);
     } else {
-      callback(OFFLINE)
+      callback(OFFLINE);
     }
   }
 
@@ -96,12 +96,12 @@
    */
   function _initEventListeners(callback) {
     window.addEventListener('online', function() {
-      callback(ONLINE)
-    })
+      callback(ONLINE);
+    });
 
     window.addEventListener('offline', function() {
-      callback(OFFLINE)
-    })
+      callback(OFFLINE);
+    });
   }
 
   /**
@@ -111,28 +111,28 @@
    * @private
    */
   function _sendRequest(url, headers, timeout, callback, method) {
-    var xhr = new XMLHttpRequest()
-    xhr.timeout = timeout
+    var xhr = new XMLHttpRequest();
+    xhr.timeout = timeout;
 
     xhr.onload = function() {
-      callback(ONLINE)
-    }
+      callback(ONLINE);
+    };
 
     xhr.onerror = function() {
-      callback(OFFLINE)
-    }
+      callback(OFFLINE);
+    };
 
     xhr.ontimeout = function() {
-      callback(OFFLINE)
-    }
+      callback(OFFLINE);
+    };
 
-    xhr.open(method, url)
+    xhr.open(method, url);
 
     for (var key in headers) {
-      xhr.setRequestHeader(key, headers[key])
+      xhr.setRequestHeader(key, headers[key]);
     }
 
-    xhr.send()
+    xhr.send();
   }
 
   /**
@@ -142,10 +142,10 @@
    */
   function _buildURL(url) {
     if (url.indexOf('http') !== -1) {
-      return url
+      return url;
     }
 
-    return window.location.protocol + '//' + window.location.host + url
+    return window.location.protocol + '//' + window.location.host + url;
   }
 
   /**
@@ -156,15 +156,15 @@
    */
   function _extend(target, obj) {
     if (!obj) {
-      return target
+      return target;
     }
 
     Object.keys(obj).forEach(function(key) {
-      target[key] = obj[key]
-    })
+      target[key] = obj[key];
+    });
 
-    return target
+    return target;
   }
 
-  return noInternet
-})
+  return noInternet;
+});

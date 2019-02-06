@@ -1,7 +1,7 @@
 // const fm = require('./front-matter')
 
 // const fs = require(`fs-extra`)
-const path = require('path')
+const path = require('path');
 
 // exports.onCreatePage = async function({ page }) {
 //   const { attributes: { layout } } = fm(
@@ -11,9 +11,9 @@ const path = require('path')
 // }
 
 exports.createPages = ({ boundActionCreators, graphql }) => {
-  const { createPage } = boundActionCreators
+  const { createPage } = boundActionCreators;
 
-  const blogPostTemplate = path.resolve(`src/templates/blogTemplate.jsx`)
+  const blogPostTemplate = path.resolve(`src/templates/blogTemplate.js`);
 
   return graphql(`
     {
@@ -32,7 +32,7 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
     }
   `).then(result => {
     if (result.errors) {
-      return Promise.reject(result.errors)
+      return Promise.reject(result.errors);
     }
 
     result.data.allMarkdownRemark.edges.forEach(({ node }) => {
@@ -40,11 +40,11 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
         path: node.frontmatter.path,
         component: blogPostTemplate,
         context: {}, // additional data can be passed via context
-      })
-    })
-    return Promise.resolve()
-  })
-}
+      });
+    });
+    return Promise.resolve();
+  });
+};
 
 exports.modifyBabelrc = ({ babelrc }) => ({
   ...babelrc,
@@ -54,4 +54,4 @@ exports.modifyBabelrc = ({ babelrc }) => ({
       'transform-runtime',
     ]),
   }),
-})
+});

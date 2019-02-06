@@ -1,12 +1,12 @@
-import React from 'react'
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { Col, Row } from 'react-flexbox-grid';
+import './index.css';
 
-import './index.css'
-
-export default props => (
+const Error422 = props => (
   <div>
     <div className="form-error-msg">
-      <h3>Sorry, something's gone wrong processing your request.</h3>
+      <h3>Sorry, something&apos; gone wrong processing your request.</h3>
       <p>
         Please try calling us on <a href="tel:+61285203165">02 8520 3165</a>
       </p>
@@ -37,16 +37,25 @@ export default props => (
           height: '100%',
         }}
       >
-        <a
+        <button
           className="button"
           onClick={props.onEdit}
+          onKeyPress={props.onEdit}
           style={{
             width: '100%',
           }}
         >
           edit
-        </a>
+        </button>
       </Col>
     </Row>
   </div>
-)
+);
+
+Error422.propTypes = {
+  onEdit: PropTypes.func.isRequired,
+};
+
+Error422.defaultProps = {};
+
+export default Error422;

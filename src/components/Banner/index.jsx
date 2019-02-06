@@ -1,22 +1,22 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { Events, scrollSpy } from 'react-scroll'
-import logo from '../../img/logo-white.svg'
-import FindYourNavigator from '../FindYourNavigator'
-import GotoNext from '../GotoNext'
-import banner1440 from './banner-1440.jpeg'
-import banner180 from './banner-180.jpeg'
-import banner20 from './banner-20.jpeg'
-import banner2880 from './banner-2880.jpeg'
-import banner360 from './banner-360.jpeg'
-import banner45 from './banner-45.jpeg'
-import banner720 from './banner-720.jpeg'
-import banner90 from './banner-90.jpeg'
-import './index.css'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { Events, scrollSpy } from 'react-scroll';
+import logo from '../../img/logo-white.svg';
+import FindYourNavigator from '../FindYourNavigator';
+import GotoNext from '../GotoNext';
+import banner1440 from './banner-1440.jpeg';
+import banner180 from './banner-180.jpeg';
+import banner20 from './banner-20.jpeg';
+import banner2880 from './banner-2880.jpeg';
+import banner360 from './banner-360.jpeg';
+import banner45 from './banner-45.jpeg';
+import banner720 from './banner-720.jpeg';
+import banner90 from './banner-90.jpeg';
+import './index.css';
 
 class Banner extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.images = {
       20: banner20,
       45: banner45,
@@ -26,27 +26,27 @@ class Banner extends React.Component {
       720: banner720,
       1440: banner1440,
       2880: banner2880,
-    }
+    };
 
     this.state = {
       size: 20,
       image: this.images[20],
-    }
+    };
 
-    this.scrollDuration = 1000
+    this.scrollDuration = 1000;
   }
 
   componentDidMount() {
-    window.addEventListener('resize', () => this.handleResize(window))
-    this.handleResize(window)
+    window.addEventListener('resize', () => this.handleResize(window));
+    this.handleResize(window);
 
-    scrollSpy.update()
+    scrollSpy.update();
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', () => this.handleResize(window))
-    Events.scrollEvent.remove('begin')
-    Events.scrollEvent.remove('end')
+    window.removeEventListener('resize', () => this.handleResize(window));
+    Events.scrollEvent.remove('begin');
+    Events.scrollEvent.remove('end');
   }
 
   static get propTypes() {
@@ -54,36 +54,36 @@ class Banner extends React.Component {
       nextActive: PropTypes.func.isRequired,
       nextInactive: PropTypes.func.isRequired,
       next: PropTypes.string.isRequired,
-    }
+    };
   }
 
   getImage(window, pixelRatio) {
-    const currentSize = this.state.size
+    const currentSize = this.state.size;
     for (const key in this.images) {
       if (
         window.innerWidth * pixelRatio > this.state.size &&
         key > this.state.size
       ) {
-        return Number(key)
+        return Number(key);
       }
     }
-    return currentSize
+    return currentSize;
   }
 
   handleResize(window) {
-    const pixelRatio = window.devicePixelRatio
-    const size = this.getImage(window, pixelRatio)
+    const pixelRatio = window.devicePixelRatio;
+    const size = this.getImage(window, pixelRatio);
     if (size != this.state.size) {
-      const image = new Image()
+      const image = new Image();
       // only show the image once it's loaded
       image.onload = () => {
-        this.setState({ size, image: this.images[size] })
-        this.handleResize(window)
-      }
+        this.setState({ size, image: this.images[size] });
+        this.handleResize(window);
+      };
       // load the image
-      image.src = this.images[size]
+      image.src = this.images[size];
     } else if (pixelRatio != window.devicePixelRatio) {
-      this.handleResize(window, window.devicePixelRatio)
+      this.handleResize(window, window.devicePixelRatio);
     }
   }
 
@@ -112,8 +112,8 @@ class Banner extends React.Component {
           onSetInactive={this.props.nextInactive}
         />
       </section>
-    )
+    );
   }
 }
 
-export default Banner
+export default Banner;

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import validator from 'email-validator';
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
 import ReactDOM from 'react-dom'; // eslint-disable-line import/no-extraneous-dependencies
 import { Col, Row } from 'react-flexbox-grid';
@@ -62,7 +63,7 @@ function scrollToComponent(ref, options) {
     offset: 0,
     align: 'middle',
   };
-  let element = ReactDOM.findDOMNode(ref);
+  let element = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
   if (element === null) return 0;
   return scroll.scrollTo(
     calculateScrollOffset(element, options.offset, options.align),
@@ -73,7 +74,7 @@ function scrollToComponent(ref, options) {
 const ZD_HOST = 'windyroad.zendesk.com:443';
 const ZD_API = `https://${ZD_HOST}/api/v2/requests.json`;
 
-const OTHER_HOST = 'google.com.au:443';
+// const OTHER_HOST = 'google.com.au:443';
 
 const FormStateEnum = Object.freeze({
   READY: 'READY',
@@ -107,117 +108,117 @@ const emailValidation = (name, value) => {
 const DEFAULT_PRIORITY = 'normal';
 const DEFAULT_CATEGORY = 'general-enquiry';
 
-const exampleSuccess = {
-  request: {
-    url: 'https://windyroad.zendesk.com/api/v2/requests/1482.json',
-    id: 1482,
-    status: 'new',
-    priority: null,
-    type: null,
-    subject: 'general-enquiry',
-    description: 'sdsd',
-    organization_id: null,
-    via: { channel: 'api', source: { from: {}, to: {}, rel: null } },
-    custom_fields: [],
-    requester_id: 368173136,
-    collaborator_ids: [],
-    email_cc_ids: [],
-    is_public: true,
-    due_at: null,
-    can_be_solved_by_me: false,
-    created_at: '2018-04-30T21:22:20Z',
-    updated_at: '2018-04-30T21:22:20Z',
-    recipient: null,
-    followup_source_id: null,
-    assignee_id: null,
-    fields: [],
-  },
-};
+// const exampleSuccess = {
+//   request: {
+//     url: 'https://windyroad.zendesk.com/api/v2/requests/1482.json',
+//     id: 1482,
+//     status: 'new',
+//     priority: null,
+//     type: null,
+//     subject: 'general-enquiry',
+//     description: 'sdsd',
+//     organization_id: null,
+//     via: { channel: 'api', source: { from: {}, to: {}, rel: null } },
+//     custom_fields: [],
+//     requester_id: 368173136,
+//     collaborator_ids: [],
+//     email_cc_ids: [],
+//     is_public: true,
+//     due_at: null,
+//     can_be_solved_by_me: false,
+//     created_at: '2018-04-30T21:22:20Z',
+//     updated_at: '2018-04-30T21:22:20Z',
+//     recipient: null,
+//     followup_source_id: null,
+//     assignee_id: null,
+//     fields: [],
+//   },
+// };
 
-const exampleNetworkError = {
-  config: {
-    transformRequest: {},
-    transformResponse: {},
-    timeout: 0,
-    xsrfCookieName: 'XSRF-TOKEN',
-    xsrfHeaderName: 'X-XSRF-TOKEN',
-    maxContentLength: -1,
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    method: 'post',
-    cancelToken: { promise: {} },
-    url: 'https://windyroad.zendesk.com/api/v2/requests.json',
-    data:
-      '{"request":{"requester":{"name":"Tom Howard","email":"tom@windyroad.com.au"},"subject":"general-enquiry","comment":{"body":"Test"},"priority":"low","type":"question"}}',
-  },
-  request: {},
-};
+// const exampleNetworkError = {
+//   config: {
+//     transformRequest: {},
+//     transformResponse: {},
+//     timeout: 0,
+//     xsrfCookieName: 'XSRF-TOKEN',
+//     xsrfHeaderName: 'X-XSRF-TOKEN',
+//     maxContentLength: -1,
+//     headers: {
+//       Accept: 'application/json, text/plain, */*',
+//       'Content-Type': 'application/json;charset=utf-8',
+//     },
+//     method: 'post',
+//     cancelToken: { promise: {} },
+//     url: 'https://windyroad.zendesk.com/api/v2/requests.json',
+//     data:
+//       '{"request":{"requester":{"name":"Tom Howard","email":"tom@windyroad.com.au"},"subject":"general-enquiry","comment":{"body":"Test"},"priority":"low","type":"question"}}',
+//   },
+//   request: {},
+// };
 
-const exampleApiError = {
-  config: {
-    transformRequest: {},
-    transformResponse: {},
-    timeout: 0,
-    xsrfCookieName: 'XSRF-TOKEN',
-    xsrfHeaderName: 'X-XSRF-TOKEN',
-    maxContentLength: -1,
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    method: 'post',
-    url: 'https://windyroad.zendesk.com/api/v2/requests.json',
-    data:
-      '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
-  },
-  request: {},
-  response: {
-    data: {
-      error: 'RecordInvalid',
-      description: 'Record validation errors',
-      details: {
-        base: [
-          {
-            description: 'Description: cannot be blank',
-            error: 'BlankValue',
-            field_key: 'description',
-          },
-          {
-            description: 'Subject: cannot be blank',
-            error: 'BlankValue',
-            field_key: 'subject',
-          },
-        ],
-        requester: [{ description: 'Requester: Email:  cannot be blank' }],
-      },
-    },
-    status: 422,
-    statusText: 'Unprocessable Entity',
-    headers: {
-      'content-type': 'application/json; charset=UTF-8',
-      'cache-control': 'no-cache',
-    },
-    config: {
-      transformRequest: {},
-      transformResponse: {},
-      timeout: 0,
-      xsrfCookieName: 'XSRF-TOKEN',
-      xsrfHeaderName: 'X-XSRF-TOKEN',
-      maxContentLength: -1,
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      method: 'post',
-      url: 'https://windyroad.zendesk.com/api/v2/requests.json',
-      data:
-        '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
-    },
-    request: {},
-  },
-};
+// const exampleApiError = {
+//   config: {
+//     transformRequest: {},
+//     transformResponse: {},
+//     timeout: 0,
+//     xsrfCookieName: 'XSRF-TOKEN',
+//     xsrfHeaderName: 'X-XSRF-TOKEN',
+//     maxContentLength: -1,
+//     headers: {
+//       Accept: 'application/json, text/plain, */*',
+//       'Content-Type': 'application/json;charset=utf-8',
+//     },
+//     method: 'post',
+//     url: 'https://windyroad.zendesk.com/api/v2/requests.json',
+//     data:
+//       '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
+//   },
+//   request: {},
+//   response: {
+//     data: {
+//       error: 'RecordInvalid',
+//       description: 'Record validation errors',
+//       details: {
+//         base: [
+//           {
+//             description: 'Description: cannot be blank',
+//             error: 'BlankValue',
+//             field_key: 'description',
+//           },
+//           {
+//             description: 'Subject: cannot be blank',
+//             error: 'BlankValue',
+//             field_key: 'subject',
+//           },
+//         ],
+//         requester: [{ description: 'Requester: Email:  cannot be blank' }],
+//       },
+//     },
+//     status: 422,
+//     statusText: 'Unprocessable Entity',
+//     headers: {
+//       'content-type': 'application/json; charset=UTF-8',
+//       'cache-control': 'no-cache',
+//     },
+//     config: {
+//       transformRequest: {},
+//       transformResponse: {},
+//       timeout: 0,
+//       xsrfCookieName: 'XSRF-TOKEN',
+//       xsrfHeaderName: 'X-XSRF-TOKEN',
+//       maxContentLength: -1,
+//       headers: {
+//         Accept: 'application/json, text/plain, */*',
+//         'Content-Type': 'application/json;charset=utf-8',
+//       },
+//       method: 'post',
+//       url: 'https://windyroad.zendesk.com/api/v2/requests.json',
+//       data:
+//         '{"request":{"requester":{"name":"","email":""},"subject":"","comment":{"body":""},"priority":"normal","type":"question"}}',
+//     },
+//     request: {},
+//   },
+// };
 
 class Contact extends React.Component {
   constructor(props) {
@@ -286,7 +287,7 @@ class Contact extends React.Component {
     });
   }
 
-  handleCancel(event) {
+  handleCancel() {
     if (this.state.formCancel) {
       this.state.formCancel('user cancelled');
     } else {
@@ -384,7 +385,7 @@ class Contact extends React.Component {
           });
         }),
         onUploadProgress: progressEvent => {
-          this.setState((prevstate, props) => ({
+          this.setState(prevstate => ({
             form: {
               state: progressEvent.cancelable
                 ? FormStateEnum.UPLOADING
@@ -417,7 +418,7 @@ class Contact extends React.Component {
       .catch(async error => {
         if (axios.isCancel(error)) {
           this.setState({
-            ticket: response.data.request,
+            ticket: error.response.data.request,
             form: {
               state: FormStateEnum.CANCELED,
             },
@@ -488,7 +489,7 @@ class Contact extends React.Component {
     }
   }
 
-  handleChange(event, elem) {
+  handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -499,7 +500,7 @@ class Contact extends React.Component {
     });
   }
 
-  handleRadioChange(value, event, elem) {
+  handleRadioChange(value, event) {
     const target = event.target;
     const name = target.name;
     this.setState({
@@ -518,7 +519,12 @@ class Contact extends React.Component {
       ) {
         let cause = (
           <div>
-            <p>We'll this is a litte embarrasing 😳</p>
+            <p>
+              We@apos;ll this is a litte embarrasing{' '}
+              <span role="img" aria-label="embarrased">
+                😳
+              </span>
+            </p>
             <p>
               Please try calling us on{' '}
               <a href="tel:+61285203165">02 8520 3165</a>
@@ -547,16 +553,16 @@ class Contact extends React.Component {
         ) {
           cause = (
             <p>
-              From what we can tell, you don't have an internet connection at
-              the moment. Please check you connection and try again, or call us
-              on <a href="tel:+61285203165">02 8520 3165</a>
+              From what we can tell, you don&apos;t have an internet connection
+              at the moment. Please check you connection and try again, or call
+              us on <a href="tel:+61285203165">02 8520 3165</a>
             </p>
           );
         }
         errorConent = (
           <div>
             <div className="form-error-msg">
-              <h3>Sorry, something's gone wrong sending your request.</h3>
+              <h3>Sorry, something&apos;s gone wrong sending your request.</h3>
               {cause}
             </div>
             <Row end="xs" between="xs">
@@ -597,7 +603,7 @@ class Contact extends React.Component {
                   height: '100%',
                 }}
               >
-                <a
+                <button
                   className="button"
                   onClick={() =>
                     this.setState({ form: { state: FormStateEnum.READY } })
@@ -605,9 +611,12 @@ class Contact extends React.Component {
                   style={{
                     width: '100%',
                   }}
+                  onKeyPress={() =>
+                    this.setState({ form: { state: FormStateEnum.READY } })
+                  }
                 >
                   edit
-                </a>
+                </button>
               </Col>
             </Row>
           </div>
@@ -988,5 +997,11 @@ class Contact extends React.Component {
     );
   }
 }
+
+Contact.propTypes = {
+  onEdit: PropTypes.func.isRequired,
+};
+
+Contact.defaultProps = {};
 
 export default Contact;

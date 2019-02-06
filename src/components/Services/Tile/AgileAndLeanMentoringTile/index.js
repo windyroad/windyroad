@@ -1,8 +1,8 @@
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { faChartLine } from '@fortawesome/free-solid-svg-icons'
-import Tile from '..'
-import background from './AdobeStock_90682313-1024x683.jpg'
-import './index.css'
+import { faChartLine } from '@fortawesome/free-solid-svg-icons';
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import Tile from '..';
+import background from './AdobeStock_90682313-1024x683.jpg';
+import './index.css';
 
 const AgileAndLeanMentoringTile = function() {
   return (
@@ -14,7 +14,7 @@ const AgileAndLeanMentoringTile = function() {
       icon={faChartLine}
       topic="agile &amp; lean"
     />
-  )
-}
+  );
+};
 
-export default AgileAndLeanMentoringTile
+export default AgileAndLeanMentoringTile;

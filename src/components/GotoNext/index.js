@@ -1,20 +1,20 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowAltCircleDown } from '@fortawesome/free-regular-svg-icons'
-import { Link } from 'react-scroll'
-import './index.css'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowAltCircleDown } from '@fortawesome/free-regular-svg-icons';
+import { Link } from 'react-scroll';
+import './index.css';
 
 class GotoNext extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       click: false,
-    }
+    };
 
-    this.clickStart = this.clickStart.bind(this)
-    this.clickEnd = this.clickEnd.bind(this)
+    this.clickStart = this.clickStart.bind(this);
+    this.clickEnd = this.clickEnd.bind(this);
   }
 
   componentDidMount() {}
@@ -26,21 +26,21 @@ class GotoNext extends React.Component {
       to: PropTypes.string.isRequired,
       onSetActive: PropTypes.func.isRequired,
       onSetInactive: PropTypes.func.isRequired,
-    }
+    };
   }
 
   clickStart() {
-    this.setState({ click: true })
-    return true
+    this.setState({ click: true });
+    return true;
   }
 
   clickEnd() {
-    this.setState({ click: false })
-    return true
+    this.setState({ click: false });
+    return true;
   }
 
   render() {
-    const scrollDuration = 1000
+    const scrollDuration = 1000;
     return (
       <Link
         className={`goto-next ${this.state.click ? ' click' : ''}`}
@@ -62,8 +62,8 @@ class GotoNext extends React.Component {
       >
         <FontAwesomeIcon icon={faArrowAltCircleDown} />
       </Link>
-    )
+    );
   }
 }
 
-export default GotoNext
+export default GotoNext;

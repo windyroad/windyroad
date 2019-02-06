@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import './index.css'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import './index.css';
 
 const DefaultState = Object.freeze({
   failedValidationMsg: null,
@@ -8,38 +8,38 @@ const DefaultState = Object.freeze({
   prevValidationMsg: null,
   hasNotChanged: true,
   isValid: true,
-})
+});
 
 class Input extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = DefaultState
+    super(props);
+    this.state = DefaultState;
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleBlur = this.handleBlur.bind(this)
-    this.handleFocus = this.handleFocus.bind(this)
-    this.reset = this.reset.bind(this)
-    this.isValid = this.isValid.bind(this)
+    this.handleChange = this.handleChange.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleFocus = this.handleFocus.bind(this);
+    this.reset = this.reset.bind(this);
+    this.isValid = this.isValid.bind(this);
   }
 
   componentDidMount() {
-    this.validate(this.props.value)
+    this.validate(this.props.value);
     if (this.props.setResetter) {
-      this.props.setResetter(this.reset)
+      this.props.setResetter(this.reset);
     }
     if (this.props.setGetIsValid) {
-      this.props.setGetIsValid(this.isValid)
+      this.props.setGetIsValid(this.isValid);
     }
   }
 
   componentWillUnmount() {
     if (this.props.setResetter) {
-      this.props.setResetter(null)
+      this.props.setResetter(null);
     }
   }
 
   isValid() {
-    return this.state.isValid
+    return this.state.isValid;
   }
 
   reset() {
@@ -50,28 +50,28 @@ class Input extends React.Component {
         prevValidationMsg: prevState.failedValidationMsg,
         hasNotChanged: true,
         isValid: true,
-      }
-    })
-    this.validate(this.props.value)
+      };
+    });
+    this.validate(this.props.value);
   }
 
   handleChange(event, elem) {
-    const target = event.target
-    const value = target.value
+    const target = event.target;
+    const value = target.value;
     // if their are validation errors, check validation now,
     // otherwise we'll revalidate after blur
     if (this.state.failedValidationMethod) {
       let errorMsg = this.state.failedValidationMethod(
         target.placeholder,
         value,
-      )
+      );
       if (errorMsg) {
         this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
           hasNotChanged: false,
           isValid: false,
-        }))
+        }));
       } else {
         this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
@@ -79,17 +79,17 @@ class Input extends React.Component {
           failedValidationMethod: null,
           hasNotChanged: false,
           isValid: true,
-        }))
+        }));
       }
     }
-    this.props.onChange(event, elem)
+    this.props.onChange(event, elem);
   }
 
   handleBlur(event) {
     this.setState({
       hasNotChanged: false,
-    })
-    this.validate(event.target.value)
+    });
+    this.validate(event.target.value);
   }
 
   handleFocus() {}
@@ -98,7 +98,7 @@ class Input extends React.Component {
     return (
       !this.state.isValid &&
       !(this.props.formIsInit && this.state.hasNotChanged)
-    )
+    );
   }
 
   validate(value) {
@@ -107,16 +107,16 @@ class Input extends React.Component {
       this.props.validations && index < this.props.validations.length;
       index++
     ) {
-      const validationMethod = this.props.validations[index]
-      let errorMsg = validationMethod(this.props.placeholder, value)
+      const validationMethod = this.props.validations[index];
+      let errorMsg = validationMethod(this.props.placeholder, value);
       if (errorMsg) {
         this.setState(prevState => ({
           prevValidationMsg: prevState.failedValidationMsg,
           failedValidationMsg: errorMsg,
           failedValidationMethod: validationMethod,
           isValid: false,
-        }))
-        return false
+        }));
+        return false;
       }
     }
     this.setState(prevState => ({
@@ -124,8 +124,8 @@ class Input extends React.Component {
       failedValidationMsg: null,
       failedValidationMethod: null,
       isValid: true,
-    }))
-    return true
+    }));
+    return true;
   }
 
   render() {
@@ -155,7 +155,7 @@ class Input extends React.Component {
           onFocus={this.handleFocus}
           autoComplete={this.props.autoComplete}
         />
-      )
+      );
     return (
       <div>
         {field}
@@ -165,7 +165,7 @@ class Input extends React.Component {
             : this.state.prevValidationMsg}&nbsp;
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -181,10 +181,10 @@ Input.propTypes = {
   name: PropTypes.string.isRequired,
   rows: PropTypes.number,
   autoComplete: PropTypes.bool,
-}
+};
 
 Input.defaultProps = {
   rows: 5,
   autoComplete: true,
-}
-export default Input
+};
+export default Input;

@@ -1,20 +1,20 @@
-import PropTypes from 'prop-types' // eslint-disable-line import/no-extraneous-dependencies
-import React from 'react' // eslint-disable-line import/no-extraneous-dependencies
-import { Col, Row } from 'react-flexbox-grid'
-import FindYourNavigator from '../FindYourNavigator'
-import Spotlight from '../Spotlight'
-import './index.css'
-import whiteboard1440 from './whiteboard-1440.jpeg'
-import whiteboard180 from './whiteboard-180.jpeg'
-import whiteboard2880 from './whiteboard-2880.jpeg'
-import whiteboard360 from './whiteboard-360.jpeg'
-import whiteboard45 from './whiteboard-45.jpeg'
-import whiteboard720 from './whiteboard-720.jpeg'
-import whiteboard90 from './whiteboard-90.jpeg'
+import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import { Col, Row } from 'react-flexbox-grid';
+import FindYourNavigator from '../FindYourNavigator';
+import Spotlight from '../Spotlight';
+import './index.css';
+import whiteboard1440 from './whiteboard-1440.jpeg';
+import whiteboard180 from './whiteboard-180.jpeg';
+import whiteboard2880 from './whiteboard-2880.jpeg';
+import whiteboard360 from './whiteboard-360.jpeg';
+import whiteboard45 from './whiteboard-45.jpeg';
+import whiteboard720 from './whiteboard-720.jpeg';
+import whiteboard90 from './whiteboard-90.jpeg';
 
 class About extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.images = {
       45: whiteboard45,
       90: whiteboard90,
@@ -23,7 +23,7 @@ class About extends React.Component {
       720: whiteboard720,
       1440: whiteboard1440,
       2880: whiteboard2880,
-    }
+    };
   }
 
   static get propTypes() {
@@ -32,22 +32,22 @@ class About extends React.Component {
       nextActive: PropTypes.func.isRequired,
       nextInactive: PropTypes.func.isRequired,
       next: PropTypes.string.isRequired,
-    }
+    };
   }
 
   handleSetActive() {
-    this.spotlight.handleSetActive()
+    this.spotlight.handleSetActive();
   }
 
   handleSetInactive() {
-    this.spotlight.handleSetInactive()
+    this.spotlight.handleSetInactive();
   }
 
   render() {
     return (
       <Spotlight
         ref={section => {
-          this.spotlight = section
+          this.spotlight = section;
         }}
         id={this.props.id}
         images={this.images}
@@ -103,8 +103,8 @@ class About extends React.Component {
           </Row>
         </div>
       </Spotlight>
-    )
+    );
   }
 }
 
-export default About
+export default About;

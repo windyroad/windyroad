@@ -1,4 +1,5 @@
-import React from 'react'
-import './index.css'
+import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import './index.css';
 
-export default props => <div>ERROR</div>
+const Error = () => <div>ERROR</div>;
+export default Error;

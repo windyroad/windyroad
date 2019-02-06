@@ -647,7 +647,7 @@ body.landing:before {
   font-weight: 900;
   text-transform: none !important;
 }
-
+/* 
 body.landing:before {
   -moz-animation: spinner-show 1.5s 1 0.25s ease forwards,
     spinner-hide 0.25s ease-in-out forwards !important;
@@ -676,7 +676,7 @@ body.landing:before {
   top: 50%;
   width: 2em;
   z-index: -1;
-}
+} */
 
 body.landing:after {
   -moz-animation: overlay-hide 1.5s ease-in forwards !important;
@@ -695,7 +695,7 @@ body.landing:after {
   z-index: -1;
 }
 
-body.landing.is-loading:before {
+/* body.landing.is-loading:before {
   -moz-animation: spinner-show 1.5s 1 0.25s ease forwards,
     spinner-rotate 0.75s infinite linear !important;
   -webkit-animation: spinner-show 1.5s 1 0.25s ease forwards,
@@ -714,7 +714,7 @@ body.landing.is-loading:after {
   animation: none !important;
   opacity: 1;
   z-index: 100000;
-}
+} */
 
 @media (-webkit-min-device-pixel-ratio: 2) {
   body.landing:before {
@@ -1721,9 +1721,9 @@ body {
 
   /* Header */
 
-  #header {
-    /*display: none;*/
-  }
+  /* #header {
+    display: none;
+  } */
 
   /* Off-Canvas Navigation */
 
