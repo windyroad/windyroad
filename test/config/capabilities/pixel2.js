@@ -1,4 +1,6 @@
-const capability = {
+const baseCapability = require('./base-capability');
+
+const capability = Object.assign(baseCapability, {
   maxInstances: 5,
   browserName: 'chrome',
   chromeOptions: {
@@ -6,6 +8,6 @@ const capability = {
       deviceName: 'Pixel 2',
     },
   },
-}
+});
 
-exports.config = capability
+exports.config = capability;
