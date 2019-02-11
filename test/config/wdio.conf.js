@@ -5,6 +5,10 @@ const chromeCapability = require('./capabilities/chrome.js').config;
 const landscapeCapability = require('./capabilities/landscape.js').config;
 const pixel2Capability = require('./capabilities/pixel2.js').config;
 const chrome733Capability = require('./capabilities/chrome.733.js').config;
+const chromeIPadCapability = require('./capabilities/chrome.iPad.js').config;
+const chromeIPadProCapability = require('./capabilities/chrome.iPadPro.js')
+  .config;
+const safariCapability = require('./capabilities/safari.js').config;
 
 const defaultFeatures = require('../../src/features.js');
 
@@ -46,28 +50,9 @@ let config = {
     landscapeCapability,
     pixel2Capability,
     chrome733Capability,
-    {
-      maxInstances: 5,
-      browserName: 'chrome',
-      chromeOptions: {
-        mobileEmulation: {
-          deviceName: 'iPad',
-        },
-      },
-    },
-    {
-      maxInstances: 5,
-      browserName: 'chrome',
-      chromeOptions: {
-        mobileEmulation: {
-          deviceName: 'iPad Pro',
-        },
-      },
-    },
-    {
-      maxInstances: 5,
-      browserName: 'safari',
-    },
+    chromeIPadCapability,
+    chromeIPadProCapability,
+    safariCapability,
   ],
   //
   // =================== Test Configurations =================== Define all

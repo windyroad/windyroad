@@ -1,5 +1,6 @@
-const waitPort = require('wait-port')
-const extractTarget = require('./node_modules/wait-port/lib/extract-target.js')
+const waitPort = require('wait-port');
+const extractTarget = require('./node_modules/wait-port/lib/extract-target.js');
+const safariIPhoneCapability = require('./capabilities/safari.iPhone');
 
 exports.config = {
   //
@@ -34,20 +35,7 @@ exports.config = {
   // the Sauce Labs platform configurator - a great tool to configure your
   // capabilities: https://docs.saucelabs.com/reference/platforms-configurator
   //
-  capabilities: [
-    {
-      maxInstances: 1,
-      browserType: 'iphone',
-      deviceName: 'iPhone Simulator',
-      deviceOrientation: 'portrait',
-      platformVersion: '10.0',
-      platformName: 'iOS',
-      browserName: 'Safari',
-
-      // app: 'net.company.SafariLauncher', // bundle id of the app or safari launcher
-      // udid: '123123123123abc',
-    },
-  ],
+  capabilities: [safariIPhoneCapability],
   //
   // =================== Test Configurations =================== Define all
   // options that are relevant for the WebdriverIO instance here
@@ -198,26 +186,26 @@ exports.config = {
     /**
      * Setup the Chai assertion framework
      */
-    const chai = require('chai')
+    const chai = require('chai');
 
-    global.expect = chai.expect
-    global.assert = chai.assert
-    global.should = chai.should()
+    global.expect = chai.expect;
+    global.assert = chai.assert;
+    global.should = chai.should();
 
     try {
-      const open = await waitPort(extractTarget(this.baseUrl))
+      const open = await waitPort(extractTarget(this.baseUrl));
 
       if (open) {
-        console.log('The port is now open!')
+        console.log('The port is now open!');
       } else {
-        console.error('The port did not open before the timeout...')
-        process.abort()
+        console.error('The port did not open before the timeout...');
+        process.abort();
       }
     } catch (err) {
       console.error(
         `An unknown error occured while waiting for the port: ${err}`,
-      )
-      process.abort()
+      );
+      process.abort();
     }
   },
   /**
@@ -290,4 +278,4 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    */
   //  onComplete: function(exitCode, config, capabilities) {  }
-}
+};

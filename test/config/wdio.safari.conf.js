@@ -1,12 +1,9 @@
 const defaults = require('./wdio.conf.js').config;
+const safariCapability = require('./capabilities/safari.js').config;
 
 // clone prod config and add new properties/overrides
 const localConfig = Object.assign(defaults, {
-  capabilities: [
-    {
-      browserName: 'safari',
-    },
-  ],
+  capabilities: [safariCapability],
   services: ['selenium-standalone'],
 });
 
