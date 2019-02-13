@@ -1,9 +1,9 @@
 const defaults = require('./wdio.saucelabs.conf').config;
-const firefoxCapability = require('./capabilities/firefox.js');
+const chromeCapability = require('./capabilities/chrome');
 
 // clone prod config and add new properties/overrides
 const localConfig = Object.assign(defaults, {
-  capabilities: [firefoxCapability],
+  capabilities: [chromeCapability],
 });
 
 exports.config = localConfig;

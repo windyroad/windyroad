@@ -1,4 +1,4 @@
-const defaults = require('./wdio.conf.js').config;
+const defaults = require('./wdio.conf').config;
 
 // clone prod config and add new properties/overrides
 const localConfig = Object.assign(defaults, {

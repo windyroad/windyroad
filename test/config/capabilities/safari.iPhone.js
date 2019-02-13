@@ -1,6 +1,6 @@
 const baseCapability = require('./base-capability');
 
-const capability = Object.assign(baseCapability, {
+const capability = Object.assign({}, baseCapability, {
   maxInstances: 1,
   browserType: 'iphone',
   deviceName: 'iPhone Simulator',
@@ -13,4 +13,4 @@ const capability = Object.assign(baseCapability, {
   // udid: '123123123123abc',
 });
 
-exports.config = capability;
+module.exports = capability;

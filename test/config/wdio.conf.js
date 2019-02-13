@@ -52,7 +52,7 @@ let config = {
     chrome733Capability,
     chromeIPadCapability,
     chromeIPadProCapability,
-    safariCapability,
+    // safariCapability,
   ],
   //
   // =================== Test Configurations =================== Define all
@@ -218,7 +218,7 @@ let config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  before: async function before() {
+  before: async function before(capabilities) {
     /**
      * Setup the Chai assertion framework
      */

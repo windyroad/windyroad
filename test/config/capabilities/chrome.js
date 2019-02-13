@@ -1,6 +1,6 @@
 const baseCapability = require('./base-capability');
 
-const capability = Object.assign(baseCapability, {
+const capability = Object.assign({}, baseCapability, {
   maxInstances: 5,
   browserName: 'chrome',
   chromeOptions: {
@@ -8,4 +8,4 @@ const capability = Object.assign(baseCapability, {
   },
 });
 
-exports.config = capability;
+module.exports = capability;
