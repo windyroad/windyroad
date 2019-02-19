@@ -1,14 +1,13 @@
 const waitPort = require('wait-port');
 const extractTarget = require('wait-port/lib/extract-target');
 
-const chromeCapability = require('./capabilities/chrome.js').config;
-const landscapeCapability = require('./capabilities/landscape.js').config;
-const pixel2Capability = require('./capabilities/pixel2.js').config;
-const chrome733Capability = require('./capabilities/chrome.733.js').config;
-const chromeIPadCapability = require('./capabilities/chrome.iPad.js').config;
-const chromeIPadProCapability = require('./capabilities/chrome.iPadPro.js')
-  .config;
-const safariCapability = require('./capabilities/safari.js').config;
+const chromeCapability = require('./capabilities/chrome.js');
+const landscapeCapability = require('./capabilities/landscape.js');
+const pixel2Capability = require('./capabilities/pixel2.js');
+const chrome733Capability = require('./capabilities/chrome.733.js');
+const chromeIPadCapability = require('./capabilities/chrome.iPad.js');
+const chromeIPadProCapability = require('./capabilities/chrome.iPadPro.js');
+const safariCapability = require('./capabilities/safari.js');
 
 const defaultFeatures = require('../../src/features.js');
 
