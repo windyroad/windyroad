@@ -7,7 +7,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.75);
   color: #ffffff;
   top: 0;
   left: 0;
@@ -22,7 +22,7 @@
 }
 
 /*hover*/
-.service-item:hover .overlay {
+.service-item .overlay {
   opacity: 1;
   -moz-transform: scale(1);
   -ms-transform: scale(1);
@@ -65,7 +65,7 @@
     font-size: 300%;
 } */
 
-.service-item .button {
+.service-item .excerpt {
   padding: 0.5em 1ex;
   display: block;
   white-space: normal;
@@ -78,7 +78,7 @@
   font-size: 90%;
 }
 
-.service-item .button .fa {
+.service-item .excerpt .fa {
   display: inline;
 }
 
@@ -86,7 +86,7 @@
   margin: 0;
 }
 
-.service-item .button {
+.service-item .excerpt {
   border-bottom: none;
 }
 

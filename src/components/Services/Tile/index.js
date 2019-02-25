@@ -1,4 +1,3 @@
-import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
@@ -35,10 +34,12 @@ class Tile extends React.Component {
                 <div className="overlay-child">
                   <FontAwesomeIcon icon={this.props.icon} size="2x" />
                   <h3>{this.props.title}</h3>
-                  <span className="excerpt">{this.props.excerpt}</span>
+                  {/* <span className="excerpt">{this.props.excerpt}</span> */}
                 </div>
               </div>
-              <div className="special button cta">
+              <div className="excerpt">{this.props.excerpt}</div>
+
+              {/* <div className="special button cta">
                 Find your {this.props.topic}{' '}
                 <span style={{ whiteSpace: 'nowrap' }}>
                   navigator<FontAwesomeIcon
@@ -50,7 +51,7 @@ class Tile extends React.Component {
                     }}
                   />
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
         </Link>

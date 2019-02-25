@@ -101,7 +101,13 @@ class Banner extends React.Component {
             <h2>
               <img src={logo} className="logo" alt="Windy Road" />
             </h2>
-            <p>We help you stay on course</p>
+            <p>
+              <strong>Your Software Delivery &amp; DevOps Experts</strong>
+            </p>
+            <p>
+              We help you on the road to high quality, efficient, and high
+              velocity software delivery.
+            </p>
             <FindYourNavigator />
           </header>
         </div>
