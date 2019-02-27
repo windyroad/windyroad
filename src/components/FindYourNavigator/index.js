@@ -12,7 +12,6 @@ const FindYourNavigator = function({ duration, ...otherProps }) {
       to="contact"
       spy
       smooth
-      hashSpy
       duration={duration}
       data-duration={duration}
       {...otherProps}

@@ -43,7 +43,6 @@ const Footer = function() {
             to="contact"
             spy
             smooth
-            hashSpy
             duration={1000}
             className="icon alt"
             style={{}}

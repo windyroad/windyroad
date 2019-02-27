@@ -1,7 +1,7 @@
+import { faArrowAltCircleDown } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
 import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowAltCircleDown } from '@fortawesome/free-regular-svg-icons';
 import { Link } from 'react-scroll';
 import './index.css';
 
@@ -47,7 +47,6 @@ class GotoNext extends React.Component {
         to={this.props.to}
         spy
         smooth
-        hashSpy
         duration={scrollDuration}
         onSetActive={this.props.onSetActive}
         onSetInactive={this.props.onSetInactive}

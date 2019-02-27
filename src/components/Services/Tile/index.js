@@ -21,7 +21,6 @@ class Tile extends React.Component {
           to="contact"
           spy
           smooth
-          hashSpy
           duration={duration}
           data-duration={duration}
           style={{ cursor: `pointer` }}
