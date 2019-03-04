@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  dependencies:
+  build:
     docker:
       - image: circleci/node:9
     steps:
@@ -8,12 +8,13 @@ jobs:
 
       - restore_cache:
           keys:
-          - dependencies-{{ checksum "package.json" }}
-          - dependencies-
+            - dependencies-{{ checksum "package.json" }}
+            - dependencies-
       - run:
           command: |
             npm install
-            
+            npm run build
+
       - save_cache:
           paths:
             - node_modules
@@ -21,22 +22,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - '*'
-        
-  build:
-    docker:
-      - image: circleci/node:9
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          command: |
-            npm run build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
-          
+            - "*"
 
   test-headless:
     docker:
@@ -63,7 +49,7 @@ jobs:
           path: ./target/reports/junit
       - store_artifacts:
           path: ./target/errorShots
-  
+
   test-saucelabs-stg:
     docker:
       - image: circleci/node:9
@@ -133,10 +119,7 @@ workflows:
 
   ci:
     jobs:
-      - dependencies
-      - build:
-          requires:
-            - dependencies
+      - build
       - test-headless:
           requires:
             - build
