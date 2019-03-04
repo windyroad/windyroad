@@ -12,7 +12,6 @@ For an overview of the project structure please refer to the [Gatsby documentati
 ## Development Mode
 
 ```sh
-cd windyroad
 npm run develop
 ```
 
@@ -21,7 +20,6 @@ Open http://localhost:8000
 ## Build
 
 ```sh
-cd windyroad
 npm run build
 ```
 
@@ -37,7 +35,11 @@ Open http://localhost:9000
 
 ## Test
 
-Working on it.
+```sh
+npm run test:headless:start
+```
+
+Currently using WDIO v4. V5 Doesn't seem to support cucumber yet.
 
 ## TODO
 
