@@ -8,7 +8,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - dependencies-{{ checksum "package.json" }}
+            - dependencies-{{ checksum "package.json" }}-{{ checksum "./circleci/config.yml" }}
             - dependencies-
       - run:
           command: |
@@ -18,7 +18,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-{{ checksum "package.json" }}
+          key: dependencies-{{ checksum "package.json" }}-{{ checksum "./circleci/config.yml" }}
       - persist_to_workspace:
           root: .
           paths:
@@ -91,7 +91,7 @@ jobs:
 
   prod-deploy:
     docker:
-      - image: circleci/node:lts-browsers
+      - image: circleci/node:10-browsers
     steps:
       - attach_workspace:
           at: .
