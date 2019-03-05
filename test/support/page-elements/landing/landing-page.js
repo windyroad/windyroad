@@ -7,11 +7,6 @@ import LandingSection from './landing-section';
 class LandingPage extends Page {
   constructor() {
     super();
-    this.header = Header;
-
-    this.aboutUs = new LandingSection(`section#about`);
-    this.services = new ServicesSection(`section#services`);
-    this.contact = new LandingSection(`section#contact`);
   }
 
   get aboutUsSection() {
@@ -35,6 +30,10 @@ class LandingPage extends Page {
     // wait for body to have class 'is-loaded' then wait 1.5s for transitions to
     // complete
     browser.pause(1500);
+    this.header = new Header();
+    this.aboutUs = new LandingSection(`section#about`);
+    this.services = new ServicesSection(`section#services`);
+    this.contact = new LandingSection(`section#contact`);
     this.currentSection = new LandingSection(`section#banner`);
   }
 }

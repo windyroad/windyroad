@@ -6,4 +6,4 @@ class LandingHeader extends PageElement {
   }
 }
 
-export default new LandingHeader();
+export default LandingHeader;
