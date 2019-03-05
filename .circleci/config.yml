@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:lts-browsers
     steps:
       - checkout
 
@@ -14,7 +14,7 @@ jobs:
           command: |
             npm install
             npm run build
-
+            npm run test:headless:start:prebuilt
       - save_cache:
           paths:
             - node_modules
@@ -23,15 +23,6 @@ jobs:
           root: .
           paths:
             - "*"
-
-  test-headless:
-    docker:
-      - image: circleci/node:9-browsers
-    steps:
-      - attach_workspace:
-          at: .
-      - run: |
-          npm run test:headless:start:prebuilt
       - store_test_results:
           path: ./target/reports/junit
       - store_artifacts:
@@ -39,7 +30,7 @@ jobs:
 
   test-saucelabs:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:lts-browsers
     steps:
       - attach_workspace:
           at: .
@@ -52,7 +43,7 @@ jobs:
 
   test-saucelabs-stg:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:lts-browsers
     steps:
       - attach_workspace:
           at: .
@@ -65,7 +56,7 @@ jobs:
 
   prerelease:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:lts-browsers
     steps:
       - attach_workspace:
           at: .
@@ -84,7 +75,7 @@ jobs:
 
   stg-deploy:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:lts-browsers
     steps:
       - attach_workspace:
           at: .
@@ -100,7 +91,7 @@ jobs:
 
   prod-deploy:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:lts-browsers
     steps:
       - attach_workspace:
           at: .
@@ -120,16 +111,12 @@ workflows:
   ci:
     jobs:
       - build
-      - test-headless:
-          requires:
-            - build
       - test-saucelabs:
           requires:
             - build
       - prerelease:
           requires:
             - build
-            - test-headless
             - test-saucelabs
       - stg-deploy:
           requires:
