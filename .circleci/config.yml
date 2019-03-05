@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:lts-browsers
+      - image: circleci/node:10-browsers
     steps:
       - checkout
 
@@ -30,7 +30,7 @@ jobs:
 
   test-saucelabs:
     docker:
-      - image: circleci/node:lts-browsers
+      - image: circleci/node:10-browsers
     steps:
       - attach_workspace:
           at: .
@@ -43,7 +43,7 @@ jobs:
 
   test-saucelabs-stg:
     docker:
-      - image: circleci/node:lts-browsers
+      - image: circleci/node:10-browsers
     steps:
       - attach_workspace:
           at: .
@@ -56,7 +56,7 @@ jobs:
 
   prerelease:
     docker:
-      - image: circleci/node:lts-browsers
+      - image: circleci/node:10-browsers
     steps:
       - attach_workspace:
           at: .
@@ -75,7 +75,7 @@ jobs:
 
   stg-deploy:
     docker:
-      - image: circleci/node:lts-browsers
+      - image: circleci/node:10-browsers
     steps:
       - attach_workspace:
           at: .
