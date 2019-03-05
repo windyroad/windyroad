@@ -40,7 +40,6 @@
   "license": "MIT",
   "scripts": {
     "lint:js": "eslint \"src/**/*.{js,jsx}\" --fix",
-    "precommit": "lint-staged",
     "build": "gatsby build",
     "develop": "node ./node_modules/.bin/gatsby develop",
     "start": "gatsby serve",
@@ -149,5 +148,10 @@
       "imagemin-lint-staged",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
