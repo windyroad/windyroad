@@ -55,6 +55,8 @@
     "test:saucelabs:no-start": "wdio test/config/wdio.saucelabs.conf.js",
     "test:saucelabs:chrome:start": "start-server-and-test build-and-start http://localhost:9000 test:saucelabs:chrome:no-start",
     "test:saucelabs:chrome:no-start": "wdio test/config/wdio.saucelabs.chrome.conf.js",
+    "test:saucelabs:chrome:wip:start": "start-server-and-test build-and-start http://localhost:9000 test:saucelabs:chrome:wip:no-start",
+    "test:saucelabs:chrome:wip:no-start": "wdio test/config/wdio.saucelabs.chrome.wip.conf.js",
     "test:saucelabs:firefox:start": "start-server-and-test build-and-start http://localhost:9000 test:saucelabs:firefox:no-start",
     "test:saucelabs:firefox:no-start": "wdio test/config/wdio.saucelabs.firefox.conf.js",
     "test:saucelabs:safari:start": "start-server-and-test build-and-start http://localhost:9000 test:saucelabs:safari:no-start",
@@ -75,6 +77,8 @@
     "test:chrome:no-start": "wdio test/config/wdio.chrome.conf.js",
     "test:chrome:start": "start-server-and-test build-and-start http://localhost:9000 test:chrome:no-start",
     "test:chrome:start:prebuilt": "start-server-and-test start http://localhost:9000 test:chrome:no-start",
+    "test:chrome:wip:no-start": "wdio test/config/wdio.chrome.wip.conf.js",
+    "test:chrome:wip:start": "start-server-and-test build-and-start http://localhost:9000 test:chrome:no-start",
     "test:landscape:on-dev": "node --inspect ./node_modules/.bin/wdio test/config/wdio.landscape.dev.conf.js",
     "test:landscape:no-start": "wdio test/config/wdio.landscape.conf.js",
     "test:landscape:start": "start-server-and-test build-and-start http://localhost:9000 test:landscape:no-start",
@@ -105,7 +109,6 @@
     "chai": "^4.2.0",
     "chai-webdriverio": "^0.4.3",
     "chromedriver": "^2.46.0",
-    "cucumber": "^5.1.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
@@ -129,6 +132,7 @@
     "wdio-logger": "^5.0.0-alpha.9",
     "wdio-sauce-service": "^0.4.14",
     "wdio-selenium-standalone-service": "0.0.12",
+    "wdio-spec-reporter": "^0.1.5",
     "webdriverio": "^4.13.1"
   },
   "lint-staged": {

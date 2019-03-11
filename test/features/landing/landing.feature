@@ -1,16 +1,16 @@
-@landing 
+@landing
 Feature: Landing Page
-    
 
-    @content 
+
+    @content
     Scenario: Landing page Title
         When I open the Windy Road site
         Then the title will be "Windy Road"
 
-    @layout 
+    @layout
     Scenario: Landing page header
         When I open the Windy Road site
-        Then there will be a header bar at the top of the page 
+        Then there will be a header bar at the top of the page
 
     @content
     Scenario: Down Arror In Banner
@@ -30,7 +30,7 @@ Feature: Landing Page
         And I've scrolled to the about us section
         Then there will be a "Find your navigator" CTA
 
-    @nav @about 
+    @nav @about
     Scenario: CTA In About Us
         Given I've opened the Windy Road site
         And I've scrolled to the about us section

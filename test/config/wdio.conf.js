@@ -123,7 +123,7 @@ let config = {
   //
   // Test reporter for stdout. The only one supported by default is 'dot' see
   // also: http://webdriver.io/guide/reporters/dot.html
-  reporters: ['dot', 'junit', 'cucumber-snippet'],
+  reporters: ['spec', 'dot', 'junit', 'cucumber-snippet'],
 
   reporterOptions: {
     junit: {
@@ -157,7 +157,7 @@ let config = {
     source: true, // <boolean> hide source uris
     profile: [], // <string[]> (name) specify the profile to use
     strict: false, // <boolean> fail if there are any undefined or pending steps
-    tags: [], // <string[]> (expression) only execute the features or scenarios with tags matching the expression
+    tagExpression: '', // <string[]> (expression) only execute the features or scenarios with tags matching the expression
     timeout: 40000, // <number> timeout for step definitions
     ignoreUndefinedDefinitions: true, // <boolean> Enable this config to treat undefined definitions as warnings.
   },
@@ -173,7 +173,11 @@ let config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) { },
+  onPrepare: function(config) {
+    //, capabilities) {
+    console.log('TAG Expression:', config.cucumberOpts.tagExpression);
+    // process.exit();
+  },
   /**
    * Gets executed just before initialising the webdriver session and test framework. It allows you
    * to manipulate configurations depending on the capability or spec.
@@ -181,7 +185,8 @@ let config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  // beforeSession: function (config, capabilities, specs) { },
+  // beforeSession: function(config, capabilities, specs) {
+  // },
   features: defaultFeatures,
   getTags: function() {
     const keys = Object.keys(this.features);
@@ -208,7 +213,7 @@ let config = {
       })
       .join(' or ');
     let tags = `(${enabled}) and not(${disabled})`;
-    console.log('TAGS:', tags);
+    console.log('TAGS Expression:', tags);
     return tags;
   },
   /**
@@ -326,6 +331,6 @@ let config = {
   //  onComplete: function(exitCode, config, capabilities) {  }
 };
 
-config.cucumberOpts.tags = config.getTags();
+config.cucumberOpts.tagExpression = config.getTags();
 
 exports.config = config;

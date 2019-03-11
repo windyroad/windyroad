@@ -1,10 +1,10 @@
-const defaults = require('./wdio.safari.conf.js').config
+const defaults = require('./wdio.safari.conf.js').config;
 
 // clone prod config and add new properties/overrides
 const localConfig = Object.assign(defaults, {
   baseUrl: 'http://localhost:8000',
-})
+});
 
-localConfig.cucumberOpts.tags = '@wip'
+localConfig.cucumberOpts.tagExpression = '@wip';
 
-exports.config = localConfig
+exports.config = localConfig;

@@ -1,8 +1,7 @@
-const baseCapability = require('./base-capability');
+const baseCapability = require('./base-chrome');
 
 const capability = Object.assign({}, baseCapability, {
-  maxInstances: 5,
-  browserName: 'chrome',
+  name: 'Windy Road Website - Chrome Pixel 2',
   chromeOptions: {
     mobileEmulation: {
       deviceName: 'Pixel 2',

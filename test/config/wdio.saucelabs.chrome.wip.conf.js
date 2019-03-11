@@ -1,4 +1,4 @@
-const defaults = require('./wdio.wip.conf.js').config;
+const defaults = require('./wdio.saucelabs.chrome.conf').config;
 
 // clone prod config and add new properties/overrides
 const localConfig = Object.assign(defaults, {});

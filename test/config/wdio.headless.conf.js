@@ -9,7 +9,7 @@ const localConfig = Object.assign(defaults, {
   services: ['chromedriver'],
 });
 
-//localConfig.cucumberOpts.tags = []
+//localConfig.cucumberOptstagExpression = ''
 // delete any unwanted properties delete localConfig.user; delete
 // localConfig.key; delete localConfig.sauceConnect;
 

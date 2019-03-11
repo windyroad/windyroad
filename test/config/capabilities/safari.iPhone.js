@@ -1,6 +1,7 @@
 const baseCapability = require('./base-capability');
 
 const capability = Object.assign({}, baseCapability, {
+  name: 'Windy Road Website - Safari iPhone',
   maxInstances: 1,
   browserType: 'iphone',
   deviceName: 'iPhone Simulator',
