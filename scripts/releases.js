@@ -76,7 +76,7 @@ async function cretePreRelease(
       .expand({ name: path.basename(artifactFile), label: '' });
     let form = new FormData();
 
-    form.append('my_file', fs.createReadStream(artifactFile));
+    form.append('file', fs.createReadStream(artifactFile));
 
     const uploadResponse = await got.post(
       uploadUrl,

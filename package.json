@@ -93,7 +93,7 @@
     "test:safari:start": "start-server-and-test build-and-start http://localhost:9000 test:safari:no-start",
     "test:firefox:no-start": "wdio test/config/wdio.firefox.conf.js",
     "test:firefox:start": "start-server-and-test build-and-start http://localhost:9000 test:firefox:no-start",
-    "package": "mkdir -p target && cd public && tar zcvf ../target/windyroad.tar.gz *",
+    "package": "mkdir -p target && cd public && tar zcvf ../target/windyroad.tar.gz * && shasum ../target/windyroad.tar.gz",
     "prerelease": "node ./scripts/prerelease.js ./target/windyroad.tar.gz",
     "deploy": "cat scripts/deploy.sh | ssh s25627.gridserver.com -l tom@windyroad.com.au GITHUB_TOKEN=$GITHUB_TOKEN CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM 'bash -s'",
     "npm-check": "npm-check  --skip-unused",
