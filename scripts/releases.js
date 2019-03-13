@@ -35,6 +35,15 @@ async function getReleases(owner, repo) {
   }
 }
 
+function streamToString(stream) {
+  const chunks = [];
+  return new Promise((resolve, reject) => {
+    stream.on('data', chunk => chunks.push(chunk));
+    stream.on('error', reject);
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
+}
+
 async function cretePreRelease(
   owner,
   repo,
@@ -74,23 +83,50 @@ async function cretePreRelease(
     let uploadUrl = urlTemplate
       .parse(createResponse.body.upload_url)
       .expand({ name: path.basename(artifactFile), label: '' });
-    let form = new FormData();
 
-    form.append('file', fs.createReadStream(artifactFile));
+    var stats = fs.statSync(artifactFile);
 
-    const uploadResponse = await got.post(
-      uploadUrl,
-      Object.assign({}, gotOptions, {
-        body: form,
-        json: false,
-      }),
-    );
-    const uploadResponseBody = uploadResponse.body
-      ? JSON.parse(uploadResponse.body)
-      : null;
-    console.log('upload response', uploadResponseBody);
-    fs.writeFileSync(outputArtifactUrl, uploadResponseBody.url);
-    return uploadResponse.body ? uploadResponseBody.url : null;
+    await fs
+      .createReadStream(artifactFile)
+      .pipe(
+        got.stream.post(
+          uploadUrl,
+          Object.assign({}, gotOptions, {
+            json: false,
+            headers: Object.assign({}, gotOptions.headers, {
+              Accept: 'application/vnd.github.v3+json',
+              'Content-Type': 'application/gzip',
+              'Content-Length': stats.size,
+            }),
+          }),
+        ),
+      )
+      .on('response', async response => {
+        const unparsedBody = await streamToString(response);
+        const uploadResponseBody = JSON.parse(unparsedBody);
+        console.log('upload response body', uploadResponseBody);
+        fs.writeFileSync(outputArtifactUrl, uploadResponseBody.url);
+        console.log('DONE');
+      })
+      .on('uploadProgress', progress => {
+        console.log('progress', progress);
+      })
+      .on('error', (error, body, response) => {
+        console.error(error);
+        process.exit(1);
+      });
+
+    // let form = new FormData();
+
+    // form.append('file', fs.createReadStream(artifactFile));
+
+    // const uploadResponse = await got.post(
+    //   uploadUrl,
+    //   Object.assign({}, gotOptions, {
+    //     body: form,
+    //     json: false,
+    //   }),
+    // );
   } catch (err) {
     console.error(err);
     process.exit(1);
