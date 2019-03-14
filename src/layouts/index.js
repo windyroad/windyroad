@@ -3,33 +3,20 @@
 
 import '@fortawesome/fontawesome-free/css/all.css';
 import Link from 'gatsby-link';
-import PropTypes from 'prop-types'; // eslint-disable-line import/no-extraneous-dependencies
-import queryString from 'querystring';
-import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
+import PropTypes from 'prop-types';
+import React from 'react';
 import Helmet from 'react-helmet';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import defaultFeatures from '../features';
 import themeCss from './css/main.css';
 
 class TemplateWrapper extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor({ children, location }) {
+    super({ children, location });
 
     this.state = {
       loadState: 'is-loaded',
     };
-
-    const parsedfeatures = Object.assign(
-      defaultFeatures,
-      queryString.parse(this.props.location.search.substring(1)),
-    );
-    this.features = {};
-    const keys = Object.keys(parsedfeatures);
-    for (let i = 0; i < keys.length; i += 1) {
-      this.features[keys[i]] =
-        parsedfeatures[keys[i]] === true || parsedfeatures[keys[i]] === 'true';
-    }
 
     this.setLoaded = this.setLoaded.bind(this);
   }
@@ -53,7 +40,6 @@ class TemplateWrapper extends React.Component {
   }
 
   render() {
-    const features = this.features;
     return (
       <div>
         <Helmet
@@ -65,7 +51,7 @@ class TemplateWrapper extends React.Component {
             },
             {
               name: 'keywords',
-              content: 'consulting, IT, scrum',
+              content: 'consulting, IT, scrum, devops, agile, lean',
             },
           ]}
         >
@@ -127,7 +113,7 @@ class TemplateWrapper extends React.Component {
         </Helmet>
         <div id="page-wrapper">
           <Header />
-          {this.props.children({ ...this.props, features })}
+          {this.props.children}
           <Footer />
         </div>
       </div>

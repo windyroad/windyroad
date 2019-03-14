@@ -1,28 +1,26 @@
 {
   "parser": "babel-eslint",
-  "root": true,
   "extends": [
     "airbnb",
-    "prettier",
     "eslint:recommended",
-    "plugin:react/recommended"
+    "prettier",
+    "plugin:prettier/recommended",
+    "prettier/flowtype",
+    "prettier/react",
+    "prettier/standard"
   ],
-  "plugins": ["prettier"],
-  "settings": {
-    "import/core-modules": ["gatsby"]
-  },
+  "plugins": ["prettier", "react"],
   "globals": {
-    "graphql": true,
-    "browser": true,
-    "expect": true,
     "document": true,
     "window": true,
     "Image": true
   },
+  "settings": {
+    "import/core-modules": ["react", "prop-types"]
+  },
   "rules": {
-    "prettier/prettier": ["error"],
-    "strict": 0,
-    "react/jsx-filename-extension": 0,
+    "strict": 2,
+    "prettier/prettier": "error",
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
@@ -34,10 +32,12 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["test/**/*"],
+        "devDependencies": ["**/*"],
         "optionalDependencies": false,
-        "peerDependencies": false
+        "peerDependencies": true
       }
-    ]
+    ],
+    "react/jsx-filename-extension": 0,
+    "no-console": 0
   }
 }
