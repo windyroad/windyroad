@@ -1,9 +1,11 @@
 {
   "editor.formatOnSave": true,
-  "eslint.alwaysShowStatus": true,
+  "prettier.eslintIntegration": true,
   "eslint.autoFixOnSave": true,
+  "npm.enableScriptExplorer": true,
+  "eslint.alwaysShowStatus": true,
   "eslint.provideLintTask": true,
-  "editor.codeActionsOnSave": {},
+  "eslint.validate": ["javascript", "javascriptreact"],
   "[javascript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
