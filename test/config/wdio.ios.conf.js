@@ -1,5 +1,5 @@
 const waitPort = require('wait-port');
-const extractTarget = require('./node_modules/wait-port/lib/extract-target.js');
+const extractTarget = require('wait-port/lib/extract-target');
 const safariIPhoneCapability = require('./capabilities/safari.iPhone');
 
 exports.config = {
@@ -142,7 +142,7 @@ exports.config = {
       './test/steps/when.js',
     ], // <string[]> (file/dir) require files before executing features
     backtrace: false, // <boolean> show full backtrace for errors
-    compiler: ['js:babel-register'], // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+    //compiler: ['js:babel-register'], // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
     dryRun: false, // <boolean> invoke formatters without executing steps
     failFast: false, // <boolean> abort the run on first failure
     format: ['pretty'], // <string[]> (type[:path]) specify the output format, optionally supply PATH to redirect formatter output (repeatable)
@@ -261,7 +261,7 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  after: (result, capabilities, specs) => {
+  after: (/*result, capabilities, specs*/) => {
     // browser.debug()
   },
   /**

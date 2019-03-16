@@ -102,9 +102,9 @@
     "npm-check-unused": "npm-check"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
     "babel-eslint": "^10.0.1",
-    "babel-preset-env": "~1.7.0",
-    "babel-register": "~6.26.0",
     "chai": "^4.2.0",
     "chai-webdriverio": "^0.4.3",
     "chromedriver": "^2.46.0",
@@ -124,6 +124,7 @@
     "lint-staged": "^8.1.5",
     "prettier": "^1.16.4",
     "selenium-standalone": "^6.15.6",
+    "source-map-support": "^0.5.11",
     "start-server-and-test": "^1.7.11",
     "wait-port": "^0.2.2",
     "wdio-chromedriver-service": "^0.1.3",

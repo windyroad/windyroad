@@ -7,7 +7,7 @@ const pixel2Capability = require('./capabilities/pixel2.js');
 const chrome733Capability = require('./capabilities/chrome.733.js');
 const chromeIPadCapability = require('./capabilities/chrome.iPad.js');
 const chromeIPadProCapability = require('./capabilities/chrome.iPadPro.js');
-const safariCapability = require('./capabilities/safari.js');
+//const safariCapability = require('./capabilities/safari.js');
 
 const defaultFeatures = require('../../src/features.js');
 
@@ -148,7 +148,7 @@ let config = {
       './test/steps/steps.js',
     ], // <string[]> (file/dir) require files before executing features
     backtrace: false, // <boolean> show full backtrace for errors
-    compiler: ['js:babel-register'], // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+    compiler: ['js:@babel/register'], // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
     dryRun: false, // <boolean> invoke formatters without executing steps
     failFast: false, // <boolean> abort the run on first failure
     format: ['pretty'], // <string[]> (type[:path]) specify the output format, optionally supply PATH to redirect formatter output (repeatable)
@@ -222,10 +222,11 @@ let config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  before: async function before(capabilities) {
+  before: async function before(/*capabilities*/) {
     /**
      * Setup the Chai assertion framework
      */
+    require('@babel/register');
     const chai = require('chai');
 
     global.expect = chai.expect;
@@ -294,9 +295,9 @@ let config = {
    * @param {Number} result 0 - command success, 1 - command error
    * @param {Object} error error object if any
    */
-  afterCommand: (commandName, args, result, error) => {
-    browser.execute(`window.features = ${JSON.stringify(global.features)}`);
-    browser.execute(`console.log('features:', window.features)`);
+  afterCommand: (/*commandName, args, result, error*/) => {
+    browser.execute(`window.features = ${JSON.stringify(global.features)}`); // eslint-disable-line no-undef
+    browser.execute(`console.log('features:', window.features)`); // eslint-disable-line no-undef
 
     // const logs = browser.log('browser')
     // console.log('BROWSER LOGS:')
@@ -312,7 +313,7 @@ let config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  after: (result, capabilities, specs) => {
+  after: (/*result, capabilities, specs*/) => {
     // browser.debug()
   },
   /**
