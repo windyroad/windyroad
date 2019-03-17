@@ -15,7 +15,7 @@ class TemplateWrapper extends React.Component {
     super({ children, location });
 
     this.state = {
-      loadState: 'is-loaded',
+      loadState: 'is-loading',
     };
 
     this.setLoaded = this.setLoaded.bind(this);
