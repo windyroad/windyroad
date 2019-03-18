@@ -234,7 +234,6 @@ class Contact extends React.Component {
       },
       ticket: null,
       error: null, //* / exampleApiError,
-      active: 'active',
     };
 
     this.resetters = {};
@@ -275,17 +274,9 @@ class Contact extends React.Component {
     return offlineState;
   }
 
-  handleSetActive() {
-    this.setState({
-      active: 'active',
-    });
-  }
+  handleSetActive() {}
 
-  handleSetInactive() {
-    this.setState({
-      active: 'inactive',
-    });
-  }
+  handleSetInactive() {}
 
   handleCancel() {
     if (this.state.formCancel) {
@@ -659,12 +650,12 @@ class Contact extends React.Component {
     const ticket = this.state.ticket
       ? this.state.ticket
       : this.state.prevTicket
-        ? this.state.prevTicket
-        : {
-            id: null,
-            subject: null,
-            description: null,
-          };
+      ? this.state.prevTicket
+      : {
+          id: null,
+          subject: null,
+          description: null,
+        };
     const name = this.state.name ? this.state.name : this.state.prevName;
     const email = this.state.email ? this.state.email : this.state.prevEmail;
 
@@ -752,7 +743,7 @@ class Contact extends React.Component {
                         formIsInit={
                           this.state.form.state == FormStateEnum.READY
                         }
-                        autoComplete="name"
+                        autoComplete
                         setResetter={resetter =>
                           (this.resetters.name = resetter)
                         }
@@ -778,7 +769,7 @@ class Contact extends React.Component {
                         formIsInit={
                           this.state.form.state == FormStateEnum.READY
                         }
-                        autoComplete="email"
+                        autoComplete
                         setResetter={resetter =>
                           (this.resetters.email = resetter)
                         }
@@ -886,15 +877,13 @@ class Contact extends React.Component {
                         height: '100%',
                       }}
                     >
-                      <a
-                        className="button"
+                      <button
+                        className="reset"
                         onClick={() => this.reset()}
-                        style={{
-                          width: '100%',
-                        }}
+                        style={{}}
                       >
                         reset
-                      </a>
+                      </button>
                     </Col>
                   </Row>
                 </form>
@@ -944,7 +933,7 @@ class Contact extends React.Component {
                   className={this.state.ticket ? 'ticket submitted' : 'ticket'}
                 >
                   <h3>Request Sent Successfully</h3>
-                  <p>Thanks! We'll respond to your request ASAP.</p>
+                  <p>Thanks! We&apos;ll respond to your request ASAP.</p>
 
                   <div className="table-wrapper" style={{ textAlign: 'left' }}>
                     <table>
@@ -985,9 +974,13 @@ class Contact extends React.Component {
                     If you would like to provide us with more information, you
                     can simply reply to that email.
                   </p>
-                  <a className="button" onClick={() => this.reset()}>
+                  <button
+                    className="reset"
+                    onClick={() => this.reset()}
+                    onKeyPress={() => this.reset()}
+                  >
                     reset
-                  </a>
+                  </button>
                 </div>
               </Col>
             </Row>
@@ -999,7 +992,7 @@ class Contact extends React.Component {
 }
 
 Contact.propTypes = {
-  onEdit: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 Contact.defaultProps = {};

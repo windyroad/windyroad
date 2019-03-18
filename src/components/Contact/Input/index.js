@@ -141,7 +141,7 @@ class Input extends React.Component {
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
           onFocus={this.handleFocus}
-          autoComplete={this.props.autoComplete}
+          autoComplete={this.props.autoComplete ? 'on' : 'off'}
         />
       ) : (
         <input
@@ -153,7 +153,7 @@ class Input extends React.Component {
           className={this.showError() ? 'error' : ''}
           onBlur={this.handleBlur}
           onFocus={this.handleFocus}
-          autoComplete={this.props.autoComplete}
+          autoComplete={this.props.autoComplete ? 'on' : 'off'}
         />
       );
     return (
@@ -162,7 +162,8 @@ class Input extends React.Component {
         <div className="error-msg">
           {this.state.failedValidationMsg
             ? this.state.failedValidationMsg
-            : this.state.prevValidationMsg}&nbsp;
+            : this.state.prevValidationMsg}
+          &nbsp;
         </div>
       </div>
     );
@@ -180,7 +181,7 @@ Input.propTypes = {
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   rows: PropTypes.number,
-  autoComplete: PropTypes.bool,
+  autoComplete: PropTypes.string,
 };
 
 Input.defaultProps = {
