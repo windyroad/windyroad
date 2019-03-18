@@ -18,26 +18,30 @@ class Radio extends React.Component {
   render() {
     const groupName = this.props.group.props.name;
     const groupValue = this.props.group.props.value;
+    /* eslint-disable jsx-a11y/label-has-for */
     return (
       <div>
+        <input
+          type="radio"
+          id={`${groupName}-${this.props.value}`}
+          name={groupName}
+          value={this.props.value}
+          checked={groupValue == this.props.value}
+          onChange={this.props.group.handleChange}
+        />
         <label htmlFor={`${groupName}-${this.props.value}`}>
           {this.props.placeholder}
-          <input
-            type="radio"
-            id={`${groupName}-${this.props.value}`}
-            name={groupName}
-            value={this.props.value}
-            checked={groupValue == this.props.value}
-            onChange={this.props.group.handleChange}
-          />
         </label>
       </div>
     );
+    /* eslint-enable jsx-a11y/label-has-for */
   }
 }
 
 Radio.propTypes = {
-  group: PropTypes.object.isRequired,
+  group: PropTypes.objectOf({
+    group: PropTypes.objectOf({ name: PropTypes.string }),
+  }).isRequired,
   value: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
 };
