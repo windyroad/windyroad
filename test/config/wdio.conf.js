@@ -7,6 +7,8 @@ const pixel2Capability = require('./capabilities/pixel2.js');
 const chrome733Capability = require('./capabilities/chrome.733.js');
 const chromeIPadCapability = require('./capabilities/chrome.iPad.js');
 const chromeIPadProCapability = require('./capabilities/chrome.iPadPro.js');
+
+// NOTE: Not testing in safari because webdirver.io scroll is borken 😢
 //const safariCapability = require('./capabilities/safari.js');
 
 const defaultFeatures = require('../../src/features.js');
