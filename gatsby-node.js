@@ -1,8 +1,10 @@
 // const fm = require('./front-matter')
 
 // const fs = require(`fs-extra`)
+const moment = require('moment');
 const path = require('path');
-
+const slugify = require('slugify');
+// const { createFilePath } = require('gatsby-source-filesystem');
 // exports.onCreatePage = async function({ page }) {
 //   const { attributes: { layout } } = fm(
 //     await fs.readFile(page.component, 'utf8'),
@@ -10,12 +12,10 @@ const path = require('path');
 //   page.layout = 'index'
 // }
 
-exports.createPages = ({ boundActionCreators, graphql }) => {
-  const { createPage } = boundActionCreators;
+async function createBlogPages(createPage, graphql) {
+  const blogTemplate = path.resolve(`src/templates/blogTemplate.js`);
 
-  const blogPostTemplate = path.resolve(`src/templates/blogTemplate.js`);
-
-  return graphql(`
+  const blogQuery = await graphql(`
     {
       allMarkdownRemark(
         sort: { order: DESC, fields: [frontmatter___date] }
@@ -24,24 +24,96 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
         edges {
           node {
             frontmatter {
-              path
+              title
+              date(formatString: "YYYY/MM/DD")
             }
+            fileAbsolutePath
           }
         }
       }
     }
-  `).then(result => {
-    if (result.errors) {
-      return Promise.reject(result.errors);
-    }
+  `);
+  if (blogQuery.errors) {
+    return Promise.reject(blogQuery.errors);
+  }
 
-    result.data.allMarkdownRemark.edges.forEach(({ node }) => {
-      createPage({
-        path: node.frontmatter.path,
-        component: blogPostTemplate,
-        context: {}, // additional data can be passed via context
-      });
+  blogQuery.data.allMarkdownRemark.edges.forEach(({ node }) => {
+    createPage({
+      path: createPageSlug(node),
+      component: blogTemplate,
+      context: {
+        fileAbsolutePath: node.fileAbsolutePath,
+      }, // additional data can be passed via context
     });
-    return Promise.resolve();
   });
+  return Promise.resolve();
+}
+
+exports.createPages = async ({ actions, graphql }) => {
+  const { createPage } = actions;
+  console.log('CREATING PAGES!!!!!');
+  await createBlogPages(createPage, graphql);
+
+  return new Promise((resolve, reject) => {
+    resolve(
+      graphql(
+        `
+          {
+            allMarkdownRemark(
+              sort: { order: DESC, fields: [frontmatter___date] }
+              limit: 1000
+            ) {
+              edges {
+                node {
+                  fileAbsolutePath
+                }
+              }
+            }
+          }
+        `,
+      ).then(result => {
+        if (result.errors) {
+          console.log('RESULT', result);
+          reject(result.errors);
+        } else {
+          // ...
+          console.log('RESULT', result);
+          // Create blog-list pages
+          const posts = result.data.allMarkdownRemark.edges;
+          const postsPerPage = 2;
+          const numPages = Math.ceil(posts.length / postsPerPage);
+          Array.from({ length: numPages }).forEach((_, i) => {
+            createPage({
+              path: i === 0 ? `/blogx` : `/blogx/${i + 1}`,
+              component: path.resolve('./src/templates/blogListTemplate.js'),
+              context: {
+                limit: postsPerPage,
+                skip: i * postsPerPage,
+              },
+            });
+          });
+        }
+      }),
+    );
+  });
+};
+
+function createPageSlug(node) {
+  return `blog/${moment(node.frontmatter.date, 'YYYY-MM-DD').format(
+    'YYYY/MM/DD',
+  )}/${slugify(node.frontmatter.title, {
+    lower: true,
+  })}`;
+}
+
+exports.onCreateNode = ({ node, actions }) => {
+  const { createNodeField } = actions;
+  if (node.internal.type === `MarkdownRemark`) {
+    const value = createPageSlug(node);
+    createNodeField({
+      name: `slug`,
+      node,
+      value,
+    });
+  }
 };

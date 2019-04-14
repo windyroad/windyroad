@@ -21,7 +21,10 @@ const Header = () => (
     <nav id="nav">
       <ul>
         <li>
-          <a href="https://windyroad.com.au/articles/">Posts</a>
+          <Link to="blog">Blog</Link>
+        </li>
+        <li>
+          <a href="https://windyroad.com.au/articles/">Older Blog Posts</a>
         </li>
       </ul>
     </nav>

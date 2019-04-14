@@ -3,10 +3,9 @@ import {
   faGithub,
   faLinkedin,
 } from '@fortawesome/free-brands-svg-icons';
-import { faAmbulance, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faAmbulance } from '@fortawesome/free-solid-svg-icons';
 import React from 'react'; // eslint-disable-line import/no-extraneous-dependencies
 import { Col, Row } from 'react-flexbox-grid';
-import { Link } from 'react-scroll';
 
 const Footer = function() {
   return (
@@ -37,19 +36,6 @@ const Footer = function() {
             {String.fromCharCode(parseInt('0x' + faGithub.icon[3]))}
             <span className="label">GitHub</span>
           </a>
-        </li>
-        <li>
-          <Link
-            to="contact"
-            spy
-            smooth
-            duration={1000}
-            className="icon alt"
-            style={{}}
-          >
-            {String.fromCharCode(parseInt('0x' + faEnvelope.icon[3]))}
-            <span className="label">Email</span>
-          </Link>
         </li>
         <li>
           <a

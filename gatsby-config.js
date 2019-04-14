@@ -23,12 +23,19 @@ module.exports = {
       },
     },
     'gatsby-plugin-react-helmet',
-    `gatsby-transformer-remark`,
+    `gatsby-transformer-json`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/md`,
+        path: `${__dirname}/src/articles`,
         name: 'markdown-pages',
+      },
+    },
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [],
+        excerpt_separator: `<!-- end -->`,
       },
     },
     {
@@ -54,5 +61,11 @@ module.exports = {
         exclude: [],
       },
     },
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        precision: 8,
+      },
+    },
   ],
-}
+};

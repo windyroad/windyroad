@@ -25,7 +25,8 @@ class IndexPage extends React.Component {
   }
 
   setLoaded() {
-    if (this.state.loadState == 'is-loading') {
+    const { loadState } = this.state;
+    if (loadState == 'is-loading') {
       this.setState({ loadState: 'is-loaded' });
     }
   }
@@ -84,9 +85,10 @@ class IndexPage extends React.Component {
     );
 
     const aboutNext = servicesEnabled ? 'services' : 'contact';
+    const { location } = this.props;
 
     return (
-      <Layout location={this.props.location}>
+      <Layout location={location} loaderEnabled>
         <div>
           <Banner
             next="about"

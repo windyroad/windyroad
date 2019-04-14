@@ -12,7 +12,8 @@
   "globals": {
     "document": true,
     "window": true,
-    "Image": true
+    "Image": true,
+    "requestAnimationFrame": true
   },
   "settings": {
     "import/core-modules": ["react", "prop-types"]

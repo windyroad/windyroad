@@ -1984,6 +1984,17 @@ body {
 .row {
   margin: 0;
 }
+
+.content.blog,
+.content.blog-article {
+  margin-top: 3.5em;
+}
+
+.content.blog h2,
+.content.blog-article h2 {
+  padding-top: 1em;
+}
+
 @media only screen and (min-width: 576px) {
 }
 

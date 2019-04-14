@@ -11,11 +11,11 @@ import Header from '../components/Header';
 import themeCss from './css/main.css';
 
 class TemplateWrapper extends React.Component {
-  constructor({ children, location }) {
+  constructor({ children, location, loaderEnabled }) {
     super({ children, location });
 
     this.state = {
-      loadState: 'is-loading',
+      loadState: loaderEnabled ? 'is-loading' : 'is-loaded',
     };
 
     this.setLoaded = this.setLoaded.bind(this);
@@ -23,10 +23,12 @@ class TemplateWrapper extends React.Component {
 
   componentDidMount() {
     // console.log('features: ', this.state.features)
-    window.addEventListener('load', this.setLoaded);
+    window.addEventListener('load', () => {
+      this.setLoaded();
+    });
     // if the load event doesn't fire after a few of seconds,
     // trigger in anyway
-    setTimeout(this.setLoaded, 3000);
+    setTimeout(this.setLoaded, 1000);
   }
 
   componentWillUnmount() {
@@ -34,12 +36,15 @@ class TemplateWrapper extends React.Component {
   }
 
   setLoaded() {
-    if (this.state.loadState == 'is-loading') {
+    const { loadState } = this.state;
+    if (loadState == 'is-loading') {
       this.setState({ loadState: 'is-loaded' });
     }
   }
 
   render() {
+    const { loadState } = this.state;
+    const { children } = this.props;
     return (
       <div>
         <Helmet
@@ -55,7 +60,6 @@ class TemplateWrapper extends React.Component {
             },
           ]}
         >
-          {/* <script src="https://cdn.optimizely.com/js/105401733.js" /> */}
           <script type="text/javascript" id="inspectletjs">
             {(function() {
               if (
@@ -107,13 +111,13 @@ class TemplateWrapper extends React.Component {
               }
             })()}
           </script>
-          {/* <Link to={fontAwesomeCss} rel="stylesheet" type="text/css" /> */}
+
           <Link to={themeCss} rel="stylesheet" type="text/css" />
-          <body className={`landing ${this.state.loadState}`} />
+          <body className={`landing ${loadState}`} />
         </Helmet>
         <div id="page-wrapper">
           <Header />
-          {this.props.children}
+          {children}
           <Footer />
         </div>
       </div>
@@ -126,6 +130,11 @@ TemplateWrapper.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string.isRequired,
   }).isRequired,
+  loaderEnabled: PropTypes.bool,
+};
+
+TemplateWrapper.defaultProps = {
+  loaderEnabled: false,
 };
 
 export default TemplateWrapper;
