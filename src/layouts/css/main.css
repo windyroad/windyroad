@@ -1981,6 +1981,18 @@ body {
   }
 }
 
+.footnotes li p {
+  display: inline;
+}
+.footnote-backref {
+  opacity: 0.25;
+}
+
+iframe {
+  margin: auto;
+  display: block;
+}
+
 .row {
   margin: 0;
 }

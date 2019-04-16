@@ -1,7 +1,6 @@
 // const fm = require('./front-matter')
 
 // const fs = require(`fs-extra`)
-const moment = require('moment');
 const path = require('path');
 const slugify = require('slugify');
 // const { createFilePath } = require('gatsby-source-filesystem');
@@ -51,7 +50,6 @@ async function createBlogPages(createPage, graphql) {
 
 exports.createPages = async ({ actions, graphql }) => {
   const { createPage } = actions;
-  console.log('CREATING PAGES!!!!!');
   await createBlogPages(createPage, graphql);
 
   return new Promise((resolve, reject) => {
@@ -99,11 +97,18 @@ exports.createPages = async ({ actions, graphql }) => {
 };
 
 function createPageSlug(node) {
-  return `blog/${moment(node.frontmatter.date, 'YYYY-MM-DD').format(
-    'YYYY/MM/DD',
-  )}/${slugify(node.frontmatter.title, {
+  const slug = slugify(node.frontmatter.title, {
     lower: true,
-  })}`;
+  });
+  const dirAbsolutePath = path.dirname(node.fileAbsolutePath);
+  const dirname = path.basename(dirAbsolutePath);
+  if (dirname !== slug) {
+    console.error('Incorrect article directory name');
+    console.error(`Rename: ${dirAbsolutePath}`);
+    console.error(`To: ${path.dirname(dirAbsolutePath)}/${slug}`);
+    process.exit(1);
+  }
+  return `blog/${slug}`;
 }
 
 exports.onCreateNode = ({ node, actions }) => {

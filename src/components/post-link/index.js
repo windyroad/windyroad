@@ -17,16 +17,16 @@ class PostLink extends React.Component {
 
   render() {
     const { post } = this.props;
-    const img = post.frontmatter.image ? (
-      <img
-        style={{ float: 'right', marginLeft: '0.75em' }}
-        src={post.frontmatter.image.childImageSharp.fixed.src}
-        srcSet={post.frontmatter.image.childImageSharp.fixed.srcSet}
-        alt={post.frontmatter.imageAlt}
-      />
-    ) : (
-      ''
-    );
+    // const img = post.frontmatter.image ? (
+    //   <img
+    //     style={{ float: 'right', marginLeft: '0.75em' }}
+    //     src={post.frontmatter.image.childImageSharp.fixed.src}
+    //     srcSet={post.frontmatter.image.childImageSharp.fixed.srcSet}
+    //     alt={post.frontmatter.imageAlt}
+    //   />
+    // ) : (
+    //   ''
+    // );
     const height = post.frontmatter.image
       ? `${post.frontmatter.image.childImageSharp.fixed.height + 1}px`
       : '135px';
@@ -41,7 +41,7 @@ class PostLink extends React.Component {
         onKeyPress={this.onClick}
         role="presentation"
       >
-        {img}
+        {/* {img} */}
         <div style={{ marginLeft: '0.75em', marginRight: '0.75em' }}>
           <header>
             <h3>
@@ -52,7 +52,9 @@ class PostLink extends React.Component {
             By {post.frontmatter.author},{' '}
             {moment(post.frontmatter.date, 'YYYY/MM/DD').format('MMMM YYYY')}
           </div>
-          <section>{post.excerpt}</section>
+          <section>
+            {post.excerpt} <Link to={post.fields.slug}>(more)</Link>
+          </section>
         </div>
       </article>
     );

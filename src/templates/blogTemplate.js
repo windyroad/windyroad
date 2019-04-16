@@ -1,5 +1,5 @@
+import { DiscussionEmbed } from 'disqus-react';
 import { graphql, Link } from 'gatsby';
-import Img from 'gatsby-image';
 import { OutboundLink } from 'gatsby-plugin-google-analytics';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import Layout from '../layouts/index';
 
 const BlogTemplate = function Template({ data, location }) {
   const { markdownRemark } = data; // data.markdownRemark holds our post data
-  const { frontmatter, html, fields } = markdownRemark;
+  const { frontmatter, html, fields, id } = markdownRemark;
   const more = frontmatter.link ? (
     <OutboundLink href={frontmatter.link} target="_blank">
       read more...
@@ -16,24 +16,31 @@ const BlogTemplate = function Template({ data, location }) {
   ) : (
     ''
   );
-  const img = frontmatter.image ? (
-    <div>
-      <Img fluid={frontmatter.image.childImageSharp.fluid} />
-      {/* <img
-        style={{ float: 'left' }}
-        src={frontmatter.image.childImageSharp.fixed.src}
-        srcSet={frontmatter.image.childImageSharp.fixed.srcSet}
-        alt={frontmatter.imageAlt}
-      /> */}
-    </div>
-  ) : (
-    ''
-  );
+  // const img = frontmatter.image ? (
+  //   <div>
+  //     <Img fluid={frontmatter.image.childImageSharp.fluid} />
+  //     {/* <img
+  //       style={{ float: 'left' }}
+  //       src={frontmatter.image.childImageSharp.fixed.src}
+  //       srcSet={frontmatter.image.childImageSharp.fixed.srcSet}
+  //       alt={frontmatter.imageAlt}
+  //     /> */}
+  //   </div>
+  // ) : (
+  //   ''
+  // );
+
+  const disqusShortname = 'windy-road';
+  const disqusConfig = {
+    identifier: id,
+    title: frontmatter.title,
+  };
+
   return (
     <Layout location={location}>
       <main className="container">
         <article className="content blog-article">
-          {img}
+          {/* {img} */}
           <header>
             <h2>
               <Link to={fields.slug}>{frontmatter.title}</Link>
@@ -50,6 +57,7 @@ const BlogTemplate = function Template({ data, location }) {
             />
             {more}
           </section>
+          <DiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
         </article>
       </main>
     </Layout>
