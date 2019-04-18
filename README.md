@@ -11,7 +11,7 @@ For an overview of the project structure please refer to the [Gatsby documentati
 
 ## Development Mode
 
-```
+```sh
 npm run develop
 ```
 
