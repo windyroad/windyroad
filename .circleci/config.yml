@@ -15,7 +15,7 @@ jobs:
             npm install
             npm rebuild
             npm run build
-            npm run test:headless:start:prebuilt
+            # npm run test:headless:start:prebuilt
       - save_cache:
           paths:
             - node_modules
