@@ -1,0 +1,18 @@
+---
+date: '2020-03-06'
+title: 'Seeing round-ups for what they are'
+author: 'Tom Howard'
+tags: ['round-up', 'banking', 'saving', 'consumerism', 'investing']
+---
+
+Round-ups are an awesome way to <a href="https://www.ing.com.au/everyday-banking/everyday-round-up.html">save</a> or <a href="https://raizinvest.com.au">invest</a>. It's cool, it's new (from what I can find it was <a href="https://en.wikipedia.org/wiki/Acorns_(company)">launched by Acorns in 2014</a>) and it's painless.
+
+It works, because rather than asking you to be disciplined and fight your consumerism, it leverages it. The more you spend, the more you save (or invest).
+
+In this light, it becomes clear that round-ups are just a specific type a consumption based saving, in the same way that <abbr title="Goods and Services Tax">GST<abbr> and <abbr title="Value Added Tax">VAT</abbr> are consumption based taxes. Round-ups work and are effective because of the exact same reasons that GSTs and VATs work and are effective.
+
+But while round-ups are much better than traditional approaches to saving, they look almost ridiculous in the light of a general consumption based saving approach. For small purchases, the amount saved is a large percentage of the transaction, but for large purchases, the amount saved is miniscule. This is anti-consumerist.
+
+For a consumption based saving approach to be truly consumerist, the amount saved needs to increase with the amount spent. Spend $10, save $1. Spend $1000, save $100. Pick the percentage you want to save.
+
+I can’t find anyone offering this type of service at the moment, and some of you will ask why, but to me the more obvious question is when.

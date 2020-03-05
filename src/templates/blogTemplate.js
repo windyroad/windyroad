@@ -48,6 +48,11 @@ const BlogTemplate = function Template({ data, location }) {
             <div className="meta">
               by {frontmatter.author},{' '}
               {moment(frontmatter.date, 'YYYY/MM/DD').format('MMMM YYYY')}
+              <div>
+                {frontmatter.tags.map(tag => {
+                  return <span>#{tag} </span>;
+                })}
+              </div>
             </div>
           </header>
           <section className="blog-article-content">
@@ -92,6 +97,7 @@ export const pageQuery = graphql`
         date(formatString: "YYYY/MM/DD")
         title
         author
+        tags
         image {
           childImageSharp {
             fluid(maxWidth: 1168) {
