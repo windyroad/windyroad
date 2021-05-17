@@ -23,9 +23,9 @@ const Header = () => (
         <li>
           <Link to="blog">Blog</Link>
         </li>
-        <li>
+        {/* <li>
           <a href="https://windyroad.com.au/articles/">Older Blog Posts</a>
-        </li>
+        </li> */}
       </ul>
     </nav>
   </header>
