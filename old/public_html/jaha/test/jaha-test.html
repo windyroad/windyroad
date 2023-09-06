@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>JAHA @ Windy Road</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="java applets javascript jaha" />
+	<link rel="stylesheet" href="resources/style.css" type="text/css" />
+	<script type="text/javascript" src="resources/jsunit/JsUtil.js"></script>
+	<script type="text/javascript" src="resources/jsunit/JsUnit.js"></script>
+	<script type="text/javascript" src="/jaha/org.windyroad.jaha-0.0.0.js"></script>
+	<script type="text/javascript" src="resources/jaha-test.js"></script>
+</head>
+<body>
+	<h1><a href="http://windyroad.org/2007/05/02/css-lightbox-poc/">JAHA</a></h1>
+	<p>This is a demonstration of the <acronymn title="Javascript And Hidden Apples">JAHA</acronymn> technique</p>
+
+<p id="result">Sorry, Javascript must be enabled</p>
+<button disabled="disabled" id="runTests">runTests</button><br/>
+<applet id="test" code="org.windyroad.jaha.JAHATest.class"
+	style="width: 1px; height: 1px;"
+	codebase="http://windyroad.org/jaha/test/resources"
+	mayscript="true">
+	<param name="archive" value="org.windyroad.jaha.JAHATest-0.0.0.jar"/>
+</applet>
+<ul id="tests"></ul>
+<p id="results" class="test"></p>
+<pre id="debug"></pre>
+	<div id="footer">
+		<a rel="license" href="http://creativecommons.org/licenses/by/2.5/au/"><img alt="Creative Commons License" src="resources/images/cc-lic.png" /></a> : 
+		<a href="http://windyroad.org">JAHA</a>
+		by
+		<a href="http://windyroad.org"><img src="resources/images/windyroad.png" alt="Windy Road" /></a>
+	</div>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+	</script>
+	<script type="text/javascript">
+	_uacct = "UA-808591-1";
+	if( window.urchinTracker ) {
+		urchinTracker();
+	}
+	</script>
+</body>
+</html>
