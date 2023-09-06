@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ivy-build"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:wrivy="org.windyroad.ivy-util"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-common.xml" />
+
+
+	<target name="-get-version-to-promote" depends="-determine-snapshot-version" description="">
+		<input addproperty="bwda.pipeline.version"
+		       message="What snapshot version of '${ivy.organisation}.${ivy.module}' would you like to promote to a release version ${bwda.releases.new.revision}?"
+		       defaultvalue="${bwda.snapshots.revision}" />
+	</target>
+
+	<target name="promote"
+	        depends="-get-version-to-promote,-retrieve-deployable-inline"
+	        description="Promotes a snapshot to a release">
+		<echo level="info"
+		      message="promoting '${ivy.organisation}.${ivy.module}-${bwda.pipeline.version}' to 'releases' with version '${bwda.releases.new.revision}'..." />
+        <ivy:resolve settingsRef="${bwda.ivy.settings.id}" file="${bwda.build.dir}/deployable/ivy.xml" />
+		<ivy:publish artifactspattern="${bwda.build.dir}/deployable/[artifact].[ext]"
+		             resolver="releases"
+		             pubrevision="${bwda.releases.new.revision}"
+		             overwrite="false"
+		             forcedeliver="true"
+		             update="false"
+		             replacedynamicrev="false"
+		             conf="default,dist"
+		             settingsRef="${bwda.ivy.settings.id}"
+		             haltonmissing="true">
+		</ivy:publish>
+
+		<echo level="info" message="...promoted" />
+		<echoproperties destfile="${bwda.build.dir}/pubrevision.properties">
+			<propertyset>
+				<propertyref name="bwda.releases.new.revision" />
+				<globmapper from="bwda.releases.new.revision" to="bwda.pipeline.version" />
+			</propertyset>
+		</echoproperties>
+	</target>
+
+
+</project>

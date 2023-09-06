@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BWUnitBuild"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:bwunit="org.windyroad.bwunit"
+         xmlns:bwda="au.com.windyroad.bwda"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-build.xml" />
+
+	<target name="-init" depends="-retrieve">
+		<mkdir dir="${bwda.build.dir}" />
+
+		<propertyset id="bwengine.properties" dynamic="true">
+			<propertyset>
+				<propertyref prefix="engine.properties." />
+				<mapper type="glob" from="engine.properties.*" to="*" />
+			</propertyset>
+		</propertyset>
+
+		<propertyset id="bwengine.gvars" dynamic="true">
+			<propertyset>
+				<propertyref prefix="engine.gvars." />
+				<mapper type="glob" from="engine.gvars.*" to="*" />
+			</propertyset>
+		</propertyset>
+
+		<for param="file">
+			<fileset dir="${bwda.aliases.dir}">
+				<include name="*.jar" />
+				<include name="*.projlib" />
+			</fileset>
+			<sequential>
+				<basename file="@{file}" property="engine.alias.@{file}" />
+				<property name="engine.aliases.${engine.alias.@{file}}" location="@{file}" />
+			</sequential>
+		</for>
+
+		<propertyset id="bwengine.aliases" dynamic="true">
+			<propertyref prefix="engine.aliases." />
+			<mapper type="glob" from="engine.aliases.*" to="*" />
+		</propertyset>
+
+		<pathconvert property="bwda.bwengine.classpath">
+			<fileset dir="${bwda.classpath.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</pathconvert>
+
+	</target>
+
+	<target name="validate" depends="-init" description="Validates the BW project" unless="bwda.skip.validation">
+		<!-- confirm number of validation errors -->
+		<bwda:PersitedInput property="bwda.expected.errors"
+		                    message="When validating your BW project, how many errors are reported?"
+		                    defaultvalue="0" />
+
+		<!-- confirm number of validation warnings -->
+		<bwda:PersitedInput property="bwda.max.warnings"
+		                    message="When validating your BW project, how many warnings are reported?"
+		                    defaultvalue="0" />
+		<bwunit:validate-project dir="${bwda.bw.src.dir}"
+		                         project="${bwda.bw.project.name}"
+		                         max-warnings="${bwda.max.warnings}"
+		                         expected-errors="${bwda.expected.errors}"
+		                         create-dtl-file="true"
+		                         aliases-refid="bwengine.aliases"
+		                         custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+		                         working-dir="${bwda.build.dir}/working/${ant.project.name}"
+		                         out="${bwda.build.dir}/validation.log" />
+	</target>
+
+	<target name="ear" depends="validate" description="Builds the EARs for the BW project">
+		<for param="archive">
+			<fileset dir="${bwda.bw.project.path}">
+				<include name="**/*.archive" />
+			</fileset>
+			<sequential>
+				<pathconvert property="bwda.@{archive}.name" dirsep="/">
+					<path>
+						<pathelement location="@{archive}" />
+					</path>
+					<chainedmapper>
+						<filtermapper>
+							<replacestring from="\" to="/" />
+						</filtermapper>
+						<regexpmapper from="\Q${bwda.bw.project.path.normalised}\E(.*)\.archive" to="\1" />
+					</chainedmapper>
+				</pathconvert>
+				<basename file="@{archive}" suffix=".archive" property="bwda.@{archive}.basename" />
+				<mkdir dir="${bwda.build.dir}" />
+				<tibant:build-ear ear="${bwda.@{archive}.name}"
+				                  dir="${bwda.bw.src.dir}"
+				                  project="${bwda.bw.project.name}"
+				                  out="${bwda.build.dir}/${bwda.@{archive}.basename}.ear"
+				                  validate="false"
+				                  create-dtl-file="true"
+				                  aliases-refid="bwengine.aliases"
+				                  custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+				                  working-dir="${bwda.build.dir}/working/${bwda.bw.project.name}" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="projlib" depends="validate" description="Builds the Design Time Libraries for the BW project">
+		<for param="archive">
+			<fileset dir="${bwda.bw.project.path}">
+				<include name="**/*.libbuilder" />
+			</fileset>
+			<sequential>
+				<pathconvert property="bwda.@{archive}.name" dirsep="/">
+					<path>
+						<pathelement location="@{archive}" />
+					</path>
+					<chainedmapper>
+						<filtermapper>
+							<replacestring from="\" to="/" />
+						</filtermapper>
+						<regexpmapper from="\Q${bwda.bw.project.path.normalised}\E(.*)\.libbuilder" to="\1" />
+					</chainedmapper>
+				</pathconvert>
+				<basename file="@{archive}" suffix=".libbuilder" property="bwda.@{archive}.basename" />
+				<tibant:build-library lib="${bwda.@{archive}.name}"
+				                      dir="${bwda.bw.src.dir}"
+				                      project="${bwda.bw.project.name}"
+				                      out="${bwda.build.dir}/${bwda.@{archive}.basename}.projlib"
+				                      validate="false"
+				                      create-dtl-file="true"
+				                      aliases-refid="bwengine.aliases"
+				                      custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+				                      working-dir="${bwda.build.dir}/working/${bwda.bw.project.name}" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-developer" depends="-load-ant-contrib,-get-gvar-config-dir,-get-sdk-config-dir">
+		<bwda:load-env-properties domain="LOCAL" />
+	</target>
+
+	<target name="designer"
+	        depends="-developer,-init,-retrieve"
+	        description="Launch ${ant.project.name} in TIBCO Designer">
+		<bwunit:designer dir="${bwda.bw.src.dir}"
+		                 project="${bwda.bw.project.name}"
+		                 create-dtl-file="true"
+		                 custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+		                 aliases-refid="bwengine.aliases"
+		                 global-variables-refid="bwengine.gvars"
+		                 working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+	</target>
+
+	<target name="clean" description="Remove generated files">
+		<delete dir="${bwda.build.dir}" verbose="true" />
+		<delete verbose="true">
+			<fileset dir="${bwda.bw.src.dir}" includes="${bwda.bw.project.name}/.designtimelibs" />
+		</delete>
+	</target>
+
+	<target name="build" depends="ear,projlib" description="Build binaries" />
+
+
+
+</project>

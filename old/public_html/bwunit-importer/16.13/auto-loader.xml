@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bwunit-auto-loader"
+	>
+
+	<import file="ivy-util.xml" />
+
+	<!-- we don't want to unzip BWUnit every time, so we check to see if it's been unzipped -->
+	<target name="-check-bwunit-unpacked"
+	        description="Check if BWUnit has been unzipped"
+	        depends="ivy-util.-retrieve">
+		<condition property="bwunit-unpacked">
+			<available file="${bwda.lib.dir.location}/bwunit-${bwda.new.dep.bwunit.revision}/BWUnit.jar" />
+		</condition>
+	</target>
+
+	<!-- In order to use BWUnit we must unzip it -->
+	<target name="-unpack-bwunit" description="Unzip BWUnit" depends="-check-bwunit-unpacked" unless="bwunit-unpacked">
+		<unzip dest="${bwda.lib.dir.location}/BWUnit-${bwda.new.dep.bwunit.revision}" src="${bwda.new.dep.bwunit.BWUnit.zip}" overwrite="true" />
+	</target>
+
+	<!-- In order to have BWUnit unpacked when we retrieve the test dependencies, we overrite the `retrieve-test`
+	 target so that ivy retrives the deps and unpacks BWUnit -->
+	<target name="-retrieve-test"
+	        description="retrieve test dependancies with ivy"
+	        depends="-unpack-bwunit,ivy-util.-retrieve-test">
+	</target>
+
+	<!-- In order to have BWUnit unpacked when with retrieve the default dependencies, we overrite the `retrieve`
+	     target so that it retrives the deps and unpacks BWUnit -->
+	<target name="-retrieve" description="retrieve dependancies with ivy" depends="-unpack-bwunit">
+	</target>
+
+</project>

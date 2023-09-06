@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="properties">
+
+	<dirname property="ant.file.dir" file="${ant.file}" />
+	<basename property="ant.file.dir.base" file="${ant.file.dir}" />
+
+
+	<echo>LOADING: ${user.home}/${ant.project.name}.properties</echo>
+	<property file="${user.home}/${ant.project.name}.properties" />
+	<echo>LOADING: ${basedir}/build.properties</echo>
+	<property file="${basedir}/build.properties" />
+	<echo>LOADING: ${user.home}/build.properties</echo>
+	<property file="${user.home}/build.properties" />
+
+	<property name="bwda.expected.errors" value="0" />
+	<property name="bwda.max.warnings" value="0" />
+
+
+	<property name="BWUnit/HTTP-service-port" value="5454" />
+	<property name="bwunit.version" value="16.11" />
+
+	<property name="ivy.organisation" value="com.temp"/>
+
+	<property name="bwda.build.dir" value="build" />
+	<property name="bwda.lib.dir" value="lib" />
+	<property name="bwda.lib.dir.location" location="${bwda.lib.dir}" />
+	<property name="bwda.importer.dir" location="${bwda.lib.dir}/bwunit-importer"/>
+	<property name="bwda.ivy.lib.dir" value="${bwda.lib.dir}" />
+	<property name="bwda.bw.src.dir" value="src/main/bw" />
+	<property name="bwda.bw.project.name" value="${ant.project.name}" />
+	<property name="bwda.bw.archive" value="/Build/${ant.project.name}" />
+	<property name="bwda.results.dir" location="${bwda.build.dir}/test-results"/>
+	<property name="bwda.results.bwunit.xml" location="${bwda.results.dir}/${ant.project.name}-bwunit.xml"/>
+	<property name="bwda.results.bwunit.html" location="${bwda.results.dir}/${ant.project.name}-bwunit.html"/>
+        <property name="bwda.results.junit.xml" location="${bwda.results.dir}/TEST-${ant.project.name}.xml"/>
+	<property name="bwda.results.emma.xml" location="${bwda.results.dir}/coverage-${ant.project.name}.xml"/>
+</project>

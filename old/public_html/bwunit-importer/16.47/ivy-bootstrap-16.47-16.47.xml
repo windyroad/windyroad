@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ivy-bootstrap"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:wrivy="org.windyroad.ivy-util"
+         xmlns:bwda="au.com.windyroad.bwda"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="properties.xml" />
+
+	<target name="-override-ivy-properties">
+	</target>
+
+	<!-- to allow developers to change the Ivy version and location of the various files, we store theses values
+    in properties, which are used in the other targets -->
+	<target name="-init-ivy-properties" depends="-override-ivy-properties">
+		<property name="ivy.install.version" value="2.3.0" />
+		<property name="ivy.jar.dir" location="${user.home}/.ivy2/jars" />
+		<property name="ivy.jar.file" location="${ivy.jar.dir}/ivy-${ivy.install.version}.jar" />
+		<condition property="bwda.ivy.settings.file"
+		           value="${bwda.importer.dir}/local-only-ivysettings.xml"
+		           else="${bwda.importer.dir}/ivysettings.xml">
+			<istrue value="${bwda.local.resolve.only}" />
+		</condition>
+		<property name="ivy.settings.file" location="${bwda.ivy.settings.file}" />
+		<property name="ivy.dep.file" value="${bwda.importer.dir}/importer-ivy.xml" />
+		<bwda:PersistedInput property="wr.repo.username"
+		                     message="What is your username for the Windy Road Download Server?"
+		                     file="${user.home}/build.properties" />
+		<bwda:PersistedInput property="wr.repo.password"
+		                     message="What is your password for the Windy Road Download Server?"
+		                     file="${user.home}/build.properties" />
+
+	</target>
+
+	<!-- we do not assume the developer has Ivy installed, so we use this target to download Ivy from the
+    Windy Road repository, which proxies the Maven Central Repository. Ideally this should be changed to an Enterprise
+    Repository (also know as a Definitive Media Library), to ensure the revisions of software we use are always
+    available -->
+	<target name="-download-ivy" unless="ivy.downloaded" depends="-init-ivy-properties">
+		<mkdir dir="${ivy.jar.dir}" />
+		<echo message="installing ivy..." />
+		<get src="http://windyroad.artifactoryonline.com/windyroad/mavenCentral-cache/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+		     dest="${ivy.jar.file}"
+		     usetimestamp="true"
+		     verbose="true"
+		     username="${wr.repo.username}"
+		     password="${wr.repo.password}" />
+	</target>
+
+	<!-- we don't want to download Ivy every time, so this target is used to see if it has already been downloaded -->
+	<target name="-check-ivy-downloaded" depends="-init-ivy-properties">
+		<condition property="ivy.downloaded">
+			<available file="${ivy.jar.file}" />
+		</condition>
+	</target>
+
+	<!-- In order to make Ivy available for use, it needs to be loaded and configured -->
+	<target name="-load-ivy" depends="-check-ivy-downloaded,-download-ivy" unless="ivy.loaded">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="ivy-${ivy.install.version}.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+		<property name="ivy.loaded" value="true" />
+	</target>
+
+
+
+	<target name="-configure-ivy" depends="-load-ivy">
+		<property name="bwda.ivy.settings.id" value="ivy.instance" />
+		<ivy:configure settingsid="${bwda.ivy.settings.id}" />
+	</target>
+
+	<!-- So that developers don't have manually download their dependencies, we use Ivy to retrieve them.
+    The dependencies are specified in ${ivy.dep.file} -->
+	<target name="-retrieve" depends="-configure-ivy">
+		<wrivy:retrieve />
+	</target>
+
+	<macrodef name="retrieve" uri="org.windyroad.ivy-util">
+		<attribute name="conf" default="default" />
+		<sequential>
+			<ivy:resolve conf="@{conf}" settingsRef="${bwda.ivy.settings.id}" />
+			<ivy:retrieve settingsRef="${bwda.ivy.settings.id}" />
+			<!-- in order to make the locations of the dependencies and their revisions available to other targets 
+        we set properties using the following tasks -->
+			<ivy:artifactproperty name="bwda.dep.[module].[artifact].[ext]"
+			                      value="${ivy.lib.dir.location}/[artifact]-[revision].[ext]"
+			                      settingsRef="${bwda.ivy.settings.id}" />
+			<ivy:artifactproperty name="bwda.dep.[module].[artifact]"
+			                      value="${ivy.lib.dir.location}/[artifact]-[revision]"
+			                      settingsRef="${bwda.ivy.settings.id}" />
+			<ivy:artifactproperty name="bwda.dep.[module].revision"
+			                      value="[revision]"
+			                      settingsRef="${bwda.ivy.settings.id}" />
+			<mkdir dir="${bwda.build.dir}" />
+			<ivy:artifactproperty name="bwda.new.dep.[module].[artifact].[ext]"
+			                      value="${ivy.lib.dir.location}/[artifact]-[revision].[ext]"
+			                      settingsRef="${bwda.ivy.settings.id}" />
+			<ivy:artifactproperty name="bwda.new.dep.[module].revision"
+			                      value="[revision]"
+			                      settingsRef="${bwda.ivy.settings.id}" />
+			<mkdir dir="${bwda.build.dir}" />
+			<echoproperties destfile="${bwda.build.dir}/dependencies.properties">
+				<propertyset>
+					<mapper type="glob" from="bwda.new.dep.*" to="bwda.dep.*" />
+					<propertyref prefix="bwda.new.dep" />
+				</propertyset>
+			</echoproperties>
+		</sequential>
+	</macrodef>
+
+</project>

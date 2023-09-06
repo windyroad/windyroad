@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BWUnitTest"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:bwunit="org.windyroad.bwunit"
+         xmlns:bwda="au.com.windyroad.bwda">
+
+	<import file="ivy-test.xml" />
+	<import file="build-targets.xml" />
+
+	<target name="clean-license-settings" description="Remove BWUnit license settings">
+		<propertyfile file="${user.home}/build.properties">
+			<entry key="bwunit.license.version" operation="del" />
+			<entry key="bwunit.license.company" operation="del" />
+			<entry key="bwunit.license.department" operation="del" />
+			<entry key="bwunit.license.holder" operation="del" />
+		</propertyfile>
+	</target>
+
+	<macrodef name="run-bwunit-tests"
+	          uri="org.windyroad.bwunit"
+	          description="runs the bwunit tests and by default fails the build on error">
+		<attribute name="failonerror" default="true" />
+		<sequential>
+			<property name="bwda.coverage.exclusions" value="" />
+
+			<bwunit:run-tests dir="${bwda.bw.src.dir}"
+			                  project="${bwda.bw.project.name}"
+			                  results-xml="${bwda.results.bwunit.xml}"
+			                  results-html="${bwda.results.bwunit.html}"
+			                  results-junit="${bwda.results.junit.xml}"
+			                  results-emma="${bwda.results.emma.xml}"
+			                  force="${bwunit.force}"
+			                  failonerror="@{failonerror}"
+			                  errorproperty="unstable"
+			                  license="${bwunit.license}"
+			                  properties-refid="bwengine.properties"
+			                  create-dtl-file="true"
+			                  aliases-refid="bwengine.aliases"
+			                  global-variables-refid="bwengine.gvars"
+			                  custom-cp-ext-prepend="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+			                  working-dir="${bwda.build.dir}/working/${ant.project.name}"
+			                  coverage-exclusions="${bwda.coverage.exclusions}" />
+		</sequential>
+	</macrodef>
+
+	<presetdef name="report-bwunit-tests"
+	           uri="org.windyroad.bwunit"
+	           description="runs the bwunit tests and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build.">
+		<bwunit:run-bwunit-tests failonerror="false" />
+	</presetdef>
+
+	<target name="-init" depends="-load-ant-contrib">
+		<mkdir dir="${bwda.build.dir}" />
+
+		<for param="file">
+			<fileset dir="${bwda.aliases.dir}">
+				<include name="*.jar" />
+				<include name="*.projlib" />
+			</fileset>
+			<sequential>
+				<basename file="@{file}" property="engine.alias.@{file}" />
+				<property name="engine.aliases.${engine.alias.@{file}}" location="@{file}" />
+			</sequential>
+		</for>
+
+		<propertyset id="bwengine.aliases" dynamic="true">
+			<propertyref prefix="engine.aliases." />
+			<mapper type="glob" from="engine.aliases.*" to="*" />
+		</propertyset>
+
+		<pathconvert property="bwda.bwengine.classpath">
+			<fileset dir="${bwda.classpath.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</pathconvert>
+
+	</target>
+
+	<target name="-init-tests" depends="-init,-retrieve-test">
+		<propertycopy property="bwda.dep.bwunit.BWUnit.license"
+		              from="bwda.dep.bwunit-${bwunit.license.company}-${bwunit.license.holder}.BWUnit.license" />
+
+		<loadfile property="bwunit.license" srcfile="${bwda.dep.bwunit.BWUnit.license}" />
+		<property name="bwda.results.bwunit.xml" location="${bwda.results.dir}/${ant.project.name}-bwunit.xml" />
+		<property name="bwda.results.bwunit.html" location="${bwda.results.dir}/${ant.project.name}-bwunit.html" />
+		<property name="bwda.results.junit.xml" location="${bwda.results.dir}/TEST-${ant.project.name}.xml" />
+		<property name="bwda.results.emma.xml" location="${bwda.results.dir}/coverage-${ant.project.name}.xml" />
+
+	</target>
+
+	<target name="run-functional-tests"
+	        description="Runs all the BWUnit tests. Failed tests *will* fail the build."
+	        depends="-developer,-load-ant-contrib,-init-tests">
+		<bwunit:run-bwunit-tests />
+	</target>
+
+	<target name="report-functional-tests"
+	        description="Runs all the BWUnit tests and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build."
+	        depends="-developer,-load-ant-contrib,-init-tests">
+		<bwunit:report-bwunit-tests />
+	</target>
+
+	<target name="-get-test-folder" depends="">
+		<bwda:PersitedInputDir property="bwda.test.dir"
+		                       message="In which folder should BWUnit look for tests, relative to `${bwda.bw.project.path}`?"
+		                       base="${bwda.bw.project.path}"
+		                       defaultValue="test" />
+	</target>
+
+	<target name="-init-unit-tests" depends="-get-test-folder">
+		<bwda:PersitedInputDir property="bwda.test.unit.dir"
+		                       message="In which folder should BWUnit look for *unit* tests, relative to `${bwda.bw.project.path}/${bwda.test.dir}`?"
+		                       base="${bwda.bw.project.path}/${bwda.test.dir}"
+		                       defaultValue="UnitTestSuite" />
+
+		<property name="bwda.bw.project.path.location" location="${bwda.bw.project.path}" />
+		<pathconvert property="bwda.bw.project.path.location.normalized" dirsep="/" pathsep=",">
+			<path>
+				<pathelement location="${bwda.bw.project.path.location}" />
+			</path>
+		</pathconvert>
+
+
+		<pathconvert property="engine.properties.Config.Primary.Partitions" dirsep="/" pathsep=",">
+			<map from="${bwda.bw.project.path.location.normalized}" to="" />
+			<path>
+				<pathelement location="${bwda.bw.project.path.location.normalized}/BWUnit.process" />
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}/${bwda.test.unit.dir}">
+					<include name="**/*.process" />
+					<include name="**/*.serviceagent" />
+				</fileset>
+			</path>
+		</pathconvert>
+
+		<property name="bwda.results.bwunit.xml" location="${bwda.results.dir}/${ant.project.name}-UT-bwunit.xml" />
+		<property name="bwda.results.bwunit.html" location="${bwda.results.dir}/${ant.project.name}-UT-bwunit.html" />
+		<property name="bwda.results.junit.xml" location="${bwda.results.dir}/TEST-${ant.project.name}-UT.xml" />
+		<property name="bwda.results.emma.xml" location="${bwda.results.dir}/coverage-${ant.project.name}-UT.xml" />
+	</target>
+
+	<target name="run-unit-tests"
+	        description="Runs the BWUnit unit tests. Failed tests *will* fail the build."
+	        depends="-init,-init-unit-tests,run-functional-tests" />
+
+	<target name="report-unit-tests"
+	        description="Runs the BWUnit unit tests and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build."
+	        depends="-init,-init-unit-tests,report-functional-tests" />
+
+	<target name="-get-integration-test-folder" depends="-get-test-folder">
+		<bwda:PersitedInputDir property="bwda.test.int.dir"
+		                       message="In which folder should BWUnit look for *integration* tests, relative to `${bwda.bw.project.path}/${bwda.test.dir}`?"
+		                       base="${bwda.bw.project.path}/${bwda.test.dir}"
+		                       defaultValue="IntegrationTestSuite" />
+	</target>
+
+
+	<target name="-init-integration-tests" depends="-developer,-get-integration-test-folder">
+
+		<property name="bwda.bw.project.path.location" location="${bwda.bw.project.path}" />
+		<pathconvert property="bwda.bw.project.path.location.normalized" dirsep="/" pathsep=",">
+			<path>
+				<pathelement location="${bwda.bw.project.path.location}" />
+			</path>
+		</pathconvert>
+
+		<pathconvert property="bwda.bw.projlibs.location.normalized" dirsep="/" pathsep=",">
+			<path>
+				<pathelement location="${bwda.build.dir}/projlibs" />
+			</path>
+		</pathconvert>
+
+		<delete dir="${bwda.build.dir}/projlibs" />
+		<for param="alias">
+			<propertyset>
+				<propertyref prefix="engine.aliases." />
+			</propertyset>
+			<sequential>
+				<if>
+					<isfileselected file="@{alias}">
+						<filename name="**/*.projlib" />
+					</isfileselected>
+					<then>
+						<unzip dest="${bwda.build.dir}/projlibs" src="@{alias}" />
+					</then>
+				</if>
+			</sequential>
+		</for>
+
+		<pathconvert property="engine.properties.Config.Primary.Partitions" dirsep="/" pathsep=",">
+			<map from="${bwda.bw.project.path.location.normalized}" to="" />
+			<map from="${bwda.bw.projlibs.location.normalized}" to="" />
+			<path>
+				<pathelement location="${bwda.bw.project.path.location.normalized}/BWUnit.process" />
+				<fileset dir="${bwda.bw.project.path.location.normalized}">
+					<include name="**/*.process" />
+					<include name="**/*.serviceagent" />
+					<exclude name="${bwda.test.dir}/**" />
+				</fileset>
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}/${bwda.test.int.dir}">
+					<include name="**/*.process" />
+					<include name="**/*.serviceagent" />
+				</fileset>
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}">
+					<include name="*.process" />
+					<include name="*.serviceagent" />
+				</fileset>
+				<fileset dir="${bwda.bw.projlibs.location.normalized}">
+					<include name="**/*.process" />
+					<include name="**/*.serviceagent" />
+				</fileset>
+			</path>
+		</pathconvert>
+		
+		<property name="bwda.results.bwunit.xml" location="${bwda.results.dir}/${ant.project.name}-IT-bwunit.xml" />
+		<property name="bwda.results.bwunit.html" location="${bwda.results.dir}/${ant.project.name}-IT-bwunit.html" />
+		<property name="bwda.results.junit.xml" location="${bwda.results.dir}/TEST-${ant.project.name}-IT.xml" />
+		<property name="bwda.results.emma.xml" location="${bwda.results.dir}/coverage-${ant.project.name}-IT.xml" />
+	</target>
+
+	<target name="run-integration-tests"
+	        description="Runs the BWUnit integration tests. Failed tests *will* fail the build."
+	        depends="-init,-init-integration-tests,-init-tests">
+		<bwunit:run-bwunit-tests />
+	</target>
+
+	<target name="report-integration-tests"
+	        description="Runs the BWUnit integration tests and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build."
+	        depends="-init,-init-integration-tests,-init-tests">
+		<bwunit:report-bwunit-tests />
+	</target>
+
+	<target name="-st" depends="-load-ant-contrib,-get-gvar-config-dir,-get-sdk-config-dir">
+		<bwda:PersistedInput property="bwda.test.int.domain"
+		                     message="What is the name of the TIBCO Domain for System Testing?"
+		                     defaultValue="ST" />
+		<bwda:load-env-properties domain="${bwda.test.int.domain}" />
+	</target>
+
+	<target name="-init-system-tests" depends="-st,-get-integration-test-folder">
+
+		<property name="bwda.bw.project.path.location" location="${bwda.bw.project.path}" />
+		<pathconvert property="bwda.bw.project.path.location.normalized" dirsep="/" pathsep=",">
+			<path>
+				<pathelement location="${bwda.bw.project.path.location}" />
+			</path>
+		</pathconvert>
+
+		<pathconvert property="engine.properties.Config.Primary.Partitions" dirsep="/" pathsep=",">
+			<map from="${bwda.bw.project.path.location.normalized}" to="" />
+			<path>
+				<pathelement location="${bwda.bw.project.path.location.normalized}/BWUnit.process" />
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}/${bwda.test.int.dir}">
+					<include name="**/*.process" />
+					<include name="**/*.serviceagent" />
+				</fileset>
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}">
+					<include name="*.process" />
+					<include name="*.serviceagent" />
+				</fileset>
+			</path>
+		</pathconvert>
+
+		<property name="bwda.results.bwunit.xml" location="${bwda.results.dir}/${ant.project.name}-ST-bwunit.xml" />
+		<property name="bwda.results.bwunit.html" location="${bwda.results.dir}/${ant.project.name}-ST-bwunit.html" />
+		<property name="bwda.results.junit.xml" location="${bwda.results.dir}/TEST-${ant.project.name}-ST.xml" />
+		<property name="bwda.results.emma.xml" location="${bwda.results.dir}/coverage-${ant.project.name}-ST.xml" />
+	</target>
+
+
+	<target name="run-system-tests"
+	        description="Runs the BWUnit system tests (i.e. runs the integration tests against a deployed engine). Failed tests *will* fail the build."
+	        depends="-init,-init-system-tests,-init-tests">
+		<bwunit:run-bwunit-tests />
+	</target>
+
+	<target name="report-system-tests"
+	        description="Runs the BWUnit system tests (i.e. runs the integration tests against a deployed engine) and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build."
+	        depends="-init,-init-system-tests,-init-tests">
+		<bwunit:report-bwunit-tests />
+	</target>
+
+	<target name="designer-st"
+	        depends="-init,-st,-retrieve"
+	        description="Launch ${ant.project.name} in TIBCO Designer using settings for the system testing environment for debugging purposes">
+		<bwunit:designer dir="${bwda.bw.src.dir}"
+		                 project="${bwda.bw.project.name}"
+		                 create-dtl-file="true"
+		                 custom-cp-ext="${bwda.bw.custom-cp-ext}"
+		                 aliases-refid="bwengine.aliases"
+		                 global-variables-refid="bwengine.gvars"
+		                 properties-refid="bwengine.properties"
+		                 working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+	</target>
+
+
+	<target name="-get-smoke-test-folder" depends="-get-test-folder">
+		<bwda:PersitedInputDir property="bwda.test.smoke.dir"
+		                       message="In which folder should BWUnit look for *smoke* tests, relative to `${bwda.bw.project.path}/${bwda.test.dir}`?"
+		                       base="${bwda.bw.project.path}/${bwda.test.dir}"
+		                       defaultValue="SmokeTestSuite" />
+	</target>
+
+
+	<target name="-init-smoke-tests" depends="-get-smoke-test-folder">
+
+		<property name="bwda.bw.project.path.location" location="${bwda.bw.project.path}" />
+		<pathconvert property="bwda.bw.project.path.location.normalized" dirsep="/" pathsep=",">
+			<path>
+				<pathelement location="${bwda.bw.project.path.location}" />
+			</path>
+		</pathconvert>
+
+		<pathconvert property="engine.properties.Config.Primary.Partitions" dirsep="/" pathsep=",">
+			<map from="${bwda.bw.project.path.location.normalized}" to="" />
+			<path>
+				<pathelement location="${bwda.bw.project.path.location.normalized}/BWUnit.process" />
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}/${bwda.test.smoke.dir}">
+					<include name="**/*.process" />
+					<include name="**/*.serviceagent" />
+				</fileset>
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}">
+					<include name="*.process" />
+					<include name="*.serviceagent" />
+				</fileset>
+			</path>
+		</pathconvert>
+
+		<property name="bwda.results.bwunit.xml" location="${bwda.results.dir}/${ant.project.name}-SMOKE-bwunit.xml" />
+		<property name="bwda.results.bwunit.html"
+		          location="${bwda.results.dir}/${ant.project.name}-SMOKE-bwunit.html" />
+		<property name="bwda.results.junit.xml" location="${bwda.results.dir}/TEST-${ant.project.name}-SMOKE.xml" />
+		<property name="bwda.results.emma.xml" location="${bwda.results.dir}/coverage-${ant.project.name}-SMOKE.xml" />
+	</target>
+
+	<target name="report-smoke-tests"
+	        description="Runs the BWUnit smoke tests and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build."
+	        depends="deploy,-init,-init-smoke-tests,-init-tests">
+		<bwunit:report-bwunit-tests />
+	</target>
+
+
+	<target name="-get-system-integration-test-folder" depends="-get-test-folder">
+		<bwda:PersitedInputDir property="bwda.test.sit.dir"
+		                       message="In which folder should BWUnit look for *system integration* tests, relative to `${bwda.bw.project.path}/${bwda.test.dir}`?"
+		                       base="${bwda.bw.project.path}/${bwda.test.dir}"
+		                       defaultValue="SystemIntegrationTestSuite" />
+	</target>
+
+	<target name="-sit" depends="-load-ant-contrib,-get-gvar-config-dir,-get-sdk-config-dir">
+		<bwda:PersistedInput property="bwda.test.sit.domain"
+		                     message="What is the name of the TIBCO Domain for System Integration Testing?"
+		                     defaultValue="SIT" />
+		<bwda:load-env-properties domain="${bwda.test.sit.domain}" />
+	</target>
+
+	<target name="-init-system-integration-tests" depends="-sit,-get-system-integration-test-folder">
+
+		<property name="bwda.bw.project.path.location" location="${bwda.bw.project.path}" />
+		<pathconvert property="bwda.bw.project.path.location.normalized" dirsep="/" pathsep=",">
+			<path>
+				<pathelement location="${bwda.bw.project.path.location}" />
+			</path>
+		</pathconvert>
+
+		<pathconvert property="engine.properties.Config.Primary.Partitions" dirsep="/" pathsep=",">
+			<map from="${bwda.bw.project.path.location.normalized}" to="" />
+			<path>
+				<pathelement location="${bwda.bw.project.path.location.normalized}/BWUnit.process" />
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}/${bwda.test.sit.dir}">
+					<include name="**/*.process" />
+					<include name="**/*.serviceagent" />
+				</fileset>
+				<fileset dir="${bwda.bw.project.path.location.normalized}/${bwda.test.dir}">
+					<include name="*.process" />
+					<include name="*.serviceagent" />
+				</fileset>
+			</path>
+		</pathconvert>
+
+		<property name="bwda.results.bwunit.xml" location="${bwda.results.dir}/${ant.project.name}-SIT-bwunit.xml" />
+		<property name="bwda.results.bwunit.html" location="${bwda.results.dir}/${ant.project.name}-SIT-bwunit.html" />
+		<property name="bwda.results.junit.xml" location="${bwda.results.dir}/TEST-${ant.project.name}-SIT.xml" />
+		<property name="bwda.results.emma.xml" location="${bwda.results.dir}/coverage-${ant.project.name}-SIT.xml" />
+	</target>
+
+
+	<target name="run-system-integration-tests"
+	        description="Runs the BWUnit system integration tests. Failed tests *will* fail the build."
+	        depends="-init,-init-system-integration-tests,-init-tests">
+		<bwunit:run-bwunit-tests />
+	</target>
+
+	<target name="report-system-integration-tests"
+	        description="Runs the BWUnit system integration testsand generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build."
+	        depends="-init,-init-system-integration-tests,-init-tests">
+		<bwunit:report-bwunit-tests />
+	</target>
+
+	<target name="designer-sit"
+	        depends="-init,-sit,-retrieve"
+	        description="Launch ${ant.project.name} in TIBCO Designer using settings for the system integration testing environment for debugging purposes">
+		<bwunit:designer dir="${bwda.bw.src.dir}"
+		                 project="${bwda.bw.project.name}"
+		                 create-dtl-file="true"
+		                 custom-cp-ext="${bwda.bw.custom-cp-ext}"
+		                 aliases-refid="bwengine.aliases"
+		                 global-variables-refid="bwengine.gvars"
+		                 properties-refid="bwengine.properties"
+		                 working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+	</target>
+
+</project>

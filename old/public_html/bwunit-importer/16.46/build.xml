@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BWDABuildImporter" xmlns:i="au.com.windyroad.bwda.importer">
+
+    <property name="bwda.build.enabled" value="true"/>
+
+    <import file="properties.xml" />
+
+    <macrodef name="getImporterFile" uri="au.com.windyroad.bwda.importer">
+        <attribute name="name" />
+        <attribute name="type" default="xml" />
+        <sequential>
+            <condition property="bwda.importer.@{name}" value="${ant.file.BWDABuildImporter}/../@{name}.@{type}">
+                <not>
+                    <available file="${bwda.importer.dir}/@{name}.xml" />
+                </not>
+            </condition>
+            <property name="bwda.importer.@{name}" value="${ant.file.BWDABuildImporter}/ignore.me" />
+            <copy todir="${bwda.importer.dir}" flatten="true" verbose="true">
+                <mappedresources id="bwda.importer.@{name}.src">
+                    <restrict>
+                        <resources>
+                            <url url="${bwda.importer.@{name}}" />
+                        </resources>
+                        <not>
+                            <name regex=".*ignore\.me$" />
+                        </not>
+                    </restrict >
+                    <regexpmapper from="(.*)/.*?\.xml/\.\./(.*)" to="\1/\2" />
+                </mappedresources>
+            </copy>
+        </sequential>
+    </macrodef>
+
+    <i:getImporterFile name="auto-loader" />
+    <i:getImporterFile name="build-targets" />
+    <i:getImporterFile name="config-targets" />
+    <i:getImporterFile name="deploy-targets" />
+    <i:getImporterFile name="ivy-bootstrap" />
+    <i:getImporterFile name="ivy-build" />
+    <i:getImporterFile name="ivy-common" />
+    <i:getImporterFile name="ivy-config" />
+    <i:getImporterFile name="ivy-deploy" />
+    <i:getImporterFile name="ivy-config" />
+    <i:getImporterFile name="ivy-promote" />
+    <i:getImporterFile name="ivy" />
+    <i:getImporterFile name="ivysettings" />
+    <i:getImporterFile name="promote-targets" />
+    <i:getImporterFile name="properties" />
+    <i:getImporterFile name="copyright" type="html" />
+    <i:getImporterFile name="test-targets" />
+    <i:getImporterFile name="ivy-test" />
+
+    <ant antfile="${bwda.importer.dir}/auto-loader.xml" target="-retrieve" inheritall="true" inheritrefs="true">
+        <property name="bwda.ivy.settings.id" value="bwda.autoload" />
+    </ant>
+    <echo>LOADING: ${bwda.build.dir}/dependencies.properties</echo>
+    <property file="${bwda.build.dir}/dependencies.properties" />
+
+	<import>
+		<url url="file:///${basedir}/${bwda.importer.dir}/build-targets.xml" />
+	</import>
+
+</project>

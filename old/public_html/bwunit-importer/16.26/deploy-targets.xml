@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BWUnitDeploy"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:ta="antlib:com.tibant"
+         xmlns:bwda="au.com.windyroad.bwda"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-deploy.xml" />
+
+	<target name="-get-admin-credentials" depends="BWUnitDeploy.-get-deployment-domain">
+		<for param="domain">
+			<propertyset>
+				<propertyref name="bwda.deployment.domain" />
+			</propertyset>
+			<sequential>
+				<input addproperty="bwda.admin.@{domain}.user"
+				       message="What is your TIBCO Administrator Username for @{domain}?" />
+				<if>
+					<not>
+						<isset property="bwda.admin.@{domain}.pw" />
+					</not>
+					<then>
+						<input addproperty="bwda.admin.@{domain}.pw.plain"
+						       message="What is your TIBCO Administrator Password for @{domain}?" />
+
+						<property name="bwda.admin.@{domain}.pw" value="#!${bwda.admin.@{domain}.pw.plain}" />
+
+						<property name="bwda.admin.@{domain}.credentials.file"
+						          value="${bwda.build.dir}/@{domain}.properties" />
+
+						<tempfile destdir="${bwda.build.dir}"
+						          property="bwda.admin.@{domain}.credentials.file.tmp"
+						          deleteonexit="true" />
+						<echoproperties destfile="${bwda.admin.@{domain}.credentials.file.tmp}">
+							<propertyset>
+								<propertyref name="bwda.admin.@{domain}.user" />
+								<propertyref name="bwda.admin.@{domain}.pw" />
+								<globmapper from="bwda.admin.@{domain}.*" to="*" />
+							</propertyset>
+						</echoproperties>
+						<replace file="${bwda.admin.@{domain}.credentials.file.tmp}" token="\#\!" value="#!" />
+
+						<tibant:obfuscate src="${bwda.admin.@{domain}.credentials.file.tmp}"
+						                  dest="${bwda.admin.@{domain}.credentials.file}" />
+						<delete file="${bwda.admin.@{domain}.credentials.file.tmp}" />
+					</then>
+					<else>
+						<echoproperties destfile="${bwda.admin.@{domain}.credentials.file}">
+							<propertyset>
+								<propertyref name="bwda.admin.@{domain}.user" />
+								<propertyref name="bwda.admin.@{domain}.pw" />
+								<globmapper from="bwda.admin.@{domain}.*" to="*" />
+							</propertyset>
+						</echoproperties>
+						<replace file="${bwda.admin.@{domain}.credentials.file.tmp}" token="\#\!" value="#!" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-get-deployment-domain">
+		<loadfile property="bwda.domains" srcfile="${tibco.home.tra}/../domain/DomainHomes.properties">
+			<filterchain>
+				<striplinecomments>
+					<comment value="#" />
+				</striplinecomments>
+				<linecontainsregexp>
+					<regexp pattern="\.TIBCO_ADMIN_DOMAIN_HOME=.*" />
+				</linecontainsregexp>
+				<tokenfilter>
+					<ignoreblank />
+					<replaceregex pattern="\.TIBCO_ADMIN_DOMAIN_HOME=.*" replace="," />
+				</tokenfilter>
+				<striplinebreaks />
+				<tokenfilter>
+					<replaceregex pattern="(.*),$" replace="\1" />
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+
+		<input addproperty="bwda.deployment.domain"
+		       message="Which TIBCO Administrator Domain are we deploying to?"
+		       validargs="${bwda.domains}" />
+	</target>
+
+	<target name="-set-bwda-current-task">
+		<property name="bwda.current.task" value="deploying" />
+	</target>
+
+	<target name="-export-current-deployment"
+	        depends="BWUnitDeploy.-set-bwda-current-task,BWUnitDeploy.-get-deployment-domain,-retrieve-config,-get-admin-credentials">
+		<mappedresources id="bwda.config.ears">
+			<restrict>
+				<fileset refid="bwda.config.set" />
+				<rsel:name name="*.ear" />
+			</restrict>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.ear" to="*" />
+			</chainedmapper>
+		</mappedresources>
+
+		<mkdir dir="${bwda.build.dir}/rollback" />
+
+		<for param="domain">
+			<propertyset>
+				<propertyref name="bwda.deployment.domain" />
+			</propertyset>
+			<sequential>
+				<for param="ear">
+					<resources refid="bwda.config.ears" />
+					<sequential>
+						<exec executable="${tibco.home.tra}/bin/wrap"
+						      dir="${bwda.build.dir}/working"
+						      taskname="AppManage Export"
+						      resultproperty="bwda.appmanage.export.result"
+						      failonerror="false"
+						      outputproperty="bwda.appmanage.export.output">
+							<arg value='--propFile' />
+							<arg value='${tibco.home.tra}/bin/AppManage.tra' />
+							<arg value='-export' />
+							<arg value='-app' />
+							<arg value='@{ear}' />
+							<arg value='-domain' />
+							<arg value='@{domain}' />
+							<arg line='-cred "${bwda.admin.@{domain}.credentials.file}"' />
+							<arg value='-out' />
+							<arg value='${bwda.build.dir}/rollback/@{ear}.xml' />
+							<arg value='-genEar' />
+							<arg value='-ear' />
+							<arg value='${bwda.build.dir}/rollback/@{ear}.ear' />
+						</exec>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="deploy"
+	        depends="BWUnitDeploy.-set-bwda-current-task,BWUnitDeploy.-get-deployment-domain,-retrieve-config,-get-admin-credentials"
+	        description="Deploys the ears to the specified environment">
+
+		<bwda:PersitedInput property="bwda.stop.check.timeout"
+		                    message="How long should we wait (seconds) for an engine to stop?"
+		                    defaultvalue="120" />
+		<bwda:PersitedInput property="bwda.stop.check.interval"
+		                    message="How often (seconds) should we check to see if an engine is stopped?"
+		                    defaultvalue="10" />
+		<bwda:PersitedInput property="bwda.start.check.timeout"
+		                    message="How long should we wait (seconds) for an engine to start?"
+		                    defaultvalue="120" />
+		<bwda:PersitedInput property="bwda.start.check.interval"
+		                    message="How often (seconds) should we check to see if an engine is started?"
+		                    defaultvalue="10" />
+
+		<mappedresources id="bwda.config.ears">
+			<restrict>
+				<fileset refid="bwda.config.set" />
+				<rsel:name name="*.ear" />
+			</restrict>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.ear" to="*" />
+			</chainedmapper>
+		</mappedresources>
+
+		<for param="domain">
+			<propertyset>
+				<propertyref name="bwda.deployment.domain" />
+			</propertyset>
+			<sequential>
+				<for param="ear">
+					<resources refid="bwda.config.ears" />
+					<sequential>
+						<tibant:administrator-config domain="${bwda.deployment.domain}"
+						                             credentials-file="${bwda.admin.@{domain}.credentials.file}" description="v${bwda.pipeline.version}-c${bwda.pipeline.@{domain}.config.version}">
+							<tibant:app name="@{ear}"
+							            ear="${bwda.build.dir}/deployable/@{ear}.ear"
+							            xml="${bwda.build.dir}/deployable/@{ear}.xml" />
+						</tibant:administrator-config>
+						<tibant:administrator-deploy domain="@{domain}"
+						                             credentials-file="${bwda.admin.@{domain}.credentials.file}"
+						                             nostop="true"
+						                             nostart="true" description="v${bwda.pipeline.version}-c${bwda.pipeline.@{domain}.config.version}">
+							<tibant:app name="@{ear}" />
+						</tibant:administrator-deploy>
+
+						<ta:appStatusCheck domain="@{domain}"
+						                   app="@{ear}"
+						                   cred="${basedir}/${bwda.admin.@{domain}.credentials.file}"
+						                   prefix="bwda.deploy.instances" />
+
+						<for param="service" list="${bwda.deploy.instances.@{ear}.services}">
+							<sequential>
+								<for param="binding" list="${bwda.deploy.instances.@{ear}.@{service}.bindings}">
+									<sequential>
+										<exec executable="${tibco.home.tra}/bin/AppManage"
+										      dir="${bwda.build.dir}/working"
+										      taskname="AppManage Stop"
+										      failonerror="true">
+											<arg value='--propFile' />
+											<arg value='${tibco.home.tra}/bin/AppManage.tra' />
+											<arg value='-stop' />
+											<arg value='-domain' />
+											<arg value='@{domain}' />
+											<arg value='-app' />
+											<arg value='@{ear}' />
+											<arg value='-service' />
+											<arg value='@{service}' />
+											<arg value='-binding' />
+											<arg value='@{binding}' />
+											<arg value='-cred' />
+											<arg value='${basedir}/${bwda.admin.@{domain}.credentials.file}' />
+										</exec>
+										<waitfor checkevery="${bwda.stop.check.interval}"
+										         checkeveryunit="second"
+										         maxwait="${bwda.stop.check.timeout}"
+										         maxwaitunit="second"
+										         timeoutproperty="bwda.deploy.@{ear}.@{service}.@{binding}.stop.timeout">
+											<ta:instanceStatusCheck domain="@{domain}"
+											                        app="@{ear}"
+											                        service="@{service}"
+											                        binding="@{binding}"
+											                        cred="${basedir}/${bwda.admin.@{domain}.credentials.file}"
+											                        expectedStatus="Stopped" />
+										</waitfor>
+										<exec executable="${tibco.home.tra}/bin/AppManage"
+										      dir="${bwda.build.dir}/working"
+										      taskname="AppManage Start"
+										      failonerror="true">
+											<arg value='--propFile' />
+											<arg value='${tibco.home.tra}/bin/AppManage.tra' />
+											<arg value='-start' />
+											<arg value='-domain' />
+											<arg value='@{domain}' />
+											<arg value='-app' />
+											<arg value='@{ear}' />
+											<arg value='-service' />
+											<arg value='@{service}' />
+											<arg value='-binding' />
+											<arg value='@{binding}' />
+											<arg value='-cred' />
+											<arg value='${basedir}/${bwda.admin.@{domain}.credentials.file}' />
+										</exec>
+										<waitfor checkevery="${bwda.start.check.interval}"
+										         checkeveryunit="second"
+										         maxwait="${bwda.start.check.timeout}"
+										         maxwaitunit="second"
+										         timeoutproperty="bwda.deploy.@{ear}.@{service}.@{binding}.start.timeout">
+											<ta:instanceStatusCheck domain="@{domain}"
+											                        app="@{ear}"
+											                        service="@{service}"
+											                        binding="@{binding}"
+											                        cred="${basedir}/${bwda.admin.@{domain}.credentials.file}"
+											                        expectedStatus="Running" />
+										</waitfor>
+									</sequential>
+								</for>
+							</sequential>
+						</for>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+</project>

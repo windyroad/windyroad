@@ -1,0 +1,1307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bwunit"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:bwunit="org.windyroad.bwunit"
+         xmlns:bwuc="org.windyroad.bwunit.custom"
+         xmlns:tac="org.windyroad.tibant.custom">
+
+	<import file="ivy-util.xml" />
+
+	<property name="bwunit.home" location="${bwda.lib.dir.location}/BWUnit-${bwda.dep.bwunit.revision}" />
+	<echo level="info">Importing ${bwunit.home}/util/bwunit.xml</echo>
+	<import file="${bwunit.home}/util/bwunit.xml" />
+
+	<macrodef name="run-bwunit-tests"
+	          uri="org.windyroad.bwunit.custom"
+	          description="runs the bwunit tests and by default fails the build on error">
+		<attribute name="failonerror" default="true" />
+		<sequential>
+			<bwunit:run-tests dir="${bwda.bw.src.dir}"
+			                  project="${bwda.bw.project.name}"
+			                  results-xml="${bwda.results.bwunit.xml}"
+			                  results-html="${bwda.results.bwunit.html}"
+			                  results-junit="${bwda.results.junit.xml}"
+			                  results-emma="${bwda.results.emma.xml}"
+			                  force="${bwunit.force}"
+			                  failonerror="@{failonerror}"
+			                  errorproperty="unstable"
+			                  license="${bwunit.license}"
+			                  properties-refid="bwengine.properties"
+			                  create-dtl-file="true"
+			                  aliases-refid="bwengine.aliases"
+			                  global-variables-refid="bwengine.gvars"
+			                  custom-cp-ext-prepend="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+			                  working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+			<fail message="BWUnit test run did not produce a test report">
+				<condition>
+					<not>
+						<available file="${bwda.results.bwunit.xml}" />
+					</not>
+				</condition>
+			</fail>
+			<fail message="BWUnit test run did not produce a junit compatible test report">
+				<condition>
+					<not>
+						<available file="${bwda.results.junit.xml}" />
+					</not>
+				</condition>
+			</fail>
+			<fail message="BWUnit test run did not produce a html test report">
+				<condition>
+					<not>
+						<available file="${bwda.results.bwunit.html}" />
+					</not>
+				</condition>
+			</fail>
+			<fail message="BWUnit test run did not produce a emma compatible coverage report">
+				<condition>
+					<not>
+						<available file="${bwda.results.emma.xml}" />
+					</not>
+				</condition>
+			</fail>
+		</sequential>
+	</macrodef>
+
+	<presetdef name="report-bwunit-tests"
+	           uri="org.windyroad.bwunit.custom"
+	           description="runs the bwunit tests and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build.">
+		<bwuc:run-bwunit-tests failonerror="false" />
+	</presetdef>
+
+	<target name="-load-ant-contrib" unless="ant-contrib.loaded">
+		<tibant:load-ant-contrib />
+		<property name="ant-contrib.loaded" value="true" />
+	</target>
+
+	<target name="-init" depends="-load-ant-contrib">
+		<mkdir dir="${bwda.build.dir}" />
+
+		<for param="file">
+			<fileset dir="${bwda.aliases.dir}">
+				<include name="*.jar" />
+				<include name="*.projlib" />
+			</fileset>
+			<sequential>
+				<basename file="@{file}" property="engine.alias.@{file}" />
+				<property name="engine.aliases.${engine.alias.@{file}}" location="@{file}" />
+			</sequential>
+		</for>
+
+		<propertyset id="bwengine.aliases" dynamic="true">
+			<propertyref prefix="engine.aliases." />
+			<mapper type="glob" from="engine.aliases.*" to="*" />
+		</propertyset>
+
+		<pathconvert property="bwda.bwengine.classpath">
+			<fileset dir="${bwda.classpath.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</pathconvert>
+
+	</target>
+
+	<target name="-init-tests" depends="-init,-retrieve-test">
+		<loadfile property="bwunit.license" srcfile="${bwda.dep.bwunit.BWUnit.license}" />
+	</target>
+
+	<target name="run-functional-tests"
+	        description="Runs the BWUnit tests. Failed tests *will* fail the build."
+	        depends="-load-ant-contrib,-init-tests">
+		<bwuc:run-bwunit-tests />
+	</target>
+
+	<target name="report-functional-tests"
+	        description="Runs the BWUnit tests and generates reports indicating for each test if it passed or failed. Failed tests will *not* fail the build."
+	        depends="-init-tests">
+		<bwuc:report-bwunit-tests />
+	</target>
+
+	<macrodef name="check-dir-exists"
+	          uri="org.windyroad.tibant.custom"
+	          description="Checks whether a directory exists.">
+		<attribute name="dir" />
+		<attribute name="reportonly" default="false" />
+		<sequential>
+			<if>
+				<not>
+					<available file="@{dir}" />
+				</not>
+				<then>
+					<if>
+						<istrue value="@{reportonly}" />
+						<then>
+							<echo message="WARN: The directory '@{dir}' does not exist!" />
+						</then>
+						<else>
+							<fail message="ERROR: The directory '@{dir}' does not exist!" />
+						</else>
+					</if>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="validate" depends="-init,-retrieve" description="Validates the BW project">
+		<bwunit:validate-project dir="${bwda.bw.src.dir}"
+		                         project="${bwda.bw.project.name}"
+		                         max-warnings="${bwda.max.warnings}"
+		                         expected-errors="${bwda.expected.errors}"
+		                         create-dtl-file="true"
+		                         aliases-refid="bwengine.aliases"
+		                         custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+		                         working-dir="${bwda.build.dir}/working/${ant.project.name}"
+		                         out="${bwda.build.dir}/validation.log" />
+	</target>
+
+	<target name="ear" depends="validate" description="Builds the EARs for the BW project">
+		<for param="archive">
+			<fileset dir="${bwda.bw.src.dir}">
+				<include name="**/*.archive" />
+			</fileset>
+			<sequential>
+				<pathconvert property="bwda.@{archive}.name" dirsep="/">
+					<path>
+						<pathelement location="@{archive}" />
+					</path>
+					<chainedmapper>
+						<filtermapper>
+							<replacestring from="\" to="/" />
+						</filtermapper>
+						<regexpmapper from="${ant.file.dir.normalised}/${bwda.bw.project.path}(.*)\.archive" to="\1" />
+					</chainedmapper>
+				</pathconvert>
+				<basename file="@{archive}" suffix=".archive" property="bwda.@{archive}.basename" />
+				<mkdir dir="${bwda.build.dir}" />
+				<tibant:build-ear ear="${bwda.@{archive}.name}"
+				                  dir="${bwda.bw.src.dir}"
+				                  project="${bwda.bw.project.name}"
+				                  out="${bwda.build.dir}/${bwda.@{archive}.basename}.ear"
+				                  validate="false"
+				                  create-dtl-file="true"
+				                  aliases-refid="bwengine.aliases"
+				                  custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+				                  working-dir="${bwda.build.dir}/working/${bwda.bw.project.name}" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="projlib" depends="validate" description="Builds the Design Time Libraries for the BW project">
+		<for param="archive">
+			<fileset dir="${bwda.bw.src.dir}">
+				<include name="**/*.libbuilder" />
+			</fileset>
+			<sequential>
+				<pathconvert property="bwda.@{archive}.name" dirsep="/">
+					<path>
+						<pathelement location="@{archive}" />
+					</path>
+					<chainedmapper>
+						<filtermapper>
+							<replacestring from="\" to="/" />
+						</filtermapper>
+						<regexpmapper from="${ant.file.dir.normalised}/${bwda.bw.project.path}(.*)\.libbuilder"
+						              to="\1" />
+					</chainedmapper>
+				</pathconvert>
+				<basename file="@{archive}" suffix=".libbuilder" property="bwda.@{archive}.basename" />
+				<mkdir dir="${bwda.build.dir}" />
+				<tibant:build-library lib="${bwda.@{archive}.name}"
+				                      dir="${bwda.bw.src.dir}"
+				                      project="${bwda.bw.project.name}"
+				                      out="${bwda.build.dir}/${bwda.@{archive}.basename}.projlib"
+				                      validate="false"
+				                      create-dtl-file="true"
+				                      aliases-refid="bwengine.aliases"
+				                      custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+				                      working-dir="${bwda.build.dir}/working/${bwda.bw.project.name}" />
+			</sequential>
+		</for>
+	</target>
+
+	<macrodef name="loadproperties" uri="org.windyroad.bwunit">
+		<attribute name="srcfile" />
+		<attribute name="prefix" />
+		<sequential>
+			<if>
+				<available file="@{srcfile}" />
+				<then>
+					<loadproperties srcfile="@{srcfile}" prefix="@{prefix}" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="-developer" depends="-load-ant-contrib,-get-gvar-config-dir,-get-sdk-config-dir">
+
+		<bwunit:loadproperties srcfile="${bwda.config.sdk.dir}/LOCAL-sdk.properties" prefix="bwda.sdk.LOCAL." />
+		<bwunit:loadproperties srcfile="${bwda.config.sdk.dir}/sdk.properties" prefix="bwda.sdk.LOCAL." />
+
+		<bwunit:loadproperties srcfile="${bwda.config.gvar.dir}/LOCAL-gvar.properties" prefix="bwda.gvar.LOCAL." />
+		<bwunit:loadproperties srcfile="${bwda.config.gvar.dir}/gvar.properties" prefix="bwda.gvar.LOCAL." />
+
+		<propertyset id="bwda.config.LOCAL.gvar">
+			<propertyref prefix="bwda.gvar.LOCAL." />
+			<globmapper from='bwda.gvar.LOCAL.*' to='*' />
+		</propertyset>
+
+		<propertyset id="bwda.config.LOCAL.sdk">
+			<propertyref prefix="bwda.sdk.LOCAL." />
+			<globmapper from='bwda.sdk.LOCAL.*' to='*' />
+		</propertyset>
+
+		<property name="bw.platform.services.retreiveresources.Httpport" value="8010" />
+
+		<propertyset id="bwengine.properties" dynamic="true">
+			<propertyref name="bw.platform.services.retreiveresources.Httpport" />
+			<propertyset>
+				<propertyref prefix="engine.properties." />
+				<mapper type="glob" from="engine.properties.*" to="*" />
+			</propertyset>
+			<propertyset refid="bwda.config.LOCAL.sdk" />
+		</propertyset>
+		<property name="BWUnit/HTTP-service-port" value="5454" />
+
+		<propertyset id="bwengine.gvars" dynamic="true">
+			<propertyref name="BWUnit/HTTP-service-port" />
+			<propertyset>
+				<propertyref prefix="engine.gvars." />
+				<mapper type="glob" from="engine.gvars.*" to="*" />
+				<propertyset refid="bwda.config.LOCAL.gvar" />
+			</propertyset>
+		</propertyset>
+	</target>
+
+	<target name="designer"
+	        depends="-developer,-init,-retrieve"
+	        description="Launch ${ant.project.name} in TIBCO Designer">
+		<bwunit:designer dir="${bwda.bw.src.dir}"
+		                 project="${bwda.bw.project.name}"
+		                 create-dtl-file="true"
+		                 custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+		                 aliases-refid="bwengine.aliases"
+		                 global-variables-refid="bwengine.gvars"
+		                 working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+	</target>
+
+	<target name="clean" description="Remove generated files">
+		<delete dir="${bwda.build.dir}" verbose="true" />
+		<delete verbose="true">
+			<fileset dir="${bwda.bw.src.dir}" includes="${bw.project.name}/.designtimelibs" />
+		</delete>
+	</target>
+
+	<target name="clean-license-settings" description="Remove BWUnit license settings">
+		<propertyfile file="${user.home}/build.properties">
+			<entry key="bwunit.license.version" operation="del" />
+			<entry key="bwunit.license.company" operation="del" />
+			<entry key="bwunit.license.department" operation="del" />
+			<entry key="bwunit.license.holder" operation="del" />
+		</propertyfile>
+	</target>
+
+
+	<target name="build" depends="ear,projlib" description="Build binaries" />
+
+	<!-- for pre-commit, we first validate the project. If all that is good, then it will run the unit tests -->
+	<target name="pre-commit"
+	        description="Validate the project and if that succeeds, run the BWUnit tests"
+	        depends="validate,run-functional-tests">
+	</target>
+
+	<!-- for post-commit, we first validate the the project. If all that is good, then it will report on the the unit tests -->
+	<target name="post-commit"
+	        description="Validate the project and if that succeeds, report on the BWUnit tests"
+	        depends="validate,report-functional-tests">
+	</target>
+
+	<target name="-create-ivy-file" depends="-load-ant-contrib,-get-module-org">
+		<!-- the code commented out below is running into errors  -->
+		<!-- let the user overwrite the default ivy.xml  -->
+		<!--available property="ivy.dep.file" value="ivy.xml" file="ivy.xml" /-->
+		<property name="ivy.dep.file" value="${bwda.importer.dir}/ivy.xml" />
+
+		<!-- create ivy file pub targets based on .archive and .libbuilder files in project -->
+		<!--property name="ivy.dep.file" value="${bwda.build.dir}/generated-ivy.xml" />
+		<echo file="${bwda.build.dir}/generated-ivy.xml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"&gt;
+    &lt;info
+        organisation="${ivy.organisation}"
+        module="${ant.project.name}"
+        status="release"&gt;
+        &lt;extends 
+            organisation="${ivy.organisation}"
+            module="${ant.project.name}"
+            revision="latest.integration"
+            location="ivy.xml"/&gt;
+        &lt;extends 
+            organisation="not.set"
+            module="${ant.project.name}"
+            revision="latest.integration"
+            location="${basedir}/${bwda.importer.dir}/ivy.xml"/&gt;
+    &lt;/info&gt;
+    &lt;publications&gt;</echo>
+		<for param="archive">
+			<fileset dir="${bwda.bw.project.path}" includes="**/*.archive" />
+			<sequential>
+				<basename file="@{archive}" property="@{archive}.basename" suffix=".archive" />
+				<echo file="${bwda.build.dir}/generated-ivy.xml" append="true">
+        &lt;artifact name="${@{archive}.basename}" type="ear" conf="dist" /&gt;</echo>
+			</sequential>
+		</for>
+		<for param="library">
+			<fileset dir="${bwda.bw.project.path}" includes="**/*.libbuilder" />
+			<sequential>
+				<basename file="@{library}" property="@{library}.basename" suffix=".libbuilder" />
+				<echo file="${bwda.build.dir}/generated-ivy.xml" append="true">
+        &lt;artifact name="${@{library}.basename}" type="projlib" conf="default" /&gt;</echo>
+			</sequential>
+		</for>
+		<echo file="${bwda.build.dir}/generated-ivy.xml" append="true">
+    &lt;/publications&gt;
+&lt;/ivy-module&gt;</echo-->
+
+		<!-- now create an ivy file for users to enter the dependencies into -->
+		<!--if>
+			<not>
+				<available file="ivy.xml" />
+			</not>
+			<then>
+				<echo file="ivy.xml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"&gt;
+    &lt;info
+        organisation="${ivy.organisation}"
+        module="${ant.project.name}"
+        status="release"&gt;
+    &lt;/info&gt;
+    &lt;dependencies&gt;
+    &lt;/dependencies&gt;
+&lt;/ivy-module&gt;</echo>
+			</then>
+		</if-->
+	</target>
+
+	<target name="-create-settings-file" depends="-load-ant-contrib,-get-module-org">
+		<!-- the code commented out below is running into errors  -->
+		<!-- let the user overwrite the default ivy.xml  -->
+		<!--available property="ivy.settings.file" value="ivysettings.xml" file="ivysettings.xml" /-->
+		<property name="ivy.settings.file" value="${bwda.importer.dir}/ivysettings.xml" />
+
+		<!--if>
+			<not>
+				<isset property="bwda.repo.dir" />
+			</not>
+			<then>
+				<input addproperty="bwda.repo.dir"
+				       message="Please specify an path to shared directory, where EAR and PROJLIB files can be published to and retrieved from. e.g., `Z:/shared/repo`" />
+				<fail message="'${bwda.repo.dir}' is not a valid path to a directory">
+					<condition>
+						<not>
+							<available file="${bwda.repo.dir}" type="dir" />
+						</not>
+					</condition>
+				</fail>
+				<propertyfile file="${user.home}/build.properties">
+					<entry key="bwda.repo.dir" value="${bwda.repo.dir}" />
+				</propertyfile>
+				<echo level="info">'bwda.repo.dir' persisted to `${user.home}/build.properties`</echo>
+			</then>
+		</if>
+		<property name="bwda.repo.dir.location" location="${bwda.repo.dir}" />
+
+		<property name="ivy.settings.file" value="ivysettings.xml" />
+		<if>
+			<not>
+				<available file="${ivy.settings.file}" />
+			</not>
+			<then>
+				<echo file="${ivy.settings.file}">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;ivysettings&gt;
+    &lt;include file="${basedir}/${bwda.importer.dir}/ivysettings.xml"/&gt;
+    &lt;resolvers&gt;
+        &lt;chain name="shared"&gt;
+            &lt;filesystem name="snapshots" m2compatible="true"&gt;
+                &lt;artifact pattern="$${bwda.repo.dir.location}/snapshots/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+                &lt;ivy pattern="$${bwda.repo.dir.location}/snapshots/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+            &lt;/filesystem&gt;
+            &lt;filesystem name="releases" m2compatible="true"&gt;
+                &lt;artifact pattern="$${bwda.repo.dir.location}/releases/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+                &lt;ivy pattern="$${bwda.repo.dir.location}/releases/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+            &lt;/filesystem&gt;
+        &lt;/chain&gt;
+    &lt;/resolvers&gt;
+    &lt;include url="${ivy.default.settings.dir}/ivysettings-main-chain.xml"/&gt;
+    &lt;resolvers&gt;
+        &lt;chain name="default.${bwda.ivy.settings.id}" returnFirst="true"&gt;
+            &lt;resolver ref="local"/&gt;
+            &lt;resolver ref="main"/&gt;
+        &lt;/chain&gt;
+    &lt;/resolvers&gt;
+    &lt;modules&gt;
+        &lt;module organisation="${ivy.organisation}" name="*" resolver="shared"/&gt;
+    &lt;/modules&gt;
+&lt;/ivysettings&gt;</echo>
+			</then>
+		</if-->
+	</target>
+
+	<target name="-override-ivy-properties" depends="-create-ivy-file,-create-settings-file">
+	</target>
+
+	<target name="-get-deployable-ears-set" depends="-create-ivy-file,-create-settings-file">
+		<mappedresources id="bwda.deployable.ears">
+			<fileset dir="${bwda.build.dir}/deployable/" includes="*.ear"/>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.ear" to="*" />
+			</chainedmapper>
+		</mappedresources>
+	</target>
+
+
+
+
+	<target name="-extract-config-template" depends="-retrieve-deployable,-get-deployable-ears-set">
+
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<echo level="info">Extracting configuration template from '${bwda.build.dir}/deployable/@{ear}.ear'</echo>
+				<property name="bwda.@{ear}.config.template" value="${bwda.build.dir}/deployable/@{ear}-template.xml" />
+				<tibant:extract-config ear="${bwda.build.dir}/deployable/@{ear}.ear"
+				                       out="${bwda.@{ear}.config.template}" />
+			</sequential>
+		</for>
+	</target>
+
+	<macrodef name="loadBinding" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="archive" />
+		<attribute name="file" />
+		<sequential>
+			<if>
+				<not>
+					<isset property="bwda.deploy.@{ear}.@{archive}-bindings" />
+				</not>
+				<then>
+					<echo level="info">Looking for '@{ear}-@{archive}' binding names in '@{file}'</echo>
+					<if>
+						<available file="@{file}" />
+						<then>
+							<!-- spaces and other characters need to be escaped when using the archive name as a property key -->
+							<propertyregex property="@{archive}.escaped"
+							               input="@{archive}"
+							               regexp="([ =\#!:])"
+							               replace="\\\\\1"
+							               global="true"
+							               defaultvalue="@{archive}" />
+
+							<loadproperties srcfile="@{file}" prefix="bwda.deploy.@{ear}.">
+								<filterchain>
+									<striplinecomments>
+										<comment value="#" />
+									</striplinecomments>
+									<tokenfilter>
+										<ignoreblank />
+									</tokenfilter>
+									<prefixlines prefix="${@{archive}.escaped}-" />
+								</filterchain>
+							</loadproperties>
+						</then>
+					</if>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="-get-deployment-domain">
+		<input addproperty="bwda.deployment.domain" message="Which TIBCO Administrator Domain are you deploying to?" />
+	</target>
+
+	<target name="-get-list-of-archives" depends="-extract-config-template">
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<xmlproperty file="${bwda.@{ear}.config.template}"
+				             prefix="bwda.@{ear}.config.template.settings"
+				             keepRoot="false" />
+				<propertyset id="bwda.@{ear}.archive-list">
+					<propertyref regex="^bwda\.@{ear}\.config\.template\.settings\.services\.[^\.]+\(name\)$" />
+				</propertyset>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-get-deploy-config-dir">
+		<bwunit:PersitedInput property="bwda.config.deploy.dir"
+		                      message="Where should BWUnit load deployment properties from, relative to `${ant.file.dir}`"
+		                      defaultValue="config/deploy" />
+	</target>
+
+
+	<target name="-load-binding-names" depends="-get-list-of-archives,-get-deployment-domain,-get-deploy-config-dir">
+		<mkdir dir="${bwda.config.deploy.dir}" />
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<for param="archive-list">
+					<propertyset refid="bwda.@{ear}.archive-list" />
+					<sequential>
+						<for param="archive" list="@{archive-list}">
+							<sequential>
+								<!-- binding names for particular ear archive in a specific environment -->
+								<bwunit:loadBinding ear="@{ear}"
+								                    archive="@{archive}"
+								                    file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-binding-names.properties" />
+								<!-- binding names for particular ear archive across all environments -->
+								<bwunit:loadBinding ear="@{ear}"
+								                    archive="@{archive}"
+								                    file="${bwda.config.deploy.dir}/@{ear}-@{archive}-binding-names.properties" />
+								<!-- binding names for particular archive for any ear across all environments -->
+								<bwunit:loadBinding ear="@{ear}"
+								                    archive="@{archive}"
+								                    file="${bwda.config.deploy.dir}/@{archive}-binding-names.properties" />
+								<!-- binding names for particular ear in a specific environments -->
+								<bwunit:loadBinding ear="@{ear}"
+								                    archive="@{archive}"
+								                    file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-binding-names.properties" />
+								<!-- binding names for particular ear across all environments -->
+								<bwunit:loadBinding ear="@{ear}"
+								                    archive="@{archive}"
+								                    file="${bwda.config.deploy.dir}/@{ear}-binding-names.properties" />
+								<!-- binding names for all ears in a specific environments -->
+								<bwunit:loadBinding ear="@{ear}"
+								                    archive="@{archive}"
+								                    file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-binding-names.properties" />
+								<!-- binding names for all ears across environments -->
+								<bwunit:loadBinding ear="@{ear}"
+								                    archive="@{archive}"
+								                    file="${bwda.config.deploy.dir}/binding-names.properties" />
+
+								<!-- if the binding is not set, ask for it and store it in the most specific version of the file -->
+								<if>
+									<not>
+										<isset property="bwda.deploy.@{ear}.@{archive}-bindings" />
+									</not>
+									<then>
+										<input addproperty="bwda.deploy.@{ear}.@{archive}-bindings"
+										       message="What are the binding names for @{ear}-@{archive}? Mutliple binding should be seperated with a comma. e.g. 'Primary,Secondary'" />
+										<propertyfile file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-binding-names.properties">
+											<entry key="bindings" value="${bwda.deploy.@{ear}.@{archive}-bindings}" />
+										</propertyfile>
+										<echo level="info">bindings persisted to `${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-binding-names.properties`</echo>
+									</then>
+								</if>
+							</sequential>
+						</for>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+	<macrodef name="loadBindingProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="archive" />
+		<attribute name="binding" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading binding properties for '@{ear}-@{archive}-@{binding}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<!-- spaces and other characters need to be escaped when using the archive name as a property key -->
+					<propertyregex property="@{archive}-@{binding}.escaped"
+					               input="@{archive}-@{binding}"
+					               regexp="([ =\#!:])"
+					               replace="\\\\\1"
+					               global="true"
+					               defaultvalue="@{archive}-@{binding}" />
+
+					<loadproperties srcfile="@{file}" prefix="bwda.deploy.@{ear}.">
+						<filterchain>
+							<striplinecomments>
+								<comment value="#" />
+							</striplinecomments>
+							<tokenfilter>
+								<ignoreblank />
+							</tokenfilter>
+							<prefixlines prefix="${@{archive}-@{binding}.escaped}-" />
+						</filterchain>
+					</loadproperties>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="PersistedBindingPropertyInput" uri="org.windyroad.bwunit">
+		<attribute name="property" />
+		<attribute name="message" />
+		<attribute name="ear" />
+		<attribute name="archive" />
+		<attribute name="binding" />
+		<attribute name="defaultvalue" default="" />
+		<sequential>
+			<if>
+				<not>
+					<isset property="bwda.deploy.@{ear}.@{archive}-@{binding}-@{property}" />
+				</not>
+				<then>
+					<input addproperty="bwda.deploy.@{ear}.@{archive}-@{binding}-@{property}"
+					       message="@{message}"
+					       defaultvalue="@{defaultvalue}" />
+					<propertyfile file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-@{binding}-bindings.properties">
+						<entry key="@{property}" value="${bwda.deploy.@{ear}.@{archive}-@{binding}-@{property}}" />
+					</propertyfile>
+					<echo level="info">'@{property}' persisted to `${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-@{binding}-bindings.properties`</echo>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="-hostname">
+		<exec executable="hostname" outputproperty="hostname" />
+	</target>
+
+	<target name="-load-binding-properties" depends="-load-binding-names,-hostname">
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<for param="archive-list">
+					<propertyset refid="bwda.@{ear}.archive-list" />
+					<sequential>
+						<for param="archive" list="@{archive-list}">
+							<sequential>
+								<for param="binding" list="${bwda.deploy.@{ear}.@{archive}-bindings}">
+									<sequential>
+										<!-- binding properties for particular ear archive binding in a specific environment -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-@{binding}-bindings.properties" />
+										<!-- binding properties for particular ear archive binding across all environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/@{ear}-@{archive}-@{binding}-bindings.properties" />
+										<!-- binding properties for particular archive binding for any ear across all environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/@{archive}-@{binding}-bindings.properties" />
+										<!-- binding properties for particular binding for any ear across all environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/@{binding}-bindings.properties" />
+										<!-- binding properties for particular ear archive in a specific environment -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-bindings.properties" />
+										<!-- binding properties for particular ear archive across all environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/@{ear}-@{archive}-bindings.properties" />
+										<!-- binding properties for particular archive for any ear across all environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/@{archive}-bindings.properties" />
+										<!-- binding properties for particular ear in a specific environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-bindings.properties" />
+										<!-- binding properties for particular ear across all environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/@{ear}-bindings.properties" />
+										<!-- binding properties for all ears in a specific environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-bindings.properties" />
+										<!-- binding properties for all ears across environments -->
+										<bwunit:loadBindingProperties ear="@{ear}"
+										                              binding="@{binding}"
+										                              archive="@{archive}"
+										                              file="${bwda.config.deploy.dir}/bindings.properties" />
+
+										<!-- if the machine property is not set, ask for it and store it in the most specific version of the file -->
+										<bwunit:PersistedBindingPropertyInput property="machine"
+										                                      message="What machine would you like to deploy @{ear}-@{archive}-@{binding} to?"
+										                                      ear="@{ear}"
+										                                      binding="@{binding}"
+										                                      archive="@{archive}"
+										                                      defaultvalue="${hostname}" />
+									</sequential>
+								</for>
+							</sequential>
+						</for>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+	<macrodef name="loadArchiveProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="archive" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading archive properties for '@{ear}-@{archive}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<!-- spaces and other characters need to be escaped when using the archive name as a property key -->
+					<propertyregex property="@{archive}.escaped"
+					               input="@{archive}"
+					               regexp="([ =\#!:])"
+					               replace="\\\\\1"
+					               global="true"
+					               defaultvalue="@{archive}" />
+
+					<loadproperties srcfile="@{file}" prefix="bwda.deploy.@{ear}.">
+						<filterchain>
+							<striplinecomments>
+								<comment value="#" />
+							</striplinecomments>
+							<tokenfilter>
+								<ignoreblank />
+							</tokenfilter>
+							<prefixlines prefix="${@{archive}.escaped}-" />
+						</filterchain>
+					</loadproperties>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="-load-archive-properties" depends="-load-binding-names">
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<for param="archive-list">
+					<propertyset refid="bwda.@{ear}.archive-list" />
+					<sequential>
+						<for param="archive" list="@{archive-list}">
+							<sequential>
+								<!-- archive properties for particular ear archive in a specific environment -->
+								<bwunit:loadArchiveProperties ear="@{ear}"
+								                              archive="@{archive}"
+								                              file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-archive.properties" />
+								<!-- archive properties for particular ear archive across all environments -->
+								<bwunit:loadArchiveProperties ear="@{ear}"
+								                              archive="@{archive}"
+								                              file="${bwda.config.deploy.dir}/@{ear}-@{archive}-archive.properties" />
+								<!-- archive properties for particular archive for any ear across all environments -->
+								<bwunit:loadArchiveProperties ear="@{ear}"
+								                              archive="@{archive}"
+								                              file="${bwda.config.deploy.dir}/@{archive}-archive.properties" />
+								<!-- archive properties for particular ear in a specific environments -->
+								<bwunit:loadArchiveProperties ear="@{ear}"
+								                              archive="@{archive}"
+								                              file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-archive.properties" />
+								<!-- archive properties for particular ear across all environments -->
+								<bwunit:loadArchiveProperties ear="@{ear}"
+								                              archive="@{archive}"
+								                              file="${bwda.config.deploy.dir}/@{ear}-archive.properties" />
+								<!-- archive properties for all ears in a specific environments -->
+								<bwunit:loadArchiveProperties ear="@{ear}"
+								                              archive="@{archive}"
+								                              file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-archive.properties" />
+								<!-- archive properties for all ears across environments -->
+								<bwunit:loadArchiveProperties ear="@{ear}"
+								                              archive="@{archive}"
+								                              file="${bwda.config.deploy.dir}/archive.properties" />
+							</sequential>
+						</for>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+	<macrodef name="loadDeploymentProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading deployment properties for '@{ear}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<loadproperties srcfile="@{file}" prefix="bwda.deploy.@{ear}." />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="-load-deployment-properties" depends="-load-binding-properties,-load-archive-properties">
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<!-- deployment properties for particular ear in a specific environment -->
+				<bwunit:loadDeploymentProperties ear="@{ear}"
+				                                 file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-@{ear}-deploy.properties" />
+				<!-- deployment properties for particular ear across all environments -->
+				<bwunit:loadDeploymentProperties ear="@{ear}"
+				                                 file="${bwda.config.deploy.dir}/@{ear}-deploy.properties" />
+				<!-- deployment properties for any ear in a specific environment -->
+				<bwunit:loadDeploymentProperties ear="@{ear}"
+				                                 file="${bwda.config.deploy.dir}/${bwda.deployment.domain}-deploy.properties" />
+				<!-- deployment properties for any ear across all environments -->
+				<bwunit:loadDeploymentProperties ear="@{ear}" file="${bwda.config.deploy.dir}/deploy.properties" />
+			</sequential>
+		</for>
+	</target>
+
+	<macrodef name="loadInstanceGVarProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="archive" />
+		<attribute name="binding" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading instance global variable properties for '@{ear}-@{archive}-@{binding}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<!-- spaces and other characters need to be escaped when using the archive name as a property key -->
+					<propertyregex property="@{archive}-@{binding}.escaped"
+					               input="@{archive}-@{binding}"
+					               regexp="([ =\#!:])"
+					               replace="\\\\\1"
+					               global="true"
+					               defaultvalue="@{archive}-@{binding}" />
+
+					<loadproperties srcfile="@{file}" prefix="bwda.gvar.@{ear}.">
+						<filterchain>
+							<striplinecomments>
+								<comment value="#" />
+							</striplinecomments>
+							<tokenfilter>
+								<ignoreblank />
+							</tokenfilter>
+							<prefixlines prefix="${@{archive}-@{binding}.escaped}-" />
+						</filterchain>
+					</loadproperties>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="loadServiceGVarProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="archive" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading service global variable properties for '@{ear}-@{archive}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<!-- spaces and other characters need to be escaped when using the archive name as a property key -->
+					<propertyregex property="@{archive}.escaped"
+					               input="@{archive}"
+					               regexp="([ =\#!:])"
+					               replace="\\\\\1"
+					               global="true"
+					               defaultvalue="@{archive}" />
+
+					<loadproperties srcfile="@{file}" prefix="bwda.gvar.@{ear}.">
+						<filterchain>
+							<striplinecomments>
+								<comment value="#" />
+							</striplinecomments>
+							<tokenfilter>
+								<ignoreblank />
+							</tokenfilter>
+							<prefixlines prefix="${@{archive}.escaped}-" />
+						</filterchain>
+					</loadproperties>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="loadGVarProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading global variable properties for '@{ear}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<loadproperties srcfile="@{file}" prefix="bwda.gvar.@{ear}." />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="-get-gvar-config-dir">
+		<bwunit:PersitedInput property="bwda.config.gvar.dir"
+		                      message="Where should BWUnit load global variable properties from, relative to `${ant.file.dir}`"
+		                      defaultValue="config/gvar" />
+	</target>
+
+
+	<target name="-load-global-variables" depends="-load-binding-names,-get-gvar-config-dir">
+		<mkdir dir="${bwda.config.gvar.dir}" />
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<for param="archive-list">
+					<propertyset refid="bwda.@{ear}.archive-list" />
+					<sequential>
+						<for param="archive" list="@{archive-list}">
+							<sequential>
+								<for param="binding" list="${bwda.deploy.@{ear}.@{archive}-bindings}">
+									<sequential>
+										<!-- gvar properties for particular ear archive binding in a specific environment -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-@{binding}-gvar.properties" />
+										<!-- gvar properties for particular ear archive binding across all environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/@{ear}-@{archive}-@{binding}-gvar.properties" />
+										<!-- gvar properties for particular archive binding for any ear across all environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/@{archive}-@{binding}-gvar.properties" />
+										<!-- gvar properties for particular binding for any ear across all environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/@{binding}-gvar.properties" />
+										<!-- gvar properties for particular ear archive in a specific environment -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-gvar.properties" />
+										<!-- gvar properties for particular ear archive across all environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/@{ear}-@{archive}-gvar.properties" />
+										<!-- gvar properties for particular archive for any ear across all environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/@{archive}-gvar.properties" />
+										<!-- gvar properties for particular ear in a specific environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-@{ear}-gvar.properties" />
+										<!-- gvar properties for particular ear across all environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/@{ear}-gvar.properties" />
+										<!-- gvar properties for all ears in a specific environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-gvar.properties" />
+										<!-- gvar properties for all ears across environments -->
+										<bwunit:loadInstanceGVarProperties ear="@{ear}"
+										                                   binding="@{binding}"
+										                                   archive="@{archive}"
+										                                   file="${bwda.config.gvar.dir}/gvar.properties" />
+									</sequential>
+								</for>
+								<!-- gvar properties for particular ear archive in a specific environment -->
+								<bwunit:loadServiceGVarProperties ear="@{ear}"
+								                                  archive="@{archive}"
+								                                  file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-gvar.properties" />
+								<!-- gvar properties for particular ear archive across all environments -->
+								<bwunit:loadServiceGVarProperties ear="@{ear}"
+								                                  archive="@{archive}"
+								                                  file="${bwda.config.gvar.dir}/@{ear}-@{archive}-gvar.properties" />
+								<!-- gvar properties for particular archive for any ear across all environments -->
+								<bwunit:loadServiceGVarProperties ear="@{ear}"
+								                                  archive="@{archive}"
+								                                  file="${bwda.config.gvar.dir}/@{archive}-gvar.properties" />
+								<!-- gvar properties for particular ear in a specific environments -->
+								<bwunit:loadServiceGVarProperties ear="@{ear}"
+								                                  archive="@{archive}"
+								                                  file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-@{ear}-gvar.properties" />
+								<!-- gvar properties for particular ear across all environments -->
+								<bwunit:loadServiceGVarProperties ear="@{ear}"
+								                                  archive="@{archive}"
+								                                  file="${bwda.config.gvar.dir}/@{ear}-gvar.properties" />
+								<!-- gvar properties for all ears in a specific environments -->
+								<bwunit:loadServiceGVarProperties ear="@{ear}"
+								                                  archive="@{archive}"
+								                                  file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-gvar.properties" />
+								<!-- gvar properties for all ears across environments -->
+								<bwunit:loadServiceGVarProperties ear="@{ear}"
+								                                  archive="@{archive}"
+								                                  file="${bwda.config.gvar.dir}/gvar.properties" />
+
+							</sequential>
+						</for>
+					</sequential>
+				</for>
+				<!-- gvar properties for particular ear in a specific environments -->
+				<bwunit:loadGVarProperties ear="@{ear}"
+				                           file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-@{ear}-gvar.properties" />
+				<!-- gvar properties for particular ear across all environments -->
+				<bwunit:loadGVarProperties ear="@{ear}" file="${bwda.config.gvar.dir}/@{ear}-gvar.properties" />
+				<!-- gvar properties for all ears in a specific environments -->
+				<bwunit:loadGVarProperties ear="@{ear}"
+				                           file="${bwda.config.gvar.dir}/${bwda.deployment.domain}-gvar.properties" />
+				<!-- gvar properties for all ears across environments -->
+				<bwunit:loadGVarProperties ear="@{ear}" file="${bwda.config.gvar.dir}/gvar.properties" />
+			</sequential>
+		</for>
+	</target>
+
+
+	<macrodef name="loadServiceSDKProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="archive" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading service Adapter SDK properties for '@{ear}-@{archive}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<!-- spaces and other characters need to be escaped when using the archive name as a property key -->
+					<propertyregex property="@{archive}.escaped"
+					               input="@{archive}"
+					               regexp="([ =\#!:])"
+					               replace="\\\\\1"
+					               global="true"
+					               defaultvalue="@{archive}" />
+
+					<loadproperties srcfile="@{file}" prefix="bwda.sdk.@{ear}.">
+						<filterchain>
+							<striplinecomments>
+								<comment value="#" />
+							</striplinecomments>
+							<tokenfilter>
+								<ignoreblank />
+							</tokenfilter>
+							<prefixlines prefix="${@{archive}.escaped}-" />
+						</filterchain>
+					</loadproperties>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="loadSDKProperties" uri="org.windyroad.bwunit">
+		<attribute name="ear" />
+		<attribute name="file" />
+		<sequential>
+			<echo level="info">Loading Adapter SDK properties for '@{ear}' from '@{file}'</echo>
+			<if>
+				<available file="@{file}" />
+				<then>
+					<loadproperties srcfile="@{file}" prefix="bwda.sdk.@{ear}." />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="-get-sdk-config-dir">
+		<bwunit:PersitedInput property="bwda.config.sdk.dir"
+		                      message="Where should BWUnit load Adapter SDK properties from, relative to `${ant.file.dir}`"
+		                      defaultValue="config/sdk" />
+	</target>
+
+	<target name="-load-sdk-properties" depends="-load-binding-names,-get-sdk-config-dir">
+		<mkdir dir="${bwda.config.sdk.dir}" />
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<for param="archive-list">
+					<propertyset refid="bwda.@{ear}.archive-list" />
+					<sequential>
+						<for param="archive" list="@{archive-list}">
+							<sequential>
+								<!-- gvar properties for particular ear archive in a specific environment -->
+								<bwunit:loadServiceSDKProperties ear="@{ear}"
+								                                 archive="@{archive}"
+								                                 file="${bwda.config.sdk.dir}/${bwda.deployment.domain}-@{ear}-@{archive}-sdk.properties" />
+								<!-- gvar properties for particular ear archive across all environments -->
+								<bwunit:loadServiceSDKProperties ear="@{ear}"
+								                                 archive="@{archive}"
+								                                 file="${bwda.config.sdk.dir}/@{ear}-@{archive}-sdk.properties" />
+								<!-- gvar properties for particular archive for any ear across all environments -->
+								<bwunit:loadServiceSDKProperties ear="@{ear}"
+								                                 archive="@{archive}"
+								                                 file="${bwda.config.sdk.dir}/@{archive}-sdk.properties" />
+								<!-- gvar properties for particular ear in a specific environments -->
+								<bwunit:loadServiceSDKProperties ear="@{ear}"
+								                                 archive="@{archive}"
+								                                 file="${bwda.config.sdk.dir}/${bwda.deployment.domain}-@{ear}-sdk.properties" />
+								<!-- gvar properties for particular ear across all environments -->
+								<bwunit:loadServiceSDKProperties ear="@{ear}"
+								                                 archive="@{archive}"
+								                                 file="${bwda.config.sdk.dir}/@{ear}-sdk.properties" />
+								<!-- gvar properties for all ears in a specific environments -->
+								<bwunit:loadServiceSDKProperties ear="@{ear}"
+								                                 archive="@{archive}"
+								                                 file="${bwda.config.sdk.dir}/${bwda.deployment.domain}-sdk.properties" />
+								<!-- gvar properties for all ears across environments -->
+								<bwunit:loadServiceSDKProperties ear="@{ear}"
+								                                 archive="@{archive}"
+								                                 file="${bwda.config.sdk.dir}/sdk.properties" />
+
+							</sequential>
+						</for>
+					</sequential>
+				</for>
+				<!-- gvar properties for particular ear in a specific environments -->
+				<bwunit:loadSDKProperties ear="@{ear}"
+				                          file="${bwda.config.sdk.dir}/${bwda.deployment.domain}-@{ear}-sdk.properties" />
+				<!-- gvar properties for particular ear across all environments -->
+				<bwunit:loadSDKProperties ear="@{ear}" file="${bwda.config.sdk.dir}/@{ear}-sdk.properties" />
+				<!-- gvar properties for all ears in a specific environments -->
+				<bwunit:loadSDKProperties ear="@{ear}"
+				                          file="${bwda.config.sdk.dir}/${bwda.deployment.domain}-sdk.properties" />
+				<!-- gvar properties for all ears across environments -->
+				<bwunit:loadSDKProperties ear="@{ear}" file="${bwda.config.sdk.dir}/sdk.properties" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-load-config" depends="-load-deployment-properties,-load-global-variables,-load-sdk-properties" />
+
+	<target name="configure-ear" depends="-load-config">
+		<for param="ear">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<propertyset id="bwda.config.@{ear}.gvar">
+					<propertyref prefix="bwda.gvar.@{ear}." />
+					<globmapper from='bwda.gvar.@{ear}.*' to='*' />
+				</propertyset>
+				<propertyset id="bwda.config.@{ear}.sdk">
+					<propertyref prefix="bwda.sdk.@{ear}." />
+					<globmapper from='bwda.sdk.@{ear}.*' to='*' />
+				</propertyset>
+				<propertyset id="bwda.config.@{ear}.deploy">
+					<propertyref prefix="bwda.deploy.@{ear}." />
+					<globmapper from='bwda.deploy.@{ear}.*' to='*' />
+				</propertyset>
+				<bwunit:PersitedInputVA property="bwda.config.fail.on.unset.global.variables.@{ear}"
+				                        message="The build should fail if there are global variables in '@{ear}' that have not been set."
+				                        validargs="true,false"
+				                        defaultValue="false" />
+				<bwunit:PersitedInputVA property="bwda.config.fail.on.unknown.sdk.properties.@{ear}"
+				                        message="The build should fail if Adapter SDK properties missing from '@{ear}' have not been set."
+				                        validargs="true,false"
+				                        defaultValue="false" />
+				<echo level="info">Creating configuration from template '${bwda.@{ear}.config.template}'</echo>
+				<property name="bwda.@{ear}.config" value="${bwda.build.dir}/deployable/@{ear}.xml" />
+				<tibant:configure-ear xml="${bwda.@{ear}.config.template}"
+				                      out="${bwda.@{ear}.config}"
+				                      global-variables-refid="bwda.config.@{ear}.gvar"
+				                      adapter-sdk-properties-refid="bwda.config.@{ear}.sdk"
+				                      deployment-properties-refid="bwda.config.@{ear}.deploy"
+				                      fail-on-unset-global-variables="${bwda.config.fail.on.unset.global.variables.@{ear}}"
+				                      fail-on-unknown-adapter-sdk-properties="${bwda.config.fail.on.unknown.sdk.properties.@{ear}}"
+				                      working-dir="${bwda.build.dir}/working" />
+			</sequential>
+		</for>
+	</target>
+
+
+	<target name="-retrieve-deployable" depends="-load-ant-contrib">
+		<delete dir="${bwda.build.dir}/deployable" includes="*.ear" />
+		<for param="archive">
+			<fileset dir="${bwda.bw.src.dir}">
+				<include name="**/*.archive" />
+			</fileset>
+			<sequential>
+				<pathconvert property="bwda.@{archive}.name" dirsep="/">
+					<path>
+						<pathelement location="@{archive}" />
+					</path>
+					<chainedmapper>
+						<filtermapper>
+							<replacestring from="\" to="/" />
+						</filtermapper>
+						<regexpmapper from="${ant.file.dir.normalised}/${bwda.bw.project.path}(.*)\.archive" to="\1" />
+					</chainedmapper>
+				</pathconvert>
+				<basename file="@{archive}" suffix=".archive" property="bwda.@{archive}.basename" />
+				<mkdir dir="${bwda.build.dir}/deployable" />
+				<copy overwrite="true"
+				      todir="${bwda.build.dir}/deployable"
+				      file="${bwda.build.dir}/${bwda.@{archive}.basename}.ear" />
+			</sequential>
+		</for>
+		<fileset id="bwda.deployable.set" dir="${bwda.build.dir}/deployable" includes="*.ear" />
+	</target>
+
+
+	<target name="deploy"
+	        depends="-get-deployment-domain,-load-ant-contrib,-get-deployable-ears-set"
+	        description="Deploys the ears to the specified environment">
+
+		<!-- The following steps upload the new ear and config
+	        and deploys them without stopping the engine. The engine is then bounced
+	        to pick up the new code and config.
+	        Why so complicated and why not just deploy?
+	        Doing it this way keeps the engine outage to a minimum. While the new code
+	        and ear are being uploaded and deployed, then engine is still doing it's job,
+	        it's only after all that is done that the engine get's stopped and started. -->
+		<for param="domain">
+			<propertyset>
+				<propertyref name="bwda.deployment.domain" />
+			</propertyset>
+			<sequential>
+				<input addproperty="bwda.admin.@{domain}.username"
+				       message="What is your TIBCO Administrator Username for @{domain}?" />
+				<input addproperty="bwda.admin.@{domain}.password"
+				       message="What is your TIBCO Administrator Password for @{domain}?" />
+				<for param="ear">
+					<resources refid="bwda.deployable.ears" />
+					<sequential>
+
+						<tibant:administrator-config domain="${bwda.deployment.domain}"
+						                             username="${bwda.admin.@{domain}.username}"
+						                             password="${bwda.admin.@{domain}.password}">
+							<tibant:app name="${ant.project.name}"
+							            ear="${bwda.build.dir}/deployable/@{ear}.ear"
+							            xml="${bwda.build.dir}/deployable/@{ear}.xml" />
+						</tibant:administrator-config>
+						<tibant:administrator-deploy domain="@{domain}"
+						                             username="${bwda.admin.@{domain}.username}"
+						                             password="${bwda.admin.@{domain}.password}"
+						                             nostop="true"
+						                             nostart="true">
+							<tibant:app name="@{ear}" />
+						</tibant:administrator-deploy>
+					</sequential>
+				</for>
+				<for param="ear">
+					<resources refid="bwda.deployable.ears" />
+					<sequential>
+						<tibant:administrator-stop domain="${bwda.deployment.domain}"
+						                           username="${bwda.admin.@{domain}.username}"
+						                           password="${bwda.admin.@{domain}.password}">
+							<tibant:app name="${ant.project.name}" />
+						</tibant:administrator-stop>
+						<tibant:administrator-start domain="${bwda.deployment.domain}"
+						                            username="${bwda.admin.@{domain}.username}"
+						                            password="${bwda.admin.@{domain}.password}">
+							<tibant:app name="${ant.project.name}" />
+						</tibant:administrator-start>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+</project>

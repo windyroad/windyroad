@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bwunit"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:bwunit="org.windyroad.bwunit"
+         xmlns:bwuc="org.windyroad.bwunit.custom"
+         xmlns:tac="org.windyroad.tibant.custom">
+
+	<import file="ivy-util.xml" />
+
+	<property name="bwunit.home" location="${bwda.lib.dir.location}/BWUnit-${bwda.dep.bwunit.revision}" />
+	<echo level="info">Importing ${bwunit.home}/util/bwunit.xml</echo>
+	<import file="file:///${bwunit.home}/util/bwunit.xml" />
+
+
+	<macrodef name="run-bwunit-tests"
+	          uri="org.windyroad.bwunit.custom"
+	          description="runs the bwunit tests and by default fails the build on the first error">
+		<attribute name="failonerror" default="true" />
+		<sequential>
+			<bwunit:run-tests dir="${bwda.bw.src.dir}"
+			                  project="${bwda.bw.project.name}"
+			                  results-xml="${bwda.results.bwunit.xml}"
+			                  results-html="${bwda.results.bwunit.html}"
+			                  results-junit="${bwda.results.junit.xml}"
+			                  results-emma="${bwda.results.emma.xml}"
+			                  force="${bwunit.force}"
+			                  failonerror="@{failonerror}"
+			                  errorproperty="unstable"
+			                  license="${bwunit.license}"
+			                  properties-refid="bwengine.properties"
+			                  create-dtl-file="true"
+			                  custom-cp-ext-prepend="%EXISTING-VALUE%${path.separator}${bwda.dep.h2.h2.jar}"
+			                  working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+			<fail message="BWUnit test run did not produce a test report">
+				<condition>
+					<not>
+						<available file="${bwda.results.bwunit.xml}" />
+					</not>
+				</condition>
+			</fail>
+			<fail message="BWUnit test run did not produce a junit compatible test report">
+				<condition>
+					<not>
+						<available file="${bwda.results.junit.xml}" />
+					</not>
+				</condition>
+			</fail>
+			<fail message="BWUnit test run did not produce a html test report">
+				<condition>
+					<not>
+						<available file="${bwda.results.bwunit.html}" />
+					</not>
+				</condition>
+			</fail>
+			<fail message="BWUnit test run did not produce a emma compatible coverage report">
+				<condition>
+					<not>
+						<available file="${bwda.results.emma.xml}" />
+					</not>
+				</condition>
+			</fail>
+		</sequential>
+	</macrodef>
+
+	<presetdef name="report-bwunit-tests"
+	           uri="org.windyroad.bwunit.custom"
+	           description="runs the bwunit tests and reports on all tests passed and failed.">
+		<bwuc:run-bwunit-tests failonerror="false" />
+	</presetdef>
+
+	<target name="-load-ant-contrib" unless="ant-contrib.loaded">
+		<tibant:load-ant-contrib />
+		<property name="ant-contrib.loaded" value="true" />
+	</target>
+
+	<target name="-init" />
+
+	<target name="-init-tests" depends="-init,retrieve-test">
+		<loadfile property="bwunit.license" srcfile="${bwda.dep.bwunit.BWUnit.license}" />
+
+		<property name="bw.platform.services.retreiveresources.Httpport" value="8010" />
+
+		<propertyset id="bwengine.properties" dynamic="true">
+			<propertyref name="bw.platform.services.retreiveresources.Httpport" />
+			<propertyset>
+				<propertyref prefix="engine.properties." />
+				<mapper type="glob" from="engine.properties.*" to="*" />
+			</propertyset>
+		</propertyset>
+		<property name="BWUnit/HTTP-service-port" value="5454" />
+
+		<propertyset id="bwengine.gvars" dynamic="true">
+			<propertyref name="BWUnit/HTTP-service-port" />
+			<propertyset>
+				<propertyref prefix="engine.gvars." />
+				<mapper type="glob" from="engine.gvars.*" to="*" />
+			</propertyset>
+		</propertyset>
+	</target>
+
+	<target name="run-functional-tests" description="Run BWUnit tests" depends="-load-ant-contrib,-init-tests">
+		<bwuc:run-bwunit-tests />
+	</target>
+
+	<target name="report-functional-tests"
+	        description="Run BWUnit tests and create a JUnit compatible report"
+	        depends="-load-ant-contrib,-init-tests">
+		<bwuc:report-bwunit-tests />
+	</target>
+
+	<macrodef name="check-dir-exists"
+	          uri="org.windyroad.tibant.custom"
+	          description="Checks whether a directory exists.">
+		<attribute name="dir" />
+		<attribute name="reportonly" default="false" />
+		<sequential>
+			<if>
+				<not>
+					<available file="@{dir}" />
+				</not>
+				<then>
+					<if>
+						<istrue value="@{reportonly}" />
+						<then>
+							<echo message="WARN: The directory '@{dir}' does not exist!" />
+						</then>
+						<else>
+							<fail message="ERROR: The directory '@{dir}' does not exist!" />
+						</else>
+					</if>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="check-tibco-config"
+	          uri="org.windyroad.tibant.custom"
+	          description="Checks whether tibco home directories exist.">
+		<attribute name="reportonly" default="false" />
+		<sequential>
+			<propertyselector property="tmp_tibco_dirs" match="tibco\.home\.(.*)" select="\1" />
+			<for list="${tmp_tibco_dirs}" param="id">
+				<sequential>
+					<if>
+						<not>
+							<equals arg1="@{id}" arg2="jre" />
+						</not>
+						<then>
+							<tac:check-dir-exists dir="${tibco.home.@{id}}" reportonly="@{reportonly}" />
+						</then>
+					</if>
+				</sequential>
+			</for>
+		</sequential>
+	</macrodef>
+
+	<target name="report-tibco-config"
+	        depends="-load-ant-contrib"
+	        description="Reports whether the tibco.home.* properties have been correctly configured.">
+		<tac:check-tibco-config reportonly="true" />
+	</target>
+
+	<target name="-assert-tibco-config"
+	        description="Validates whether the tibco.home.* properties have been correctly configured.">
+		<tac:check-tibco-config />
+	</target>
+
+
+	<target name="validate" depends="-load-ant-contrib">
+		<bwunit:validate-project dir="${bwda.bw.src.dir}"
+		                         project="${bwda.bw.project.name}"
+		                         max-warnings="${bwda.max.warnings}"
+		                         expected-errors="${bwda.expected.errors}"
+		                         create-dtl-file="true"
+		                         working-dir="${bwda.build.dir}/working/${ant.project.name}"
+		                         out="${bwda.build.dir}/validation.log" />
+	</target>
+
+	<target name="ear" depends="-load-ant-contrib,validate">
+		<tibant:build-ear ear="${bwda.bw.archive}"
+		                  dir="${bwda.bw.src.dir}"
+		                  project="${bwda.bw.project.name}"
+		                  out="${bwda.build.dir}/${ant.project.name}.ear"
+		                  validate="false"
+		                  create-dtl-file="true"
+		                  working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${bwda.build.dir}" />
+	</target>
+
+
+	<target name="designer"
+	        depends="-load-ant-contrib,-assert-tibco-config"
+	        description="Launch ${ant.project.name} in TIBCO Designer">
+		<bwunit:designer dir="${bwda.bw.src.dir}"
+		                 project="${bwda.bw.project.name}"
+		                 create-dtl-file="true"
+		                 custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.dep.h2.h2.jar}"
+		                 working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+	</target>
+
+	<target name="clean" description="">
+		<delete dir="${bwda.build.dir}" verbose="true" />
+		<delete verbose="true">
+			<fileset dir="${bwda.bw.src.dir}" includes="${bw.project.name}/.designtimelibs" />
+		</delete>
+	</target>
+
+	<target name="clean-lib" description="">
+		<delete dir="${bwda.lib.dir.location}" verbose="true" />
+	</target>
+
+	<target name="clean-all" depends="clean,clean-lib" description="" />
+
+	<target name="build" depends="ear" description="Build binaries" />
+
+	<!-- for pre-commit, we first validate the project. If all that is good, then it will run the unit tests -->
+	<target name="pre-commit" description="Run pre-commit tests" depends="validate,run-functional-tests">
+	</target>
+
+	<!-- for post-commit, we first validate the the project. If all that is good, then it will report on the the unit tests -->
+	<target name="post-commit" description="Run post-commit tests" depends="validate,report-functional-tests">
+	</target>
+</project>

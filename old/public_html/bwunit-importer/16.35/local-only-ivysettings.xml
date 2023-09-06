@@ -1,0 +1,19 @@
+<ivysettings>
+    <property name="ivy.local.default.root"
+    value="${ivy.default.ivy.user.dir}/local" override="false"/>
+    <property name="ivy.shared.default.root"
+    value="${ivy.default.ivy.user.dir}/shared" override="false"/>
+    <settings defaultResolver="default" />
+    <caches lockStrategy="artifact-lock" defaultCacheDir="${ivy.default.ivy.user.dir}/cache"/>
+    <resolvers>
+    </resolvers>
+    <include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
+    <resolvers>
+        <chain name="default" returnFirst="true">
+            <resolver ref="local"/>
+        </chain>
+    </resolvers>
+    <modules>
+        <module organisation="org.windyroad" name="*" resolver="${bwda.mirror.repo}"/>
+    </modules>
+</ivysettings>

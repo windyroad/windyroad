@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ivy-build"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:wrivy="org.windyroad.ivy-util"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-common.xml" />
+
+
+	<target name="build">
+		<fail message="This target should be overridden in the provideded build-targets.xml" />
+	</target>
+
+	<target name="publish-snapshot"
+	        depends="-determine-snapshot-version,build"
+	        description="Publish the built EAR files and PROJLIB files to an artifact repository as a snapshot release">
+		<echo level="info"
+		      message="publishing ${ant.project.name} to 'snapshots' with version '${bwda.snapshots.new.revision}'..." />
+		<ivy:publish artifactspattern="${bwda.build.dir}/[artifact].[ext]"
+		             resolver="snapshots"
+		             pubrevision="${bwda.snapshots.new.revision}"
+		             overwrite="false"
+		             forcedeliver="true"
+		             update="false"
+		             replacedynamicrev="false"
+		             conf="default,dist"
+		             settingsRef="${bwda.ivy.settings.id}"
+		             haltonmissing="true"
+		             status="integration">
+		</ivy:publish>
+
+		<echo level="info" message="...published" />
+		<echoproperties destfile="${bwda.build.dir}/pubrevision.properties">
+			<propertyset>
+				<propertyref name="bwda.snapshots.new.revision" />
+			</propertyset>
+		</echoproperties>
+	</target>
+
+    <target name="-create-ivy-file" depends="-load-ant-contrib,-get-module-org">
+        <!-- create ivy file pub targets based on .archive and .libbuilder files in project -->
+        <property name="ivy.dep.file" value="${bwda.build.dir}/generated-ivy.xml" />
+        <echo file="${bwda.build.dir}/generated-ivy.xml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"&gt;
+    &lt;info
+        organisation="$${ivy.organisation}"
+        module="$${ant.project.name}"
+        status="release"&gt;
+        &lt;extends 
+            organisation="$${ivy.organisation}"
+            module="$${ant.project.name}"
+            revision="latest.integration"
+            location="$${basedir}/ivy.xml"/&gt;
+        &lt;extends 
+            organisation="not.set"
+            module="$${ant.project.name}"
+            revision="latest.integration"
+            location="$${basedir}/$${bwda.importer.dir}/ivy.xml"/&gt;
+    &lt;/info&gt;
+    &lt;publications&gt;</echo>
+        <for param="archive">
+            <fileset dir="${bwda.bw.project.path}" includes="**/*.archive" />
+            <sequential>
+                <basename file="@{archive}" property="@{archive}.basename" suffix=".archive" />
+                <echo file="${bwda.build.dir}/generated-ivy.xml" append="true">
+        &lt;artifact name="${@{archive}.basename}" type="ear" conf="dist" /&gt;</echo>
+            </sequential>
+        </for>
+        <for param="library">
+            <fileset dir="${bwda.bw.project.path}" includes="**/*.libbuilder" />
+            <sequential>
+                <basename file="@{library}" property="@{library}.basename" suffix=".libbuilder" />
+                <echo file="${bwda.build.dir}/generated-ivy.xml" append="true">
+        &lt;artifact name="${@{library}.basename}" type="projlib" conf="default" /&gt;</echo>
+            </sequential>
+        </for>
+        <echo file="${bwda.build.dir}/generated-ivy.xml" append="true">
+    &lt;/publications&gt;
+&lt;/ivy-module&gt;</echo>
+
+        <!-- now create an ivy file for users to enter the dependencies into -->
+        <if>
+            <not>
+                <available file="ivy.xml" />
+            </not>
+            <then>
+                <echo file="ivy.xml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"&gt;
+    &lt;info
+        organisation="$${ivy.organisation}"
+        module="$${ant.project.name}"
+        status="release"&gt;
+    &lt;/info&gt;
+    &lt;dependencies&gt;
+    &lt;/dependencies&gt;
+&lt;/ivy-module&gt;</echo>
+            </then>
+        </if>
+    </target>
+
+    
+
+</project>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="designer"
+         name="BWUnitImporter"
+         >
+
+
+	<import file="properties.xml" />
+
+	<mkdir dir="${bwda.importer.dir}"/>
+	<get src="http://windyroad.com.au/bwunit-importer/auto-loader.xml" dest="${bwda.importer.dir}/auto-loader.xml"/>	
+	<get src="http://windyroad.com.au/bwunit-importer/ivy-util.xml" dest="${bwda.importer.dir}/ivy-util.xml"/>	
+        <get src="http://windyroad.com.au/bwunit-importer/properties.xml" dest="${bwda.importer.dir}/properties.xml"/>
+	<get src="http://windyroad.com.au/bwunit-importer/ivy.xml" dest="${bwda.importer.dir}/ivy.xml"/>
+	<get src="http://windyroad.com.au/bwunit-importer/ivysettings.xml" dest="${bwda.importer.dir}/ivysettings.xml"/>
+
+	<ant antfile="${bwda.importer.dir}/auto-loader.xml"
+	     target="retrieve"
+	     inheritall="true"
+	     inheritrefs="true" />
+	<echo>LOADING: ${bwda.build.dir}/dependencies.properties</echo>
+	<property file="${bwda.build.dir}/dependencies.properties" />
+
+	<import file="targets.xml" />
+
+</project>

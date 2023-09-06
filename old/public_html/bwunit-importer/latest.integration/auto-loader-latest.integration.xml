@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bwda-auto-loader">
+
+	<import file="ivy-bootstrap.xml" />
+
+	<!-- we don't want to unzip every time, so we check to see if it's been unzipped -->
+	<target name="-check-bwda-unpacked"
+	        depends="ivy-bootstrap.-retrieve">
+		<condition property="bwda-unpacked">
+			<available file="${ivy.lib.dir.location}/bwunit-${bwda.new.dep.bwunit.revision}/BWUnit.jar" />
+		</condition>
+	</target>
+
+	<!-- In order to use BWDA we must unzip it -->
+	<target name="-unpack-bwda" depends="-check-bwda-unpacked" unless="bwda-unpacked">
+		<unzip dest="${ivy.lib.dir.location}/BWUnit-${bwda.new.dep.bwunit.revision}" src="${bwda.new.dep.bwunit.BWUnit.zip}" overwrite="true" />
+	</target>
+
+	<!-- In order to have BWDA unpacked when with retrieve the default dependencies, we overrite the `retrieve`
+	     target so that it retrives the deps and unpacks BWDA -->
+	<target name="-retrieve" description="retrieve dependancies with ivy" depends="-unpack-bwda">
+	</target>
+
+</project>

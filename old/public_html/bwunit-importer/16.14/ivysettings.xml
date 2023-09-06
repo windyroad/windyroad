@@ -1,0 +1,38 @@
+<ivysettings>
+    <property name="wr.repo.basepath"
+    value="http://windyroad.artifactoryonline.com/windyroad" />
+    <property name="wr.repo.artifact.pattern"
+    value="[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" />
+    <property name="wr.repo.ivy.pattern"
+    value="[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" />
+    <property name="ivy.local.default.root"
+    value="${ivy.default.ivy.user.dir}/local" override="false"/>
+    <property name="ivy.shared.default.root"
+    value="${ivy.default.ivy.user.dir}/shared" override="false"/>
+    <credentials host="windyroad.artifactoryonline.com" realm="Artifactory Realm"
+    username="${wr.repo.username}" passwd="${wr.repo.password}" />
+    <settings defaultResolver="default.${bwda.ivy.settings.id}" />
+    <caches lockStrategy="artifact-lock" defaultCacheDir="${ivy.default.ivy.user.dir}/cache"/>
+    <resolvers>
+        <chain name="public" >
+            <url name="windyroad-licenses" m2compatible="false">
+                <artifact pattern="${wr.repo.basepath}/licenses/[organisation]/[module]/${bwunit.license.company}/${bwunit.license.department}/[revision]/[type]s/${bwunit.license.holder}-[artifact]-[revision].[ext]" />
+                <ivy pattern="${wr.repo.basepath}/licenses/[organisation]/[module]/${bwunit.license.company}/${bwunit.license.department}/[revision]/[type]s/${bwunit.license.holder}-[artifact]-[revision].[ext]" />
+            </url>
+            <url name="windyroad-artifacts" m2compatible="true">
+                <artifact pattern="${wr.repo.basepath}/repo/${wr.repo.artifact.pattern}" />
+                <ivy pattern="${wr.repo.basepath}/repo/${wr.repo.ivy.pattern}" />
+            </url>
+        </chain>
+    </resolvers>
+    <include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
+    <resolvers>
+        <chain name="default.${bwda.ivy.settings.id}" returnFirst="true">
+            <resolver ref="local"/>
+            <resolver ref="public"/>
+        </chain>
+    </resolvers>
+    <modules>
+        <module organisation="org.windyroad" name="*" resolver="public"/>
+    </modules>
+</ivysettings>

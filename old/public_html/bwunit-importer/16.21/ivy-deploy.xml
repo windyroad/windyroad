@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ivy-deploy"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:wrivy="org.windyroad.ivy-util"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-common.xml" />
+
+	<target name="-check-determine-current-config-version-needed">
+		<condition property="skip.determine.current.config.version">
+			<isset property="bwda.pipeline.${bwda.deployment.domain}.config.version" />
+		</condition>
+	</target>
+
+
+	<target name="-retrieve-config"
+	        depends="-check-determine-current-config-version-needed,-determine-current-config-version">
+		<for param="domain">
+			<propertyset>
+				<propertyref name="bwda.deployment.domain" />
+			</propertyset>
+			<sequential>
+				<fail message="Please publish a configuration for '${ivy.organisation}.${ant.project.name}-${bwda.pipeline.version}' for the '@{domain}' Domain">
+					<condition>
+						<equals arg1="none" arg2="${bwda.config.revision}" />
+					</condition>
+				</fail>
+				<input addproperty="bwda.pipeline.@{domain}.config.version"
+				       message="What version of '${ivy.organisation}.${ant.project.name}-@{domain}' configuration are we deploying?"
+				       defaultvalue="${bwda.config.revision}" />
+				<mkdir dir="${bwda.build.dir}/deployable" />
+				<ivy:retrieve organisation="${ivy.organisation}"
+				              module="${ant.project.name}-@{domain}"
+				              revision="${bwda.pipeline.@{domain}.config.version}"
+				              inline="true"
+				              transitive="true"
+				              pattern="${bwda.build.dir}/deployable/[artifact].[ext]"
+				              settingsRef="bwda.config"
+				              setId="bwda.config.set" />
+			</sequential>
+		</for>
+		<var unset="true" name="skip.determine.current.config.version"/>
+	</target>
+
+</project>
