@@ -1,0 +1,52 @@
+/* Copyright (C)2007 Windy Road
+  This work is licensed under a Creative Commons Attribution 2.5 License.  See http://creativecommons.org/licenses/by/2.5/au/
+  */
+body {
+  font-family: 'verdana', sans-serif;
+  margin: 0px;
+  padding: 0px;
+  background: #b4b4b4;
+}
+
+h1 {
+  text-align: center;
+  margin: 0px;
+  padding: 0.5ex 0.5em;
+  background: url('images/top.png') top center repeat-x;
+}
+
+h1 a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+}
+
+a:hover {
+  color: white;
+}
+
+p,
+h2 {
+  margin: 0.5ex 0.5em;
+  padding: 0px;
+}
+
+a img {
+  border: none;
+}
+
+#footer {
+  background: url('images/bottom.png') bottom center repeat-x;
+  text-align: right;
+  padding: 0.5ex 0.5em;
+  padding-bottom: 15px;
+  font-size: 75%;
+  font-variant: small-caps;
+}
+
+#footer img {
+  position: relative;
+  top: 3px;
+}

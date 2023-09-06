@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>JAHA @ Windy Road</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="java applets javascript jaha" />
+	<link rel="stylesheet" href="resources/style.css" type="text/css" />
+	<script type="text/javascript" src="resources/JAHA.js"></script>
+	<script type="text/javascript" src="resources/HelloWorld.js"></script>
+</head>
+<body>
+	<h1><a href="http://windyroad.org/2007/05/02/css-lightbox-poc/">JAHA</a></h1>
+	<p>This is a demonstration of the <acronymn title="Javascript And Hidden Apples">JAHA</acronymn> technique</p>
+
+<p id="result">Sorry, both Java and Javascript must be enabled for this demonstration</p>
+<button disabled="disabled" id="getMsg">applet.getMsg()</button><br/>
+<button disabled="disabled" id="sendMsgUsingEval">applet.sendMsgUsingEval()</button><br/>
+<button disabled="disabled" id="sendMsgUsingCall">applet.sendMsgUsingCall()</button><br/>
+<button disabled="disabled" id="sendMsgWithTwoArgsUsingCall">applet.sendMsgWithTwoArgsUsingCall()</button><br/>
+<button disabled="disabled" id="runTests">runTests</button><br/>
+<table>
+<thead><tr><th>Description</th><th>Result</th></thead>
+<tbody id="testResults"></tbody>
+</table>
+<applet id="test" code="org.windyroad.jaha.HelloWorld.class"
+	style="width: 100px; height: 100px;"
+	codebase="http://windyroad.org/static/jaha/resources"
+	mayscript="true">
+	<param name="archive" value="org.windyroad.jaha.HelloWorld-0.0.0.jar"/>
+</applet>
+	<div id="footer">
+		<a rel="license" href="http://creativecommons.org/licenses/by/2.5/au/"><img alt="Creative Commons License" src="resources/images/cc-lic.png" /></a> : 
+		<a href="http://windyroad.org">JAHA</a>
+		by
+		<a href="http://windyroad.org"><img src="resources/images/windyroad.png" alt="Windy Road" /></a>
+	</div>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+	</script>
+	<script type="text/javascript">
+	_uacct = "UA-808591-1";
+	if( window.urchinTracker ) {
+		urchinTracker();
+	}
+	</script>
+</body>
+</html>
