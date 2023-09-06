@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BWDABuild"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:bwda="au.com.windyroad.bwda"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors" xmlns:au="antlib:org.apache.ant.antunit">
+
+	<import file="ivy-build.xml" />
+
+
+	<target name="-init" depends="-retrieve">
+		<mkdir dir="${bwda.build.dir}" />
+
+		<propertyset id="bwengine.properties" dynamic="true">
+			<propertyset>
+				<propertyref prefix="engine.properties." />
+				<mapper type="glob" from="engine.properties.*" to="*" />
+			</propertyset>
+		</propertyset>
+
+		<propertyset id="bwengine.gvars" dynamic="true">
+			<propertyset>
+				<propertyref prefix="engine.gvars." />
+				<mapper type="glob" from="engine.gvars.*" to="*" />
+			</propertyset>
+		</propertyset>
+
+		<for param="file">
+			<fileset dir="${bwda.aliases.dir}">
+				<include name="*.jar" />
+				<include name="*.projlib" />
+			</fileset>
+			<sequential>
+				<basename file="@{file}" property="engine.alias.@{file}" />
+				<property name="engine.aliases.${engine.alias.@{file}}" location="@{file}" />
+			</sequential>
+		</for>
+
+		<propertyset id="bwengine.aliases" dynamic="true">
+			<propertyref prefix="engine.aliases." />
+			<mapper type="glob" from="engine.aliases.*" to="*" />
+		</propertyset>
+
+		<pathconvert property="bwda.bwengine.classpath">
+			<fileset dir="${bwda.classpath.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</pathconvert>
+
+		<property name="bwda.bw.custom-cp-ext" value="${bwda.bwengine.classpath}${path.separator}%EXISTING-VALUE%" />
+
+	</target>
+
+	<target name="validate" depends="-init" description="Validates the BW project" unless="bwda.skip.validation">
+		<!-- confirm number of validation errors -->
+		<bwda:PersistedInput property="bwda.expected.errors"
+		                     message="When validating your BW project, how many errors are reported?"
+		                     defaultvalue="0" />
+
+		<!-- confirm number of validation warnings -->
+		<bwda:PersistedInput property="bwda.max.warnings"
+		                     message="When validating your BW project, how many warnings are reported?"
+		                     defaultvalue="0" />
+		<tibant:validate-project dir="${bwda.bw.src.dir}"
+		                         project="${bwda.bw.project.name}"
+		                         max-warnings="${bwda.max.warnings}"
+		                         expected-errors="${bwda.expected.errors}"
+		                         create-dtl-file="true"
+		                         aliases-refid="bwengine.aliases"
+		                         custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+		                         working-dir="${bwda.build.dir}/working/${ant.project.name}"
+		                         out="${bwda.build.dir}/validation.log" />
+	</target>
+
+	<target name="ear" depends="validate" description="Builds the EARs for the BW project">
+		<for param="archive">
+			<fileset dir="${bwda.bw.project.path}">
+				<include name="**/*.archive" />
+			</fileset>
+			<sequential>
+				<pathconvert property="bwda.@{archive}.name" dirsep="/">
+					<path>
+						<pathelement location="@{archive}" />
+					</path>
+					<chainedmapper>
+						<filtermapper>
+							<replacestring from="\" to="/" />
+						</filtermapper>
+						<regexpmapper from="\Q${bwda.bw.project.path.normalised}\E(.*)\.archive" to="\1" />
+					</chainedmapper>
+				</pathconvert>
+				<basename file="@{archive}" suffix=".archive" property="bwda.@{archive}.basename" />
+				<mkdir dir="${bwda.build.dir}" />
+				<tibant:build-ear ear="${bwda.@{archive}.name}"
+				                  dir="${bwda.bw.src.dir}"
+				                  project="${bwda.bw.project.name}"
+				                  out="${bwda.build.dir}/${bwda.@{archive}.basename}.ear"
+				                  validate="false"
+				                  create-dtl-file="true"
+				                  aliases-refid="bwengine.aliases"
+				                  custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+				                  working-dir="${bwda.build.dir}/working/${bwda.bw.project.name}" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="projlib" depends="validate" description="Builds the Design Time Libraries for the BW project">
+		<for param="archive">
+			<fileset dir="${bwda.bw.project.path}">
+				<include name="**/*.libbuilder" />
+			</fileset>
+			<sequential>
+				<pathconvert property="bwda.@{archive}.name" dirsep="/">
+					<path>
+						<pathelement location="@{archive}" />
+					</path>
+					<chainedmapper>
+						<filtermapper>
+							<replacestring from="\" to="/" />
+						</filtermapper>
+						<regexpmapper from="\Q${bwda.bw.project.path.normalised}\E(.*)\.libbuilder" to="\1" />
+					</chainedmapper>
+				</pathconvert>
+				<basename file="@{archive}" suffix=".libbuilder" property="bwda.@{archive}.basename" />
+				<tibant:build-library lib="${bwda.@{archive}.name}"
+				                      dir="${bwda.bw.src.dir}"
+				                      project="${bwda.bw.project.name}"
+				                      out="${bwda.build.dir}/${bwda.@{archive}.basename}.projlib"
+				                      validate="false"
+				                      create-dtl-file="true"
+				                      aliases-refid="bwengine.aliases"
+				                      custom-cp-ext="%EXISTING-VALUE%${path.separator}${bwda.bwengine.classpath}"
+				                      working-dir="${bwda.build.dir}/working/${bwda.bw.project.name}" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-developer" depends="-load-ant-contrib,-get-gvar-config-dir,-get-sdk-config-dir">
+		<bwda:load-env-properties domain="LOCAL" />
+	</target>
+
+	<target name="designer"
+	        depends="-init,-developer,-retrieve"
+	        description="Launch ${ant.project.name} in TIBCO Designer">
+		<tibant:designer dir="${bwda.bw.src.dir}"
+		                 project="${bwda.bw.project.name}"
+		                 create-dtl-file="true"
+		                 custom-cp-ext="${bwda.bw.custom-cp-ext}"
+		                 aliases-refid="bwengine.aliases"
+		                 global-variables-refid="bwengine.gvars"
+		                 properties-refid="bwengine.properties"
+		                 working-dir="${bwda.build.dir}/working/${ant.project.name}" />
+	</target>
+
+	<target name="clean" description="Remove generated files">
+		<delete dir="${bwda.build.dir}" verbose="true" />
+		<delete verbose="true">
+			<fileset dir="${bwda.bw.src.dir}" includes="${bwda.bw.project.name}/.designtimelibs" />
+		</delete>
+	</target>
+
+	<target name="build" depends="ear,projlib" description="Build binaries" />
+
+	<target name="obfuscate-input"
+	        depends="-load-ant-contrib"
+	        description="Takes a password as input and outputs an obfuscated result.">
+		<tempfile destdir="${bwda.build.dir}" property="bwda.obfuscate.input.file" deleteonexit="true" />
+		<tempfile destdir="${bwda.build.dir}" property="bwda.obfuscate.output.file" deleteonexit="true" />
+		<input addproperty="bwda.obfuscate.input"
+		       message="bwda.obfuscate.input: What is the password you would like to obfuscate?" />
+		<echo file="${bwda.obfuscate.input.file}">bwda.obfuscate.output=#!${bwda.obfuscate.input}</echo>
+		<tibant:obfuscate src="${bwda.obfuscate.input.file}" dest="${bwda.obfuscate.output.file}" />
+		<property file="${bwda.obfuscate.output.file}" />
+		<echo>Obfuscated: ${bwda.obfuscate.output}</echo>
+	</target>
+
+
+	<macrodef name="run-tibant-selfcheck-tests"
+	          uri="au.com.windyroad.bwda"
+	          description="runs the antunit tests and by default fails the build on the first error">
+		<attribute name="phase" />
+		<attribute name="includes" default="*.xml" />
+		<attribute name="failonerror" default="true" />
+		<attribute name="errorproperty" default="unstable" />
+		<sequential>
+			<mkdir dir="${bwda.build.dir}/@{phase}" />
+			<!-- antunit's fail-on-error doesn't work the way I'd like. It does fail the build, but only after all of
+	            the tests have been executed. By running the tests as seperate antunit executions, it will fail the build
+	            after the first test file has failed -->
+			<property name="${bwda.ant.test.src.dir}" location="src/test/ant"/>
+			<for param="antunit">
+				<fileset dir="${bwda.ant.test.src.dir}/@{phase}" includes="@{includes}" />
+				<sequential>
+					<au:antunit failonerror="@{failonerror}" errorproperty="@{errorproperty}">
+						<propertyset>
+							<propertyref name="config.filename" />
+							<propertyref regex=".*\.loaded" />
+							<propertyref name="bw.platform.services.retreiveresources.Httpport" />
+							<propertyref name="ServicePort" />
+							<propertyref name="administrator.user" />
+							<propertyref name="administrator.pw" />
+							<propertyref name="bwda.test.domain" />
+						</propertyset>
+						<path>
+							<pathelement location="@{antunit}" />
+						</path>
+						<au:plainlistener logLevel="info" />
+						<au:xmllistener todir="build" loglevel="info" />
+					</au:antunit>
+				</sequential>
+			</for>
+		</sequential>
+	</macrodef>
+
+</project>

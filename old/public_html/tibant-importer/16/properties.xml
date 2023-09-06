@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="properties" xmlns:tibant="org.windyroad.tibant">
+
+	<dirname property="ant.file.dir" file="${ant.file}" />
+	<pathconvert property="ant.file.dir.normalised" dirsep="/">
+		<path>
+			<pathelement location="${ant.file.dir}" />
+		</path>
+	</pathconvert>
+	<basename property="ant.file.dir.base" file="${ant.file.dir}" />
+
+	<property name="bwda.min.ant.version" value="1.8.2"/>
+	<fail message="TIBant requires Apache Ant ${bwda.min.ant.version} or above. Current version is: ${ant.version}">
+		<condition>
+			<not><antversion atleast="${bwda.min.ant.version}" /></not>
+		</condition>
+	</fail>
+
+	<echo>LOADING: ${user.home}/${ant.project.name}.properties</echo>
+	<property file="${user.home}/${ant.project.name}.properties" />
+	<echo>LOADING: ${basedir}/build.properties</echo>
+	<property file="${basedir}/build.properties" />
+	<echo>LOADING: ${user.home}/build.properties</echo>
+	<property file="${user.home}/build.properties" />
+
+	<macrodef name="PersitedInput" uri="org.windyroad.tibant">
+		<attribute name="property" />
+		<attribute name="message" />
+		<attribute name="defaultvalue" default="" />
+		<attribute name="type" default="default" />
+		<attribute name="file" default="${ant.file.dir}/build.properties" />
+		<sequential>
+			<input addproperty="@{property}" message="@{message}" defaultvalue="@{defaultvalue}" />
+			<propertyfile file="@{file}">
+				<entry key="@{property}" value="${@{property}}" />
+			</propertyfile>
+			<echo level="info">@{property} persisted to `@{file}`</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="PersitedInputVA" uri="org.windyroad.tibant">
+		<attribute name="property" />
+		<attribute name="message" />
+		<attribute name="defaultvalue" default="" />
+		<attribute name="validargs" />
+		<attribute name="type" default="default" />
+		<attribute name="file" default="${ant.file.dir}/build.properties" />
+		<sequential>
+			<input addproperty="@{property}"
+			       message="@{message}"
+			       defaultvalue="@{defaultvalue}"
+			       validargs="@{validargs}" />
+			<propertyfile file="@{file}">
+				<entry key="@{property}" value="${@{property}}" />
+			</propertyfile>
+			<echo level="info">@{property} persisted to `@{file}`</echo>
+		</sequential>
+	</macrodef>
+
+	<!-- search for the BW project -->
+	<pathconvert property="bwda.bw.project.path.search">
+		<restrict>
+			<first>
+				<fileset dir="${ant.file.dir}">
+					<include name="**/vcrepo.dat" />
+					<exclude name="**/TIBant-*/Examples/**" />
+					<exclude name="**/TIBant-*/Templates/**" />
+					<exclude name="**/TIBant-*/test/**" />
+					<exclude name="**/TIBant-*/**/tibant/**" />
+				</fileset>
+			</first>
+		</restrict>
+		<chainedmapper>
+			<regexpmapper from="^(.*)\Q${file.separator}\Evcrepo.dat" to="\1" />
+			<filtermapper>
+				<replacestring from="\" to="/" />
+			</filtermapper>
+			<regexpmapper from="${ant.file.dir.normalised}/(.*)" to="\1" />
+		</chainedmapper>
+	</pathconvert>
+
+	<!-- confirm the project's location -->
+	<input addproperty="bwda.bw.project.path"
+	       message="What is the relative path to your BW project from `${ant.file.dir}`"
+	       defaultvalue="${bwda.bw.project.path.search}" />
+	<fail message="`${bwda.bw.project.path}/vcrepo.dat` not found.">
+		<condition>
+			<not>
+				<available file="${bwda.bw.project.path}/vcrepo.dat" type="file" />
+			</not>
+		</condition>
+	</fail>
+	<propertyfile file="${ant.file.dir}/build.properties">
+		<entry key="bwda.bw.project.path" value="${bwda.bw.project.path}" />
+	</propertyfile>
+
+	<dirname property="bwda.bw.src.dir" file="${bwda.bw.project.path}" />
+	<basename property="bwda.bw.project.name" file="${bwda.bw.project.path}" />
+
+	<pathconvert property="bwda.bw.src.dir.normalised" dirsep="/">
+		<path>
+			<pathelement location="${bwda.bw.src.dir}" />
+		</path>
+	</pathconvert>
+
+
+	<!-- confirm where to put generated files -->
+	<tibant:PersitedInput property="bwda.build.dir"
+	                      message="Where would you like TIBant to store generated files, relative to `${ant.file.dir}`?"
+	                      defaultvalue="build" />
+
+	<!-- confirm where to put libraries -->
+	<tibant:PersitedInput property="bwda.lib.dir"
+	                      message="Where would you like TIBant to place downloaded libraries, relative to `${ant.file.dir}`?"
+	                      defaultvalue="lib" />
+	<property name="bwda.lib.dir.location" location="${bwda.lib.dir}" />
+
+	<!-- confirm where to look for classpath jar files -->
+	<tibant:PersitedInput property="bwda.classpath.dir"
+	                      message="What directory should TIBant look for jar files to add to Designer's and BW's class path, relative to `${ant.file.dir}`?"
+	                      defaultvalue="${bwda.lib.dir}" />
+
+	<!-- confirm where to look for alias files -->
+	<tibant:PersitedInput property="bwda.aliases.dir"
+	                      message="What directory should TIBant look for projlib and jar files to add to your file aliases, relative to `${ant.file.dir}`?"
+	                      defaultvalue="${bwda.lib.dir}" />
+
+	<property name="bwda.importer.dir" value="${bwda.lib.dir}/tibant-importer" />
+	<property name="bwda.ivy.lib.dir" value="${bwda.lib.dir}" />
+
+
+	<!-- confirm number of validation errors -->
+	<tibant:PersitedInput property="bwda.expected.errors"
+	                      message="When validating your BW project, how many errors are reported?"
+	                      defaultvalue="0" />
+
+	<!-- confirm number of validation warnings -->
+	<tibant:PersitedInput property="bwda.max.warnings"
+	                      message="When validating your BW project, how many warnings are reported?"
+	                      defaultvalue="0" />
+
+	<!-- calculate TIBant version -->
+	<dirname property="bwda.importer.src.dir" file="${ant.file.properties}" />
+	<!--basename property="tibant.version" file="${bwda.importer.src.dir}" /-->
+	<property name="tibant.version" value="16" />
+
+</project>

@@ -1,0 +1,39 @@
+<ivysettings>
+    <property name="wr.repo.basepath"
+    value="http://windyroad.jfrog.io/windyroad" />
+    <property name="wr.repo.artifact.pattern"
+    value="[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" />
+    <property name="wr.repo.ivy.pattern"
+    value="[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" />
+    <property name="ivy.local.default.root"
+    value="${ivy.default.ivy.user.dir}/local" override="false"/>
+    <property name="ivy.shared.default.root"
+    value="${ivy.default.ivy.user.dir}/shared" override="false"/>
+    <credentials host="windyroad.jfrog.io" realm="Artifactory Realm"
+    username="${wr.repo.username}" passwd="${wr.repo.password}" />
+    <settings defaultResolver="default" />
+    <caches lockStrategy="artifact-lock" defaultCacheDir="${ivy.default.ivy.user.dir}/cache"/>
+    <include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
+    <resolvers>
+        <chain name="windyroad">
+            <resolver ref="local"/>
+            <url name="windyroad-online" m2compatible="true">
+                <artifact pattern="${wr.repo.basepath}/repo/${wr.repo.artifact.pattern}" />
+                <ivy pattern="${wr.repo.basepath}/repo/${wr.repo.ivy.pattern}" />
+            </url>
+        </chain>
+        <chain name="public" >
+            <ibiblio name="maven2" m2compatible="true"/>
+            <resolver ref="windyroad"/>
+        </chain>
+    </resolvers>
+    <resolvers>
+        <chain name="default" returnFirst="true">
+            <resolver ref="local"/>
+            <resolver ref="public"/>
+        </chain>
+    </resolvers>
+    <modules>
+        <module organisation="org.windyroad" name="*" resolver="windyroad"/>
+    </modules>
+</ivysettings>

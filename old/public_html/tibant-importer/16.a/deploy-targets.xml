@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TIBantDeploy"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-deploy.xml" />
+
+	<target name="-get-admin-credentials" depends="-get-deployment-domain">
+		<for param="domain">
+			<propertyset>
+				<propertyref name="bwda.deployment.domain" />
+			</propertyset>
+			<sequential>
+				<input addproperty="bwda.admin.@{domain}.user"
+				       message="What is your TIBCO Administrator Username for @{domain}?" />
+				<if>
+					<not>
+						<isset property="bwda.admin.@{domain}.pw" />
+					</not>
+					<then>
+						<input addproperty="bwda.admin.@{domain}.pw.plain"
+						       message="What is your TIBCO Administrator Password for @{domain}?" />
+
+						<property name="bwda.admin.@{domain}.pw" value="#!${bwda.admin.@{domain}.pw.plain}" />
+
+						<property name="bwda.admin.@{domain}.credentials.file"
+						          value="${bwda.build.dir}/@{domain}.properties" />
+
+						<tempfile destdir="${bwda.build.dir}"
+						          property="bwda.admin.@{domain}.credentials.file.tmp"
+						          deleteonexit="true" />
+						<echoproperties destfile="${bwda.admin.@{domain}.credentials.file.tmp}">
+							<propertyset>
+								<propertyref name="bwda.admin.@{domain}.user" />
+								<propertyref name="bwda.admin.@{domain}.pw" />
+								<globmapper from="bwda.admin.@{domain}.*" to="*" />
+							</propertyset>
+						</echoproperties>
+						<replace file="${bwda.admin.@{domain}.credentials.file.tmp}" token="\#\!" value="#!" />
+
+						<tibant:obfuscate src="${bwda.admin.@{domain}.credentials.file.tmp}"
+						                  dest="${bwda.admin.@{domain}.credentials.file}" />
+						<delete file="${bwda.admin.@{domain}.credentials.file.tmp}" />
+					</then>
+					<else>
+						<echoproperties destfile="${bwda.admin.@{domain}.credentials.file}">
+							<propertyset>
+								<propertyref name="bwda.admin.@{domain}.user" />
+								<propertyref name="bwda.admin.@{domain}.pw" />
+								<globmapper from="bwda.admin.@{domain}.*" to="*" />
+							</propertyset>
+						</echoproperties>
+						<replace file="${bwda.admin.@{domain}.credentials.file.tmp}" token="\#\!" value="#!" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-get-deployment-domain">
+		<loadfile property="bwda.domains" srcfile="${tibco.home.tra}/../domain/DomainHomes.properties">
+			<filterchain>
+				<striplinecomments>
+					<comment value="#" />
+				</striplinecomments>
+				<linecontainsregexp>
+					<regexp pattern="\.TIBCO_ADMIN_DOMAIN_HOME=.*" />
+				</linecontainsregexp>
+				<tokenfilter>
+					<ignoreblank />
+					<replaceregex pattern="\.TIBCO_ADMIN_DOMAIN_HOME=.*" replace="," />
+				</tokenfilter>
+				<striplinebreaks/>
+                <tokenfilter>
+                    <replaceregex pattern="(.*),$" replace="\1" />
+                </tokenfilter>
+			</filterchain>
+		</loadfile>
+
+		<input addproperty="bwda.deployment.domain" message="Which TIBCO Administrator Domain are we deploying to?" validargs="${bwda.domains}" />
+	</target>
+
+
+	<target name="deploy"
+	        depends="-get-deployment-domain,-retrieve-config,-get-admin-credentials"
+	        description="Deploys the ears to the specified environment">
+		<mappedresources id="bwda.config.ears">
+			<restrict>
+				<fileset refid="bwda.config.set" />
+				<rsel:name name="*.ear" />
+			</restrict>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.ear" to="*" />
+			</chainedmapper>
+		</mappedresources>
+
+		<!-- The following steps upload the new ear and config
+            and deploys them without stopping the engine. The engine is then bounced
+            to pick up the new code and config.
+            Why so complicated and why not just deploy?
+            Doing it this way keeps the engine outage to a minimum. While the new code
+            and ear are being uploaded and deployed, then engine is still doing it's job,
+            it's only after all that is done that the engine get's stopped and started. -->
+		<for param="domain">
+			<propertyset>
+				<propertyref name="bwda.deployment.domain" />
+			</propertyset>
+			<sequential>
+				<for param="ear">
+					<resources refid="bwda.config.ears" />
+					<sequential>
+
+						<tibant:administrator-config domain="${bwda.deployment.domain}"
+						                             credentials-file="${bwda.admin.@{domain}.credentials.file}">
+							<tibant:app name="@{ear}"
+							            ear="${bwda.build.dir}/deployable/@{ear}.ear"
+							            xml="${bwda.build.dir}/deployable/@{ear}.xml" />
+						</tibant:administrator-config>
+						<tibant:administrator-deploy domain="@{domain}"
+						                             credentials-file="${bwda.admin.@{domain}.credentials.file}"
+						                             nostop="true"
+						                             nostart="true">
+							<tibant:app name="@{ear}" />
+						</tibant:administrator-deploy>
+					</sequential>
+				</for>
+				<for param="ear">
+					<resources refid="bwda.config.ears" />
+					<sequential>
+						<tibant:administrator-stop domain="${bwda.deployment.domain}"
+						                           credentials-file="${bwda.admin.@{domain}.credentials.file}">
+							<tibant:app name="@{ear}" />
+						</tibant:administrator-stop>
+						<tibant:administrator-start domain="${bwda.deployment.domain}"
+						                            credentials-file="${bwda.admin.@{domain}.credentials.file}">
+							<tibant:app name="@{ear}" />
+						</tibant:administrator-start>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+</project>

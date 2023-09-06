@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TIBantPromoteImporter">
+
+    <import>
+        <url url="${ant.file.TIBantPromoteImporter}/../importer.xml" />
+    </import>
+
+	<import>
+		<url url="file:///${basedir}/${bwda.importer.dir}/promote-targets.xml" />
+	</import>
+
+</project>

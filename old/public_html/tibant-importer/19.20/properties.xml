@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BWDAProperties" xmlns:tibant="org.windyroad.tibant" xmlns:bwda="au.com.windyroad.bwda">
+
+	<dirname property="ant.file.dir" file="${ant.file}" />
+	<pathconvert property="ant.file.dir.normalised" dirsep="/">
+		<path>
+			<pathelement location="${ant.file.dir}" />
+		</path>
+	</pathconvert>
+	<basename property="ant.file.dir.base" file="${ant.file.dir}" />
+
+	<property name="bwda.min.ant.version" value="1.8.2" />
+	<antversion atleast="${bwda.min.ant.version}" property="bwda.ant.min.version.passed" />
+	<fail message="Apache Ant ${bwda.min.ant.version} or above is required. Current version is: ${ant.version}">
+		<condition>
+			<not>
+				<isset property="bwda.ant.min.version.passed" />
+			</not>
+		</condition>
+	</fail>
+
+	<echo>LOADING: ${user.home}/${ant.project.name}.properties</echo>
+	<property file="${user.home}/${ant.project.name}.properties" />
+    <echo>LOADING: ${user.home}/build.properties</echo>
+    <property file="${user.home}/build.properties" />
+	<echo>LOADING: ${basedir}/build.properties</echo>
+	<property file="${basedir}/build.properties" />
+
+    <property name="bwda.build.enabled" value="false"/>
+
+	<macrodef name="PersistedInput" uri="au.com.windyroad.bwda">
+		<attribute name="property" />
+		<attribute name="message" />
+		<attribute name="defaultvalue" default="" />
+		<attribute name="type" default="default" />
+		<attribute name="file" default="${ant.file.dir}/build.properties" />
+		<sequential>
+			<input addproperty="@{property}" message="@{property}: @{message}" defaultvalue="@{defaultvalue}" />
+			<propertyfile file="@{file}">
+				<entry key="@{property}" value="${@{property}}" />
+			</propertyfile>
+			<echo level="info">@{property} persisted to `@{file}`</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="PersistedInputVA" uri="au.com.windyroad.bwda">
+		<attribute name="property" />
+		<attribute name="message" />
+		<attribute name="defaultvalue" default="" />
+		<attribute name="validargs" />
+		<attribute name="type" default="default" />
+		<attribute name="file" default="${ant.file.dir}/build.properties" />
+		<sequential>
+			<input addproperty="@{property}"
+			       message="@{property}: @{message}"
+			       defaultvalue="@{defaultvalue}"
+			       validargs="@{validargs}" />
+			<propertyfile file="@{file}">
+				<entry key="@{property}" value="${@{property}}" />
+			</propertyfile>
+			<echo level="info">@{property} persisted to `@{file}`</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="PersistedInputGenDir" uri="au.com.windyroad.bwda">
+		<attribute name="property" />
+		<attribute name="message" />
+		<attribute name="defaultvalue" default="" />
+		<attribute name="file" default="${ant.file.dir}/build.properties" />
+		<sequential>
+			<input addproperty="@{property}" message="@{property}: @{message}" defaultvalue="@{defaultvalue}" />
+			<property name="@{property}.location" location="${@{property}}" />
+			<pathconvert property="@{property}.normalised" dirsep="/">
+				<path>
+					<pathelement location="${@{property}.location}" />
+				</path>
+			</pathconvert>
+			<fail message="The directory `@{property}` cannot be within your BW project directory `${bwda.bw.project.path}`">
+				<condition>
+					<and>
+						<istrue value="${bwda.build.enabled}" />
+						<contains string="${@{property}.normalised}"
+						          substring="${bwda.bw.project.path.normalised}"
+						          casesensitive="false" />
+					</and>
+				</condition>
+			</fail>
+			<propertyfile file="@{file}">
+				<entry key="@{property}" value="${@{property}}" />
+			</propertyfile>
+			<echo level="info">@{property} persisted to `@{file}`</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="PersitedInputDir" uri="au.com.windyroad.bwda">
+		<attribute name="property" />
+		<attribute name="message" />
+		<attribute name="base" default="${ant.file.dir}" />
+		<attribute name="defaultvalue" default="" />
+		<attribute name="file" default="${ant.file.dir}/build.properties" />
+		<sequential>
+			<input addproperty="@{property}" message="@{message}" defaultvalue="@{defaultvalue}" />
+			<fail message="The directory `@{base}/${@{property}}` cannot be found">
+				<condition>
+					<not>
+						<available type="dir" file="@{base}/${@{property}}" />
+					</not>
+				</condition>
+			</fail>
+			<propertyfile file="@{file}">
+				<entry key="@{property}" value="${@{property}}" />
+			</propertyfile>
+			<echo level="info">@{property} persisted to `@{file}`</echo>
+		</sequential>
+	</macrodef>
+
+	<!-- search for the BW project -->
+	<pathconvert property="bwda.bw.project.path.search">
+		<restrict>
+			<first>
+				<fileset dir="${ant.file.dir}">
+					<include name="vcrepo.dat" />
+					<include name="**/vcrepo.dat" />
+					<exclude name="**/TIBant-*/**" />
+					<exclude name="**/BWUnit-*/**" />
+				</fileset>
+			</first>
+		</restrict>
+		<chainedmapper>
+			<filtermapper>
+				<replacestring from="\" to="/" />
+			</filtermapper>
+			<regexpmapper from="${ant.file.dir.normalised}/(.*)" to="\1" />
+			<regexpmapper from="(.*)vcrepo.dat" to="\1." />
+			<regexpmapper from="(.*?)(/\.)?$" to="\1" />
+		</chainedmapper>
+	</pathconvert>
+
+	<!-- confirm the project's location -->
+    <condition property="bwda.bw.project.path" value="">
+        <isfalse value="${bwda.build.enabled}" />
+    </condition>
+	<input addproperty="bwda.bw.project.path"
+	       message="bwda.bw.project.path: What is the relative path to your BW project from `${ant.file.dir}`"
+	       defaultvalue="${bwda.bw.project.path.search}" />
+	<fail message="`${bwda.bw.project.path}/vcrepo.dat` not found.">
+		<condition>
+			<and>
+				<istrue value="${bwda.build.enabled}" />
+				<not>
+					<available file="${bwda.bw.project.path}/vcrepo.dat" type="file" />
+				</not>
+			</and>
+		</condition>
+	</fail>
+	<property name="bwda.bw.project.path.location" location="${bwda.bw.project.path}" />
+
+	<condition property="bwda.default.dir.prefix" value="">
+		<isfalse value="${bwda.build.enabled}" />
+	</condition>
+	<condition property="bwda.default.dir.prefix" value="../">
+		<resourcecount when="less" count="2">
+			<path>
+				<pathelement location="${bwda.bw.project.path.location}" />
+				<pathelement location="${ant.file.dir}" />
+			</path>
+		</resourcecount>
+	</condition>
+	<property name="bwda.default.dir.prefix" value="" />
+
+
+	<propertyfile file="${ant.file.dir}/build.properties">
+		<entry key="bwda.bw.project.path" value="${bwda.bw.project.path}" />
+	</propertyfile>
+
+	<dirname property="bwda.bw.src.dir" file="${bwda.bw.project.path}" />
+	<basename property="bwda.bw.project.name" file="${bwda.bw.project.path}" />
+
+	<pathconvert property="bwda.bw.project.path.normalised" dirsep="/">
+		<path>
+			<pathelement location="${bwda.bw.project.path.location}" />
+		</path>
+	</pathconvert>
+
+	<!-- confirm where to put generated files -->
+	<bwda:PersistedInputGenDir property="bwda.build.dir"
+	                            message="Where would you like to store generated files, relative to `${ant.file.dir}`?"
+	                            defaultvalue="${bwda.default.dir.prefix}build" />
+
+	<!-- confirm where to put libraries -->
+	<bwda:PersistedInputGenDir property="ivy.lib.dir"
+	                            message="Where would you like to store downloaded libraries, relative to `${ant.file.dir}`?"
+	                            defaultvalue="${bwda.default.dir.prefix}lib" />
+
+	<!-- confirm where to look for classpath jar files -->
+	<condition property="bwda.classpath.dir" value="">
+		<isfalse value="${bwda.build.enabled}" />
+	</condition>
+	<bwda:PersistedInputGenDir property="bwda.classpath.dir"
+	                           message="What directory should be searched for jar files to add to Designer's and BW's class path, relative to `${ant.file.dir}`?"
+	                           defaultvalue="${ivy.lib.dir}" />
+
+	<!-- confirm where to look for alias files -->
+	<condition property="bwda.aliases.dir" value="">
+        <isfalse value="${bwda.build.enabled}" />
+	</condition>
+	<bwda:PersistedInputGenDir property="bwda.aliases.dir"
+	                           message="What directory should be searched for projlib and jar files to add to your file aliases, relative to `${ant.file.dir}`?"
+	                           defaultvalue="${ivy.lib.dir}" />
+
+	<target name="-get-sdk-config-dir">
+		<bwda:PersistedInput property="bwda.config.sdk.dir"
+		                    message="Where should Adapter SDK properties be loaded from, relative to `${ant.file.dir}`"
+		                    defaultValue="config/sdk" />
+	</target>
+
+	<target name="-get-gvar-config-dir">
+		<bwda:PersistedInput property="bwda.config.gvar.dir"
+		                    message="Where should global variable properties be loaded from, relative to `${ant.file.dir}`"
+		                    defaultValue="config/gvar" />
+	</target>
+
+	<macrodef name="loadproperties" uri="au.com.windyroad.bwda">
+		<attribute name="srcfile" />
+		<attribute name="prefix" />
+		<sequential>
+			<if>
+				<available file="@{srcfile}" />
+				<then>
+					<loadproperties srcfile="@{srcfile}" prefix="@{prefix}">
+						<filterchain>
+							<expandproperties />
+						</filterchain>
+					</loadproperties>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="load-env-properties" uri="au.com.windyroad.bwda">
+		<attribute name="domain" />
+		<sequential>
+			<bwda:loadproperties srcfile="${bwda.config.sdk.dir}/@{domain}-sdk.properties"
+			                     prefix="bwda.sdk.@{domain}." />
+			<bwda:loadproperties srcfile="${bwda.config.sdk.dir}/sdk.properties" prefix="bwda.sdk.@{domain}." />
+
+			<bwda:loadproperties srcfile="${bwda.config.gvar.dir}/@{domain}-gvar.properties"
+			                     prefix="bwda.gvar.@{domain}." />
+			<bwda:loadproperties srcfile="${bwda.config.gvar.dir}/gvar.properties" prefix="bwda.gvar.@{domain}." />
+
+			<propertyset id="bwda.config.@{domain}.gvar">
+				<propertyref prefix="bwda.gvar.@{domain}." />
+				<globmapper from='bwda.gvar.@{domain}.*' to='*' />
+			</propertyset>
+
+			<propertyset id="bwda.config.@{domain}.sdk">
+				<propertyref prefix="bwda.sdk.@{domain}." />
+				<globmapper from='bwda.sdk.@{domain}.*' to='*' />
+			</propertyset>
+
+			<property name="bw.platform.services.retreiveresources.Httpport" value="8010" />
+
+			<propertyset id="bwengine.properties" dynamic="true">
+				<propertyref name="bw.platform.services.retreiveresources.Httpport" />
+				<propertyset>
+					<propertyref prefix="engine.properties." />
+					<mapper type="glob" from="engine.properties.*" to="*" />
+				</propertyset>
+				<propertyset refid="bwda.config.@{domain}.sdk" />
+			</propertyset>
+			<property name="BWUnit/HTTP-service-port" value="5454" />
+
+			<propertyset id="bwengine.gvars" dynamic="true">
+				<propertyref name="BWUnit/HTTP-service-port" />
+				<propertyset>
+					<propertyref prefix="engine.gvars." />
+					<mapper type="glob" from="engine.gvars.*" to="*" />
+					<propertyset refid="bwda.config.@{domain}.gvar" />
+				</propertyset>
+			</propertyset>
+		</sequential>
+	</macrodef>
+
+
+	<!-- calculate version -->
+	<dirname property="bwda.importer.src.dir" file="${ant.file.BWDAProperties}" />
+	<basename property="tibant.version" file="${bwda.importer.src.dir}" />
+    <property name="bwda.importer.dir" value="${ivy.lib.dir}/tibant-importer/${tibant.version}" />
+
+    <property name="bwda.mirror.repo" value="releases"/>
+</project>

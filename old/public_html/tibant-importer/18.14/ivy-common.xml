@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ivy-common"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:wrivy="org.windyroad.ivy-util"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-bootstrap.xml" />
+
+	<property name="tibant.home" location="${ivy.lib.dir.location}/TIBant-${bwda.dep.tibant-pro.revision}" />
+	<echo level="info">Importing ${tibant.home}/tibant.xml</echo>
+	<import file="${tibant.home}/tibant.xml" />
+
+	<target name="-load-ant-contrib" unless="ant-contrib.loaded">
+		<tibant:load-ant-contrib />
+		<property name="ant-contrib.loaded" value="true" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${bwda.build.dir}" verbose="true" />
+	</target>
+
+	<target name="-get-module-org">
+		<!-- get the organisation for this module -->
+		<tibant:PersitedInput property="ivy.organisation"
+		                      message="What organisation or organisational unit does this project belong to (using reverse internet domain format)? e.g., com.company.department"
+		                      defaultValue="com.example.integration" />
+	</target>
+
+	<target name="-determine-current-version" depends="-retrieve">
+
+		<echo level="info">Getting Current and Next Release Version...</echo>
+		<tibant:PersitedInput property="bwda.default.version"
+		                      message="What the version number should be used for the first revision of this project?"
+		                      defaultvalue="1" />
+
+		<ivy:buildnumber organisation="${ivy.organisation}"
+		                 module="${ivy.module}"
+		                 default="${bwda.default.version}"
+		                 revision="${bwda.default.version}"
+		                 resolver="releases"
+		                 prefix="bwda.releases"
+		                 settingsRef="${bwda.ivy.settings.id}" />
+		<!-- default to "none" if there is no current release version -->
+		<property name="bwda.releases.revision" value="none" />
+		<echo level="info">Current Release Version: ${bwda.releases.revision}</echo>
+		<echo level="info">Next Release Version: ${bwda.releases.new.revision}</echo>
+	</target>
+
+	<target name="-determine-snapshot-version" depends="-determine-current-version">
+
+		<echo level="info">Getting Current and Next Snapshot Version...</echo>
+		<ivy:buildnumber organisation="${ivy.organisation}"
+		                 module="${ivy.module}"
+		                 revision="${bwda.releases.new.revision}"
+		                 resolver="snapshots"
+		                 prefix="bwda.snapshots"
+		                 settingsRef="${bwda.ivy.settings.id}" />
+		<!-- default to "none" if there is no current snapshot version -->
+		<property name="bwda.snapshots.revision" value="none" />
+		<echo level="info">Current Snapshot Version: ${bwda.snapshots.revision}</echo>
+		<echo level="info">Next Snapshot Version: ${bwda.snapshots.new.revision}</echo>
+	</target>
+
+
+
+	<target name="-retrieve-deployable-inline" depends="-load-ivy,-configure-ivy,-determine-latest-version">
+		<fail message="Please publish a build for '${ivy.organisation}.${ant.project.name}'">
+			<condition>
+				<equals arg1="none" arg2="${bwda.shared.revision}" />
+			</condition>
+		</fail>
+		<input addproperty="bwda.pipeline.version"
+		       message="bwda.pipeline.version: What version of '${ivy.organisation}.${ant.project.name}' are we deploying?"
+		       defaultvalue="${bwda.shared.revision}" />
+		<mkdir dir="${bwda.build.dir}/deployable" />
+		<!-- we do an inline resolve here, so we'll have the ear set to know what we need to put into the generated ivy.xml -->
+		<ivy:retrieve organisation="${ivy.organisation}"
+		              module="${ant.project.name}"
+		              revision="${bwda.pipeline.version}"
+		              inline="true"
+		              transitive="true"
+		              pattern="${bwda.build.dir}/deployable/[artifact].[ext]"
+		              ivypattern="${bwda.build.dir}/deployable/[artifact].[ext]"
+		              settingsRef="${bwda.ivy.settings.id}"
+		              setId="bwda.deployable.set" />
+		<mappedresources id="bwda.deployable.ears">
+			<restrict>
+				<fileset refid="bwda.deployable.set" />
+				<rsel:name name="*.ear" />
+			</restrict>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.ear" to="*" />
+			</chainedmapper>
+		</mappedresources>
+	</target>
+
+	<target name="-determine-latest-version" depends="-determine-snapshot-version">
+
+		<condition property="bwda.shared.revision" value="${bwda.releases.revision}">
+			<equals arg1="${bwda.snapshots.revision}" arg2="none" />
+		</condition>
+		<property name="bwda.shared.revision" value="${bwda.snapshots.revision}" />
+		<echo level="info">Latest Version: ${bwda.shared.revision}</echo>
+	</target>
+
+
+	<target name="-create-ivy-file" depends="-load-ant-contrib,-get-module-org">
+		<!-- create ivy file pub targets based on .archive and .libbuilder files in project -->
+		<property name="ivy.dep.file" value="${bwda.build.dir}/generated-ivy.xml" />
+		<echo file="${bwda.build.dir}/generated-ivy.xml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+	&lt;ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"&gt;
+	    &lt;info
+	        organisation="$${ivy.organisation}"
+	        module="$${ant.project.name}"
+	        status="release"&gt;
+	        &lt;extends 
+	            organisation="$${ivy.organisation}"
+	            module="$${ant.project.name}"
+	            revision="latest.integration"
+	            location="$${basedir}/ivy.xml"/&gt;
+	        &lt;extends 
+	            organisation="not.set"
+	            module="$${ant.project.name}"
+	            revision="latest.integration"
+	            location="$${basedir}/$${bwda.importer.dir}/ivy.xml"/&gt;
+	    &lt;/info&gt;
+	    &lt;publications&gt;
+	    &lt;/publications&gt;
+	&lt;/ivy-module&gt;</echo>
+
+		<!-- now create an ivy file for users to enter the dependencies into -->
+		<if>
+			<not>
+				<available file="ivy.xml" />
+			</not>
+			<then>
+				<echo file="ivy.xml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+	&lt;ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"&gt;
+	    &lt;info
+	        organisation="$${ivy.organisation}"
+	        module="$${ant.project.name}"
+	        status="release"&gt;
+	    &lt;/info&gt;
+	    &lt;dependencies&gt;
+	    &lt;/dependencies&gt;
+	&lt;/ivy-module&gt;</echo>
+			</then>
+		</if>
+	</target>
+
+	<target name="-create-settings-file" depends="-load-ant-contrib,-get-module-org">
+		<condition property="bwda.repo.dir.input" value="${bwda.repo.dir}">
+			<isset property="bwda.repo.dir" />
+		</condition>
+		<input addproperty="bwda.repo.dir.input"
+		       message="bwda.repo.dir: Please specify an absolute path to a shared directory, where EAR and PROJLIB files can be published to and retrieved from." />
+		<property name="bwda.repo.dir" location="${bwda.repo.dir.input}" />
+		<fail message="'${bwda.repo.dir}' does not exist">
+			<condition>
+				<not>
+					<available file="${bwda.repo.dir}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="$${bwda.repo.dir} may not be blank">
+			<condition>
+				<equals arg1="" arg2="${bwda.repo.dir}" />
+			</condition>
+		</fail>
+		<fail message="'${bwda.repo.dir}' is not a directory">
+			<condition>
+				<not>
+					<available type="dir" file="${bwda.repo.dir}" />
+				</not>
+			</condition>
+		</fail>
+		<propertyfile file="${user.home}/build.properties">
+			<entry key="bwda.repo.dir" value="${bwda.repo.dir}" />
+		</propertyfile>
+		<property name="ivy.settings.file" value="ivysettings.xml" />
+		<if>
+			<not>
+				<available file="${ivy.settings.file}" />
+			</not>
+			<then>
+				<echo file="${ivy.settings.file}">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;ivysettings&gt;
+    &lt;include file="$${basedir}/$${bwda.importer.dir}/ivysettings.xml"/&gt;
+    &lt;resolvers&gt;
+        &lt;chain name="shared"&gt;
+            &lt;filesystem name="snapshots" m2compatible="true"&gt;
+                &lt;artifact pattern="$${bwda.repo.dir}/snapshots/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+                &lt;ivy pattern="$${bwda.repo.dir}/snapshots/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+            &lt;/filesystem&gt;
+            &lt;filesystem name="releases" m2compatible="true"&gt;
+                &lt;artifact pattern="$${bwda.repo.dir}/releases/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+                &lt;ivy pattern="$${bwda.repo.dir}/releases/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" /&gt;
+            &lt;/filesystem&gt;
+        &lt;/chain&gt;
+    &lt;/resolvers&gt;
+    &lt;include url="$${ivy.default.settings.dir}/ivysettings-main-chain.xml"/&gt;
+    &lt;resolvers&gt;
+        &lt;chain name="default.$${bwda.ivy.settings.id}" returnFirst="true"&gt;
+            &lt;resolver ref="local"/&gt;
+            &lt;resolver ref="main"/&gt;
+        &lt;/chain&gt;
+    &lt;/resolvers&gt;
+    &lt;modules&gt;
+        &lt;module organisation="$${ivy.organisation}" name="*" resolver="shared"/&gt;
+    &lt;/modules&gt;
+&lt;/ivysettings&gt;</echo>
+			</then>
+		</if>
+	</target>
+
+	<target name="-override-ivy-properties" depends="-create-ivy-file,-create-settings-file">
+	</target>
+
+	<target name="-get-deployment-domain">
+		<input addproperty="bwda.deployment.domain"
+		       message="bwda.deployment.domain: Which TIBCO Administrator Domain are we creating a configuration for?" />
+	</target>
+
+	<target name="-configure-ivy-for-ear-config"
+	        depends="-load-ivy,-get-module-org,-determine-latest-version,-create-settings-file">
+		<ivy:configure settingsid="bwda.config" file="${ivy.settings.file}" />
+	</target>
+
+	<target name="-determine-current-config-version"
+	        depends="-retrieve-deployable,ivy-common.-get-deployment-domain,-configure-ivy-for-ear-config">
+
+		<echo level="info">Getting Current and Next Config Version...</echo>
+		<ivy:buildnumber organisation="${ivy.organisation}"
+		                 module="${ant.project.name}-${bwda.deployment.domain}"
+		                 revision="${bwda.pipeline.version}"
+		                 resolver="releases"
+		                 prefix="bwda.config"
+		                 settingsRef="bwda.config" />
+		<!-- default to "none" if there is no current snapshot version -->
+		<property name="bwda.config.revision" value="none" />
+		<echo level="info">Current ${bwda.deployment.domain} Config Version: ${bwda.config.revision}</echo>
+		<echo level="info">Next ${bwda.deployment.domain} Config Version: ${bwda.config.new.revision}</echo>
+	</target>
+
+	<target name="-retrieve-deployable" depends="-create-ivy-file-for-config,-configure-ivy-for-ear-config">
+		<ivy:resolve settingsRef="bwda.config"
+		             file="${bwda.build.dir}/ivy-ear-config.xml"
+		             resolveId="bwda.config.resolve.id" />
+		<ivy:retrieve settingsRef="bwda.config"
+		              resolveid="bwda.config.resolve.id"
+		              pattern="${bwda.build.dir}/deployable/[artifact].[ext]"
+		              setid="bwda.deployable.set" />
+	</target>
+
+
+	<target name="-create-ivy-file-for-config"
+	        depends="-load-ant-contrib,-get-config-pipeline-version,-retrieve-deployable-inline">
+		<!-- create ivy file ear config pubs and deps based on the ear files retrieved -->
+		<echo file="${bwda.build.dir}/ivy-ear-config.xml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;ivy-module version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"&gt;
+    &lt;info organisation="$${ivy.organisation}"
+          module="$${ant.project.name}-$${bwda.deployment.domain}"
+          status="release" /&gt;
+    &lt;publications&gt;</echo>
+		<for param="archive">
+			<resources refid="bwda.deployable.ears" />
+			<sequential>
+				<echo file="${bwda.build.dir}/ivy-ear-config.xml" append="true">
+        &lt;artifact name="@{archive}" type="config" ext="xml" /&gt;</echo>
+			</sequential>
+		</for>
+		<echo file="${bwda.build.dir}/ivy-ear-config.xml" append="true">
+    &lt;/publications&gt;
+    &lt;dependencies&gt;
+        &lt;dependency org="$${ivy.organisation}"
+                    name="$${ant.project.name}"
+                    rev="${bwda.pipeline.version}"
+                    transitive="true"
+                        conf="*-&gt;dist" /&gt;
+    &lt;/dependencies&gt;
+&lt;/ivy-module&gt;</echo>
+	</target>
+
+	<target name="-get-config-pipeline-version" depends="-determine-latest-version">
+		<property name="bwda.current.task" value="configuring" />
+		<input addproperty="bwda.pipeline.version"
+		       message="bwda.pipeline.version: What version of '${ivy.organisation}.${ant.project.name}' are we ${bwda.current.task}?"
+		       defaultvalue="${bwda.shared.revision}" />
+	</target>
+
+
+
+</project>

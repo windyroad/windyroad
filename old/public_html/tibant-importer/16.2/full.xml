@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TIBantBuildImporter">
+
+    <property name="bwda.build.enabled" value="true"/>
+    <import>
+        <url url="${ant.file.TIBantBuildImporter}/../importer.xml" />
+    </import>
+
+	<import>
+		<url url="file:///${basedir}/${bwda.importer.dir}/build-targets.xml" />
+	</import>
+    <import>
+        <url url="file:///${basedir}/${bwda.importer.dir}/config-targets.xml" />
+    </import>
+    <import>
+        <url url="file:///${basedir}/${bwda.importer.dir}/deploy-targets.xml" />
+    </import>
+    <import>
+        <url url="file:///${basedir}/${bwda.importer.dir}/promote-targets.xml" />
+    </import>
+
+</project>

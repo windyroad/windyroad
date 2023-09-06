@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TIBantDeployImporter">
+
+    <import>
+        <url url="${ant.file.TIBantDeployImporter}/../importer.xml" />
+    </import>
+
+	<import>
+		<url url="file:///${basedir}/${bwda.importer.dir}/deploy-targets.xml" />
+	</import>
+
+</project>

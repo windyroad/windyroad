@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TIBantConfigImporter">
+
+    <import>
+        <url url="${ant.file.TIBantConfigImporter}/../importer.xml" />
+    </import>
+
+	<import>
+		<url url="file:///${basedir}/${bwda.importer.dir}/config-targets.xml" />
+	</import>
+
+</project>

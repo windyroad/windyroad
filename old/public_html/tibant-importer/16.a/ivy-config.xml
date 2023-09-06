@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ivy-config"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:wrivy="org.windyroad.ivy-util"
+         xmlns:tibant="org.windyroad.tibant"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+	<import file="ivy-common.xml" />
+
+
+
+	<target name="-determine-config-version" depends="-get-deployment-domain,-retrieve-deployable">
+
+		<echo level="info">Getting Current and Next Config Version for ${ivy.organisation}.${ant.project.name}-${bwda.pipeline.version}....</echo>
+		<ivy:buildnumber organisation="${ivy.organisation}"
+		                 module="${ant.project.name}-${bwda.deployment.domain}"
+		                 revision="${bwda.pipeline.version}"
+		                 resolver="releases"
+		                 prefix="bwda.config"
+		                 settingsRef="bwda.config" />
+		<!-- default to "none" if there is no current snapshot version -->
+		<property name="bwda.config.revision" value="none" />
+		<echo level="info">Current ${bwda.deployment.domain} Config Version: ${bwda.config.revision}</echo>
+		<echo level="info">Next ${bwda.deployment.domain} Config Version: ${bwda.config.new.revision}</echo>
+	</target>
+
+	<target name="configure-ear">
+		<fail message="This target should be overridden in the provideded targets.xml" />
+	</target>
+
+
+	<target name="publish-config"
+	        depends="configure-ear,-determine-config-version"
+	        description="Publish the built EAR configuration files">
+		<echo level="info"
+		      message="publishing ${ant.project.name} configuration to 'releases' with version '${bwda.config.new.revision}'..." />
+		<ivy:publish artifactspattern="${bwda.build.dir}/deployable/[artifact].[ext]"
+		             resolver="releases"
+		             pubrevision="${bwda.config.new.revision}"
+		             status="release"
+		             overwrite="false"
+		             forcedeliver="true"
+		             update="false"
+		             replacedynamicrev="false"
+		             conf="default"
+		             settingsRef="bwda.config"
+		             haltonmissing="true">
+		</ivy:publish>
+		<echo level="info" message="...published" />
+		<echoproperties destfile="${bwda.build.dir}/pubrevision.properties">
+			<propertyset>
+				<propertyref name="bwda.pipeline.version" />
+				<propertyref name="bwda.config.new.revision" />
+				<mapper type="glob"
+				        from="bwda.config.new.revision"
+				        to="bwda.pipeline.${bwda.deployment.domain}.config.version" />
+			</propertyset>
+		</echoproperties>
+	</target>
+
+
+
+
+</project>

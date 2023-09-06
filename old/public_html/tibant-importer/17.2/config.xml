@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TIBantConfigImporter">
+
+    <import file="properties.xml" />
+
+    <mkdir dir="${bwda.importer.dir}" />
+    <copy todir="${bwda.importer.dir}" flatten="true" overwrite="true" >
+        <mappedresources id="bwda.importer.files">
+            <resources>
+                <url url="${ant.file.TIBantConfigImporter}/../auto-loader.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../build-targets.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../config-targets.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../deploy-targets.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivy-bootstrap.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivy-build.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivy-common.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivy-config.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivy-deploy.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivy-promote.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivy.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../ivysettings.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../promote-targets.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../properties.xml" />
+                <url url="${ant.file.TIBantConfigImporter}/../copyright.html" />
+            </resources>
+            <regexpmapper from="(.*)/config\.xml/\.\./(.*)" to="\1\2" />
+        </mappedresources>
+    </copy>
+
+    <ant antfile="${bwda.importer.dir}/auto-loader.xml" target="-retrieve" inheritall="true" inheritrefs="true">
+        <property name="bwda.ivy.settings.id" value="bwda.autoload" />
+    </ant>
+    <echo>LOADING: ${bwda.build.dir}/dependencies.properties</echo>
+    <property file="${bwda.build.dir}/dependencies.properties" />
+
+	<import>
+		<url url="file:///${basedir}/${bwda.importer.dir}/config-targets.xml" />
+	</import>
+
+</project>

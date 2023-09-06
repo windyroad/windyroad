@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tibant-auto-loader"
+	>
+
+	<import file="ivy-bootstrap.xml" />
+
+	<!-- we don't want to unzip TIBant every time, so we check to see if it's been unzipped -->
+	<target name="-check-tibant-unpacked"
+	        description="Check if TIBant has been unzipped"
+	        depends="ivy-bootstrap.-retrieve">
+		<condition property="tibant-unpacked">
+			<available file="${ivy.lib.dir.location}/tibant-${bwda.new.dep.tibant-pro.revision}/TIBant.jar" />
+		</condition>
+	</target>
+
+	<!-- In order to use TIBant we must unzip it -->
+	<target name="-unpack-tibant" description="Unzip TIBant" depends="-check-tibant-unpacked" unless="tibant-unpacked">
+		<unzip dest="${ivy.lib.dir.location}/TIBant-${bwda.new.dep.tibant-pro.revision}" src="${bwda.new.dep.tibant-pro.TIBant.zip}" overwrite="true" />
+	</target>
+
+	<!-- In order to have TIBant unpacked when with retrieve the default dependencies, we overrite the `retrieve`
+	     target so that it retrives the deps and unpacks TIBant -->
+	<target name="-retrieve" description="retrieve dependancies with ivy" depends="-unpack-tibant">
+	</target>
+
+</project>
