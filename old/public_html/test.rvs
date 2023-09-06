@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<rvscript>
+
+<transport type="rm"/>
+   <msg name="pagecount">
+	<field name="event" type="STRING">testing</field>
+   </msg>
+	<send subject="comet">pagecount</send>
+    <msgPrint/>
+</rvscript>
