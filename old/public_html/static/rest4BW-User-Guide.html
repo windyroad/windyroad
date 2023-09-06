@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>rest4BW-User-Guide</title>
+  <script type="text/javascript" charset="utf-8" src="js/jquery-1.8.0.min.js">
+  </script>
+  <script type="text/javascript" charset="utf-8"
+  src="js/jquery.tableofcontents.min.js">
+  </script>
+  <script type="text/javascript" charset="utf-8" src="js/windyroad.js">
+  </script>
+  <link rel="stylesheet" type="text/css" href="css/windyroad.css?v=1" />
+</head>
+
+<body>
+
+<noscript>
+
+<div class="noscript">
+Anchored links and the Table of Contents requires Javascript to be
+enabled.</div>
+</noscript>
+
+<div class="validation">
+
+<input type="button" onclick="validate_links();" value="Validate Links" />
+</div>
+
+<div class="header">
+<h1>rest4BW<sup>™</sup></h1>
+
+<h2>User Guide</h2>
+Version 1 </div>
+
+<div class="toc">
+<hr />
+
+<h1>Contents</h1>
+
+<div id="toc">
+&lt;Table of Contents&gt; </div>
+</div>
+
+<div class="container">
+<hr />
+
+<h1>Introduction</h1>
+
+<p>rest4BW™ provides a framework to facilitate the task of building REST
+services in TIBCO BusinessWorks.<br />
+<br />
+Out of the box, it provides Query, Accept Header and MultiPart Mime parsing of
+HTTP requests, and HTTP Status Code schemas to facilitate building HTTP
+responses.<br />
+<br />
+If you want to see an example of the rest4BW™ in use, please check out the <a
+href="#coffee-shop-example">Coffee Shop Example</a> under the <a
+href="#source-code">Source Code</a> section. </p>
+<hr />
+
+<h1>Minimum Software Requirements</h1>
+
+<p>The framework was developed with the following software versions, and has
+not been tested for backwards compatibility. It is recommended to use the same,
+or a newer version when developing with rest4BW™.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <th>Software</th>
+      <th>Version</th>
+    </tr>
+    <tr>
+      <td>TIBCO BusinessWorks™</td>
+      <td>5.9</td>
+    </tr>
+    <tr>
+      <td>TIBCO Designer™</td>
+      <td>5.7</td>
+    </tr>
+    <tr>
+      <td>TIBCO Runtime Agent™</td>
+      <td>5.0</td>
+    </tr>
+  </tbody>
+</table>
+<hr />
+
+<h1>Resources</h1>
+
+<p>The rest4BW™ homepage, binary and source can be found at <a
+href="http://windyroad.org/software/open-source/rest4BW/">http://windyroad.org/software/open-source/rest4BW/</a>.</p>
+
+<p>The rest4BW™ <a href="#source-code">source code</a> is stored in a <a
+href="http://mercurial.selenic.com/">Mercurial</a> repository. It can be
+checked out by executing the following command:</p>
+
+<p><code>hg clone https://hg.assembla.com/rest4BW.2</code></p>
+
+<p>Community discussion forums for rest4BW™ can be found at <a
+href="http://windyroad.org/discussion/">http://windyroad.org/discussion/</a>.</p>
+
+<p>The Windy Road team is looking forward to receiving feedback and answering
+your support questions at <a
+href="http://windyroad.org/support/">http://windyroad.org/support/</a>.</p>
+
+<p></p>
+<hr />
+
+<h1>Architecture</h1>
+
+<h2>Overview</h2>
+
+<p>The following sequence diagram shows the interaction of a REST
+request-response scenario using rest4BW™ (Figure 1.1).</p>
+
+<p><img alt="Sequence Diagram" src="images/image01.png" /></p>
+
+<p><sub>Figure 1.1 - REST request-response sequence diagram</sub></p>
+<dl>
+  <dt>REST Client</dt>
+    <dd>Is responsible for sending the HTTP request and receiving the HTTP
+      response. It is not implemented by rest4BW™.</dd>
+  <dt>REST Interface</dt>
+    <dd>Is responsible for handling the request and response parsing. It is
+      implemented by rest4BW™.</dd>
+  <dt>REST Delegate</dt>
+    <dd>Is responsible for handling the business logic and processing of the
+      REST service. A template is supplied by rest4BW™, with the
+      implementation left to the developer.</dd>
+</dl>
+<hr />
+
+<h1>Using rest4BW™</h1>
+
+<h2>Setup</h2>
+
+<p>Please see the <a href="#resources">Resources</a> section, for instructions
+on obtaining the rest4BW™ binary artifact.</p>
+<ol>
+  <li>Download rest4BW.projlib</li>
+  <li>In TIBCO Designer: 
+    <ol>
+      <li>Select the root folder of your project</li>
+      <li>Select the Design Time Libraries tab</li>
+      <li>Press the ‘+’ button</li>
+      <li>Select the <em>rest4BW.projlib</em> file, to import into your
+      project</li>
+      <li>You should now see the imported rest4BW™ project (the purple
+        highlighted folder in the Figure 1.2 below)</li>
+    </ol>
+  </li>
+</ol>
+
+<p><img alt="TIBCO Designer Screenshot" src="images/image04.png" /></p>
+
+<p><sub>Figure 1.2 - Importing rest4BW™ into a project</sub></p>
+
+<h2>Using the REST Interface</h2>
+
+<p>The REST Interface is responsible for:</p>
+<ul>
+  <li>parsing the HTTP request into a REST request</li>
+  <li>invoking the REST Delegate</li>
+  <li>rendering the REST response into a HTTP response</li>
+  <li>performing Error Handling</li>
+</ul>
+
+<p></p>
+
+<p>The process is located under <code>/rest4BW/REST Interface.process</code></p>
+
+<p></p>
+
+<p><strong>To implement:</strong></p>
+<ol>
+  <li>Setup a HTTP Connection (as per your application’s requirements)</li>
+  <li>Setup a new process as per Figure 1.3, and configure the HTTP
+    Receiver/Response appropriately. 
+    <p><img alt="Process Example" src="images/image00.png" /></p>
+    <p><sub>Figure 1.3 - Example REST Interface Usage</sub></p>
+  </li>
+  <li>Map the output directly from <em>HTTP Receiver</em> into <em>REST
+    Interface</em>.</li>
+  <li>Map the output directly from <em>REST Interface</em> into <em>Send HTTP
+    Response</em>.</li>
+  <li>Set the <code>$REST_Interface/root/handlerProcess</code> variable to the
+    REST Delegate process. 
+    <ul>
+      <li>e.g. <code>/coffee-shop/REST Service.process</code></li>
+    </ul>
+  </li>
+  <li>Optionally, set the
+    <code>$REST_Interface/root/exceptionShielderProcess</code> variable to a
+    custom Exception Shielder process (see the <code>/rest4BW/Templates</code>
+    directory).</li>
+</ol>
+
+<p><strong>N.B.</strong> It is recommended to add the following headers to HTTP
+Processes to fully utilise the REST interface.</p>
+<ol>
+  <li>HTTP Receiver - <code>host, If-Modified-Since, ETag</code></li>
+  <li>Send HTTP Response - <code>Allow, Cache-Control, Last-Modified, Expires,
+    ETag</code></li>
+</ol>
+
+<p>For an example implementation, please see the <a
+href="#coffee-shop-example">Coffee Shop Example</a>.</p>
+
+<h2>Implementing the REST Delegate</h2>
+
+<p>The REST Delegate is the central process of the REST service, and is
+responsible for implementing the business logic and providing a REST
+response.</p>
+
+<p>The implementation is left to the developer, however a template REST
+Delegate process is supplied under <code>/rest4BW/Templates/REST
+Delegate.process</code>.</p>
+
+<p>For an example implementation, please see the <a
+href="#coffee-shop-example">Coffee Shop Example</a>.</p>
+
+<h2>Recommended Reading</h2>
+<ol>
+  <li><a href="#1-http-connection-automatically-responds-to-http-o">HTTP
+    Connection automatically responds to HTTP OPTIONS method</a></li>
+  <li><a href="#2-mimeparts-are-incorrectly-parsed-by-the-http-rec">MimeParts
+    are incorrectly parsed by the HTTP Receiver</a></li>
+</ol>
+<hr />
+
+<h1>Source Code</h1>
+
+<p>Please refer to the <a href="#resources">Resources</a> section, for
+instructions on obtaining the source code.</p>
+
+<p>To make use of the automated build scripts, you will need to install <a
+href="http://ant.apache.org/">Apache Ant™</a>.</p>
+
+<p>Once the source code is checked out, the following projects are
+available.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <th>Project Name</th>
+      <th>Root Path</th>
+      <th>Source Path</th>
+    </tr>
+    <tr>
+      <td>rest4BW</td>
+      <td>/</td>
+      <td>/src/main/bw/rest4BW</td>
+    </tr>
+    <tr>
+      <td>coffee-shop</td>
+      <td>/examples/coffee-shop</td>
+      <td>/examples/coffee-shop/src/main/bw/coffee-shop</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Ant Scripts</h2>
+
+<h3>Configuration</h3>
+
+<p>To configure the Ant scripts:</p>
+<ol>
+  <li>Copy the file <code>/config/default.properties</code> to <code>${<a
+    href="http://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html"
+    title="See 'Java System Properties'">user.home</a>}/build.properties</code></li>
+  <li>Modify <code>${user.home}/build.properties</code> to reflect the paths
+    for your local TIBCO environment</li>
+</ol>
+
+<p>Once configured, you can now open the projects in TIBCO Designer, by
+executing the following commands from the project's Root Path:</p>
+<ol>
+  <li><code>ant retrieve</code> (Only required on initial setup)</li>
+  <li><code>ant designer</code></li>
+</ol>
+
+<p>Please check the Ant console output for any errors related to misconfigured
+files. </p>
+
+<p>When the build completes successfully the project will be opened in TIBCO
+Designer, with all dependencies automatically configured.</p>
+
+<h2>Coffee Shop Example</h2>
+
+<h3>Overview</h3>
+
+<p>The Coffee Shop Example demonstrates an implementation of a RESTful service,
+utilising the rest4BW™ API.</p>
+
+<p>The example is based around the ability to create, action and view “coffee
+order” objects.</p>
+
+<p>The following table shows resources, and their demonstrated
+functionality.</p>
+
+<table class="coffee-shop-resources">
+  <tbody>
+    <tr>
+      <th>Resource </th>
+      <th>Demonstrated functionality </th>
+    </tr>
+    <tr>
+      <td>/Coffee Shop Service.process</td>
+      <td>REST Interface</td>
+    </tr>
+    <tr>
+      <td>/coffee-shop/REST Service.process </td>
+      <td>REST Delegate implementation</td>
+    </tr>
+    <tr>
+      <td>/coffee-shop/services/Order Service.process </td>
+      <td>RESTful processing of a request </td>
+    </tr>
+    <tr>
+      <td>/coffee-shop/services/Order/edit.process</td>
+      <td>Throwing a REST HTTP Status Code error</td>
+    </tr>
+    <tr>
+      <td>/test/uatTestSuite/*</td>
+      <td>Testing the REST Delegate</td>
+    </tr>
+    <tr>
+      <td>/coffee-shop/model/CoffeeShop.xsd</td>
+      <td>The “Coffee Order” schema</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The following schema models the “Coffee Order” object (Figure 1.4).</p>
+
+<p><img alt="Coffee Order Schema" src="images/image03.png" /></p>
+
+<p><sub>Figure 1.4 - “Coffee Order” schema</sub></p>
+
+<p>The following diagram models the states of a “Coffee Order”, and the
+actions that can be performed upon it (Figure 1.5).</p>
+
+<p><img alt="State Machine Diagram" src="images/image02.png" width="294"
+height="373" /></p>
+
+<p><sub>Figure 1.5 - “Coffee Order” state machine diagram</sub></p>
+
+<p>Please refer to the <code>/test/uatTestSuite/*</code> Feature and Scenario
+test processes, which were used to drive the coffee-shop’s development.</p>
+<hr />
+
+<h1>License</h1>
+
+<p>© Windy Road Technology Pty. Limited 2009-2012</p>
+
+<p></p>
+
+<p>rest4BW™ is distributed under the terms of the GNU Lesser General Public
+License (LGPL).</p>
+
+<p></p>
+
+<p>Permission to waive conditions of this license may be requested from: <a
+href="http://support.windyroad.org">http://support.windyroad.org</a></p>
+
+<p></p>
+
+<p>This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your option)
+any later version.</p>
+
+<p></p>
+
+<p>This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+details.</p>
+
+<p></p>
+
+<p>You should have received a copy of the GNU Lesser General Public License
+along with this program. If not, see: <a
+href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a></p>
+<hr />
+
+<h1>Appendix</h1>
+
+<h2>1. HTTP Connection automatically responds to HTTP OPTIONS method</h2>
+
+<h3>Problem</h3>
+
+<p>The default HTTP Connection automatically responds to OPTIONS HTTP methods,
+without being processed by my HTTP receiver. This is a problem if you want to
+explicitly handle the OPTIONS HTTP method, as you typically would in a RESTful
+application.</p>
+
+<h3>Solution</h3>
+
+<p>In TIBCO’s <em>HTTP Connection</em> Configuration tab, change the
+<em>Server Type</em> from "Tomcat" to "HttpComponent". This will allow you to
+process the OPTIONS HTTP method.</p>
+
+<p></p>
+
+<h2>2. MimeParts are incorrectly parsed by the HTTP Receiver</h2>
+
+<h3>Problem</h3>
+
+<p>In previous TIBCO releases, when the content-type of an incoming message was
+"multipart/*", the first part of the message was presented as the POSTDATA.
+This is incorrect according to MIME specification.</p>
+
+<h3>Solution</h3>
+
+<p>The <code>bw.plugin.http.handleAllMimePartsAsAttachment</code> property
+fixes this problem.</p>
+
+<p></p>
+
+<p>If this property is set to <em>true</em> and the top-level content-type of
+the incoming HTTP message is "multipart/*", then a HTTP Receiver will present
+all the MIME parts as attachments and the POSTDATA field will be empty. If this
+property is set to <em>false</em> (the default value), backward compatibility
+is maintained and the first MIME part is presented as the POSTDATA.</p>
+
+<p><strong>N.B.</strong> Do not check the Parse Post Method Data field on the
+HTTP Receiver process starter when this property is set to <em>true</em>. This
+will cause an error to be thrown.</p>
+
+<p><strong>Example: Modify TIBCO Designer properties</strong></p>
+<ol>
+  <li>Add the following property to your
+    <code>&lt;designer_home&gt;/&lt;version&gt;/properties.cfg</code> file
+    (create the file if it doesn't already exist). 
+    <ol>
+      <li><code>bw.plugin.http.handleAllMimePartsAsAttachment=true</code></li>
+    </ol>
+  </li>
+  <li>(Re)Start TIBCO Designer.</li>
+</ol>
+
+<p><strong>Example: Runtime Test execution configuration, from within TIBCO
+Designer</strong></p>
+<ol>
+  <li>Create a <code>/path/to/custom.properties</code> file, containing the
+    <code>bw.plugin.http.handleAllMimePartsAsAttachment=true</code>
+  property.</li>
+  <li>From within TIBCO Designer, navigate to "<em>Tools &gt; Tester &gt; Start
+    (F9) &gt; Advanced</em>".</li>
+  <li>In the field <em>Test Engine User Args:</em>, enter the following:
+    <code>-p /path/to/custom.properties</code></li>
+  <li>Then Start your Test process as usual.</li>
+</ol>
+
+<p>For more information, please refer to the documentation provided with your
+TIBCO Installation - <a
+href="https://docs.tibco.com/pub/activematrix_businessworks/5.9.3_march_2012/pdf/tib_bw_administration.pdf">TIBCO
+ActiveMatrix BusinessWorks™ Administration</a> (Chapter 8: Custom Engine
+Properties).</p>
+</div>
+
+<div class="footer">
+<a href="http://windyroad.org"></a> </div>
+</body>
+</html>
