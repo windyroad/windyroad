@@ -1,0 +1,58 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: Helvetica, sans-serif;
+}
+
+body {
+  font-size: 16px;
+  margin: 0px;
+  margin-top: 120px;
+  padding: 0px;
+  background-position: center 20px;
+  text-align: center;
+  background-image: url('windyroad-498x80.png');
+  background-repeat: no-repeat;
+}
+a:link,
+a:active,
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+}
+a img {
+  border: 0px;
+}
+
+h1 {
+  margin-left: 10px;
+  font-weight: normal;
+  font-family: 'Trebuchet MS', sans-serif;
+  letter-spacing: -0.1em;
+  background-image: url('front-road-work-ahead.jpg');
+  width: 100px;
+  height: 0px;
+  padding-top: 101px;
+  overflow: hidden;
+  margin: auto;
+}
+
+p {
+  width: 600px;
+  margin: 1em auto;
+}
+
+.detour {
+  background-image: url('detour.jpg');
+  width: 150px;
+  height: 0px;
+  padding-top: 124px;
+  overflow: hidden;
+  display: block;
+  margin: auto;
+}
+
+.detour:hover {
+  background-image: url('detour-hover.jpg');
+}
