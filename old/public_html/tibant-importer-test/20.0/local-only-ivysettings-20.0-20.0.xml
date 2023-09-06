@@ -1,0 +1,27 @@
+<ivysettings>
+    <property name="ivy.local.default.root"
+    value="${ivy.default.ivy.user.dir}/local" override="false"/>
+    <property name="ivy.shared.default.root"
+    value="${ivy.default.ivy.user.dir}/shared" override="false"/>
+    <settings defaultResolver="default" />
+    <caches lockStrategy="artifact-lock" defaultCacheDir="${ivy.default.ivy.user.dir}/cache"/>
+    <resolvers>
+        <filesystem name="${bwda.mirror.repo}" m2compatible="true">
+            <artifact pattern="${bwda.repo.dir}/releases/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" />
+            <ivy pattern="${bwda.repo.dir}/releases/[organisation]/[module]/[revision]/[artifact](-[classifier])-[revision].[ext]" />
+        </filesystem>
+        <chain name="public" >
+            <resolver ref="${bwda.mirror.repo}"/>
+        </chain>
+    </resolvers>
+    <include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
+    <resolvers>
+        <chain name="default" returnFirst="true">
+            <resolver ref="local"/>
+            <resolver ref="public"/>
+        </chain>
+    </resolvers>
+    <modules>
+        <module organisation="org.windyroad" name="*" resolver="${bwda.mirror.repo}"/>
+    </modules>
+</ivysettings>
