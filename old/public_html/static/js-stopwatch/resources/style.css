@@ -1,0 +1,107 @@
+/* Copyright (C)2007 Windy Road
+  This work is licensed under a Creative Commons Attribution 2.5 License.  See http://creativecommons.org/licenses/by/2.5/au/
+  */
+body {
+  text-align: center;
+  font-family: 'verdana', sans-serif;
+  margin: 0px;
+  padding: 0px;
+  background: #b4b4b4;
+}
+
+h1 {
+  margin: 0px;
+  padding: 0.5ex 0.5em;
+  background: url('images/top.png') top center repeat-x;
+}
+
+h1 a {
+  text-decoration: none;
+}
+
+h1 a:hover {
+  color: white;
+}
+
+#header {
+  background: url('images/bottom.png') bottom center repeat-x;
+  padding-bottom: 1ex;
+}
+
+p {
+  margin: 0px;
+  padding: 0px;
+}
+
+#footer {
+  position: relative;
+  bottom: 0px;
+  right: 0px;
+  text-align: right;
+  background: #aaa;
+  padding: 0.5ex 0.5em;
+  font-size: 75%;
+  font-variant: small-caps;
+  background: #b4b4b4 url('images/top.png') top center repeat-x;
+  padding-top: 1ex;
+}
+
+#footer img {
+  border: none;
+  position: relative;
+  top: 3px;
+}
+
+#main {
+  background: white;
+}
+
+#time {
+  display: block;
+  background: white;
+}
+
+#time * {
+  padding: 0px;
+  margin: 0px;
+}
+
+#timetext {
+  font-size: 100px;
+  font-weight: bold;
+  margin: 0px;
+  font-family: monospace;
+  padding: 0px;
+  display: inline;
+}
+
+#seconds {
+  font-size: 50%;
+}
+
+#microseconds {
+  font-size: 25%;
+}
+
+#controls {
+  padding: 0.5ex 0.5em;
+}
+
+#controls button {
+  font-size: 200%;
+}
+
+#stop,
+#resume {
+  display: none;
+}
+
+#debug {
+  position: absolute;
+  top: 0;
+}
+
+a:link,
+a:visited {
+  color: black;
+}
