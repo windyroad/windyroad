@@ -1,0 +1,197 @@
+/* Copyright (C)2007 Windy Road
+  This work is licensed under a Creative Commons Attribution 2.5 License.  See http://creativecommons.org/licenses/by/2.5/au/
+  */
+@import 'undo.css';
+
+body {
+  text-align: center;
+  font-family: 'verdana', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: white;
+}
+
+h1 {
+  margin: 0;
+  padding: 0.5ex 0.5em;
+  background-image: url('scaleimage.php?image=top.png&width=20');
+  background-repeat: repeat-x;
+  background-position: top center;
+  font-size: 200%;
+  font-weight: bold;
+}
+
+h1 a {
+  text-decoration: none;
+}
+
+h1 a:hover,
+p a:hover {
+  color: #008;
+}
+
+#page-width {
+  height: 0;
+}
+
+#header {
+  background-color: #b4b4b4;
+  background-image: url('scaleimage.php?image=bottom.png&width=19');
+  background-repeat: repeat-x;
+  background-position: bottom center;
+  padding-bottom: 1ex;
+}
+
+p {
+  margin: 2ex 1em;
+  padding: 0;
+}
+
+#footer {
+  clear: both;
+  position: relative;
+  bottom: 0;
+  right: 0;
+  text-align: right;
+  font-variant: small-caps;
+  background-color: #b4b4b4;
+  background-image: url('scaleimage.php?image=top.png&width=20');
+  background-repeat: repeat-x;
+  background-position: top center;
+  padding-top: 1ex;
+}
+
+#footer img {
+  border: none;
+  position: relative;
+  top: 0.1em;
+}
+
+#footer div {
+  padding: 0 0.5em 0.5ex 0.5em;
+}
+
+#content {
+  text-align: justify;
+  margin: auto;
+  overflow: visible;
+  min-width: 52em;
+  max-width: 67em;
+  padding: 1em 2em;
+  line-height: 2.5ex;
+}
+
+#main-wrapper {
+  float: left;
+  padding: 1em;
+  padding-right: 17em;
+}
+
+#main-left {
+  background: #b4b4b4 url('scaleimage.php?image=left.png&width=800') top left
+    repeat-y;
+}
+
+#main-right {
+  background: url('scaleimage.php?image=right.png&width=21') top right repeat-y;
+}
+
+#main-top-left {
+  background: url('scaleimage.php?image=top-left.png&width=800') top left
+    no-repeat;
+  height: 2ex;
+  margin-bottom: -1ex;
+}
+
+#main-top-right {
+  float: right;
+  background: url('scaleimage.php?image=top-right.png&width=21') top right
+    no-repeat;
+  height: 2ex;
+  width: 2em;
+  margin-bottom: -1ex;
+}
+
+#main-bottom-left {
+  background: url('scaleimage.php?image=bottom-left.png&width=800') bottom left
+    no-repeat;
+  height: 2ex;
+}
+
+#main-bottom-right {
+  float: right;
+  background: url('scaleimage.php?image=bottom-right.png&width=19') bottom right
+    no-repeat;
+  height: 2ex;
+  width: 2em;
+}
+
+#sidebar-wrapper {
+  width: 14em;
+  padding: 1em;
+  background: white;
+  float: right;
+  margin-left: -17em;
+}
+
+#sidebar-left {
+  background: #b4b4b4 url('scaleimage.php?image=left.png&width=800') top left
+    repeat-y;
+}
+
+#sidebar-right {
+  background: url('scaleimage.php?image=right.png&width=21') top right repeat-y;
+}
+
+#sidebar-top-left {
+  background: url('scaleimage.php?image=top-left.png&width=800') top left
+    no-repeat;
+  height: 2ex;
+  margin-bottom: -1ex;
+}
+
+#sidebar-top-right {
+  float: right;
+  background: url('scaleimage.php?image=top-right.png&width=21') top right
+    no-repeat;
+  height: 2ex;
+  width: 2em;
+  margin-bottom: -1ex;
+}
+
+#sidebar-bottom-left {
+  background: url('scaleimage.php?image=bottom-left.png&width=800') bottom left
+    no-repeat;
+  height: 2ex;
+}
+
+#sidebar-bottom-right {
+  float: right;
+  background: url('scaleimage.php?image=bottom-right.png&width=19') bottom right
+    no-repeat;
+  height: 2ex;
+  width: 2em;
+}
+
+#sidebar {
+}
+
+#debug {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  display: none; /**/
+}
+
+a:link,
+a:visited {
+  color: black;
+}
+
+#main img {
+  float: right;
+  border: solid white 0.5em;
+  border-bottom: solid white 1.5em;
+  margin: 1ex 1em;
+}

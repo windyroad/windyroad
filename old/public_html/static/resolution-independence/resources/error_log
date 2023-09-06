@@ -1,0 +1,169 @@
+[25-Mar-2023 10:27:21 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[25-Mar-2023 10:27:21 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[27-Mar-2023 04:30:32 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[27-Mar-2023 04:30:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[03-Apr-2023 09:05:08 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[03-Apr-2023 09:05:08 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[07-Apr-2023 20:19:12 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[07-Apr-2023 20:19:12 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[07-Apr-2023 20:19:13 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[07-Apr-2023 20:19:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[12-Apr-2023 07:28:54 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[12-Apr-2023 07:28:54 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[21-Apr-2023 22:50:14 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[21-Apr-2023 22:50:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[25-Apr-2023 02:49:57 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[25-Apr-2023 02:49:57 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[26-Apr-2023 14:57:13 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[26-Apr-2023 14:57:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[01-May-2023 09:08:20 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[01-May-2023 09:08:20 UTC] PHP Notice:  Undefined variable: targetwidth in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 13
+[01-May-2023 09:08:20 UTC] PHP Warning:  getimagesize(/home/lymvpzmikyfc/public_html/static/resolution-independence/resources/images/mi): failed to open stream: No such file or directory in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 17
+[01-May-2023 09:08:20 UTC] PHP Notice:  Trying to access array offset on value of type bool in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 24
+[01-May-2023 09:08:20 UTC] PHP Notice:  Trying to access array offset on value of type bool in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 35
+[01-May-2023 09:08:20 UTC] PHP Warning:  getimagesize(/home/lymvpzmikyfc/public_html/static/resolution-independence/resources/images/mi): failed to open stream: No such file or directory in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 41
+[01-May-2023 09:08:20 UTC] PHP Warning:  Division by zero in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 43
+[01-May-2023 09:08:20 UTC] PHP Warning:  Division by zero in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 44
+[01-May-2023 09:08:20 UTC] PHP Warning:  imagecreatetruecolor() expects parameter 1 to be int, float given in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 48
+[01-May-2023 09:08:20 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[01-May-2023 15:03:13 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[01-May-2023 15:03:13 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[04-May-2023 09:44:40 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[04-May-2023 09:46:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[04-May-2023 09:46:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[14-May-2023 03:23:15 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[14-May-2023 03:23:15 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[04-Jun-2023 16:16:12 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[04-Jun-2023 16:16:12 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[05-Jun-2023 09:01:36 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[05-Jun-2023 09:03:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[05-Jun-2023 09:03:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[11-Jun-2023 22:25:59 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[11-Jun-2023 22:25:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[15-Jun-2023 13:49:23 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[15-Jun-2023 13:49:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[15-Jun-2023 17:28:07 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[15-Jun-2023 17:29:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[15-Jun-2023 17:29:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[15-Jun-2023 20:25:38 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[19-Jun-2023 22:38:38 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[19-Jun-2023 22:38:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[24-Jun-2023 08:35:42 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[24-Jun-2023 08:35:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[26-Jun-2023 14:40:57 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[26-Jun-2023 14:40:57 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[02-Jul-2023 00:04:08 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[07-Jul-2023 11:29:02 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[10-Jul-2023 23:56:28 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[11-Jul-2023 03:09:35 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[11-Jul-2023 03:09:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[11-Jul-2023 19:39:47 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[11-Jul-2023 19:39:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[17-Jul-2023 02:22:54 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[24-Jul-2023 02:16:41 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[24-Jul-2023 02:16:41 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[28-Jul-2023 18:53:04 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[01-Aug-2023 04:20:46 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[01-Aug-2023 04:20:46 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[04-Aug-2023 07:35:06 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[04-Aug-2023 07:35:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[18-Aug-2023 04:11:29 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[18-Aug-2023 04:11:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
+[24-Aug-2023 10:27:08 UTC] PHP Deprecated:  Unparenthesized `a ? b : c ? d : e` is deprecated. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 26
+[24-Aug-2023 10:27:08 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function eregi() in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php:53
+Stack trace:
+#0 {main}
+  thrown in /home/lymvpzmikyfc/public_html/static/resolution-independence/resources/scaleimage.php on line 53
