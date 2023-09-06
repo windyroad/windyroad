@@ -1,0 +1,84 @@
+body {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  color: #000;
+  font-size: 0.8em;
+  background-color: #fff;
+}
+
+a:link,
+a:visited {
+  color: #00f;
+}
+
+a:hover {
+  color: #f00;
+}
+
+h1 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #039;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+h2 {
+  font-weight: bold;
+  color: #039;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+h3 {
+  font-weight: bold;
+  color: #039;
+  text-decoration: underline;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+h4 {
+  font-weight: bold;
+  color: #039;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.jsUnitTestResultSuccess {
+  color: #000;
+}
+
+.jsUnitTestResultNotSuccess {
+  color: #f00;
+}
+
+.unselectedTab {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  height: 26px;
+  background: #ffffff;
+  border-style: solid;
+  border-bottom-width: 1px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+}
+
+.selectedTab {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  height: 26px;
+  background: #dddddd;
+  font-weight: bold;
+  border-style: solid;
+  border-bottom-width: 0px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+}
+
+.tabHeaderSeparator {
+  height: 26px;
+  background: #ffffff;
+  border-style: solid;
+  border-bottom-width: 1px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+}

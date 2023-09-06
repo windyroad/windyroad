@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JsUnit Version Check Tests</title>
+<script language="JavaScript" type="text/javascript" src="app/jsUnitCore.js"></script>
+<script language="JavaScript" type="text/javascript" src="../jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="../resources/jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="../resources/resolution-independence.js"></script>
+<script language="JavaScript" type="text/javascript">
+
+function testCalcScale() {
+	var content = $("#content");
+	content.width(400);
+	assertEquals("testing 400 width", $(window).width() / 400, autoResize.calculateScale());
+
+	content.width(150);
+	assertEquals("testing 400 width", $(window).width() / 150, autoResize.calculateScale());
+
+	content.width(900);
+	assertEquals("testing 900 width", $(window).width() / 900, autoResize.calculateScale());
+
+	content.width($(window).width());
+	assertEquals("testing window width", 1, autoResize.calculateScale());
+
+	content.width($(window).width()*2);
+	assertEquals("testing twice window width", 0.5, autoResize.calculateScale());
+
+	content.width($(window).width()*0.5);
+	assertRoughlyEquals("testing half window width", 2, autoResize.calculateScale(), 0.01);
+
+	content.width(0);
+	assertEquals("testing window width", 1/0, autoResize.calculateScale());
+	
+	content.width(400);
+}
+
+function testFontSize() {
+	var content = $("#content");
+	content.css("font-size", "200%");
+	var expected = content.css("font-size");
+	autoResize.setFontSize(2,content);
+	assertEquals("Testing 200% font size", expected, content.css("font-size"));
+
+	content.css("font-size", "156.78%");
+	expected = content.css("font-size");
+	autoResize.setFontSize(1.5678,content);
+	assertEquals("Testing 156.78% font size", expected, content.css("font-size"));
+
+	content.css("font-size", "0%");
+	expected = content.css("font-size");
+	autoResize.setFontSize(0,content);
+	assertEquals("Testing 0% font size", expected, content.css("font-size"));
+}
+
+function testInnerWidth() {
+	var content = $("#content");
+	content.css("width", "200px");
+	content.css("padding", "50px");
+	assertEquals("testing 50px padding", 100, autoResize.innerWidth(content));
+
+	content.css("padding", "0px");
+	assertEquals("testing 0px padding", 200, autoResize.innerWidth(content));
+	content.css("padding", "-50px");
+	assertEquals("testing negative padding", 200, autoResize.innerWidth(content));
+
+	content.css("padding", "100px");
+	assertEquals("testing full padding", 0, autoResize.innerWidth(content));
+
+	content.css("padding", "150px");
+	assertEquals("testing over padding", -100, autoResize.innerWidth(content));
+
+	content.css("padding", "0px");
+}
+
+function testOuterWidth() {
+	var content = $("#content");
+	content.css("width", "200px");
+	content.css("margin", "50px");
+	assertEquals("testing positive margin", 300, autoResize.outerWidth(content));
+	content.css("margin", "-50px");
+	assertEquals("testing negative margin", 100, autoResize.outerWidth(content));
+	content.css("margin", "0px");
+	assertEquals("testing zero margin", 200, autoResize.outerWidth(content));
+	content.css("margin", "-100px");
+	assertEquals("testing full negative margin", 0, autoResize.outerWidth(content));
+	content.css("margin", "-150px");
+	assertEquals("testing over margin", -100, autoResize.outerWidth(content));
+
+	content.css("margin", "0px");
+}
+
+function testChildDisplay() {
+	var content = $("#content");
+	var child1 = $("#firstChild");
+	var child2 = $("#secondChild");
+	var child3 = $("#thirdChild");
+	child1.css("display", "none");
+	child2.css("display", "none");
+	child3.css("display", "none");
+	assertEquals("testing all none", "none", autoResize.getChildDisplay(content));	
+
+	content.childDisplay = undefined;
+	child1.css("display", "inline");
+	child2.css("display", "none");
+	child3.css("display", "none");
+	assertEquals("testing 1st inline", "inline", autoResize.getChildDisplay(content));	
+
+	content.childDisplay = undefined;
+	child1.css("display", "none");
+	child2.css("display", "inline");
+	child3.css("display", "none");
+	assertEquals("testing 2st inline", "inline", autoResize.getChildDisplay(content));	
+
+	content.childDisplay = undefined;
+	child1.css("display", "none");
+	child2.css("display", "none");
+	child3.css("display", "inline");
+	assertEquals("testing 3rd inline", "inline", autoResize.getChildDisplay(content));	
+
+	content.childDisplay = undefined;
+	child1.css("display", "block");
+	child2.css("display", "none");
+	child3.css("display", "none");
+	assertEquals("testing 1st block", "block", autoResize.getChildDisplay(content));	
+
+	content.childDisplay = undefined;
+	child1.css("display", "none");
+	child2.css("display", "block");
+	child3.css("display", "none");
+	assertEquals("testing 2st block", "block", autoResize.getChildDisplay(content));	
+
+	content.childDisplay = undefined;
+	child1.css("display", "none");
+	child2.css("display", "none");
+	child3.css("display", "block");
+	assertEquals("testing 3rd block", "block", autoResize.getChildDisplay(content));
+	assertEquals("testing cached value", "block", content.childDisplay);
+
+	child3.css("display", "none");
+	assertEquals("testing cached value post change", "block", autoResize.getChildDisplay(content));
+
+	content.childDisplay = undefined;
+	child1.css("display", "block");
+	child2.css("display", "block");
+	child3.css("display", "block");
+}
+
+function testGetDisplay() {
+	var content = $("#content");
+	assertEquals("testing block", "block", autoResize.getDisplay(content));	
+	assertEquals("testing cached value", "block", content.display);
+}
+
+function testDisplayLargest() {
+	var content = $("#content");
+	var child1 = $("#firstChild");
+	var child2 = $("#secondChild");
+	var child3 = $("#thirdChild");
+	
+	content.width(300);
+	child1.width(800);
+	child2.width(200);
+	child3.width(400);
+	child1.css("display", "none");
+	child2.css("display", "inline");
+	child3.css("display", "none");
+	content.childDisplay = undefined;
+	assertEquals("testing display", "inline", autoResize.getChildDisplay(content));
+	autoResize.displayLargest(content,1);
+	assertEquals("testing child1 display", "none", child1.css("display"));
+	assertEquals("testing child2 display", "inline", child2.css("display"));
+	assertEquals("testing child3 display", "none", child3.css("display"));
+	
+	content.width(200);
+	autoResize.displayLargest(content,1);
+	assertEquals("testing child1 display", "none", child1.css("display"));
+	assertEquals("testing child2 display", "inline", child2.css("display"));
+	assertEquals("testing child3 display", "none", child3.css("display"));
+
+	content.width(199);
+	autoResize.displayLargest(content,1);
+	assertEquals("testing child1 display", "none", child1.css("display"));
+	assertEquals("testing child2 display", "none", child2.css("display"));
+	assertEquals("testing child3 display", "none", child3.css("display"));
+
+	content.width(0);
+	autoResize.displayLargest(content,1);
+	assertEquals("testing child1 display", "none", child1.css("display"));
+	assertEquals("testing child2 display", "none", child2.css("display"));
+	assertEquals("testing child3 display", "none", child3.css("display"));
+
+	content.width(200);
+	autoResize.displayLargest(content,1);
+	assertEquals("testing child1 display", "none", child1.css("display"));
+	assertEquals("testing child2 display", "inline", child2.css("display"));
+	assertEquals("testing child3 display", "none", child3.css("display"));
+
+	content.width(400);
+	autoResize.displayLargest(content,1);
+	assertEquals("testing child1 display", "none", child1.css("display"));
+	assertEquals("testing child2 display", "none", child2.css("display"));
+	assertEquals("testing child3 display", "inline", child3.css("display"));
+
+	content.width(800);
+	autoResize.displayLargest(content,1);
+	assertEquals("testing child1 display", "inline", child1.css("display"));
+	assertEquals("testing child2 display", "none", child2.css("display"));
+	assertEquals("testing child3 display", "none", child3.css("display"));
+
+	child1.css("display", "block");
+	child2.css("display", "block");
+	child3.css("display", "block");
+
+}
+
+function testDisplayIfFits() {
+	var content = $("#content");
+	var child1 = $("#firstChild");	
+
+	content.width(800);
+	child1.width(800);
+	autoResize.displayIfFits(child1);
+	assertEquals("testing child1 display block", "block", child1.css("display"));
+
+	content.width(799);
+	autoResize.displayIfFits(child1);
+	assertEquals("testing child1 display none", "none", child1.css("display"));
+
+	content.width(0);
+	autoResize.displayIfFits(child1);
+	assertEquals("testing child1 display none", "none", child1.css("display"));
+
+	content.width(800);
+	autoResize.displayIfFits(child1);
+	assertEquals("testing child1 display block", "block", child1.css("display"));	
+}
+
+
+</script>
+</head>
+
+<body>
+<h1>JsUnit Version Check Tests</h1>
+
+<p>This page contains tests for the version checking code in JsUnit that looks to see whether a newer version of JsUnit
+    is available. To see them, take a look at the source.</p>
+<div id="content">
+	<div id="firstChild"></div>
+	<div id="secondChild"></div>
+	<div id="thirdChild"></div>
+</div>
+</body>
+</html>

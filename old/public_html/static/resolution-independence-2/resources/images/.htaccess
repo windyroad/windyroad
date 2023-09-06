@@ -1,0 +1,10 @@
+
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} ^(.+)/images/([^\.]+)\.(.+)$
+RewriteCond %1/images/generated/%2/%3 -f
+RewriteRule ^([^\.]+)\.(.+) generated/$1/$2 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . scaleimage.php [L]
