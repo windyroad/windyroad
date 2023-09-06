@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "name": "windy-road",
+  "description": null,
+  "icons": {
+    "60": "/icons-0c214035dd02737f66f47af19f93446d/firefox_app_60x60.png",
+    "128": "/icons-0c214035dd02737f66f47af19f93446d/firefox_app_128x128.png",
+    "512": "/icons-0c214035dd02737f66f47af19f93446d/firefox_app_512x512.png"
+  },
+  "developer": {
+    "name": null,
+    "url": null
+  }
+}
