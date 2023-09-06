@@ -1,0 +1,193 @@
+/* Copyright (C)2007 Windy Road
+  This work is licensed under a Creative Commons Attribution 2.5 License.  See http://creativecommons.org/licenses/by/2.5/au/
+  */
+body {
+  font-family: 'verdana', sans-serif;
+  margin: 0px;
+  padding: 0px;
+  background: #b4b4b4;
+}
+
+h1 {
+  text-align: center;
+  margin: 0px;
+  padding: 0.5ex 0.5em;
+  background: url('images/top.png') top center repeat-x;
+}
+
+h1 a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+}
+
+a:hover {
+  color: white;
+}
+
+p,
+h2 {
+  margin: 0.5ex 0.5em;
+  padding: 0px;
+}
+
+a img {
+  border: none;
+}
+
+#footer {
+  background: url('images/bottom.png') bottom center repeat-x;
+  text-align: right;
+  padding: 0.5ex 0.5em;
+  padding-bottom: 15px;
+  font-size: 75%;
+  font-variant: small-caps;
+}
+
+#footer img {
+  position: relative;
+  top: 3px;
+}
+
+.thumb {
+  display: inline;
+  border: solid white 5px;
+  border-bottom: solid white 15px;
+  vertical-align: top;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.thumbs {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.lightbox {
+  display: none;
+}
+
+.lightbox:target {
+  display: inline;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background: black;
+  opacity: 0.6;
+}
+
+.cframe {
+  position: fixed;
+  background: #484848 url('images/loading.gif') center center no-repeat;
+  border: solid white 5px;
+  z-index: 200;
+}
+
+.cframe.text,
+.cframe.iframe {
+  width: 50%;
+  height: 50%;
+  top: 25%;
+  left: 25%;
+}
+
+.cframe.image {
+  top: 50%;
+  left: 50%;
+}
+
+.controls {
+  background: white;
+  height: 22px;
+  position: relative;
+  border-left: solid white 5px;
+  border-right: solid white 5px;
+  margin: 0px -5px;
+}
+
+.controls.top {
+  top: -22px;
+}
+
+.controls.bottom {
+  margin-top: -5px;
+  top: 5px;
+}
+
+.controls.top + .content {
+  position: relative;
+  bottom: 22px;
+}
+
+.close-lightbox {
+  float: right;
+  background: white url('images/closelabel.gif');
+  width: 66px;
+  height: 0px;
+  padding-top: 22px;
+  overflow: hidden;
+  margin-left: 10px;
+}
+
+.next-lightbox {
+  float: right;
+  background: white url('images/nextlabel.gif');
+  width: 58px;
+  height: 0px;
+  padding-top: 22px;
+  overflow: hidden;
+}
+
+.prev-lightbox {
+  float: left;
+  background: white url('images/prevlabel.gif');
+  width: 58px;
+  height: 0px;
+  padding-top: 22px;
+  overflow: hidden;
+}
+
+.content {
+  background: #484848;
+  color: white;
+  padding: 0px;
+}
+
+.content.image {
+  width: 100%;
+  height: 100%;
+}
+
+.cframe.text .content,
+.cframe.iframe .content {
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+}
+
+.cframe.iframe .content {
+  border: none;
+}
+
+.caption {
+  text-align: center;
+  font-style: oblique;
+  background: white;
+  color: #555;
+  background: white;
+  height: 22px;
+  position: relative;
+  border-left: solid white 5px;
+  border-right: solid white 5px;
+  margin: 0px -5px;
+  padding: 0.5ex 0.5em;
+}
