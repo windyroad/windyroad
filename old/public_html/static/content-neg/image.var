@@ -1,0 +1,19 @@
+URI: image
+
+URI: image-1200x1000.jpg
+Content-type: image/jpeg; qs=0.9
+Content-feature: width=1200; qs 0.9
+
+# we want the 600x500 to be the default
+# hence it has a higher qs than the 1200x1000
+URI: image-600x500.jpg
+Content-type: image/jpeg; qs=1.0
+Content-feature: width=600; qs 1.0
+
+URI: image-300x250.jpg
+Content-type: image/jpeg; qs=0.25
+Content-feature: width=300; qs 0.25
+
+URI: image-150x125.jpg
+Content-type: image/jpeg; qs=0.1
+Content-feature: width=150; qs 0.1

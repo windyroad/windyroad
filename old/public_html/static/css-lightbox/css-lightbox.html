@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>CSS Lightbox @ Windy Road</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="css lightbox" />
+	<link rel="stylesheet" href="resources/style.css" type="text/css" />
+</head>
+<body>
+	<h1><a href="http://windyroad.org/2007/05/02/css-lightbox-poc/">CSS Lightbox</a></h1>
+	<p>This is a demonstration of the lightbox technique, using XHTML and CSS without any javascript.</p>
+	<p>Sorry IE users, it only works in Firefox and Safari.</p>
+	<h2>Text Lightbox</h2>
+	<p id="showtextlink"><a href="#showtext">Show Text</a></p>
+	<div class="lightbox" id="showtext">
+		<div class="overlay"></div>
+		<div class="content-frame text">
+			<div class="controls top"><a class="close-lightbox" href="#showtextlink">Close</a></div>
+			<div class="content">
+				<h2>Modal Content</h2>
+				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nulla orci. Morbi ligula. Donec ligula. Ut ullamcorper. Cras arcu arcu, convallis non, dignissim ornare, aliquam ut, magna. Donec interdum. Nam tempor porttitor erat. Sed velit. Donec ac purus varius dui feugiat hendrerit. Suspendisse id erat. Aliquam non nulla ut augue feugiat commodo. Proin mi diam, bibendum at, laoreet nec, malesuada at, dui. Donec scelerisque varius odio.</p>
+				<p>Maecenas vehicula augue ac purus. Curabitur ac sapien. Etiam sagittis porttitor enim. Aliquam erat volutpat. Integer semper augue aliquam lacus. Quisque a tortor vitae sapien pharetra rhoncus. Nunc vehicula bibendum diam. Sed eget pede. Ut et massa at metus malesuada ullamcorper. Aliquam ultrices cursus tellus. Donec ultrices. Vivamus accumsan felis et dolor.</p>
+				<p>Fusce quis lacus. Donec id orci vitae libero dictum semper. Sed laoreet felis et elit. Vivamus odio ligula, pellentesque id, dapibus in, iaculis in, mauris. Aenean ut pede vel sapien aliquet iaculis. Phasellus dolor turpis, posuere eu, laoreet et, volutpat ac, purus. Proin nec elit. Suspendisse a dui. Curabitur sollicitudin risus vel pede. Quisque cursus. Proin ut erat in tortor mattis convallis. Sed nec erat. Fusce elementum, nisl sit amet sodales feugiat, lectus pede lobortis tortor, vitae commodo lorem leo et pede. Fusce erat augue, elementum sed, cursus vitae, mollis non, felis. Quisque vel libero. Mauris tristique, odio fermentum pellentesque sollicitudin, urna nisl luctus orci, in lobortis quam felis in sem.</p>
+				<p>Cras feugiat. Pellentesque dolor arcu, dapibus vitae, elementum feugiat, egestas pretium, sem. Cras fermentum velit in ligula. Duis dignissim metus non augue. Morbi bibendum interdum leo. Duis condimentum sollicitudin magna. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec nonummy dictum lorem. Nulla molestie condimentum leo. Proin iaculis, pede in viverra convallis, neque magna hendrerit sapien, et tempus massa erat quis lacus. Nam magna eros, scelerisque vulputate, aliquam et, euismod convallis, augue. Aenean tincidunt fringilla odio. Sed libero mi, aliquam rutrum, lobortis at, pharetra at, magna. Vestibulum at felis. Nulla rutrum turpis ac nibh sollicitudin sollicitudin. Aliquam tempus elit eget metus. Vestibulum nonummy scelerisque mauris. Sed non purus quis orci dapibus venenatis.</p>
+				<p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Aliquam vel massa ut dolor faucibus tempor. Donec sapien est, scelerisque at, iaculis vel, fringilla rutrum, sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed nisl metus, molestie quis, tempor eu, ultricies ut, dui. Nunc dictum mi ac dui. Suspendisse felis quam, pharetra quis, vestibulum id, eleifend in, lorem. Cras pulvinar tristique enim. Quisque accumsan rhoncus nisi. Maecenas tincidunt gravida eros. Donec aliquam.</p>
+			</div>
+		</div>
+	</div>
+	<h2>Image Lightbox</h2>
+	<p id="showimagelink"><a href="#showimage"><img class="thumb" src="resources/images/wallpaper1-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></p>
+	<div class="lightbox" id="showimage">
+		<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 400px; margin-top: -200px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/wallpaper1.jpg') no-repeat;" ></div>
+				<div class="controls bottom"><a class="close-lightbox" href="#showimagelink">Close</a></div>
+			</div>
+	</div>
+	<h2>Image Lightbox w/ Caption</h2>
+	<p id="showimagecaplink"><a href="#showimagecap"><img class="thumb" src="resources/images/wallpaper1-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></p>
+	<div class="lightbox" id="showimagecap">
+		<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 400px; margin-top: -200px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/wallpaper1.jpg') no-repeat;" ></div>
+				<div class="caption">This is a caption</div>
+				<div class="controls bottom"><a class="close-lightbox" href="#showimagecaplink">Close</a></div>
+			</div>
+	</div>
+	<h2>Gallery Lightbox</h2>
+	<div class="thumbs">
+		<span id="showg1link"><a href="#showg1"><img class="thumb" src="resources/images/wallpaper1-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></span>
+		<div class="lightbox" id="showg1">
+			<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 400px; margin-top: -200px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/wallpaper1.jpg') no-repeat;" ></div>
+				<div class="controls bottom">
+					<a class="close-lightbox" href="#showg1link">Close</a>
+					<a class="next-lightbox" href="#showg2">Next</a>
+				</div>
+			</div>
+		</div>
+		<span id="showg2link"><a href="#showg2"><img class="thumb" src="resources/images/wallpaper6-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></span>
+		<div class="lightbox" id="showg2">
+			<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 400px; margin-top: -200px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/wallpaper6.jpg') no-repeat;" ></div>
+				<div class="controls bottom">
+					<a class="close-lightbox" href="#showg2link">Close</a>
+					<a class="prev-lightbox" href="#showg1">Prev</a>
+					<a class="next-lightbox" href="#showg3">Next</a>
+				</div>
+			</div>
+		</div>
+		<span id="showg3link"><a href="#showg3"><img class="thumb" src="resources/images/im-wallpaper1-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></span>
+		<div class="lightbox" id="showg3">
+			<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 320px; margin-top: -160px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/im-wallpaper1.jpg') no-repeat;" ></div>
+				<div class="controls bottom">
+					<a class="close-lightbox" href="#showg3link">Close</a>
+					<a class="prev-lightbox" href="#showg2">Prev</a>
+					<a class="next-lightbox" href="#showg4">Next</a>
+				</div>
+			</div>
+		</div>
+		<span id="showg4link"><a href="#showg4"><img class="thumb" src="resources/images/wallpaper2-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></span>
+		<div class="lightbox" id="showg4">
+			<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 400px; margin-top: -200px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/wallpaper2.jpg') no-repeat;" ></div>
+				<div class="controls bottom">
+					<a class="close-lightbox" href="#showg4link">Close</a>
+					<a class="prev-lightbox" href="#showg3">Prev</a>
+					<a class="next-lightbox" href="#showg5">Next</a>
+				</div>
+			</div>
+		</div>
+		<span id="showg5link"><a href="#showg5"><img class="thumb" src="resources/images/wallpaper3-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></span>
+		<div class="lightbox" id="showg5">
+			<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 400px; margin-top: -200px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/wallpaper3.jpg') no-repeat;" ></div>
+				<div class="controls bottom">
+					<a class="close-lightbox" href="#showg5link">Close</a>
+					<a class="prev-lightbox" href="#showg4">Prev</a>
+					<a class="next-lightbox" href="#showg6">Next</a>
+				</div>
+			</div>
+		</div>
+		<span id="showg6link"><a href="#showg6"><img class="thumb" src="resources/images/wallpaper5-thumb.jpg" alt="Thumbnail for a picture of trees in a park with sunbeams."/></a></span>
+		<div class="lightbox" id="showg6">
+			<div class="overlay"></div>
+			<div class="content-frame image" style="width: 480px; height: 400px; margin-top: -200px; margin-left: -240px;">
+				<div class="content image" style="background: url('resources/images/wallpaper5.jpg') no-repeat;" ></div>
+				<div class="controls bottom">
+					<a class="close-lightbox" href="#showg6link">Close</a>
+					<a class="prev-lightbox" href="#showg5">Prev</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="footer">
+		<a rel="license" href="http://creativecommons.org/licenses/by/2.5/au/"><img alt="Creative Commons License" src="resources/images/cc-lic.png" /></a> : 
+		<a href="http://windyroad.org/2007/05/02/css-lightbox-poc/">CSS Lightbox</a>
+		by
+		<a href="http://windyroad.org"><img src="resources/images/windyroad.png" alt="Windy Road" /></a>
+	</div>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+	</script>
+	<script type="text/javascript">
+	_uacct = "UA-808591-1";
+	urchinTracker();
+	</script>
+</body>
+</html>
