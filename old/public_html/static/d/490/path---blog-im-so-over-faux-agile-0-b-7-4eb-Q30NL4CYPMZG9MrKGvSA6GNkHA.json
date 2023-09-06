@@ -1,0 +1,19 @@
+{
+  "data": {
+    "markdownRemark": {
+      "html": "<iframe src=\"https://giphy.com/embed/3XiQswSmbjBiU\" width=\"480\" height=\"264\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe>\n<p>OK, I've had enough. I'm over teams \"doing Agile\" like it involves following a prescribed set of processes with a prescribed set of \"ceremonies\". Just the term \"ceremonies\" should be a <strong>BIG RED</strong> warning sign.</p>\n<p>I've even starting to wonder if faux agile is worse than Waterfall... OK, maybe that's taking it a bit far.</p>\n<p>So if that's faux agile, what's real agile? It's called being <a href=\"https://www.dictionary.com/browse/nimble\">nimble</a>. Full Stop.</p>\n<p>No that's not some new methodology with a whole heap of books, videos, acceditations and conferences. Simply ask yourself, are you nimble and is the the team you are working with nimble? Or are you a big lumbering hot mess?</p>",
+      "fields": { "slug": "blog/i'm-so-over-faux-agile" },
+      "frontmatter": {
+        "date": "2020/01/29",
+        "title": "I'm So Over Faux Agile",
+        "author": "Tom Howard",
+        "tags": ["agile", "nimble", "devops", "software", "software delivery"],
+        "image": null
+      },
+      "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/i'm-so-over-faux-agile/index.md"
+    }
+  },
+  "pageContext": {
+    "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/i'm-so-over-faux-agile/index.md"
+  }
+}

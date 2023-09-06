@@ -1,0 +1,42 @@
+{
+  "data": {
+    "allMarkdownRemark": {
+      "edges": [
+        {
+          "node": {
+            "fields": { "slug": "blog/i'm-so-over-faux-agile" },
+            "frontmatter": {
+              "date": "2020/01/29",
+              "title": "I'm So Over Faux Agile",
+              "author": "Tom Howard",
+              "image": null
+            }
+          }
+        },
+        {
+          "node": {
+            "fields": {
+              "slug": "blog/the-development-of-expertise-in-software-delivery"
+            },
+            "frontmatter": {
+              "date": "2019/04/17",
+              "title": "The Development of Expertise in Software Delivery",
+              "author": "Tom Howard",
+              "image": {
+                "childImageSharp": {
+                  "fixed": {
+                    "width": 200,
+                    "height": 106,
+                    "src": "/static/b825487a1c95d001e720d4539b1b0fc4/e7c66/second-way1-400x211.png",
+                    "srcSet": "/static/b825487a1c95d001e720d4539b1b0fc4/e7c66/second-way1-400x211.png 1x,\n/static/b825487a1c95d001e720d4539b1b0fc4/fbe2f/second-way1-400x211.png 1.5x,\n/static/b825487a1c95d001e720d4539b1b0fc4/140ea/second-way1-400x211.png 2x"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "pageContext": { "limit": 2, "skip": 2 }
+}

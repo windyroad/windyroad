@@ -1,0 +1,78 @@
+{
+  "data": {
+    "allMarkdownRemark": {
+      "edges": [
+        {
+          "node": {
+            "fields": { "slug": "blog/seeing-round-ups-for-what-they-are" },
+            "id": "87fe4de6-f184-5b8c-b932-1f38c99128d5",
+            "excerpt": "Round-ups are an awesome way to  save  or  invest . It's cool, it's new (from what I can find it was  launched by Acorns in 2014 ) and it's painless. It works, because rather than asking you to be disciplined and fight your consumerism, it leverages…",
+            "frontmatter": {
+              "date": "2020/03/06",
+              "title": "Seeing round-ups for what they are",
+              "author": "Tom Howard",
+              "image": null
+            },
+            "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/seeing-round-ups-for-what-they-are/index.md"
+          }
+        },
+        {
+          "node": {
+            "fields": {
+              "slug": "blog/script-to-wait-untill-docker-container-is-healthy"
+            },
+            "id": "badf48d4-73bd-56e0-8096-c3592bab3e25",
+            "excerpt": "Here's a quick script that can be used to wait until a Docker container reports the status is heathly (or not). It assumes the image has  HEALTHCHECK  configured First arg is the container ID.",
+            "frontmatter": {
+              "date": "2020/01/29",
+              "title": "Script to wait untill Docker container is healthy",
+              "author": "Tom Howard",
+              "image": null
+            },
+            "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/script-to-wait-untill-docker-container-is-healthy/index.md"
+          }
+        },
+        {
+          "node": {
+            "fields": { "slug": "blog/i'm-so-over-faux-agile" },
+            "id": "68a15e2d-ae76-5722-a956-94e468085736",
+            "excerpt": "OK, I've had enough. I'm over teams \"doing Agile\" like it involves following a prescribed set of processes with a prescribed set of \"ceremonies\". Just the term \"ceremonies\" should be a  BIG RED  warning sign. I've even starting to wonder if faux…",
+            "frontmatter": {
+              "date": "2020/01/29",
+              "title": "I'm So Over Faux Agile",
+              "author": "Tom Howard",
+              "image": null
+            },
+            "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/i'm-so-over-faux-agile/index.md"
+          }
+        },
+        {
+          "node": {
+            "fields": {
+              "slug": "blog/the-development-of-expertise-in-software-delivery"
+            },
+            "id": "16aac796-bf50-5899-a80e-134fb4285947",
+            "excerpt": "Fast and accurate feedback is critical for fast and efficient software delivery, but its benefits go far beyond those typically described by the agile, lean and DevOps communities. Since its inception, agile development has encouraged feedback  and…",
+            "frontmatter": {
+              "date": "2019/04/17",
+              "title": "The Development of Expertise in Software Delivery",
+              "author": "Tom Howard",
+              "image": {
+                "childImageSharp": {
+                  "fixed": {
+                    "width": 256,
+                    "height": 135,
+                    "src": "/static/b825487a1c95d001e720d4539b1b0fc4/12e55/second-way1-400x211.png",
+                    "srcSet": "/static/b825487a1c95d001e720d4539b1b0fc4/12e55/second-way1-400x211.png 1x,\n/static/b825487a1c95d001e720d4539b1b0fc4/77114/second-way1-400x211.png 1.5x"
+                  }
+                }
+              }
+            },
+            "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/the-development-of-expertise-in-software-delivery/index.md"
+          }
+        }
+      ]
+    }
+  },
+  "pageContext": {}
+}

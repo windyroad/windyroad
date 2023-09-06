@@ -1,0 +1,21 @@
+{
+  "data": {
+    "markdownRemark": {
+      "html": "<p>Here's a quick script that can be used to wait until a Docker container reports the status is heathly (or not).</p>\n<p>It assumes the image has <a href=\"https://docs.docker.com/engine/reference/builder/#healthcheck\">HEALTHCHECK</a> configured</p>\n<p>First arg is the container ID.</p>\n<pre><code>#!/bin/bash\n\n\nwhile true\ndo\n  STATUS=`docker inspect --format='{{json .State.Health.Status}}' $1`\n  if [ \"$STATUS\" == '\"healthy\"' ] ; then\n    echo \"$(date -u) Healthy!!!\"\n    sleep 1\n    exit 0\n  elif [ \"$STATUS\" == '\"unhealthy\"' ] ; then\n    echo \"$(date -u) Unhealthy!!!\"\n    sleep 1\n    exit 9\n  elif [ \"$STATUS\" == '\"starting\"' ] ; then\n    echo \"$(date -u) starting!!!\"\n  else\n    echo \"Huh? $STATUS\"\n    sleep 1\n    exit 10\n  fi\n  sleep 1\ndone\n</code></pre>",
+      "fields": {
+        "slug": "blog/script-to-wait-untill-docker-container-is-healthy"
+      },
+      "frontmatter": {
+        "date": "2020/01/29",
+        "title": "Script to wait untill Docker container is healthy",
+        "author": "Tom Howard",
+        "tags": ["devops", "software", "docker", "script"],
+        "image": null
+      },
+      "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/script-to-wait-untill-docker-container-is-healthy/index.md"
+    }
+  },
+  "pageContext": {
+    "fileAbsolutePath": "/Users/tomhoward/Projects/windyroad/src/articles/script-to-wait-untill-docker-container-is-healthy/index.md"
+  }
+}
