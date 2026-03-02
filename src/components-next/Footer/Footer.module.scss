@@ -1,0 +1,37 @@
+.footer {
+  padding: 2rem 1.5rem;
+  background-color: var(--color-bg-dark);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.copyright {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.socials {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.socialLink {
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: var(--color-accent);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
