@@ -1,0 +1,38 @@
+.testimonials {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.card {
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-light);
+  background-color: #fff;
+}
+
+.quote {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--color-text-dark);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.attribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  font-style: normal;
+}
+
+.role {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
