@@ -6,7 +6,7 @@ const problems = [
   'AI-generated code passes review because it \u201Clooks right\u201D but has subtle security holes',
   'Your AI-written tests pass, but they\u2019re testing the wrong thing \u2014 or nothing at all',
   'Developers ship 3x faster but defect rate quietly doubles',
-  'No one on the team knows which code was AI-generated and which was human-written',
+  'Junior developers accept AI suggestions without question because they don\u2019t know enough to push back',
 ];
 
 const process = [
