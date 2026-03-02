@@ -5,7 +5,6 @@ const goodFit = [
   'Your team is using Copilot, Cursor, or Claude and you\u2019re not sure what\u2019s getting through review',
   'You\u2019ve shipped faster since adopting AI tools but defect rates or security issues are creeping up',
   'You need someone who can implement the guardrails, not just recommend them in a PDF',
-  'You\u2019re in a regulated industry and need to demonstrate control over AI-assisted development',
   'You want your team to get better at working with AI, not just dependent on one consultant',
 ];
 
