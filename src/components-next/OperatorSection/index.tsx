@@ -32,18 +32,22 @@ export default function OperatorSection() {
           customer portal.
         </p>
         <p>
-          I&apos;ve been working with AI since 1999, when I built autonomous
-          agents at CSIRO that competed at the RoboCup World Cup. I hold a
-          patent, co-authored three research papers, and have shipped three
-          profitable software products through my company Windy Road
-          Technology &mdash; TIBant, BWUnit, and Addressr &mdash; with
-          customers across Australia, the UK, US, and Europe.
+          I&apos;ve been working with AI since 1999 &mdash; building autonomous
+          agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
+          co-authoring research papers. AI experience before it was called AI.
         </p>
         <p>
-          25+ years of delivery leadership. AI experience before it was a
-          buzzword. Three products built, shipped, and sold. That&apos;s what
-          I bring to your team: someone who&apos;s done the hard parts and
-          knows where things break.
+          Through Windy Road Technology, I&apos;ve taken three software products
+          from idea to implementation to market to profit: TIBant, BWUnit, and
+          Addressr. Not consulting on someone else&apos;s product &mdash;
+          actually doing it. Finding customers, closing sales, supporting users.
+          With paying customers across Australia, the UK, US, and Europe, I know
+          what it takes.
+        </p>
+        <p>
+          25+ years of delivery leadership. AI before it was a buzzword. Three
+          products taken from idea to profit. When you need a navigator who&apos;s
+          been on this road before, I&apos;m that person.
         </p>
       </div>
     </Section>

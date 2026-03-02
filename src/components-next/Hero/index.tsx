@@ -10,9 +10,10 @@ export default function Hero() {
           <span className={styles.accent}>I make sure it actually works.</span>
         </h1>
         <p className={styles.subheadline}>
-          Copilot, Cursor, and Claude are writing your production code. I help
-          founders and engineering leaders put the guardrails in place so that
-          speed doesn&apos;t become your most expensive liability.
+          Copilot, Cursor, and Claude are writing your production code. I
+          partner with founders and engineering leaders as a co-driver —
+          reading the road ahead, calling corners — so the speed doesn&apos;t
+          put you in the ditch. It&apos;s why I called the company Windy Road.
         </p>
         <div className={styles.cta}>
           <Button
