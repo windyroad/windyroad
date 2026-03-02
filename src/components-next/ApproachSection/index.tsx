@@ -11,9 +11,9 @@ const problems = [
 
 const process = [
   {
-    label: 'Audit',
+    label: 'Diagnose',
     description:
-      'I review your current AI-assisted workflow end to end \u2014 which tools your team uses, how generated code gets reviewed, what your CI/CD pipeline catches and what it misses. You get a written assessment with specific recommendations.',
+      'I look at how your team actually works with AI tools today \u2014 which ones they use, how generated code gets reviewed, what your pipeline catches and what slips through. You get a clear picture of where the risk is and what to fix first.',
   },
   {
     label: 'Implement',

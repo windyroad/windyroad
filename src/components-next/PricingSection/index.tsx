@@ -3,11 +3,11 @@ import styles from './PricingSection.module.scss';
 
 const engagements = [
   {
-    name: 'AI Delivery Audit',
+    name: 'AI Delivery Review',
     duration: '1 week',
     description:
-      'A deep-dive into your current AI-assisted development workflow. I review your tools, pipeline, review process, and test coverage. You get a written risk assessment with specific, prioritised recommendations for quality gates and security controls.',
-    outcome: 'Written assessment + action plan',
+      'I look at how your team works with AI tools today and where the gaps are. You get a prioritised action plan \u2014 what to fix first, what guardrails to add, and what\u2019s already working.',
+    outcome: 'Clear picture + prioritised action plan',
   },
   {
     name: 'Embedded Delivery Lead',
