@@ -9,8 +9,7 @@ const nextConfig = {
   outputFileTracingRoot: __dirname,
   sassOptions: {},
   eslint: {
-    // ESLint will be set up in Step 6; skip during build for now
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
     // Type checking will be enabled once migration is complete
