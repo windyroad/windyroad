@@ -4,19 +4,18 @@
 
 :root {
   /* Colors */
-  --color-bg-dark: #0A0A0F;
-  --color-bg-light: #FAFAFA;
-  --color-accent: #22D46F;
-  --color-accent-hover: #1eba60;
-  --color-text-dark: #1A1A2E;
-  --color-text-light: #E8E8ED;
-  --color-text-muted: #6B7280;
+  --color-bg-dark: #0F172A;
+  --color-bg-light: #FFFFFF;
+  --color-accent: #3B82F6;
+  --color-accent-hover: #2563EB;
+  --color-text-dark: #0F172A;
+  --color-text-light: #F1F5F9;
+  --color-text-muted: #64748B;
   --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-light: rgba(0, 0, 0, 0.1);
+  --color-border-light: rgba(0, 0, 0, 0.08);
 
   /* Typography */
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Spacing */
   --section-padding: 6rem 1.5rem;
@@ -121,7 +120,6 @@ p:last-child {
    ======================================== */
 
 .section-number {
-  font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-accent);

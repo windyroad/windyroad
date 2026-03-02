@@ -3,25 +3,25 @@ import styles from './TestimonialsSection.module.scss';
 
 const testimonials = [
   {
-    theme: 'On transforming how a team delivers',
+    theme: 'On turning around a troubled project',
+    name: 'Mark Chan',
+    role: 'Senior Project Manager, Westpac',
+    quote:
+      'Resourced into a troubled project at WBC, he was able to reassure management regarding directions to stabilise and bring the project back on course. Tom projects well with all levels of staff and is highly regarded for his training efforts. I highly recommend Tom from a technical and management perspective.',
+  },
+  {
+    theme: 'On technical credibility',
     name: 'Kasi Subramanian',
     role: 'Manager, Rail Services at Pacific National',
     quote:
-      'Tom is the kind of Scrum Master who doesn\u2019t just run standups \u2014 he transforms teams. When he joined Rail Services, we were following a waterfall approach. Tom introduced agile thinking, improved our delivery and productivity, and created a model that other teams across the organisation have since adopted. What set him apart was his technical strength \u2014 he could engage credibly with both the business and the team, managing expectations effectively while keeping everyone honest on what was truly achievable.',
+      'What set him apart was his technical strength \u2014 he could engage credibly with both the business and the team, managing expectations effectively while keeping everyone honest on what was truly achievable.',
   },
   {
-    theme: 'On navigating complex, regulated delivery',
-    name: 'Martin Lee',
-    role: 'Senior / Lead Business Analyst \u2014 Regulatory Compliance & Risk Management',
+    theme: 'On delivering results',
+    name: 'John Menzies',
+    role: 'Director and Founding Engineer, Think Platinum',
     quote:
-      'Tom is a true professional with uncompromising values and willingness provide advice or share knowledge for work or other related matters. We worked together in large regulatory projects with emphasis on compliance, data and technology deliveries. Throughout the time, Tom has demonstrated structural and logical approaches to complex matters. He always made himself available to provide guidance or constructive feedbacks to ideas. Tom is a great asset for any organisation that looks for technology delivery or team leadership.',
-  },
-  {
-    theme: 'On hands-on versatility',
-    name: 'Stan Ciesielski',
-    role: 'Senior Software Engineer',
-    quote:
-      'Tom is very versatile and comfortable working in many areas. He handles solution architecture, technical design, coding, testing, scrum mastering and project management very well. He has strong technical knowledge and understands both the big picture and the details. He always looks for ways to improve processes and make delivery smoother and more reliable.',
+      'Never afraid to tackle a problem, he brought high levels of innovation coupled with quality and commitment. Tom never failed to meet the objectives set for him, often exceeding expectations.',
   },
 ];
 
