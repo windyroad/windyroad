@@ -10,13 +10,15 @@ All agent work in this repo must align with:
 When uncertain, prefer the option that improves feedback speed and keeps changes small and recoverable.
 Apply Gall's law in delivery decisions: start from a working simple slice, then earn complexity incrementally through validated trunk feedback.
 
-## Migration Status
+## Project Structure
 
-This project is migrating from Gatsby v2 to Next.js 15 (static export). Legacy Gatsby files remain in the repo during migration and will be removed once the Next.js site is verified.
+This project has been migrated from Gatsby v2 to Next.js 15 (static export).
 
-- **Active code**: `src/app/` (Next.js App Router), `next.config.mjs`
-- **Legacy (do not modify)**: `gatsby-*.js`, `.circleci/`, `scripts/deploy.sh`, `src/pages/`, `src/layouts/`, `src/templates/`
-- **Shared (used by both)**: `src/articles/` (markdown content), `src/components/` (being migrated), `src/img/`
+- **App code**: `src/app/` (Next.js App Router), `src/components-next/`, `src/lib/`
+- **Config**: `next.config.mjs`, `eslint.config.mjs`, `tsconfig.json`
+- **Content**: `src/articles/` (markdown blog posts), `src/img/`, `public/img/`
+- **Legacy CSS (still imported)**: `src/layouts/css/main.css`, `src/components/*/index.css` — these contain the site's visual styles and are imported by Next.js components
+- **CI**: `.github/workflows/ci.yml` (GitHub Actions)
 
 ## Trunk-Based Delivery
 
@@ -33,9 +35,10 @@ This project enforces quality through existing deterministic gates. Do not bypas
 - `npm run build` — Next.js static export (produces `out/` directory)
 - `npm run dev` — Next.js dev server (port 3000)
 
-**CI Pipeline (GitHub Actions — to be set up):**
+**CI Pipeline (GitHub Actions):**
 
-- Build: `npm run build` (Next.js)
+- Lint: `npx eslint src/app/ src/components-next/ src/lib/`
+- Build: `npm run build` (Next.js static export → `out/`)
 - Deploy: Netlify (current production host for windyroad.com.au, behind Cloudflare DNS)
 
 **Claude Code hooks (`.claude/hooks/`):**
@@ -45,7 +48,6 @@ This project enforces quality through existing deterministic gates. Do not bypas
 
 Hooks are registered in `.claude/settings.json` and run automatically. Do not bypass them.
 
-**Note**: Pre-commit hooks (Husky + lint-staged) are not yet reconfigured for the Next.js stack. This will be done in the linting upgrade step.
 
 ## Completion Protocol
 
@@ -60,5 +62,5 @@ Unless explicitly told otherwise, when a task is complete:
 
 - **Stack**: Next.js 15 (static export), React 19, TypeScript, Sass, Node 20
 - **Deployment**: Netlify (behind Cloudflare DNS)
-- **Content**: Blog posts as Markdown in `src/articles/`, landing page components being migrated to `src/app/`
-- **Legacy**: Gatsby v2 source files, CircleCI config, WDIO v4 test infrastructure — all pending removal
+- **Content**: Blog posts as Markdown in `src/articles/`, landing page in `src/app/page.tsx`
+- **Blog**: `src/app/blog/` (listing + `[slug]`), processed by `src/lib/markdown.ts`

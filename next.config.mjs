@@ -15,8 +15,6 @@ const nextConfig = {
     // Type checking will be enabled once migration is complete
     ignoreBuildErrors: true,
   },
-  // Only treat .tsx/.ts as pages so legacy Gatsby .js files in src/pages/ are ignored
-  pageExtensions: ['tsx', 'ts'],
 };
 
 export default nextConfig;
