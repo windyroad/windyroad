@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
+import styles from '../post.module.scss';
 
 export async function generateStaticParams() {
   const slugs = getAllSlugs();
@@ -17,7 +18,7 @@ export async function generateMetadata({
   const post = await getPostBySlug(slug);
   if (!post) return { title: 'Not Found' };
   return {
-    title: `${post.frontmatter.title} - Windy Road`,
+    title: `${post.frontmatter.title} — Tom Howard`,
     description: post.excerpt,
   };
 }
@@ -38,35 +39,39 @@ export default async function BlogPost({
   );
 
   const moreLink = frontmatter.link ? (
-    <a href={frontmatter.link} target="_blank" rel="noopener noreferrer">
+    <a
+      href={frontmatter.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.readMore}
+    >
       read more...
     </a>
   ) : null;
 
   return (
-    <main className="container">
-      <article className="content blog-article">
-        <header>
-          <h2>
-            <Link href={`/blog/${slug}`}>{frontmatter.title}</Link>
-          </h2>
-          <div className="meta">
-            by {frontmatter.author}, {formattedDate}
-            <div>
-              {frontmatter.tags?.map((tag) => (
-                <span key={tag}>#{tag} </span>
-              ))}
+    <div className={styles.postPage}>
+      <div className={styles.inner}>
+        <article>
+          <header className={styles.postHeader}>
+            <h1 className={styles.postTitle}>
+              <Link href={`/blog/${slug}`}>{frontmatter.title}</Link>
+            </h1>
+            <div className={styles.postMeta}>
+              by {frontmatter.author}, {formattedDate}
+              <div className={styles.tags}>
+                {frontmatter.tags?.map((tag) => (
+                  <span key={tag}>#{tag}</span>
+                ))}
+              </div>
             </div>
-          </div>
-        </header>
-        <section className="blog-article-content">
-          <div
-            className="blog-article-content"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-          {moreLink}
-        </section>
-      </article>
-    </main>
+          </header>
+          <section className={styles.content}>
+            <div dangerouslySetInnerHTML={{ __html: html }} />
+            {moreLink}
+          </section>
+        </article>
+      </div>
+    </div>
   );
 }
