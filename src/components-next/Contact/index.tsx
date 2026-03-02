@@ -5,8 +5,8 @@ import { faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import validator from 'email-validator';
 import Button from '../Button';
-import '../../components/Contact/index.css';
-import '../../components/Contact/Input/index.css';
+import './contact.css';
+import './input.css';
 
 const ZD_API = 'https://windyroad.zendesk.com:443/api/v2/requests.json';
 

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import FindYourNavigator from '../FindYourNavigator';
 import GotoNext from '../GotoNext';
-import '../../components/Banner/index.css';
+import './index.css';
 
 const bannerImages: Record<number, string> = {
   20: '/img/banner/banner-20.jpeg',

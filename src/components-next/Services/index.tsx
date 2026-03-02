@@ -6,8 +6,8 @@ import { faCompass } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import GotoNext from '../GotoNext';
-import '../../components/Services/index.css';
-import '../../components/Services/Tile/index.css';
+import './services.css';
+import './tile.css';
 
 interface TileProps {
   title: string;

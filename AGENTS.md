@@ -15,9 +15,9 @@ Apply Gall's law in delivery decisions: start from a working simple slice, then 
 This project has been migrated from Gatsby v2 to Next.js 15 (static export).
 
 - **App code**: `src/app/` (Next.js App Router), `src/components-next/`, `src/lib/`
+- **Styles**: `src/styles/main.css` (global), component CSS co-located in `src/components-next/`
 - **Config**: `next.config.mjs`, `eslint.config.mjs`, `tsconfig.json`
 - **Content**: `src/articles/` (markdown blog posts), `src/img/`, `public/img/`
-- **Legacy CSS (still imported)**: `src/layouts/css/main.css`, `src/components/*/index.css` — these contain the site's visual styles and are imported by Next.js components
 - **CI**: `.github/workflows/ci.yml` (GitHub Actions)
 
 ## Trunk-Based Delivery

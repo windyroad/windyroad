@@ -2,7 +2,7 @@
 
 import FindYourNavigator from '../FindYourNavigator';
 import Spotlight from '../Spotlight';
-import '../../components/About/index.css';
+import './index.css';
 
 const whiteboardImages: Record<number, string> = {
   45: '/img/about/whiteboard-45.jpeg',

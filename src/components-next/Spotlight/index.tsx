@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import GotoNext from '../GotoNext';
-import '../../components/Spotlight/index.css';
+import './index.css';
 
 interface SpotlightProps {
   id: string;

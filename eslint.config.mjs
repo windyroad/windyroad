@@ -6,14 +6,7 @@ import nextPlugin from '@next/eslint-plugin-next';
 export default [
   {
     ignores: [
-      'gatsby-*.js',
-      'src/pages/**',
-      'src/layouts/**',
-      'src/templates/**',
-      'src/components/**',
-      'src/features.js',
       'old/**',
-      'scripts/**',
       'node_modules/**',
       'public/**',
       '.next/**',

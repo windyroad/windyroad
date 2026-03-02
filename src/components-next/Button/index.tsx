@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import '../../components/Button/index.css';
+import './index.css';
 
 interface ButtonProps {
   href?: string;

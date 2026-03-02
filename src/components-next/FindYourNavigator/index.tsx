@@ -2,7 +2,7 @@
 
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '../../components/FindYourNavigator/index.css';
+import './index.css';
 
 interface FindYourNavigatorProps {
   duration?: number;

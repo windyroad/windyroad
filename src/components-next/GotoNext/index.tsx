@@ -3,7 +3,7 @@
 import { faArrowAltCircleDown } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import '../../components/GotoNext/index.css';
+import './index.css';
 
 interface GotoNextProps {
   to: string;
