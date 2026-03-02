@@ -1,15 +1,21 @@
-import Banner from '@/src/components-next/Banner';
-import About from '@/src/components-next/About';
-import Services from '@/src/components-next/Services';
-import Contact from '@/src/components-next/Contact';
+import Hero from '@/src/components-next/Hero';
+import OperatorSection from '@/src/components-next/OperatorSection';
+import ApproachSection from '@/src/components-next/ApproachSection';
+import PricingSection from '@/src/components-next/PricingSection';
+import TestimonialsSection from '@/src/components-next/TestimonialsSection';
+import FitCheckSection from '@/src/components-next/FitCheckSection';
+import CTASection from '@/src/components-next/CTASection';
 
 export default function Home() {
   return (
-    <div>
-      <Banner next="about" />
-      <About id="about" next="services" />
-      <Services id="services" next="contact" />
-      <Contact id="contact" />
-    </div>
+    <>
+      <Hero />
+      <OperatorSection />
+      <ApproachSection />
+      <PricingSection />
+      <TestimonialsSection />
+      <FitCheckSection />
+      <CTASection />
+    </>
   );
 }
