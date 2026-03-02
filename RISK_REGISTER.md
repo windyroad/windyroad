@@ -31,7 +31,7 @@ Delivery policy baseline:
 
 | Risk ID | Indicator | Trigger |
 | --- | --- | --- |
-| WR-R1 | `npm audit` findings; Gatsby/Node version falls further behind LTS | Any critical CVE in a production dependency |
+| WR-R1 | `npx dry-aged-deps` reports mature safe updates available; Gatsby/Node version falls further behind LTS | Any critical CVE in a production dependency; safe updates ignored for >30 days |
 | WR-R2 | Secrets referenced in plain text in scripts or CI config | Any credential committed to git history |
 | WR-R3 | No CI pipeline running on push to `master` | GitHub Actions workflow missing or failing |
 | WR-R4 | Broken links reported by visitors or detected by crawl | >5 broken external links on the live site |
@@ -41,8 +41,8 @@ Delivery policy baseline:
 
 | Risk ID | Current controls | Gap |
 | --- | --- | --- |
-| WR-R1 | Manual `npm-check` script exists (`npm run npm-check`). | No CI gate, no scheduled dependency audit, no age policy. |
-| WR-R2 | `.gitignore` excludes common secret paths. Netlify manages deploy tokens. | No secret scanning in pre-commit or CI. Legacy deploy scripts reference SSH keys and CF_AUTH_KEY inline. No rotation policy. |
+| WR-R1 | Manual `npm-check` script exists (`npm run npm-check`). Claude Code hook nudges `npx dry-aged-deps` on dependency changes. | No CI gate, no scheduled dependency audit. `dry-aged-deps` not yet installed or configured with age/severity thresholds. |
+| WR-R2 | `.gitignore` excludes common secret paths. Netlify manages deploy tokens. Claude Code hook blocks writing secret patterns to files. | No secret scanning in CI. Legacy deploy scripts reference SSH keys and CF_AUTH_KEY inline. No rotation policy. |
 | WR-R3 | Netlify auto-deploys from the repo (if configured). Legacy CircleCI config exists but is not active. | No GitHub Actions pipeline. No automated build/test gate on push. |
 | WR-R4 | None. | No broken-link checker. No content freshness tracking. |
 | WR-R5 | BDD tests run in CI via SauceLabs across Chrome, Firefox, and Safari. | WDIO v4 API is frozen. No upgrade path documented. SauceLabs config may require browser matrix updates. |

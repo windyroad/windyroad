@@ -22,8 +22,8 @@ except:
     print('')
 " 2>/dev/null || echo "")
 
-if echo "$USER_PROMPT" | grep -qEi 'npm (install|add|i )|yarn add|pnpm add'; then
-    REMINDERS="${REMINDERS}WR-R1 REMINDER: When adding or updating dependencies, also run \`npm audit\` to check for known vulnerabilities. Gatsby v2 and Node 10 are end-of-life — see RISK_REGISTER.md.\n"
+if echo "$USER_PROMPT" | grep -qEi 'npm (install|add|i )|yarn add|pnpm add|upgrade|update dep|add dep'; then
+    REMINDERS="${REMINDERS}WR-R1 REMINDER: When adding or updating dependencies, use \`npx dry-aged-deps\` (not just \`npm audit\`) to check both age and security. dry-aged-deps enforces a maturity gate so you only upgrade to releases that have had time to stabilise. Gatsby v2 and Node 10 are end-of-life — see RISK_REGISTER.md.\n"
 fi
 
 # Output reminders if any

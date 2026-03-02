@@ -36,7 +36,7 @@ This project enforces quality through existing deterministic gates. Do not bypas
 **Claude Code hooks (`.claude/hooks/`):**
 
 - `secret-leak-gate.sh` — `PreToolUse` on Edit/Write. Blocks writing files that contain secret patterns (API keys, tokens, private keys). Mitigates WR-R2.
-- `project-health-check.sh` — `UserPromptSubmit`. Injects reminders when GitHub Actions workflows are missing (WR-R3) and when dependency install commands are detected (WR-R1).
+- `project-health-check.sh` — `UserPromptSubmit`. Injects reminders when GitHub Actions workflows are missing (WR-R3) and when dependency install/update commands are detected, recommending `npx dry-aged-deps` for age+security checks (WR-R1).
 
 Hooks are registered in `.claude/settings.json` and run automatically. Do not bypass them.
 
