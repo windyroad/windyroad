@@ -5,7 +5,8 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <Link href="/" className={styles.wordmark}>
-        Tom Howard
+        <span className={styles.name}>Tom Howard</span>
+        <span className={styles.company}>Windy Road Technology</span>
       </Link>
       <a
         href="https://cal.com/tomhoward"
