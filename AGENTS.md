@@ -12,10 +12,10 @@ Apply Gall's law in delivery decisions: start from a working simple slice, then 
 
 ## Project Structure
 
-This project has been migrated from Gatsby v2 to Next.js 15 (static export).
+Personal consulting site for Tom Howard, built with Next.js 15 (static export).
 
 - **App code**: `src/app/` (Next.js App Router), `src/components-next/`, `src/lib/`
-- **Styles**: `src/styles/main.css` (global), component CSS co-located in `src/components-next/`
+- **Styles**: `src/styles/globals.scss` (design tokens + reset), CSS Modules (`.module.scss`) co-located in `src/components-next/`
 - **Config**: `next.config.mjs`, `eslint.config.mjs`, `tsconfig.json`
 - **Content**: `src/articles/` (markdown blog posts), `src/img/`, `public/img/`
 - **CI**: `.github/workflows/ci.yml` (GitHub Actions)
@@ -62,5 +62,5 @@ Unless explicitly told otherwise, when a task is complete:
 
 - **Stack**: Next.js 15 (static export), React 19, TypeScript, Sass, Node 20
 - **Deployment**: Netlify (behind Cloudflare DNS)
-- **Content**: Blog posts as Markdown in `src/articles/`, landing page in `src/app/page.tsx`
+- **Content**: Blog posts as Markdown in `src/articles/`, consulting landing page in `src/app/page.tsx`
 - **Blog**: `src/app/blog/` (listing + `[slug]`), processed by `src/lib/markdown.ts`
