@@ -33,6 +33,13 @@ This project enforces quality through existing deterministic gates. Do not bypas
 
 **Note**: The repo contains a legacy `.circleci/config.yml` and `scripts/deploy.sh` targeting GridServer shared hosting. These are outdated — the live site is already on Netlify.
 
+**Claude Code hooks (`.claude/hooks/`):**
+
+- `secret-leak-gate.sh` — `PreToolUse` on Edit/Write. Blocks writing files that contain secret patterns (API keys, tokens, private keys). Mitigates WR-R2.
+- `project-health-check.sh` — `UserPromptSubmit`. Injects reminders when GitHub Actions workflows are missing (WR-R3) and when dependency install commands are detected (WR-R1).
+
+Hooks are registered in `.claude/settings.json` and run automatically. Do not bypass them.
+
 **Local development:**
 
 - `npm run develop` — Gatsby dev server (port 8000)
