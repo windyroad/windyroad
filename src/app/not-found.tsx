@@ -1,8 +1,18 @@
+import Link from 'next/link';
+import styles from './not-found.module.scss';
+
 export default function NotFound() {
   return (
-    <div style={{ paddingTop: '4.5em' }}>
-      <h1>NOT FOUND</h1>
-      <p>You just hit a route that doesn&apos;t exist...</p>
+    <div className={styles.notFound}>
+      <div>
+        <div className={styles.code}>404</div>
+        <p className={styles.message}>
+          This page doesn&apos;t exist.
+        </p>
+        <Link href="/" className={styles.homeLink}>
+          Back to home
+        </Link>
+      </div>
     </div>
   );
 }
