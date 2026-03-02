@@ -1,29 +1,33 @@
-'use client';
-
-import React from 'react';
-import './index.css';
+import styles from './Button.module.scss';
 
 interface ButtonProps {
   href?: string;
-  className?: string;
-  style?: React.CSSProperties;
-  onClick?: (e: React.MouseEvent) => void;
+  variant?: 'primary' | 'outline';
+  size?: 'default' | 'large';
+  external?: boolean;
   children: React.ReactNode;
 }
 
 export default function Button({
-  href = '#contact',
-  className = '',
-  style,
-  onClick,
+  href = '#',
+  variant = 'primary',
+  size = 'default',
+  external = false,
   children,
 }: ButtonProps) {
+  const className = [
+    styles.button,
+    styles[variant],
+    size === 'large' ? styles.large : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <a
       href={href}
-      className={'button special ' + className}
-      style={style}
-      onClick={onClick}
+      className={className}
+      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {children}
     </a>
