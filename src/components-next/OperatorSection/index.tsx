@@ -4,57 +4,46 @@ import styles from './OperatorSection.module.scss';
 export default function OperatorSection() {
   return (
     <Section number="01" label="THE OPERATOR" variant="dark" id="operator">
-      <h2 className={styles.title}>Tom Howard</h2>
+      <h2 className={styles.title}>I&apos;ve been here before.</h2>
 
       <div className={styles.stats}>
         <div className={styles.stat}>
-          <div className={styles.statValue}>25+</div>
-          <div className={styles.statLabel}>years in delivery</div>
+          <div className={styles.statValue}>400%</div>
+          <div className={styles.statLabel}>throughput increase per developer at Greater Bank</div>
         </div>
         <div className={styles.stat}>
-          <div className={styles.statValue}>1999</div>
-          <div className={styles.statLabel}>AI work since</div>
+          <div className={styles.statValue}>0 &rarr; 97%</div>
+          <div className={styles.statLabel}>compliance in 10 months at Westpac</div>
         </div>
         <div className={styles.stat}>
-          <div className={styles.statValue}>17+</div>
-          <div className={styles.statLabel}>years running Windy Road</div>
+          <div className={styles.statValue}>3</div>
+          <div className={styles.statLabel}>profitable software products shipped</div>
         </div>
       </div>
 
       <div className={styles.narrative}>
         <p>
-          I started in AI before most people had broadband. At CSIRO I built
-          autonomous AI agents for the RoboCup Simulation League, placing 2nd
-          in Pacific Rim and 9th at the World Cup. I co-authored three research
-          papers and hold a patent for a functional planning system.
-        </p>
-        <p>
-          From there I moved into enterprise delivery &mdash; integration
-          architecture, solution design, and engineering leadership at
-          organisations like AMP, Westpac, Pacific National, and Greater Bank.
-        </p>
-        <p>
-          At Westpac I led FATCA/CRS compliance remediation, taking entity
-          compliance from 0% to 97% in 10 months across 5,300+ bankers. At
-          Greater Bank I introduced Software Delivery Fireteams that cut cycle
-          time from 24 to 8 days and increased throughput by 400% per developer.
-          At Pacific National I led the Rail Systems team, halved open
-          incidents, and built an API platform that underpinned an award-winning
+          At Greater Bank I introduced Software Delivery Fireteams that cut
+          cycle time from 24 to 8 days and increased developer throughput by
+          400% &mdash; while growing the team by 50%. At Westpac I led
+          FATCA/CRS compliance remediation across 5,300+ bankers, taking entity
+          compliance from 0% to 97% in 10 months. At Pacific National I halved
+          open incidents and built the API platform behind their award-winning
           customer portal.
         </p>
         <p>
-          In 2008 I founded Windy Road Technology and have run it for 17+ years.
-          I&apos;ve built and shipped three profitable software
-          products &mdash; TIBant (CI/CD automation), BWUnit (test automation
-          for TIBCO BusinessWorks), and Addressr (Australian address
-          API) &mdash; with customers across Australia, the UK, US, and Europe.
+          I&apos;ve been working with AI since 1999, when I built autonomous
+          agents at CSIRO that competed at the RoboCup World Cup. I hold a
+          patent, co-authored three research papers, and have shipped three
+          profitable software products through my company Windy Road
+          Technology &mdash; TIBant, BWUnit, and Addressr &mdash; with
+          customers across Australia, the UK, US, and Europe.
         </p>
         <p>
-          I&apos;ve spoken at apidays, SlashNEW, and Newcastle Coder&apos;s
-          Group on topics ranging from fireteam-based delivery to event-sourcing
-          architecture. That mix of hands-on AI research, enterprise-scale
-          delivery, and shipping real products is what I bring to every
-          engagement.
+          25+ years of delivery leadership. AI experience before it was a
+          buzzword. Three products built, shipped, and sold. That&apos;s what
+          I bring to your team: someone who&apos;s done the hard parts and
+          knows where things break.
         </p>
       </div>
     </Section>

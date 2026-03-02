@@ -6,13 +6,13 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.inner}>
         <h1 className={styles.headline}>
-          Ship with AI.<br />
-          <span className={styles.accent}>Without the risk.</span>
+          Your team ships faster with AI.<br />
+          <span className={styles.accent}>I make sure it actually works.</span>
         </h1>
         <p className={styles.subheadline}>
-          AI tools let your team move fast &mdash; but speed without guardrails
-          is how you blow up your production database. I help founders and
-          engineering leaders deliver with AI safely.
+          Copilot, Cursor, and Claude are writing your production code. I help
+          founders and engineering leaders put the guardrails in place so that
+          speed doesn&apos;t become your most expensive liability.
         </p>
         <div className={styles.cta}>
           <Button

@@ -11,6 +11,15 @@
   background-color: #fff;
 }
 
+.theme {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+}
+
 .quote {
   font-size: 1rem;
   line-height: 1.8;

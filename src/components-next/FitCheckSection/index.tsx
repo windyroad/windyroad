@@ -2,18 +2,18 @@ import Section from '@/src/components-next/Section';
 import styles from './FitCheckSection.module.scss';
 
 const goodFit = [
-  'You\u2019re a founder or engineering leader using AI to ship faster',
-  'You want guardrails before your team pushes AI-generated code to production',
-  'You need someone who can lead delivery and write code, not just make slides',
-  'You\u2019re in a regulated industry where shipping fast means managing risk',
-  'You want to build a sustainable AI-assisted delivery process, not a one-off hack',
+  'Your team is using Copilot, Cursor, or Claude and you\u2019re not sure what\u2019s getting through review',
+  'You\u2019ve shipped faster since adopting AI tools but defect rates or security issues are creeping up',
+  'You need someone who can implement the guardrails, not just recommend them in a PDF',
+  'You\u2019re in a regulated industry and need to demonstrate control over AI-assisted development',
+  'You want your team to get better at working with AI, not just dependent on one consultant',
 ];
 
 const notFit = [
-  'You want a pure strategy consultant who won\u2019t touch code',
-  'You need a full-time permanent hire',
-  'You\u2019re looking for someone to build an AI/ML model from scratch',
-  'You want to move fast with zero process and see what happens',
+  'You haven\u2019t started using AI tools yet and want a general AI strategy',
+  'You need a full-time permanent engineering leader',
+  'You\u2019re looking for someone to build a custom ML model or AI product',
+  'You want advice without implementation \u2014 I work hands-on',
 ];
 
 const CheckIcon = () => (

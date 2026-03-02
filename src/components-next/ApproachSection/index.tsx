@@ -1,55 +1,60 @@
 import Section from '@/src/components-next/Section';
 import styles from './ApproachSection.module.scss';
 
-const pillars = [
+const problems = [
+  'Copilot suggests a dependency that doesn\u2019t exist \u2014 and nobody catches it before merge',
+  'AI-generated code passes review because it \u201Clooks right\u201D but has subtle security holes',
+  'Your AI-written tests pass, but they\u2019re testing the wrong thing \u2014 or nothing at all',
+  'Developers ship 3x faster but defect rate quietly doubles',
+  'No one on the team knows which code was AI-generated and which was human-written',
+];
+
+const process = [
   {
-    title: 'AI Expertise',
+    label: 'Audit',
     description:
-      'From building autonomous AI agents at CSIRO to shipping three profitable software products — I understand what AI can reliably do, where it breaks down, and how to put guardrails around it so your team ships safely.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.5v1h-4v-1A4 4 0 0 1 12 2z" />
-        <path d="M10 10.5v2h4v-2" />
-        <path d="M10 14.5h4" />
-        <path d="M9 18h6" />
-        <path d="M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 7l1.4-1.4" />
-      </svg>
-    ),
+      'I review your current AI-assisted workflow end to end \u2014 which tools your team uses, how generated code gets reviewed, what your CI/CD pipeline catches and what it misses. You get a written assessment with specific recommendations.',
   },
   {
-    title: 'Delivery & Risk',
+    label: 'Implement',
     description:
-      '25+ years scaling teams and delivery systems in banking, rail, and regulated environments. I know how to make things ship on time without cutting the corners that come back to bite you.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-        <path d="M9 12l2 2 4-4" />
-      </svg>
-    ),
+      'I build the guardrails: quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that actually catch the failure modes these tools introduce. Not a slide deck \u2014 working infrastructure.',
   },
   {
-    title: 'Hands-On Building',
+    label: 'Embed',
     description:
-      'I don\'t just advise — I build. CI/CD pipelines, test automation frameworks, API platforms, full products. When I recommend a quality gate, I can implement it the same afternoon.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="16 18 22 12 16 6" />
-        <polyline points="8 6 2 12 8 18" />
-        <line x1="14" y1="4" x2="10" y2="20" />
-      </svg>
-    ),
+      'I work alongside your team to make it stick. Pair on real PRs, coach developers on what to watch for in AI output, tune the process based on what\u2019s actually happening in your codebase.',
   },
 ];
 
 export default function ApproachSection() {
   return (
-    <Section number="02" label="THE APPROACH" variant="light" id="approach">
-      <div className={styles.pillars}>
-        {pillars.map((pillar) => (
-          <div key={pillar.title} className={styles.pillar}>
-            <div className={styles.icon}>{pillar.icon}</div>
-            <h3 className={styles.pillarTitle}>{pillar.title}</h3>
-            <p className={styles.pillarDesc}>{pillar.description}</p>
+    <Section number="02" label="THE PROBLEM" variant="light" id="approach">
+      <h2 className={styles.sectionTitle}>
+        AI tools are writing your production code. Here&apos;s what&apos;s going wrong.
+      </h2>
+      <div className={styles.problemList}>
+        {problems.map((problem) => (
+          <div key={problem} className={styles.problemItem}>
+            <svg className={styles.problemIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <span>{problem}</span>
+          </div>
+        ))}
+      </div>
+
+      <h3 className={styles.processTitle}>What working with me looks like</h3>
+      <div className={styles.processSteps}>
+        {process.map((step, i) => (
+          <div key={step.label} className={styles.step}>
+            <div className={styles.stepNumber}>{String(i + 1).padStart(2, '0')}</div>
+            <div>
+              <div className={styles.stepLabel}>{step.label}</div>
+              <p className={styles.stepDesc}>{step.description}</p>
+            </div>
           </div>
         ))}
       </div>
