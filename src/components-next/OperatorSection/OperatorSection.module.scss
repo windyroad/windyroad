@@ -1,0 +1,58 @@
+.title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+  flex: 1;
+  min-width: 140px;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.narrative {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--color-text-light);
+
+  p {
+    margin-bottom: 1.25rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    gap: 1.25rem;
+  }
+
+  .stat {
+    min-width: 100px;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+}
