@@ -1,31 +1,20 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import styles from './Header.module.scss';
 
 export default function Header() {
   return (
-    <header id="header">
-      <h1 id="logo">
-        <Link href="/">
-          <Image
-            src="/img/logo-white.svg"
-            alt="Windy Road Logo"
-            width={150}
-            height={40}
-            style={{
-              verticalAlign: 'middle',
-              position: 'relative',
-              bottom: '0.2em',
-            }}
-          />
-        </Link>
-      </h1>
-      <nav id="nav">
-        <ul>
-          <li>
-            <Link href="/blog">Blog</Link>
-          </li>
-        </ul>
-      </nav>
+    <header className={styles.header}>
+      <Link href="/" className={styles.wordmark}>
+        Tom Howard
+      </Link>
+      <a
+        href="https://cal.com/tomhoward"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.cta}
+      >
+        Book a Call
+      </a>
     </header>
   );
 }
