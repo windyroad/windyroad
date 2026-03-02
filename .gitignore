@@ -48,8 +48,7 @@ jspm_packages
 
 .cache
 
-# Gatsby (legacy)
-public
+# Gatsby (legacy build output)
 target
 domains
 errorShots
