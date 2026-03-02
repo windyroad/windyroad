@@ -1,0 +1,84 @@
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { remark } from 'remark';
+import html from 'remark-html';
+import slugify from 'slugify';
+
+const articlesDirectory = path.join(process.cwd(), 'src/articles');
+
+export interface PostFrontmatter {
+  date: string;
+  title: string;
+  author: string;
+  tags: string[];
+  image?: string;
+  link?: string;
+}
+
+export interface Post {
+  slug: string;
+  frontmatter: PostFrontmatter;
+  content: string;
+  excerpt: string;
+}
+
+export interface PostWithHtml extends Post {
+  html: string;
+}
+
+export function getAllPosts(): Post[] {
+  const dirs = fs.readdirSync(articlesDirectory);
+
+  const posts = dirs
+    .filter((dir) => {
+      const fullPath = path.join(articlesDirectory, dir, 'index.md');
+      return fs.existsSync(fullPath);
+    })
+    .map((dir) => {
+      const fullPath = path.join(articlesDirectory, dir, 'index.md');
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
+      const frontmatter = data as PostFrontmatter;
+
+      const slug = slugify(frontmatter.title, { lower: true });
+
+      // Generate excerpt: first 250 characters of content, stripped of markdown
+      const plainText = content.replace(/[#*_\[\]()>`~]/g, '').trim();
+      const excerpt = plainText.substring(0, 250);
+
+      return {
+        slug,
+        frontmatter,
+        content,
+        excerpt,
+      };
+    });
+
+  // Sort by date descending
+  posts.sort((a, b) => {
+    const dateA = new Date(a.frontmatter.date).getTime();
+    const dateB = new Date(b.frontmatter.date).getTime();
+    return dateB - dateA;
+  });
+
+  return posts;
+}
+
+export function getAllSlugs(): string[] {
+  return getAllPosts().map((post) => post.slug);
+}
+
+export async function getPostBySlug(slug: string): Promise<PostWithHtml | null> {
+  const posts = getAllPosts();
+  const post = posts.find((p) => p.slug === slug);
+  if (!post) return null;
+
+  const processedContent = await remark().use(html).process(post.content);
+  const contentHtml = processedContent.toString();
+
+  return {
+    ...post,
+    html: contentHtml,
+  };
+}

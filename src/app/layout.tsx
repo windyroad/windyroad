@@ -5,6 +5,7 @@ import Footer from '@/src/components-next/Footer';
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../layouts/css/main.css';
 import '../components/Header/index.css';
+import '../components/post-link/_post-link.scss';
 
 export const metadata: Metadata = {
   title: 'Windy Road',
