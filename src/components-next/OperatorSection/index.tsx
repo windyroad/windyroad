@@ -24,16 +24,14 @@ export default function OperatorSection() {
       <div className={styles.narrative}>
         <p>
           I started in AI before most people had broadband. At CSIRO I built
-          autonomous agents in C++ for the RoboCup Simulation League, placing
-          2nd in Pacific Rim and 9th at the World Cup. I co-authored three
-          research papers and hold a patent for a functional planning system.
+          autonomous AI agents for the RoboCup Simulation League, placing 2nd
+          in Pacific Rim and 9th at the World Cup. I co-authored three research
+          papers and hold a patent for a functional planning system.
         </p>
         <p>
-          From there I spent six years leading the RoboCup Soccer Simulator
-          project, coordinating international contributors. Then I moved into
-          enterprise delivery &mdash; integration architecture, solution design,
-          and engineering leadership at organisations like AMP, Westpac, Pacific
-          National, and Greater Bank.
+          From there I moved into enterprise delivery &mdash; integration
+          architecture, solution design, and engineering leadership at
+          organisations like AMP, Westpac, Pacific National, and Greater Bank.
         </p>
         <p>
           At Westpac I led FATCA/CRS compliance remediation, taking entity
@@ -45,17 +43,18 @@ export default function OperatorSection() {
           customer portal.
         </p>
         <p>
-          In 2008 I founded Windy Road Technology and have run it for 17+ years,
-          building and commercialising software products &mdash; TIBant, BWUnit,
-          Addressr &mdash; with customers across Australia, the UK, US, and
-          Europe. Now I&apos;m building Voder, an autonomous software delivery
-          system that takes user stories and iteratively delivers real software.
+          In 2008 I founded Windy Road Technology and have run it for 17+ years.
+          I&apos;ve built and shipped three profitable software
+          products &mdash; TIBant (CI/CD automation), BWUnit (test automation
+          for TIBCO BusinessWorks), and Addressr (Australian address
+          API) &mdash; with customers across Australia, the UK, US, and Europe.
         </p>
         <p>
           I&apos;ve spoken at apidays, SlashNEW, and Newcastle Coder&apos;s
           Group on topics ranging from fireteam-based delivery to event-sourcing
           architecture. That mix of hands-on AI research, enterprise-scale
-          delivery, and product-building is what I bring to every engagement.
+          delivery, and shipping real products is what I bring to every
+          engagement.
         </p>
       </div>
     </Section>

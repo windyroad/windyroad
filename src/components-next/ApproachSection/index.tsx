@@ -5,7 +5,7 @@ const pillars = [
   {
     title: 'AI Expertise',
     description:
-      'From autonomous agents at CSIRO to building Voder today — I understand what AI can reliably do, where it breaks down, and how to put guardrails around it so your team ships safely.',
+      'From building autonomous AI agents at CSIRO to shipping three profitable software products — I understand what AI can reliably do, where it breaks down, and how to put guardrails around it so your team ships safely.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.5v1h-4v-1A4 4 0 0 1 12 2z" />
