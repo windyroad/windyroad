@@ -26,6 +26,20 @@ export default function RootLayout({
           {children}
           <Footer />
         </div>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=UA-808591-8"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            if (document.location.hostname === 'windyroad.com.au') {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'UA-808591-8');
+            }
+          `}
+        </Script>
         <Script id="inspectlet" strategy="lazyOnload">
           {`
             if (document.location.hostname === 'windyroad.com.au') {
