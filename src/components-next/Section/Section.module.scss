@@ -5,6 +5,7 @@
 .dark {
   background-color: var(--color-bg-dark);
   color: var(--color-text-light);
+  --color-text-muted: var(--color-text-muted-on-dark);
 }
 
 .light {

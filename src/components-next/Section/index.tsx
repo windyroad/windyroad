@@ -18,6 +18,7 @@ export default function Section({
   return (
     <section
       id={id}
+      aria-label={label}
       className={`${styles.section} ${styles[variant]}`}
     >
       <div className={styles.inner}>
