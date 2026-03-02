@@ -23,7 +23,7 @@ const engagements = [
     price: '$15,000\u2013$25,000',
     duration: '2\u20134 weeks',
     description:
-      'A focused, project-based engagement with a defined outcome \u2014 a CI/CD pipeline with AI-specific quality gates, a test automation framework, or a working product increment with proper guardrails in place.',
+      'A focused, project-based engagement with a defined outcome \u2014 a greenfield product built from scratch, a CI/CD pipeline with AI-specific quality gates, a test automation framework, or a working product increment with proper guardrails in place.',
     outcome: 'Specific deliverable, shipped',
   },
 ];
