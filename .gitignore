@@ -57,6 +57,9 @@ errorShots
 .next
 out
 
+# Netlify
+.netlify
+
 # macOS
 .DS_Store
 
