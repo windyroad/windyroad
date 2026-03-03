@@ -10,7 +10,9 @@
     "build": "next build",
     "start": "npx serve out",
     "lint": "next lint",
-    "changeset:version": "changeset version"
+    "changeset:version": "changeset version",
+    "push:watch": "bash scripts/push-watch.sh",
+    "release:watch": "bash scripts/release-watch.sh"
   },
   "dependencies": {
     "date-fns": "^4.1.0",

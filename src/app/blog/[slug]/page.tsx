@@ -78,8 +78,9 @@ export default async function BlogPost({
             Shipping AI-generated code and want guardrails like this?
           </p>
           <p className={styles.ctaBody}>
-            I help founders set up pipelines with quality gates, preview environments,
-            and the controls to ship without fear. One week, fixed price.
+            I&apos;ve built CI/CD pipelines for teams at MLC, AMP, Greater Bank, and Pacific National.
+            I help founders and engineering teams set up quality gates, preview environments,
+            and the controls to ship AI-generated code without fear. One week, fixed price.
           </p>
           <a
             href="https://cal.com/tomhoward"
