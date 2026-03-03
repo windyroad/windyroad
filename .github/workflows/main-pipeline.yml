@@ -183,6 +183,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Add preview URL to release PR
+        if: steps.changesets.outputs.pullRequestNumber
+        run: |
+          PR_NUMBER="${{ steps.changesets.outputs.pullRequestNumber }}"
+          PREVIEW_URL="${{ needs.deploy-test.outputs.deploy_url }}"
+          CURRENT_BODY="$(gh pr view "$PR_NUMBER" --json body --jq '.body')"
+          gh pr edit "$PR_NUMBER" --body "$CURRENT_BODY
+
+---
+**Preview:** $PREVIEW_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Trigger release PR preview
         if: steps.changesets.outputs.pullRequestNumber
         run: |
