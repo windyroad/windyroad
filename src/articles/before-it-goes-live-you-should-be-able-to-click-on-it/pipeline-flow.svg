@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 870" role="img" aria-label="Pipeline flow diagram: local hooks, automated CI gates, preview environment, human review, then production">
+
+  <defs>
+    <marker id="arrow-muted" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#3B82F6"/>
+    </marker>
+    <marker id="arrow-blue-thick" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#3B82F6"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#22C55E"/>
+    </marker>
+  </defs>
+
+  <style>
+    text { font-family: Inter, system-ui, -apple-system, sans-serif; }
+    .label { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; }
+    .box-title { font-size: 12.5px; font-weight: 600; }
+    .box-body { font-size: 11.5px; }
+    .box-note { font-size: 10.5px; font-style: italic; }
+    .review-title { font-size: 16px; font-weight: 700; letter-spacing: 0.02em; }
+    .review-body { font-size: 12px; }
+  </style>
+
+  <!-- ═══════════════════════════════════════
+       BOX 1 — LOCAL HOOKS
+       ═══════════════════════════════════════ -->
+  <text x="20" y="15" class="label" fill="#64748B">Local</text>
+  <rect x="20" y="20" width="660" height="78" rx="6"
+        fill="rgba(255,255,255,0.04)" stroke="#374151" stroke-width="1.5"/>
+  <text x="36" y="42" class="box-title" fill="#94A3B8">pre-commit hook</text>
+  <text x="160" y="42" class="box-body" fill="#64748B">  secrets scan · lint staged files</text>
+  <text x="36" y="62" class="box-title" fill="#94A3B8">pre-push hook</text>
+  <text x="142" y="62" class="box-body" fill="#64748B">  lint · unit tests · obligation gate · dep check · WIP size</text>
+  <text x="36" y="84" class="box-note" fill="#475569">npm run push:watch — pushes and tails the CI run in your terminal</text>
+
+  <!-- Arrow 1 → 2 -->
+  <line x1="350" y1="98" x2="350" y2="118"
+        stroke="#475569" stroke-width="1.5" marker-end="url(#arrow-muted)"/>
+
+  <!-- ═══════════════════════════════════════
+       BOX 2 — MAIN PIPELINE GATES
+       ═══════════════════════════════════════ -->
+  <text x="20" y="135" class="label" fill="#3B82F6">Automated — main-pipeline (GitHub Actions)</text>
+  <rect x="20" y="140" width="660" height="92" rx="6"
+        fill="rgba(59,130,246,0.07)" stroke="rgba(59,130,246,0.4)" stroke-width="1.5"/>
+  <text x="36" y="162" class="box-title" fill="#93C5FD">Quality gates — all run in parallel, all must pass</text>
+  <text x="36" y="181" class="box-body" fill="#94A3B8">lint · unit tests · app coverage · accessibility · secrets scan · dep security check</text>
+  <text x="36" y="199" class="box-body" fill="#94A3B8">workbook parity · migration contract · architecture drift · cloud policy · push size</text>
+  <text x="36" y="220" class="box-note" fill="#475569">If any gate fails, the pipeline stops. No deployment, no release PR.</text>
+
+  <!-- Arrow 2 → 3 -->
+  <line x1="350" y1="232" x2="350" y2="252"
+        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- ═══════════════════════════════════════
+       BOX 3 — BUILD + TEST DEPLOY
+       ═══════════════════════════════════════ -->
+  <rect x="20" y="256" width="660" height="68" rx="6"
+        fill="rgba(59,130,246,0.07)" stroke="rgba(59,130,246,0.4)" stroke-width="1.5"/>
+  <text x="36" y="277" class="box-body" fill="#94A3B8">Build Docker image  →  deploy <tspan font-weight="600" fill="#93C5FD">bbstats-test</tspan> (Cloud Run)  →  smoke tests</text>
+  <text x="36" y="297" class="box-note" fill="#475569">Proves the build is deployable before any release work starts</text>
+  <text x="36" y="313" class="box-note" fill="#475569">Image signed with cosign (keyless, OIDC) — provenance tied to this workflow run</text>
+
+  <!-- Arrow 3 → 4 -->
+  <line x1="350" y1="324" x2="350" y2="344"
+        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- ═══════════════════════════════════════
+       BOX 4 — SUBMIT RELEASE PR
+       ═══════════════════════════════════════ -->
+  <rect x="20" y="348" width="660" height="76" rx="6"
+        fill="rgba(59,130,246,0.07)" stroke="rgba(59,130,246,0.4)" stroke-width="1.5"/>
+  <text x="36" y="370" class="box-title" fill="#93C5FD">Pipeline creates (or updates) release PR via changesets</text>
+  <text x="36" y="389" class="box-body" fill="#94A3B8"><tspan font-weight="600">branch:</tspan>  changeset-release/publish  →  publish</text>
+  <text x="36" y="407" class="box-body" fill="#94A3B8"><tspan font-weight="600">contains:</tspan>  version bump · CHANGELOG · all unreleased changesets the AI wrote</text>
+  <text x="36" y="415" class="box-note" fill="#475569"> </text>
+
+  <!-- Arrow 4 → 5 -->
+  <line x1="350" y1="424" x2="350" y2="444"
+        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- ═══════════════════════════════════════
+       BOX 5 — PREVIEW ENVIRONMENT
+       ═══════════════════════════════════════ -->
+  <rect x="20" y="448" width="660" height="88" rx="6"
+        fill="rgba(59,130,246,0.07)" stroke="rgba(59,130,246,0.4)" stroke-width="1.5"/>
+  <text x="36" y="470" class="box-title" fill="#93C5FD">release-pr-preview workflow</text>
+  <text x="36" y="489" class="box-body" fill="#94A3B8">Build candidate image (cosign signed)  →  deploy <tspan font-weight="600" fill="#93C5FD">bbstats-release-preview</tspan> (public URL)</text>
+  <text x="36" y="508" class="box-body" fill="#94A3B8">Smoke tests: /health SHA check · 401 unauthenticated · business logic assertions</text>
+  <text x="36" y="526" class="box-note" fill="#475569">PR check status reported — PR is not mergeable until these pass</text>
+
+  <!-- THICK Arrow 5 → 6 (human decision) -->
+  <line x1="350" y1="536" x2="350" y2="562"
+        stroke="#3B82F6" stroke-width="2.5" marker-end="url(#arrow-blue-thick)"/>
+
+  <!-- ═══════════════════════════════════════
+       BOX 6 — HUMAN REVIEW  ★
+       ═══════════════════════════════════════ -->
+  <rect x="20" y="566" width="660" height="108" rx="6"
+        fill="rgba(59,130,246,0.14)" stroke="#3B82F6" stroke-width="2"/>
+  <text x="350" y="596" class="review-title" fill="#93C5FD" text-anchor="middle">HUMAN REVIEW</text>
+  <text x="350" y="619" class="review-body" fill="#E2E8F0" text-anchor="middle">Open bbstats-release-preview in your browser. Use the actual app.</text>
+  <text x="350" y="639" class="review-body" fill="#E2E8F0" text-anchor="middle">Check the things that matter — the things AI might have broken subtly.</text>
+  <text x="350" y="659" class="review-body" fill="#93C5FD" text-anchor="middle" font-weight="600">Merge the PR when satisfied. Nothing ships without this step.</text>
+
+  <!-- Arrow 6 → 7 -->
+  <line x1="350" y1="674" x2="350" y2="694"
+        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- ═══════════════════════════════════════
+       BOX 7 — PUBLISH PIPELINE
+       ═══════════════════════════════════════ -->
+  <text x="20" y="711" class="label" fill="#3B82F6">Automated — publish-pipeline (triggered by PR merge)</text>
+  <rect x="20" y="716" width="660" height="96" rx="6"
+        fill="rgba(59,130,246,0.07)" stroke="rgba(59,130,246,0.4)" stroke-width="1.5"/>
+  <text x="36" y="737" class="box-body" fill="#94A3B8">Re-run quality gates  ·  cosign verify image provenance</text>
+  <text x="36" y="756" class="box-body" fill="#94A3B8">Build prod image (signed)  →  deploy <tspan font-weight="600" fill="#93C5FD">bbstats-release</tspan> (private)  →  verify</text>
+  <text x="36" y="775" class="box-body" fill="#94A3B8">Deploy <tspan font-weight="600" fill="#93C5FD">bbstats-prod</tspan> (public)  →  smoke tests  →  verify readiness</text>
+  <text x="36" y="800" class="box-note" fill="#475569">Image digest is verified at every deploy step — same artifact from preview to prod</text>
+
+  <!-- Arrow 7 → 8 -->
+  <line x1="350" y1="812" x2="350" y2="832"
+        stroke="#22C55E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <!-- ═══════════════════════════════════════
+       BOX 8 — PRODUCTION
+       ═══════════════════════════════════════ -->
+  <rect x="20" y="836" width="660" height="56" rx="6"
+        fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.5)" stroke-width="1.5"/>
+  <text x="350" y="860" class="box-title" fill="#86EFAC" text-anchor="middle">Production live</text>
+  <text x="350" y="879" class="box-body" fill="#64748B" text-anchor="middle">publish branch merged back to main automatically</text>
+
+</svg>
