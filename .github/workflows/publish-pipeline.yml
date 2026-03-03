@@ -1,0 +1,92 @@
+name: publish-pipeline
+
+on:
+  push:
+    branches: [publish]
+
+jobs:
+  quality-gates:
+    name: Quality gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-site-${{ github.sha }}
+          path: out/
+          retention-days: 1
+
+  deploy-production:
+    name: Deploy to production
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      deploy_url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site-${{ github.sha }}
+          path: out/
+
+      - name: Deploy to Netlify production
+        id: deploy
+        run: |
+          OUTPUT=$(netlify deploy --dir=out --prod --json --message "publish-${{ github.sha }}")
+          echo "url=$(echo "$OUTPUT" | jq -r '.deploy_url')" >> "$GITHUB_OUTPUT"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Smoke test production
+        run: |
+          URL="${{ steps.deploy.outputs.url }}"
+
+          STATUS=$(curl -sS -o /tmp/home.html -w "%{http_code}" "$URL/")
+          [ "$STATUS" = "200" ]
+          grep -q "Tom Howard" /tmp/home.html
+
+          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" "$URL/blog/")
+          [ "$STATUS" = "200" ]
+
+          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" "$URL/vibe-code-audit/")
+          [ "$STATUS" = "200" ]
+
+      - name: Merge publish back to master
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin master
+          git checkout master
+          git merge --ff-only publish
+          git push origin master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
