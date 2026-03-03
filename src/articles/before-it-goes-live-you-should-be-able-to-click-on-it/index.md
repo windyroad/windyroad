@@ -15,7 +15,7 @@ So I built a pipeline where that's literally the last step before anything ships
 
 Here's how it works, concretely enough that you could build it yourself.
 
-<img src="/img/pipeline-flow.svg" alt="Pipeline flow: local hooks → automated CI gates → release PR with preview environment → human review → publish pipeline → production" style="width:100%;border-radius:8px;margin:1.5rem 0;" />
+![Pipeline flow: local hooks → automated CI gates → release PR with preview environment → human review → publish pipeline → production](/img/pipeline-flow.svg)
 
 ## The branch strategy
 
