@@ -96,24 +96,19 @@
   <text x="268" y="377" class="sub" fill="#94A3B8">Deploys bbstats-release-preview · smoke tests</text>
   <text x="268" y="393" class="nte" fill="#64748B">health check · 401 unauthenticated · business logic assertions</text>
 
-  <!-- AUTO → YOU handoff: L-path down + left into F -->
-  <path d="M470,416 L470,422 L120,422 L120,428" fill="none"
-        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
+  <!-- Down arrow E→F -->
+  <line x1="470" y1="416" x2="470" y2="428" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
 
 
-  <!-- ══ ROW F  y=428  h=92  HUMAN REVIEW ══ -->
-  <!-- Subtle highlight across YOU lane for this row -->
-  <rect x="1" y="428" width="238" height="92" fill="rgba(59,130,246,0.07)"/>
-
-  <rect x="10" y="428" width="218" height="92" rx="6"
+  <!-- ══ ROW F  y=428  h=92  HUMAN REVIEW — full width ══ -->
+  <rect x="10" y="428" width="678" height="92" rx="6"
         fill="rgba(59,130,246,0.18)" stroke="#3B82F6" stroke-width="2"/>
-  <text x="119" y="452" class="htl"  fill="#93C5FD" text-anchor="middle">HUMAN REVIEW</text>
-  <text x="119" y="472" class="sub"  fill="#E2E8F0" text-anchor="middle">Open preview. Use the app.</text>
-  <text x="119" y="490" class="sub"  fill="#93C5FD" text-anchor="middle" font-weight="600">Merge when satisfied.</text>
+  <text x="350" y="458" class="htl" fill="#93C5FD" text-anchor="middle">HUMAN REVIEW</text>
+  <text x="350" y="478" class="sub" fill="#E2E8F0" text-anchor="middle">Open preview. Use the app.</text>
+  <text x="350" y="498" class="sub" fill="#93C5FD" text-anchor="middle" font-weight="600">Merge when satisfied.</text>
 
-  <!-- YOU → AUTO handoff: L-path down + right into G -->
-  <path d="M120,520 L120,526 L470,526 L470,532" fill="none"
-        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
+  <!-- Down arrow F→G -->
+  <line x1="470" y1="520" x2="470" y2="532" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
 
 
   <!-- ══ ROW G  y=532  h=72 ══ -->
