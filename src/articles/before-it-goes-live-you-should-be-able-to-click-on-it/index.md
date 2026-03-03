@@ -191,7 +191,7 @@ Or in `package.json` so it runs on install:
 
 **Pre-commit** runs fast checks on staged files: secrets scan, lint on changed TypeScript files. Seconds, not minutes.
 
-**Pre-push** runs the full local battery: lint, unit tests, test obligation gate, architecture conformance, dependency check, WIP size gate. This takes longer, but it means if something is broken you find out before your push triggers a CI run that other people might see fail.
+**Pre-push** runs the substantive checks: lint, unit tests, and a dependency security check. This takes longer, but it means if something is broken you find out before your push triggers a CI run.
 
 The pre-push hook is the reason CI usually passes. By the time a push hits GitHub, it's already been through the same checks locally.
 
@@ -219,13 +219,13 @@ That combination — automated correctness checks plus human review of the runni
 
 To make this concrete: at any given time there are three Cloud Run services:
 
-| Service | When deployed | Access | Purpose |
-|---------|--------------|--------|---------|
-| `bbstats-test` | Every passing push to `main` | Public | Smoke-tested in the main pipeline; proves the build is deployable |
-| `bbstats-release-preview` | Every release PR update | Public | Human review environment; smoke-tested before you look at it |
-| `bbstats-prod` | Release PR merged to `publish` | Public | Production |
+| Service | When deployed | Purpose |
+|---------|--------------|---------|
+| `bbstats-test` | Every passing push to `main` | Proves the build deploys cleanly; smoke-tested in the main pipeline |
+| `bbstats-release-preview` | Every release PR update | Human review environment; smoke-tested before you look at it |
+| `bbstats-prod` | Release PR merged to `publish` | Production |
 
-The test and preview services are disposable. They get overwritten on every run. Only production gets the immutable, cosign-verified image.
+The test and preview services are disposable. They get overwritten on every run. Production only gets the cosign-verified image that was reviewed.
 
 ## How to adapt this
 
