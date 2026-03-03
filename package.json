@@ -1,7 +1,7 @@
 {
   "name": "windy-road",
   "description": "Windy Road - windyroad.com.au",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Tom Howard <tom@windyroad.com.au>",
   "license": "MIT",
   "private": true,
@@ -9,12 +9,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "npx serve out",
-    "lint": "next lint"
+    "lint": "eslint src/",
+    "changeset:version": "changeset version",
+    "deps:check": "dry-aged-deps --check",
+    "push:watch": "bash scripts/push-watch.sh",
+    "release:watch": "bash scripts/release-watch.sh"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.2",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
-    "next": "^15",
+    "next": "^16",
     "react": "^19",
     "react-dom": "^19",
     "remark": "^15.0.1",
@@ -23,14 +28,17 @@
     "slugify": "^1.6.6"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.3",
+    "@changesets/cli": "^2.29.8",
+    "@eslint/js": "^9",
     "@next/eslint-plugin-next": "^16.1.6",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9.39.3",
+    "dry-aged-deps": "^2",
+    "eslint": "^9",
     "eslint-config-next": "^16.1.6",
     "eslint-plugin-react": "^7.37.5",
+    "netlify-cli": "^24.0.1",
     "typescript": "^5",
     "typescript-eslint": "^8.56.1"
   }

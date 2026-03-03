@@ -1,6 +1,8 @@
 [build]
   command = "npm run build"
   publish = "out"
+  # Deploys are driven by GitHub Actions — disable Netlify git-triggered builds
+  ignore = "exit 0"
 
 [build.environment]
   NODE_VERSION = "20"

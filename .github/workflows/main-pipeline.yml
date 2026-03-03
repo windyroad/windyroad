@@ -1,0 +1,127 @@
+name: main-pipeline
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  quality-gates:
+    name: Quality gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Check dependency freshness
+        run: npm run deps:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-site-${{ github.sha }}
+          path: out/
+          retention-days: 1
+
+  deploy-test:
+    name: Deploy draft + smoke test
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site-${{ github.sha }}
+          path: out/
+
+      - name: Deploy draft to Netlify
+        id: deploy
+        run: |
+          OUTPUT=$(npx netlify deploy --dir=out --json --message "main-${{ github.sha }}" --alias main-test)
+          echo "url=$(echo "$OUTPUT" | jq -r '.deploy_url')" >> "$GITHUB_OUTPUT"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Smoke test
+        run: |
+          URL="${{ steps.deploy.outputs.url }}"
+          echo "Testing $URL"
+
+          STATUS=$(curl -sS -L -o /tmp/home.html -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/")
+          [ "$STATUS" = "200" ] || { echo "Homepage returned $STATUS"; exit 1; }
+          grep -q "Tom Howard" /tmp/home.html || { echo "Homepage missing expected content"; exit 1; }
+
+          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/blog/")
+          [ "$STATUS" = "200" ] || { echo "/blog/ returned $STATUS"; exit 1; }
+
+          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/vibe-code-audit/")
+          [ "$STATUS" = "200" ] || { echo "/vibe-code-audit/ returned $STATUS"; exit 1; }
+
+          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/blog/before-it-goes-live-you-should-be-able-to-click-on-it/")
+          [ "$STATUS" = "200" ] || { echo "blog post returned $STATUS"; exit 1; }
+
+  release-pr:
+    name: Create release PR
+    needs: deploy-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Create or update release PR
+        id: changesets
+        uses: changesets/action@8eb63fb4cfc7f9643537c7d39d0b68c835012a19
+        with:
+          publish: echo "publish handled by publish-pipeline"
+          version: npm run changeset:version
+          commit: "pipeline: release"
+          title: "pipeline: release"
+          createGithubReleases: false
+          branch: publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger release PR preview
+        if: steps.changesets.outputs.pullRequestNumber
+        run: |
+          PR_NUMBER="${{ steps.changesets.outputs.pullRequestNumber }}"
+          PR_HEAD_SHA="$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')"
+          gh workflow run release-pr-preview.yml \
+            --ref changeset-release/publish \
+            -f pr_head_sha="$PR_HEAD_SHA" \
+            -f pr_number="$PR_NUMBER"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

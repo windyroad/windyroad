@@ -8,10 +8,7 @@ const nextConfig = {
   output: 'export',
   outputFileTracingRoot: __dirname,
   sassOptions: {},
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
-  typescript: {
+typescript: {
     // Type checking will be enabled once migration is complete
     ignoreBuildErrors: true,
   },

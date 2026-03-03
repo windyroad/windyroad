@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/src/components-next/Header';
 import Footer from '@/src/components-next/Footer';
+import Clarity from '@/src/components-next/Clarity';
 import '../styles/globals.scss';
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Clarity projectId="vpxikrum5k" />
         <Header />
         <main>{children}</main>
         <Footer />
