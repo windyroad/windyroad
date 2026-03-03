@@ -15,7 +15,11 @@ So I built a pipeline where that's literally the last step before anything ships
 
 Here's how it works, concretely enough that you could build it yourself.
 
+If you want a simpler starting point — no Docker, no GCP, just Netlify — the pipeline for this very site is public at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad).
+
 ![Pipeline flow: local hooks → automated CI gates → release PR with preview environment → human review → publish pipeline → production](/img/pipeline-flow.svg)
+
+*The diagram above shows the Netlify static-site version of this pipeline. The detailed code examples later in this post show the full GCP/Docker version used in bbstats.*
 
 ## The branch strategy
 
@@ -49,7 +53,7 @@ The practical effect: the release PR shows you exactly what's in the release, de
 
 ## The main pipeline: gates, then a release PR
 
-When you push to `main`, the main pipeline runs a battery of checks in parallel: lint, unit tests, app correctness gate (coverage and test obligation), accessibility gate, dependency security check, secrets scan, and several domain-specific gates. If any of them fail, the pipeline stops.
+When you push to `main`, the main pipeline runs a battery of checks in parallel: lint, unit tests, app correctness gate (coverage and test obligation), accessibility gate, dependency security check, secrets scan, and several domain-specific gates. If any of them fail, the pipeline stops. (The minimal Netlify version linked above runs: lint, dependency freshness, secrets scan, build, accessibility gate, and smoke tests.)
 
 If they all pass *and* the change touches app code, the pipeline builds and deploys to a test service, then runs smoke tests against it. If those pass, the final step creates (or updates) the release PR:
 
@@ -85,6 +89,8 @@ The pipeline then immediately triggers the preview workflow on that PR:
   env:
     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+> **Gotcha: `actions: write` permission required.** The job that runs `gh workflow run` needs `actions: write` declared explicitly in its `permissions` block. Without it, you get a silent HTTP 403 — the step appears to succeed but the workflow dispatch never happens.
 
 ## The preview: your actual production candidate, deployed
 
@@ -226,6 +232,24 @@ To make this concrete: at any given time there are three Cloud Run services.
 **`bbstats-release-preview`** deploys on every release PR update. This is the human review environment — the actual production candidate, live and accessible. Smoke-tested before you look at it. Also disposable.
 
 **`bbstats-prod`** deploys when the release PR merges to `publish`. Production. It only ever gets the cosign-verified image that was reviewed in the preview environment.
+
+## Netlify-specific notes
+
+If you're running this pattern with Netlify rather than Cloud Run, two things will bite you.
+
+**Named alias, not deploy ID.** When `netlify deploy` runs without `--alias`, the deploy URL has the form `abc123--yoursite.netlify.app`. That deploy-ID URL isn't routable from Azure-hosted GitHub Actions runners — your smoke tests will time out. Pass `--alias <name>` to get a stable, routable URL instead:
+
+```bash
+netlify deploy --dir=out --alias main-test
+```
+
+The `deploy_url` in the JSON output will then be `https://main-test--yoursite.netlify.app`, which works reliably from CI.
+
+**Follow redirects with `-L`.** Netlify draft deploys redirect trailing-slash URLs (`/blog/` → `/blog`). If you curl `/blog/` without `-L`, you get a 301 and the smoke test fails even though the page exists. Always pass `-L` to follow redirects:
+
+```bash
+curl -sS -L -o /dev/null -w "%{http_code}" "$URL/blog/"
+```
 
 ## How to adapt this
 

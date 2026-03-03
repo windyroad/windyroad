@@ -1,0 +1,10 @@
+{
+  "standard": "WCAG2AA",
+  "threshold": 0,
+  "urls": [
+    "http://localhost:3000/",
+    "http://localhost:3000/blog/",
+    "http://localhost:3000/vibe-code-audit/",
+    "http://localhost:3000/blog/before-it-goes-live-you-should-be-able-to-click-on-it/"
+  ]
+}

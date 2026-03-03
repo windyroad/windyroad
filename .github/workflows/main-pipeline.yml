@@ -5,8 +5,24 @@ on:
     branches: [master]
 
 jobs:
-  quality-gates:
-    name: Quality gates
+  gate-lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  gate-deps:
+    name: Dependency freshness
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,8 +37,32 @@ jobs:
       - name: Check dependency freshness
         run: npm run deps:check
 
-      - name: Lint
-        run: npm run lint
+  gate-secrets:
+    name: Secrets scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets
+        uses: trufflesecurity/trufflehog@v3
+        with:
+          extra_args: --only-verified
+
+  build:
+    name: Build
+    needs: [gate-lint, gate-deps, gate-secrets]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
 
       - name: Build
         run: npm run build
@@ -34,9 +74,35 @@ jobs:
           path: out/
           retention-days: 1
 
+  gate-accessibility:
+    name: Accessibility gate
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site-${{ github.sha }}
+          path: out/
+
+      - name: Run accessibility checks
+        run: |
+          npx serve out -l 3000 &
+          sleep 3
+          npx pa11y-ci
+
   deploy-test:
     name: Deploy draft + smoke test
-    needs: quality-gates
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       deploy_url: ${{ steps.deploy.outputs.url }}
@@ -85,7 +151,7 @@ jobs:
 
   release-pr:
     name: Create release PR
-    needs: deploy-test
+    needs: [gate-accessibility, deploy-test]
     runs-on: ubuntu-latest
     permissions:
       contents: write
