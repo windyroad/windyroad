@@ -3,6 +3,7 @@ import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
 import styles from '../post.module.scss';
+import Button from '@/src/components-next/Button';
 
 export async function generateStaticParams() {
   const slugs = getAllSlugs();
@@ -82,14 +83,9 @@ export default async function BlogPost({
             I help founders and engineering teams set up quality gates, preview environments,
             and the controls to ship AI-generated code without fear. One week, fixed price.
           </p>
-          <a
-            href="https://cal.com/tomhoward"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.ctaLink}
-          >
+          <Button href="https://cal.com/tomhoward" external>
             Book a call →
-          </a>
+          </Button>
         </aside>
       </div>
     </div>

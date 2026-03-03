@@ -18,6 +18,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Check dependency freshness
+        run: npm run deps:check
+
       - name: Lint
         run: npm run lint
 
@@ -60,7 +63,7 @@ jobs:
       - name: Deploy to Netlify production
         id: deploy
         run: |
-          OUTPUT=$(netlify deploy --dir=out --prod --json --message "publish-${{ github.sha }}")
+          OUTPUT=$(npx netlify deploy --dir=out --prod --json --message "publish-${{ github.sha }}")
           echo "url=$(echo "$OUTPUT" | jq -r '.deploy_url')" >> "$GITHUB_OUTPUT"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

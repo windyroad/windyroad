@@ -38,7 +38,7 @@ jobs:
       - name: Deploy preview to Netlify
         id: deploy
         run: |
-          OUTPUT=$(netlify deploy --dir=out --json --message "release-pr-${{ github.event.inputs.pr_number }}")
+          OUTPUT=$(npx netlify deploy --dir=out --json --message "release-pr-${{ github.event.inputs.pr_number }}")
           echo "url=$(echo "$OUTPUT" | jq -r '.deploy_url')" >> "$GITHUB_OUTPUT"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

@@ -1,0 +1,4 @@
+{
+  "dev": { "minAge": 30 },
+  "prod": { "minAge": 14 }
+}
