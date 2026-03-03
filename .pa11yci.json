@@ -1,6 +1,9 @@
 {
   "standard": "WCAG2AA",
   "threshold": 0,
+  "chromeLaunchConfig": {
+    "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+  },
   "urls": [
     "http://localhost:3000/",
     "http://localhost:3000/blog/",
