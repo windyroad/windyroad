@@ -2,92 +2,243 @@
 date: '2026-03-03'
 title: "Before it goes live, you should be able to click on it"
 author: 'Tom Howard'
-tags: ['deployment', 'release', 'ci/cd', 'vibe coding', 'production', 'software delivery']
+tags: ['deployment', 'release', 'ci/cd', 'vibe coding', 'ai coding', 'production', 'software delivery']
 ---
 
-Most founders I talk to have the same deployment anxiety: *what if pushing breaks something?*
+I use AI to write most of my code. Cursor, Claude, the whole stack. I ship faster than I ever have.
 
-The instinct is to add more automated checks — more tests, more linting, more gates. Those are worth having. But they don't actually fix the anxiety, because passing CI doesn't mean the app works. It means the app passed the tests you wrote. That's not the same thing.
+I also use AI to write most of my tests. Which means my tests might be wrong in exactly the same ways my code is wrong. The AI imagines the happy path, writes tests for the happy path, and if the happy path is subtly broken — the tests still pass.
 
-The thing that actually fixes the anxiety is being able to see the app running before you commit to shipping it.
+The only check I actually trust is: *does the app work?* Not "does CI say it works." Does it actually work. Can I click through it. Can I use it.
 
-Here's the approach I've been using.
+So I built a pipeline where that's literally the last step before anything ships. Every push to `main` that passes all the automated gates ends with a live preview of the exact production candidate, deployed and smoke-tested, waiting for me to look at it. I merge when I'm satisfied. Nothing ships without that.
 
-## A release PR, not a deploy button
+Here's how it works, concretely enough that you could build it yourself.
 
-The pipeline I built for my current app separates two things that usually get smashed together: *readiness to release* and *decision to release*.
+## The branch strategy
 
-When code lands on `main` and all the gates pass, the pipeline automatically prepares a release — but it doesn't push it live. Instead, it opens a pull request to a `publish` branch and deploys the candidate to a preview URL. The release waits there until I choose to merge.
+Three things to understand:
 
-That PR is the decision point. Merging it is how I say "yes, ship this."
+**`main`** is the trunk. This is where all development happens. Pushes here trigger the main pipeline — quality gates, automated tests, build, deploy to a test environment. If everything passes, the pipeline prepares a release. If it doesn't, nothing downstream happens.
 
-The key is what happens before I look at the PR. By the time I open GitHub, the pipeline has already:
+**`publish`** is the release branch. The only way code gets here is via a release PR that the pipeline creates automatically. Pushing to `publish` triggers the publish pipeline, which builds the production image and deploys to prod.
 
-1. Built a Docker image from the candidate commit
-2. Deployed that image to Cloud Run with the exact same runtime configuration as production
-3. Run smoke tests against the live preview — real HTTP requests, checking real API responses
-4. Reported all of that as required checks on the PR
+**`changeset-release/publish`** is a working branch managed by the [Changesets](https://github.com/changesets/changesets) tool. When you have unreleased changes tracked by a changeset file, this branch holds the auto-generated release commit (version bump, CHANGELOG update). The release PR goes from this branch into `publish`.
 
-If the smoke tests fail, the PR is blocked. I won't see it in a mergeable state unless the preview is actually working.
+You never push to `publish` manually. You never push to `changeset-release/publish` at all — the pipeline owns it.
 
-## "Works in staging" is a different problem
+## Changesets: tracking what's in the release
 
-Most staging environments fail in the same way: they run *different code* than production. A different branch, a different build, a different configuration. So when something breaks in prod that was fine in staging, the reason is usually one of those gaps.
+Changesets gives you a way to describe changes as you make them, separate from committing code. When you have something worth releasing, you run:
 
-The preview I'm looking at is not a staging environment in that sense. It's the production candidate. The same Docker image — identified by content digest, not tag — that will be deployed to production if I merge the PR. The pipeline signs the image with [cosign](https://github.com/sigstore/cosign) when it's built, and verifies that signature before every deploy step.
-
-Before deploying to production, the pipeline re-verifies:
-
-```
-cosign verify \
-  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  --certificate-identity-regexp "^https://github.com/.../publish-pipeline.yml@refs/heads/publish$" \
-  "$IMAGE_REF"
+```bash
+npx changeset
 ```
 
-This means you can't accidentally ship an image that wasn't built by the pipeline, and you can't ship a different image than the one that was tested. The preview and production are provably the same artifact.
+This creates a markdown file in `.changeset/` — something like `.changeset/foul-turnover-subtypes.md` — that describes what changed and whether it's a patch, minor, or major bump:
 
-## What the smoke tests actually check
+```markdown
+---
+"bbstats": patch
+---
 
-The temptation with smoke tests is to write them as a health check: "is the server up?" That's not nothing, but it's not much either.
+Add foul turnover subtypes to the event model
+```
 
-The smoke tests I run against the preview check things that could be subtly broken even if the server is up:
+That file gets committed alongside the code. When the pipeline runs `changeset version`, it reads all pending changeset files, bumps the version in `package.json`, rolls the descriptions into `CHANGELOG.md`, and deletes the individual files.
 
-- The `/health` endpoint returns the expected build SHA — confirming this is actually the candidate, not a stale deploy
-- An unauthenticated API request returns `401` — not `500`, not `200`, not a redirect loop
-- An authenticated request with a known input returns the expected output — specific field values, not just a `200` status
+This happens automatically on the release branch. You don't run it locally.
 
-That last one is doing real work. It's a regression check on the core logic of the app, run against the live deployed instance. If I shipped a change that broke how the app handles a known scenario, the smoke test catches it before I've merged anything.
+## The main pipeline: gates, then a release PR
 
-## The release waits
+When you push to `main`, the main pipeline runs a battery of checks in parallel: lint, unit tests, app correctness gate (coverage and test obligation), accessibility gate, dependency security check, secrets scan, and several domain-specific gates. If any of them fail, the pipeline stops.
 
-The thing I find most useful about this setup is that I don't have to decide anything under pressure. The release PR sits there until I'm ready. I can look at it in the morning when I'm fresh. I can deploy the preview to my phone and use the app. I can wait until the weekend feature I'm building is ready to ship alongside it.
+If they all pass *and* the change touches app code, the pipeline builds and deploys to a test service, then runs smoke tests against it. If those pass, the final step creates (or updates) the release PR:
 
-If I'm heads-down and don't want to think about releases, nothing ships. If I'm ready and the preview looks right, I merge and it's live in a few minutes.
+```yaml
+- name: Create changesets release PR to publish
+  id: changesets
+  uses: changesets/action@8eb63fb4cfc7f9643537c7d39d0b68c835012a19
+  with:
+    publish: echo "publish handled by publish-pipeline"
+    version: npm run changeset:version
+    commit: "pipeline: release"
+    title: "pipeline: release"
+    createGithubReleases: false
+    branch: publish
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
 
-This might sound obvious, but it's different from the two failure modes I see most often: fully manual deploys that require courage (and a good day), or fully automatic deploys that require complete trust in your test suite. The review PR is a middle path — automation does the preparation, a human makes the call.
+The changesets action checks whether there are unreleased changeset files. If there are, it creates or updates a PR from `changeset-release/publish` into `publish`. If there's nothing unreleased, it does nothing.
 
-## What this looks like in practice
+The pipeline then immediately triggers the preview workflow on that PR:
 
-The pipeline has three services in play at any given time:
+```yaml
+- name: Trigger release PR checks
+  if: steps.changesets.outputs.pullRequestNumber
+  run: |
+    PR_NUMBER="${{ steps.changesets.outputs.pullRequestNumber }}"
+    PR_HEAD_SHA="$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')"
+    gh workflow run release-pr-preview.yml \
+      --ref changeset-release/publish \
+      -f pr_head_sha="$PR_HEAD_SHA" \
+      -f pr_number="$PR_NUMBER"
+  env:
+    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
 
-- `bbstats-test` — deployed on every push to `main` that touches app code, publicly accessible, used for smoke-testing in the main pipeline
-- `bbstats-release-preview` — deployed from the release PR, publicly accessible, used for human review before merging
-- `bbstats-prod` — deployed only after the release PR is merged and the publish pipeline has verified the candidate
+## The preview: your actual production candidate, deployed
 
-The test and preview services are intentionally throwaway. They get overwritten on every run. Production only gets updated when the full publish pipeline passes, which requires the same image to have survived the review step.
+The `release-pr-preview.yml` workflow does three things:
 
-## Should you build this?
+**1. Build and push the candidate image**
 
-If you're shipping a vibe-coded prototype to a handful of early users, probably not yet. The overhead isn't worth it at that stage.
+```yaml
+- name: Build and push preview image
+  run: |
+    IMAGE="${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/bbstats/bbstats:${{ github.sha }}-pr${{ github.event.pull_request.number }}"
+    docker build -t "$IMAGE" .
+    docker push "$IMAGE"
+    IMAGE_REF="$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE")"
+    echo "image_ref=$IMAGE_REF" >> "$GITHUB_OUTPUT"
+```
 
-But if you have real users, real data, and production incidents that have actually cost you something — yes, I think you should build something like this. The specific technology doesn't matter much. What matters is the pattern:
+Note `IMAGE_REF`: this is the image identified by its content digest, not the mutable tag. This matters. The same digest that gets deployed to the preview is what gets re-verified before production.
 
-1. Automated checks prepare a candidate
-2. The candidate is deployed to a preview that looks like production
-3. A human reviews the running app before it ships
-4. Merging is the explicit release decision
+**2. Deploy to a live preview service**
 
-The result is that deploying stops feeling like a coin flip. It starts feeling like a thing you do on purpose, when you're ready, with confidence that what you saw in the preview is what your users are going to get.
+```yaml
+- name: Deploy release PR preview service
+  run: |
+    gcloud run deploy bbstats-release-preview \
+      --image "$IMAGE_REF" \
+      --region "${{ vars.GCP_REGION }}" \
+      --allow-unauthenticated \
+      --set-env-vars "BUILD_SHA=${{ github.sha }},BBSTATS_AUTH_MODE=google_oidc,..."
+```
 
-That's a much better place to ship from.
+This is the same Cloud Run configuration as production — same memory, same service account, same auth setup. The only difference is the service name. It's publicly accessible so I can open it on my phone.
+
+**3. Smoke test the running preview**
+
+The smoke tests don't just check if the server is up. They check things the app is supposed to actually do:
+
+```yaml
+- name: Smoke-test release preview
+  run: |
+    # Health check returns the right build SHA — this is actually deployed, not stale
+    HEALTH_JSON="$(curl -fsSL "$URL/health")"
+    ACTUAL_BUILD_SHA="$(echo "$HEALTH_JSON" | jq -r '.buildSha // empty')"
+    [ "$ACTUAL_BUILD_SHA" = "${{ github.sha }}" ]
+
+    # Unauthenticated API request returns 401, not 500 or 200
+    UNAUTH_STATUS="$(curl -sS -o /dev/null -w "%{http_code}" \
+      -H "content-type: application/json" \
+      -d '{"utterances":[]}' "$URL/api/project")"
+    [ "$UNAUTH_STATUS" = "401" ]
+
+    # Known input → expected output (regression check on core logic)
+    PROBE_STATUS="$(curl -sS -o /tmp/smoke-probe.json -w "%{http_code}" \
+      -H "authorization: Bearer $ID_TOKEN" \
+      -d '{"seed":"live-ops-synthetic","utterances":["checkpoint 2:34 46 48","lineup 13,14,5,4,7","two point made 13"]}' \
+      "$URL/api/project")"
+    [ "$PROBE_STATUS" = "200" ]
+    [ "$(jq -r '.projection.score.us' /tmp/smoke-probe.json)" = "48" ]
+    [ "$(jq -r '.projection.score.them' /tmp/smoke-probe.json)" = "48" ]
+    [ "$(jq -r '.projection.unresolvedUtterances | length' /tmp/smoke-probe.json)" = "0" ]
+```
+
+That last check is the one that matters most. It sends a known sequence of game events and asserts specific values in the response. If I shipped a change that broke how the app handles scoring logic, this fails — before I've seen or merged anything.
+
+By the time the PR shows up in GitHub as "all checks passed," the app has already been deployed and verified against known inputs.
+
+## What I actually do to release
+
+Nothing complicated. I look at the release PR. It shows me what changesets are included — what's actually in this release. I open the preview URL. I use the app. If it looks right, I merge.
+
+That's the whole human interaction. No deploy scripts. No "cross my fingers and push." Just: look at it running, merge when satisfied.
+
+When the PR merges, the publish pipeline runs. It re-runs the quality gates, then builds the production image. Here's the part that makes me confident: before deploying to production, it verifies the image signature with [cosign](https://github.com/sigstore/cosign):
+
+```yaml
+- name: Deploy production service from immutable artifact
+  run: |
+    cosign verify \
+      --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+      --certificate-identity-regexp "^https://github.com/.../publish-pipeline.yml@refs/heads/publish$" \
+      "$IMAGE_REF"
+    gcloud run deploy bbstats-prod --image "$IMAGE_REF" ...
+```
+
+The signature proves this image was built by the pipeline from the publish branch — not built locally, not pulled from somewhere else, not tampered with. The production deploy can only happen from an image the pipeline built and signed.
+
+After production is verified, the pipeline merges `publish` back to `main` automatically. The release is done.
+
+## The local hooks: fast feedback before anything leaves your machine
+
+The pipeline catches things at push time. The hooks catch things before that.
+
+The setup is simple — no Husky, just `.githooks/` in the repo:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Or in `package.json` so it runs on install:
+
+```json
+"hooks:install": "git config core.hooksPath .githooks"
+```
+
+**Pre-commit** runs fast checks on staged files: secrets scan, lint on changed TypeScript files. Seconds, not minutes.
+
+**Pre-push** runs the full local battery: lint, unit tests, test obligation gate, architecture conformance, dependency check, WIP size gate. This takes longer, but it means if something is broken you find out before your push triggers a CI run that other people might see fail.
+
+The pre-push hook is the reason CI usually passes. By the time a push hits GitHub, it's already been through the same checks locally.
+
+I also have a `push:watch` script that pushes and then tails the pipeline run in the terminal:
+
+```bash
+git push "$@"
+# ... finds the pipeline run for the current HEAD SHA
+gh run watch "$run_id" --exit-status
+```
+
+So `npm run push:watch` is: push, then watch the pipeline live. Green pipeline = release PR is being prepared. No context switching to GitHub to check.
+
+## Why this matters specifically for AI-generated code
+
+With hand-written code, a failing test usually points to something you wrote incorrectly. You can reason about it. You have context.
+
+With AI-generated code, a failing test might point to something the AI got subtly wrong — or to a test the AI wrote that tests the wrong thing. The code and the tests can be wrong in the same direction. Both look reasonable. Both pass review.
+
+The review environment doesn't solve that completely. But it adds a check the AI can't fake: *does the app actually behave correctly when a human uses it?* The smoke tests add determinism — known inputs, expected outputs, checked against the live deployment. The human review adds judgment — something feels off, the numbers don't look right, a flow that should work doesn't.
+
+That combination — automated correctness checks plus human review of the running app — is what I trust when I'm shipping code I didn't write entirely myself.
+
+## The three services
+
+To make this concrete: at any given time there are three Cloud Run services:
+
+| Service | When deployed | Access | Purpose |
+|---------|--------------|--------|---------|
+| `bbstats-test` | Every passing push to `main` | Public | Smoke-tested in the main pipeline; proves the build is deployable |
+| `bbstats-release-preview` | Every release PR update | Public | Human review environment; smoke-tested before you look at it |
+| `bbstats-prod` | Release PR merged to `publish` | Public | Production |
+
+The test and preview services are disposable. They get overwritten on every run. Only production gets the immutable, cosign-verified image.
+
+## How to adapt this
+
+The specific tools here are GitHub Actions, Cloud Run, Changesets, and cosign. You can swap most of them. The pattern is what matters:
+
+1. **Gate on `main`, not `publish`** — all your quality gates run when code lands on the trunk, before anything release-related happens
+2. **Separate the readiness decision from the release decision** — the pipeline decides "this is ready to release," you decide "release it now"
+3. **Deploy the candidate before the decision** — the thing you're reviewing is the actual production artifact, not a separate staging build
+4. **Smoke-test the live preview** — by the time you look at the PR, the app has already been verified against known inputs
+5. **Sign and verify the image** — prove that what goes to production is what the pipeline built and tested
+
+The goal is a release process where your answer to "what if this breaks something?" is: "I looked at it running. The smoke tests passed. The image is the same one I reviewed." That's a much more grounded answer than "CI was green."
+
+And when you're shipping code that an AI wrote? You want the most grounded answer you can get.
