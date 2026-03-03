@@ -48,7 +48,7 @@ export function getAllPosts(): Post[] {
       const slug = slugify(frontmatter.title, { lower: true });
 
       // Generate excerpt: first 250 characters of content, stripped of markdown
-      const plainText = content.replace(/[#*_[\]()>`~]/g, '').trim();
+      const plainText = content.replace(/<[^>]+>/g, ' ').replace(/[#*_[\]()>`~]/g, '').trim();
       const excerpt = plainText.substring(0, 250);
 
       return {
