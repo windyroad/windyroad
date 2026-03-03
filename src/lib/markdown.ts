@@ -1,8 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import remarkRehype from 'remark-rehype';
+import rehypeRaw from 'rehype-raw';
+import rehypeStringify from 'rehype-stringify';
 import slugify from 'slugify';
 
 const articlesDirectory = path.join(process.cwd(), 'src/articles');
@@ -74,7 +78,13 @@ export async function getPostBySlug(slug: string): Promise<PostWithHtml | null> 
   const post = posts.find((p) => p.slug === slug);
   if (!post) return null;
 
-  const processedContent = await remark().use(html).process(post.content);
+  const processedContent = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeStringify)
+    .process(post.content);
   const contentHtml = processedContent.toString();
 
   return {
