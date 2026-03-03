@@ -29,13 +29,7 @@ You never push to `publish` manually. You never push to `changeset-release/publi
 
 ## Changesets: tracking what's in the release
 
-Changesets gives you a way to describe changes as you make them, separate from committing code. When you have something worth releasing, you run:
-
-```bash
-npx changeset
-```
-
-This creates a markdown file in `.changeset/` — something like `.changeset/foul-turnover-subtypes.md` — that describes what changed and whether it's a patch, minor, or major bump:
+Changesets gives you a way to describe changes as you make them, separate from committing code. When I ask Claude or Cursor to implement something, I include "create a changeset for this" in the prompt. The AI creates a markdown file in `.changeset/` — something like `.changeset/foul-turnover-subtypes.md` — that describes what changed and whether it's a patch, minor, or major bump:
 
 ```markdown
 ---
@@ -47,7 +41,9 @@ Add foul turnover subtypes to the event model
 
 That file gets committed alongside the code. When the pipeline runs `changeset version`, it reads all pending changeset files, bumps the version in `package.json`, rolls the descriptions into `CHANGELOG.md`, and deletes the individual files.
 
-This happens automatically on the release branch. You don't run it locally.
+This happens automatically on the release branch. Neither you nor the AI runs it manually — the pipeline owns that step.
+
+The practical effect: the release PR shows you exactly what's in the release, described in plain language, because the AI that wrote the code also wrote the release note. The whole loop — code, tests, changeset — is AI-generated. The pipeline turns it into a deployable release candidate. You decide whether to ship it.
 
 ## The main pipeline: gates, then a release PR
 
