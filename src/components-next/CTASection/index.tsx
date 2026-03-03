@@ -5,9 +5,10 @@ export default function CTASection() {
   return (
     <section className={styles.cta} id="contact">
       <div className={styles.inner}>
-        <h2 className={styles.headline}>Ready to ship with confidence?</h2>
+        <h2 className={styles.headline}>Ready to ship — or need help right now?</h2>
         <p className={styles.subtext}>
-          Book a 30-minute call and let&apos;s see if there&apos;s a fit.
+          Book a 30-minute call. If your app is breaking in production today,
+          I can usually start this week.
         </p>
         <div className={styles.buttonWrap}>
           <Button

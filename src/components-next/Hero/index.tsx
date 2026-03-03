@@ -13,8 +13,9 @@ export default function Hero() {
           Copilot, Cursor, and Claude are writing your production code. I
           partner with founders and engineering leaders as a co-driver —
           reading the road ahead, calling corners — so the speed doesn&apos;t
-          put you in the ditch. Whether you&apos;re building something new or
-          fixing what&apos;s broken, I&apos;ve done both.
+          put you in the ditch. Whether you vibe-coded a prototype that needs
+          to survive production, or your team&apos;s AI-assisted code is
+          accumulating hidden debt — I&apos;ve seen it and fixed it.
         </p>
         <div className={styles.cta}>
           <Button

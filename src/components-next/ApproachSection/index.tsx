@@ -2,11 +2,12 @@ import Section from '@/src/components-next/Section';
 import styles from './ApproachSection.module.scss';
 
 const problems = [
-  'Copilot suggests a dependency that doesn\u2019t exist \u2014 and nobody catches it before merge',
-  'AI-generated code passes review because it \u201Clooks right\u201D but has subtle security holes',
-  'Your AI-written tests pass, but they\u2019re testing the wrong thing \u2014 or nothing at all',
-  'Developers ship 3x faster but defect rate quietly doubles',
-  'Junior developers accept AI suggestions without question because they don\u2019t know enough to push back',
+  'A vibe-coded prototype that works until it meets real users, real data, or a security audit',
+  'Hallucinated dependencies that slip past review and into production',
+  'AI code that \u201Clooks right\u201D but ships with security holes',
+  'Tests that pass but test nothing \u2014 the real failure mode goes undetected',
+  '3\u00D7 faster shipping, quietly doubled defect rate',
+  'Junior devs who don\u2019t know enough to push back on AI suggestions',
 ];
 
 const process = [
@@ -31,7 +32,8 @@ export default function ApproachSection() {
   return (
     <Section number="02" label="THE PROBLEM" variant="light" id="approach">
       <h2 className={styles.sectionTitle}>
-        AI tools are writing your production code. Here&apos;s what&apos;s going wrong.
+        Vibe-coded a prototype, or your team is on Copilot?<br />
+        Here&apos;s what&apos;s going wrong.
       </h2>
       <div className={styles.problemList}>
         {problems.map((problem) => (

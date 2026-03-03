@@ -2,7 +2,7 @@ import Section from '@/src/components-next/Section';
 import styles from './FitCheckSection.module.scss';
 
 const goodFit = [
-  'You have a product idea and want it built properly with AI tools from day one',
+  'You vibe-coded a working prototype and need someone to make it production-ready',
   'Your team is using Copilot, Cursor, or Claude and you\u2019re not sure what\u2019s getting through review',
   'You\u2019ve shipped faster since adopting AI tools but defect rates or security issues are creeping up',
   'You need someone who can implement the guardrails, not just recommend them in a PDF',
