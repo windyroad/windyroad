@@ -16,6 +16,7 @@
     "release:watch": "bash scripts/release-watch.sh"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.2",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "next": "^16",
