@@ -97,7 +97,10 @@ jobs:
       - name: Run accessibility checks
         run: |
           npx serve out -l 3000 &
-          sleep 3
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3000 > /dev/null && break
+            sleep 1
+          done
           npx pa11y-ci
 
   deploy-test:
