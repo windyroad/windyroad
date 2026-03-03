@@ -120,7 +120,9 @@ This is the same Cloud Run configuration as production — same memory, same ser
 
 **3. Smoke test the running preview**
 
-The smoke tests don't just check if the server is up. They check things the app is supposed to actually do:
+The smoke tests don't just check if the server is up. They check things the app is supposed to actually do.
+
+bbstats is a live basketball stats app that processes natural-language voice commands and projects game state in real time. The smoke test sends a known sequence of commands — a checkpoint, a lineup change, a scoring event — and asserts specific values in the response:
 
 ```yaml
 - name: Smoke-test release preview
@@ -147,7 +149,7 @@ The smoke tests don't just check if the server is up. They check things the app 
     [ "$(jq -r '.projection.unresolvedUtterances | length' /tmp/smoke-probe.json)" = "0" ]
 ```
 
-That last check is the one that matters most. It sends a known sequence of game events and asserts specific values in the response. If I shipped a change that broke how the app handles scoring logic, this fails — before I've seen or merged anything.
+That last check is the one that matters most. It sends a known sequence of events and asserts specific values in the response. If a change broke how the app processes commands or calculates scores, this fails — before I've seen or merged anything.
 
 By the time the PR shows up in GitHub as "all checks passed," the app has already been deployed and verified against known inputs.
 
@@ -217,15 +219,13 @@ That combination — automated correctness checks plus human review of the runni
 
 ## The three services
 
-To make this concrete: at any given time there are three Cloud Run services:
+To make this concrete: at any given time there are three Cloud Run services.
 
-| Service | When deployed | Purpose |
-|---------|--------------|---------|
-| `bbstats-test` | Every passing push to `main` | Proves the build deploys cleanly; smoke-tested in the main pipeline |
-| `bbstats-release-preview` | Every release PR update | Human review environment; smoke-tested before you look at it |
-| `bbstats-prod` | Release PR merged to `publish` | Production |
+**`bbstats-test`** deploys on every passing push to `main`. It proves the build is deployable before any release work starts, and it's smoke-tested as part of the main pipeline. Disposable — overwritten on every run.
 
-The test and preview services are disposable. They get overwritten on every run. Production only gets the cosign-verified image that was reviewed.
+**`bbstats-release-preview`** deploys on every release PR update. This is the human review environment — the actual production candidate, live and accessible. Smoke-tested before you look at it. Also disposable.
+
+**`bbstats-prod`** deploys when the release PR merges to `publish`. Production. It only ever gets the cosign-verified image that was reviewed in the preview environment.
 
 ## How to adapt this
 

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 582" role="img" aria-label="Two-column swimlane diagram. Left column: your actions (commit, push, review and merge). Right column: automated steps (pre-commit hook, pre-push hook, CI quality gates, build and test, release PR with preview deployment, publish pipeline, production).">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 672" role="img" aria-label="Two-column swimlane diagram. Left column: your actions — commit, push, then human review and merge. Right column: automated steps — pre-commit hook, pre-push hook, CI quality gates, build and test deploy, release PR with preview environment, publish pipeline, and production.">
   <defs>
     <marker id="am" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#475569"/></marker>
     <marker id="ab" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#3B82F6"/></marker>
@@ -6,142 +6,132 @@
   </defs>
   <style>
     text { font-family: Inter, system-ui, -apple-system, sans-serif; }
-    .col  { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; }
-    .ttl  { font-size: 12px; font-weight: 600; }
-    .sub  { font-size: 11px; }
-    .nte  { font-size: 10px; font-style: italic; }
-    .htl  { font-size: 15px; font-weight: 700; }
+    .col { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; }
+    .ttl { font-size: 12px; font-weight: 600; }
+    .sub { font-size: 11px; }
+    .nte { font-size: 10px; font-style: italic; }
+    .htl { font-size: 15px; font-weight: 700; }
   </style>
 
   <!-- Lane backgrounds -->
-  <rect x="0"   y="0" width="240" height="582" fill="rgba(255,255,255,0.025)"/>
-  <rect x="240" y="0" width="460" height="582" fill="rgba(59,130,246,0.035)"/>
+  <rect x="0"   y="0" width="240" height="672" fill="rgba(255,255,255,0.025)"/>
+  <rect x="240" y="0" width="460" height="672" fill="rgba(59,130,246,0.035)"/>
 
   <!-- Column headers -->
-  <rect x="0"   y="0" width="240" height="38" fill="rgba(255,255,255,0.06)"/>
-  <rect x="240" y="0" width="460" height="38" fill="rgba(59,130,246,0.18)"/>
-  <text x="120" y="24" class="col" fill="#94A3B8" text-anchor="middle">YOU</text>
-  <text x="470" y="24" class="col" fill="#93C5FD" text-anchor="middle">AUTOMATED</text>
+  <rect x="0"   y="0" width="240" height="44" fill="rgba(255,255,255,0.07)"/>
+  <rect x="240" y="0" width="460" height="44" fill="rgba(59,130,246,0.18)"/>
+  <text x="120" y="27" class="col" fill="#94A3B8" text-anchor="middle">YOU</text>
+  <text x="470" y="27" class="col" fill="#93C5FD" text-anchor="middle">AUTOMATED</text>
 
-  <!-- Vertical divider -->
-  <line x1="240" y1="0" x2="240" y2="582" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-
-  <!-- Outer border -->
-  <rect x="0" y="0" width="700" height="582" rx="8" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <!-- Vertical divider + outer border -->
+  <line x1="240" y1="0" x2="240" y2="672" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <rect x="0" y="0" width="700" height="672" rx="8" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
 
 
-  <!-- ══ ROW A: commit / pre-commit  y=38 h=60 ══ -->
-  <line x1="0" y1="98" x2="700" y2="98" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <!-- ══ ROW A  y=56  h=56 ══ -->
 
-  <rect x="10" y="46" width="218" height="44" rx="5"
+  <rect x="10"  y="56" width="218" height="56" rx="5"
         fill="rgba(255,255,255,0.05)" stroke="#334155" stroke-width="1"/>
-  <text x="22" y="63"  class="ttl" fill="#94A3B8">Commit</text>
-  <text x="22" y="79"  class="sub" fill="#64748B">AI writes code, tests + changeset</text>
+  <text x="26" y="74"  class="ttl" fill="#94A3B8">Commit</text>
+  <text x="26" y="89"  class="sub" fill="#64748B">AI writes code, tests + changeset</text>
 
-  <!-- YOU → AUTO trigger -->
-  <line x1="228" y1="68" x2="248" y2="68" stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
+  <line x1="228" y1="84" x2="248" y2="84" stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
 
-  <rect x="252" y="46" width="436" height="44" rx="5"
+  <rect x="252" y="56" width="436" height="56" rx="5"
         fill="rgba(59,130,246,0.09)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-  <text x="264" y="63"  class="ttl" fill="#93C5FD">pre-commit hook</text>
-  <text x="264" y="79"  class="sub" fill="#94A3B8">secrets scan · lint staged files</text>
+  <text x="268" y="74"  class="ttl" fill="#93C5FD">pre-commit hook</text>
+  <text x="268" y="89"  class="sub" fill="#94A3B8">secrets scan · lint staged files</text>
 
-  <!-- Down arrows A→B -->
-  <line x1="119" y1="98" x2="119" y2="106" stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
-  <line x1="470" y1="98" x2="470" y2="106" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
+  <!-- Down arrows A→B (12px gap) -->
+  <line x1="120" y1="112" x2="120" y2="124" stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
+  <line x1="470" y1="112" x2="470" y2="124" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
 
 
-  <!-- ══ ROW B: push / pre-push  y=98 h=60 ══ -->
-  <line x1="0" y1="158" x2="700" y2="158" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <!-- ══ ROW B  y=124  h=56 ══ -->
 
-  <rect x="10" y="106" width="218" height="44" rx="5"
+  <rect x="10"  y="124" width="218" height="56" rx="5"
         fill="rgba(255,255,255,0.05)" stroke="#334155" stroke-width="1"/>
-  <text x="22" y="123" class="ttl" fill="#94A3B8">Push</text>
-  <text x="22" y="139" class="sub" fill="#64748B">npm run push:watch</text>
+  <text x="26" y="142" class="ttl" fill="#94A3B8">Push</text>
+  <text x="26" y="157" class="sub" fill="#64748B">npm run push:watch</text>
 
-  <!-- YOU → AUTO trigger -->
-  <line x1="228" y1="128" x2="248" y2="128" stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
+  <line x1="228" y1="152" x2="248" y2="152" stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
 
-  <rect x="252" y="106" width="436" height="44" rx="5"
+  <rect x="252" y="124" width="436" height="56" rx="5"
         fill="rgba(59,130,246,0.09)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-  <text x="264" y="123" class="ttl" fill="#93C5FD">pre-push hook</text>
-  <text x="264" y="139" class="sub" fill="#94A3B8">lint · unit tests</text>
+  <text x="268" y="142" class="ttl" fill="#93C5FD">pre-push hook</text>
+  <text x="268" y="157" class="sub" fill="#94A3B8">lint · unit tests</text>
 
-  <!-- Down arrow B→C (AUTO only) -->
-  <line x1="470" y1="158" x2="470" y2="166" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
+  <!-- Down arrow B→C -->
+  <line x1="470" y1="180" x2="470" y2="192" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
 
 
-  <!-- ══ ROW C: CI quality gates  y=158 h=72 ══ -->
-  <line x1="0" y1="230" x2="700" y2="230" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <!-- ══ ROW C  y=192  h=72 ══ -->
 
-  <rect x="252" y="166" width="436" height="56" rx="5"
+  <rect x="252" y="192" width="436" height="72" rx="5"
         fill="rgba(59,130,246,0.09)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-  <text x="264" y="184" class="ttl" fill="#93C5FD">main-pipeline quality gates — all parallel, all must pass</text>
-  <text x="264" y="200" class="sub" fill="#94A3B8">lint · unit tests · coverage · accessibility · secrets scan</text>
-  <text x="264" y="215" class="sub" fill="#94A3B8">dependency check  ·  any failure stops the pipeline</text>
+  <text x="268" y="210" class="ttl" fill="#93C5FD">main-pipeline quality gates — all parallel, all must pass</text>
+  <text x="268" y="225" class="sub" fill="#94A3B8">lint · unit tests · coverage · accessibility · secrets scan</text>
+  <text x="268" y="241" class="nte" fill="#64748B">dependency check  ·  any failure stops the pipeline</text>
 
   <!-- Down arrow C→D -->
-  <line x1="470" y1="230" x2="470" y2="238" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
+  <line x1="470" y1="264" x2="470" y2="276" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
 
 
-  <!-- ══ ROW D: build + test deploy  y=230 h=60 ══ -->
-  <line x1="0" y1="290" x2="700" y2="290" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <!-- ══ ROW D  y=276  h=56 ══ -->
 
-  <rect x="252" y="238" width="436" height="44" rx="5"
+  <rect x="252" y="276" width="436" height="56" rx="5"
         fill="rgba(59,130,246,0.09)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-  <text x="264" y="255" class="ttl" fill="#93C5FD">Build Docker image  →  deploy bbstats-test  →  smoke tests</text>
-  <text x="264" y="271" class="nte" fill="#64748B">image signed with cosign — provenance tied to this workflow run</text>
+  <text x="268" y="294" class="ttl" fill="#93C5FD">Build Docker image  →  deploy bbstats-test  →  smoke tests</text>
+  <text x="268" y="309" class="nte" fill="#64748B">image signed with cosign — provenance tied to this workflow run</text>
 
   <!-- Down arrow D→E -->
-  <line x1="470" y1="290" x2="470" y2="298" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
+  <line x1="470" y1="332" x2="470" y2="344" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
 
 
-  <!-- ══ ROW E: release PR + preview  y=290 h=76 ══ -->
-  <line x1="0" y1="366" x2="700" y2="366" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <!-- ══ ROW E  y=344  h=72 ══ -->
 
-  <rect x="252" y="298" width="436" height="60" rx="5"
+  <rect x="252" y="344" width="436" height="72" rx="5"
         fill="rgba(59,130,246,0.09)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-  <text x="264" y="316" class="ttl" fill="#93C5FD">Pipeline creates release PR  (changesets)</text>
-  <text x="264" y="332" class="sub" fill="#94A3B8">Deploys bbstats-release-preview · smoke tests</text>
-  <text x="264" y="348" class="nte" fill="#64748B">health check · 401 unauthenticated · business logic assertions</text>
+  <text x="268" y="362" class="ttl" fill="#93C5FD">Pipeline creates release PR  (changesets)</text>
+  <text x="268" y="377" class="sub" fill="#94A3B8">Deploys bbstats-release-preview · smoke tests</text>
+  <text x="268" y="393" class="nte" fill="#64748B">health check · 401 unauthenticated · business logic assertions</text>
 
-  <!-- AUTO → YOU handoff: L-path from E bottom → across divider → into F YOU box -->
-  <path d="M470,366 L470,370 L119,370 L119,374" fill="none"
+  <!-- AUTO → YOU handoff: L-path down + left into F -->
+  <path d="M470,416 L470,422 L120,422 L120,428" fill="none"
         stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
 
 
-  <!-- ══ ROW F: HUMAN REVIEW  y=366 h=92 ══ -->
-  <!-- Highlight human review row in YOU lane -->
-  <rect x="0" y="366" width="240" height="92" fill="rgba(59,130,246,0.08)"/>
-  <line x1="0" y1="458" x2="700" y2="458" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <!-- ══ ROW F  y=428  h=92  HUMAN REVIEW ══ -->
+  <!-- Subtle highlight across YOU lane for this row -->
+  <rect x="1" y="428" width="238" height="92" fill="rgba(59,130,246,0.07)"/>
 
-  <rect x="10" y="374" width="218" height="76" rx="6"
+  <rect x="10" y="428" width="218" height="92" rx="6"
         fill="rgba(59,130,246,0.18)" stroke="#3B82F6" stroke-width="2"/>
-  <text x="119" y="398" class="htl"  fill="#93C5FD" text-anchor="middle">HUMAN REVIEW</text>
-  <text x="119" y="416" class="sub"  fill="#E2E8F0" text-anchor="middle">Open preview. Use the app.</text>
-  <text x="119" y="434" class="sub"  fill="#93C5FD" text-anchor="middle" font-weight="600">Merge when satisfied.</text>
+  <text x="119" y="452" class="htl"  fill="#93C5FD" text-anchor="middle">HUMAN REVIEW</text>
+  <text x="119" y="472" class="sub"  fill="#E2E8F0" text-anchor="middle">Open preview. Use the app.</text>
+  <text x="119" y="490" class="sub"  fill="#93C5FD" text-anchor="middle" font-weight="600">Merge when satisfied.</text>
 
-  <!-- YOU → AUTO handoff: merge triggers publish pipeline -->
-  <path d="M119,450 L119,454 L470,454 L470,462" fill="none"
+  <!-- YOU → AUTO handoff: L-path down + right into G -->
+  <path d="M120,520 L120,526 L470,526 L470,532" fill="none"
         stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
 
 
-  <!-- ══ ROW G: publish pipeline  y=458 h=72 ══ -->
-  <line x1="0" y1="530" x2="700" y2="530" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <!-- ══ ROW G  y=532  h=72 ══ -->
 
-  <rect x="252" y="462" width="436" height="60" rx="5"
+  <rect x="252" y="532" width="436" height="72" rx="5"
         fill="rgba(59,130,246,0.09)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-  <text x="264" y="480" class="ttl" fill="#93C5FD">publish-pipeline</text>
-  <text x="264" y="496" class="sub" fill="#94A3B8">cosign verify · build prod image · deploy bbstats-prod</text>
-  <text x="264" y="512" class="nte" fill="#64748B">same image you reviewed is exactly what ships</text>
+  <text x="268" y="550" class="ttl" fill="#93C5FD">publish-pipeline</text>
+  <text x="268" y="565" class="sub" fill="#94A3B8">cosign verify · build prod image · deploy bbstats-prod</text>
+  <text x="268" y="581" class="nte" fill="#64748B">same image you reviewed is exactly what ships</text>
 
   <!-- Down arrow G→H -->
-  <line x1="470" y1="530" x2="470" y2="538" stroke="#22C55E" stroke-width="1" marker-end="url(#ag)"/>
+  <line x1="470" y1="604" x2="470" y2="616" stroke="#22C55E" stroke-width="1" marker-end="url(#ag)"/>
 
 
-  <!-- ══ ROW H: production  y=530 h=52 ══ -->
-  <rect x="252" y="538" width="436" height="36" rx="5"
+  <!-- ══ ROW H  y=616  h=44 ══ -->
+
+  <rect x="252" y="616" width="436" height="44" rx="5"
         fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.5)" stroke-width="1.5"/>
-  <text x="470" y="561" class="ttl" fill="#86EFAC" text-anchor="middle">Production live</text>
+  <text x="470" y="642" class="ttl" fill="#86EFAC" text-anchor="middle">Production live</text>
 
 </svg>
