@@ -6,7 +6,7 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.inner}>
         <h1 className={styles.headline}>
-          Your team ships faster with AI.<br />
+          You ship faster with AI.<br />
           <span className={styles.accent}>I make sure it actually works.</span>
         </h1>
         <p className={styles.subheadline}>
