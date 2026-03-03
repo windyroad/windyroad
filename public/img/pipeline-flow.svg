@@ -97,7 +97,7 @@
 
   <!-- Entry: AUTO → HUMAN REVIEW — out left of Pipeline creates, rounded corner, down into box -->
   <path d="M252,380 L136,380 Q120,380 120,396 L120,428" fill="none"
-        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
+        stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
 
 
   <!-- ══ ROW F  y=428  h=92  HUMAN REVIEW ══ -->
@@ -109,7 +109,7 @@
 
   <!-- Exit: HUMAN REVIEW → publish-pipeline — out bottom, rounded corner, into left of box -->
   <path d="M119,520 L119,548 Q119,568 137,568 L252,568" fill="none"
-        stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
+        stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
 
 
   <!-- ══ ROW G  y=532  h=72 ══ -->

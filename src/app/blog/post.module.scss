@@ -115,6 +115,42 @@
   }
 }
 
+.ctaDivider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 3rem 0 2rem;
+}
+
+.cta {
+  margin-bottom: 3rem;
+}
+
+.ctaHeadline {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  margin-bottom: 0.75rem;
+}
+
+.ctaBody {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.ctaLink {
+  display: inline-block;
+  color: var(--color-accent);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .readMore {
   display: inline-block;
   margin-top: 1rem;

@@ -71,6 +71,25 @@ export default async function BlogPost({
             {moreLink}
           </section>
         </article>
+
+        <hr className={styles.ctaDivider} />
+        <aside className={styles.cta}>
+          <p className={styles.ctaHeadline}>
+            Shipping AI-generated code and want guardrails like this?
+          </p>
+          <p className={styles.ctaBody}>
+            I help founders set up pipelines with quality gates, preview environments,
+            and the controls to ship without fear. One week, fixed price.
+          </p>
+          <a
+            href="https://cal.com/tomhoward"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.ctaLink}
+          >
+            Book a call →
+          </a>
+        </aside>
       </div>
     </div>
   );
