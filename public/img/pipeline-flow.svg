@@ -42,9 +42,8 @@
   <text x="268" y="74"  class="ttl" fill="#93C5FD">pre-commit hook</text>
   <text x="268" y="89"  class="sub" fill="#94A3B8">secrets scan · lint staged files</text>
 
-  <!-- Down arrows A→B (12px gap) -->
+  <!-- Down arrow A→B (YOU lane only — pre-commit and pre-push are independent) -->
   <line x1="120" y1="112" x2="120" y2="124" stroke="#475569" stroke-width="1" marker-end="url(#am)"/>
-  <line x1="470" y1="112" x2="470" y2="124" stroke="#3B82F6" stroke-width="1" marker-end="url(#ab)"/>
 
 
   <!-- ══ ROW B  y=124  h=56 ══ -->
@@ -96,22 +95,20 @@
   <text x="268" y="377" class="sub" fill="#94A3B8">Deploys bbstats-release-preview · smoke tests</text>
   <text x="268" y="393" class="nte" fill="#64748B">health check · 401 unauthenticated · business logic assertions</text>
 
-  <!-- Entry: AUTO → HUMAN REVIEW — down AUTOMATED column then left into box -->
-  <path d="M470,416 L470,474 L228,474" fill="none"
+  <!-- Entry: AUTO → HUMAN REVIEW — out left of Pipeline creates, rounded corner, down into box -->
+  <path d="M252,380 L136,380 Q120,380 120,396 L120,428" fill="none"
         stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
 
 
   <!-- ══ ROW F  y=428  h=92  HUMAN REVIEW ══ -->
-  <rect x="1" y="428" width="238" height="92" fill="rgba(59,130,246,0.07)"/>
-
   <rect x="10" y="428" width="218" height="92" rx="6"
-        fill="rgba(59,130,246,0.18)" stroke="#3B82F6" stroke-width="2"/>
-  <text x="119" y="452" class="htl" fill="#93C5FD" text-anchor="middle">HUMAN REVIEW</text>
-  <text x="119" y="472" class="sub" fill="#E2E8F0" text-anchor="middle">Open preview. Use the app.</text>
-  <text x="119" y="490" class="sub" fill="#93C5FD" text-anchor="middle" font-weight="600">Merge when satisfied.</text>
+        fill="rgba(255,255,255,0.07)" stroke="#94A3B8" stroke-width="2"/>
+  <text x="119" y="452" class="htl" fill="#E2E8F0" text-anchor="middle">HUMAN REVIEW</text>
+  <text x="119" y="472" class="sub" fill="#CBD5E1" text-anchor="middle">Open preview. Use the app.</text>
+  <text x="119" y="490" class="sub" fill="#F1F5F9" text-anchor="middle" font-weight="600">Merge when satisfied.</text>
 
-  <!-- Exit: HUMAN REVIEW → publish-pipeline — right out of box then down -->
-  <path d="M228,504 L470,504 L470,532" fill="none"
+  <!-- Exit: HUMAN REVIEW → publish-pipeline — out bottom, rounded corner, into left of box -->
+  <path d="M119,520 L119,548 Q119,568 137,568 L252,568" fill="none"
         stroke="#3B82F6" stroke-width="1.5" marker-end="url(#ab)"/>
 
 
