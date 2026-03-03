@@ -49,14 +49,14 @@ jobs:
           URL="${{ steps.deploy.outputs.url }}"
           echo "Testing $URL"
 
-          STATUS=$(curl -sS -o /tmp/home.html -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/")
+          STATUS=$(curl -sS -L -o /tmp/home.html -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/")
           [ "$STATUS" = "200" ] || { echo "Homepage returned $STATUS"; exit 1; }
           grep -q "Tom Howard" /tmp/home.html || { echo "Homepage missing expected content"; exit 1; }
 
-          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/blog/")
+          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/blog/")
           [ "$STATUS" = "200" ] || { echo "/blog/ returned $STATUS"; exit 1; }
 
-          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/vibe-code-audit/")
+          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/vibe-code-audit/")
           [ "$STATUS" = "200" ] || { echo "/vibe-code-audit/ returned $STATUS"; exit 1; }
 
       - name: Comment preview URL on PR
