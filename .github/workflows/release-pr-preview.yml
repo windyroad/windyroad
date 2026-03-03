@@ -48,15 +48,20 @@ jobs:
         run: |
           URL="${{ steps.deploy.outputs.url }}"
 
-          STATUS=$(curl -sS -o /tmp/home.html -w "%{http_code}" "$URL/")
-          [ "$STATUS" = "200" ]
-          grep -q "Tom Howard" /tmp/home.html
+          for i in $(seq 1 10); do
+            STATUS=$(curl -sS -o /tmp/home.html -w "%{http_code}" "$URL/")
+            [ "$STATUS" = "200" ] && break
+            echo "Attempt $i: got $STATUS, retrying in 5s..."
+            sleep 5
+          done
+          [ "$STATUS" = "200" ] || { echo "Homepage did not return 200 (got $STATUS)"; exit 1; }
+          grep -q "Tom Howard" /tmp/home.html || { echo "Homepage missing expected content"; exit 1; }
 
           STATUS=$(curl -sS -o /dev/null -w "%{http_code}" "$URL/blog/")
-          [ "$STATUS" = "200" ]
+          [ "$STATUS" = "200" ] || { echo "/blog/ returned $STATUS"; exit 1; }
 
           STATUS=$(curl -sS -o /dev/null -w "%{http_code}" "$URL/vibe-code-audit/")
-          [ "$STATUS" = "200" ]
+          [ "$STATUS" = "200" ] || { echo "/vibe-code-audit/ returned $STATUS"; exit 1; }
 
       - name: Comment preview URL on PR
         run: |
