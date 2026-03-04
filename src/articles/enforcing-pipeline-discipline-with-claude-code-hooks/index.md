@@ -155,6 +155,8 @@ PR_URL=$(echo "$PR_JSON" | jq -r '.[0].url // empty')
 
 if [ -z "$PR_NUMBER" ]; then
   echo "No pending changesets — nothing to release."
+  echo ""
+  echo "CLAUDE: Show the user the test deploy URL above so they can review it."
   exit 0
 fi
 
@@ -193,6 +195,9 @@ PREVIEW_URL=$(netlify api listSiteDeploys --data "{\"site_id\": \"$SITE_ID\", \"
 echo "  Release PR:      $PR_URL"
 echo ""
 echo "Review the preview, then merge the PR when satisfied."
+echo "Run: npm run release:watch"
+echo ""
+echo "CLAUDE: Show the user the release preview URL and release PR URL above so they can review and merge."
 ```
 
 Two implementation details worth noting. First, the `git pull --rebase` is preceded by a conditional stash — `git stash` before the rebase, `git stash pop` after — but only if there are actually local changes. Running `git stash pop` with no stash entry fails, so the flag guards against that.

@@ -85,6 +85,8 @@ PR_URL=$(echo "$PR_JSON" | jq -r '.[0].url // empty')
 if [ -z "$PR_NUMBER" ]; then
   echo ""
   echo "No pending changesets — nothing to release."
+  echo ""
+  echo "CLAUDE: Show the user the test deploy URL above so they can review it."
   exit 0
 fi
 
@@ -135,3 +137,5 @@ echo "  Release PR:      $PR_URL"
 echo ""
 echo "Review the preview, then merge the PR when satisfied."
 echo "Run: npm run release:watch"
+echo ""
+echo "CLAUDE: Show the user the release preview URL and release PR URL above so they can review and merge."
