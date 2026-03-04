@@ -11,8 +11,8 @@
 .light {
   background-color: var(--color-bg-light);
   color: var(--color-text-dark);
-  /* Darken accent so it meets 4.5:1 on white (#2b72e6 = 4.51:1 on #fff) */
-  --color-accent: #2b72e6;
+  /* Darken accent so it meets 4.5:1 on #F5F5F5 (#9A6208 = 4.67:1) */
+  --color-accent: #9A6208;
 }
 
 .inner {
