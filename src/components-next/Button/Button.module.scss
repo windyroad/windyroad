@@ -25,7 +25,7 @@
 }
 
 .primary {
-  color: var(--color-bg-dark);
+  color: #FFFFFF;
   background-color: var(--color-accent);
 
   &:hover {
@@ -39,7 +39,22 @@
   box-shadow: inset 0 0 0 2px var(--color-accent);
 
   &:hover {
-    background-color: rgba(192, 123, 10, 0.1);
+    background-color: rgba(184, 57, 15, 0.1);
+  }
+}
+
+.inverted {
+  color: var(--color-bg-dark);
+  background-color: #FFFFFF;
+
+  &:hover {
+    background-color: #E8E8E8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--color-accent);
   }
 }
 

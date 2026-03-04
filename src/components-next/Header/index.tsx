@@ -18,9 +18,15 @@ export default function Header() {
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
-      <Link href="/" className={styles.wordmark}>
-        <span className={styles.name}>Tom Howard</span>
-        <span className={styles.company}>Windy Road Technology</span>
+      <Link href="/" className={styles.wordmark} aria-label="Windy Road Technology, home">
+        <img
+          src="/img/logo-white.svg"
+          alt=""
+          aria-hidden="true"
+          className={styles.logo}
+          width={140}
+          height={42}
+        />
       </Link>
       <a
         href="https://cal.com/tomhoward"

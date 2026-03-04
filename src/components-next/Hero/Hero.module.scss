@@ -1,5 +1,5 @@
 .hero {
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,11 +7,39 @@
   padding-top: calc(var(--header-height) + 4rem);
   background-color: var(--color-bg-dark);
   color: var(--color-text-light);
+  position: relative;
+  clip-path: inset(0);
+
+  /* Fixed background image — GPU composited, no repaint on scroll */
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url('/img/banner.jpg') center / cover no-repeat;
+    z-index: -2;
+  }
+
+  /* Dark overlay */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.62);
+    z-index: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 70vh;
+  }
 }
 
 .inner {
   max-width: var(--content-max-width);
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .headline {
@@ -23,7 +51,7 @@
 }
 
 .accent {
-  color: var(--color-accent);
+  color: var(--color-text-light);
 }
 
 .subheadline {
@@ -52,19 +80,19 @@
 .routeLink {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #fefeff;
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
   padding-bottom: 2px;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   transition: color var(--transition-fast), border-color var(--transition-fast);
 
   &:hover {
-    color: var(--color-accent);
-    border-bottom-color: var(--color-accent);
+    color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid #FFFFFF;
     outline-offset: 2px;
     border-radius: 2px;
   }

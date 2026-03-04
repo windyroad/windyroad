@@ -153,7 +153,7 @@ export default function VibeCodingAuditPage() {
           <h2 className={styles.sectionTitle}>Questions</h2>
           <div className={styles.faqList}>
             {faqs.map((faq) => (
-              <details key={faq.q} className={styles.faqItem}>
+              <details key={faq.q} className={styles.faqItem} open>
                 <summary className={styles.faqQuestion}>{faq.q}</summary>
                 <p className={styles.faqAnswer}>{faq.a}</p>
               </details>

@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Section from '@/src/components-next/Section';
 import styles from './FAQSection.module.scss';
 
@@ -21,12 +24,24 @@ const faqs = [
 ];
 
 export default function FAQSection() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 769px)');
+    setIsDesktop(mq.matches);
+    function onChange(e: MediaQueryListEvent) {
+      setIsDesktop(e.matches);
+    }
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   return (
     <Section label="QUESTIONS" variant="light" id="faq">
       <h2 className={styles.title}>Questions</h2>
       <div className={styles.faqList}>
         {faqs.map((faq) => (
-          <details key={faq.q} className={styles.faqItem}>
+          <details key={faq.q} className={styles.faqItem} open={isDesktop || undefined}>
             <summary className={styles.faqQuestion}>{faq.q}</summary>
             <p className={styles.faqAnswer}>{faq.a}</p>
           </details>

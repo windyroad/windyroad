@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" fill="#0F172A" rx="20"/>
+  <rect width="100" height="100" fill="#1A1A1A" rx="20"/>
   <!-- WR mark extracted from logo-white.svg, scaled and centred with padding -->
   <!-- Original mark occupies approx x:5–51, y:0–30 in path coordinates -->
   <!-- transform: scale(1.52), centred in 100×100 with ~15px horizontal padding -->

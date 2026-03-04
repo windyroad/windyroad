@@ -1,5 +1,8 @@
 .notifySection {
-  /* Standalone or nested — works in both contexts */
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .heading {
@@ -75,7 +78,7 @@
   border-radius: 8px;
   border: none;
   background-color: var(--color-accent);
-  color: var(--color-bg-dark);
+  color: #FFFFFF;
   cursor: pointer;
   transition: background-color var(--transition-fast), transform var(--transition-fast);
 

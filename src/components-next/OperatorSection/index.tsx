@@ -11,7 +11,7 @@ export default function OperatorSection() {
       <div className={styles.stats}>
         <div className={styles.stat}>
           <CountUp end={3} className={styles.statValue} />
-          <div className={styles.statLabel}>profitable software products shipped from scratch</div>
+          <div className={styles.statLabel}>profitable products shipped from scratch</div>
         </div>
         <div className={styles.stat}>
           <CountUp end={400} suffix="%" className={styles.statValue} />
