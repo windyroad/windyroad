@@ -75,12 +75,17 @@ fi
 echo ""
 echo "✓ Production live: https://windyroad.com.au"
 
-# ── 4. Merge publish back to master ──────────────────────────────────────────
+# ── 4. Sync version bump back to master ──────────────────────────────────────
 echo ""
-echo "Syncing publish back to master..."
+echo "Syncing version bump back to master..."
 git fetch origin publish
 git checkout master
-git merge --no-ff origin/publish -m "chore: merge publish back to master after release"
+# Checkout just the version/changelog files from publish — avoids merge conflicts
+git checkout origin/publish -- package.json CHANGELOG.md
+# Delete any consumed changeset files (they were deleted on the release branch)
+git ls-files .changeset/ | grep -v 'README.md\|config.json' | xargs --no-run-if-empty git rm -f
+VERSION=$(node -p "require('./package.json').version")
+git commit -m "chore: sync version $VERSION from publish to master"
 npm run push:watch
 
 echo ""
