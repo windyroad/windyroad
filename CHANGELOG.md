@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.2.0
+
+### Minor Changes
+
+- 1cb96ce: Add parallel CI/CD quality gates (lint, secrets scan, accessibility), restore full markdown rendering for all blog posts (iframes, tables, footnotes, raw HTML), add tag-based CTAs on blog posts, restore Apache Ant JUnit XML Schema post with redirect from original URL, and update pipeline blog post with product owner review concept and Netlify-specific notes.
+
 ## 2.1.0
 
 ### Minor Changes
