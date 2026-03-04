@@ -1,13 +1,45 @@
 #!/bin/bash
 # Usage: npm run release:watch
-# Run after merging the release PR. Watches the publish-pipeline and
-# reports the production URL when the deploy completes.
+# Merges the open release PR, watches the publish-pipeline, and surfaces
+# the production URL when live. On failure: shows what failed and prompts
+# for a fix.
 
 set -euo pipefail
 
 REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 
-# ── 1. Find the publish-pipeline run ─────────────────────────────────────────
+# ── Helper: show failed jobs and guidance ─────────────────────────────────────
+show_failure_guidance() {
+  local run_id="$1"
+  local run_url="$2"
+
+  echo ""
+  echo "Failed checks:"
+  gh run view "$run_id" --json jobs \
+    --jq '.jobs[] | select(.conclusion == "failure") | "  ✗ \(.name)"' 2>/dev/null || true
+
+  echo ""
+  echo "Fix the failure above, then re-run: npm run release:watch"
+  echo ""
+  echo "CLAUDE: The publish pipeline failed. Show the user which checks failed above,"
+  echo "help them fix the issue, then run \`npm run release:watch\` again."
+}
+
+# ── 1. Find and merge the open release PR ────────────────────────────────────
+PR_JSON=$(gh pr list --base publish --state open --limit 1 --json number,url 2>/dev/null)
+PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number // empty')
+PR_URL=$(echo "$PR_JSON" | jq -r '.[0].url // empty')
+
+if [ -z "$PR_NUMBER" ]; then
+  echo "✗ No open release PR found. Has it already been merged?" >&2
+  exit 1
+fi
+
+echo "Merging release PR: $PR_URL"
+gh pr merge "$PR_NUMBER" --squash --auto
+echo ""
+
+# ── 2. Find the publish-pipeline run ─────────────────────────────────────────
 printf 'Waiting for publish-pipeline'
 RUN_ID=""
 for i in $(seq 1 40); do
@@ -24,19 +56,23 @@ done
 echo ""
 
 if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
-  echo "✗ No in-progress publish-pipeline found. Has the release PR been merged?" >&2
+  echo "✗ No in-progress publish-pipeline found." >&2
   exit 1
 fi
 
-echo "Publish pipeline: https://github.com/$REPO/actions/runs/$RUN_ID"
+RUN_URL="https://github.com/$REPO/actions/runs/$RUN_ID"
+echo "Publish pipeline: $RUN_URL"
 echo ""
 
-# ── 2. Watch ──────────────────────────────────────────────────────────────────
+# ── 3. Watch ──────────────────────────────────────────────────────────────────
 if ! gh run watch "$RUN_ID" --exit-status; then
   echo ""
-  echo "✗ Production deploy failed — https://github.com/$REPO/actions/runs/$RUN_ID"
+  echo "✗ Production deploy failed — $RUN_URL"
+  show_failure_guidance "$RUN_ID" "$RUN_URL"
   exit 1
 fi
 
 echo ""
 echo "✓ Production live: https://windyroad.com.au"
+echo ""
+echo "CLAUDE: The release is live. Let the user know and share the URL: https://windyroad.com.au"
