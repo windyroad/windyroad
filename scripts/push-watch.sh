@@ -3,12 +3,31 @@
 # Pushes to master, watches the main pipeline, and surfaces deploy URLs.
 # If there are pending changesets, also watches the release-pr-preview and
 # provides the preview URL and release PR link for human review.
+# On failure: shows which checks failed and prompts for a local hook fix.
 
 set -euo pipefail
 
 SITE_ID="${NETLIFY_SITE_ID:-d00c9942-3c2a-420d-9486-0339ae54af4d}"
 
+# ── Helper: show failed jobs and hook guidance ────────────────────────────────
+show_failure_guidance() {
+  local run_id="$1"
+  local run_url="$2"
+
+  echo ""
+  echo "Failed checks:"
+  gh run view "$run_id" --json jobs \
+    --jq '.jobs[] | select(.conclusion == "failure") | "  ✗ \(.name)"' 2>/dev/null || true
+
+  echo ""
+  echo "Fix the failure above, then re-run: npm run push:watch"
+  echo ""
+  echo "Ask Claude: 'What pre-push or pre-commit git hook in .githooks/ could"
+  echo "have caught the failure in $run_url ?'"
+}
+
 # ── 1. Push ──────────────────────────────────────────────────────────────────
+PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)
 REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
@@ -31,13 +50,15 @@ done
 echo ""
 
 [ -n "$RUN_ID" ] || { echo "✗ Could not find pipeline run for $COMMIT_SHA" >&2; exit 1; }
-echo "Pipeline: https://github.com/$REPO/actions/runs/$RUN_ID"
+RUN_URL="https://github.com/$REPO/actions/runs/$RUN_ID"
+echo "Pipeline: $RUN_URL"
 echo ""
 
 # ── 3. Watch main pipeline ────────────────────────────────────────────────────
 if ! gh run watch "$RUN_ID" --exit-status; then
   echo ""
-  echo "✗ Pipeline failed — https://github.com/$REPO/actions/runs/$RUN_ID"
+  echo "✗ Pipeline failed — $RUN_URL"
+  show_failure_guidance "$RUN_ID" "$RUN_URL"
   exit 1
 fi
 
@@ -69,9 +90,10 @@ PREVIEW_RUN_ID=""
 for i in $(seq 1 60); do
   PREVIEW_RUN_ID=$(gh run list \
     --workflow=release-pr-preview.yml \
-    --limit 5 \
-    --json databaseId,createdAt \
-    --jq 'sort_by(.createdAt) | reverse | .[0].databaseId' 2>/dev/null)
+    --limit 10 \
+    --json databaseId,createdAt 2>/dev/null | \
+    jq -r --arg since "$PUSH_TIME" \
+    '[.[] | select(.createdAt > $since)] | sort_by(.createdAt) | reverse | .[0].databaseId // empty')
   [ -n "$PREVIEW_RUN_ID" ] && [ "$PREVIEW_RUN_ID" != "null" ] && break
   printf '.'
   sleep 3
@@ -83,12 +105,14 @@ if [ -z "$PREVIEW_RUN_ID" ] || [ "$PREVIEW_RUN_ID" = "null" ]; then
   exit 1
 fi
 
-echo "Preview pipeline: https://github.com/$REPO/actions/runs/$PREVIEW_RUN_ID"
+PREVIEW_RUN_URL="https://github.com/$REPO/actions/runs/$PREVIEW_RUN_ID"
+echo "Preview pipeline: $PREVIEW_RUN_URL"
 echo ""
 
 if ! gh run watch "$PREVIEW_RUN_ID" --exit-status; then
   echo ""
-  echo "✗ Preview pipeline failed — https://github.com/$REPO/actions/runs/$PREVIEW_RUN_ID"
+  echo "✗ Preview pipeline failed — $PREVIEW_RUN_URL"
+  show_failure_guidance "$PREVIEW_RUN_ID" "$PREVIEW_RUN_URL"
   exit 1
 fi
 

@@ -9,13 +9,17 @@ I use AI to write most of my code. Cursor, Claude, the whole stack. I ship faste
 
 I also use AI to write most of my tests. Which means my tests might be wrong in exactly the same ways my code is wrong. The AI imagines the happy path, writes tests for the happy path, and if the happy path is subtly broken — the tests still pass.
 
-The only check I actually trust is: *does the app work?* Not "does CI say it works." Does it actually work. Can I click through it. Can I use it.
+The only check I actually trust is: *does the app work?* Not "does CI say it works." Does it actually work. Can I click through it. Can I use it. And — just as important — is it actually what I needed, not just what I asked for.
 
 So I built a pipeline where that's literally the last step before anything ships. Every push to `main` that passes all the automated gates ends with a live preview of the exact production candidate, deployed and smoke-tested, waiting for me to look at it. I merge when I'm satisfied. Nothing ships without that.
 
 Here's how it works, concretely enough that you could build it yourself.
 
+If you want a simpler starting point — no Docker, no GCP, just Netlify — the pipeline for this very site is public at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad).
+
 ![Pipeline flow: local hooks → automated CI gates → release PR with preview environment → human review → publish pipeline → production](/img/pipeline-flow.svg)
+
+*The diagram above shows the Netlify static-site version of this pipeline. The detailed code examples later in this post show the full GCP/Docker version used in bbstats.*
 
 ## The branch strategy
 
@@ -49,7 +53,7 @@ The practical effect: the release PR shows you exactly what's in the release, de
 
 ## The main pipeline: gates, then a release PR
 
-When you push to `main`, the main pipeline runs a battery of checks in parallel: lint, unit tests, app correctness gate (coverage and test obligation), accessibility gate, dependency security check, secrets scan, and several domain-specific gates. If any of them fail, the pipeline stops.
+When you push to `main`, the main pipeline runs a battery of checks in parallel: lint, unit tests, app correctness gate (coverage and test obligation), accessibility gate, dependency security check, secrets scan, and several domain-specific gates. If any of them fail, the pipeline stops. (The minimal Netlify version linked above runs: lint, dependency freshness, secrets scan, build, accessibility gate, and smoke tests.)
 
 If they all pass *and* the change touches app code, the pipeline builds and deploys to a test service, then runs smoke tests against it. If those pass, the final step creates (or updates) the release PR:
 
@@ -85,6 +89,8 @@ The pipeline then immediately triggers the preview workflow on that PR:
   env:
     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+> **Gotcha: `actions: write` permission required.** The job that runs `gh workflow run` needs `actions: write` declared explicitly in its `permissions` block. Without it, you get a silent HTTP 403 — the step appears to succeed but the workflow dispatch never happens.
 
 ## The preview: your actual production candidate, deployed
 
@@ -157,7 +163,9 @@ By the time the PR shows up in GitHub as "all checks passed," the app has alread
 
 Nothing complicated. I look at the release PR. It shows me what changesets are included — what's actually in this release. I open the preview URL. I use the app. If it looks right, I merge.
 
-That's the whole human interaction. No deploy scripts. No "cross my fingers and push." Just: look at it running, merge when satisfied.
+Sometimes it doesn't look right — not broken, just not what I meant. I asked for X, the AI built X, the tests verify X. But standing in front of a running version of X, I realise I needed Y. That's a product owner moment: *that's what I asked for, not what I meant.* There's no test that catches it, because the test was written against the same requirement that was wrong.
+
+That's the whole human interaction. No deploy scripts. No "cross my fingers and push." Just: look at it running, decide whether it's actually what you needed, merge when satisfied.
 
 When the PR merges, the publish pipeline runs. It re-runs the quality gates, then builds the production image. Here's the part that makes me confident: before deploying to production, it verifies the image signature with [cosign](https://github.com/sigstore/cosign):
 
@@ -213,7 +221,9 @@ With hand-written code, a failing test usually points to something you wrote inc
 
 With AI-generated code, a failing test might point to something the AI got subtly wrong — or to a test the AI wrote that tests the wrong thing. The code and the tests can be wrong in the same direction. Both look reasonable. Both pass review.
 
-The review environment doesn't solve that completely. But it adds a check the AI can't fake: *does the app actually behave correctly when a human uses it?* The smoke tests add determinism — known inputs, expected outputs, checked against the live deployment. The human review adds judgment — something feels off, the numbers don't look right, a flow that should work doesn't.
+There's a third failure mode that's subtler than either of those. Sometimes the code is correct and the tests are correct — the implementation faithfully translates what you asked for. But what you asked for wasn't what you needed. You described X, the AI built X exactly, the tests verify X, and it wasn't until you used the running version that you noticed the problem. No test catches this, because the tests were written against the same spec that was wrong. The only check that surfaces it is using the thing — as a user would, with real data, in the actual flow.
+
+The review environment doesn't solve all of that. But it adds checks the AI can't fake: *does the app actually behave correctly when a human uses it? Is this actually what I needed?* The smoke tests add determinism — known inputs, expected outputs, checked against the live deployment. The human review adds judgment — something feels off, a flow that should work doesn't, and sometimes: that's not what I meant at all.
 
 That combination — automated correctness checks plus human review of the running app — is what I trust when I'm shipping code I didn't write entirely myself.
 
@@ -226,6 +236,24 @@ To make this concrete: at any given time there are three Cloud Run services.
 **`bbstats-release-preview`** deploys on every release PR update. This is the human review environment — the actual production candidate, live and accessible. Smoke-tested before you look at it. Also disposable.
 
 **`bbstats-prod`** deploys when the release PR merges to `publish`. Production. It only ever gets the cosign-verified image that was reviewed in the preview environment.
+
+## Netlify-specific notes
+
+If you're running this pattern with Netlify rather than Cloud Run, two things will bite you.
+
+**Named alias, not deploy ID.** When `netlify deploy` runs without `--alias`, the deploy URL has the form `abc123--yoursite.netlify.app`. That deploy-ID URL isn't routable from Azure-hosted GitHub Actions runners — your smoke tests will time out. Pass `--alias <name>` to get a stable, routable URL instead:
+
+```bash
+netlify deploy --dir=out --alias main-test
+```
+
+The `deploy_url` in the JSON output will then be `https://main-test--yoursite.netlify.app`, which works reliably from CI.
+
+**Follow redirects with `-L`.** Netlify draft deploys redirect trailing-slash URLs (`/blog/` → `/blog`). If you curl `/blog/` without `-L`, you get a 301 and the smoke test fails even though the page exists. Always pass `-L` to follow redirects:
+
+```bash
+curl -sS -L -o /dev/null -w "%{http_code}" "$URL/blog/"
+```
 
 ## How to adapt this
 

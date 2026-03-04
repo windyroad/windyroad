@@ -4,6 +4,8 @@
   min-height: 100vh;
   background-color: var(--color-bg-dark);
   color: var(--color-text-light);
+  /* On dark background, use the higher-contrast muted token (#94A3B8 = 6.96:1 on #0F172A) */
+  --color-text-muted: var(--color-text-muted-on-dark);
 }
 
 .inner {

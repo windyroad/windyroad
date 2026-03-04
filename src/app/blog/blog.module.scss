@@ -4,6 +4,12 @@
   min-height: 100vh;
   background-color: var(--color-bg-dark);
   color: var(--color-text-light);
+  /*
+   * Override muted text token for dark background.
+   * #64748B (base --color-text-muted) is only 3.86:1 on #0F172A — fails WCAG AA.
+   * #94A3B8 (--color-text-muted-on-dark) is 7.57:1 on #0F172A — passes.
+   */
+  --color-text-muted: var(--color-text-muted-on-dark);
 }
 
 .inner {
@@ -18,6 +24,24 @@
   margin-bottom: 2rem;
 }
 
+.backLink {
+  display: inline-block;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  margin-bottom: 1rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
 .postCard {
   padding: 1.5rem;
   margin-bottom: 1.25rem;
@@ -27,6 +51,10 @@
   transition: border-color var(--transition-fast);
 
   &:hover {
+    border-color: var(--color-accent);
+  }
+
+  &:focus-within {
     border-color: var(--color-accent);
   }
 }
@@ -44,13 +72,49 @@
     &:hover {
       color: var(--color-accent);
     }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
   }
 }
 
 .postMeta {
   font-size: 0.8125rem;
   color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
   margin-bottom: 0.75rem;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.2em 0.6em;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-accent);
+    background: rgba(255, 255, 255, 0.10);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 .postExcerpt {
@@ -64,6 +128,12 @@
 
     &:hover {
       text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+      border-radius: 2px;
     }
   }
 }
@@ -79,6 +149,12 @@
 
     &:hover {
       text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+      border-radius: 2px;
     }
   }
 }
