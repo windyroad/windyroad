@@ -26,7 +26,14 @@ show_failure_guidance() {
   echo "have caught the failure in $run_url ?'"
 }
 
-# ── 1. Push ──────────────────────────────────────────────────────────────────
+# ── 1. Pull + Push ───────────────────────────────────────────────────────────
+STASHED=0
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash
+  STASHED=1
+fi
+git pull --rebase
+[ "$STASHED" = "1" ] && git stash pop
 PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)
@@ -78,6 +85,8 @@ PR_URL=$(echo "$PR_JSON" | jq -r '.[0].url // empty')
 if [ -z "$PR_NUMBER" ]; then
   echo ""
   echo "No pending changesets — nothing to release."
+  echo ""
+  echo "CLAUDE: Show the user the test deploy URL above so they can review it."
   exit 0
 fi
 
@@ -128,3 +137,5 @@ echo "  Release PR:      $PR_URL"
 echo ""
 echo "Review the preview, then merge the PR when satisfied."
 echo "Run: npm run release:watch"
+echo ""
+echo "CLAUDE: Show the user the release preview URL and release PR URL above so they can review and merge."

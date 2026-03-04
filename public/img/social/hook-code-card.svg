@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; font-size: 13.5px; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0F172A"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#3B82F6"/>
+
+  <!-- Title -->
+  <text x="600" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="#F1F5F9">The hook is just two files.</text>
+  <text x="600" y="78" text-anchor="middle" font-size="15" fill="#94A3B8">Wire it in settings.json. Intercept the command in a shell script.</text>
+
+  <!-- ===== LEFT PANEL: settings.json ===== -->
+  <rect x="60" y="100" width="520" height="492" rx="8" fill="#0D1117" stroke="#30363D" stroke-width="1.5"/>
+  <rect x="60" y="100" width="520" height="36" rx="8" fill="#161B22"/>
+  <rect x="60" y="118" width="520" height="18" fill="#161B22"/>
+  <rect x="78" y="108" width="185" height="22" rx="4" fill="#1F2937"/>
+  <circle cx="83" cy="119" r="4" fill="#3B82F6"/>
+  <text x="170" y="123" text-anchor="middle" font-size="12" fill="#94A3B8" class="mono">.claude/settings.json</text>
+
+  <!-- JSON: x indentation guide (8.1px per char at 13.5px mono)
+       level0=88, level1=104(+2ch), level2=121(+4ch), level3=138(+6ch), level4=154(+8ch), level5=171(+10ch) -->
+  <text x="88"  y="162" class="mono" fill="#E6EDF3">{</text>
+  <text x="104" y="185" class="mono"><tspan fill="#79C0FF">"hooks"</tspan><tspan fill="#E6EDF3">: {</tspan></text>
+  <text x="121" y="208" class="mono"><tspan fill="#79C0FF">"PreToolUse"</tspan><tspan fill="#E6EDF3">: [{</tspan></text>
+  <text x="138" y="231" class="mono"><tspan fill="#79C0FF">"matcher"</tspan><tspan fill="#E6EDF3">: </tspan><tspan fill="#A5D6FF">"Bash"</tspan><tspan fill="#E6EDF3">,</tspan></text>
+  <text x="138" y="254" class="mono"><tspan fill="#79C0FF">"hooks"</tspan><tspan fill="#E6EDF3">: [{</tspan></text>
+  <text x="155" y="277" class="mono"><tspan fill="#79C0FF">"type"</tspan><tspan fill="#E6EDF3">: </tspan><tspan fill="#A5D6FF">"command"</tspan><tspan fill="#E6EDF3">,</tspan></text>
+  <text x="155" y="300" class="mono"><tspan fill="#79C0FF">"command"</tspan><tspan fill="#E6EDF3">:</tspan></text>
+  <text x="171" y="323" class="mono" fill="#A5D6FF">".claude/hooks/git-push-gate.sh"</text>
+  <text x="155" y="346" class="mono" fill="#E6EDF3">}]</text>
+  <text x="138" y="369" class="mono" fill="#E6EDF3">}]</text>
+  <text x="121" y="392" class="mono" fill="#E6EDF3">}</text>
+  <text x="88"  y="415" class="mono" fill="#E6EDF3">}</text>
+
+  <!-- Callout box -->
+  <rect x="78" y="548" width="490" height="36" rx="6" fill="#1E293B" stroke="#3B82F640" stroke-width="1"/>
+  <text x="323" y="571" text-anchor="middle" font-size="13" fill="#93C5FD">Fires before every Bash tool call — Claude can't bypass it</text>
+
+  <!-- ===== RIGHT PANEL: git-push-gate.sh ===== -->
+  <rect x="620" y="100" width="520" height="492" rx="8" fill="#0D1117" stroke="#30363D" stroke-width="1.5"/>
+  <rect x="620" y="100" width="520" height="36" rx="8" fill="#161B22"/>
+  <rect x="620" y="118" width="520" height="18" fill="#161B22"/>
+  <rect x="638" y="108" width="185" height="22" rx="4" fill="#1F2937"/>
+  <circle cx="643" cy="119" r="4" fill="#22C55E"/>
+  <text x="730" y="123" text-anchor="middle" font-size="12" fill="#94A3B8" class="mono">git-push-gate.sh</text>
+
+  <!-- Shell: x guide — base=648, indent1=665(+2ch), indent2=681(+4ch) -->
+  <text x="648" y="162" class="mono" fill="#8B949E">#!/bin/bash</text>
+  <text x="648" y="193" class="mono" fill="#8B949E"># Read tool call JSON from stdin</text>
+  <text x="648" y="216" class="mono"><tspan fill="#E6EDF3">INPUT=</tspan><tspan fill="#A5D6FF">$(cat)</tspan></text>
+  <text x="648" y="247" class="mono" fill="#8B949E"># Get the bash command being run</text>
+  <text x="648" y="270" class="mono"><tspan fill="#E6EDF3">COMMAND=</tspan><tspan fill="#A5D6FF">$(echo "$INPUT" | python3 -c \</tspan></text>
+  <text x="665" y="293" class="mono" fill="#A5D6FF">"import sys,json; d=json.load(sys.stdin);</text>
+  <text x="665" y="316" class="mono" fill="#A5D6FF"> print(d['tool_input']['command'])")</text>
+  <text x="648" y="347" class="mono" fill="#8B949E"># Block bare git push</text>
+  <text x="648" y="370" class="mono"><tspan fill="#FF7B72">if </tspan><tspan fill="#E6EDF3">echo "$COMMAND" | grep -qE \</tspan></text>
+  <text x="681" y="393" class="mono" fill="#A5D6FF">'(^|;|&amp;&amp;)\s*git push(\s|$)'</text>
+  <text x="648" y="416" class="mono" fill="#FF7B72">then</text>
+  <text x="665" y="439" class="mono"><tspan fill="#E6EDF3">printf </tspan><tspan fill="#A5D6FF">'{"permissionDecision": "deny",</tspan></text>
+  <text x="681" y="462" class="mono" fill="#A5D6FF">"permissionDecisionReason":</text>
+  <text x="681" y="485" class="mono" fill="#A5D6FF">"Use npm run push:watch"}'</text>
+  <text x="648" y="508" class="mono" fill="#FF7B72">fi</text>
+</svg>

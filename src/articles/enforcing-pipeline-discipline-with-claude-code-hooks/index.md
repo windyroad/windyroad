@@ -11,11 +11,15 @@ There's a gap, though. The pipeline only works if you actually watch it. If you 
 
 Claude Code has a hook system that can enforce this at the point where an AI agent is about to run a command. I use it to intercept `git push` and redirect to a script that watches the pipeline and surfaces the right URL when it's done.
 
+![Before: git push with no pipeline visibility. After: git push blocked by hook, npm run push:watch runs, pipeline watched live, preview URL surfaced automatically.](/img/social/hook-intercept-flow.svg)
+
 ## The hook
 
 Claude Code hooks are shell scripts that fire before or after tool calls. `PreToolUse` runs before the tool executes and can deny it entirely.
 
 The hook lives in `.claude/hooks/git-push-gate.sh` and is wired into `.claude/settings.json`:
+
+![settings.json wiring the PreToolUse hook to git-push-gate.sh on the left, and the key intercept logic in the shell script on the right](/img/social/hook-code-card.svg)
 
 ```json
 {
@@ -71,7 +75,134 @@ When Claude tries to run `git push`, it sees the denial reason and uses `npm run
 
 The end state is always: here is the URL to look at, here is where to merge if you're satisfied.
 
-One implementation note: when looking for the `release-pr-preview` run, the script records the push timestamp and filters for runs created *after* that time. Without this, it would immediately find the previous run (already completed) and watch that instead of the new one. The filter uses ISO 8601 string comparison — it works, but it only works if you pipe through standalone `jq` rather than using the `gh run list --jq` flag, which doesn't accept `--arg` parameters.
+![Terminal session showing git push blocked by hook, npm run push:watch running, all pipeline checks passing, and the preview URL surfaced automatically](/img/social/push-watch-terminal.svg)
+
+The script is wired into `package.json` as `"push:watch": "bash scripts/push-watch.sh"`. Here's the full implementation:
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+SITE_ID="${NETLIFY_SITE_ID:-d00c9942-3c2a-420d-9486-0339ae54af4d}"
+
+show_failure_guidance() {
+  local run_id="$1"
+  local run_url="$2"
+
+  echo ""
+  echo "Failed checks:"
+  gh run view "$run_id" --json jobs \
+    --jq '.jobs[] | select(.conclusion == "failure") | "  ✗ \(.name)"' 2>/dev/null || true
+
+  echo ""
+  echo "Fix the failure above, then re-run: npm run push:watch"
+  echo ""
+  echo "Ask Claude: 'What pre-push or pre-commit git hook in .githooks/ could"
+  echo "have caught the failure in $run_url ?'"
+}
+
+# Pull + push
+STASHED=0
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash
+  STASHED=1
+fi
+git pull --rebase
+[ "$STASHED" = "1" ] && git stash pop
+PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+git push "$@"
+COMMIT_SHA=$(git rev-parse HEAD)
+REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+
+# Find the main-pipeline run for this commit
+printf 'Waiting for main-pipeline'
+RUN_ID=""
+for i in $(seq 1 30); do
+  RUN_ID=$(gh run list \
+    --workflow=main-pipeline.yml \
+    --branch master \
+    --limit 10 \
+    --json databaseId,headSha \
+    --jq ".[] | select(.headSha == \"$COMMIT_SHA\") | .databaseId" 2>/dev/null | head -1)
+  [ -n "$RUN_ID" ] && break
+  printf '.'
+  sleep 2
+done
+echo ""
+
+[ -n "$RUN_ID" ] || { echo "✗ Could not find pipeline run for $COMMIT_SHA" >&2; exit 1; }
+RUN_URL="https://github.com/$REPO/actions/runs/$RUN_ID"
+echo "Pipeline: $RUN_URL"
+
+# Watch it
+if ! gh run watch "$RUN_ID" --exit-status; then
+  echo "✗ Pipeline failed — $RUN_URL"
+  show_failure_guidance "$RUN_ID" "$RUN_URL"
+  exit 1
+fi
+
+# Surface test deploy URL
+TEST_URL=$(netlify api listSiteDeploys --data "{\"site_id\": \"$SITE_ID\", \"per_page\": 20}" 2>/dev/null | \
+  jq -r --arg t "main-$COMMIT_SHA" '.[] | select(.title == $t) | .deploy_url' | head -1)
+[ -n "$TEST_URL" ] && [ "$TEST_URL" != "null" ] \
+  && echo "✓ Test deploy:  $TEST_URL" \
+  || echo "  (test deploy URL not found — check Netlify dashboard)"
+
+# Check for a pending release PR
+PR_JSON=$(gh pr list --base publish --state open --limit 1 --json number,url 2>/dev/null)
+PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number // empty')
+PR_URL=$(echo "$PR_JSON" | jq -r '.[0].url // empty')
+
+if [ -z "$PR_NUMBER" ]; then
+  echo "No pending changesets — nothing to release."
+  echo ""
+  echo "CLAUDE: Show the user the test deploy URL above so they can review it."
+  exit 0
+fi
+
+echo "  Release PR:   $PR_URL"
+
+# Find and watch the release-pr-preview run triggered by this push
+printf 'Waiting for release-pr-preview'
+PREVIEW_RUN_ID=""
+for i in $(seq 1 60); do
+  PREVIEW_RUN_ID=$(gh run list \
+    --workflow=release-pr-preview.yml \
+    --limit 10 \
+    --json databaseId,createdAt 2>/dev/null | \
+    jq -r --arg since "$PUSH_TIME" \
+    '[.[] | select(.createdAt > $since)] | sort_by(.createdAt) | reverse | .[0].databaseId // empty')
+  [ -n "$PREVIEW_RUN_ID" ] && [ "$PREVIEW_RUN_ID" != "null" ] && break
+  printf '.'
+  sleep 3
+done
+echo ""
+
+PREVIEW_RUN_URL="https://github.com/$REPO/actions/runs/$PREVIEW_RUN_ID"
+if ! gh run watch "$PREVIEW_RUN_ID" --exit-status; then
+  echo "✗ Preview pipeline failed — $PREVIEW_RUN_URL"
+  show_failure_guidance "$PREVIEW_RUN_ID" "$PREVIEW_RUN_URL"
+  exit 1
+fi
+
+# Surface preview URL
+PREVIEW_URL=$(netlify api listSiteDeploys --data "{\"site_id\": \"$SITE_ID\", \"per_page\": 20}" 2>/dev/null | \
+  jq -r --arg t "release-pr-$PR_NUMBER" '.[] | select(.title == $t) | .deploy_url' | head -1)
+
+[ -n "$PREVIEW_URL" ] && [ "$PREVIEW_URL" != "null" ] \
+  && echo "✓ Release preview: $PREVIEW_URL" \
+  || echo "  (preview URL not found — check PR comments)"
+echo "  Release PR:      $PR_URL"
+echo ""
+echo "Review the preview, then merge the PR when satisfied."
+echo "Run: npm run release:watch"
+echo ""
+echo "CLAUDE: Show the user the release preview URL and release PR URL above so they can review and merge."
+```
+
+Two implementation details worth noting. First, the `git pull --rebase` is preceded by a conditional stash — `git stash` before the rebase, `git stash pop` after — but only if there are actually local changes. Running `git stash pop` with no stash entry fails, so the flag guards against that.
+
+Second, when looking for the `release-pr-preview` run, the script records the push timestamp and filters for runs created *after* that time. Without this, it would immediately find the previous run (already completed) and watch that instead of the new one. The filter uses ISO 8601 string comparison — it works, but it only works if you pipe through standalone `jq` rather than using the `gh run list --jq` flag, which doesn't accept `--arg` parameters.
 
 If either pipeline fails, the script shows which checks failed and prompts:
 
@@ -89,7 +220,11 @@ This is the loop I care about. When CI catches something, the question isn't jus
 
 ## Why hooks for this, not just instructions
 
-You could tell Claude "always use `npm run push:watch` instead of `git push`." It would probably comply most of the time. But instructions drift. A long context window, a new session, a pasted snippet with `git push` in it — there are many ways an instruction gets forgotten.
+You could tell Claude "always use `npm run push:watch` instead of `git push`." It would probably comply most of the time. But instructions drift.
+
+![Comparison table: Guidelines are trust-based and depend on the AI remembering. Hooks are structural and enforced every time regardless of context.](/img/social/guidelines-vs-hooks.svg)
+
+A long context window, a new session, a pasted snippet with `git push` in it — there are many ways an instruction gets forgotten.
 
 A hook is different. It's structural enforcement. The gate doesn't care about context — it fires on every `Bash` tool call, checks the command, and denies it if it matches. The AI can't accidentally bypass it by forgetting.
 

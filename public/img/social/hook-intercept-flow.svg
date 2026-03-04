@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0F172A"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="600" y1="0" x2="600" y2="630" stroke="#1E293B" stroke-width="1"/>
+
+  <!-- Header -->
+  <text x="600" y="58" text-anchor="middle" font-size="28" font-weight="700" fill="#F1F5F9">Enforce the pipeline, automatically</text>
+  <text x="600" y="88" text-anchor="middle" font-size="17" fill="#94A3B8">Claude Code hooks turn guidelines into guardrails</text>
+
+  <!-- Divider under header -->
+  <line x1="80" y1="108" x2="1120" y2="108" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- BEFORE column label -->
+  <rect x="80" y="120" width="490" height="34" rx="4" fill="#EF444415"/>
+  <text x="325" y="143" text-anchor="middle" font-size="14" font-weight="600" fill="#EF4444" letter-spacing="0.08em">BEFORE</text>
+
+  <!-- AFTER column label -->
+  <rect x="630" y="120" width="490" height="34" rx="4" fill="#3B82F615"/>
+  <text x="875" y="143" text-anchor="middle" font-size="14" font-weight="600" fill="#3B82F6" letter-spacing="0.08em">AFTER</text>
+
+  <!-- ===== BEFORE COLUMN ===== -->
+
+  <!-- Step 1: git push -->
+  <rect x="100" y="174" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="325" y="199" text-anchor="middle" font-size="13" fill="#94A3B8">Claude runs</text>
+  <text x="325" y="220" text-anchor="middle" font-size="18" font-weight="600" fill="#F1F5F9" class="mono">git push</text>
+
+  <!-- Arrow (wider gap matches AFTER column) -->
+  <line x1="325" y1="234" x2="325" y2="282" stroke="#475569" stroke-width="2"/>
+  <polygon points="325,290 319,278 331,278" fill="#475569"/>
+
+  <!-- Step 2: pipeline runs somewhere -->
+  <rect x="100" y="290" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="325" y="316" text-anchor="middle" font-size="13" fill="#94A3B8">pipeline runs... somewhere</text>
+  <text x="325" y="337" text-anchor="middle" font-size="16" fill="#94A3B8">🤷 no visibility</text>
+
+  <!-- Arrow -->
+  <line x1="325" y1="350" x2="325" y2="374" stroke="#475569" stroke-width="2"/>
+  <polygon points="325,382 319,370 331,370" fill="#475569"/>
+
+  <!-- Step 3: manual check -->
+  <rect x="100" y="382" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="325" y="408" text-anchor="middle" font-size="13" fill="#94A3B8">open GitHub, find the run,</text>
+  <text x="325" y="429" text-anchor="middle" font-size="13" fill="#94A3B8">copy the deploy URL manually</text>
+
+  <!-- Arrow -->
+  <line x1="325" y1="442" x2="325" y2="466" stroke="#475569" stroke-width="2"/>
+  <polygon points="325,474 319,462 331,462" fill="#475569"/>
+
+  <!-- Step 4: result -->
+  <rect x="100" y="474" width="450" height="60" rx="8" fill="#7F1D1D" stroke="#EF444440" stroke-width="1.5"/>
+  <text x="325" y="500" text-anchor="middle" font-size="13" fill="#FCA5A5">broken flow, context switches,</text>
+  <text x="325" y="521" text-anchor="middle" font-size="13" fill="#FCA5A5">easy to skip under pressure</text>
+
+  <!-- ===== AFTER COLUMN ===== -->
+
+  <!-- Step 1: git push blocked -->
+  <rect x="650" y="174" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="875" y="199" text-anchor="middle" font-size="13" fill="#94A3B8">Claude runs</text>
+  <text x="875" y="220" text-anchor="middle" font-size="18" font-weight="600" fill="#F1F5F9" class="mono">git push</text>
+
+  <!-- Arrow with BLOCKED label — wider gap so badge has room -->
+  <line x1="875" y1="234" x2="875" y2="280" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4,3"/>
+  <polygon points="875,290 869,278 881,278" fill="#F59E0B"/>
+
+  <!-- Blocked badge — centered in the 56px gap -->
+  <rect x="775" y="249" width="200" height="28" rx="14" fill="#F59E0B25" stroke="#F59E0B70" stroke-width="1.5"/>
+  <text x="875" y="268" text-anchor="middle" font-size="13" font-weight="600" fill="#F59E0B">⛔  hook intercepts</text>
+
+  <!-- Step 2: push:watch -->
+  <rect x="650" y="290" width="450" height="60" rx="8" fill="#1E2940" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="875" y="316" text-anchor="middle" font-size="13" fill="#94A3B8">redirected to</text>
+  <text x="875" y="337" text-anchor="middle" font-size="18" font-weight="600" fill="#93C5FD" class="mono">npm run push:watch</text>
+
+  <!-- Arrow -->
+  <line x1="875" y1="350" x2="875" y2="374" stroke="#3B82F6" stroke-width="2"/>
+  <polygon points="875,382 869,370 881,370" fill="#3B82F6"/>
+
+  <!-- Step 3: watching -->
+  <rect x="650" y="382" width="450" height="60" rx="8" fill="#1E293B" stroke="#3B82F640" stroke-width="1.5"/>
+  <text x="875" y="408" text-anchor="middle" font-size="13" fill="#94A3B8">pushes + watches pipeline live</text>
+  <text x="875" y="429" text-anchor="middle" font-size="13" fill="#94A3B8">✓ lint  ✓ deps  ✓ build  ✓ a11y</text>
+
+  <!-- Arrow -->
+  <line x1="875" y1="442" x2="875" y2="466" stroke="#22C55E" stroke-width="2"/>
+  <polygon points="875,474 869,462 881,462" fill="#22C55E"/>
+
+  <!-- Step 4: URL delivered -->
+  <rect x="650" y="474" width="450" height="60" rx="8" fill="#14532D" stroke="#22C55E40" stroke-width="1.5"/>
+  <text x="875" y="500" text-anchor="middle" font-size="13" fill="#86EFAC">Preview: https://main-test--windyroad.netlify.app</text>
+  <text x="875" y="521" text-anchor="middle" font-size="13" fill="#86EFAC">surfaced automatically, every time</text>
+
+  <!-- Center divider line -->
+  <line x1="600" y1="120" x2="600" y2="545" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Footer -->
+</svg>
