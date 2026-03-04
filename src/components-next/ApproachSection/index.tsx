@@ -25,7 +25,7 @@ const WarningIcon = () => (
 
 const process = [
   {
-    label: 'Read the road',
+    label: 'Read the pace notes',
     subtitle: 'Diagnose',
     description:
       'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. I look at how your team actually uses AI tools: which ones, how generated code gets reviewed, what your pipeline catches and what slips through.',
