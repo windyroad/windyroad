@@ -105,5 +105,24 @@
 @media (max-width: 768px) {
   .audienceSplit {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionTitle {
+    font-size: 1.25rem;
+  }
+
+  .problemItem {
+    font-size: 0.9375rem;
+  }
+
+  .stepDesc {
+    font-size: 0.875rem;
   }
 }
