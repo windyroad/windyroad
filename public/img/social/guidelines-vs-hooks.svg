@@ -53,10 +53,10 @@
   <line x1="80" y1="300" x2="1120" y2="300" stroke="#334155" stroke-width="1"/>
 
   <!-- Row 3 -->
-  <text x="340" y="335" text-anchor="middle" font-size="15" fill="#94A3B8">Works until a new developer joins</text>
-  <text x="340" y="356" text-anchor="middle" font-size="15" fill="#94A3B8">and doesn't know the convention</text>
-  <text x="860" y="335" text-anchor="middle" font-size="15" fill="#E2E8F0">Same behaviour for everyone —</text>
-  <text x="860" y="356" text-anchor="middle" font-size="15" fill="#E2E8F0">day one and day one thousand</text>
+  <text x="340" y="335" text-anchor="middle" font-size="15" fill="#94A3B8">Breaks when context resets</text>
+  <text x="340" y="356" text-anchor="middle" font-size="15" fill="#94A3B8">or a new session starts</text>
+  <text x="860" y="335" text-anchor="middle" font-size="15" fill="#E2E8F0">Works the same every session,</text>
+  <text x="860" y="356" text-anchor="middle" font-size="15" fill="#E2E8F0">regardless of context length</text>
   <line x1="80" y1="378" x2="1120" y2="378" stroke="#334155" stroke-width="1"/>
 
   <!-- Row 4 -->

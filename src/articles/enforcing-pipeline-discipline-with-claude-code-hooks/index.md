@@ -97,7 +97,9 @@ This is the loop I care about. When CI catches something, the question isn't jus
 
 You could tell Claude "always use `npm run push:watch` instead of `git push`." It would probably comply most of the time. But instructions drift.
 
-![Comparison table: Guidelines are trust-based and depend on the AI remembering. Hooks are structural and enforced every time regardless of context.](/img/social/guidelines-vs-hooks.svg) A long context window, a new session, a pasted snippet with `git push` in it — there are many ways an instruction gets forgotten.
+![Comparison table: Guidelines are trust-based and depend on the AI remembering. Hooks are structural and enforced every time regardless of context.](/img/social/guidelines-vs-hooks.svg)
+
+A long context window, a new session, a pasted snippet with `git push` in it — there are many ways an instruction gets forgotten.
 
 A hook is different. It's structural enforcement. The gate doesn't care about context — it fires on every `Bash` tool call, checks the command, and denies it if it matches. The AI can't accidentally bypass it by forgetting.
 

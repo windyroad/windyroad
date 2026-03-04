@@ -27,7 +27,13 @@ show_failure_guidance() {
 }
 
 # ── 1. Pull + Push ───────────────────────────────────────────────────────────
+STASHED=0
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash
+  STASHED=1
+fi
 git pull --rebase
+[ "$STASHED" = "1" ] && git stash pop
 PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)

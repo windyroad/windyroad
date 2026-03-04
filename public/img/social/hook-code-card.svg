@@ -11,8 +11,8 @@
   <rect x="0" y="0" width="1200" height="4" fill="#3B82F6"/>
 
   <!-- Title -->
-  <text x="600" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="#F1F5F9">Two files. That's all it takes.</text>
-  <text x="600" y="78" text-anchor="middle" font-size="15" fill="#94A3B8">Wire a hook in settings.json. Intercept the command in a shell script.</text>
+  <text x="600" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="#F1F5F9">The hook is just two files.</text>
+  <text x="600" y="78" text-anchor="middle" font-size="15" fill="#94A3B8">Wire it in settings.json. Intercept the command in a shell script.</text>
 
   <!-- ===== LEFT PANEL: settings.json ===== -->
   <rect x="60" y="100" width="520" height="492" rx="8" fill="#0D1117" stroke="#30363D" stroke-width="1.5"/>
