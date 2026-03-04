@@ -71,6 +71,8 @@ When Claude tries to run `git push`, it sees the denial reason and uses `npm run
 
 The end state is always: here is the URL to look at, here is where to merge if you're satisfied.
 
+One implementation note: when looking for the `release-pr-preview` run, the script records the push timestamp and filters for runs created *after* that time. Without this, it would immediately find the previous run (already completed) and watch that instead of the new one. The filter uses ISO 8601 string comparison — it works, but it only works if you pipe through standalone `jq` rather than using the `gh run list --jq` flag, which doesn't accept `--arg` parameters.
+
 If either pipeline fails, the script shows which checks failed and prompts:
 
 ```

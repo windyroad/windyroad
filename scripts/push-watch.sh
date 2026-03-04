@@ -90,10 +90,10 @@ PREVIEW_RUN_ID=""
 for i in $(seq 1 60); do
   PREVIEW_RUN_ID=$(gh run list \
     --workflow=release-pr-preview.yml \
-    --limit 5 \
-    --json databaseId,createdAt \
-    --jq --arg since "$PUSH_TIME" \
-    '[.[] | select(.createdAt > $since)] | sort_by(.createdAt) | reverse | .[0].databaseId // empty' 2>/dev/null)
+    --limit 10 \
+    --json databaseId,createdAt 2>/dev/null | \
+    jq -r --arg since "$PUSH_TIME" \
+    '[.[] | select(.createdAt > $since)] | sort_by(.createdAt) | reverse | .[0].databaseId // empty')
   [ -n "$PREVIEW_RUN_ID" ] && [ "$PREVIEW_RUN_ID" != "null" ] && break
   printf '.'
   sleep 3
