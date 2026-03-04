@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <span className={styles.copyright}>
-        &copy; {new Date().getFullYear()} Tom Howard
+        &copy; {new Date().getFullYear()} Windy Road Technology Pty Ltd
       </span>
       <div className={styles.socials}>
         <a
@@ -19,7 +19,7 @@ export default function Footer() {
           </svg>
         </a>
         <a
-          href="https://github.com/tomhoward"
+          href="https://github.com/tompahoward"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.socialLink}
