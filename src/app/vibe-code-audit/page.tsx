@@ -49,9 +49,10 @@ export default function VibeCodingAuditPage() {
   return (
     <main>
       {/* Hidden form for Netlify build-time detection */}
-      <form name="notify" data-netlify="true" netlify-honeypot="bot-field" hidden>
-        <input type="email" name="email" />
-        <textarea name="message" />
+      <form name="notify" data-netlify="true" netlify-honeypot="bot-field" hidden aria-hidden="true">
+        <label>Email<input type="email" name="email" /></label>
+        <label>Message<textarea name="message" /></label>
+        <button type="submit">Send</button>
       </form>
 
       {/* Hero */}
