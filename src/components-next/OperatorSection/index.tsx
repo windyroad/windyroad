@@ -8,6 +8,10 @@ export default function OperatorSection() {
 
       <div className={styles.stats}>
         <div className={styles.stat}>
+          <div className={styles.statValue}>3</div>
+          <div className={styles.statLabel}>profitable software products shipped from scratch</div>
+        </div>
+        <div className={styles.stat}>
           <div className={styles.statValue}>400%</div>
           <div className={styles.statLabel}>throughput increase per developer at Greater Bank</div>
         </div>
@@ -15,13 +19,22 @@ export default function OperatorSection() {
           <div className={styles.statValue}>0 &rarr; 97%</div>
           <div className={styles.statLabel}>compliance in 10 months at Westpac</div>
         </div>
-        <div className={styles.stat}>
-          <div className={styles.statValue}>3</div>
-          <div className={styles.statLabel}>profitable software products shipped</div>
-        </div>
       </div>
 
       <div className={styles.narrative}>
+        <p>
+          Through Windy Road Technology, I&apos;ve taken three software products
+          from idea to market to profit: TIBant, BWUnit, and Addressr. Not
+          consulting on someone else&apos;s product, actually building it.
+          Finding customers, closing sales, supporting users. With paying
+          customers across Australia, the UK, US, and Europe, I know what it
+          takes to ship something real.
+        </p>
+        <p>
+          I&apos;ve been working with AI since 1999: building autonomous
+          agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
+          co-authoring research papers. AI experience before it was called AI.
+        </p>
         <p>
           At Greater Bank I introduced Software Delivery Fireteams that cut
           cycle time from 24 to 8 days and increased developer throughput by
@@ -32,23 +45,9 @@ export default function OperatorSection() {
           customer portal.
         </p>
         <p>
-          I&apos;ve been working with AI since 1999: building autonomous
-          agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
-          co-authoring research papers. AI experience before it was called AI.
-        </p>
-        <p>
-          Through Windy Road Technology, I&apos;ve taken three software products
-          from idea to implementation to market to profit: TIBant, BWUnit, and
-          Addressr. Not consulting on someone else&apos;s product,
-          actually doing it. Finding customers, closing sales, supporting users.
-          With paying customers across Australia, the UK, US, and Europe, I know
-          what it takes.
-        </p>
-        <p>
-          25+ years of delivery leadership. AI before it was called AI. Three
-          products taken from idea to profit (not consulting on someone
-          else&apos;s, actually shipping them). Which means I&apos;m not guessing
-          at what breaks when you scale. I&apos;ve broken it and fixed it.
+          25+ years of delivery leadership. Three products shipped from scratch.
+          Which means I&apos;m not guessing at what breaks when you scale.
+          I&apos;ve broken it and fixed it.
         </p>
       </div>
     </Section>

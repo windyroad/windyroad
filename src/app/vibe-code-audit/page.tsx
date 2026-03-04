@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Button from '@/src/components-next/Button';
+import NotifyForm from '@/src/components-next/NotifyForm';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
@@ -47,6 +48,11 @@ const faqs = [
 export default function VibeCodingAuditPage() {
   return (
     <main>
+      {/* Hidden form for Netlify build-time detection */}
+      <form name="notify" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="email" name="email" />
+        <textarea name="message" />
+      </form>
 
       {/* Hero */}
       <section className={`${styles.section} ${styles.dark} ${styles.hero}`}>
@@ -166,6 +172,7 @@ export default function VibeCodingAuditPage() {
           <Button href="https://cal.com/tomhoward" variant="primary" size="large" external>
             Book a Call
           </Button>
+          <NotifyForm />
         </div>
       </section>
 
