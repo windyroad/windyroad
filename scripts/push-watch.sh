@@ -26,7 +26,8 @@ show_failure_guidance() {
   echo "have caught the failure in $run_url ?'"
 }
 
-# ── 1. Push ──────────────────────────────────────────────────────────────────
+# ── 1. Pull + Push ───────────────────────────────────────────────────────────
+git pull --rebase
 PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)

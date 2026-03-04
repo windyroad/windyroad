@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    </style>
+    <clipPath id="table-clip">
+      <rect x="80" y="112" width="1040" height="432" rx="8"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0F172A"/>
+
+  <text x="600" y="58" text-anchor="middle" font-size="30" font-weight="700" fill="#F1F5F9">Guidelines vs Hooks</text>
+  <text x="600" y="88" text-anchor="middle" font-size="17" fill="#94A3B8">Both aim for the same outcome. Only one guarantees it.</text>
+
+  <!-- Table body (clipped so backgrounds respect border-radius) -->
+  <g clip-path="url(#table-clip)">
+    <!-- Header backgrounds -->
+    <rect x="80"  y="112" width="519" height="54" fill="#2A0F12"/>
+    <rect x="601" y="112" width="519" height="54" fill="#0A1628"/>
+
+    <!-- Body rows alternating subtle bg -->
+    <rect x="80"  y="166" width="1040" height="288" fill="#1E293B"/>
+
+    <!-- Verdict backgrounds -->
+    <rect x="80"  y="454" width="519" height="90" fill="#3B0E0E"/>
+    <rect x="601" y="454" width="519" height="90" fill="#0A2E18"/>
+  </g>
+
+  <!-- Table outer border -->
+  <rect x="80" y="112" width="1040" height="432" rx="8" fill="none" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Centre divider -->
+  <line x1="600" y1="112" x2="600" y2="544" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Header labels -->
+  <text x="340" y="147" text-anchor="middle" font-size="15" font-weight="700" fill="#F87171" letter-spacing="0.06em">📋  GUIDELINES</text>
+  <text x="860" y="147" text-anchor="middle" font-size="15" font-weight="700" fill="#60A5FA" letter-spacing="0.06em">⚡  HOOKS</text>
+
+  <!-- Header bottom divider -->
+  <line x1="80" y1="166" x2="1120" y2="166" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Row 1 -->
+  <text x="340" y="202" text-anchor="middle" font-size="15" fill="#94A3B8">"Please use npm run push:watch"</text>
+  <text x="860" y="202" text-anchor="middle" font-size="15" fill="#E2E8F0">Blocks git push structurally</text>
+  <line x1="80" y1="222" x2="1120" y2="222" stroke="#334155" stroke-width="1"/>
+
+  <!-- Row 2 -->
+  <text x="340" y="257" text-anchor="middle" font-size="15" fill="#94A3B8">Forgotten under</text>
+  <text x="340" y="278" text-anchor="middle" font-size="15" fill="#94A3B8">deadline pressure</text>
+  <text x="860" y="257" text-anchor="middle" font-size="15" fill="#E2E8F0">Enforced every time,</text>
+  <text x="860" y="278" text-anchor="middle" font-size="15" fill="#E2E8F0">regardless of pressure</text>
+  <line x1="80" y1="300" x2="1120" y2="300" stroke="#334155" stroke-width="1"/>
+
+  <!-- Row 3 -->
+  <text x="340" y="335" text-anchor="middle" font-size="15" fill="#94A3B8">Works until a new developer joins</text>
+  <text x="340" y="356" text-anchor="middle" font-size="15" fill="#94A3B8">and doesn't know the convention</text>
+  <text x="860" y="335" text-anchor="middle" font-size="15" fill="#E2E8F0">Same behaviour for everyone —</text>
+  <text x="860" y="356" text-anchor="middle" font-size="15" fill="#E2E8F0">day one and day one thousand</text>
+  <line x1="80" y1="378" x2="1120" y2="378" stroke="#334155" stroke-width="1"/>
+
+  <!-- Row 4 -->
+  <text x="340" y="413" text-anchor="middle" font-size="15" fill="#94A3B8">Post-mortem reminder:</text>
+  <text x="340" y="434" text-anchor="middle" font-size="15" fill="#94A3B8">"remember to check the pipeline"</text>
+  <text x="860" y="413" text-anchor="middle" font-size="15" fill="#E2E8F0">Pre-flight: surfaces the URL</text>
+  <text x="860" y="434" text-anchor="middle" font-size="15" fill="#E2E8F0">before you can move on</text>
+  <line x1="80" y1="454" x2="1120" y2="454" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Verdict text -->
+  <text x="340" y="492" text-anchor="middle" font-size="17" font-weight="700" fill="#F87171">❌  Trust-based</text>
+  <text x="340" y="515" text-anchor="middle" font-size="14" fill="#F8717190">depends on the AI remembering</text>
+
+  <text x="860" y="492" text-anchor="middle" font-size="17" font-weight="700" fill="#4ADE80">✅  Structural</text>
+  <text x="860" y="515" text-anchor="middle" font-size="14" fill="#4ADE8090">baked into the workflow itself</text>
+
+  <!-- Footer -->
+</svg>

@@ -11,11 +11,15 @@ There's a gap, though. The pipeline only works if you actually watch it. If you 
 
 Claude Code has a hook system that can enforce this at the point where an AI agent is about to run a command. I use it to intercept `git push` and redirect to a script that watches the pipeline and surfaces the right URL when it's done.
 
+![Before: git push with no pipeline visibility. After: git push blocked by hook, npm run push:watch runs, pipeline watched live, preview URL surfaced automatically.](/img/social/hook-intercept-flow.svg)
+
 ## The hook
 
 Claude Code hooks are shell scripts that fire before or after tool calls. `PreToolUse` runs before the tool executes and can deny it entirely.
 
 The hook lives in `.claude/hooks/git-push-gate.sh` and is wired into `.claude/settings.json`:
+
+![settings.json wiring the PreToolUse hook to git-push-gate.sh on the left, and the key intercept logic in the shell script on the right](/img/social/hook-code-card.svg)
 
 ```json
 {
@@ -73,6 +77,8 @@ The end state is always: here is the URL to look at, here is where to merge if y
 
 One implementation note: when looking for the `release-pr-preview` run, the script records the push timestamp and filters for runs created *after* that time. Without this, it would immediately find the previous run (already completed) and watch that instead of the new one. The filter uses ISO 8601 string comparison — it works, but it only works if you pipe through standalone `jq` rather than using the `gh run list --jq` flag, which doesn't accept `--arg` parameters.
 
+![Terminal session showing git push blocked by hook, npm run push:watch running, all pipeline checks passing, and the preview URL surfaced automatically](/img/social/push-watch-terminal.svg)
+
 If either pipeline fails, the script shows which checks failed and prompts:
 
 ```
@@ -89,7 +95,9 @@ This is the loop I care about. When CI catches something, the question isn't jus
 
 ## Why hooks for this, not just instructions
 
-You could tell Claude "always use `npm run push:watch` instead of `git push`." It would probably comply most of the time. But instructions drift. A long context window, a new session, a pasted snippet with `git push` in it — there are many ways an instruction gets forgotten.
+You could tell Claude "always use `npm run push:watch` instead of `git push`." It would probably comply most of the time. But instructions drift.
+
+![Comparison table: Guidelines are trust-based and depend on the AI remembering. Hooks are structural and enforced every time regardless of context.](/img/social/guidelines-vs-hooks.svg) A long context window, a new session, a pasted snippet with `git push` in it — there are many ways an instruction gets forgotten.
 
 A hook is different. It's structural enforcement. The gate doesn't care about context — it fires on every `Bash` tool call, checks the command, and denies it if it matches. The AI can't accidentally bypass it by forgetting.
 
