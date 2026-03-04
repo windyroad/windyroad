@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.6.1
+
+### Patch Changes
+
+- 662661e: Copy and voice refinements: tighter hero subheadline, "This Road"/"Wrong Road" fit check labels, low-pressure footer CTA, sharpened VCA bullet, codebase access FAQ, reduced-commitment CTA button on audit page, duration-specific Cal.com booking links, em-dash removal, and fixed em-dash hook for macOS.
+
 ## 2.6.0
 
 ### Minor Changes
