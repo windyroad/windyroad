@@ -69,7 +69,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   margin-bottom: 1rem;
 }
 
@@ -170,7 +170,7 @@
 .deliverableNum {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   flex-shrink: 0;
   padding-top: 0.2rem;
   letter-spacing: 0.05em;

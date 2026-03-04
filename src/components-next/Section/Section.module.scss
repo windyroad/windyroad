@@ -6,6 +6,7 @@
   background-color: var(--color-bg-dark);
   color: var(--color-text-light);
   --color-text-muted: var(--color-text-muted-on-dark);
+  --color-accent-text: var(--color-accent-on-dark);
   border-top: 1px solid var(--color-border);
 }
 
@@ -32,7 +33,7 @@
 .number {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--color-accent-text, var(--color-accent));
   letter-spacing: 0.05em;
 }
 

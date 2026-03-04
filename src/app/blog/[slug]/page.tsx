@@ -3,7 +3,7 @@ import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
 import styles from '../post.module.scss';
-import Button from '@/src/components-next/Button';
+
 
 export async function generateStaticParams() {
   const slugs = getAllSlugs();
@@ -73,57 +73,7 @@ export default async function BlogPost({
           </section>
         </article>
 
-        {(() => {
-          const tags = frontmatter.tags ?? [];
-          const isPipelinePost = tags.some((t) =>
-            ['ci/cd', 'deployment', 'release', 'production'].includes(t),
-          );
-          const isDeliveryPost =
-            !isPipelinePost &&
-            tags.some((t) =>
-              ['software delivery', 'agile', 'devops', 'lean', 'software'].includes(t),
-            );
-          if (isPipelinePost) {
-            return (
-              <>
-                <hr className={styles.ctaDivider} />
-                <aside className={styles.cta}>
-                  <p className={styles.ctaHeadline}>
-                    Shipping AI-generated code and want guardrails like this?
-                  </p>
-                  <p className={styles.ctaBody}>
-                    I&apos;ve built CI/CD pipelines for teams at MLC, AMP, Greater Bank, and Pacific National.
-                    I help founders and engineering teams set up quality gates, preview environments,
-                    and the controls to ship AI-generated code without fear. One week, fixed price.
-                  </p>
-                  <Button href="https://cal.com/tomhoward" external>
-                    Book a call →
-                  </Button>
-                </aside>
-              </>
-            );
-          }
-          if (isDeliveryPost) {
-            return (
-              <>
-                <hr className={styles.ctaDivider} />
-                <aside className={styles.cta}>
-                  <p className={styles.ctaHeadline}>
-                    Want to improve how your team delivers software?
-                  </p>
-                  <p className={styles.ctaBody}>
-                    I help founders and engineering leads ship faster, reduce risk, and build
-                    the habits that make teams genuinely effective. Let&apos;s talk.
-                  </p>
-                  <Button href="https://cal.com/tomhoward" external>
-                    Book a call →
-                  </Button>
-                </aside>
-              </>
-            );
-          }
-          return null;
-        })()}
+        {/* CTA handled by site-wide footer */}
       </div>
     </div>
   );

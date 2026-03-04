@@ -8,12 +8,13 @@
   background-color: var(--color-bg-dark);
   color: var(--color-text-light);
   text-align: center;
+  --color-text-muted: var(--color-text-muted-on-dark);
 }
 
 .code {
   font-size: 5rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   line-height: 1;
   margin-bottom: 1rem;
 }
@@ -25,11 +26,18 @@
 }
 
 .homeLink {
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   text-decoration: none;
   font-weight: 600;
 
   &:hover {
+    color: var(--color-text-light);
     text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent-on-dark);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
