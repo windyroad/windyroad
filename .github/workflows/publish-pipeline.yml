@@ -90,7 +90,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin master
           git checkout master
-          git merge --ff-only publish
+          git merge --no-ff publish -m "chore: merge publish back to master after release"
           git push origin master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
