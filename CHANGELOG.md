@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.4.1
+
+### Patch Changes
+
+- c3a9aa7: Fix release workflow: hook blocks pipeline-managed branches, release:watch merges PR and syncs version cleanly
+
 ## 2.4.0
 
 ### Minor Changes
