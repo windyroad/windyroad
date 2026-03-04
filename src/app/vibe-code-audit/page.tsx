@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const problems = [
   'Your Stripe webhooks fail randomly and you don\'t know why',
   'Users see loading screens that never finish',
-  'The code looks right but something keeps breaking',
+  'The code looks fine. Something keeps breaking anyway.',
   'You\'re scared to touch anything in case it makes things worse',
   'An agency quoted you $50k and 8 weeks',
 ];
@@ -38,6 +38,10 @@ const faqs = [
   {
     q: 'What stack do you work with?',
     a: 'JavaScript/TypeScript, Python, and most modern web frameworks. If you\'re not sure, book a call and we\'ll figure it out.',
+  },
+  {
+    q: 'Do I need to give you access to my whole codebase?',
+    a: 'Yes \u2014 a real audit means reading what\'s actually there, not what you show me. Everything is treated as confidential. I\'ll sign an NDA before we start if you need one.',
   },
   {
     q: 'How is this different from an agency?',
@@ -178,7 +182,7 @@ export default function VibeCodingAuditPage() {
             I&apos;ll point you to someone who can.
           </p>
           <Button href="https://cal.com/tomhoward" variant="primary" size="large" external>
-            Book a Call
+            Book a 15-min Call
           </Button>
         </div>
       </section>

@@ -7,7 +7,8 @@ export default function Footer() {
       <div className={styles.inner}>
         <div className={styles.ctaBand}>
           <p className={styles.ctaText}>
-            Book a 30-minute call. If your app is breaking in production today,
+            Book a 30-minute call. No pitch &mdash; just figuring out if
+            there&apos;s a fit. If something&apos;s breaking in production today,
             I can usually start this week.
           </p>
           <Button

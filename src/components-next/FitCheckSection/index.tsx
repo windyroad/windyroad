@@ -34,7 +34,7 @@ export default function FitCheckSection() {
       <div className={styles.columns}>
         <div className={`${styles.column} ${styles.good}`}>
           <h3 className={styles.columnTitle}>
-            <CheckIcon /> Good Fit
+            <CheckIcon /> This Road
           </h3>
           <div className={styles.list}>
             {goodFit.map((item) => (
@@ -48,7 +48,7 @@ export default function FitCheckSection() {
 
         <div className={`${styles.column} ${styles.notFit}`}>
           <h3 className={styles.columnTitle}>
-            <XIcon /> Not a Fit
+            <XIcon /> Wrong Road
           </h3>
           <div className={styles.list}>
             {notFit.map((item) => (

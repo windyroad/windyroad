@@ -12,9 +12,9 @@ export default function Hero() {
         </h1>
         <p className={styles.subheadline}>
           Copilot, Cursor, and Claude are writing your production code. I
-          partner with founders and engineering leaders as a co-driver,
-          reading the road ahead, warning about what&apos;s coming, so the
-          speed doesn&apos;t put you in a ditch.
+          partner with founders and engineering leaders as a co-driver
+          &mdash; reading the road ahead so the speed doesn&apos;t put you
+          in a ditch.
         </p>
         <div className={styles.cta}>
           <Button
