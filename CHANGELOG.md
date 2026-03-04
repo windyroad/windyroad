@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.5.0
+
+### Minor Changes
+
+- ecf5d3e: Add blog post: Enforcing pipeline discipline with Claude Code hooks
+
 ## 2.4.0
 
 ### Minor Changes

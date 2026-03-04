@@ -1,7 +1,7 @@
 {
   "name": "windy-road",
   "description": "Windy Road - windyroad.com.au",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "author": "Tom Howard <tom@windyroad.com.au>",
   "license": "MIT",
   "private": true,
