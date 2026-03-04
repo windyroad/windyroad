@@ -162,8 +162,15 @@ export default function VibeCodingAuditPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Email capture */}
       <section className={`${styles.section} ${styles.dark}`}>
+        <div className={styles.inner}>
+          <NotifyForm />
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className={`${styles.section} ${styles.light}`}>
         <div className={styles.inner}>
           <h2 className={styles.ctaTitle}>Your app is breaking. Let&apos;s fix it.</h2>
           <p className={styles.ctaSub}>
@@ -173,7 +180,6 @@ export default function VibeCodingAuditPage() {
           <Button href="https://cal.com/tomhoward" variant="primary" size="large" external>
             Book a Call
           </Button>
-          <NotifyForm />
         </div>
       </section>
 

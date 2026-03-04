@@ -60,11 +60,11 @@ export default function NotifyForm() {
   return (
     <div className={styles.notifySection}>
       <h3 className={styles.heading} id="notify-heading">
-        Not ready for a call?
+        Not sure where to start?
       </h3>
       <p className={styles.desc}>
-        Drop your email and tell me what&apos;s breaking. I&apos;ll let you
-        know if it&apos;s something I can help with.
+        Tell me what&apos;s breaking and I&apos;ll give you an honest
+        read, no pitch, no obligation.
       </p>
 
       <form

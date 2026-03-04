@@ -33,7 +33,9 @@ export default function OperatorSection() {
         <p>
           I&apos;ve been working with AI since 1999: building autonomous
           agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
-          co-authoring research papers. AI experience before it was called AI.
+          co-authoring research papers. Which means I understand how these tools
+          actually reason, not just how to prompt them. I know where they
+          hallucinate and why.
         </p>
         <p>
           At Greater Bank I introduced Software Delivery Fireteams that cut

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Button from '@/src/components-next/Button';
 import styles from './Hero.module.scss';
 
@@ -13,10 +14,7 @@ export default function Hero() {
           Copilot, Cursor, and Claude are writing your production code. I
           partner with founders and engineering leaders as a co-driver,
           reading the road ahead, warning about what&apos;s coming, so the
-          speed doesn&apos;t put you in a ditch. Whether you vibe-coded a
-          prototype that needs to survive production, or your team&apos;s
-          AI-assisted code is accumulating hidden debt: I&apos;ve seen it
-          and fixed it.
+          speed doesn&apos;t put you in a ditch.
         </p>
         <div className={styles.cta}>
           <Button
@@ -27,6 +25,14 @@ export default function Hero() {
           >
             Book a Call
           </Button>
+        </div>
+        <div className={styles.routing}>
+          <Link href="/vibe-code-audit" className={styles.routeLink}>
+            I vibe-coded something
+          </Link>
+          <Link href="#approach" className={styles.routeLink}>
+            My team uses AI tools
+          </Link>
         </div>
       </div>
     </section>

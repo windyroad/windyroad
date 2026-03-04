@@ -31,6 +31,9 @@ const engagements = [
 export default function PricingSection() {
   return (
     <Section number="03" label="ENGAGEMENTS" variant="dark" id="engagements">
+      <p className={styles.intro}>
+        Engagements start at $5,000. No retainers, no long-term commitments.
+      </p>
       <ul className={styles.tiers}>
         {engagements.map((eng) => (
           <li key={eng.name} className={styles.tier}>
