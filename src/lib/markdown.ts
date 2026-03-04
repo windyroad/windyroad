@@ -47,9 +47,23 @@ export function getAllPosts(): Post[] {
 
       const slug = slugify(frontmatter.title, { lower: true });
 
-      // Generate excerpt: first 250 characters of content, stripped of markdown
-      const plainText = content.replace(/<[^>]+>/g, ' ').replace(/[#*_[\]()>`~]/g, '').trim();
-      const excerpt = plainText.substring(0, 250);
+      // Generate excerpt: strip markdown links → text only, strip remaining
+      // markup, trim to last word boundary ≤ 250 chars, append ellipsis.
+      const plainText = content
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // [text](url) → text
+        .replace(/<[^>]+>/g, ' ')                  // HTML tags → space
+        .replace(/[#*_`>~]/g, '')                  // remaining markdown symbols
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      let excerpt: string;
+      if (plainText.length <= 250) {
+        excerpt = plainText;
+      } else {
+        const truncated = plainText.substring(0, 250);
+        const lastSpace = truncated.lastIndexOf(' ');
+        excerpt = (lastSpace > 0 ? truncated.substring(0, lastSpace) : truncated) + '\u2026';
+      }
 
       return {
         slug,
