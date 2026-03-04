@@ -19,7 +19,7 @@ export async function generateMetadata({
   const post = await getPostBySlug(slug);
   if (!post) return { title: 'Not Found' };
   return {
-    title: `${post.frontmatter.title} — Tom Howard`,
+    title: `${post.frontmatter.title} | Tom Howard`,
     description: post.excerpt,
   };
 }

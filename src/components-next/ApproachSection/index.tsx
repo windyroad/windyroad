@@ -14,17 +14,17 @@ const process = [
   {
     label: 'Diagnose',
     description:
-      'I look at how your team actually works with AI tools today \u2014 which ones they use, how generated code gets reviewed, what your pipeline catches and what slips through. You get a clear picture of where the risk is and what to fix first.',
+      'You get a clear picture of where your risk is and what to fix first \u2014 before it costs you a production incident. I look at how your team actually uses AI tools: which ones, how generated code gets reviewed, what your pipeline catches and what slips through.',
   },
   {
     label: 'Implement',
     description:
-      'I build the guardrails: quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that actually catch the failure modes these tools introduce. Not a slide deck \u2014 working infrastructure.',
+      'You get working guardrails, not a slide deck. Quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that actually catch the failure modes these tools introduce.',
   },
   {
     label: 'Embed',
     description:
-      'I work alongside your team to make it stick. Pair on real PRs, coach developers on what to watch for in AI output, tune the process based on what\u2019s actually happening in your codebase.',
+      'Your team learns to catch the problems themselves. I pair on real PRs, coach developers on what to watch for in AI output, and tune the process based on what\u2019s actually happening in your codebase.',
   },
 ];
 

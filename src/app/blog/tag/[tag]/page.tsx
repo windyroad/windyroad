@@ -31,11 +31,11 @@ export async function generateMetadata({
     .find((t) => slugify(t, { lower: true }) === tagSlug);
 
   if (!tagName) {
-    return { title: 'Tag not found — Tom Howard' };
+    return { title: 'Tag not found | Tom Howard' };
   }
 
   return {
-    title: `Posts tagged "${tagName}" — Tom Howard`,
+    title: `Posts tagged "${tagName}" | Tom Howard`,
     description: `Blog posts tagged with ${tagName}.`,
   };
 }

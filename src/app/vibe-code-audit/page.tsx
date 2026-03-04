@@ -4,7 +4,7 @@ import Button from '@/src/components-next/Button';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
-  title: 'Vibe Code Audit — Fix Your AI-Generated App | Windy Road Technology',
+  title: 'Vibe Code Audit | Fix Your AI-Generated App | Windy Road Technology',
   description:
     'Your vibe-coded app is breaking in production. $5,000. One week. A senior engineer audits your AI-generated code, tells you exactly what\'s broken, and how to fix it.',
 };
@@ -57,7 +57,7 @@ export default function VibeCodingAuditPage() {
             <span className={styles.accent}>I fix that.</span>
           </h1>
           <p className={styles.heroSub}>
-            $5,000. One week. A senior engineer tells you exactly what&apos;s broken — and how to fix it.
+            $5,000. One week. A senior engineer tells you exactly what&apos;s broken and how to fix it.
           </p>
           <Button href="https://cal.com/tomhoward" variant="primary" size="large" external>
             Book a Call
@@ -92,7 +92,7 @@ export default function VibeCodingAuditPage() {
                 </span>
                 <div>
                   <strong className={styles.deliverableTitle}>{d.title}</strong>
-                  <span className={styles.deliverableDesc}> — {d.desc}</span>
+                  <span className={styles.deliverableDesc}>: {d.desc}</span>
                 </div>
               </li>
             ))}
@@ -132,7 +132,7 @@ export default function VibeCodingAuditPage() {
           <h2 className={styles.sectionTitle}>Why trust me with your codebase</h2>
           <ul className={styles.credList} role="list">
             <li>25 years shipping production software</li>
-            <li>AI and automation since 1999 — CSIRO, RoboCup, patents</li>
+            <li>Reviewed AI-generated codebases across Node.js, Python, and TypeScript</li>
             <li>Led delivery at Greater Bank, Westpac, Pacific National</li>
             <li>Shipped 3 profitable software products from scratch</li>
           </ul>
@@ -160,7 +160,7 @@ export default function VibeCodingAuditPage() {
         <div className={styles.inner}>
           <h2 className={styles.ctaTitle}>Your app is breaking. Let&apos;s fix it.</h2>
           <p className={styles.ctaSub}>
-            Book a 15-minute call. I&apos;ll tell you if I can help — and if I can&apos;t,
+            Book a 15-minute call. I&apos;ll tell you if I can help, and if I can&apos;t,
             I&apos;ll point you to someone who can.
           </p>
           <Button href="https://cal.com/tomhoward" variant="primary" size="large" external>

@@ -3,21 +3,21 @@ import styles from './TestimonialsSection.module.scss';
 
 const testimonials = [
   {
-    theme: 'On turning around a troubled project',
+    theme: 'On fixing what\u2019s broken',
     name: 'Mark Chan',
     role: 'Senior Project Manager, Westpac',
     quote:
       'Resourced into a troubled project at WBC, he was able to reassure management regarding directions to stabilise and bring the project back on course. Tom projects well with all levels of staff and is highly regarded for his training efforts. I highly recommend Tom from a technical and management perspective.',
   },
   {
-    theme: 'On technical credibility',
+    theme: 'On bridging tech and business',
     name: 'Kasi Subramanian',
     role: 'Manager, Rail Services at Pacific National',
     quote:
       'What set him apart was his technical strength \u2014 he could engage credibly with both the business and the team, managing expectations effectively while keeping everyone honest on what was truly achievable.',
   },
   {
-    theme: 'On delivering results',
+    theme: 'On tackling hard problems',
     name: 'John Menzies',
     role: 'Director and Founding Engineer, Think Platinum',
     quote:

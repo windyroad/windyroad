@@ -5,7 +5,7 @@ import { getAllPosts } from '@/src/lib/markdown';
 import styles from './blog.module.scss';
 
 export const metadata = {
-  title: 'Blog — Tom Howard',
+  title: 'Blog | Tom Howard',
   description: 'Articles on software delivery, AI, and engineering leadership.',
 };
 

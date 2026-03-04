@@ -5,7 +5,7 @@ import Clarity from '@/src/components-next/Clarity';
 import '../styles/globals.scss';
 
 export const metadata: Metadata = {
-  title: 'Tom Howard — AI Delivery Consulting',
+  title: 'Tom Howard | AI Delivery Consulting',
   description:
     'Ship with AI without the risk. 25+ years of delivery, quality, and risk expertise helping founders and engineering leaders deliver with AI safely.',
   keywords:

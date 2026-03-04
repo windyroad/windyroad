@@ -52,6 +52,15 @@
             "command": ".claude/hooks/a11y-enforce-edit.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/no-em-dash.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
