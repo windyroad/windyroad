@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.6.0
+
+### Minor Changes
+
+- 9a42e49: Full design overhaul: brick red accent palette, hero background image with parallax, logo in nav, redesigned footer with CTA, FAQ desktop-open behavior, stat card layout improvements, and compressed banner image.
+
 ## 2.5.0
 
 ### Minor Changes
