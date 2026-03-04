@@ -29,7 +29,7 @@ export default function Header() {
         />
       </Link>
       <a
-        href="https://cal.com/tomhoward"
+        href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
         target="_blank"
         rel="noopener noreferrer"
         className={styles.cta}

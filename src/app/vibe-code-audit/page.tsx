@@ -70,7 +70,7 @@ export default function VibeCodingAuditPage() {
           <p className={styles.heroSub}>
             $5,000. One week. A senior engineer tells you exactly what&apos;s broken and how to fix it.
           </p>
-          <Button href="https://cal.com/tomhoward" variant="primary" size="large" external>
+          <Button href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view" variant="primary" size="large" external>
             Book a Call
           </Button>
         </div>
@@ -181,7 +181,7 @@ export default function VibeCodingAuditPage() {
             Book a 15-minute call. I&apos;ll tell you if I can help, and if I can&apos;t,
             I&apos;ll point you to someone who can.
           </p>
-          <Button href="https://cal.com/tomhoward" variant="primary" size="large" external>
+          <Button href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=15&overlayCalendar=true&layout=week_view" variant="primary" size="large" external>
             Book a 15-min Call
           </Button>
         </div>

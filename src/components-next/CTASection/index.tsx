@@ -12,7 +12,7 @@ export default function CTASection() {
         </p>
         <div className={styles.buttonWrap}>
           <Button
-            href="https://cal.com/tomhoward"
+            href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
             variant="primary"
             size="large"
             external
