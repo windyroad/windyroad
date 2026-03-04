@@ -189,10 +189,8 @@ jobs:
           PR_NUMBER="${{ steps.changesets.outputs.pullRequestNumber }}"
           PREVIEW_URL="${{ needs.deploy-test.outputs.deploy_url }}"
           CURRENT_BODY="$(gh pr view "$PR_NUMBER" --json body --jq '.body')"
-          gh pr edit "$PR_NUMBER" --body "$CURRENT_BODY
-
----
-**Preview:** $PREVIEW_URL"
+          NEW_BODY="$(printf '%s\n\n---\n**Preview:** %s' "$CURRENT_BODY" "$PREVIEW_URL")"
+          gh pr edit "$PR_NUMBER" --body "$NEW_BODY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

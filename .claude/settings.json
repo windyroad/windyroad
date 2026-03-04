@@ -53,6 +53,15 @@
             "command": ".claude/hooks/secret-leak-gate.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/git-push-gate.sh"
+          }
+        ]
       }
     ]
   }
