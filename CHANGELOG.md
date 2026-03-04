@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.4.2
+
+### Patch Changes
+
+- e821d73: Reframe site copy around client outcomes, remove em-dashes, add em-dash prevention hook
+
 ## 2.4.1
 
 ### Patch Changes
