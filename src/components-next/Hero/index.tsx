@@ -8,7 +8,7 @@ export default function Hero() {
       <div className={styles.inner}>
         <h1 className={styles.headline}>
           You ship faster with AI.<br />
-          <span className={styles.accent}>I make sure it actually works.</span>
+          I make sure it <span className={styles.accent}>actually</span> works.
         </h1>
         <p className={styles.subheadline}>
           Copilot, Cursor, and Claude are writing your production code. I

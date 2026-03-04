@@ -66,9 +66,12 @@ export default function RangeCountUp({
     return () => observer.disconnect();
   }, [start, end, duration]);
 
+  const final = `${start} \u2192 ${end}${suffix}`;
+
   return (
-    <div ref={ref} className={className}>
-      {start} &rarr; {current}{suffix}
+    <div ref={ref} className={className} style={{ position: 'relative', display: 'inline-grid' }}>
+      <span style={{ visibility: 'hidden', gridArea: '1/1' }} aria-hidden="true">{final}</span>
+      <span style={{ gridArea: '1/1', textAlign: 'center' }}>{start} &rarr; {current}{suffix}</span>
     </div>
   );
 }

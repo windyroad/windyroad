@@ -16,8 +16,9 @@
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--color-border);
-  display: grid;
-  place-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .statValue {
@@ -28,6 +29,7 @@
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .statLabel {

@@ -68,9 +68,12 @@ export default function CountUp({
     return () => observer.disconnect();
   }, [end, prefix, suffix, duration]);
 
+  const final = `${prefix}${end}${suffix}`;
+
   return (
-    <div ref={ref} className={className}>
-      {display}
+    <div ref={ref} className={className} style={{ position: 'relative', display: 'inline-grid' }}>
+      <span style={{ visibility: 'hidden', gridArea: '1/1' }} aria-hidden="true">{final}</span>
+      <span style={{ gridArea: '1/1', textAlign: 'center' }}>{display}</span>
     </div>
   );
 }
