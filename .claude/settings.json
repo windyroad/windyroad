@@ -1,36 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install)",
-      "Bash(npx next build)",
-      "Bash(git add .nvmrc next.config.mjs tsconfig.json package.json package-lock.json .gitignore src/app/layout.tsx src/app/page.tsx)",
-      "Bash(npm install @fortawesome/fontawesome-free @fortawesome/fontawesome-svg-core @fortawesome/free-brands-svg-icons @fortawesome/free-solid-svg-icons)",
-      "Bash(git add src/app/layout.tsx src/components-next/ public/img/ package.json package-lock.json AGENTS.md)",
-      "Bash(npm install email-validator @fortawesome/react-fontawesome)",
-      "Bash(npm install @fortawesome/free-regular-svg-icons)",
-      "Bash(git status -u)",
-      "Bash(git add src/components-next/About/index.tsx src/components-next/Banner/index.tsx src/components-next/Button/index.tsx src/components-next/Contact/index.tsx src/components-next/FindYourNavigator/index.tsx src/components-next/GotoNext/index.tsx src/components-next/Services/index.tsx src/components-next/Spotlight/index.tsx src/app/page.tsx package.json package-lock.json public/img/about/ public/img/banner/ public/img/services/)",
-      "Bash(git commit:*)",
-      "Bash(npm install gray-matter remark remark-html slugify date-fns)",
-      "Bash(git add src/lib/markdown.ts src/app/blog/page.tsx \"src/app/blog/[slug]/page.tsx\" src/app/layout.tsx package.json package-lock.json)",
-      "Bash(git add src/app/not-found.tsx src/app/layout.tsx src/app/icon.png)",
-      "Bash(npm install --save-dev eslint eslint-config-next)",
-      "Bash(npx next lint)",
-      "Bash(npx eslint src/app/ src/components-next/ src/lib/)",
-      "Bash(npm install --save-dev @eslint/js typescript-eslint eslint-plugin-react @next/eslint-plugin-next)",
-      "Bash(npm install --save-dev @eslint/js@^9 typescript-eslint@^8 eslint-plugin-react @next/eslint-plugin-next)",
-      "Bash(git rm -r /Users/tomhoward/Projects/windyroad/.circleci/ /Users/tomhoward/Projects/windyroad/scripts/ /Users/tomhoward/Projects/windyroad/.eslintignore)",
-      "Bash(git add eslint.config.mjs next.config.mjs src/lib/markdown.ts package.json package-lock.json)",
-      "Bash(git rm gatsby-browser.js gatsby-config.js gatsby-node.js gatsby-ssr.js src/pages/404.js src/pages/blog.js src/pages/index.js src/templates/blogListTemplate.js src/templates/blogTemplate.js src/features.js src/layouts/index.js src/layouts/css/ie8.css src/layouts/css/ie9.css)",
-      "Bash(git rm -r src/layouts/fonts/ src/layouts/images/)",
-      "Bash(git add -A)",
-      "Bash(git reset HEAD .DS_Store .claude/settings.local.json .claude/settings.json .vscode/settings.json old/ src/.DS_Store \"old/public_html/bwunit-importer/16.49.zip\" \"old/public_html/discussion/\" \"old/public_html/dl/\" \"old/public_html/static/.DS_Store\" \"old/public_html/.DS_Store\" \"old/.DS_Store\" \"src/articles-draft/\" next-env.d.ts)"
-    ],
-    "additionalDirectories": [
-      "/Users/tomhoward/Projects/windyroad/src/img",
-      "/Users/tomhoward/Projects/windyroad/src/components/Banner",
-      "/Users/tomhoward/Projects/windyroad/src/components/About",
-      "/Users/tomhoward/Projects/windyroad/src/app/blog"
+      "*",
+      "Bash",
+      "Edit"
     ]
   },
   "hooks": {
@@ -40,6 +13,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/project-health-check.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/a11y-team-eval.sh"
           }
         ]
       }
@@ -60,6 +41,26 @@
           {
             "type": "command",
             "command": ".claude/hooks/git-push-gate.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/a11y-enforce-edit.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/a11y-mark-reviewed.sh"
           }
         ]
       }
