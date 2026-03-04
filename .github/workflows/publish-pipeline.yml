@@ -84,13 +84,5 @@ jobs:
           STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/vibe-code-audit/")
           [ "$STATUS" = "200" ] || { echo "/vibe-code-audit/ returned $STATUS"; exit 1; }
 
-      - name: Merge publish back to master
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin master
-          git checkout master
-          git merge --no-ff publish -m "chore: merge publish back to master after release"
-          git push origin master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Merge back to master is handled by release:watch running locally,
+      # which uses push:watch to ensure the master pipeline stays green.

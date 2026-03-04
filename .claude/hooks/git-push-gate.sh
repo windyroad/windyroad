@@ -27,14 +27,20 @@ except:
     print('')
 " 2>/dev/null || echo "")
 
-# Match bare git push
+# Block git push to master/main/publish/changeset-release/*, or bare git push.
+# Allow explicit pushes to other branches (feature branches etc).
 if echo "$COMMAND" | grep -qE '(^|;|&&|\|\|)\s*git push(\s|$)'; then
+    # Allow if pushing to an explicit branch that isn't a protected/managed branch
+    if echo "$COMMAND" | grep -qE 'git push\s+\S+\s+\S+' && \
+       ! echo "$COMMAND" | grep -qE 'git push\s+\S+\s+(master|main|publish|changeset-release/)'; then
+        exit 0
+    fi
     cat <<'EOF'
 {
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
     "permissionDecision": "deny",
-    "permissionDecisionReason": "Use `npm run push:watch` instead of `git push`. It pushes, watches the pipeline, and then surfaces either the release PR URL (if there are pending changesets) or the test deploy URL so you can review before releasing."
+    "permissionDecisionReason": "Use `npm run push:watch` instead of `git push`. It pushes, watches the pipeline, and then surfaces either the release PR URL (if there are pending changesets) or the test deploy URL so you can review before releasing. The publish and changeset-release/* branches are managed by the pipeline — do not push to them directly."
   }
 }
 EOF

@@ -36,7 +36,7 @@ if [ -z "$PR_NUMBER" ]; then
 fi
 
 echo "Merging release PR: $PR_URL"
-gh pr merge "$PR_NUMBER" --squash --auto
+gh pr merge "$PR_NUMBER" --squash
 echo ""
 
 # ── 2. Find the publish-pipeline run ─────────────────────────────────────────
@@ -74,5 +74,14 @@ fi
 
 echo ""
 echo "✓ Production live: https://windyroad.com.au"
+
+# ── 4. Merge publish back to master ──────────────────────────────────────────
+echo ""
+echo "Syncing publish back to master..."
+git fetch origin publish
+git checkout master
+git merge --no-ff origin/publish -m "chore: merge publish back to master after release"
+npm run push:watch
+
 echo ""
 echo "CLAUDE: The release is live. Let the user know and share the URL: https://windyroad.com.au"
