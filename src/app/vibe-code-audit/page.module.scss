@@ -26,9 +26,10 @@
 .light {
   background-color: var(--color-bg-light);
   color: var(--color-text-dark);
-  /* Darken accent so it meets 4.5:1 on #F5F5F5 */
-  --color-accent: #9A6208;
   border-top: 1px solid var(--color-border-light);
+  /* Darken accent for text on light bg (#9A6208 = 4.67:1 on #F5F5F5).
+     Keep --color-accent at root value for button backgrounds. */
+  --color-accent-text: #9A6208;
 }
 
 .inner {
@@ -190,7 +191,7 @@
 .pricingPrice {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-accent-text, var(--color-accent));
 }
 
 .pricingFeatures {
@@ -262,7 +263,7 @@
 
 .credLink {
   font-size: 0.875rem;
-  color: var(--color-accent);
+  color: var(--color-accent-text, var(--color-accent));
   text-decoration: none;
 
   &:hover {
@@ -303,7 +304,7 @@
 
   &::after {
     content: '+';
-    color: var(--color-accent);
+    color: var(--color-accent-text, var(--color-accent));
     font-size: 1.25rem;
     line-height: 1;
     flex-shrink: 0;
