@@ -27,6 +27,7 @@ show_failure_guidance() {
 }
 
 # ── 1. Push ──────────────────────────────────────────────────────────────────
+PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)
 REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
@@ -91,7 +92,8 @@ for i in $(seq 1 60); do
     --workflow=release-pr-preview.yml \
     --limit 5 \
     --json databaseId,createdAt \
-    --jq 'sort_by(.createdAt) | reverse | .[0].databaseId' 2>/dev/null)
+    --jq --arg since "$PUSH_TIME" \
+    '[.[] | select(.createdAt > $since)] | sort_by(.createdAt) | reverse | .[0].databaseId // empty' 2>/dev/null)
   [ -n "$PREVIEW_RUN_ID" ] && [ "$PREVIEW_RUN_ID" != "null" ] && break
   printf '.'
   sleep 3
