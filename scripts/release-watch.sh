@@ -36,7 +36,7 @@ if [ -z "$PR_NUMBER" ]; then
 fi
 
 echo "Merging release PR: $PR_URL"
-gh pr merge "$PR_NUMBER" --squash
+gh pr merge "$PR_NUMBER" --merge
 echo ""
 
 # ── 2. Find the publish-pipeline run ─────────────────────────────────────────
@@ -87,6 +87,16 @@ git ls-files .changeset/ | grep -v 'README.md\|config.json' | xargs --no-run-if-
 VERSION=$(node -p "require('./package.json').version")
 git commit -m "chore: sync version $VERSION from publish to master"
 npm run push:watch
+
+# ── 5. Reset publish to master so next changeset PR has no conflict ───────────
+echo ""
+echo "Aligning publish branch with master..."
+MASTER_SHA=$(git rev-parse HEAD)
+gh api "repos/$REPO/git/refs/heads/publish" \
+  --method PATCH \
+  --field sha="$MASTER_SHA" \
+  --field force=true \
+  --silent
 
 echo ""
 echo "CLAUDE: The release is live. Let the user know and share the URL: https://windyroad.com.au"
