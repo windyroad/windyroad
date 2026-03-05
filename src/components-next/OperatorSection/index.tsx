@@ -33,18 +33,6 @@ export default function OperatorSection() {
         </div>
       </div>
 
-      <div className={styles.proofStory}>
-        <p>
-          When I joined Greater Bank, their dev team was stuck in 24-day
-          delivery cycles. Releases were batched, reviews bottlenecked, and
-          developers were waiting more than they were shipping. I introduced
-          Software Delivery Fireteams: small, autonomous squads with clear
-          ownership. Within months, cycle time dropped to 8 days and individual
-          throughput jumped 400%. The team grew by 50% in the same period and
-          shipped more than they had in the previous two years.
-        </p>
-      </div>
-
       <div className={styles.narrative}>
         <p>
           Through Windy Road Technology, I&apos;ve taken three software products
