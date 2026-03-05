@@ -15,7 +15,11 @@ export default function OperatorSection() {
           height={120}
           loading="lazy"
         />
-        <h2 className={styles.title}>I&apos;ve been here before.</h2>
+        <h2 className={styles.title}>
+          I&apos;ve shipped three profitable software products from
+          scratch. Not consulting on someone else&apos;s idea: actually
+          building, finding customers, and closing sales.
+        </h2>
       </div>
 
       <div className={styles.stats}>

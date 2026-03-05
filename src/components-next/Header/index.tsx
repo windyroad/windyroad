@@ -42,14 +42,19 @@ export default function Header() {
           </g>
         </svg>
       </Link>
-      <a
-        href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.cta}
-      >
-        Book a Call
-      </a>
+      <nav aria-label="Main" className={styles.nav}>
+        <Link href="/ai-teams" className={styles.navLink}>
+          AI Teams
+        </Link>
+        <a
+          href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.cta}
+        >
+          Book a Call
+        </a>
+      </nav>
     </header>
   );
 }

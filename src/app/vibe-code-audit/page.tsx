@@ -41,7 +41,7 @@ const faqs = [
   },
   {
     q: 'Do I need to give you access to my whole codebase?',
-    a: 'Yes \u2014 a real audit means reading what\'s actually there, not what you show me. Everything is treated as confidential. I\'ll sign an NDA before we start if you need one.',
+    a: 'Yes, a real audit means reading what\'s actually there, not what you show me. Everything is treated as confidential. I sign an NDA before every engagement.',
   },
   {
     q: 'How is this different from an agency?',
@@ -142,10 +142,10 @@ export default function VibeCodingAuditPage() {
         <div className={styles.inner}>
           <h2 className={styles.sectionTitle}>Why trust me with your codebase</h2>
           <ul className={styles.credList} role="list">
-            <li>25 years shipping production software</li>
-            <li>Reviewed AI-generated codebases across Node.js, Python, and TypeScript</li>
-            <li>Led delivery at Greater Bank, Westpac, Pacific National</li>
             <li>Shipped 3 profitable software products from scratch</li>
+            <li>25 years shipping production software</li>
+            <li>Led delivery at Greater Bank, Westpac, Pacific National</li>
+            <li>Reviewed AI-generated codebases across Node.js, Python, and TypeScript</li>
           </ul>
           <Link href="/" className={styles.credLink}>Full background at windyroad.com.au →</Link>
         </div>

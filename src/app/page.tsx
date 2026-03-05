@@ -2,6 +2,7 @@ import Hero from '@/src/components-next/Hero';
 import OperatorSection from '@/src/components-next/OperatorSection';
 import ApproachSection from '@/src/components-next/ApproachSection';
 import PricingSection from '@/src/components-next/PricingSection';
+import ObjectionBlock from '@/src/components-next/ObjectionBlock';
 import TestimonialsSection from '@/src/components-next/TestimonialsSection';
 import FitCheckSection from '@/src/components-next/FitCheckSection';
 import FAQSection from '@/src/components-next/FAQSection';
@@ -14,6 +15,7 @@ export default function Home() {
       <OperatorSection />
       <ApproachSection />
       <PricingSection />
+      <ObjectionBlock />
       <TestimonialsSection />
       <FitCheckSection />
       <FAQSection />

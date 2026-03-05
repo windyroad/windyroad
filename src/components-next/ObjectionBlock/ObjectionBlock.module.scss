@@ -1,0 +1,18 @@
+.block {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.question {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  margin-bottom: 0.75rem;
+}
+
+.answer {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}

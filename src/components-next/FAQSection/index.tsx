@@ -6,10 +6,6 @@ import styles from './FAQSection.module.scss';
 
 const faqs = [
   {
-    q: 'Can\u2019t I just ask Claude to audit the code?',
-    a: 'You can. But Claude wrote the bugs in the first place. You need a human who knows what production-grade code actually looks like.',
-  },
-  {
     q: 'What if we\u2019re already shipping fine?',
     a: 'Then I\u2019ll tell you that. Most teams using AI tools have 5\u201310 hidden issues that only surface under load, during a security audit, or when someone leaves.',
   },
