@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.6.3
+
+### Patch Changes
+
+- cba27ba: Remove redundant CTA band from footer, add conditional CTA to AI coding blog posts
+
 ## 2.6.2
 
 ### Patch Changes
