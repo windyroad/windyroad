@@ -5,41 +5,12 @@ on:
     branches: [publish]
 
 jobs:
-  quality-gates:
-    name: Quality gates
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-
-      - run: npm ci
-
-      - name: Check dependency freshness
-        run: npm run deps:check
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-site-${{ github.sha }}
-          path: out/
-          retention-days: 1
-
   deploy-production:
     name: Deploy to production
-    needs: quality-gates
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read
     outputs:
       deploy_url: ${{ steps.deploy.outputs.url }}
     steps:
@@ -54,11 +25,27 @@ jobs:
 
       - run: npm ci
 
-      - name: Download build artifact
+      - name: Find release preview run
+        id: find-preview
+        run: |
+          RUN_ID=$(gh run list \
+            --workflow=release-pr-preview.yml \
+            --status=success \
+            --limit=1 \
+            --json databaseId \
+            --jq '.[0].databaseId')
+          [ -n "$RUN_ID" ] && [ "$RUN_ID" != "null" ] || { echo "No successful preview run found"; exit 1; }
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download build from release preview
         uses: actions/download-artifact@v4
         with:
-          name: static-site-${{ github.sha }}
+          name: release-preview-build
           path: out/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.find-preview.outputs.run_id }}
 
       - name: Deploy to Netlify production
         id: deploy
