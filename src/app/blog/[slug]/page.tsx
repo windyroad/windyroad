@@ -2,7 +2,10 @@ import Link from 'next/link';
 import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
+import CTASection from '@/src/components-next/CTASection';
 import styles from '../post.module.scss';
+
+const CTA_TAGS = ['ai coding', 'ai-coding', 'vibe coding', 'claude code'];
 
 
 export async function generateStaticParams() {
@@ -39,6 +42,8 @@ export default async function BlogPost({
     'MMMM yyyy',
   );
 
+  const showCTA = frontmatter.tags?.some((tag) => CTA_TAGS.includes(tag));
+
   const moreLink = frontmatter.link ? (
     <a
       href={frontmatter.link}
@@ -73,7 +78,7 @@ export default async function BlogPost({
           </section>
         </article>
 
-        {/* CTA handled by site-wide footer */}
+        {showCTA && <CTASection />}
       </div>
     </div>
   );
