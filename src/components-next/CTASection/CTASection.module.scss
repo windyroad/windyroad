@@ -1,4 +1,5 @@
 .cta {
+  --color-text-muted: #6B6B6B; /* Reset for light background when inherited from dark parent */
   padding: var(--section-padding);
   background-color: var(--color-bg-light);
   text-align: center;
