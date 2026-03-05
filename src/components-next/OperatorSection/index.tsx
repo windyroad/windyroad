@@ -5,8 +5,18 @@ import styles from './OperatorSection.module.scss';
 
 export default function OperatorSection() {
   return (
-    <Section number="01" label="THE OPERATOR" variant="dark" id="operator">
-      <h2 className={styles.title}>I&apos;ve been here before.</h2>
+    <Section variant="dark" id="operator">
+      <div className={styles.intro}>
+        <img
+          src="/img/tomhoward.jpg"
+          alt="Tom Howard"
+          className={styles.headshot}
+          width={120}
+          height={120}
+          loading="lazy"
+        />
+        <h2 className={styles.title}>I&apos;ve been here before.</h2>
+      </div>
 
       <div className={styles.stats}>
         <div className={styles.stat}>

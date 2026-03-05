@@ -37,7 +37,7 @@ export default function FAQSection() {
   }, []);
 
   return (
-    <Section label="QUESTIONS" variant="light" id="faq">
+    <Section variant="light" id="faq">
       <h2 className={styles.title}>Questions</h2>
       <div className={styles.faqList}>
         {faqs.map((faq) => (

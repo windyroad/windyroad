@@ -30,7 +30,7 @@ const XIcon = () => (
 
 export default function FitCheckSection() {
   return (
-    <Section number="05" label="FIT CHECK" variant="dark" id="fit">
+    <Section variant="dark" id="fit">
       <div className={styles.columns}>
         <div className={`${styles.column} ${styles.good}`}>
           <h3 className={styles.columnTitle}>

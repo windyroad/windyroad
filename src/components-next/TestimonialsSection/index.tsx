@@ -27,7 +27,7 @@ const testimonials = [
 
 export default function TestimonialsSection() {
   return (
-    <Section number="04" label="WHAT OTHERS SAY" variant="light" id="testimonials">
+    <Section variant="light" id="testimonials">
       <div className={styles.testimonials}>
         {testimonials.map((t) => (
           <div key={t.name} className={styles.card}>

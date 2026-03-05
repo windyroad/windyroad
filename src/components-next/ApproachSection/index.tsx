@@ -46,7 +46,7 @@ const process = [
 
 export default function ApproachSection() {
   return (
-    <Section number="02" label="THE PROBLEM" variant="light" id="approach">
+    <Section variant="light" id="approach">
       <h2 className={styles.sectionTitle}>
         Vibe-coded a prototype, or your team is on Copilot?<br />
         Here&apos;s what&apos;s going wrong.
