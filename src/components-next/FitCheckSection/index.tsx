@@ -3,7 +3,7 @@ import styles from './FitCheckSection.module.scss';
 
 const goodFit = [
   'You vibe-coded a working prototype and need someone to make it production-ready',
-  'You need someone who can implement the guardrails, not just recommend them in a PDF',
+  'You know something is wrong but you\u2019re not sure what to fix first',
 ];
 
 const notFit = [

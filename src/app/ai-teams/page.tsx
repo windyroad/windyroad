@@ -62,6 +62,23 @@ const engagements = [
   },
 ];
 
+const testimonials = [
+  {
+    theme: 'On fixing what\u2019s broken',
+    name: 'Mark Chan',
+    role: 'Senior Project Manager, Westpac',
+    quote:
+      'Resourced into a troubled project at WBC, he was able to reassure management regarding directions to stabilise and bring the project back on course. Tom projects well with all levels of staff and is highly regarded for his training efforts. I highly recommend Tom from a technical and management perspective.',
+  },
+  {
+    theme: 'On bridging tech and business',
+    name: 'Kasi Subramanian',
+    role: 'Manager, Rail Services at Pacific National',
+    quote:
+      'What set him apart was his technical strength \u2014 he could engage credibly with both the business and the team, managing expectations effectively while keeping everyone honest on what was truly achievable.',
+  },
+];
+
 const goodFit = [
   'Your team is using Copilot, Cursor, or Claude and you\u2019re not sure what\u2019s getting through review',
   'You\u2019ve shipped faster since adopting AI tools but defect rates or security issues are creeping up',
@@ -121,14 +138,19 @@ export default function AITeamsPage() {
             partner with engineering leaders to make sure the speed doesn&apos;t
             come at the cost of quality.
           </p>
-          <Button
-            href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-            variant="primary"
-            size="large"
-            external
-          >
-            Book a Call
-          </Button>
+          <div className={styles.cta}>
+            <Button
+              href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
+              variant="primary"
+              size="large"
+              external
+            >
+              Book a Call
+            </Button>
+            <Button href="/" variant="ghost" size="large">
+              Building something yourself? <span aria-hidden="true">&rarr;</span>
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -239,6 +261,27 @@ export default function AITeamsPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className={`${styles.section} ${styles.light}`}>
+        <div className={styles.inner}>
+          <h2 className={styles.sectionTitle}>What others say</h2>
+          <div className={styles.testimonials}>
+            {testimonials.map((t) => (
+              <div key={t.name} className={styles.testimonialCard}>
+                <div className={styles.testimonialTheme}>{t.theme}</div>
+                <blockquote className={styles.testimonialQuote}>
+                  <p>{t.quote}</p>
+                  <footer className={styles.testimonialAttribution}>
+                    <cite className={styles.testimonialName}>{t.name}</cite>
+                    <span className={styles.testimonialRole}>{t.role}</span>
+                  </footer>
+                </blockquote>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
