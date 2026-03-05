@@ -26,7 +26,7 @@ const process = [
   {
     label: 'Implement',
     description:
-      'You get working guardrails, not a slide deck. Quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that actually catch the failure modes these tools introduce.',
+      'You get working guardrails: quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that catch the failure modes these tools introduce.',
   },
   {
     label: 'Embed',
@@ -82,7 +82,7 @@ const testimonials = [
 const goodFit = [
   'Your team is using Copilot, Cursor, or Claude and you\u2019re not sure what\u2019s getting through review',
   'You\u2019ve shipped faster since adopting AI tools but defect rates or security issues are creeping up',
-  'You need someone who can implement the guardrails, not just recommend them in a PDF',
+  'You want guardrails implemented in your pipeline, not written up in a PDF',
 ];
 
 const notFit = [
@@ -183,8 +183,7 @@ export default function AITeamsPage() {
             />
             <h2 className={styles.bioTitle}>
               I&apos;ve shipped three profitable software products from
-              scratch. Not consulting on someone else&apos;s idea: actually
-              building, finding customers, and closing sales.
+              scratch: built them, found the customers, closed the sales.
             </h2>
           </div>
           <div className={styles.stats}>
@@ -206,7 +205,7 @@ export default function AITeamsPage() {
               I&apos;ve been working with AI since 1999: building autonomous
               agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
               co-authoring research papers. Which means I understand how these tools
-              actually reason, not just how to prompt them.
+              reason and where they break.
             </p>
             <p>
               At Greater Bank I introduced Software Delivery Fireteams that cut

@@ -9,8 +9,11 @@ export default function ObjectionBlock() {
           &ldquo;Can&apos;t I just ask Claude to audit the code?&rdquo;
         </p>
         <p className={styles.answer}>
-          You can. But Claude wrote the bugs in the first place. You need a
-          human who knows what production-grade code actually looks like.
+          You can. An AI audit will catch syntax and pattern issues. It
+          won&apos;t catch the architectural gaps, the business logic that
+          doesn&apos;t match your edge cases, or the dependencies that
+          don&apos;t exist. That takes a human who&apos;s shipped production
+          code.
         </p>
       </div>
     </Section>

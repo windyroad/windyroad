@@ -15,11 +15,10 @@ const problems = [
   'Users see loading screens that never finish',
   'The code looks fine. Something keeps breaking anyway.',
   'You\'re scared to touch anything in case it makes things worse',
-  'An agency quoted you $50k and 8 weeks',
 ];
 
 const deliverables = [
-  { title: 'Full codebase audit', desc: 'I read every line your AI wrote' },
+  { title: 'Full codebase audit', desc: 'Every file, every dependency, every integration point' },
   { title: 'Prioritised issue list', desc: 'What\'s critical vs. what can wait' },
   { title: 'Production risk assessment', desc: 'Where you\'ll break next as you scale' },
   { title: 'Fix recommendations', desc: 'Exactly what to change, in priority order' },
@@ -29,7 +28,7 @@ const deliverables = [
 const faqs = [
   {
     q: 'Can\'t I just ask Claude to audit the code?',
-    a: 'You can. But Claude wrote the bugs in the first place. You need a human who knows what production-grade code actually looks like.',
+    a: 'You can. An AI audit will catch syntax and pattern issues. It won\'t catch the architectural gaps, the business logic that doesn\'t match your edge cases, or the dependencies that don\'t exist. That takes a human who\'s shipped production code.',
   },
   {
     q: 'What if my code is fine?',
@@ -45,7 +44,7 @@ const faqs = [
   },
   {
     q: 'How is this different from an agency?',
-    a: 'I\'m one senior person who actually reads your code. Not an account manager who hands you off to juniors. $5k not $50k. One week not two months.',
+    a: 'One senior engineer reads your entire codebase, writes the report, and walks you through it. $5k. One week.',
   },
 ];
 
@@ -132,7 +131,7 @@ export default function VibeCodingAuditPage() {
             </p>
           </div>
           <p className={styles.agencyNote}>
-            Agencies charge $50–100k and take 6–8 weeks. I charge $5k and take one week.
+            $5,000. One week. Full codebase audit with a prioritised fix list.
           </p>
         </div>
       </section>

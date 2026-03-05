@@ -17,8 +17,7 @@ export default function OperatorSection() {
         />
         <h2 className={styles.title}>
           I&apos;ve shipped three profitable software products from
-          scratch. Not consulting on someone else&apos;s idea: actually
-          building, finding customers, and closing sales.
+          scratch: built them, found the customers, closed the sales.
         </h2>
       </div>
 
@@ -50,8 +49,7 @@ export default function OperatorSection() {
           I&apos;ve been working with AI since 1999: building autonomous
           agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
           co-authoring research papers. Which means I understand how these tools
-          actually reason, not just how to prompt them. I know where they
-          hallucinate and why.
+          reason and where they break.
         </p>
         <p>
           At Greater Bank I introduced Software Delivery Fireteams that cut
@@ -64,8 +62,7 @@ export default function OperatorSection() {
         </p>
         <p>
           25+ years of delivery leadership. Three products shipped from scratch.
-          Which means I&apos;m not guessing at what breaks when you scale.
-          I&apos;ve broken it and fixed it.
+          I&apos;ve seen what breaks when you scale, and I&apos;ve fixed it.
         </p>
       </div>
     </Section>

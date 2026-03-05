@@ -24,7 +24,7 @@ const process = [
   {
     label: 'Implement',
     description:
-      'You get working guardrails, not a slide deck. Quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that actually catch the failure modes these tools introduce.',
+      'You get working guardrails: quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that catch the failure modes these tools introduce.',
   },
   {
     label: 'Embed',
