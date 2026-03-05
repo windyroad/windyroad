@@ -1,5 +1,12 @@
 # windy-road
 
+## 2.6.2
+
+### Patch Changes
+
+- 02d6129: Fix page load jitter: replace Google Fonts @import (render-blocking) with next/font/google for zero-layout-shift font loading, and add preload link for hero banner image to prevent background flash.
+- 02d6129: Speed up CI pipelines: skip full pipeline on version-sync commits ([skip-ci]), move release-pr job earlier in dependency chain, and consolidate redundant npm ci invocations.
+
 ## 2.6.1
 
 ### Patch Changes
