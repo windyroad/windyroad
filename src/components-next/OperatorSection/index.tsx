@@ -1,4 +1,6 @@
 import Section from '@/src/components-next/Section';
+import CountUp from '@/src/components-next/CountUp';
+import RangeCountUp from '@/src/components-next/CountUp/RangeCountUp';
 import styles from './OperatorSection.module.scss';
 
 export default function OperatorSection() {
@@ -18,15 +20,15 @@ export default function OperatorSection() {
 
       <div className={styles.stats}>
         <div className={styles.stat}>
-          <div className={styles.statValue}>3</div>
+          <CountUp end={3} className={styles.statValue} />
           <div className={styles.statLabel}>profitable products shipped from scratch</div>
         </div>
         <div className={styles.stat}>
-          <div className={styles.statValue}>400%</div>
+          <CountUp end={400} suffix="%" className={styles.statValue} />
           <div className={styles.statLabel}>throughput increase per developer at Greater Bank</div>
         </div>
         <div className={styles.stat}>
-          <div className={styles.statValue}>0 &rarr; 97%</div>
+          <RangeCountUp start={0} end={97} suffix="%" className={styles.statValue} />
           <div className={styles.statLabel}>compliance in 10 months at Westpac</div>
         </div>
       </div>
