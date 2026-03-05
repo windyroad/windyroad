@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
-import CTASection from '@/src/components-next/CTASection';
+import Button from '@/src/components-next/Button';
 import styles from '../post.module.scss';
 
 const CTA_TAGS = ['ai coding', 'ai-coding', 'vibe coding', 'claude code'];
@@ -78,7 +78,23 @@ export default async function BlogPost({
           </section>
         </article>
 
-        {showCTA && <CTASection />}
+        {showCTA && (
+          <section className={styles.cta}>
+            <hr className={styles.ctaDivider} />
+            <h2 className={styles.ctaHeadline}>Need help shipping?</h2>
+            <p className={styles.ctaBody}>
+              Book a 30-minute call. If your app is breaking in production
+              today, I can usually start this week.
+            </p>
+            <Button
+              href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
+              variant="primary"
+              external
+            >
+              Book a Call
+            </Button>
+          </section>
+        )}
       </div>
     </div>
   );
