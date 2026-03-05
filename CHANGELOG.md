@@ -1,5 +1,17 @@
 # windy-road
 
+## 2.6.4
+
+### Patch Changes
+
+- 37f2aa7: Tighten FAQ answers and rewrite Wrong Road disqualifiers
+- aaf1a6e: Rewrite hero to lead with visitor's problem, add stat strip, promote vibe-code-audit
+- 37d4611: Add Tom's headshot, remove numbered section headers
+- f017d7d: Add proof story to operator section
+- 5a79db3: Reuse release-pr-preview build artifact in publish pipeline instead of rebuilding from scratch
+- c2a213b: Fix counter scroll trigger, improve stat strip legibility, sharpen hero subheadline, remove ambiguous route link
+- 99d0965: Split AI teams content to dedicated page, sharpen homepage copy, move Claude FAQ below pricing
+
 ## 2.6.3
 
 ### Patch Changes
