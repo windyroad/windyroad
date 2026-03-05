@@ -85,8 +85,9 @@ git checkout origin/publish -- package.json CHANGELOG.md
 # Delete any consumed changeset files (they were deleted on the release branch)
 git ls-files .changeset/ | grep -v 'README.md\|config.json' | xargs --no-run-if-empty git rm -f
 VERSION=$(node -p "require('./package.json').version")
-git commit -m "chore: sync version $VERSION from publish to master"
-npm run push:watch
+git commit -m "chore: sync version $VERSION from publish to master [skip ci]"
+git push
+echo "Version sync pushed (pipeline skipped, code already verified by publish pipeline)"
 
 # ── 5. Reset publish to master so next changeset PR has no conflict ───────────
 echo ""

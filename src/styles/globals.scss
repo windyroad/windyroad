@@ -22,7 +22,7 @@
   --color-border-light: rgba(0, 0, 0, 0.1);
 
   /* Typography */
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;
 
   /* Spacing */
   --section-padding: 6rem 1.5rem;
@@ -33,12 +33,6 @@
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
 }
-
-/* ========================================
-   Font Import
-   ======================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* ========================================
    Modern Reset
