@@ -138,7 +138,7 @@
 .stepNumber {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-accent-on-dark);
+  color: var(--color-accent-text, var(--color-accent));
   flex-shrink: 0;
   padding-top: 0.15rem;
 }
@@ -147,13 +147,357 @@
   font-size: 1.0625rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
-  color: var(--color-text-light);
+  color: var(--color-text-dark);
 }
 
 .stepDesc {
   font-size: 0.9375rem;
   line-height: 1.7;
   color: var(--color-text-muted);
+}
+
+/* ---- Credentials / Bio ---- */
+
+.bioIntro {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.headshot {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+}
+
+.bioTitle {
+  font-size: 2rem;
+  margin-bottom: 0;
+
+  @media (max-width: 480px) {
+    font-size: 1.375rem;
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.stat {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (max-width: 480px) {
+    padding: 1rem 0.75rem;
+  }
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text-light);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.statLabel {
+  font-size: 0.8125rem;
+  color: var(--color-accent-on-dark);
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.narrative {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--color-text-muted-on-dark);
+
+  p {
+    margin-bottom: 1.25rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.credLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted-on-dark);
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--color-text-light);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* ---- Pricing ---- */
+
+.pricingIntro {
+  font-size: 1.125rem;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  list-style: none;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tier {
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background-color: rgba(255, 255, 255, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.tierName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--color-text-light);
+}
+
+.tierPrice {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent-on-dark);
+  margin-bottom: 0.25rem;
+}
+
+.tierDuration {
+  font-size: 0.8125rem;
+  color: var(--color-accent-on-dark);
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.tierDesc {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  flex: 1;
+  margin-bottom: 1.25rem;
+}
+
+.tierOutcome {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.checkIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* ---- Fit Check ---- */
+
+.fitSection {
+  border-top: none;
+}
+
+.fitColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.fitColumn {
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.25rem;
+  }
+}
+
+.fitGood {
+  background-color: rgba(34, 197, 94, 0.06);
+}
+
+.fitBad {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.fitTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fitGood .fitTitle {
+  color: var(--color-accent);
+}
+
+.fitBad .fitTitle {
+  color: var(--color-text-muted);
+}
+
+.fitList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.fitItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-light);
+
+  @media (max-width: 480px) {
+    font-size: 0.875rem;
+  }
+}
+
+.fitIcon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.2rem;
+}
+
+.fitGood .fitIcon {
+  color: var(--color-accent);
+}
+
+.fitBad .fitIcon {
+  color: var(--color-text-muted);
+}
+
+/* ---- FAQ ---- */
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--color-border-light);
+
+  &:first-child {
+    border-top: 1px solid var(--color-border-light);
+  }
+}
+
+.faqQuestion {
+  padding: 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  color: var(--color-text-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::after {
+    content: '+';
+    color: var(--color-accent-text, var(--color-accent));
+    font-size: 1.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+}
+
+:global(details[open]) .faqQuestion::after {
+  content: '\2212';
+}
+
+.faqAnswer {
+  padding: 0 0 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Desktop: show all FAQ answers, hide toggle affordance */
+@media (min-width: 769px) {
+  .faqItem {
+    &[open] > .faqQuestion::after,
+    & > .faqQuestion::after {
+      display: none;
+    }
+  }
+
+  .faqAnswer {
+    display: block !important;
+  }
+
+  .faqQuestion {
+    cursor: default;
+  }
 }
 
 /* ---- CTA ---- */

@@ -46,9 +46,6 @@ export default function Hero() {
           <Button href="/vibe-code-audit" variant="inverted" size="large">
             Vibe Code Audit: $5k
           </Button>
-          <Button href="#approach" variant="ghost" size="large">
-            See what&apos;s included <span aria-hidden="true">&darr;</span>
-          </Button>
         </div>
         <p className={styles.statStrip}>
           400% developer throughput

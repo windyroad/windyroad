@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: 'What stack do you work with?',
-    a: 'JavaScript/TypeScript, Python, and most modern web frameworks.',
+    a: 'JavaScript/TypeScript, Python, and most modern web frameworks. If you\u2019re not sure, book a call and we\u2019ll figure it out.',
   },
   {
     q: 'How is this different from an agency?',
