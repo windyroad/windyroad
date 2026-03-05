@@ -2,7 +2,7 @@ import styles from './Button.module.scss';
 
 interface ButtonProps {
   href?: string;
-  variant?: 'primary' | 'outline' | 'inverted';
+  variant?: 'primary' | 'outline' | 'inverted' | 'ghost';
   size?: 'default' | 'large';
   external?: boolean;
   children: React.ReactNode;
