@@ -1,26 +1,9 @@
-import Button from '@/src/components-next/Button';
 import styles from './Footer.module.scss';
 
 export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
-        <div className={styles.ctaBand}>
-          <p className={styles.ctaText}>
-            Book a 30-minute call. No pitch, just figuring out if
-            there&apos;s a fit. If something&apos;s breaking in production today,
-            I can usually start this week.
-          </p>
-          <Button
-            href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-            variant="primary"
-            size="large"
-            external
-          >
-            Book a Call
-          </Button>
-        </div>
-
         <div className={styles.bottom}>
           <img
             src="/img/logo-white.svg"
