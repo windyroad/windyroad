@@ -81,10 +81,13 @@ export default async function BlogPost({
         {showCTA && (
           <section className={styles.cta}>
             <hr className={styles.ctaDivider} />
-            <h2 className={styles.ctaHeadline}>Need help shipping?</h2>
+            <h2 className={styles.ctaHeadline}>
+              Want these controls on your codebase?
+            </h2>
             <p className={styles.ctaBody}>
-              Book a 30-minute call. If your app is breaking in production
-              today, I can usually start this week.
+              I set up CI/CD pipelines, quality gates, and deployment
+              guardrails for teams shipping with AI. Book a call and
+              I&apos;ll tell you exactly what your project needs.
             </p>
             <Button
               href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
