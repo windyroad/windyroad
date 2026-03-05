@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import Button from '@/src/components-next/Button';
 import styles from './Hero.module.scss';
 
@@ -33,9 +32,7 @@ export default function Hero() {
         </h1>
         <p className={styles.subheadline}>
           I make sure it <span className={styles.accent}>actually</span>{' '}
-          works. I partner with founders and engineering leaders as a
-          co-driver, reading the road ahead so the speed doesn&apos;t put
-          you in a ditch.
+          works.
         </p>
         <div className={styles.cta}>
           <Button
@@ -49,11 +46,6 @@ export default function Hero() {
           <Button href="/vibe-code-audit" variant="inverted" size="large">
             Vibe Code Audit: $5k
           </Button>
-        </div>
-        <div className={styles.routing}>
-          <Link href="#approach" className={styles.routeLink}>
-            My team uses AI tools
-          </Link>
         </div>
         <p className={styles.statStrip}>
           400% developer throughput
