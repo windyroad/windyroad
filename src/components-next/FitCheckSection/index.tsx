@@ -9,10 +9,10 @@ const goodFit = [
 ];
 
 const notFit = [
-  'You haven\u2019t started using AI tools yet and want a general AI strategy',
-  'You need a full-time permanent engineering leader',
-  'You\u2019re looking for someone to build a custom ML model or AI product',
-  'You want advice without implementation \u2014 I work hands-on',
+  'You want a strategy document, not working code',
+  'You\u2019re not ready to give a senior engineer real access to your codebase',
+  'You haven\u2019t shipped anything yet and want to talk about AI in theory',
+  'You need someone to manage your team full-time',
 ];
 
 const CheckIcon = () => (
