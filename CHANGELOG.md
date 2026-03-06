@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.6.5
+
+### Patch Changes
+
+- 7421f5d: Replace defensive copy with authoritative voice across all pages
+
 ## 2.6.4
 
 ### Patch Changes
