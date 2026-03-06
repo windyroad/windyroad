@@ -39,9 +39,8 @@ export default function OperatorSection() {
       <div className={styles.narrative}>
         <p>
           Through Windy Road Technology, I&apos;ve taken three software products
-          from idea to market to profit: TIBant, BWUnit, and Addressr. Not
-          consulting on someone else&apos;s product, actually building it.
-          Finding customers, closing sales, supporting users. With paying
+          from idea to market to profit: TIBant, BWUnit, and Addressr.
+          Built them, found the customers, closed the sales, supported the users. With paying
           customers across Australia, the UK, US, and Europe, I know what it
           takes to ship something real.
         </p>

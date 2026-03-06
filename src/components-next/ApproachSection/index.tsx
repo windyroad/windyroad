@@ -29,7 +29,7 @@ const process = [
   {
     label: 'Embed',
     description:
-      'You learn to catch the problems yourself. I pair on real PRs, coach on what to watch for in AI output, and tune the process based on what\u2019s actually happening in your codebase.',
+      'You learn to catch the problems yourself. I pair on real PRs, coach on what to watch for in AI output, and tune the process based on what\u2019s happening in your codebase.',
   },
 ];
 

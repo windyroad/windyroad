@@ -21,7 +21,7 @@ const process = [
   {
     label: 'Diagnose',
     description:
-      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. I look at how your team actually uses AI tools: which ones, how generated code gets reviewed, what your pipeline catches and what slips through.',
+      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. I look at how your team uses AI tools: which ones, how generated code gets reviewed, what your pipeline catches and what slips through.',
   },
   {
     label: 'Implement',
@@ -31,7 +31,7 @@ const process = [
   {
     label: 'Embed',
     description:
-      'Your team learns to catch the problems themselves. I pair on real PRs, coach developers on what to watch for in AI output, and tune the process based on what\u2019s actually happening in your codebase.',
+      'Your team learns to catch the problems themselves. I pair on real PRs, coach developers on what to watch for in AI output, and tune the process based on what\u2019s happening in your codebase.',
   },
 ];
 
