@@ -31,6 +31,14 @@
             "command": ".claude/hooks/voice-tone-eval.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/wip-nudge.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
