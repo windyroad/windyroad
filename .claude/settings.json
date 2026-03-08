@@ -23,6 +23,14 @@
             "command": ".claude/hooks/a11y-team-eval.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/voice-tone-eval.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -58,6 +66,15 @@
         "hooks": [
           {
             "type": "command",
+            "command": ".claude/hooks/voice-tone-enforce-edit.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
             "command": ".claude/hooks/no-em-dash.sh"
           }
         ]
@@ -70,6 +87,15 @@
           {
             "type": "command",
             "command": ".claude/hooks/a11y-mark-reviewed.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/voice-tone-mark-reviewed.sh"
           }
         ]
       }
