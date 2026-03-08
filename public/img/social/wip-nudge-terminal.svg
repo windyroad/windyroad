@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500">
+  <defs>
+    <style>
+      text { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+      .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="500" fill="#0F172A"/>
+
+  <!-- Terminal window chrome -->
+  <rect x="60" y="30" width="1080" height="440" rx="10" fill="#1A1B26" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Title bar -->
+  <rect x="60" y="30" width="1080" height="36" rx="10" fill="#1E293B"/>
+  <rect x="60" y="56" width="1080" height="10" fill="#1E293B"/>
+  <circle cx="86" cy="48" r="6" fill="#EF4444"/>
+  <circle cx="108" cy="48" r="6" fill="#F59E0B"/>
+  <circle cx="130" cy="48" r="6" fill="#22C55E"/>
+  <text x="600" y="53" text-anchor="middle" font-size="13" fill="#64748B" class="sans">wip-nudge.sh output (systemReminder)</text>
+
+  <!-- Terminal content -->
+  <!-- Prompt line -->
+  <text x="84" y="100" font-size="14" fill="#64748B">$ claude "add error handling to the API endpoint"</text>
+
+  <!-- System reminder header -->
+  <text x="84" y="136" font-size="13" fill="#475569">system-reminder from wip-nudge.sh:</text>
+
+  <!-- Warning 1 -->
+  <text x="84" y="172" font-size="14" fill="#F59E0B">WIP: ~347 lines of uncommitted changes.</text>
+  <text x="84" y="194" font-size="14" fill="#F59E0B">Consider committing before continuing.</text>
+
+  <!-- Warning 2 -->
+  <text x="84" y="230" font-size="14" fill="#3B82F6">WIP: 5 unpushed commits on master.</text>
+  <text x="84" y="252" font-size="14" fill="#3B82F6">Consider running `npm run push:watch`.</text>
+
+  <!-- Warning 3 -->
+  <text x="84" y="288" font-size="14" fill="#A855F7">WIP: 5 commits on master with no changeset.</text>
+  <text x="84" y="310" font-size="14" fill="#A855F7">Run `npx changeset` to describe what's shipping.</text>
+
+  <!-- Warning 4 -->
+  <text x="84" y="346" font-size="14" fill="#22C55E">WIP: Release PR #42 has been open for 3 day(s).</text>
+  <text x="84" y="368" font-size="14" fill="#22C55E">Review and merge: https://github.com/windyroad/windyroad/pull/42</text>
+
+  <!-- Separator -->
+  <line x1="84" y1="394" x2="1100" y2="394" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- AI continues working -->
+  <text x="84" y="424" font-size="14" fill="#64748B">Claude continues working normally. No blocking.</text>
+  <text x="84" y="448" font-size="14" fill="#94A3B8">The AI sees the warnings and can act on them.</text>
+</svg>

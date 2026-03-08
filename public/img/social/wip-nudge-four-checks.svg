@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0F172A"/>
+
+  <!-- Header -->
+  <text x="600" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="#F1F5F9">Four checks, every prompt</text>
+  <text x="600" y="80" text-anchor="middle" font-size="16" fill="#94A3B8">UserPromptSubmit hook nudges about accumulating work-in-progress</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="100" x2="1140" y2="100" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- Check 1: Uncommitted changes -->
+  <rect x="60" y="120" width="530" height="110" rx="10" fill="#1E293B" stroke="#F59E0B40" stroke-width="1.5"/>
+  <rect x="60" y="120" width="530" height="36" rx="10" fill="#F59E0B15"/>
+  <rect x="60" y="146" width="530" height="1" fill="#1E293B"/>
+  <circle cx="84" cy="138" r="10" fill="#F59E0B30" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="84" y="143" text-anchor="middle" font-size="13" font-weight="700" fill="#F59E0B">1</text>
+  <text x="104" y="143" font-size="14" font-weight="600" fill="#FDE68A">Uncommitted changes too large</text>
+  <text x="80" y="175" font-size="13" fill="#94A3B8">Threshold:</text>
+  <text x="160" y="175" font-size="13" fill="#F1F5F9" class="mono">insertions + deletions >= 200</text>
+  <text x="80" y="198" font-size="12" fill="#94A3B8" class="mono">WIP: ~347 lines of uncommitted changes.</text>
+  <text x="80" y="216" font-size="12" fill="#94A3B8" class="mono">Consider committing before continuing.</text>
+
+  <!-- Check 2: Unpushed commits -->
+  <rect x="610" y="120" width="530" height="110" rx="10" fill="#1E293B" stroke="#3B82F640" stroke-width="1.5"/>
+  <rect x="610" y="120" width="530" height="36" rx="10" fill="#3B82F615"/>
+  <rect x="610" y="146" width="530" height="1" fill="#1E293B"/>
+  <circle cx="634" cy="138" r="10" fill="#3B82F630" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="634" y="143" text-anchor="middle" font-size="13" font-weight="700" fill="#3B82F6">2</text>
+  <text x="654" y="143" font-size="14" font-weight="600" fill="#93C5FD">Unpushed commits piling up</text>
+  <text x="630" y="175" font-size="13" fill="#94A3B8">Threshold:</text>
+  <text x="714" y="175" font-size="13" fill="#F1F5F9" class="mono">rev-list count >= 3</text>
+  <text x="630" y="198" font-size="12" fill="#94A3B8" class="mono">WIP: 5 unpushed commits on master.</text>
+  <text x="630" y="216" font-size="12" fill="#94A3B8" class="mono">Consider running `npm run push:watch`.</text>
+
+  <!-- Check 3: Missing changesets -->
+  <rect x="60" y="250" width="530" height="110" rx="10" fill="#1E293B" stroke="#A855F740" stroke-width="1.5"/>
+  <rect x="60" y="250" width="530" height="36" rx="10" fill="#A855F715"/>
+  <rect x="60" y="276" width="530" height="1" fill="#1E293B"/>
+  <circle cx="84" cy="268" r="10" fill="#A855F730" stroke="#A855F7" stroke-width="1.5"/>
+  <text x="84" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#A855F7">3</text>
+  <text x="104" y="273" font-size="14" font-weight="600" fill="#D8B4FE">Commits without changesets</text>
+  <text x="80" y="305" font-size="13" fill="#94A3B8">Condition:</text>
+  <text x="156" y="305" font-size="13" fill="#F1F5F9" class="mono">unpushed > 0 AND no .changeset/*.md</text>
+  <text x="80" y="328" font-size="12" fill="#94A3B8" class="mono">WIP: 3 commits on master with no changeset.</text>
+  <text x="80" y="346" font-size="12" fill="#94A3B8" class="mono">Run `npx changeset` to describe what's shipping.</text>
+
+  <!-- Check 4: Stale release PR -->
+  <rect x="610" y="250" width="530" height="110" rx="10" fill="#1E293B" stroke="#22C55E40" stroke-width="1.5"/>
+  <rect x="610" y="250" width="530" height="36" rx="10" fill="#22C55E15"/>
+  <rect x="610" y="276" width="530" height="1" fill="#1E293B"/>
+  <circle cx="634" cy="268" r="10" fill="#22C55E30" stroke="#22C55E" stroke-width="1.5"/>
+  <text x="634" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#22C55E">4</text>
+  <text x="654" y="273" font-size="14" font-weight="600" fill="#86EFAC">Release PR accumulating work</text>
+  <text x="630" y="305" font-size="13" fill="#94A3B8">Threshold:</text>
+  <text x="714" y="305" font-size="13" fill="#F1F5F9" class="mono">open PR to publish, age >= 24h</text>
+  <text x="630" y="328" font-size="12" fill="#94A3B8" class="mono">WIP: Release PR #42 has been open for 3 day(s).</text>
+  <text x="630" y="346" font-size="12" fill="#94A3B8" class="mono">Review and merge: https://github.com/...</text>
+
+  <!-- Flow diagram at bottom -->
+  <line x1="60" y1="390" x2="1140" y2="390" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- UserPromptSubmit flow -->
+  <rect x="100" y="420" width="200" height="50" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="200" y="440" text-anchor="middle" font-size="12" fill="#94A3B8">every prompt triggers</text>
+  <text x="200" y="458" text-anchor="middle" font-size="14" font-weight="600" fill="#F1F5F9">wip-nudge.sh</text>
+
+  <!-- Arrow -->
+  <line x1="300" y1="445" x2="370" y2="445" stroke="#475569" stroke-width="2"/>
+  <polygon points="378,445 366,439 366,451" fill="#475569"/>
+
+  <!-- Four checks box -->
+  <rect x="380" y="420" width="220" height="50" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="490" y="440" text-anchor="middle" font-size="12" fill="#94A3B8">runs 4 independent checks</text>
+  <text x="490" y="458" text-anchor="middle" font-size="14" font-weight="600" fill="#F1F5F9">git + gh CLI</text>
+
+  <!-- Arrow -->
+  <line x1="600" y1="445" x2="670" y2="445" stroke="#475569" stroke-width="2"/>
+  <polygon points="678,445 666,439 666,451" fill="#475569"/>
+
+  <!-- Output -->
+  <rect x="680" y="410" width="220" height="70" rx="8" fill="#1E293B" stroke="#F59E0B40" stroke-width="1.5"/>
+  <text x="790" y="434" text-anchor="middle" font-size="12" fill="#94A3B8">if any fire, emits</text>
+  <text x="790" y="454" text-anchor="middle" font-size="14" font-weight="600" fill="#FDE68A">systemReminder</text>
+  <text x="790" y="472" text-anchor="middle" font-size="12" fill="#94A3B8">nudge, not a gate</text>
+
+  <!-- Arrow -->
+  <line x1="900" y1="445" x2="950" y2="445" stroke="#475569" stroke-width="2"/>
+  <polygon points="958,445 946,439 946,451" fill="#475569"/>
+
+  <!-- AI sees it -->
+  <rect x="960" y="420" width="170" height="50" rx="8" fill="#14532D" stroke="#22C55E40" stroke-width="1.5"/>
+  <text x="1045" y="440" text-anchor="middle" font-size="12" fill="#86EFAC">AI + human see the</text>
+  <text x="1045" y="458" text-anchor="middle" font-size="14" font-weight="600" fill="#86EFAC">state of things</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="530" text-anchor="middle" font-size="14" fill="#64748B">No blocking. No permissionDecision. The AI keeps working but the warnings are visible.</text>
+
+  <!-- Audiences -->
+  <text x="325" y="570" text-anchor="middle" font-size="13" fill="#94A3B8">Checks 1-2 guide the <tspan font-weight="600" fill="#F1F5F9">AI agent</tspan></text>
+  <text x="875" y="570" text-anchor="middle" font-size="13" fill="#94A3B8">Checks 3-4 guide the <tspan font-weight="600" fill="#F1F5F9">human</tspan></text>
+</svg>
