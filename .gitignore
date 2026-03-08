@@ -65,7 +65,6 @@ out
 
 # Claude Code local config (not project-specific)
 .claude/settings.local.json
-.claude/agents/
 .claude/skills/
 .claude/.a11y-agent-manifest
 .claude/.accessibility-agents-version
