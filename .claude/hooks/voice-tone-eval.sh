@@ -10,8 +10,8 @@ DETECTED: VOICE-AND-TONE.md exists in this project.
 
 This is a NON-OPTIONAL instruction. You MUST use the voice-and-tone-lead agent
 before editing any user-facing copy in .tsx files under src/app/ or
-src/components-next/, or blog articles in src/articles/. This is proactive.
-Do not wait for the user to ask.
+src/components-next/, blog articles in src/articles/, or social posts in
+src/social/. This is proactive. Do not wait for the user to ask.
 
 REQUIRED ACTIONS:
 1. Use the Agent tool to delegate to voice-and-tone-lead
@@ -20,7 +20,7 @@ REQUIRED ACTIONS:
 3. Do NOT write or edit copy without voice-and-tone-lead review FIRST
 4. Do NOT skip this step even if you think you can handle it yourself
 
-SCOPE: .tsx files in src/app/ and src/components-next/, .md files in src/articles/.
+SCOPE: .tsx files in src/app/ and src/components-next/, .md files in src/articles/ and src/social/.
 Does NOT apply to: .scss/.css files, .ts (non-tsx) files, files outside those directories.
 HOOK_OUTPUT
 fi

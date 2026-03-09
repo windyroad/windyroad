@@ -196,6 +196,31 @@ Pull quotes float right and body text wraps around them, magazine-style. On narr
 - One per major section at most. Two in a short article is too many.
 - The line should work as a standalone statement. Test: does it make sense on a social media card?
 
+### LinkedIn posts
+
+**Tone: Practitioner sharing a compressed version of the work.** LinkedIn posts promote blog articles to a peer audience: engineers, tech leads, and technical founders scrolling a feed. The same voice principles apply. The difference is compression: readers are scanning, not reading.
+
+**The fold matters.** The first two to three lines appear before the "see more" link. They carry the entire post. Lead with the problem or the key insight, the same way a blog article leads with the situation. If the fold doesn't earn the click, the rest doesn't exist.
+
+> "An AI agent has no visibility into accumulating work-in-progress. It works on the current prompt."
+
+Not: "Excited to share a new blog post about how I built a Claude Code hook for WIP visibility!"
+
+**Summarising is appropriate here.** Blog articles show the work in full. LinkedIn posts summarise it. State the problem, describe the approach, list the key details. The article has the code and the depth. The post's job is to make someone want to read it.
+
+**End with the link.** The article link at the end is the point of the post, not a promotional closer. No "Check it out!" or "Link in comments." Just the URL on its own line.
+
+**No hashtag spam.** Zero to two hashtags maximum, and only if they're genuinely useful for discovery (e.g., `#cicd`). A wall of hashtags signals marketing, not craft.
+
+**No promotional framing.** Don't narrate your excitement about the post. Don't ask for engagement. Don't open with "I'm thrilled to announce" or close with "What do you think? Drop a comment below!" Write for peers who respect substance.
+
+Guidelines:
+- First person, same as blog articles
+- Short paragraphs: one to three sentences each
+- Numbered or bulleted lists work well for specifics that would otherwise blur together in a feed
+- No em-dashes (same constraint as all other copy)
+- No avoided words from the word list
+
 ---
 
 ## Banned patterns
