@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NEXT_TURBOPACK=0 next dev",
     "build": "next build",
     "start": "npx serve out",
     "lint": "eslint src/",
@@ -17,11 +17,13 @@
   },
   "dependencies": {
     "@microsoft/clarity": "^1.0.2",
+    "@shikijs/rehype": "^4.0.1",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "next": "^16",
     "react": "^19",
     "react-dom": "^19",
+    "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
     "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",

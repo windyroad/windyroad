@@ -1,6 +1,6 @@
 #!/bin/bash
 # UserPromptSubmit hook: Nudges about accumulating WIP.
-# Four checks: uncommitted size, unpushed commits, missing changesets, stale release PR.
+# Checks 1-2 (local) run every prompt. Checks 3-4 (remote) run in push:watch.
 # These are nudges (systemReminder), not gates (no permissionDecision).
 
 set -euo pipefail
@@ -26,68 +26,30 @@ if [ "$UNTRACKED_COUNT" -gt 0 ] 2>/dev/null; then
     WARNINGS="${WARNINGS}WIP: ${UNTRACKED_COUNT} untracked file(s) not yet staged.\n"
 fi
 
+# Flag modified files with stale mtimes (>24h since last modification)
+STALE_COUNT=$(git diff --name-only HEAD 2>/dev/null | python3 -c "
+import sys, os, time
+threshold = time.time() - 86400
+count = 0
+for line in sys.stdin:
+    f = line.strip()
+    if not f or not os.path.isfile(f):
+        continue
+    try:
+        if os.path.getmtime(f) < threshold:
+            count += 1
+    except OSError:
+        pass
+print(count)
+" 2>/dev/null || echo "0")
+if [ "$STALE_COUNT" -gt 0 ]; then
+    WARNINGS="${WARNINGS}WIP: ${STALE_COUNT} modified file(s) uncommitted for over 24h. Forgotten or should be reverted?\n"
+fi
+
 # --- 2. Unpushed commits piling up ---
 UNPUSHED=$(git rev-list --count origin/master..HEAD 2>/dev/null || echo "0")
 if [ "$UNPUSHED" -ge 3 ]; then
     WARNINGS="${WARNINGS}WIP: ${UNPUSHED} unpushed commits on master. Consider running \`npm run push:watch\`.\n"
-fi
-
-# --- 3. Commits without changesets ---
-if [ "$UNPUSHED" -gt 0 ]; then
-    CHANGESET_COUNT=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ')
-    if [ "$CHANGESET_COUNT" -eq 0 ]; then
-        WARNINGS="${WARNINGS}WIP: ${UNPUSHED} commits on master with no changeset. Run \`npx changeset\` to describe what's shipping.\n"
-    fi
-fi
-
-# --- 4. Release PR accumulating unreleased work ---
-if command -v gh &>/dev/null; then
-    PR_JSON=$(timeout 5 gh pr list --base publish --state open --limit 1 --json number,url,createdAt 2>/dev/null || echo "[]")
-    if [ "$PR_JSON" != "[]" ] && [ -n "$PR_JSON" ]; then
-        CREATED_AT=$(echo "$PR_JSON" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    if data:
-        print(data[0].get('createdAt', ''))
-except:
-    print('')
-" 2>/dev/null || echo "")
-
-        if [ -n "$CREATED_AT" ]; then
-            AGE_HOURS=$(python3 -c "
-from datetime import datetime, timezone
-try:
-    created = datetime.fromisoformat('$CREATED_AT'.replace('Z', '+00:00'))
-    now = datetime.now(timezone.utc)
-    hours = (now - created).total_seconds() / 3600
-    print(int(hours))
-except:
-    print(0)
-" 2>/dev/null || echo "0")
-
-            if [ "$AGE_HOURS" -ge 24 ]; then
-                PR_NUMBER=$(echo "$PR_JSON" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    print(data[0].get('number', ''))
-except:
-    print('')
-" 2>/dev/null || echo "")
-                PR_URL=$(echo "$PR_JSON" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    print(data[0].get('url', ''))
-except:
-    print('')
-" 2>/dev/null || echo "")
-                AGE_DAYS=$((AGE_HOURS / 24))
-                WARNINGS="${WARNINGS}WIP: Release PR #${PR_NUMBER} has been open for ${AGE_DAYS} day(s). Review and merge: ${PR_URL}\n"
-            fi
-        fi
-    fi
 fi
 
 # --- Output ---

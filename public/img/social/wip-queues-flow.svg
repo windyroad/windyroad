@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="500" fill="#0F172A"/>
+
+  <!-- Header -->
+  <text x="600" y="44" text-anchor="middle" font-size="24" font-weight="700" fill="#F1F5F9">Where code queues on its way to production</text>
+  <text x="600" y="70" text-anchor="middle" font-size="15" fill="#94A3B8">Each queue is a place where work can stall. Each check monitors one queue.</text>
+
+  <!-- Divider -->
+  <line x1="40" y1="88" x2="1160" y2="88" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- LOCAL label -->
+  <rect x="40" y="96" width="500" height="24" rx="4" fill="#F59E0B10"/>
+  <text x="290" y="113" text-anchor="middle" font-size="12" font-weight="600" fill="#F59E0B" letter-spacing="0.08em">LOCAL (checked every prompt)</text>
+
+  <!-- REMOTE label -->
+  <rect x="620" y="96" width="540" height="24" rx="4" fill="#3B82F610"/>
+  <text x="890" y="113" text-anchor="middle" font-size="12" font-weight="600" fill="#3B82F6" letter-spacing="0.08em">REMOTE (checked on push)</text>
+
+  <!-- Queue 1: Uncommitted (x=40..250, y=150..250) -->
+  <rect x="40" y="150" width="210" height="100" rx="10" fill="#1E293B" stroke="#F59E0B40" stroke-width="1.5"/>
+  <rect x="40" y="150" width="210" height="32" rx="10" fill="#F59E0B15"/>
+  <rect x="40" y="174" width="210" height="1" fill="#1E293B"/>
+  <text x="145" y="171" text-anchor="middle" font-size="14" font-weight="600" fill="#FDE68A">1. Uncommitted</text>
+  <text x="56" y="196" font-size="12" fill="#94A3B8">Changes in working tree</text>
+  <text x="56" y="214" font-size="10" fill="#64748B" class="mono">size >= 200 lines</text>
+  <text x="56" y="228" font-size="10" fill="#64748B" class="mono">stale files > 24h</text>
+  <text x="56" y="242" font-size="10" fill="#64748B" class="mono">untracked files</text>
+
+  <!-- Arrow 1->2: horizontal at card midpoint -->
+  <text x="287" y="193" text-anchor="middle" font-size="10" fill="#475569">git commit</text>
+  <line x1="258" y1="200" x2="317" y2="200" stroke="#475569" stroke-width="2"/>
+  <polygon points="325,200 313,194 313,206" fill="#475569"/>
+
+  <!-- Queue 2: Unpushed (x=330..540) -->
+  <rect x="330" y="150" width="210" height="100" rx="10" fill="#1E293B" stroke="#3B82F640" stroke-width="1.5"/>
+  <rect x="330" y="150" width="210" height="32" rx="10" fill="#3B82F615"/>
+  <rect x="330" y="174" width="210" height="1" fill="#1E293B"/>
+  <text x="435" y="171" text-anchor="middle" font-size="14" font-weight="600" fill="#93C5FD">2. Unpushed</text>
+  <text x="346" y="196" font-size="12" fill="#94A3B8">Commits ahead of origin</text>
+  <text x="346" y="214" font-size="10" fill="#64748B" class="mono">count >= 3</text>
+
+  <!-- Arrow 2->3: horizontal at card midpoint -->
+  <text x="580" y="193" text-anchor="middle" font-size="10" fill="#475569">git push</text>
+  <line x1="548" y1="200" x2="612" y2="200" stroke="#475569" stroke-width="2"/>
+  <polygon points="620,200 608,194 608,206" fill="#475569"/>
+
+  <!-- Vertical divider between local and remote -->
+  <line x1="605" y1="96" x2="605" y2="455" stroke="#334155" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+  <!-- Queue 3: No release preview (x=625..855) -->
+  <rect x="625" y="150" width="230" height="100" rx="10" fill="#1E293B" stroke="#A855F740" stroke-width="1.5"/>
+  <rect x="625" y="150" width="230" height="32" rx="10" fill="#A855F715"/>
+  <rect x="625" y="174" width="230" height="1" fill="#1E293B"/>
+  <text x="740" y="171" text-anchor="middle" font-size="14" font-weight="600" fill="#D8B4FE">3. No release preview</text>
+  <text x="641" y="196" font-size="12" fill="#94A3B8">On trunk, no changeset</text>
+  <text x="641" y="214" font-size="10" fill="#64748B" class="mono">oldest > 24h OR count >= 3</text>
+  <text x="641" y="228" font-size="10" fill="#64748B" class="mono">no .changeset/*.md</text>
+
+  <!-- Arrow 3->4: horizontal at card midpoint, two-line label above -->
+  <text x="893" y="187" text-anchor="middle" font-size="10" fill="#475569">npx changeset</text>
+  <text x="893" y="198" text-anchor="middle" font-size="10" fill="#475569">+ push</text>
+  <line x1="863" y1="206" x2="917" y2="206" stroke="#475569" stroke-width="2"/>
+  <polygon points="925,206 913,200 913,212" fill="#475569"/>
+
+  <!-- Queue 4: Unreleased (x=930..1150) -->
+  <rect x="930" y="150" width="220" height="100" rx="10" fill="#1E293B" stroke="#22C55E40" stroke-width="1.5"/>
+  <rect x="930" y="150" width="220" height="32" rx="10" fill="#22C55E15"/>
+  <rect x="930" y="174" width="220" height="1" fill="#1E293B"/>
+  <text x="1040" y="171" text-anchor="middle" font-size="14" font-weight="600" fill="#86EFAC">4. Unreleased</text>
+  <text x="946" y="196" font-size="12" fill="#94A3B8">Release PR open</text>
+  <text x="946" y="214" font-size="10" fill="#64748B" class="mono">age >= 24h</text>
+  <text x="946" y="228" font-size="10" fill="#64748B" class="mono">changeset count + diff size</text>
+
+  <!-- Arrow 4 -> production -->
+  <text x="1056" y="268" font-size="10" fill="#475569">merge release PR</text>
+  <line x1="1040" y1="250" x2="1040" y2="282" stroke="#22C55E" stroke-width="2"/>
+  <polygon points="1040,290 1034,278 1046,278" fill="#22C55E"/>
+
+  <!-- Production -->
+  <rect x="970" y="290" width="140" height="36" rx="8" fill="#14532D" stroke="#22C55E40" stroke-width="1.5"/>
+  <text x="1040" y="313" text-anchor="middle" font-size="13" font-weight="600" fill="#86EFAC">Production</text>
+
+  <!-- Monitoring labels -->
+  <line x1="40" y1="370" x2="1160" y2="370" stroke="#1E293B" stroke-width="1.5"/>
+
+  <text x="600" y="396" text-anchor="middle" font-size="16" font-weight="600" fill="#F1F5F9">What monitors each queue</text>
+
+  <!-- Monitor row -->
+  <rect x="40" y="410" width="210" height="44" rx="6" fill="#F59E0B10" stroke="#F59E0B30" stroke-width="1"/>
+  <text x="145" y="430" text-anchor="middle" font-size="12" fill="#FDE68A" class="mono">wip-nudge.sh</text>
+  <text x="145" y="446" text-anchor="middle" font-size="11" fill="#94A3B8">every prompt</text>
+
+  <rect x="330" y="410" width="210" height="44" rx="6" fill="#3B82F610" stroke="#3B82F630" stroke-width="1"/>
+  <text x="435" y="430" text-anchor="middle" font-size="12" fill="#93C5FD" class="mono">wip-nudge.sh</text>
+  <text x="435" y="446" text-anchor="middle" font-size="11" fill="#94A3B8">every prompt</text>
+
+  <rect x="625" y="410" width="230" height="44" rx="6" fill="#A855F710" stroke="#A855F730" stroke-width="1"/>
+  <text x="740" y="430" text-anchor="middle" font-size="12" fill="#D8B4FE" class="mono">push:watch</text>
+  <text x="740" y="446" text-anchor="middle" font-size="11" fill="#94A3B8">on push</text>
+
+  <rect x="930" y="410" width="220" height="44" rx="6" fill="#22C55E10" stroke="#22C55E30" stroke-width="1"/>
+  <text x="1040" y="430" text-anchor="middle" font-size="12" fill="#86EFAC" class="mono">push:watch</text>
+  <text x="1040" y="446" text-anchor="middle" font-size="11" fill="#94A3B8">on push</text>
+</svg>

@@ -160,6 +160,42 @@ Guidelines:
 - Headings should describe the content, not tease it: "The hook" not "The secret sauce"
 - No em-dashes (enforced by the repository's pre-commit hook)
 
+**Pull quotes.** Pull quotes repeat a key line from the article as a visual accent. They break up long sections and signal the core insight to readers who are scanning. Use them sparingly: one or two per article at most.
+
+A good pull quote is a complete thought that stands alone without the surrounding paragraph. It should be the line a reader would highlight or quote when sharing the article. If it needs context to make sense, it's not a pull quote.
+
+In markdown, wrap the source text in a `<span data-pull>` tag inline in the body:
+
+```markdown
+This matters because <span data-pull>work-in-progress is risk.</span> In Lean terms...
+```
+
+The build generates an `<aside>` from the marked text automatically. The text is written once; the pull quote and the body always match.
+
+By default the pull quote appears before the paragraph containing the marked text. To shift it earlier, add a `data-pull-offset` attribute with the number of blocks to move up:
+
+```markdown
+<span data-pull data-pull-offset="2">Work-in-progress is risk.</span>
+```
+
+Pull quotes float right and body text wraps around them, magazine-style. On narrow screens they stack full-width.
+
+**Visual design principles:**
+- Visual separation is the foundation. The quote needs to feel distinct from body text without feeling disconnected from the page. Use a combination of size, weight, colour, and whitespace, but not all four at once.
+- Typography does the heavy lifting. 1.5-2.5x body text size is typical. Loose letter-spacing and relaxed line-height help at larger sizes. The text should feel expansive, not cramped.
+- The border or rule should be purposeful. A left border (3-5px, brand colour) is a classic. Full top-and-bottom rules feel more editorial. Avoid boxing the quote on four sides: that reads as a callout box, not a pull quote. Some designs skip the rule entirely and let size + colour contrast do the work.
+- Oversized opening quotation marks add character, but only if the rest of the design has enough restraint to let them breathe. If everything is competing, drop them.
+- Colour contrast without shouting. A slightly muted version of a brand colour works better than full saturation. The goal is "this matters" not "look at me."
+- Whitespace is the most underused tool. Give pull quotes generous margin: more than feels comfortable. Tight pull quotes look like mistakes; spacious ones look deliberate.
+- Floating a pull quote within a column (with text wrapping) works for long-form editorial. Full-width pull quotes work better for landing pages or shorter content.
+- Gut-check: if you removed the pull quote, would the page feel emptier? If yes, it's doing its job. If it just feels cluttered without it, it was too heavy-handed.
+
+**Content guidelines:**
+- Mark the text inline where it appears in the body. Don't duplicate it in a separate `<aside>`.
+- Keep the pull quote close to where the marked text appears. Use `data-pull-offset` sparingly.
+- One per major section at most. Two in a short article is too many.
+- The line should work as a standalone statement. Test: does it make sense on a social media card?
+
 ---
 
 ## Banned patterns

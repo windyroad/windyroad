@@ -74,15 +74,42 @@
   }
 
   pre {
-    background-color: rgba(255, 255, 255, 0.05);
     padding: 1.25rem;
     border-radius: 8px;
     overflow-x: auto;
     margin-bottom: 1.25rem;
+    font-size: 0.875em;
+    line-height: 1.6;
+
+    // Fallback if Shiki doesn't set a background
+    &:not([style*="background"]) {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
 
     code {
       background: none;
       padding: 0;
+    }
+  }
+
+  aside {
+    float: right;
+    width: 40%;
+    margin: 0.5rem 0 1.5rem 2.5rem;
+    padding: 1.25rem 0 1.25rem 1.5rem;
+    border-left: 3px solid var(--color-accent-on-dark);
+    font-size: 1.5em;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    font-weight: 600;
+    color: var(--color-text-light);
+    font-style: italic;
+    opacity: 0.85;
+
+    @media (max-width: 600px) {
+      float: none;
+      width: 100%;
+      margin: 2rem 0;
     }
   }
 

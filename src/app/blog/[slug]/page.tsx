@@ -4,6 +4,7 @@ import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
 import Button from '@/src/components-next/Button';
 import styles from '../post.module.scss';
+import 'highlight.js/styles/github-dark.css';
 
 const CTA_TAGS = ['ai coding', 'ai-coding', 'vibe coding', 'claude code'];
 
