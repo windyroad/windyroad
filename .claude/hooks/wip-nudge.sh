@@ -1,6 +1,7 @@
 #!/bin/bash
 # UserPromptSubmit hook: Nudges about accumulating WIP.
-# Checks 1-2 (local) run every prompt. Checks 3-4 (remote) run in push:watch.
+# Checks 1-2 (local) run every prompt via UserPromptSubmit.
+# Checks 3-4 (remote) run in push:watch after push completes.
 # These are nudges, not gates (no permissionDecision).
 # Uses systemMessage (visible in terminal) + additionalContext (injected into AI).
 
