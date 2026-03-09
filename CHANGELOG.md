@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.6.7
+
+### Patch Changes
+
+- 06bea6f: Add social post drafts and voice-and-tone guidance for LinkedIn, Twitter, Reddit, Hacker News, Dev.to, Lobsters, and Bluesky
+
 ## 2.6.6
 
 ### Patch Changes
