@@ -27,6 +27,8 @@ case "$FILE_PATH" in
     IS_COPY=true ;;
   */src/social/*.md)
     IS_COPY=true ;;
+  */public/img/social/*.svg)
+    IS_COPY=true ;;
 esac
 
 if [ "$IS_COPY" = false ]; then

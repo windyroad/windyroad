@@ -7,11 +7,13 @@ tags: ['ci/cd', 'ai coding', 'claude code', 'deployment', 'production', 'softwar
 
 In [the previous post](/blog/before-it-goes-live-you-should-be-able-to-click-on-it) I described a pipeline where every push to `main` ends with a live preview of the production candidate, smoke-tested and ready for human review. The idea is that nothing ships without you seeing it running.
 
-There's a gap, though. The pipeline only works if you actually watch it. If you `git push` and then context-switch to something else, the pipeline becomes theatre: gates that run, checks that pass or fail, deploy URLs that appear in PRs you never open. The discipline only matters if it's followed.
+There's a gap, though. The pipeline only works if you watch it. If you `git push` and then context-switch to something else, the pipeline becomes theatre: gates that run, checks that pass or fail, deploy URLs that appear in PRs you never open. <span data-pull>The discipline only matters if it's followed.</span>
 
-Claude Code has a hook system that can enforce this at the point where an AI agent is about to run a command. I use it to intercept `git push` and redirect to a script that watches the pipeline and surfaces the right URL when it's done.
+Claude Code has a hook system that can enforce this at the point where an AI agent is about to run a command. I use it to intercept three commands: `git push` is denied and redirected to a pipeline-watching script, `gh pr merge` is denied and redirected to a release-watching script, and `npm run release:watch` requires human confirmation before it runs.
 
-![Before: git push with no pipeline visibility. After: git push blocked by hook, npm run push:watch runs, pipeline watched live, preview URL surfaced automatically.](/img/social/hook-intercept-flow.svg)
+The implementation here uses GitHub Actions, Netlify, and [Changesets](https://github.com/changesets/changesets) on a trunk-based workflow. The hook pattern works with any CI provider and deploy target. The watching script is the part that changes. The hook itself is just regex matching and JSON output.
+
+![Three rows showing pipeline enforcement levels. Row 1: git push denied, redirects to push:watch. Row 2: gh pr merge denied, redirects to release:watch. Row 3: npm run release:watch prompts for human confirmation before running. All three intercepts live in one hook file.](/img/social/hook-intercept-flow.svg)
 
 ## The hook
 
@@ -19,7 +21,7 @@ Claude Code hooks are shell scripts that fire before or after tool calls. `PreTo
 
 The hook lives in `.claude/hooks/git-push-gate.sh` and is wired into `.claude/settings.json`:
 
-![settings.json wiring the PreToolUse hook to git-push-gate.sh on the left, and the key intercept logic in the shell script on the right](/img/social/hook-code-card.svg)
+![settings.json wiring the PreToolUse hook to git-push-gate.sh on the left. On the right, the shell script showing three intercepts: git push denied with redirect to push:watch, gh pr merge denied with redirect to release:watch, and release:watch prompting for confirmation with ask.](/img/social/hook-code-card.svg)
 
 ```json
 {
@@ -64,9 +66,11 @@ EOF
 fi
 ```
 
-When Claude tries to run `git push`, it sees the denial reason and uses `npm run push:watch` instead. The hook doesn't require any human involvement — it just reroutes the action.
+When Claude tries to run `git push`, it sees the denial reason and uses `npm run push:watch` instead. The hook requires no human involvement. It just reroutes the action.
 
 ## What push:watch does
+
+![Two flow paths from push to production. Push path: git push denied by hook, redirected to push:watch, which runs GitHub Actions, deploys to Netlify, and surfaces the preview URL. Release path: gh pr merge denied by hook, redirected to release:watch, which prompts for human confirmation before merging the release PR and running the publish pipeline. Below, four system components: the hook file, two watching scripts, and the settings.json wiring.](/img/social/push-to-production-flow.svg)
 
 `push:watch` pushes, finds the pipeline run for the current commit SHA, watches it live in the terminal, and then surfaces the right URL:
 
@@ -202,7 +206,9 @@ echo "CLAUDE: Show the user the release preview URL and release PR URL above so 
 
 Two implementation details worth noting. First, the `git pull --rebase` is preceded by a conditional stash — `git stash` before the rebase, `git stash pop` after — but only if there are actually local changes. Running `git stash pop` with no stash entry fails, so the flag guards against that.
 
-Second, when looking for the `release-pr-preview` run, the script records the push timestamp and filters for runs created *after* that time. Without this, it would immediately find the previous run (already completed) and watch that instead of the new one. The filter uses ISO 8601 string comparison — it works, but it only works if you pipe through standalone `jq` rather than using the `gh run list --jq` flag, which doesn't accept `--arg` parameters.
+Second, when looking for the `release-pr-preview` run, the script records the push timestamp and filters for runs created *after* that time. Without this, it would immediately find the previous run (already completed) and watch that instead of the new one. The filter uses ISO 8601 string comparison. It works, but only if you pipe through standalone `jq` rather than using the `gh run list --jq` flag, which doesn't accept `--arg` parameters.
+
+The `CLAUDE:` prefixed lines in the script output are directives for the AI agent. They appear in the conversation context when the script runs. Claude Code doesn't treat them specially. They work because any text the AI sees can influence its next response. A labelled directive makes the intent explicit.
 
 If either pipeline fails, the script shows which checks failed and prompts:
 
@@ -220,28 +226,69 @@ This is the loop I care about. When CI catches something, the question isn't jus
 
 ## Why hooks for this, not just instructions
 
-You could tell Claude "always use `npm run push:watch` instead of `git push`." It would probably comply most of the time. But instructions drift.
+You could tell Claude "always use `npm run push:watch` instead of `git push`." It would probably comply most of the time. But instructions drift. A long context window, a new session, a pasted snippet with `git push` in it. There are many ways an instruction gets forgotten.
 
 ![Comparison table: Guidelines are trust-based and depend on the AI remembering. Hooks are structural and enforced every time regardless of context.](/img/social/guidelines-vs-hooks.svg)
 
-A long context window, a new session, a pasted snippet with `git push` in it — there are many ways an instruction gets forgotten.
+A hook fires on every `Bash` tool call, checks the command, and denies it if it matches. It doesn't care about context length or session state. The AI can't bypass it by forgetting.
 
-A hook is different. It's structural enforcement. The gate doesn't care about context — it fires on every `Bash` tool call, checks the command, and denies it if it matches. The AI can't accidentally bypass it by forgetting.
+This is the same principle as the pipeline itself. The release PR is the only path to production, and the preview URL is right there in the PR so opening it is one click. The hook enforces the equivalent thing locally: <span data-pull>watching the pipeline isn't a habit you have to remember, it's the only path available.</span>
 
-This is the same principle as the pipeline itself. You could tell developers "always watch the pipeline." The pipeline enforces it by making the release PR the only path to production — and by putting the preview URL directly in that PR so opening it is one click.
+## Confirming before releasing
 
-The hook enforces the equivalent thing locally: watching the pipeline isn't a habit you have to remember, it's the only path available.
+The push gate blocks `git push` and `gh pr merge`, redirecting to `push:watch` and `release:watch` respectively. But without a further check, the AI can run `release:watch` on its own. In projects without this hook, the AI sees a stale release PR, decides now is a good time to merge, and runs the release command autonomously. The human review step gets bypassed.
+
+The fix is `permissionDecision: "ask"`. The AI can propose the release, but Claude Code pauses and waits for human confirmation before running the command.
+
+The same hook intercepts `npm run release:watch` and returns `permissionDecision: "ask"` instead of `"deny"`:
+
+```bash
+if echo "$COMMAND" | grep -qE '(^|;|&&|\|\|)\s*npm run release:watch(\s|$)'; then
+    cat <<'EOF'
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "ask",
+    "permissionDecisionReason": "About to run `npm run release:watch`, which merges the release PR and publishes to production. This is a release. Confirm you want to proceed."
+  }
+}
+EOF
+    exit 0
+fi
+```
+
+`"deny"` blocks the action and the AI never runs it. `"ask"` pauses and prompts the user for confirmation. Claude Code shows the reason text and waits for a yes or no. The AI cannot proceed without human approval.
+
+This is not a theoretical risk. In projects without this hook, the AI sees a [WIP nudge](/blog/making-work-in-progress-visible-to-your-ai-agent) saying a release PR has been open for three days, finishes its current task, and runs the release. The human never confirms. The `"ask"` hook closes that gap.
 
 ## The broader pattern
 
-Claude Code's hook system is designed for exactly this kind of guardrail. The hooks I'm using in this project:
+Hooks compose. This project uses several, each enforcing a different constraint:
 
-- **`UserPromptSubmit`** — runs a project health check before every prompt
-- **`PreToolUse` on `Edit`/`Write`** — scans for secrets before any file is written
-- **`PreToolUse` on `Bash`** — intercepts `git push` and redirects to `push:watch`
+- **Pipeline discipline** (this article): `PreToolUse` on `Bash` intercepts `git push` (deny), `gh pr merge` (deny), and `npm run release:watch` (ask). Three commands, one hook file, two enforcement levels.
+- **[Voice and tone enforcement](/blog/enforcing-voice-and-tone-with-claude-code-hooks)**: `PreToolUse` on `Edit`/`Write` blocks changes to copy files until a voice-and-tone reviewer has checked the proposed text against a written guide.
+- **[WIP visibility](/blog/making-work-in-progress-visible-to-your-ai-agent)**: `UserPromptSubmit` surfaces uncommitted changes, unpushed commits, missing changesets, and stale release PRs as nudges. No blocking.
+- **Secret scanning**: `PreToolUse` on `Edit`/`Write` scans for API keys and tokens before any file is written.
+- **Project health**: `UserPromptSubmit` runs a health check before every prompt.
 
-Each one turns a discipline ("don't push without watching," "don't write secrets to files") into a structural constraint that the AI can't accidentally violate.
+Each hook is independent. They don't know about each other. They all fire on their respective events and stay silent when they have nothing to say.
 
-If you're using Claude Code to ship code at any pace — and especially if you're letting it push to `main` — hooks are worth understanding. They're the difference between guidelines that depend on the AI's attention and guardrails that fire regardless.
+The pattern scales to any constraint you want to enforce. If the AI shouldn't do something without checking first, there's a hook event for it. If you want the AI to see state without being blocked, `additionalContext` injects it. If you want human confirmation, `permissionDecision: "ask"` pauses and waits.
 
-The full hook configuration for this site is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad).
+## Adapting this for your project
+
+Start with the command you want to intercept. If your deployment goes through a specific CLI command, wire a `PreToolUse` hook on `Bash` that matches it. If your release is a merge to a specific branch, match `gh pr merge` or whatever merge command your workflow uses.
+
+Choose the right enforcement level. Use `"deny"` for actions the AI should never take directly (bare `git push`, manual merges). Use `"ask"` for actions that are correct but consequential (releasing to production). Use `additionalContext` in `UserPromptSubmit` for state you want visible without blocking (WIP accumulation, health checks).
+
+If you use a different CI provider (GitLab CI, CircleCI, Jenkins), the hook and the watching script both change but the pattern stays the same: intercept the push, watch the pipeline, surface the result. Replace `gh run watch` with your provider's equivalent.
+
+Keep the hook fast. It runs on every `Bash` tool call, not just pushes. The regex match and JSON output add negligible time. The watching script can take as long as the pipeline needs.
+
+Hooks fail silently by default. If the hook script exits non-zero or produces invalid JSON, Claude Code logs a warning and lets the tool call proceed. This is safe for nudge hooks (the worst case is a missing warning) but dangerous for gate hooks (the worst case is an unblocked action).
+
+Guard against this. The `python3` calls in `git-push-gate.sh` are wrapped in `2>/dev/null || echo ""` so a missing Python installation produces an empty string rather than crashing the script. The `exit 0` at the end of the script is a catch-all: if no pattern matches, the command runs normally.
+
+If Claude Code's hook execution model changes, your hooks still work as long as they read JSON from stdin and write JSON to stdout. The contract is the JSON schema, not the shell. Pin your expectations to the [hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks), not to observed behavior.
+
+The full hook configuration for this site is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks) covers the full event model.

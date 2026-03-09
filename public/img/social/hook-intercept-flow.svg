@@ -8,99 +8,101 @@
 
   <!-- Background -->
   <rect width="1200" height="630" fill="#0F172A"/>
-
-  <!-- Subtle grid lines -->
-  <line x1="600" y1="0" x2="600" y2="630" stroke="#1E293B" stroke-width="1"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#3B82F6"/>
 
   <!-- Header -->
-  <text x="600" y="58" text-anchor="middle" font-size="28" font-weight="700" fill="#F1F5F9">Enforce the pipeline, automatically</text>
-  <text x="600" y="88" text-anchor="middle" font-size="17" fill="#94A3B8">Claude Code hooks turn guidelines into guardrails</text>
+  <text x="600" y="58" text-anchor="middle" font-size="28" font-weight="700" fill="#F1F5F9">Three levels of pipeline enforcement</text>
+  <text x="600" y="90" text-anchor="middle" font-size="17" fill="#94A3B8">Deny shortcuts. Confirm releases. The hook decides.</text>
 
   <!-- Divider under header -->
-  <line x1="80" y1="108" x2="1120" y2="108" stroke="#1E293B" stroke-width="1.5"/>
+  <line x1="80" y1="114" x2="1120" y2="114" stroke="#1E293B" stroke-width="1.5"/>
 
-  <!-- BEFORE column label -->
-  <rect x="80" y="120" width="490" height="34" rx="4" fill="#EF444415"/>
-  <text x="325" y="143" text-anchor="middle" font-size="14" font-weight="600" fill="#EF4444" letter-spacing="0.08em">BEFORE</text>
+  <!-- Column headers -->
+  <text x="220" y="148" text-anchor="middle" font-size="13" font-weight="600" fill="#64748B" letter-spacing="0.08em">COMMAND</text>
+  <text x="540" y="148" text-anchor="middle" font-size="13" font-weight="600" fill="#64748B" letter-spacing="0.08em">HOOK ACTION</text>
+  <text x="900" y="148" text-anchor="middle" font-size="13" font-weight="600" fill="#64748B" letter-spacing="0.08em">OUTCOME</text>
 
-  <!-- AFTER column label -->
-  <rect x="630" y="120" width="490" height="34" rx="4" fill="#3B82F615"/>
-  <text x="875" y="143" text-anchor="middle" font-size="14" font-weight="600" fill="#3B82F6" letter-spacing="0.08em">AFTER</text>
+  <!-- ===== ROW 1: git push → DENY → redirects to push:watch ===== -->
 
-  <!-- ===== BEFORE COLUMN ===== -->
+  <!-- Command box -->
+  <rect x="80" y="174" width="280" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="220" y="199" text-anchor="middle" font-size="13" fill="#94A3B8">Claude runs</text>
+  <text x="220" y="220" text-anchor="middle" font-size="17" font-weight="600" fill="#F1F5F9" class="mono">git push</text>
 
-  <!-- Step 1: git push -->
-  <rect x="100" y="174" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
-  <text x="325" y="199" text-anchor="middle" font-size="13" fill="#94A3B8">Claude runs</text>
-  <text x="325" y="220" text-anchor="middle" font-size="18" font-weight="600" fill="#F1F5F9" class="mono">git push</text>
+  <!-- Arrow to action -->
+  <line x1="360" y1="204" x2="430" y2="204" stroke="#475569" stroke-width="2"/>
+  <polygon points="438,204 426,198 426,210" fill="#475569"/>
 
-  <!-- Arrow (wider gap matches AFTER column) -->
-  <line x1="325" y1="234" x2="325" y2="282" stroke="#475569" stroke-width="2"/>
-  <polygon points="325,290 319,278 331,278" fill="#475569"/>
+  <!-- DENY badge -->
+  <rect x="438" y="182" width="204" height="44" rx="22" fill="#EF444420" stroke="#EF444470" stroke-width="1.5"/>
+  <text x="540" y="210" text-anchor="middle" font-size="15" font-weight="700" fill="#EF4444">DENY</text>
 
-  <!-- Step 2: pipeline runs somewhere -->
-  <rect x="100" y="290" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
-  <text x="325" y="316" text-anchor="middle" font-size="13" fill="#94A3B8">pipeline runs... somewhere</text>
-  <text x="325" y="337" text-anchor="middle" font-size="16" fill="#94A3B8">🤷 no visibility</text>
+  <!-- Arrow to outcome -->
+  <line x1="642" y1="204" x2="712" y2="204" stroke="#EF4444" stroke-width="2"/>
+  <polygon points="720,204 708,198 708,210" fill="#EF4444"/>
 
-  <!-- Arrow -->
-  <line x1="325" y1="350" x2="325" y2="374" stroke="#475569" stroke-width="2"/>
-  <polygon points="325,382 319,370 331,370" fill="#475569"/>
+  <!-- Outcome box -->
+  <rect x="720" y="174" width="360" height="60" rx="8" fill="#1E2940" stroke="#3B82F650" stroke-width="1.5"/>
+  <text x="900" y="199" text-anchor="middle" font-size="13" fill="#94A3B8">redirects to</text>
+  <text x="900" y="220" text-anchor="middle" font-size="16" font-weight="600" fill="#93C5FD" class="mono">npm run push:watch</text>
 
-  <!-- Step 3: manual check -->
-  <rect x="100" y="382" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
-  <text x="325" y="408" text-anchor="middle" font-size="13" fill="#94A3B8">open GitHub, find the run,</text>
-  <text x="325" y="429" text-anchor="middle" font-size="13" fill="#94A3B8">copy the deploy URL manually</text>
+  <!-- ===== ROW 2: gh pr merge → DENY → redirects to release:watch ===== -->
 
-  <!-- Arrow -->
-  <line x1="325" y1="442" x2="325" y2="466" stroke="#475569" stroke-width="2"/>
-  <polygon points="325,474 319,462 331,462" fill="#475569"/>
+  <!-- Command box -->
+  <rect x="80" y="266" width="280" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="220" y="291" text-anchor="middle" font-size="13" fill="#94A3B8">Claude runs</text>
+  <text x="220" y="312" text-anchor="middle" font-size="17" font-weight="600" fill="#F1F5F9" class="mono">gh pr merge</text>
 
-  <!-- Step 4: result -->
-  <rect x="100" y="474" width="450" height="60" rx="8" fill="#7F1D1D" stroke="#EF444440" stroke-width="1.5"/>
-  <text x="325" y="500" text-anchor="middle" font-size="13" fill="#FCA5A5">broken flow, context switches,</text>
-  <text x="325" y="521" text-anchor="middle" font-size="13" fill="#FCA5A5">easy to skip under pressure</text>
+  <!-- Arrow to action -->
+  <line x1="360" y1="296" x2="430" y2="296" stroke="#475569" stroke-width="2"/>
+  <polygon points="438,296 426,290 426,302" fill="#475569"/>
 
-  <!-- ===== AFTER COLUMN ===== -->
+  <!-- DENY badge -->
+  <rect x="438" y="274" width="204" height="44" rx="22" fill="#EF444420" stroke="#EF444470" stroke-width="1.5"/>
+  <text x="540" y="302" text-anchor="middle" font-size="15" font-weight="700" fill="#EF4444">DENY</text>
 
-  <!-- Step 1: git push blocked -->
-  <rect x="650" y="174" width="450" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
-  <text x="875" y="199" text-anchor="middle" font-size="13" fill="#94A3B8">Claude runs</text>
-  <text x="875" y="220" text-anchor="middle" font-size="18" font-weight="600" fill="#F1F5F9" class="mono">git push</text>
+  <!-- Arrow to outcome -->
+  <line x1="642" y1="296" x2="712" y2="296" stroke="#EF4444" stroke-width="2"/>
+  <polygon points="720,296 708,290 708,302" fill="#EF4444"/>
 
-  <!-- Arrow with BLOCKED label — wider gap so badge has room -->
-  <line x1="875" y1="234" x2="875" y2="280" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4,3"/>
-  <polygon points="875,290 869,278 881,278" fill="#F59E0B"/>
+  <!-- Outcome box -->
+  <rect x="720" y="266" width="360" height="60" rx="8" fill="#1E2940" stroke="#3B82F650" stroke-width="1.5"/>
+  <text x="900" y="291" text-anchor="middle" font-size="13" fill="#94A3B8">redirects to</text>
+  <text x="900" y="312" text-anchor="middle" font-size="16" font-weight="600" fill="#93C5FD" class="mono">npm run release:watch</text>
 
-  <!-- Blocked badge — centered in the 56px gap -->
-  <rect x="775" y="249" width="200" height="28" rx="14" fill="#F59E0B25" stroke="#F59E0B70" stroke-width="1.5"/>
-  <text x="875" y="268" text-anchor="middle" font-size="13" font-weight="600" fill="#F59E0B">⛔  hook intercepts</text>
+  <!-- ===== ROW 3: release:watch → ASK → human confirms ===== -->
 
-  <!-- Step 2: push:watch -->
-  <rect x="650" y="290" width="450" height="60" rx="8" fill="#1E2940" stroke="#3B82F6" stroke-width="1.5"/>
-  <text x="875" y="316" text-anchor="middle" font-size="13" fill="#94A3B8">redirected to</text>
-  <text x="875" y="337" text-anchor="middle" font-size="18" font-weight="600" fill="#93C5FD" class="mono">npm run push:watch</text>
+  <!-- Command box -->
+  <rect x="80" y="358" width="280" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="220" y="383" text-anchor="middle" font-size="13" fill="#94A3B8">Claude runs</text>
+  <text x="220" y="404" text-anchor="middle" font-size="16" font-weight="600" fill="#F1F5F9" class="mono">npm run release:watch</text>
 
-  <!-- Arrow -->
-  <line x1="875" y1="350" x2="875" y2="374" stroke="#3B82F6" stroke-width="2"/>
-  <polygon points="875,382 869,370 881,370" fill="#3B82F6"/>
+  <!-- Arrow to action -->
+  <line x1="360" y1="388" x2="430" y2="388" stroke="#475569" stroke-width="2"/>
+  <polygon points="438,388 426,382 426,394" fill="#475569"/>
 
-  <!-- Step 3: watching -->
-  <rect x="650" y="382" width="450" height="60" rx="8" fill="#1E293B" stroke="#3B82F640" stroke-width="1.5"/>
-  <text x="875" y="408" text-anchor="middle" font-size="13" fill="#94A3B8">pushes + watches pipeline live</text>
-  <text x="875" y="429" text-anchor="middle" font-size="13" fill="#94A3B8">✓ lint  ✓ deps  ✓ build  ✓ a11y</text>
+  <!-- ASK badge -->
+  <rect x="438" y="366" width="204" height="44" rx="22" fill="#F59E0B20" stroke="#F59E0B70" stroke-width="1.5"/>
+  <text x="540" y="394" text-anchor="middle" font-size="15" font-weight="700" fill="#F59E0B">ASK</text>
 
-  <!-- Arrow -->
-  <line x1="875" y1="442" x2="875" y2="466" stroke="#22C55E" stroke-width="2"/>
-  <polygon points="875,474 869,462 881,462" fill="#22C55E"/>
+  <!-- Arrow to outcome -->
+  <line x1="642" y1="388" x2="712" y2="388" stroke="#F59E0B" stroke-width="2"/>
+  <polygon points="720,388 708,382 708,394" fill="#F59E0B"/>
 
-  <!-- Step 4: URL delivered -->
-  <rect x="650" y="474" width="450" height="60" rx="8" fill="#14532D" stroke="#22C55E40" stroke-width="1.5"/>
-  <text x="875" y="500" text-anchor="middle" font-size="13" fill="#86EFAC">Preview: https://main-test--windyroad.netlify.app</text>
-  <text x="875" y="521" text-anchor="middle" font-size="13" fill="#86EFAC">surfaced automatically, every time</text>
+  <!-- Outcome box -->
+  <rect x="720" y="358" width="360" height="60" rx="8" fill="#1A2A10" stroke="#22C55E50" stroke-width="1.5"/>
+  <text x="900" y="383" text-anchor="middle" font-size="13" fill="#94A3B8">human confirms, then runs</text>
+  <text x="900" y="404" text-anchor="middle" font-size="16" font-weight="600" fill="#86EFAC">release to production</text>
 
-  <!-- Center divider line -->
-  <line x1="600" y1="120" x2="600" y2="545" stroke="#334155" stroke-width="1.5"/>
+  <!-- ===== Separator ===== -->
+  <line x1="80" y1="448" x2="1120" y2="448" stroke="#1E293B" stroke-width="1.5"/>
 
-  <!-- Footer -->
+  <!-- Explanation row -->
+  <rect x="80" y="468" width="1040" height="52" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+  <text x="600" y="500" text-anchor="middle" font-size="15" fill="#94A3B8">One hook file. Three enforcement levels. No bypasses.</text>
+
+  <!-- Hook file callout -->
+  <rect x="80" y="540" width="1040" height="52" rx="8" fill="#0D1117" stroke="#30363D" stroke-width="1"/>
+  <text x="600" y="572" text-anchor="middle" font-size="14" fill="#64748B" class="mono">.claude/hooks/git-push-gate.sh</text>
+
 </svg>

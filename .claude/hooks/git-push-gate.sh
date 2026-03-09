@@ -1,5 +1,8 @@
 #!/bin/bash
-# PreToolUse hook: Blocks bare `git push` and directs to npm run push:watch.
+# PreToolUse hook for pipeline discipline:
+# - Blocks bare `git push` and directs to npm run push:watch.
+# - Blocks `gh pr merge` and directs to npm run release:watch.
+# - Prompts for confirmation before `npm run release:watch` (release is deliberate).
 # push:watch pushes, watches the pipeline, and surfaces the release PR URL
 # or test deploy URL depending on whether there are pending changesets.
 
@@ -47,7 +50,21 @@ EOF
     exit 0
 fi
 
-# Match gh pr merge — should go via npm run release:watch instead
+# Confirm before running release:watch. Releasing should be a deliberate human decision.
+if echo "$COMMAND" | grep -qE '(^|;|&&|\|\|)\s*npm run release:watch(\s|$)'; then
+    cat <<'EOF'
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "ask",
+    "permissionDecisionReason": "About to run `npm run release:watch`, which merges the release PR and publishes to production. This is a release. Confirm you want to proceed."
+  }
+}
+EOF
+    exit 0
+fi
+
+# Match gh pr merge. Should go via npm run release:watch instead.
 if echo "$COMMAND" | grep -qE '(^|;|&&|\|\|)\s*gh pr merge(\s|$)'; then
     cat <<'EOF'
 {

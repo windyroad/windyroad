@@ -4,7 +4,7 @@ article: /blog/enforcing-voice-and-tone-with-claude-code-hooks
 canonical_url: https://windyroad.com.au/blog/enforcing-voice-and-tone-with-claude-code-hooks
 title: Enforcing voice and tone with Claude Code hooks
 tags: [claudecode, ai, webdev, productivity]
-cover_image: cover.png
+cover_image: https://windyroad.com.au/img/social/voice-tone-four-hooks.png
 cover_image_alt: Flow diagram showing the four-hook gate pattern: a UserPromptSubmit hook detects VOICE-AND-TONE.md and injects context, a PreToolUse hook checks for a session marker and blocks edits to copy files if the marker is missing, a PostToolUse hook creates the session marker after voice-and-tone-lead completes, and a Stop hook removes the marker so the next turn requires a fresh review.
 published: false
 ---
