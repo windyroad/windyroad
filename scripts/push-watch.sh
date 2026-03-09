@@ -203,8 +203,13 @@ PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number // empty')
 PR_URL=$(echo "$PR_JSON" | jq -r '.[0].url // empty')
 
 if [ -z "$PR_NUMBER" ]; then
+  CHANGESET_COUNT=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ')
   echo ""
-  echo "No pending changesets — nothing to release."
+  if [ "$CHANGESET_COUNT" -eq 0 ]; then
+    echo "No pending changesets. Run \`npx changeset\` to describe what's shipping."
+  else
+    echo "Changesets exist but no release PR yet. The changesets action will create one on the next pipeline run."
+  fi
   echo ""
   echo "CLAUDE: Show the user the test deploy URL above so they can review it."
   exit 0
