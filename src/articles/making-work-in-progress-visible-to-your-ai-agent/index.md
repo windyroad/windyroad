@@ -35,7 +35,7 @@ DIFF_STAT=$(git diff HEAD --stat 2>/dev/null | tail -1)
 
 The threshold of 200 is a judgment call. Below that, you're mid-task. Above it, you have enough work that losing it would hurt.
 
-The check also counts untracked files (excluding `.DS_Store` and `node_modules`) and mentions them separately. A pile of new files that haven't been staged is a different kind of accumulation.
+The check also counts lines in untracked files (excluding `.DS_Store` and `node_modules`) and adds them to the total. A 250-line file you haven't staged yet still counts toward the threshold.
 
 There's a related check for stale modifications. If a tracked file has been modified but not committed for more than 24 hours, the hook flags it:
 
@@ -91,6 +91,8 @@ If an open PR targeting `publish` exists and was created more than 24 hours ago,
 > WIP: Release PR #42 has been open for 3 day(s) with 5 changeset(s), ~1200 lines changed. https://github.com/...
 > CLAUDE: Tell the user about this release PR and ask if they want to review and merge it now.
 
+The `CLAUDE:` prefix is a convention, not a feature of Claude Code. Any text the AI sees in its context can influence its behavior. A labelled directive just makes the intent explicit.
+
 The check reports both changeset count and total diff size. A release with one changeset feels different from one with five, but a single changeset touching 2,000 lines is also worth knowing about. Both dimensions help decide whether to review now or keep working.
 
 The `gh` CLI calls are wrapped in `timeout 10` because they hit the network. If GitHub is slow or unreachable, the script fails with an error rather than silently skipping the check. A silent skip would mean you get no feedback about the release PR, with no indication that the check didn't run. Failing loudly means you know immediately if something is wrong with your GitHub token or network connectivity.
@@ -113,9 +115,7 @@ cat <<EOF
 EOF
 ```
 
-There's no `permissionDecision: "deny"`. `systemMessage` prints the warnings in your terminal. `additionalContext` injects them into the AI's context. The AI factors the warnings into its next response: commit before continuing, suggest a push, mention the stale PR. If multiple checks fire, all warnings stack into the same output.
-
-`systemMessage` is displayed directly in the terminal every time the hook fires. `additionalContext` is injected into the AI's context but not displayed. You see the warning. The AI has the detail.
+There's no `permissionDecision: "deny"`. `systemMessage` prints in your terminal every time the hook fires. `additionalContext` injects the detail into the AI's context. You see the warning. The AI has the detail. If multiple checks fire, all warnings stack into the same output.
 
 The push gate in the [pipeline discipline hooks](/blog/enforcing-pipeline-discipline-with-claude-code-hooks) is a hard block because `git push` without pipeline visibility is the specific action I want to prevent. WIP accumulation is different. <span data-pull>It's state you want to be aware of, not an action you want to block.</span> A gate that blocks every edit until you commit would be counterproductive during a multi-file change.
 
