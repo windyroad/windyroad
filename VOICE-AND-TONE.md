@@ -348,19 +348,6 @@ Guidelines:
 - No em-dashes
 - No avoided words from the word list
 
-### r/programming
-
-**Tone: Same as Reddit, but stricter audience.** r/programming has 6M+ members and low tolerance for self-promotion. The post must be substantive enough to stand without the link. Technical depth matters more here than in r/ClaudeAI.
-
-**Use the same Reddit format.** Cross-post or adapt the r/ClaudeAI post. Add more technical context if needed. r/programming readers expect implementation detail.
-
-Guidelines:
-- Same as Reddit posts section
-- More technical depth than niche subreddits
-- Stricter self-promotion rules: ensure the post gives value without the link
-- No em-dashes
-- No avoided words from the word list
-
 ---
 
 ## Banned patterns
