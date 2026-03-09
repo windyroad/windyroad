@@ -221,6 +221,30 @@ Guidelines:
 - No em-dashes (same constraint as all other copy)
 - No avoided words from the word list
 
+### Twitter/X posts
+
+**Tone: Sharpest possible version of the idea.** Twitter posts compress the work into one or two sentences. The entire post is visible. Every word earns its place or gets cut.
+
+**One idea, stated once.** No lists, no multi-paragraph structure. One sentence that makes someone stop, optionally followed by one sentence of context.
+
+> "An AI agent doesn't feel the weight of a growing diff. I built a hook that makes it visible."
+
+Not: "Excited to share my latest blog post about making WIP visible to AI agents! Here are the four checks I implemented..."
+
+**Links go in the reply.** Twitter suppresses posts with links. Put the article URL in a reply to your own tweet, not in the main post. The main post earns the click; the reply delivers it.
+
+**Images tell the story.** A diagram or screenshot that's self-explanatory at thumbnail size drives more engagement than text alone. Include alt text in the image settings.
+
+**Threads for depth.** If one tweet isn't enough, use a thread. The first tweet is the hook. Each subsequent tweet stands alone. Don't number them or announce "Thread."
+
+**No hashtags.** Twitter hashtags read as noise. If the post is good, it reaches people through engagement, not tags.
+
+Guidelines:
+- First person, same as all other copy
+- 80-200 characters is the sweet spot (280 max)
+- No em-dashes
+- No avoided words from the word list
+
 ---
 
 ## Banned patterns
