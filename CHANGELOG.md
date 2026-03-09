@@ -1,5 +1,15 @@
 # windy-road
 
+## 2.7.0
+
+### Minor Changes
+
+- d2b8835: Add voice-and-tone enforcement article, blog nav link, social posts, and voice guide updates
+
+### Patch Changes
+
+- 0a60cf5: Add Stop hook for per-turn voice review reset, update article and social posts to four-hook architecture
+
 ## 2.6.7
 
 ### Patch Changes
