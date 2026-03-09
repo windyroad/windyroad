@@ -6,16 +6,17 @@ crosspost:
   - subreddit: r/ChatGPTCoding
   - subreddit: r/devops
 article: /blog/enforcing-voice-and-tone-with-claude-code-hooks
-title: I built three Claude Code hooks that enforce voice and tone on AI-written copy
+title: I built four Claude Code hooks that enforce voice and tone on AI-written copy
 ---
 
 When an AI agent writes copy, it drifts. Not dramatically, but steadily: a hedging phrase here, a "We're passionate about" there. Over time, the site sounds like it was written by committee.
 
-I built a system that uses three Claude Code hooks to enforce voice consistency:
+I built a system that uses four Claude Code hooks to enforce voice consistency:
 
 1. A UserPromptSubmit hook detects VOICE-AND-TONE.md and injects an instruction to delegate to a reviewer agent before editing any copy file
 2. A PreToolUse hook blocks Edit/Write calls to copy-bearing files (.tsx, .md) unless a session marker exists
 3. A PostToolUse hook creates the session marker after the reviewer completes
+4. A Stop hook removes the marker after each response, so the next turn starts locked and requires a fresh review
 
 The reviewer is a Claude Code agent with read-only tools (Read, Glob, Grep). It reads the voice guide, reads the proposed copy, and reports violations with the offending text, the rule it breaks, and a suggested fix. It cannot edit files.
 

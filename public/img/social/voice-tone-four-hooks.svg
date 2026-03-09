@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#94A3B8"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#22C55E"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#EF4444"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#818CF8"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="480" fill="#0F172A"/>
+
+  <!-- Header -->
+  <text x="600" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F5F9">Four hooks, one gate</text>
+  <text x="600" y="64" text-anchor="middle" font-size="14" fill="#94A3B8">Detection injects context. The gate blocks edits. The unlock creates a marker. The reset removes it.</text>
+
+  <!-- Divider -->
+  <line x1="40" y1="82" x2="1160" y2="82" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- Hook 1: Detection -->
+  <rect x="20" y="110" width="250" height="180" rx="12" fill="#1E293B" stroke="#F59E0B40" stroke-width="1.5"/>
+  <rect x="20" y="110" width="250" height="36" rx="12" fill="#F59E0B15"/>
+  <rect x="20" y="140" width="250" height="1" fill="#1E293B"/>
+  <text x="145" y="134" text-anchor="middle" font-size="14" font-weight="600" fill="#F59E0B">1. DETECT</text>
+  <text x="145" y="154" text-anchor="middle" font-size="11" font-weight="400" fill="#F59E0B">UserPromptSubmit</text>
+
+  <text x="40" y="185" font-size="13" fill="#CBD5E1">Checks for</text>
+  <text x="40" y="205" font-size="12" fill="#F1F5F9" class="mono">VOICE-AND-TONE.md</text>
+  <text x="40" y="232" font-size="13" fill="#CBD5E1">Injects instruction:</text>
+  <text x="40" y="252" font-size="11" fill="#94A3B8" font-style="italic">"Delegate to voice-and-tone-lead</text>
+  <text x="40" y="268" font-size="11" fill="#94A3B8" font-style="italic">before editing any copy file"</text>
+
+  <!-- Arrow 1->2 -->
+  <line x1="270" y1="200" x2="310" y2="200" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="290" y="190" text-anchor="middle" font-size="10" fill="#64748B">every</text>
+  <text x="290" y="203" text-anchor="middle" font-size="10" fill="#64748B">prompt</text>
+
+  <!-- Hook 2: Gate -->
+  <rect x="320" y="110" width="260" height="180" rx="12" fill="#1E293B" stroke="#EF444440" stroke-width="1.5"/>
+  <rect x="320" y="110" width="260" height="36" rx="12" fill="#EF444415"/>
+  <rect x="320" y="140" width="260" height="1" fill="#1E293B"/>
+  <text x="450" y="134" text-anchor="middle" font-size="14" font-weight="600" fill="#EF4444">2. GATE</text>
+  <text x="450" y="154" text-anchor="middle" font-size="11" font-weight="400" fill="#EF4444">PreToolUse (Edit / Write)</text>
+
+  <text x="340" y="185" font-size="13" fill="#CBD5E1">Is target a copy file?</text>
+  <text x="340" y="210" font-size="13" fill="#CBD5E1">Session marker exists?</text>
+
+  <rect x="340" y="228" width="105" height="28" rx="6" fill="#EF444420" stroke="#EF444460" stroke-width="1"/>
+  <text x="392" y="247" text-anchor="middle" font-size="11" font-weight="600" fill="#EF4444">No marker: DENY</text>
+
+  <rect x="455" y="228" width="105" height="28" rx="6" fill="#22C55E20" stroke="#22C55E60" stroke-width="1"/>
+  <text x="507" y="247" text-anchor="middle" font-size="11" font-weight="600" fill="#22C55E">Marker: ALLOW</text>
+
+  <!-- Arrow 2->3: deny path -->
+  <path d="M 580 200 L 620 200" stroke="#EF4444" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="6,4"/>
+  <text x="600" y="194" text-anchor="middle" font-size="10" fill="#EF4444">denied</text>
+
+  <!-- Hook 3: Unlock -->
+  <rect x="630" y="110" width="260" height="180" rx="12" fill="#1E293B" stroke="#22C55E40" stroke-width="1.5"/>
+  <rect x="630" y="110" width="260" height="36" rx="12" fill="#22C55E15"/>
+  <rect x="630" y="140" width="260" height="1" fill="#1E293B"/>
+  <text x="760" y="134" text-anchor="middle" font-size="14" font-weight="600" fill="#22C55E">3. UNLOCK</text>
+  <text x="760" y="154" text-anchor="middle" font-size="11" font-weight="400" fill="#22C55E">PostToolUse (Agent)</text>
+
+  <text x="650" y="185" font-size="13" fill="#CBD5E1">Was subagent</text>
+  <text x="650" y="205" font-size="12" fill="#F1F5F9" class="mono">voice-and-tone-lead</text>
+  <text x="838" y="205" font-size="13" fill="#CBD5E1">?</text>
+
+  <text x="650" y="235" font-size="13" fill="#CBD5E1">Creates session marker:</text>
+  <text x="650" y="255" font-size="11" fill="#F1F5F9" class="mono">/tmp/voice-tone-reviewed-$ID</text>
+
+  <!-- Arrow 3->4 -->
+  <line x1="890" y1="200" x2="930" y2="200" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Hook 4: Reset -->
+  <rect x="940" y="110" width="240" height="180" rx="12" fill="#1E293B" stroke="#818CF840" stroke-width="1.5"/>
+  <rect x="940" y="110" width="240" height="36" rx="12" fill="#818CF815"/>
+  <rect x="940" y="140" width="240" height="1" fill="#1E293B"/>
+  <text x="1060" y="134" text-anchor="middle" font-size="14" font-weight="600" fill="#818CF8">4. RESET</text>
+  <text x="1060" y="154" text-anchor="middle" font-size="11" font-weight="400" fill="#818CF8">Stop</text>
+
+  <text x="960" y="185" font-size="13" fill="#CBD5E1">Removes session marker:</text>
+  <text x="960" y="205" font-size="11" fill="#F1F5F9" class="mono">rm /tmp/voice-tone-reviewed-$ID</text>
+
+  <text x="960" y="235" font-size="13" fill="#CBD5E1">Next turn starts locked.</text>
+
+  <!-- Return arrow: unlock back to gate (routes below all boxes) -->
+  <path d="M 760 290 L 760 340 L 510 340 L 510 290" stroke="#22C55E" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+  <text x="635" y="358" text-anchor="middle" font-size="11" fill="#22C55E">unlocks gate (creates session marker)</text>
+
+  <!-- Reset arrow: reset loops back to beginning (routes below green arrow) -->
+  <path d="M 1060 290 L 1060 380 L 145 380 L 145 290" stroke="#818CF8" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)" stroke-dasharray="6,4"/>
+  <text x="600" y="398" text-anchor="middle" font-size="11" fill="#818CF8">resets per turn (removes session marker after response)</text>
+
+  <!-- Footer -->
+  <line x1="40" y1="430" x2="1160" y2="430" stroke="#1E293B" stroke-width="1"/>
+  <text x="600" y="455" text-anchor="middle" font-size="12" fill="#64748B">Each turn starts clean. The marker lives in /tmp, scoped to the session ID, and is removed after every response.</text>
+</svg>

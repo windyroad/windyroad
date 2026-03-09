@@ -5,7 +5,7 @@ canonical_url: https://windyroad.com.au/blog/enforcing-voice-and-tone-with-claud
 title: Enforcing voice and tone with Claude Code hooks
 tags: [claudecode, ai, webdev, productivity]
 cover_image: cover.png
-cover_image_alt: Flow diagram showing the three-hook gate pattern: a UserPromptSubmit hook detects VOICE-AND-TONE.md and injects context, a PreToolUse hook checks for a session marker and blocks edits to copy files if the marker is missing, and a PostToolUse hook creates the session marker after voice-and-tone-lead completes.
+cover_image_alt: Flow diagram showing the four-hook gate pattern: a UserPromptSubmit hook detects VOICE-AND-TONE.md and injects context, a PreToolUse hook checks for a session marker and blocks edits to copy files if the marker is missing, a PostToolUse hook creates the session marker after voice-and-tone-lead completes, and a Stop hook removes the marker so the next turn requires a fresh review.
 published: false
 ---
 
@@ -29,15 +29,36 @@ The voice guide says: state what you do, let the reader decide. The reviewed ver
 
 The first version is fluent. It's also generic, hedging, and sounds like every other consulting site. The reviewer catches the pattern before it ships.
 
-## Three hooks, one gate
+## Four hooks, one gate
 
-The pattern comes from [accessibility-agents](https://github.com/Community-Access/accessibility-agents), which uses the same three-hook architecture to enforce WCAG compliance on web UI code. I adapted it for voice and tone: same gate mechanism, different reviewer, different scope.
+The pattern comes from [accessibility-agents](https://github.com/Community-Access/accessibility-agents), which uses the same hook architecture to enforce WCAG compliance on web UI code. I adapted it for voice and tone: same gate mechanism, different reviewer, different scope, plus a reset hook that tightens the review cycle from per-session to per-turn.
 
-[Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) are shell scripts that fire at defined points in the AI's workflow: before a prompt is processed, before a tool is called, and after a tool completes. They can inject context, block actions, or react to what just happened.
+[Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) are shell scripts that fire at defined points in the AI's workflow: before a prompt is processed, before a tool is called, after a tool completes, and when the AI finishes responding. They can inject context, block actions, or react to what just happened.
 
-The system uses three Claude Code hooks that work together. One injects the instruction. One blocks the edit. One unlocks the block.
+The system uses four Claude Code hooks that work together. One injects the instruction. One blocks the edit. One unlocks the block. One resets the lock so the next prompt starts clean.
 
-![Flow diagram showing the three-hook gate pattern: a UserPromptSubmit hook detects VOICE-AND-TONE.md and injects context, a PreToolUse hook checks for a session marker and blocks edits to copy files if the marker is missing, and a PostToolUse hook creates the session marker after voice-and-tone-lead completes. Arrows show the sequence: detect, gate, unlock.](https://windyroad.com.au/img/social/voice-tone-three-hooks.png)
+Here is what a typical interaction looks like. The user asks for an edit. The gate blocks it. The AI delegates to the reviewer. The reviewer finds violations. The AI incorporates the fixes, and the edit goes through:
+
+```
+User: Add a CTA to the pricing page
+
+Claude: [attempts to edit src/app/pricing/page.tsx]
+
+Hook: BLOCKED: Cannot edit copy file 'page.tsx' without voice & tone
+      review. You MUST first delegate to voice-and-tone-lead.
+
+Claude: [delegates to voice-and-tone-lead]
+
+voice-and-tone-lead:
+  VIOLATIONS FOUND
+  1. [Direct voice principle] "We'd love to help you navigate the
+     complexities" -- hedging. Fix: "I review your AI coding setup
+     and tell you what's working and what isn't."
+
+Claude: [incorporates fix, edits page.tsx successfully]
+```
+
+![Flow diagram showing the four-hook gate pattern: a UserPromptSubmit hook detects VOICE-AND-TONE.md and injects context, a PreToolUse hook checks for a session marker and blocks edits to copy files if the marker is missing, a PostToolUse hook creates the session marker after voice-and-tone-lead completes, and a Stop hook removes the marker so the next turn requires a fresh review. Arrows show the cycle: detect, gate, unlock, reset.](https://windyroad.com.au/img/social/voice-tone-four-hooks.png)
 
 ### 1. Detection (UserPromptSubmit)
 
@@ -111,7 +132,19 @@ case "$SUBAGENT" in
 esac
 ```
 
-The marker is a file in `/tmp` named with the session ID. It persists for the duration of the Claude Code session. Once the voice-and-tone-lead has reviewed, all subsequent edits to copy files are unblocked. A new session starts clean.
+The marker is a file in `/tmp` named with the session ID. Once the voice-and-tone-lead has reviewed, all subsequent edits to copy files in that turn are unblocked.
+
+### 4. The reset (Stop)
+
+A Stop hook fires when the AI finishes responding, before control returns to the user. It removes the session marker so the next prompt requires a fresh voice review:
+
+```bash
+if [ -n "$SESSION_ID" ]; then
+  rm -f "/tmp/voice-tone-reviewed-${SESSION_ID}"
+fi
+```
+
+Without the reset, one early review would cover every edit for the rest of the session. With it, each turn starts locked. Each edit gets checked against the guide instead of relying on a single early review to cover everything.
 
 ## The reviewer
 
@@ -149,8 +182,6 @@ a reviewer, not an editor.
 
 The `tools` list is the key constraint. Read, Glob, and Grep give the agent enough access to review code without the ability to change it.
 
-When invoked, it reads `VOICE-AND-TONE.md`, reads the file being edited, and checks the proposed changes against every section of the guide: voice principles, tone guidance for the relevant section type, banned patterns, the word list, and technical constraints like the em-dash prohibition.
-
 If the copy passes, it reports PASS. If there are violations, it lists each one with the offending text, the rule it breaks, and a suggested fix. The AI then incorporates the fixes before writing.
 
 A typical review looks like this:
@@ -168,15 +199,31 @@ A typical review looks like this:
 
 The reviewer is read-only by design. Separating the reviewer from the editor means the review happens before the edit, not after. The AI can't write first and review later.
 
-## What the guide covers
+## What the guide looks like
 
-The `VOICE-AND-TONE.md` file is the single source of truth. Ours defines voice principles (direct, confident, specific, empathetic), tone guidance for each section type on the site, banned patterns the AI must avoid, a word list, and technical constraints. The more concrete the guide, the less room the reviewer has to drift.
+The reviewer checks every proposed change against the `VOICE-AND-TONE.md` file. The more concrete the guide, the less room the reviewer has to drift. Here is what concreteness looks like in practice.
 
-The guide also includes tone sections for distribution channels: LinkedIn, Twitter, Reddit, Hacker News, Dev.to, Lobsters, and Bluesky. LinkedIn posts summarise. Twitter compresses. Reddit gives the substance upfront. The guide captures these differences so the AI applies the right tone for the right context.
+The banned patterns table lists specific phrases the AI must avoid, with the reason each one fails:
+
+| Pattern | Why it fails | Example |
+|---------|-------------|---------|
+| "actually" as emphasis | Signals you expect to be doubted | "I actually read your code" |
+| Competitor bashing | Positions you as the cheap alternative | "Agencies charge $50k and take 8 weeks" |
+| Feature claims in fit checks | Sells the service instead of describing the visitor | "You need someone who can implement guardrails" |
+
+Each section of the site gets its own tone guidance. Here is the objection handling section:
+
+> **Tone: Respectful and substantive.** The reader asked a real question. Answer it with real information, not a dismissal.
+>
+> "You can. An AI audit will catch syntax and pattern issues. It won't catch the architectural gaps, the business logic that doesn't match your edge cases, or the dependencies that don't exist. That takes a human who's shipped production code."
+>
+> Not: "You can. But Claude wrote the bugs in the first place."
+
+The guide also includes tone sections for distribution channels: LinkedIn, Twitter, Reddit, Hacker News, Dev.to, Lobsters, and Bluesky. Each channel has its own constraints. Reddit gets the substance upfront. Twitter compresses to one idea. Lobsters titles read like paper abstracts.
 
 ## Why a gate, not a nudge
 
-The [WIP accumulation hooks](https://windyroad.com.au/blog/making-work-in-progress-visible-to-your-ai-agent) use nudges: warnings in the AI's context that inform without blocking. Voice enforcement uses a gate because the failure mode is different.
+A nudge injects a warning into the AI's context without blocking anything. The AI sees the message and can act on it, but nothing stops it from continuing. The [WIP accumulation hooks](https://windyroad.com.au/blog/making-work-in-progress-visible-to-your-ai-agent) use nudges. Voice enforcement uses a gate because the failure mode is different.
 
 A missed WIP nudge means work accumulates longer than it should. That's recoverable. A missed voice review means off-brand copy ships to production. Fixing copy after the fact means noticing the drift, finding it, rewriting it, and redeploying. The cost of prevention (one agent call before editing) is lower than the cost of remediation.
 
@@ -186,19 +233,19 @@ Other approaches exist. A post-commit linting step catches drift but only after 
 
 ## Tradeoffs
 
-The reviewer agent call adds 10-30 seconds before the first copy edit in a session. For a single article or landing page edit, that's negligible. For bulk changes across many files, it adds up.
+The reviewer agent call adds 10-30 seconds per turn. For a single article or landing page edit, that's negligible. For bulk changes across many files in separate turns, it adds up.
 
-The session marker is coarse. One review unlocks all subsequent edits for the rest of the session. If the AI drifts later in a long session, the later edits aren't re-checked. A stricter approach would re-check on every edit, but the latency cost would make it impractical for multi-file changes.
-
-In practice, the mitigation is simple: start a new session for long editing runs. The marker resets, the reviewer runs again, and drift accumulated in the previous session gets caught. For high-stakes copy (pricing pages, legal text), a per-edit gate is worth the latency.
+The marker resets after each turn, so every turn that touches copy gets a fresh review. Within a single turn, one review covers all edits. If the AI edits multiple copy files in one turn, only the first triggers the reviewer. The later edits in that same turn ride on the same approval. For most workflows this is fine: a single turn rarely drifts mid-response. For high-stakes copy (pricing pages, legal text), splitting edits across turns forces a review on each one.
 
 The reviewer itself is an AI agent, subject to the same drift it's checking for. It works because it re-reads the guide on every invocation rather than relying on memory, and because the guide is specific enough (banned patterns, a word list, concrete examples) to leave less room for interpretation.
 
 False positives and false negatives still happen. The reviewer might flag a sentence that's fine, or miss a subtle drift the guide doesn't explicitly cover. There's no automated way to audit reviewer quality. The practical check is reading the reviewer's output: if its reasoning references specific guide sections and quotes the offending text, it's doing its job. If it produces vague approvals ("looks good, no issues"), the guide probably isn't specific enough.
 
+When the reviewer flags something you disagree with, override it. The gate blocks the AI, not you. Claude Code prompts for confirmation on denied edits, and you can approve them directly. The reviewer is a check, not a veto.
+
 ## Adapting this for your project
 
-Start with the guide. Write down how your site should sound. Be specific: include examples of what good copy looks like and what bad copy looks like. Banned patterns and a word list catch the most common drift.
+Start with the guide. [Mailchimp's voice and tone guide](https://styleguide.mailchimp.com/voice-and-tone/) is a good starting point. Ours began there and diverged as we identified patterns specific to this site. Write down how your site should sound. Be specific: include examples of what good copy looks like and what bad copy looks like. Banned patterns and a word list catch the most common drift.
 
 A minimal guide might start here:
 
@@ -220,11 +267,11 @@ A minimal guide might start here:
 | help | empower, enable |
 ```
 
-Define the scope. Which files contain user-facing copy? In this project, it's `.tsx` files in two directories and `.md` files in two directories. Your project might be different.
+Define the scope. Which files contain user-facing copy? In this project, it's `.tsx` files in two directories and `.md` files in two directories. Your project might be different. If you publish to multiple channels (LinkedIn, Twitter, Reddit), add tone sections for each one. The guide captures how the voice adapts per context so the AI doesn't flatten everything to one register.
 
 Create the agent. The voice-and-tone-lead agent definition is a markdown file in `.claude/agents/`. It describes the role, lists what to check, and defines the output format. Give it read-only tools so it reviews but doesn't edit.
 
-Wire the three hooks. The detection hook goes in `UserPromptSubmit`. The gate goes in `PreToolUse` with a matcher for Edit and Write. The unlock goes in `PostToolUse` with a matcher for Agent.
+Wire the four hooks. The detection hook goes in `UserPromptSubmit`. The gate goes in `PreToolUse` with a matcher for Edit and Write. The unlock goes in `PostToolUse` with a matcher for Agent. The reset goes in `Stop`.
 
 The full configuration is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad).
 

@@ -2,9 +2,9 @@
 platform: bluesky
 article: /blog/enforcing-voice-and-tone-with-claude-code-hooks
 image: cover.png
-image_alt: Flow diagram showing the three-hook gate pattern: a UserPromptSubmit hook detects VOICE-AND-TONE.md and injects context, a PreToolUse hook checks for a session marker and blocks edits to copy files if the marker is missing, and a PostToolUse hook creates the session marker after voice-and-tone-lead completes.
+image_alt: Flow diagram showing the four-hook gate pattern: a UserPromptSubmit hook detects VOICE-AND-TONE.md and injects context, a PreToolUse hook blocks edits without a session marker, a PostToolUse hook creates the marker after review, and a Stop hook removes it so the next turn starts locked.
 ---
 
-A voice guide is documentation. Nothing enforces it. This system uses three Claude Code hooks to block edits until a reviewer agent checks the copy against the guide.
+A voice guide is documentation. Nothing enforces it. This system uses four Claude Code hooks to block edits until a reviewer agent checks the copy against the guide. The gate resets each turn.
 
 https://windyroad.com.au/blog/enforcing-voice-and-tone-with-claude-code-hooks
