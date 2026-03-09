@@ -219,6 +219,16 @@ echo "  Release PR:   $PR_URL"
 echo ""
 
 # ── 6. Find and watch release-pr-preview ─────────────────────────────────────
+# Only wait if changeset files exist. If the release PR is from a previous
+# changeset that was since removed, no preview pipeline will trigger.
+CURRENT_CHANGESETS=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ')
+if [ "$CURRENT_CHANGESETS" -eq 0 ]; then
+  echo "Release PR exists but no changeset files found. Skipping preview pipeline wait."
+  echo ""
+  echo "CLAUDE: Show the user the test deploy URL and release PR URL above. Note that no changesets exist, so the release PR may be stale."
+  exit 0
+fi
+
 printf 'Waiting for release-pr-preview'
 PREVIEW_RUN_ID=""
 for i in $(seq 1 60); do
