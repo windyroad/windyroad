@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.6.6
+
+### Patch Changes
+
+- 6b19ab5: Add WIP accumulation nudge blog post with pull quote plugin, syntax highlighting, and hook improvements
+
 ## 2.6.5
 
 ### Patch Changes
