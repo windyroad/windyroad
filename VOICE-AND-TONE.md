@@ -245,6 +245,33 @@ Guidelines:
 - No em-dashes
 - No avoided words from the word list
 
+### Reddit posts
+
+**Tone: Practitioner sharing what they built, inviting discussion.** Reddit readers want substance in the post itself, not a teaser that links elsewhere. The audience is peers in a forum. They'll engage if they learn something from the post without clicking.
+
+**Give the substance upfront.** A Reddit post should be a condensed version of the article: the problem, the approach, the key details. The link to the full write-up goes at the end as a "more detail here" reference, not as the point of the post. If the post is only valuable with the link, it's a promotion, not a contribution.
+
+> Title: "I built a Claude Code hook that nudges about accumulating WIP"
+>
+> Body: Describes the problem, lists the four checks, explains the design choice. Link at the end.
+
+Not: "I wrote a blog post about WIP visibility. Link: [url]"
+
+**Title is the hook.** Reddit titles are permanent and carry the post. State what you built or what you found. Avoid clickbait, questions you already know the answer to, and superlatives.
+
+**Conversational, not polished.** Reddit tone is more casual than LinkedIn or blog articles. Write as if explaining to a colleague over coffee. First person. Contractions. Short paragraphs.
+
+**Invite discussion genuinely.** A closing line like "curious if anyone else is doing something similar" works if you mean it. Don't ask for engagement you don't want.
+
+**Target the right subreddit.** Include the target subreddit in the front matter. Different subreddits have different rules about self-promotion, link posts, and flair requirements.
+
+Guidelines:
+- First person, casual but still direct
+- Front-load the value: problem, approach, key details
+- Link to the full article at the end, not as the main content
+- No em-dashes
+- No avoided words from the word list
+
 ---
 
 ## Banned patterns
