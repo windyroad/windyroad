@@ -152,7 +152,7 @@ Not: "In this article, I'll show you how to enforce pipeline discipline using Cl
 **Inline CTAs in articles.** If an article covers a topic directly related to the consulting service, a single contextual mention is fine: "This is the kind of thing I set up for clients." Keep it to one sentence, placed where it's relevant, not bolted on at the end. Don't repeat it.
 
 Guidelines:
-- First person ("I use," "I found," "the hook I wrote")
+- Centre the system, not the author ("this system blocks," "the hook checks," "the gate fires"). First person is fine for context ("I adapted it," "I found") but avoid "I built" framing in intros
 - Present tense for describing how things work, past tense for how they were built
 - Code blocks should be complete enough to understand without the surrounding prose
 - Use descriptive alt text on diagrams and screenshots (enforced by accessibility hooks)
@@ -163,6 +163,8 @@ Guidelines:
 **Pull quotes.** Pull quotes repeat a key line from the article as a visual accent. They break up long sections and signal the core insight to readers who are scanning. Use them sparingly: one or two per article at most.
 
 A good pull quote is a complete thought that stands alone without the surrounding paragraph. It should be the line a reader would highlight or quote when sharing the article. If it needs context to make sense, it's not a pull quote.
+
+**When to use them.** Use pull quotes in articles longer than about 800 words. Short articles don't need the visual break. If an article has diagrams or code blocks that already interrupt the text flow, pull quotes are optional. If an article is a wall of prose, pull quotes help readers find the point without reading every paragraph.
 
 In markdown, wrap the source text in a `<span data-pull>` tag inline in the body:
 
@@ -361,6 +363,7 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | Competitor bashing | Positions you as the cheap alternative rather than the right one | "Agencies charge $50k and take 8 weeks" |
 | Dismissing the reader's tools | Insults something they chose and use | "Claude wrote the bugs in the first place" |
 | Feature claims in fit checks | Sells the service instead of describing the visitor | "You need someone who can implement guardrails" |
+| Unexplained internal references | Assumes readers know your specific rules or structure | "five banned patterns, a word list of terms to prefer and avoid" |
 
 ---
 

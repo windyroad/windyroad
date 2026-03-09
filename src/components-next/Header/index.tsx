@@ -46,6 +46,9 @@ export default function Header() {
         <Link href="/ai-teams" className={styles.navLink}>
           AI Teams
         </Link>
+        <Link href="/blog" className={styles.navLink}>
+          Blog
+        </Link>
         <a
           href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
           target="_blank"
