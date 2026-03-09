@@ -1,4 +1,7 @@
 {
-  "dev": { "minAge": 31 },
-  "prod": { "minAge": 14 }
+  "dev": { "minAge": 30 },
+  "prod": { "minAge": 14 },
+  "exclude": {
+    "@eslint/js": "Must upgrade together with eslint when eslint v10 peer deps are resolved"
+  }
 }

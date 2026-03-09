@@ -40,7 +40,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "dry-aged-deps": "^2",
+    "dry-aged-deps": "^2.6.0",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
     "eslint-plugin-react": "^7.37.5",
