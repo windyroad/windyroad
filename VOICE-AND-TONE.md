@@ -272,6 +272,95 @@ Guidelines:
 - No em-dashes
 - No avoided words from the word list
 
+### Hacker News
+
+**Tone: Show your work, let the community judge.** HN readers are engineers who value substance and originality. They'll click if the title signals something concrete and novel. They'll upvote if the content delivers.
+
+**Title is everything.** HN titles are capped at 80 characters. "Show HN:" prefix signals you built something. State what it is in plain terms. No superlatives, no clickbait, no questions you already know the answer to.
+
+> "Show HN: Claude Code hook that nudges about accumulating WIP"
+
+Not: "I built an amazing AI coding tool that revolutionises developer workflow"
+
+**Link posts, not text posts.** Submit the article URL directly. HN text posts ("Ask HN", "Tell HN") are for questions and discussions, not for promoting articles. The article should stand on its own.
+
+**Timing matters.** Weekday mornings US Eastern time get the most eyeballs. Avoid weekends and holidays.
+
+Guidelines:
+- Title under 80 characters
+- "Show HN:" prefix for things you built
+- Submit as link post to the article URL
+- No text body needed
+- No em-dashes in titles
+- No avoided words from the word list
+
+### Dev.to
+
+**Tone: Practitioner sharing a complete walkthrough.** Dev.to readers expect full articles, not teasers. Cross-post the entire article using Dev.to's canonical URL field to preserve SEO. The audience overlaps with blog readers: engineers who want to learn something concrete.
+
+**Cross-post the full article.** Dev.to supports a `canonical_url` front matter field that tells search engines the original lives on your site. Use it. Don't write a summary that links elsewhere. Give them the whole thing.
+
+**Dev.to front matter.** Dev.to uses its own front matter format: `title`, `published`, `tags` (up to 4, lowercase, no spaces), `canonical_url`, and `cover_image`.
+
+**Tags drive discovery.** Dev.to tags are how readers find content. Use up to four, lowercase. Pick tags that match existing popular tags on the platform.
+
+Guidelines:
+- Cross-post the full article, not a summary
+- Always set canonical_url to the original article
+- Up to 4 tags, lowercase
+- Cover image recommended
+- No em-dashes
+- No avoided words from the word list
+
+### Lobste.rs
+
+**Tone: Terse, technical, no fluff.** Lobsters is a small, invite-only community of experienced engineers. They value density and dislike self-promotion even more than HN. The title should be descriptive and plain.
+
+**Title is descriptive, not catchy.** State what the article covers. No "Show" prefix (that's HN convention). No first person in the title. Lobsters titles read like paper abstracts.
+
+> "Making work-in-progress visible to AI coding agents with Claude Code hooks"
+
+Not: "I built a hook that nudges about WIP"
+
+**Tags are required.** Lobsters uses a curated tag system. Pick the most relevant ones.
+
+**Link post only.** Submit the URL. No text body.
+
+Guidelines:
+- Descriptive, third-person title
+- Submit as link post
+- Select relevant tags from Lobsters' curated list
+- No em-dashes in titles
+- No avoided words from the word list
+
+### Bluesky
+
+**Tone: Same compression as Twitter, slightly more room.** Bluesky posts have a 300-character limit. The audience is the growing developer community migrating from Twitter. Same principles: one idea, one or two sentences, link in a follow-up post or inline.
+
+**Links work inline.** Unlike Twitter, Bluesky doesn't suppress posts with links. You can include the URL in the main post. Link cards with preview images display automatically.
+
+**No hashtags.** Same as Twitter. Let the content drive engagement.
+
+Guidelines:
+- First person, same as all other copy
+- 300 characters max, aim for 100-200
+- Links can go inline (no algorithmic suppression)
+- No em-dashes
+- No avoided words from the word list
+
+### r/programming
+
+**Tone: Same as Reddit, but stricter audience.** r/programming has 6M+ members and low tolerance for self-promotion. The post must be substantive enough to stand without the link. Technical depth matters more here than in r/ClaudeAI.
+
+**Use the same Reddit format.** Cross-post or adapt the r/ClaudeAI post. Add more technical context if needed. r/programming readers expect implementation detail.
+
+Guidelines:
+- Same as Reddit posts section
+- More technical depth than niche subreddits
+- Stricter self-promotion rules: ensure the post gives value without the link
+- No em-dashes
+- No avoided words from the word list
+
 ---
 
 ## Banned patterns
