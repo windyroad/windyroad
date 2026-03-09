@@ -1,6 +1,10 @@
 ---
 platform: reddit
 subreddit: r/ClaudeAI
+flair: Coding
+crosspost:
+  - subreddit: r/ChatGPTCoding
+  - subreddit: r/devops
 article: /blog/making-work-in-progress-visible-to-your-ai-agent
 title: I built a Claude Code hook that nudges about accumulating WIP
 ---

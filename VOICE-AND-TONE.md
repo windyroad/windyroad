@@ -263,7 +263,7 @@ Not: "I wrote a blog post about WIP visibility. Link: [url]"
 
 **Invite discussion genuinely.** A closing line like "curious if anyone else is doing something similar" works if you mean it. Don't ask for engagement you don't want.
 
-**Target the right subreddit.** Include the target subreddit in the front matter. Different subreddits have different rules about self-promotion, link posts, and flair requirements.
+**Target the right subreddit.** Include the target subreddit and required post flair in the front matter. Different subreddits have different rules about self-promotion, link posts, and flair requirements. Posts without flair are often auto-removed.
 
 Guidelines:
 - First person, casual but still direct
