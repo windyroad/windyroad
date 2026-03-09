@@ -1,27 +1,40 @@
 #!/bin/bash
 # UserPromptSubmit hook: Nudges about accumulating WIP.
 # Checks 1-2 (local) run every prompt. Checks 3-4 (remote) run in push:watch.
-# These are nudges (systemReminder), not gates (no permissionDecision).
+# These are nudges, not gates (no permissionDecision).
+# Uses systemMessage (visible in terminal) + additionalContext (injected into AI).
 
 set -euo pipefail
 
 WARNINGS=""
 
 # --- 1. Uncommitted changes too large ---
+# Tracked changes (staged + unstaged)
 DIFF_STAT=$(git diff HEAD --stat 2>/dev/null | tail -1 || echo "")
-if [ -n "$DIFF_STAT" ]; then
-    INSERTIONS=$(echo "$DIFF_STAT" | grep -oE '[0-9]+ insertion' | grep -oE '[0-9]+' || echo "0")
-    DELETIONS=$(echo "$DIFF_STAT" | grep -oE '[0-9]+ deletion' | grep -oE '[0-9]+' || echo "0")
-    INSERTIONS=${INSERTIONS:-0}
-    DELETIONS=${DELETIONS:-0}
-    TOTAL=$((INSERTIONS + DELETIONS))
-    if [ "$TOTAL" -ge 200 ]; then
-        WARNINGS="${WARNINGS}WIP: ~${TOTAL} lines of uncommitted changes. Consider committing before continuing.\n"
+INSERTIONS=$(echo "$DIFF_STAT" | grep -oE '[0-9]+ insertion' | grep -oE '[0-9]+' || echo "0")
+DELETIONS=$(echo "$DIFF_STAT" | grep -oE '[0-9]+ deletion' | grep -oE '[0-9]+' || echo "0")
+INSERTIONS=${INSERTIONS:-0}
+DELETIONS=${DELETIONS:-0}
+TRACKED_LINES=$((INSERTIONS + DELETIONS))
+
+# Untracked file lines (excluding noise)
+UNTRACKED_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | grep -vE '(\.DS_Store|node_modules)' || true)
+UNTRACKED_COUNT=0
+UNTRACKED_LINES=0
+if [ -n "$UNTRACKED_FILES" ]; then
+    UNTRACKED_COUNT=$(echo "$UNTRACKED_FILES" | wc -l | tr -d ' ')
+    UNTRACKED_LINES=$(echo "$UNTRACKED_FILES" | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
+    # xargs wc -l prints "total" line only when >1 file; for 1 file it's just the count
+    if [ "$UNTRACKED_COUNT" -eq 1 ]; then
+        UNTRACKED_LINES=$(wc -l < "$(echo "$UNTRACKED_FILES" | head -1)" 2>/dev/null || echo "0")
     fi
 fi
 
-# Count untracked files (excluding noise)
-UNTRACKED_COUNT=$(git ls-files --others --exclude-standard 2>/dev/null | grep -vcE '(\.DS_Store|node_modules)' || echo "0")
+TOTAL=$((TRACKED_LINES + UNTRACKED_LINES))
+if [ "$TOTAL" -ge 200 ]; then
+    WARNINGS="${WARNINGS}WIP: ~${TOTAL} lines of uncommitted changes (${TRACKED_LINES} tracked, ${UNTRACKED_LINES} untracked). Consider committing before continuing.\n"
+fi
+
 if [ "$UNTRACKED_COUNT" -gt 0 ] 2>/dev/null; then
     WARNINGS="${WARNINGS}WIP: ${UNTRACKED_COUNT} untracked file(s) not yet staged.\n"
 fi
@@ -60,11 +73,14 @@ text = sys.stdin.read().strip()
 print(json.dumps(text))
 " 2>/dev/null || echo '""')
 
+    # systemMessage: displayed directly in the user's terminal
+    # additionalContext: injected into the AI's context for the next response
     cat <<EOF
 {
+  "systemMessage": "WIP accumulation detected. See warnings below.",
   "hookSpecificOutput": {
     "hookEventName": "UserPromptSubmit",
-    "systemReminder": $ESCAPED
+    "additionalContext": $ESCAPED
   }
 }
 EOF

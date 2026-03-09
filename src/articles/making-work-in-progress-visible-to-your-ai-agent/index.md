@@ -95,30 +95,27 @@ The check reports both changeset count and total diff size. A release with one c
 
 The `gh` CLI calls are wrapped in `timeout 10` because they hit the network. If GitHub is slow or unreachable, the script fails with an error rather than silently skipping the check. A silent skip would mean you get no feedback about the release PR, with no indication that the check didn't run. Failing loudly means you know immediately if something is wrong with your GitHub token or network connectivity.
 
-![Four numbered cards showing each check: uncommitted changes threshold at 200 lines, unpushed commits threshold at 3, unreleased commits without changeset files compared against the publish branch, and stale release PR when open longer than 24 hours. Below, a flow diagram showing the hook firing on every prompt, running checks, emitting a systemReminder, and the AI plus human seeing the result.](/img/social/wip-nudge-four-checks.svg)
+![Four numbered cards showing each check: uncommitted changes threshold at 200 lines, unpushed commits threshold at 3, unreleased commits without changeset files compared against the publish branch, and stale release PR when open longer than 24 hours. Below, a flow diagram showing the hook firing on every prompt, running checks, emitting additionalContext and a systemMessage, and the AI plus human seeing the result.](/img/social/wip-nudge-four-checks.svg)
 
 ## Informing without blocking
 
-Every warning line is appended to a single `systemReminder` in the hook's JSON output. The pattern is the same one used by other [pipeline discipline hooks](/blog/enforcing-pipeline-discipline-with-claude-code-hooks):
+Every warning line is appended to a single `additionalContext` string in the hook's JSON output, alongside a `systemMessage` that prints directly in the terminal. The pattern is the same one used by other [pipeline discipline hooks](/blog/enforcing-pipeline-discipline-with-claude-code-hooks):
 
 ```bash
 cat <<EOF
 {
+  "systemMessage": "WIP accumulation detected. See warnings below.",
   "hookSpecificOutput": {
     "hookEventName": "UserPromptSubmit",
-    "systemReminder": $ESCAPED
+    "additionalContext": $ESCAPED
   }
 }
 EOF
 ```
 
-There's no `permissionDecision: "deny"`. The AI keeps working. It sees the warnings injected into the conversation and factors them into its next response: commit before continuing, suggest a push, mention the stale PR. Or it keeps working on the current task if the accumulation isn't relevant yet. If multiple checks fire at once, all the warnings stack into the same `systemReminder`.
+There's no `permissionDecision: "deny"`. `systemMessage` prints the warnings in your terminal. `additionalContext` injects them into the AI's context. The AI factors the warnings into its next response: commit before continuing, suggest a push, mention the stale PR. If multiple checks fire, all warnings stack into the same output.
 
-One thing to know: `systemReminder` output is injected into the AI's context, not displayed in the terminal. You see the nudges only when the AI mentions them in its response. This is fine for guiding the AI's behavior, but it means you're relying on the AI to surface the warnings to you. If you want to see the state directly, print the warnings to stderr before the JSON output:
-
-```bash
-echo "$WARNINGS" >&2
-```
+`systemMessage` is displayed directly in the terminal every time the hook fires. `additionalContext` is injected into the AI's context but not displayed. You see the warning. The AI has the detail.
 
 The push gate in the [pipeline discipline hooks](/blog/enforcing-pipeline-discipline-with-claude-code-hooks) is a hard block because `git push` without pipeline visibility is the specific action I want to prevent. WIP accumulation is different. <span data-pull>It's state you want to be aware of, not an action you want to block.</span> A gate that blocks every edit until you commit would be counterproductive during a multi-file change.
 
@@ -153,13 +150,13 @@ The prompt-time hook goes in `.claude/settings.json` alongside the other `UserPr
 }
 ```
 
-Each `UserPromptSubmit` entry runs independently. The health check and the WIP nudge don't know about each other. They both emit `systemReminder` output if they have something to say, and stay silent if they don't.
+Each `UserPromptSubmit` entry runs independently. The health check and the WIP nudge don't know about each other. They both emit hook output if they have something to say, and stay silent if they don't.
 
 The remote checks run inside `push:watch`, the same script that pushes and watches the pipeline. After the push completes and the remote refs are updated, the script runs checks 3-4 and prints any warnings to stdout. Since the AI is already watching the push output, the warnings are visible in the conversation without any caching mechanism.
 
 ## The full hook
 
-The complete local hook (`.claude/hooks/wip-nudge.sh`) and the remote checks in `scripts/push-watch.sh` are in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The key snippets are all shown above. The full scripts add error handling, JSON escaping for the `systemReminder` output, and the stale-file detection using `python3` to compare file modification times against a 24-hour threshold.
+The complete local hook (`.claude/hooks/wip-nudge.sh`) and the remote checks in `scripts/push-watch.sh` are in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The key snippets are all shown above. The full scripts add error handling, JSON escaping for the `additionalContext` output, and the stale-file detection using `python3` to compare file modification times against a 24-hour threshold.
 
 ## Adapting this for your project
 
@@ -171,13 +168,13 @@ Split checks by cost. Anything that uses only local git commands belongs in the 
 
 Set thresholds that match your rhythm. The 200-line and 3-commit thresholds here reflect a workflow where commits are small and pushes are frequent. If your commits are larger or your pushes are batched, adjust accordingly.
 
-Use `systemReminder`, not `permissionDecision`. The warning is in the AI's context when it generates its next response. The AI factors it into what it does next without being blocked.
+Use `additionalContext`, not `permissionDecision`. The warning is in the AI's context when it generates its next response. The AI factors it into what it does next without being blocked.
 
 Make every check independent. Each check should succeed or fail silently on its own. Use `2>/dev/null` and `|| echo "0"` so that a missing remote or absent CLI tool doesn't break the other checks.
 
 Keep the prompt-time hook fast. It runs on every prompt. The git commands are local and near-instant. Network calls belong in the push script, not the prompt hook.
 
-Wire it into `UserPromptSubmit` by adding an entry to the `hooks` object in your `.claude/settings.json`. The hook receives the prompt as JSON on stdin (which this script ignores) and emits the `systemReminder` JSON on stdout.
+Wire it into `UserPromptSubmit` by adding an entry to the `hooks` object in your `.claude/settings.json`. The hook receives the prompt as JSON on stdin (which this script ignores) and emits the hook JSON on stdout.
 
 The [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks) covers the full event model: `UserPromptSubmit` for pre-prompt checks, `PreToolUse` for intercepting tool calls, and `PostToolUse` for post-action verification.
 
