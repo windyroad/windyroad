@@ -39,6 +39,14 @@
             "command": ".claude/hooks/wip-nudge.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/architect-detect.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -86,6 +94,15 @@
             "command": ".claude/hooks/no-em-dash.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/architect-enforce-edit.sh"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -94,6 +111,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/voice-tone-reset-marker.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/architect-reset-marker.sh"
           }
         ]
       }
@@ -114,6 +139,15 @@
           {
             "type": "command",
             "command": ".claude/hooks/voice-tone-mark-reviewed.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/architect-mark-reviewed.sh"
           }
         ]
       }

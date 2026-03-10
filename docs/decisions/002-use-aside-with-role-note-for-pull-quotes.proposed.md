@@ -38,16 +38,15 @@ Adding `role="note"` overrides the implicit landmark role. Screen readers announ
 
 - **Good**: Authors write `<aside>Text</aside>` in markdown with no extra attributes
 - **Good**: `role="note"` prevents landmark clutter for screen reader users
-- **Good**: No `aria-hidden` on pull quotes (content parity maintained)
+- **Good**: Generated pull quotes use `aria-hidden="true"` because they duplicate body text; this prevents screen readers from reading the same content twice
 - **Good**: rehype plugin enforces the role automatically
-- **Neutral**: Pull quotes that repeat article text are read twice by screen readers (acceptable; users can skip)
 - **Bad**: Authors could misuse `<aside>` for non-pull-quote content
 
 ## Confirmation
 
 - Build output contains `<aside role="note">` for all aside elements
 - No complementary landmarks from pull quotes in accessibility tree
-- Pull quote text is visible to screen readers (not hidden)
+- Generated pull quotes have `aria-hidden="true"` (duplicative text hidden from AT)
 
 ## Pros and Cons of the Options
 
