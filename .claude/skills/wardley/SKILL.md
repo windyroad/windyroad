@@ -13,6 +13,7 @@ Analyze the codebase and generate a Wardley Map of the project's value chain.
 - `docs/wardley-map.owm` (OWM source)
 - `docs/wardley-map.svg` (rendered SVG)
 - `docs/wardley-map.png` (rendered PNG)
+- `docs/wardley-map.md` (analysis with embedded map image)
 
 ## Steps
 
@@ -105,14 +106,31 @@ Read the generated PNG and check:
 
 If the map has issues, adjust positions in the OWM file and re-render.
 
-### 11. Summarise
+### 11. Write the analysis
 
-After generating the map, write a brief analysis:
+Write `docs/wardley-map.md` with the following structure:
 
-- **Differentiation**: Which components are custom/genesis? These are your competitive advantage.
-- **Evolution**: What is moving? In which direction? What does that mean for investment?
-- **Risk**: Which custom components could be replaced by commodities? Which commodities could change (pricing, deprecation)?
-- **Decisions**: Does the map surface any strategic choices the project should make?
+```markdown
+# Wardley Map
+
+![Wardley Map](wardley-map.png)
+
+## Analysis
+
+### Differentiation
+(Which components are custom/genesis? These are the competitive advantage.)
+
+### Evolution
+(What is moving? In which direction? What does that mean for investment?)
+
+### Risk
+(Which custom components could be replaced by commodities? Which commodities could change?)
+
+### Decisions
+(Does the map surface any strategic choices the project should make?)
+```
+
+The image path should be relative to `docs/` since the PNG lives in the same directory. Keep the analysis concise and actionable. Each section should be 2 to 4 sentences.
 
 ## Updating an existing map
 
