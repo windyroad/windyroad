@@ -1,5 +1,12 @@
 # windy-road
 
+## 2.9.0
+
+### Minor Changes
+
+- beb24f5: Expand architect gate to cover all source files, add draft post support, add architecture blog article
+- 7e4c0c7: Add architect gate for architecture decision review
+
 ## 2.8.0
 
 ### Minor Changes
