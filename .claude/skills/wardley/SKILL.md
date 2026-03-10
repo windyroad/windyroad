@@ -21,6 +21,10 @@ Analyze the codebase and generate a Wardley Map of the project's value chain.
 
 Read the project's README, homepage, main entry point, or package description to determine what need the project serves. The anchor must be a specific need, not a person. "Software delivery insight" not "Reader". "Real-time cricket stats" not "User". The anchor should distinguish this project from others.
 
+**Self-test:** If two different projects could share this anchor, it is too generic. The anchor should answer "what does someone come to this project to get?" not "what topic does this project cover?"
+
+**Need vs means:** The anchor should be an outcome the user *has* after they leave, not a capability the provider *offers*. If the anchor sounds like a service description (expertise, guidance, consulting), rewrite it as the result: "AI Delivery Expertise" becomes "Reliable AI-Built Software." "Analytics consulting" becomes "Data-driven decisions."
+
 ### 2. Inventory the codebase
 
 Scan the project to identify components. Look for:
@@ -33,6 +37,8 @@ Scan the project to identify components. Look for:
 - **Dependencies**: frameworks, libraries, external services
 
 Adapt the scan to the project type. A web app has pages and components. An API has endpoints and middleware. A CLI has commands and parsers. A library has modules and public API surface.
+
+**Platform dependencies:** For each custom or genesis component, identify which platform or API it depends on that the project does not control. If that platform does not appear in the inventory, add it as a component.
 
 ### 3. Classify evolution
 
@@ -54,7 +60,7 @@ Visibility (y-axis): 1.0 = directly serves the user need, 0.0 = deep infrastruct
 Aim for 8 to 12 components. Rules:
 
 - **Split** when two things have different evolution positions (one custom, one commodity) or different strategic roles (one differentiates, one is plumbing).
-- **Merge** when two things are at the same evolution stage and serve the same strategic purpose.
+- **Merge** when two things are at the same evolution stage and serve the same strategic purpose. **Test:** can you invest in A independently of B? If not, they are one component.
 - Every component should earn its place. If removing it from the map loses no information, remove it.
 
 ### 6. Identify evolution movement
@@ -68,9 +74,13 @@ For each component, ask: is this evolving? Signs of evolution:
 
 Add `evolve` annotations for components that are actively moving.
 
+**Inertia check:** For commodity components, note switching cost (high or low). For custom components, note whether competitors or the ecosystem are building similar things. Use these observations in the Risk section of the analysis.
+
 ### 7. Map dependencies
 
 A->B means "A needs B to function." Not "A influences B" or "A produces B." Only draw links that represent real runtime or build-time dependencies. Fewer lines with clear meaning beats many lines that add noise.
+
+**User-facing pair check:** For every pair of components with visibility above 0.7, ask: does one need the other to get traffic, data, or users? If articles drive traffic that service pages convert, that is a dependency even though both connect to the anchor.
 
 ### 8. Generate the OWM file
 
@@ -106,6 +116,8 @@ Read the generated PNG and check:
 
 If the map has issues, adjust positions in the OWM file and re-render.
 
+**Orphan check:** Look for components with only one inbound link and no outbound links. Ask whether removing them loses strategic information. If not, remove them and re-render.
+
 ### 11. Write the analysis
 
 Write `docs/wardley-map.md` with the following structure:
@@ -118,10 +130,10 @@ Write `docs/wardley-map.md` with the following structure:
 ## Analysis
 
 ### Differentiation
-(Which components are custom/genesis? These are the competitive advantage.)
+(Which components are custom/genesis? These are the competitive advantage. If multiple components depend on the same custom component, note that convergence is also concentration risk. State what would happen if that component became untenable.)
 
 ### Evolution
-(What is moving? In which direction? What does that mean for investment?)
+(What is moving? In which direction? What does that mean for investment? Check whether any evolving component has dependents that amplify its impact. If A depends on B and B is evolving, investment in B has a multiplier effect. Name the multiplier.)
 
 ### Risk
 (Which custom components could be replaced by commodities? Which commodities could change?)
@@ -131,6 +143,18 @@ Write `docs/wardley-map.md` with the following structure:
 ```
 
 The image path should be relative to `docs/` since the PNG lives in the same directory. Keep the analysis concise and actionable. Each section should be 2 to 4 sentences.
+
+**Analysis quality rules:**
+
+- **No inventory.** Do not list component counts, script counts, or file counts. State what the position *means* for investment, risk, or action.
+- **Name the phase correctly.** When describing a component's current position, use the phase name matching its current evolution value, not its evolve target. Check against the phase boundary table.
+- **Risk needs triggers.** For each risk, name what would cause it (the trigger) and what breaks (the consequence). "Low risk" is not analysis.
+- **At most two decisions.** The Decisions section should identify at most two strategic choices and state them as trade-offs. If two actions compete for the same resource, say so. Do not write a shopping list.
+- **State evidence for recommendations.** If you recommend an action (e.g. "ready to be packaged"), say what evidence supports it and what would need to be true first.
+- **End with implications.** Every section must end with a sentence stating what the project owner should do differently, protect, or watch as a result. Description without implication is not analysis.
+- **Include internal risk.** The Risk section must include at least one risk the project owner controls, such as underinvestment in a differentiating component. External risks (API changes, pricing shifts) are not sufficient alone. Internal risk triggers must include a number and a time window. "Output drops" is not a trigger. "Fewer than N per month for M consecutive months" is.
+- **Observable triggers.** Each decision's trigger must be observable and specific: a number, an event, or a condition you could check. "When external interest validates" is not observable. "When three people outside this project ask to reuse the pattern" is. Each decision should have both a go trigger (what would make you act) and a reassess trigger (what would make you reconsider the strategy if the go trigger never fires).
+- **Cover visible dependencies.** Every dependency between components with visibility above 0.7 must be mentioned in the analysis. If a link appears on the map but not in the text, either remove the link or explain why it matters.
 
 ## Updating an existing map
 
