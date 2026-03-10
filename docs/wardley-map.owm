@@ -1,0 +1,23 @@
+title Windyroad.com.au Value Chain
+
+anchor Reader [0.95, 0.50]
+
+component Website [0.85, 0.38]
+component Articles [0.72, 0.28]
+component Markdown Pipeline [0.55, 0.42]
+component Next.js [0.42, 0.78]
+component Hook Gates [0.30, 0.14]
+component Decision Records [0.22, 0.28]
+component CI/CD [0.18, 0.80]
+component Netlify [0.10, 0.90]
+
+Reader->Website
+Website->Articles
+Website->Next.js
+Website->Hook Gates
+Articles->Markdown Pipeline
+Articles->Hook Gates
+Markdown Pipeline->Next.js
+Hook Gates->Decision Records
+Next.js->CI/CD
+CI/CD->Netlify
