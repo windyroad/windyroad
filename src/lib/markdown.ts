@@ -133,6 +133,7 @@ export interface PostFrontmatter {
   tags: string[];
   image?: string;
   link?: string;
+  draft?: boolean;
 }
 
 export interface Post {
@@ -188,14 +189,19 @@ export function getAllPosts(): Post[] {
       };
     });
 
+  // Filter out drafts in production
+  const filtered = process.env.NODE_ENV === 'development'
+    ? posts
+    : posts.filter((p) => !p.frontmatter.draft);
+
   // Sort by date descending
-  posts.sort((a, b) => {
+  filtered.sort((a, b) => {
     const dateA = new Date(a.frontmatter.date).getTime();
     const dateB = new Date(b.frontmatter.date).getTime();
     return dateB - dateA;
   });
 
-  return posts;
+  return filtered;
 }
 
 export function getAllSlugs(): string[] {
@@ -206,6 +212,7 @@ export async function getPostBySlug(slug: string): Promise<PostWithHtml | null> 
   const posts = getAllPosts();
   const post = posts.find((p) => p.slug === slug);
   if (!post) return null;
+  if (post.frontmatter.draft && process.env.NODE_ENV !== 'development') return null;
 
   const processedContent = await unified()
     .use(remarkParse)

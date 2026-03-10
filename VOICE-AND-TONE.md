@@ -139,6 +139,26 @@ Articles live in `src/articles/` as markdown files. They range from short opinio
 
 Not: "In this article, I'll show you how to enforce pipeline discipline using Claude Code hooks."
 
+**Titles.** Problem-first titles outperform descriptive titles because they name something the reader recognises before asking them to care about the solution. These guidelines apply to blog articles, LinkedIn, and HN. Platform-specific overrides (Lobste.rs, Dev.to) are defined in those sections.
+
+**Lead with the problem or the tension, not the mechanism.**
+
+> "Stop your AI agent from ignoring your architecture"
+
+Not: "Enforcing architecture decisions with Claude Code hooks"
+
+The first title names a problem the reader has. The second describes a solution the reader doesn't know they need. In a LinkedIn or HN feed, the problem wins.
+
+Guidelines for titles:
+- Name the problem, the tension, or the action. "Your AI agent doesn't sound like you" is a problem. "Stop your AI agent from skipping the pipeline" is an action. Both work.
+- Make it personal. "Your AI agent" and "your architecture" put the reader in the situation. "Enforcing architecture" is abstract.
+- Keep it under 80 characters. HN truncates at 80. LinkedIn shows more but attention doesn't.
+- The tool or mechanism belongs in the article, not the title. If readers need "Claude Code hooks" to understand what the article is about, the title isn't doing its job.
+- No clickbait. The title should be an honest statement of the problem the article solves. "You won't believe what this hook does" is dishonest. "Your AI agent ignores architecture decisions" is honest and specific.
+- Vary construction. Gerund-heavy titles ("Enforcing...", "Building...") blur together when every article uses one.
+
+Test: read the title as a standalone sentence. Does it make the reader think "that's happening to me"? If yes, it works.
+
 **Show, don't summarise.** Include real code, real config, real terminal output. When you describe a solution, show the implementation. Readers trust what they can read and verify over what you claim works.
 
 **No "In this post I will" framing.** Don't narrate the structure of the article. Just write the article. The reader can see the headings.
