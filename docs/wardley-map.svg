@@ -1,4 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+<defs>
+  <marker id="evolve-arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+    <polygon points="0,0 8,3 0,6" fill="#c44"/>
+  </marker>
+</defs>
 <style>
   text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
   .title { font-size: 20px; font-weight: 700; }
@@ -6,6 +11,7 @@
   .phase-label { font-size: 11px; fill: #999; }
   .comp-label { font-size: 13px; fill: #222; }
   .anchor-label { font-size: 13px; fill: #222; font-weight: 600; }
+  .evolve-label { font-size: 11px; fill: #c44; }
 </style>
 <rect width="1200" height="800" fill="white"/>
 <text x="80" y="35" class="title">Windyroad.com.au Value Chain</text>
@@ -21,29 +27,36 @@
 <text x="610" y="745" class="phase-label" text-anchor="middle">Product</text>
 <line x1="747.8" y1="60" x2="747.8" y2="720" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>
 <text x="943.9" y="745" class="phase-label" text-anchor="middle">Commodity</text>
-<line x1="610" y1="93.00000000000003" x2="482.8" y2="159" stroke="#aaa" stroke-width="1.5"/>
-<line x1="482.8" y1="159" x2="376.8" y2="244.8" stroke="#aaa" stroke-width="1.5"/>
-<line x1="482.8" y1="159" x2="906.8000000000001" y2="442.80000000000007" stroke="#aaa" stroke-width="1.5"/>
-<line x1="482.8" y1="159" x2="228.4" y2="522" stroke="#aaa" stroke-width="1.5"/>
-<line x1="376.8" y1="244.8" x2="525.2" y2="356.99999999999994" stroke="#aaa" stroke-width="1.5"/>
-<line x1="376.8" y1="244.8" x2="228.4" y2="522" stroke="#aaa" stroke-width="1.5"/>
+<line x1="610" y1="93.00000000000003" x2="419.2" y2="139.2" stroke="#aaa" stroke-width="1.5"/>
+<line x1="610" y1="93.00000000000003" x2="588.8" y2="159" stroke="#aaa" stroke-width="1.5"/>
+<line x1="419.2" y1="139.2" x2="313.2" y2="244.8" stroke="#aaa" stroke-width="1.5"/>
+<line x1="419.2" y1="139.2" x2="906.8000000000001" y2="442.80000000000007" stroke="#aaa" stroke-width="1.5"/>
+<line x1="588.8" y1="159" x2="906.8000000000001" y2="442.80000000000007" stroke="#aaa" stroke-width="1.5"/>
+<line x1="313.2" y1="244.8" x2="525.2" y2="356.99999999999994" stroke="#aaa" stroke-width="1.5"/>
+<line x1="313.2" y1="244.8" x2="228.4" y2="489" stroke="#aaa" stroke-width="1.5"/>
 <line x1="525.2" y1="356.99999999999994" x2="906.8000000000001" y2="442.80000000000007" stroke="#aaa" stroke-width="1.5"/>
-<line x1="228.4" y1="522" x2="376.8" y2="574.8000000000001" stroke="#aaa" stroke-width="1.5"/>
+<line x1="228.4" y1="489" x2="376.8" y2="555" stroke="#aaa" stroke-width="1.5"/>
 <line x1="906.8000000000001" y1="442.80000000000007" x2="928" y2="601.2" stroke="#aaa" stroke-width="1.5"/>
 <line x1="928" y1="601.2" x2="1034" y2="654" stroke="#aaa" stroke-width="1.5"/>
-<text x="620" y="83.00000000000003" class="anchor-label">Reader</text>
-<circle cx="482.8" cy="159" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="492.8" y="149" class="comp-label">Website</text>
-<circle cx="376.8" cy="244.8" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="386.8" y="234.8" class="comp-label">Articles</text>
+<line x1="236.4" y1="489" x2="396" y2="489" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
+<circle cx="398" cy="489" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
+<line x1="321.2" y1="244.8" x2="417.2" y2="244.8" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
+<circle cx="419.2" cy="244.8" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
+<text x="620" y="83.00000000000003" class="anchor-label">Production Confidence</text>
+<circle cx="419.2" cy="139.2" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="429.2" y="129.2" class="comp-label">Blog</text>
+<circle cx="588.8" cy="159" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="598.8" y="149" class="comp-label">Service Pages</text>
+<circle cx="313.2" cy="244.8" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="323.2" y="234.8" class="comp-label">Articles</text>
 <circle cx="525.2" cy="356.99999999999994" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="535.2" y="346.99999999999994" class="comp-label">Markdown Pipeline</text>
+<circle cx="228.4" cy="489" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="238.4" y="479" class="comp-label">Hook Gates</text>
+<circle cx="376.8" cy="555" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="386.8" y="545" class="comp-label">Decision Records</text>
 <circle cx="906.8000000000001" cy="442.80000000000007" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="916.8000000000001" y="432.80000000000007" class="comp-label">Next.js</text>
-<circle cx="228.4" cy="522" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="238.4" y="512" class="comp-label">Hook Gates</text>
-<circle cx="376.8" cy="574.8000000000001" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="386.8" y="564.8000000000001" class="comp-label">Decision Records</text>
 <circle cx="928" cy="601.2" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="938" y="591.2" class="comp-label">CI/CD</text>
 <circle cx="1034" cy="654" r="6" fill="white" stroke="#333" stroke-width="1.5"/>

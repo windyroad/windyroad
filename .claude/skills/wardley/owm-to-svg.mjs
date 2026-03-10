@@ -2,7 +2,7 @@
 /**
  * Converts an OWM (Online Wardley Mapping) file to SVG and PNG.
  *
- * Usage: node scripts/owm-to-svg.mjs [input.owm] [output.svg]
+ * Usage: node owm-to-svg.mjs [input.owm] [output.svg]
  *
  * Defaults:
  *   input:  docs/wardley-map.owm
@@ -11,7 +11,7 @@
 
 import { readFileSync, writeFileSync } from 'fs';
 import { execSync } from 'child_process';
-import { resolve, dirname } from 'path';
+import { resolve } from 'path';
 
 const inputPath = resolve(process.argv[2] || 'docs/wardley-map.owm');
 const outputSvg = resolve(process.argv[3] || inputPath.replace(/\.owm$/, '.svg'));
@@ -24,6 +24,7 @@ const lines = raw.split('\n').map((l) => l.trim()).filter((l) => l && !l.startsW
 let title = '';
 const components = [];
 const links = [];
+const evolves = [];
 
 for (const line of lines) {
   const titleMatch = line.match(/^title\s+(.+)/);
@@ -38,6 +39,12 @@ for (const line of lines) {
   const compMatch = line.match(/^component\s+(.+?)\s+\[([0-9.]+),\s*([0-9.]+)\]/);
   if (compMatch) {
     components.push({ name: compMatch[1], vis: parseFloat(compMatch[2]), evo: parseFloat(compMatch[3]), isAnchor: false });
+    continue;
+  }
+
+  const evolveMatch = line.match(/^evolve\s+(.+?)\s+([0-9.]+)/);
+  if (evolveMatch) {
+    evolves.push({ name: evolveMatch[1], targetEvo: parseFloat(evolveMatch[2]) });
     continue;
   }
 
@@ -64,6 +71,11 @@ function visToY(vis) { return PAD_TOP + (1 - vis) * CHART_H; }
 // Build SVG
 const svgParts = [];
 svgParts.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`);
+svgParts.push(`<defs>
+  <marker id="evolve-arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+    <polygon points="0,0 8,3 0,6" fill="#c44"/>
+  </marker>
+</defs>`);
 svgParts.push(`<style>
   text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
   .title { font-size: 20px; font-weight: 700; }
@@ -71,6 +83,7 @@ svgParts.push(`<style>
   .phase-label { font-size: 11px; fill: #999; }
   .comp-label { font-size: 13px; fill: #222; }
   .anchor-label { font-size: 13px; fill: #222; font-weight: 600; }
+  .evolve-label { font-size: 11px; fill: #c44; }
 </style>`);
 
 // Background
@@ -118,6 +131,17 @@ for (const link of links) {
   const to = compMap.get(link.to);
   if (!from || !to) continue;
   svgParts.push(`<line x1="${evoToX(from.evo)}" y1="${visToY(from.vis)}" x2="${evoToX(to.evo)}" y2="${visToY(to.vis)}" stroke="#aaa" stroke-width="1.5"/>`);
+}
+
+// Evolution arrows
+for (const ev of evolves) {
+  const comp = compMap.get(ev.name);
+  if (!comp) continue;
+  const x1 = evoToX(comp.evo);
+  const x2 = evoToX(ev.targetEvo);
+  const y = visToY(comp.vis);
+  svgParts.push(`<line x1="${x1 + 8}" y1="${y}" x2="${x2 - 2}" y2="${y}" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>`);
+  svgParts.push(`<circle cx="${x2}" cy="${y}" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>`);
 }
 
 // Components
