@@ -1,7 +1,7 @@
 {
   "name": "windy-road",
   "description": "Windy Road - windyroad.com.au",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "author": "Tom Howard <tom@windyroad.com.au>",
   "license": "MIT",
   "private": true,
@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@microsoft/clarity": "^1.0.2",
-
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "next": "^16",
