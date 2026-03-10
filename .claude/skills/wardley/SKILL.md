@@ -1,7 +1,7 @@
 ---
 name: wardley
 description: Generate or update the project's Wardley Map by analyzing the codebase. Produces an OWM source file, SVG, and PNG.
-allowed-tools: Read, Write, Edit, Bash, Glob, Grep
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Agent
 ---
 
 # Wardley Map Generator
@@ -55,6 +55,8 @@ For each component, determine its evolution stage:
 
 Visibility (y-axis): 1.0 = directly serves the user need, 0.0 = deep infrastructure the user never thinks about.
 
+**Visibility reality check:** For each component, ask: "Does the user directly interact with this or see its output?" If yes (login screens, dashboards, error messages), visibility should be above 0.5 even if the component feels like infrastructure. Auth systems the user sees should not be positioned like databases the user never sees.
+
 ### 5. Decide what to split and merge
 
 Aim for 8 to 12 components. Rules:
@@ -62,6 +64,8 @@ Aim for 8 to 12 components. Rules:
 - **Split** when two things have different evolution positions (one custom, one commodity) or different strategic roles (one differentiates, one is plumbing).
 - **Merge** when two things are at the same evolution stage and serve the same strategic purpose. **Test:** can you invest in A independently of B? If not, they are one component.
 - Every component should earn its place. If removing it from the map loses no information, remove it.
+
+**Hidden-but-critical check:** Look for components that are invisible to the user but gate or constrain visible components. CI/CD pipelines, compliance gates, and release processes may have low visibility but high strategic impact. If such a component can block a release or degrade quality, consider whether it needs a dependency link to the component it constrains, not just to the infrastructure it uses.
 
 ### 6. Identify evolution movement
 
@@ -116,7 +120,12 @@ Read the generated PNG and check:
 
 If the map has issues, adjust positions in the OWM file and re-render.
 
-**Orphan check:** Look for components with only one inbound link and no outbound links. Ask whether removing them loses strategic information. If not, remove them and re-render.
+**Orphan check:** Look for components with only one inbound link and no outbound links. For each orphan, choose one:
+1. Add a missing dependency that justifies it (e.g., a gate component should link to what it gates, not just what it reads from).
+2. Remove it if it adds no strategic information.
+Do not leave orphans unexplained. They confuse readers into thinking the component is disconnected from the value chain.
+
+**Domain context check:** Can a reader unfamiliar with the domain understand *why* the anchor is hard to serve? If the challenge is non-obvious (real-time constraints, hostile environments, regulatory pressure), add a one-line OWM comment (`// context: ...`) above the anchor explaining the constraint. This comment will not render but documents intent for future updates.
 
 ### 11. Write the analysis
 
@@ -155,6 +164,32 @@ The image path should be relative to `docs/` since the PNG lives in the same dir
 - **Include internal risk.** The Risk section must include at least one risk the project owner controls, such as underinvestment in a differentiating component. External risks (API changes, pricing shifts) are not sufficient alone. Internal risk triggers must include a number and a time window. "Output drops" is not a trigger. "Fewer than N per month for M consecutive months" is.
 - **Observable triggers.** Each decision's trigger must be observable and specific: a number, an event, or a condition you could check. "When external interest validates" is not observable. "When three people outside this project ask to reuse the pattern" is. Each decision should have both a go trigger (what would make you act) and a reassess trigger (what would make you reconsider the strategy if the go trigger never fires).
 - **Cover visible dependencies.** Every dependency between components with visibility above 0.7 must be mentioned in the analysis. If a link appears on the map but not in the text, either remove the link or explain why it matters.
+- **Cover all custom components in Differentiation.** Every component in the custom-built or genesis phase must appear in the Differentiation section. Do not highlight some custom components while silently omitting others. If a custom component has fragile internals (non-standard APIs, complex state, platform-specific workarounds), name that fragility.
+- **Cover commodity risk.** The Risk section must include at least one commodity-layer risk (pricing changes, service discontinuation, API deprecation). State the trigger, the affected components, and the fallback. Do not treat commodities as zero-risk simply because they are interchangeable today.
+- **Triggers must be measurable today.** Each trigger must be something you can check with tools or data the project already has. If the trigger requires building new infrastructure to measure (a test suite that does not exist, a monitoring system not yet deployed), say so explicitly and name the prerequisite. A trigger you cannot currently observe is a hypothesis, not a trigger.
+- **No project-specific names in decisions.** Decision triggers and reassess triggers must be stated generically. Do not name specific external projects, people, or organisations. Use descriptions like "a second project" or "an external adopter" instead of proper nouns. The analysis should remain valid if read by someone outside the immediate team.
+
+### 12. Self-critique
+
+Use the Agent tool to spawn a general-purpose subagent with this prompt:
+
+> Read `docs/wardley-map.png` and `docs/wardley-map.md`. What are the strengths and weaknesses of this Wardley Map and its analysis? Check the map image for overlapping labels, unclear dependencies, and questionable evolution positions. Check the analysis against these rules: no inventory lists, correct phase names, risk triggers with consequences, at most two decisions, evidence for recommendations, implications at the end of each section, internal risk with number and time window, observable go and reassess triggers, all visible dependencies covered, all custom components in Differentiation, commodity risk included, triggers measurable today, no project-specific names in decisions. Return a numbered list of weaknesses to fix.
+
+Wait for the subagent to return its findings.
+
+### 13. Fix weaknesses
+
+If the subagent in step 12 returned any weaknesses, use the Agent tool to spawn a second general-purpose subagent with this prompt:
+
+> The following weaknesses were found in the Wardley Map and analysis:
+>
+> [paste the numbered list from step 12]
+>
+> Fix each weakness. For map issues, edit `docs/wardley-map.owm` and re-render by running `node [skill_dir]/owm-to-svg.mjs` (where [skill_dir] is the `.claude/skills/wardley` directory in this project). For analysis issues, edit `docs/wardley-map.md`. After fixing, read `docs/wardley-map.png` to verify the map still renders correctly with no overlapping labels.
+
+Replace `[skill_dir]` with the actual `${CLAUDE_SKILL_DIR}` path when constructing the prompt. Wait for the subagent to complete, then read the final `docs/wardley-map.png` and `docs/wardley-map.md` to confirm the fixes.
+
+If the fixes introduce new issues, repeat steps 12 and 13 once more. Do not loop more than twice to avoid infinite iteration.
 
 ## Updating an existing map
 
