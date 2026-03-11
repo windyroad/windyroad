@@ -1,0 +1,15 @@
+C4Context
+    title System Context Diagram
+
+    Person(user, "User", "End user of the system")
+    System(system, "windy-road", "Windy Road - windyroad.com.au")
+
+    System_Ext(netlify, "Netlify", "Hosting & CDN")
+    System_Ext(github_actions, "GitHub Actions", "CI/CD pipeline")
+    System_Ext(claude_code, "Claude Code", "AI coding assistant")
+
+    Rel(user, system, "Uses")
+    Rel(system, netlify, "Deployed to")
+    Rel(system, github_actions, "Built by")
+    Rel(claude_code, system, "Assists development of")
+

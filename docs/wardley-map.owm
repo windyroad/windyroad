@@ -1,0 +1,27 @@
+title Windyroad.com.au Value Chain
+
+anchor Reliable AI-Built Software [0.95, 0.50]
+
+component Articles [0.82, 0.24]
+component Service Pages [0.85, 0.48]
+component Markdown Pipeline [0.55, 0.42]
+component Hook Gates [0.35, 0.17]
+component Claude Code [0.22, 0.55]
+component Next.js [0.42, 0.78]
+component CI/CD [0.18, 0.80]
+component Netlify [0.10, 0.90]
+
+Reliable AI-Built Software->Articles
+Reliable AI-Built Software->Service Pages
+Service Pages->Articles
+Articles->Markdown Pipeline
+Articles->Hook Gates
+Markdown Pipeline->Next.js
+Service Pages->Next.js
+Service Pages->Hook Gates
+Hook Gates->Claude Code
+Next.js->CI/CD
+CI/CD->Netlify
+
+evolve Hook Gates 0.32
+evolve Articles 0.35

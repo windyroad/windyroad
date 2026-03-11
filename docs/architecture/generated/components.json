@@ -1,0 +1,297 @@
+{
+  "generator_version": "1",
+  "source_root": "src",
+  "components": [
+    {
+      "id": "app",
+      "name": "app-entry",
+      "kind": "generated",
+      "files": [
+        "app/_not-found/page.tsx",
+        "app/ai-teams/page.tsx",
+        "app/blog/[slug]/page.tsx",
+        "app/blog/page.tsx",
+        "app/blog/tag/[tag]/page.tsx",
+        "app/layout.tsx",
+        "app/not-found.tsx",
+        "app/page.tsx",
+        "app/vibe-code-audit/page.tsx"
+      ],
+      "depends_on": [
+        "components-next",
+        "lib"
+      ]
+    },
+    {
+      "id": "components-next",
+      "name": "components-next",
+      "kind": "generated",
+      "files": [
+        "components-next/ApproachSection/index.tsx",
+        "components-next/Button/index.tsx",
+        "components-next/CTASection/index.tsx",
+        "components-next/Clarity/index.tsx",
+        "components-next/CountUp/RangeCountUp.tsx",
+        "components-next/CountUp/index.tsx",
+        "components-next/FAQSection/index.tsx",
+        "components-next/FitCheckSection/index.tsx",
+        "components-next/Footer/index.tsx",
+        "components-next/Header/index.tsx",
+        "components-next/Hero/index.tsx",
+        "components-next/NotifyForm/index.tsx",
+        "components-next/ObjectionBlock/index.tsx",
+        "components-next/OperatorSection/index.tsx",
+        "components-next/PricingSection/index.tsx",
+        "components-next/Section/index.tsx",
+        "components-next/TestimonialsSection/index.tsx"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "lib",
+      "name": "lib",
+      "kind": "generated",
+      "files": [
+        "lib/markdown.ts"
+      ],
+      "depends_on": []
+    }
+  ],
+  "fileDeps": [
+    {
+      "from": "app/ai-teams/page.tsx",
+      "to": "components-next/Button/index.tsx"
+    },
+    {
+      "from": "app/ai-teams/page.tsx",
+      "to": "app/ai-teams/page.module.scss"
+    },
+    {
+      "from": "app/blog/[slug]/page.tsx",
+      "to": "lib/markdown.ts"
+    },
+    {
+      "from": "app/blog/[slug]/page.tsx",
+      "to": "components-next/Button/index.tsx"
+    },
+    {
+      "from": "app/blog/[slug]/page.tsx",
+      "to": "app/blog/post.module.scss"
+    },
+    {
+      "from": "app/blog/page.tsx",
+      "to": "lib/markdown.ts"
+    },
+    {
+      "from": "app/blog/page.tsx",
+      "to": "app/blog/blog.module.scss"
+    },
+    {
+      "from": "app/blog/tag/[tag]/page.tsx",
+      "to": "lib/markdown.ts"
+    },
+    {
+      "from": "app/blog/tag/[tag]/page.tsx",
+      "to": "app/blog/blog.module.scss"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "components-next/Header/index.tsx"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "components-next/Footer/index.tsx"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "components-next/Clarity/index.tsx"
+    },
+    {
+      "from": "app/not-found.tsx",
+      "to": "app/not-found.module.scss"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/Hero/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/OperatorSection/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/ApproachSection/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/PricingSection/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/ObjectionBlock/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/TestimonialsSection/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/FitCheckSection/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/FAQSection/index.tsx"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components-next/CTASection/index.tsx"
+    },
+    {
+      "from": "app/vibe-code-audit/page.tsx",
+      "to": "components-next/Button/index.tsx"
+    },
+    {
+      "from": "app/vibe-code-audit/page.tsx",
+      "to": "components-next/NotifyForm/index.tsx"
+    },
+    {
+      "from": "app/vibe-code-audit/page.tsx",
+      "to": "app/vibe-code-audit/page.module.scss"
+    },
+    {
+      "from": "components-next/ApproachSection/index.tsx",
+      "to": "components-next/Section/index.tsx"
+    },
+    {
+      "from": "components-next/ApproachSection/index.tsx",
+      "to": "components-next/ApproachSection/ApproachSection.module.scss"
+    },
+    {
+      "from": "components-next/Button/index.tsx",
+      "to": "components-next/Button/Button.module.scss"
+    },
+    {
+      "from": "components-next/CTASection/index.tsx",
+      "to": "components-next/Button/index.tsx"
+    },
+    {
+      "from": "components-next/CTASection/index.tsx",
+      "to": "components-next/CTASection/CTASection.module.scss"
+    },
+    {
+      "from": "components-next/FAQSection/index.tsx",
+      "to": "components-next/Section/index.tsx"
+    },
+    {
+      "from": "components-next/FAQSection/index.tsx",
+      "to": "components-next/FAQSection/FAQSection.module.scss"
+    },
+    {
+      "from": "components-next/FitCheckSection/index.tsx",
+      "to": "components-next/Section/index.tsx"
+    },
+    {
+      "from": "components-next/FitCheckSection/index.tsx",
+      "to": "components-next/FitCheckSection/FitCheckSection.module.scss"
+    },
+    {
+      "from": "components-next/Footer/index.tsx",
+      "to": "components-next/Footer/Footer.module.scss"
+    },
+    {
+      "from": "components-next/Header/index.tsx",
+      "to": "components-next/Header/Header.module.scss"
+    },
+    {
+      "from": "components-next/Hero/index.tsx",
+      "to": "components-next/Button/index.tsx"
+    },
+    {
+      "from": "components-next/Hero/index.tsx",
+      "to": "components-next/Hero/Hero.module.scss"
+    },
+    {
+      "from": "components-next/NotifyForm/index.tsx",
+      "to": "components-next/NotifyForm/NotifyForm.module.scss"
+    },
+    {
+      "from": "components-next/ObjectionBlock/index.tsx",
+      "to": "components-next/Section/index.tsx"
+    },
+    {
+      "from": "components-next/ObjectionBlock/index.tsx",
+      "to": "components-next/ObjectionBlock/ObjectionBlock.module.scss"
+    },
+    {
+      "from": "components-next/OperatorSection/index.tsx",
+      "to": "components-next/Section/index.tsx"
+    },
+    {
+      "from": "components-next/OperatorSection/index.tsx",
+      "to": "components-next/CountUp/index.tsx"
+    },
+    {
+      "from": "components-next/OperatorSection/index.tsx",
+      "to": "components-next/CountUp/RangeCountUp.tsx"
+    },
+    {
+      "from": "components-next/OperatorSection/index.tsx",
+      "to": "components-next/OperatorSection/OperatorSection.module.scss"
+    },
+    {
+      "from": "components-next/PricingSection/index.tsx",
+      "to": "components-next/Section/index.tsx"
+    },
+    {
+      "from": "components-next/PricingSection/index.tsx",
+      "to": "components-next/PricingSection/PricingSection.module.scss"
+    },
+    {
+      "from": "components-next/Section/index.tsx",
+      "to": "components-next/Section/Section.module.scss"
+    },
+    {
+      "from": "components-next/TestimonialsSection/index.tsx",
+      "to": "components-next/Section/index.tsx"
+    },
+    {
+      "from": "components-next/TestimonialsSection/index.tsx",
+      "to": "components-next/TestimonialsSection/TestimonialsSection.module.scss"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/_not-found/page.tsx",
+      "label": "wraps"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/ai-teams/page.tsx",
+      "label": "wraps"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/blog/[slug]/page.tsx",
+      "label": "wraps"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/blog/page.tsx",
+      "label": "wraps"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/blog/tag/[tag]/page.tsx",
+      "label": "wraps"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/page.tsx",
+      "label": "wraps"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/vibe-code-audit/page.tsx",
+      "label": "wraps"
+    }
+  ]
+}

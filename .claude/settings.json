@@ -47,6 +47,14 @@
             "command": ".claude/hooks/architect-detect.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/risk-score.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -65,6 +73,15 @@
           {
             "type": "command",
             "command": ".claude/hooks/git-push-gate.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/risk-score-commit-gate.sh"
           }
         ]
       },
@@ -119,6 +136,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/architect-reset-marker.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/risk-score-reset.sh"
           }
         ]
       }
