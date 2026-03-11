@@ -1,0 +1,20 @@
+C4Container
+    title Container Diagram
+
+    Person(user, "User", "End user of the system")
+
+    Container(webapp, "Web App", "React/Next.js", "User interface")
+    Container(content, "Content", "Markdown/MDX", "Articles & pages")
+    Container(static_output, "Static Output", "HTML/CSS/JS", "Built files")
+
+    System_Ext(netlify, "Netlify", "Hosting & CDN")
+    System_Ext(github_actions, "GitHub Actions", "CI/CD pipeline")
+    System_Ext(claude_code, "Claude Code", "AI coding assistant")
+
+    Rel(user, webapp, "Visits")
+    Rel(webapp, content, "Reads")
+    Rel(webapp, static_output, "Builds into")
+    Rel(static_output, netlify, "Deployed to")
+    Rel(webapp, github_actions, "Built by")
+    Rel(claude_code, webapp, "Assists development of")
+

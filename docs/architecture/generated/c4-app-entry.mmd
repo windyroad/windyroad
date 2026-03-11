@@ -1,0 +1,44 @@
+flowchart LR
+  app__not_found_page_tsx["_not-found/page"]
+  app_ai_teams_page_tsx["ai-teams/page"]
+  app_blog__slug__page_tsx["[slug]/page"]
+  app_blog_page_tsx["blog/page"]
+  app_blog_tag__tag__page_tsx["[tag]/page"]
+  app_layout_tsx["app/layout"]
+  app_not_found_tsx["not-found"]
+  app_page_tsx["app/page"]
+  app_vibe_code_audit_page_tsx["vibe-code-audit/page"]
+  app_layout_tsx -. "wraps" .-> app__not_found_page_tsx
+  app_layout_tsx -. "wraps" .-> app_ai_teams_page_tsx
+  app_layout_tsx -. "wraps" .-> app_blog__slug__page_tsx
+  app_layout_tsx -. "wraps" .-> app_blog_page_tsx
+  app_layout_tsx -. "wraps" .-> app_blog_tag__tag__page_tsx
+  app_layout_tsx -. "wraps" .-> app_page_tsx
+  app_layout_tsx -. "wraps" .-> app_vibe_code_audit_page_tsx
+  components_next_Button_index_tsx["components-next/Button/index"]:::ext
+  app_ai_teams_page_tsx -.-> components_next_Button_index_tsx
+  lib_markdown_ts["lib/markdown"]:::ext
+  app_blog__slug__page_tsx -.-> lib_markdown_ts
+  app_blog__slug__page_tsx -.-> components_next_Button_index_tsx
+  app_blog_page_tsx -.-> lib_markdown_ts
+  app_blog_tag__tag__page_tsx -.-> lib_markdown_ts
+  components_next_Header_index_tsx["components-next/Header/index"]:::ext
+  app_layout_tsx -.-> components_next_Header_index_tsx
+  components_next_Footer_index_tsx["components-next/Footer/index"]:::ext
+  app_layout_tsx -.-> components_next_Footer_index_tsx
+  components_next_Clarity_index_tsx["components-next/Clarity/index"]:::ext
+  app_layout_tsx -.-> components_next_Clarity_index_tsx
+  _components_next_cluster_["components-next (9 files)"]:::ext
+  app_page_tsx -.-> _components_next_cluster_
+  app_vibe_code_audit_page_tsx -.-> components_next_Button_index_tsx
+  components_next_NotifyForm_index_tsx["components-next/NotifyForm/index"]:::ext
+  app_vibe_code_audit_page_tsx -.-> components_next_NotifyForm_index_tsx
+  _styles_["styles"]:::ext
+  app_ai_teams_page_tsx -.-> _styles_
+  app_blog__slug__page_tsx -.-> _styles_
+  app_blog_page_tsx -.-> _styles_
+  app_blog_tag__tag__page_tsx -.-> _styles_
+  app_not_found_tsx -.-> _styles_
+  app_vibe_code_audit_page_tsx -.-> _styles_
+  classDef ext fill:#f0f0f0,stroke:#999,stroke-dasharray:5 5
+

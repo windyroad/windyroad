@@ -1,0 +1,12 @@
+flowchart LR
+  app["app-entry"]
+  components-next["components-next"]
+  lib["lib"]
+  content["Content"]:::c2
+  static_output["Static Output"]:::c2
+  app --> components-next
+  app --> lib
+  app -.-> content
+  app -.-> static_output
+  classDef c2 fill:#f0f0f0,stroke:#999,stroke-dasharray:5 5
+
