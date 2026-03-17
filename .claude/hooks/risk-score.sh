@@ -131,12 +131,7 @@ fi
 # --- Build the instruction ---
 INSTRUCTION="${NUDGE}RISK SCORE CHECK (mandatory, every prompt).
 
-You MUST call the risk-scorer agent to score uncommitted changes.
-
-Use the Agent tool with subagent_type: \"general-purpose\" and this prompt:
-
----
-You are the risk-scorer agent. Score these uncommitted changes 1-5 for risk.
+You MUST call the risk-scorer agent (subagent_type: \"risk-scorer\") with this prompt:
 
 Give this a risk score out of 5.
 
@@ -144,10 +139,6 @@ ${SUMMARY}
 
 Write your score to: ${SCORE_FILE}
 Command: printf '%s' N > ${SCORE_FILE}
-(replace N with your integer score 1-5)
-
-State: \"Risk score: N/5 - [one-line rationale]\"
----
 
 After the agent returns, report the score in your response: \"Risk score: N/5\"."
 
