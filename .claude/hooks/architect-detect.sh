@@ -21,6 +21,18 @@ REQUIRED ACTIONS:
 3. Do NOT edit project files without architect review FIRST
 4. Do NOT skip this step even if you think you can handle it yourself
 
+5. When in plan mode, review the plan file against existing decisions
+   in docs/decisions/ before calling ExitPlanMode
+
+6. Before proposing implementation options or alternatives to the user
+   (e.g., "Option A vs Option B", "where should this logic live?"),
+   consult the architect agent FIRST. Present only architect-approved
+   options. Do NOT present options that violate existing decisions.
+
+7. If the architect reports ISSUES FOUND, resolve the issues and
+   re-run the architect before editing. Do NOT proceed with edits
+   while issues are outstanding.
+
 SCOPE: All project files including source code, configs, CI, hooks,
 scripts, and decisions.
 Does NOT apply to: CSS/SCSS files, image assets, lockfiles, font files.

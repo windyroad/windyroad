@@ -5,14 +5,12 @@
 
 INPUT=$(cat)
 
-SESSION_ID=$(echo "$INPUT" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-print(data.get('session_id', ''))
-" 2>/dev/null)
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty') || true
 
 if [ -n "$SESSION_ID" ]; then
   rm -f "/tmp/architect-reviewed-${SESSION_ID}"
+  rm -f "/tmp/architect-reviewed-${SESSION_ID}.hash"
+  rm -f "/tmp/architect-plan-reviewed-${SESSION_ID}"
 fi
 
 exit 0

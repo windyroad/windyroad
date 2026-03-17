@@ -120,6 +120,15 @@
             "command": ".claude/hooks/architect-enforce-edit.sh"
           }
         ]
+      },
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/architect-plan-enforce.sh"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -144,6 +153,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/risk-score-reset.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/architect-plan-reset-marker.sh"
           }
         ]
       }
