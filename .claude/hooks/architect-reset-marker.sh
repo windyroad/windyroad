@@ -10,7 +10,6 @@ SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty') || true
 if [ -n "$SESSION_ID" ]; then
   rm -f "/tmp/architect-reviewed-${SESSION_ID}"
   rm -f "/tmp/architect-reviewed-${SESSION_ID}.hash"
-  rm -f "/tmp/architect-plan-reviewed-${SESSION_ID}"
 fi
 
 exit 0

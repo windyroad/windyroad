@@ -27,7 +27,7 @@ if [ ! -f ".claude/agents/architect.md" ]; then
   exit 0
 fi
 
-MARKER="/tmp/architect-plan-reviewed-${SESSION_ID}"
+MARKER="/tmp/architect-reviewed-${SESSION_ID}"
 TTL_SECONDS="${ARCHITECT_TTL:-600}"
 
 if [ -n "$SESSION_ID" ] && [ -f "$MARKER" ]; then
@@ -45,12 +45,15 @@ if [ -n "$SESSION_ID" ] && [ -f "$MARKER" ]; then
         CURRENT="none"
       fi
       if [ "$STORED" != "$CURRENT" ]; then
-        rm -f "$MARKER" "$HASH_FILE"
+        rm -f "$HASH_FILE"
+        # Don't delete the edit marker -- only invalidate for plan-enforce
         # Falls through to deny block
       else
+        touch "$MARKER"  # Slide TTL window forward
         exit 0
       fi
     else
+      touch "$MARKER"  # Slide TTL window forward
       exit 0  # No hash = old marker format, allow
     fi
   else

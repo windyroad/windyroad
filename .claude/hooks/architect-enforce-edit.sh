@@ -75,9 +75,11 @@ if [ -n "$SESSION_ID" ] && [ -f "$MARKER" ]; then
         rm -f "$MARKER" "$HASH_FILE"
         # Falls through to deny block
       else
+        touch "$MARKER"  # Slide TTL window forward
         exit 0
       fi
     else
+      touch "$MARKER"  # Slide TTL window forward
       exit 0  # No hash = old marker format, allow
     fi
   else

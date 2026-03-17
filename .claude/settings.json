@@ -155,14 +155,6 @@
             "command": ".claude/hooks/risk-score-reset.sh"
           }
         ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/architect-plan-reset-marker.sh"
-          }
-        ]
       }
     ],
     "PostToolUse": [

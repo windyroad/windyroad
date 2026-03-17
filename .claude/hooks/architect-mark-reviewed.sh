@@ -11,7 +11,6 @@ INPUT=$(cat)
 
 SUBAGENT=$(echo "$INPUT" | jq -r '.tool_input.subagent_type // empty') || true
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty') || true
-PROMPT=$(echo "$INPUT" | jq -r '.tool_input.prompt // empty') || true
 
 if [ -z "$SESSION_ID" ]; then
   exit 0
@@ -52,21 +51,6 @@ case "$SUBAGENT" in
       echo "$HASH" > "/tmp/architect-reviewed-${SESSION_ID}.hash"
     fi
 
-    # Determine if we're in plan mode -- create plan marker too
-    IN_PLAN_MODE=false
-    # Check for recently active plan files
-    LATEST_PLAN=$(find ~/.claude/plans -name '*.md' -mmin -5 2>/dev/null | head -1)
-    if [ -n "$LATEST_PLAN" ]; then
-      IN_PLAN_MODE=true
-    fi
-    # Fallback: keyword check
-    if echo "$PROMPT" | grep -qi 'plan\|ExitPlanMode'; then
-      IN_PLAN_MODE=true
-    fi
-
-    if [ "$IN_PLAN_MODE" = true ] && [ -f "/tmp/architect-reviewed-${SESSION_ID}" ]; then
-      touch "/tmp/architect-plan-reviewed-${SESSION_ID}"
-    fi
     ;;
 esac
 
