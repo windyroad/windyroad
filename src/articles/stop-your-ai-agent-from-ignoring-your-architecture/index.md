@@ -196,6 +196,12 @@ The "when NOT to flag" list is critical. Without it, the agent flags every versi
 
 False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the "when NOT to flag" list was too generous, or because the change didn't match any of the new-decision-detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates.
 
+The verdict gating matters more than it looks. In an earlier version of this system (before the PASS/FAIL verdict file), the architect flagged issues but the gate unlocked regardless. The AI could proceed with edits while leaving the flagged issues unresolved.
+
+A real example: the AI was removing an unused API endpoint. The architect flagged that a smoke test depended on it and recommended updating the smoke test to check something that validates the health of the system. Without verdict gating, the AI proceeded with the rest of the task, left the API in place, left the smoke test unchanged, and moved on. The architect caught the problem. The AI chose the path of least resistance: do nothing about it.
+
+With verdict gating, the gate stays locked after ISSUES FOUND. The AI has two options: fix the smoke test and remove the API properly, or stop. No middle ground where you half-do the work and leave broken dependencies in place. The hook system cannot make the AI choose the right fix. But it can prevent the AI from ignoring the issue and continuing as if the review never happened.
+
 When the agent flags something you disagree with, override it. The gate blocks the AI, not you. When a hook denies an edit, Claude Code shows the denial reason and asks whether to proceed. Type "y" and the edit goes through. The architect review still happened; you just chose to act on it differently than the agent recommended.
 
 ## Adapting this for your project

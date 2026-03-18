@@ -1,119 +1,126 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="660" viewBox="0 0 1000 660">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1080" viewBox="0 0 1200 1080">
   <defs>
     <style>
       text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
       .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
     </style>
-    <marker id="a" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#94A3B8"/>
+    <marker id="a" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#94A3B8"/>
     </marker>
-    <marker id="ag" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#22C55E"/>
+    <marker id="ag" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#22C55E"/>
     </marker>
-    <marker id="ar" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#EF4444"/>
+    <marker id="ar" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#EF4444"/>
     </marker>
   </defs>
 
-  <title>Architect gates: process flow from prompt to edit allowed or denied</title>
+  <title>Architect gates: the full turn lifecycle</title>
 
   <!-- Background -->
-  <rect width="1000" height="660" fill="#0F172A"/>
+  <rect width="1200" height="1080" fill="#0F172A"/>
 
-  <!-- Header -->
-  <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F5F9">How the architect gates work</text>
-  <text x="500" y="64" text-anchor="middle" font-size="14" fill="#94A3B8">Every edit passes through this flow. No marker, no edit.</text>
-  <line x1="40" y1="82" x2="960" y2="82" stroke="#1E293B" stroke-width="1.5"/>
+  <!-- Header: centered at x=600 -->
+  <text x="600" y="48" text-anchor="middle" font-size="26" font-weight="700" fill="#F1F5F9">How the architect gates work</text>
+  <text x="600" y="78" text-anchor="middle" font-size="16" fill="#94A3B8">Every edit passes through this flow. No marker, no edit.</text>
+  <line x1="60" y1="98" x2="1140" y2="98" stroke="#1E293B" stroke-width="1.5"/>
 
-  <!-- ===== START ===== -->
-  <rect x="40" y="108" width="150" height="52" rx="26" fill="#334155" stroke="#64748B" stroke-width="1.5"/>
-  <text x="115" y="126" text-anchor="middle" font-size="9" fill="#64748B" class="mono">hook: UserPromptSubmit</text>
-  <text x="115" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#F1F5F9">New prompt</text>
+  <!--
+    Layout grid:
+    - Center axis: x=520 (shifted left to leave room for right-side elements)
+    - Main boxes: 600px wide, x=220 to x=820
+    - PASS loop: left gutter at x=160
+    - MARKER OK / Action proceeds: right side x=830 to x=1050
+    - FAIL loop: right gutter at x=920
+    - Container: x=100 to x=1100
+  -->
 
-  <line x1="190" y1="134" x2="240" y2="134" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+  <!-- ===== PROMPT ===== -->
+  <rect x="320" y="120" width="400" height="60" rx="30" fill="#334155" stroke="#64748B" stroke-width="1.5"/>
+  <text x="520" y="145" text-anchor="middle" font-size="11" fill="#64748B" class="mono">hook: UserPromptSubmit</text>
+  <text x="520" y="167" text-anchor="middle" font-size="18" font-weight="600" fill="#F1F5F9">Prompt</text>
 
-  <!-- ===== AI WORKS ===== -->
-  <rect x="250" y="110" width="200" height="48" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
-  <text x="350" y="131" text-anchor="middle" font-size="13" fill="#CBD5E1">AI works...</text>
-  <text x="350" y="150" text-anchor="middle" font-size="10" fill="#94A3B8">attempts Edit, Write, or ExitPlanMode</text>
+  <line x1="520" y1="180" x2="520" y2="220" stroke="#94A3B8" stroke-width="2" marker-end="url(#a)"/>
 
-  <line x1="450" y1="134" x2="510" y2="134" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+  <!-- ===== AI DOES STUFF ===== -->
+  <rect x="100" y="230" width="1000" height="630" rx="16" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="10,5"/>
+  <text x="520" y="260" text-anchor="middle" font-size="15" fill="#64748B">AI does stuff (edits, plans, reviews...)</text>
 
-  <!-- ===== GATE CHECK ===== -->
-  <rect x="520" y="104" width="280" height="60" rx="8" fill="#1E293B" stroke="#F59E0B50" stroke-width="1.5"/>
-  <text x="660" y="122" text-anchor="middle" font-size="9" fill="#64748B" class="mono">hook: PreToolUse (Edit|Write|ExitPlanMode)</text>
-  <text x="660" y="142" text-anchor="middle" font-size="13" font-weight="600" fill="#F59E0B">Gate check</text>
-  <text x="660" y="158" text-anchor="middle" font-size="11" fill="#94A3B8">Marker exists? TTL? Drift?</text>
+  <!-- ATTEMPT: 600px wide -->
+  <rect x="220" y="284" width="600" height="50" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="520" y="315" text-anchor="middle" font-size="15" fill="#CBD5E1">Attempts Edit, Write, or ExitPlanMode</text>
 
-  <!-- MARKER OK: right -->
-  <line x1="800" y1="134" x2="870" y2="134" stroke="#22C55E" stroke-width="2" marker-end="url(#ag)"/>
-  <text x="835" y="124" text-anchor="middle" font-size="11" font-weight="600" fill="#22C55E">MARKER OK</text>
+  <line x1="520" y1="334" x2="520" y2="374" stroke="#94A3B8" stroke-width="2" marker-end="url(#a)"/>
 
-  <!-- Allowed + Turn ends -->
-  <rect x="880" y="108" width="90" height="52" rx="26" fill="#334155" stroke="#64748B" stroke-width="1.5"/>
-  <text x="925" y="128" text-anchor="middle" font-size="9" fill="#64748B" class="mono">hook: Stop</text>
-  <text x="925" y="146" text-anchor="middle" font-size="12" font-weight="600" fill="#22C55E">Allowed</text>
+  <!-- GATE CHECK: 600px wide -->
+  <rect x="220" y="384" width="600" height="72" rx="10" fill="#1E293B" stroke="#F59E0B50" stroke-width="1.5"/>
+  <text x="520" y="408" text-anchor="middle" font-size="11" fill="#64748B" class="mono">hook: PreToolUse (Edit|Write|ExitPlanMode)</text>
+  <text x="520" y="432" text-anchor="middle" font-size="17" font-weight="600" fill="#F59E0B">Gate check</text>
+  <text x="520" y="448" text-anchor="middle" font-size="13" fill="#94A3B8">Marker exists? TTL valid? No drift?</text>
+
+  <!-- ===== MARKER OK: right ===== -->
+  <line x1="820" y1="420" x2="910" y2="420" stroke="#22C55E" stroke-width="2" marker-end="url(#ag)"/>
+  <text x="865" y="410" text-anchor="middle" font-size="13" font-weight="600" fill="#22C55E">MARKER OK</text>
+
+  <!-- Action proceeds -->
+  <rect x="920" y="398" width="130" height="44" rx="10" fill="#22C55E15" stroke="#22C55E50" stroke-width="1.5"/>
+  <text x="985" y="417" text-anchor="middle" font-size="14" fill="#22C55E">Action</text>
+  <text x="985" y="434" text-anchor="middle" font-size="14" fill="#22C55E">proceeds</text>
+
+  <!-- Loop: Action proceeds -> Attempts -->
+  <path d="M 985 398 L 985 309 L 820 309" stroke="#22C55E" stroke-width="1.5" fill="none" marker-end="url(#ag)" stroke-dasharray="5,3"/>
+  <text x="915" y="299" text-anchor="middle" font-size="11" fill="#22C55E">continues working</text>
 
   <!-- ===== NO MARKER: down ===== -->
-  <line x1="660" y1="164" x2="660" y2="214" stroke="#EF4444" stroke-width="2" marker-end="url(#ar)"/>
-  <text x="685" y="198" font-size="11" font-weight="600" fill="#EF4444">NO MARKER</text>
+  <line x1="520" y1="456" x2="520" y2="500" stroke="#EF4444" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="560" y="486" font-size="13" font-weight="600" fill="#EF4444">NO MARKER</text>
 
-  <!-- DENY -->
-  <rect x="545" y="224" width="230" height="44" rx="8" fill="#EF444415" stroke="#EF444450" stroke-width="1.5"/>
-  <text x="660" y="243" text-anchor="middle" font-size="14" font-weight="600" fill="#EF4444">DENY</text>
-  <text x="660" y="259" text-anchor="middle" font-size="11" fill="#94A3B8">AI told to run architect</text>
+  <!-- DENY: 600px wide -->
+  <rect x="220" y="510" width="600" height="44" rx="10" fill="#EF444415" stroke="#EF444450" stroke-width="1.5"/>
+  <text x="520" y="538" text-anchor="middle" font-size="17" font-weight="600" fill="#EF4444">DENY</text>
 
-  <line x1="660" y1="268" x2="660" y2="308" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="520" y1="554" x2="520" y2="590" stroke="#94A3B8" stroke-width="2" marker-end="url(#a)"/>
 
-  <!-- ===== ARCHITECT AGENT ===== -->
-  <rect x="510" y="318" width="300" height="82" rx="10" fill="#1E293B" stroke="#F59E0B50" stroke-width="2"/>
-  <!-- Building icon -->
-  <g transform="translate(563, 324) scale(0.7)">
+  <!-- ARCHITECT AGENT: 600px wide -->
+  <rect x="220" y="600" width="600" height="76" rx="12" fill="#1E293B" stroke="#F59E0B50" stroke-width="2"/>
+  <g transform="translate(310, 608) scale(0.85)">
     <polygon points="10,0 20,6 0,6" fill="#F59E0B" opacity="0.9"/>
     <rect x="1" y="6" width="18" height="2" fill="#F59E0B" opacity="0.7"/>
-    <rect x="3" y="8" width="2" height="7" fill="#F59E0B" opacity="0.6"/>
-    <rect x="9" y="8" width="2" height="7" fill="#F59E0B" opacity="0.6"/>
-    <rect x="15" y="8" width="2" height="7" fill="#F59E0B" opacity="0.6"/>
-    <rect x="0" y="15" width="20" height="2" fill="#F59E0B" opacity="0.7"/>
+    <rect x="3" y="8" width="2" height="8" fill="#F59E0B" opacity="0.6"/>
+    <rect x="9" y="8" width="2" height="8" fill="#F59E0B" opacity="0.6"/>
+    <rect x="15" y="8" width="2" height="8" fill="#F59E0B" opacity="0.6"/>
+    <rect x="0" y="16" width="20" height="2" fill="#F59E0B" opacity="0.7"/>
   </g>
-  <text x="675" y="336" text-anchor="middle" font-size="13" font-weight="600" fill="#F59E0B">Architect agent reviews</text>
-  <text x="660" y="358" text-anchor="middle" font-size="11" fill="#CBD5E1">Checks against decisions in</text>
-  <text x="660" y="374" text-anchor="middle" font-size="10" fill="#F1F5F9" class="mono">docs/decisions/</text>
-  <text x="660" y="392" text-anchor="middle" font-size="10" fill="#94A3B8">Writes verdict file (PASS or FAIL)</text>
+  <text x="530" y="624" text-anchor="middle" font-size="17" font-weight="600" fill="#F59E0B">Architect agent reviews</text>
+  <text x="520" y="650" text-anchor="middle" font-size="14" fill="#CBD5E1">Checks change against decisions in <tspan class="mono" fill="#F1F5F9">docs/decisions/</tspan></text>
+  <text x="520" y="670" text-anchor="middle" font-size="13" fill="#94A3B8">Writes verdict file (PASS or FAIL)</text>
 
-  <line x1="660" y1="400" x2="660" y2="440" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="520" y1="676" x2="520" y2="712" stroke="#94A3B8" stroke-width="2" marker-end="url(#a)"/>
 
-  <!-- ===== READ VERDICT ===== -->
-  <rect x="520" y="450" width="280" height="54" rx="8" fill="#1E293B" stroke="#22C55E40" stroke-width="1.5"/>
-  <text x="660" y="468" text-anchor="middle" font-size="9" fill="#64748B" class="mono">hook: PostToolUse (Agent)</text>
-  <text x="660" y="488" text-anchor="middle" font-size="13" font-weight="600" fill="#F1F5F9">Read verdict file</text>
+  <!-- READ VERDICT: 600px wide -->
+  <rect x="220" y="722" width="600" height="56" rx="10" fill="#1E293B" stroke="#22C55E40" stroke-width="1.5"/>
+  <text x="520" y="744" text-anchor="middle" font-size="11" fill="#64748B" class="mono">hook: PostToolUse (Agent)</text>
+  <text x="520" y="766" text-anchor="middle" font-size="15" font-weight="600" fill="#F1F5F9">Read verdict file</text>
 
-  <!-- PASS: left -->
-  <line x1="520" y1="477" x2="430" y2="477" stroke="#22C55E" stroke-width="2" marker-end="url(#ag)"/>
-  <text x="475" y="467" text-anchor="middle" font-size="11" font-weight="600" fill="#22C55E">PASS</text>
+  <!-- PASS: left loop -->
+  <path d="M 220 750 L 160 750 L 160 309 L 220 309" stroke="#22C55E" stroke-width="2" fill="none" marker-end="url(#ag)"/>
+  <text x="140" y="540" text-anchor="middle" font-size="13" font-weight="600" fill="#22C55E" transform="rotate(-90, 140, 540)">PASS: marker created, retries</text>
 
-  <!-- Marker created -->
-  <rect x="200" y="455" width="230" height="44" rx="8" fill="#22C55E15" stroke="#22C55E50" stroke-width="1.5"/>
-  <text x="315" y="474" text-anchor="middle" font-size="13" fill="#22C55E">Marker created</text>
-  <text x="315" y="491" text-anchor="middle" font-size="10" fill="#94A3B8" class="mono">/tmp/architect-reviewed-$ID</text>
+  <!-- FAIL: right loop -->
+  <path d="M 820 750 L 920 750 L 920 638 L 820 638" stroke="#EF4444" stroke-width="2" fill="none" marker-end="url(#ar)" stroke-dasharray="8,4"/>
+  <text x="940" y="698" text-anchor="middle" font-size="13" font-weight="600" fill="#EF4444" transform="rotate(-90, 940, 698)">FAIL: fix, re-run</text>
 
-  <!-- PASS loops back up to "AI works..." -->
-  <path d="M 315 455 L 315 96 L 350 96 L 350 110" stroke="#22C55E" stroke-width="1.5" fill="none" marker-end="url(#ag)"/>
-  <text x="303" y="290" text-anchor="middle" font-size="11" fill="#22C55E" transform="rotate(-90, 303, 290)">AI retries (now allowed)</text>
+  <!-- ===== TURN ENDS ===== -->
+  <!-- Arrow exits container (container bottom = 230+630 = 860) -->
+  <line x1="520" y1="860" x2="520" y2="910" stroke="#94A3B8" stroke-width="2" marker-end="url(#a)"/>
 
-  <!-- FAIL: down -->
-  <line x1="660" y1="504" x2="660" y2="544" stroke="#EF4444" stroke-width="2" marker-end="url(#ar)"/>
-  <text x="680" y="531" font-size="11" font-weight="600" fill="#EF4444">FAIL</text>
-
-  <!-- No marker / fix -->
-  <rect x="545" y="554" width="230" height="44" rx="8" fill="#EF444415" stroke="#EF444450" stroke-width="1.5"/>
-  <text x="660" y="573" text-anchor="middle" font-size="13" fill="#EF4444">No marker created</text>
-  <text x="660" y="589" text-anchor="middle" font-size="11" fill="#94A3B8">Fix issues, re-run architect</text>
-
-  <!-- FAIL loops back to architect -->
-  <path d="M 775 576 L 860 576 L 860 359 L 810 359" stroke="#EF4444" stroke-width="1.5" fill="none" marker-end="url(#ar)" stroke-dasharray="6,4"/>
+  <!-- Turn ends pill: 400px wide, 76px tall for 3 lines of text -->
+  <rect x="320" y="920" width="400" height="76" rx="38" fill="#334155" stroke="#64748B" stroke-width="1.5"/>
+  <text x="520" y="946" text-anchor="middle" font-size="11" fill="#64748B" class="mono">hook: Stop</text>
+  <text x="520" y="968" text-anchor="middle" font-size="18" font-weight="600" fill="#F1F5F9">Turn ends</text>
+  <text x="520" y="986" text-anchor="middle" font-size="12" fill="#94A3B8">Removes marker and hash (if they exist)</text>
 
   <!-- Footer -->
-  <line x1="40" y1="620" x2="960" y2="620" stroke="#1E293B" stroke-width="1"/>
-  <text x="500" y="642" text-anchor="middle" font-size="12" fill="#64748B">Marker validity details (TTL, drift detection, sliding window) are shown in the next diagram.</text>
+  <line x1="60" y1="1024" x2="1140" y2="1024" stroke="#1E293B" stroke-width="1"/>
+  <text x="600" y="1050" text-anchor="middle" font-size="13" fill="#64748B">Marker validity details (TTL, drift detection, sliding window) are shown in the next diagram.</text>
 </svg>
