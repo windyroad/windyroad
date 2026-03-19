@@ -28,22 +28,7 @@ Five hooks enforce the gate. Four follow a cycle: detect that the project has an
 
 ### 1. Detection (UserPromptSubmit)
 
-Every prompt, a hook checks whether `.claude/agents/architect.md` exists in the project. If it does, the hook injects an instruction telling the AI to delegate to the architect agent before editing any project file.
-
-```bash
-if [ -f ".claude/agents/architect.md" ]; then
-  cat <<'HOOK_OUTPUT'
-INSTRUCTION: MANDATORY ARCHITECTURE CHECK. YOU MUST FOLLOW THIS.
-DETECTED: .claude/agents/architect.md exists in this project.
-
-This is a NON-OPTIONAL instruction. You MUST use the architect agent
-before editing any project file. This includes source code, configuration,
-CI workflows, hook scripts, build scripts, and decision files.
-HOOK_OUTPUT
-fi
-```
-
-The trigger is the agent definition itself, not any external process document. The entire decision management process is embedded in the agent definition so the system has no external dependencies. Drop the agent file into a repo, wire the hooks, and it works.
+Every prompt, a hook injects an instruction telling the AI to delegate to the architect agent before editing any project file. The decision management process is embedded in the agent definition itself, so the system has no external dependencies.
 
 ### 2. The gate (PreToolUse)
 
@@ -167,10 +152,6 @@ After either verdict, the agent writes to the verdict file:
 ```bash
 echo "PASS" > /tmp/architect-verdict
 ```
-
-## Self-contained by design
-
-The design has one dependency: the agent file itself. The hooks check for `.claude/agents/architect.md`. The agent contains the full decision lifecycle (statuses, MADR 4.0 format, naming conventions, superseding process). Drop it into any repo and the system works, even if `docs/decisions/` doesn't exist yet. The agent handles an empty or missing decisions directory gracefully and recommends creating it when the first decision needs documenting.
 
 ## What gets gated
 
