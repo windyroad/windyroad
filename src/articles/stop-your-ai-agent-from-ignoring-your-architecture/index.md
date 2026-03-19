@@ -174,3 +174,5 @@ Adjust the scope. The exclusion list matches this project's structure. If you wa
 Bootstrap your decisions. Once the hooks are wired, ask the AI to survey the codebase and document the existing architectural choices as decision records. The architect agent already knows the MADR 4.0 format and will create records for the technology choices, patterns, and conventions it finds. Review what it produces, fill in any context the agent missed (the "why" behind a choice is often not in the code), and add reassessment criteria. This gives you a populated `docs/decisions/` directory in one session instead of building it incrementally over months.
 
 The full configuration is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks) covers the full event model.
+
+The decision is still sound. Now the reasoning stays with it, because the gate won't let the agent proceed without writing it down.
