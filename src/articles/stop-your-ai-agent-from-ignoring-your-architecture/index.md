@@ -16,7 +16,7 @@ A hook-based gate can close this gap. It intercepts edits to project files and r
 
 Architecture Decision Records solve a known problem: decisions made verbally or in chat disappear. The [MADR format](https://adr.github.io/madr/) (Markdown Any Decision Records) gives them structure. Context, options considered, rationale, consequences, reassessment criteria.
 
-<span data-pull>The format is not the hard part. The hard part is remembering to write them.</span> An AI agent adding a dependency to `package.json` will not stop to ask itself whether this choice deserves a decision record. It will install the package and move on.
+The format is not the hard part. The hard part is remembering to write them. An AI agent adding a dependency to `package.json` will not stop to ask itself whether this choice deserves a decision record. It will install the package and move on.
 
 The same problem exists with compliance. If decision 001 says "use rehype-highlight for syntax highlighting," nothing stops the agent from adding `@shikijs/rehype` to `package.json` in a later session. The decision exists. The agent doesn't check it.
 
@@ -169,7 +169,7 @@ A real example: the AI was removing an unused API endpoint. The architect flagge
 
 With verdict gating, the gate stays locked after ISSUES FOUND. The AI has two options: fix the smoke test and remove the API properly, or stop. No middle ground where you half-do the work and leave broken dependencies in place. The hook system cannot make the AI choose the right fix. But it can prevent the AI from ignoring the issue and continuing as if the review never happened.
 
-When the agent flags something you disagree with, override it. The gate blocks the AI, not you. When a hook denies an edit, Claude Code shows the denial reason and asks whether to proceed. Type "y" and the edit goes through. The architect review still happened; you just chose to act on it differently than the agent recommended.
+<span data-pull>The gate blocks the AI, not you.</span> The hooks constrain the agent's workflow. You control the hooks, the agent definition, and the decisions. If the architect flags something you disagree with, adjust the decision or the agent's instructions. The system is yours to tune.
 
 ## Adapting this for your project
 
