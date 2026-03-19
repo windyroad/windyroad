@@ -145,11 +145,7 @@ echo "PASS" > /tmp/architect-verdict
 
 ## What gets gated
 
-Everything except stylesheets, images, lockfiles, fonts, and memory files.
-
-Gating only config files sounds reasonable until decisions specify how code should behave. If a decision says "all API responses must include RFC 8288 Link headers" or "resource URIs must be flat, no nesting," those rules are enforced in source files, not in config. <span data-pull>An architecture gate that only watches config files is checking the blueprint while ignoring the building.</span>
-
-The architect agent is told to be pragmatic: a refactored function or a bug fix gets a quick PASS. A new API endpoint that skips an established pattern gets flagged.
+Everything except stylesheets, images, lockfiles, fonts, and memory files. The architect agent is told to be pragmatic: a refactored function or a bug fix gets a quick PASS. A new API endpoint that skips an established pattern gets flagged.
 
 ## Decisions as living documents
 
