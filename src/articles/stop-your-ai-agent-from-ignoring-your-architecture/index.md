@@ -119,7 +119,7 @@ It checks five things, in order of importance:
 
 **Confirmation criteria.** Many decisions include a Confirmation section describing how to verify compliance (e.g. "Client JS does not contain hardcoded API URLs beyond the entry point"). The agent checks proposed code against these criteria and flags violations as `[Confirmation Violation]`.
 
-**New decision detection.** Does the change represent an undocumented architectural choice? A new dependency, a new CI workflow, a structural reorganisation. The agent is told to be pragmatic: focus on choices that affect how the team works, what dependencies the project carries, or how code flows to production.
+**New decision detection.** Does the change represent an undocumented architectural choice? The agent is told to be pragmatic. A version bump to an existing dependency is reversible and local: no flag. Adding a new ORM, switching from REST to GraphQL, or introducing a new CI workflow affects how the team works and how code flows to production: flag it.
 
 **Decision quality.** When a change includes a new decision file, does it follow MADR 4.0 format? Required frontmatter, at least two considered options, reassessment criteria.
 
@@ -155,7 +155,7 @@ Status transitions are manual. You rename the file (`001-use-rehype-highlight.pr
 
 The architect agent call adds 10-20 seconds per turn that touches project files. The sliding TTL means this cost is paid once per session, not once per edit, as long as edits are less than 10 minutes apart.
 
-False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the pragmatism criteria were too generous, or because the change didn't match any detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates.
+False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the pragmatism criteria were too generous, or because the change didn't match any detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates. The system is too new to have quantitative data on flag rates or false positive ratios. The smoke test example below is representative of the kinds of catches it makes, but systematic measurement is still ahead.
 
 The verdict gating matters more than it looks. In an earlier version of this system (before the PASS/FAIL verdict file), the architect flagged issues but the gate unlocked regardless. The AI could proceed with edits while leaving the flagged issues unresolved.
 
