@@ -184,6 +184,15 @@
             "command": ".claude/hooks/architect-mark-reviewed.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/architect-refresh-hash.sh"
+          }
+        ]
       }
     ]
   }

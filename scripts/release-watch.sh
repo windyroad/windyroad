@@ -86,6 +86,33 @@ git checkout origin/publish -- package.json CHANGELOG.md
 git ls-files .changeset/ | grep -v 'README.md\|config.json' | xargs --no-run-if-empty git rm -f
 VERSION=$(node -p "require('./package.json').version")
 git commit -m "chore: sync version $VERSION from publish to master [skip ci]"
+
+# ── 4b. Run post-release hooks ────────────────────────────────────────────────
+HOOK_DIR="scripts/post-release.d"
+if [ -d "$HOOK_DIR" ]; then
+  # Find files changed in this release (between previous sync and current sync)
+  PREV_SYNC=$(git log --grep='chore: sync version .* from publish to master' -1 --format=%H HEAD~1 2>/dev/null || true)
+  if [ -n "$PREV_SYNC" ]; then
+    CHANGED_FILES=$(git diff --name-only "$PREV_SYNC"..HEAD~1 2>/dev/null || true)
+  else
+    CHANGED_FILES=""
+  fi
+
+  for hook in "$HOOK_DIR"/*; do
+    [ -x "$hook" ] || continue
+    echo "Running post-release hook: $(basename "$hook")"
+    if ! echo "$CHANGED_FILES" | RELEASE_DATE="$(date +%Y-%m-%d)" "$hook"; then
+      echo "Warning: post-release hook $(basename "$hook") failed (non-fatal)"
+    fi
+  done
+
+  # Commit any changes produced by hooks
+  if ! git diff --quiet || ! git diff --cached --quiet; then
+    git commit -m "chore: post-release updates for v$VERSION [skip ci]"
+    echo "Post-release hook changes committed"
+  fi
+fi
+
 git push
 echo "Version sync pushed (pipeline skipped, code already verified by publish pipeline)"
 

@@ -29,7 +29,7 @@ You are the Architect. You review proposed changes against the project's archite
 ### Decision Staleness Check
 
 For each `accepted` decision in `docs/decisions/`:
-- If the decision's `date` field is older than 6 months, flag **[Stale Decision]** (advisory, does not affect PASS/FAIL)
+- If the decision's `first-released` field (or `date` field when `first-released` is absent) is older than 6 months, flag **[Stale Decision]** (advisory, does not affect PASS/FAIL)
 - If a `reassessment-date` field exists in frontmatter and has passed, flag **[Reassessment Overdue]** (advisory)
 - If the decision has a **Reassessment Criteria** section and the triggers described there appear to have been met based on the current codebase, flag **[Reassessment Triggered]** (advisory)
 
@@ -170,6 +170,8 @@ decision-makers: [list of makers]
 consulted: [list of consulted resources/people]
 informed: [list of informed parties]
 reassessment-date: YYYY-MM-DD  # optional: when this decision should be reviewed
+first-released: YYYY-MM-DD    # optional: date this decision first shipped to production
+accepted-date: YYYY-MM-DD     # optional: date this decision was promoted to accepted
 ---
 ```
 
