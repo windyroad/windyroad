@@ -26,13 +26,9 @@ Five hooks enforce the gate. Four follow a cycle: detect that the project has an
 
 ![Flow diagram showing the five-hook architect gate: a UserPromptSubmit hook detects architect.md and injects context, a PreToolUse hook checks for a session marker with TTL and drift validation and blocks edits if invalid, a PostToolUse hook creates the marker only when the architect verdict is PASS, a Stop hook removes the marker so the next turn starts locked, and a fifth PreToolUse hook on ExitPlanMode checks the same marker to block plan exit without review.](/img/social/architect-five-hooks.svg)
 
-### 1. Detection (UserPromptSubmit)
+### The gate
 
-Every prompt, a hook injects an instruction telling the AI to delegate to the architect agent before editing any project file. The decision management process is embedded in the agent definition itself, so the system has no external dependencies.
-
-### 2. The gate (PreToolUse)
-
-A PreToolUse hook fires before every Edit or Write call. It parses the tool input with `jq` and checks whether an architect session marker exists:
+The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked:
 
 ```bash
 INPUT=$(cat)
@@ -51,11 +47,11 @@ EOF
 fi
 ```
 
-If the file is not excluded (CSS, images, lockfiles, fonts, memory files) and no valid session marker exists, the edit is denied.
+If the file is not excluded (CSS, images, lockfiles, fonts, memory files) and no valid session marker exists, the edit is denied. The same check runs on `ExitPlanMode`, sharing the marker.
 
-### 3. The unlock (PostToolUse)
+### The unlock
 
-After the AI calls the Agent tool, a PostToolUse hook checks whether the subagent was the architect and whether the review passed:
+The unlock only fires after the architect agent returns. It reads a verdict file that the architect writes during its review:
 
 ```bash
 VERDICT_FILE="/tmp/architect-verdict"
@@ -76,13 +72,7 @@ case "$VERDICT" in
 esac
 ```
 
-The architect agent writes `PASS` or `FAIL` to `/tmp/architect-verdict` via Bash. The unlock hook reads and deletes it. If the verdict is FAIL, no marker is created and edits stay blocked until the issues are resolved and the architect is re-run.
-
-The missing-verdict fallback defaults to PASS. Without this, an agent error or timeout would lock the gate permanently for the rest of the session. The instruction layer (the detection hook telling the AI to resolve issues before editing) provides a second line of defence.
-
-### 4. Reset and plan gate (Stop + PreToolUse: ExitPlanMode)
-
-A Stop hook removes the marker when the AI finishes responding, so the next prompt starts locked. A fifth hook fires on `ExitPlanMode` and checks the same edit marker. No separate marker is needed. The `ExitPlanMode` matcher on the hook is itself proof that the AI is in plan mode.
+If the verdict is FAIL, no marker is created and edits stay blocked until the issues are resolved and the architect is re-run. The missing-verdict fallback defaults to PASS to prevent permanent lockout if the agent errors out.
 
 ## Marker validity
 
