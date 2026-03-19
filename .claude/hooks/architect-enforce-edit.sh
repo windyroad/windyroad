@@ -43,6 +43,8 @@ case "$FILE_PATH" in
     exit 0 ;;
   */MEMORY.md|*/.claude/projects/*/memory/*)
     exit 0 ;;
+  */.claude/plans/*.md|*.claude/plans/*.md)
+    exit 0 ;;
 esac
 
 # Check gate
