@@ -128,12 +128,8 @@ except:
             }
             PR_CHANGESET_COUNT=$(echo "$PR_DIFF_NAMES" | grep -cE '^\.changeset/.*\.md$' || echo "0")
             # Get the total diff size of the release PR
-            PR_DIFF_STAT=$(timeout 10 gh pr diff "$CHECK_PR_NUMBER" --stat | tail -1) || {
-                echo "✗ Failed to fetch release PR stats (gh CLI or GitHub API error)" >&2
-                exit 1
-            }
-            PR_INSERTIONS=$(echo "$PR_DIFF_STAT" | grep -oE '[0-9]+ insertion' | grep -oE '[0-9]+' || echo "0")
-            PR_DELETIONS=$(echo "$PR_DIFF_STAT" | grep -oE '[0-9]+ deletion' | grep -oE '[0-9]+' || echo "0")
+            PR_INSERTIONS=$(timeout 10 gh pr view "$CHECK_PR_NUMBER" --json additions -q '.additions') || PR_INSERTIONS="0"
+            PR_DELETIONS=$(timeout 10 gh pr view "$CHECK_PR_NUMBER" --json deletions -q '.deletions') || PR_DELETIONS="0"
             PR_INSERTIONS=${PR_INSERTIONS:-0}
             PR_DELETIONS=${PR_DELETIONS:-0}
             PR_TOTAL_LINES=$((PR_INSERTIONS + PR_DELETIONS))
