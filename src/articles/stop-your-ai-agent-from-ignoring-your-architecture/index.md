@@ -10,7 +10,9 @@ An AI agent makes architectural decisions constantly. Add a dependency, change a
 
 This is the knowledge management version of technical debt. Six months later, someone asks why the project uses rehype-highlight instead of Shiki. The answer is in a conversation that no longer exists. <span data-pull>The decision was sound. The reasoning is gone.</span>
 
-A hook-based gate can close this gap. It intercepts edits to project files and requires an architecture review before the edit proceeds. The reviewer checks proposed changes against existing decision records in `docs/decisions/` and flags when a new decision should be documented.
+A hook-based gate can close this gap. This implementation uses [Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks), but the pattern (detect, gate, review, unlock, reset) applies to any agent system that exposes lifecycle events.
+
+The gate intercepts edits to project files and requires an architecture review before the edit proceeds. The reviewer checks proposed changes against existing decision records in `docs/decisions/` and flags when a new decision should be documented.
 
 ## The problem
 
@@ -27,6 +29,8 @@ Five hooks enforce the gate. Four follow a cycle: detect that the project has an
 ![Flow diagram showing the five-hook architect gate: a UserPromptSubmit hook detects architect.md and injects context, a PreToolUse hook checks for a session marker with TTL and drift validation and blocks edits if invalid, a PostToolUse hook creates the marker only when the architect verdict is PASS, a Stop hook removes the marker so the next turn starts locked, and a fifth PreToolUse hook on ExitPlanMode checks the same marker to block plan exit without review.](/img/social/architect-five-hooks.svg)
 
 ### The gate
+
+The code samples below are excerpts. The complete hook scripts (each under 40 lines) are in the [linked repo](https://github.com/windyroad/windyroad).
 
 The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked:
 
@@ -145,21 +149,21 @@ Decisions follow a lifecycle. They start as `proposed`, move to `accepted` after
 
 In this project, that decision started as proposed when the agent flagged `rehype-highlight` as an undocumented dependency. The MADR record captured why Shiki was rejected (bundle size, build complexity) and when to revisit (if rehype-highlight drops maintained status). Three deploys later, the decision moved to accepted. Now when the agent sees a new syntax highlighting dependency in `package.json`, it has context: not just what was chosen, but why, and under what conditions to reconsider.
 
-The lifecycle matters because the agent checks compliance against `accepted` and `proposed` decisions but ignores `superseded` ones. A rejected decision prevents re-proposing the same approach without new evidence.
+Status transitions are manual. You rename the file (`001-use-rehype-highlight.proposed.md` to `001-use-rehype-highlight.accepted.md`) and update the frontmatter. The architect agent does not promote decisions automatically because production validation requires human judgment. What the agent does is enforce compliance: it checks against `accepted` and `proposed` decisions but ignores `superseded` ones. A rejected decision prevents re-proposing the same approach without new evidence.
 
 ## Tradeoffs
 
 The architect agent call adds 10-20 seconds per turn that touches project files. The sliding TTL means this cost is paid once per session, not once per edit, as long as edits are less than 10 minutes apart.
 
-The "when NOT to flag" list is critical. Without it, the agent flags every version bump, every bug fix to a config file, every cosmetic change. The pragmatism criteria (temporary, obvious, reversible, local) keep the signal-to-noise ratio manageable.
-
-False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the "when NOT to flag" list was too generous, or because the change didn't match any of the new-decision-detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates.
+False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the pragmatism criteria were too generous, or because the change didn't match any detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates.
 
 The verdict gating matters more than it looks. In an earlier version of this system (before the PASS/FAIL verdict file), the architect flagged issues but the gate unlocked regardless. The AI could proceed with edits while leaving the flagged issues unresolved.
 
 A real example: the AI was removing an unused API endpoint. The architect flagged that a smoke test depended on it and recommended updating the smoke test to check something that validates the health of the system. Without verdict gating, the AI proceeded with the rest of the task, left the API in place, left the smoke test unchanged, and moved on. The architect caught the problem. The AI chose the path of least resistance: do nothing about it.
 
 With verdict gating, the gate stays locked after ISSUES FOUND. The AI has two options: fix the smoke test and remove the API properly, or stop. No middle ground where you half-do the work and leave broken dependencies in place. The hook system cannot make the AI choose the right fix. But it can prevent the AI from ignoring the issue and continuing as if the review never happened.
+
+The system has known edge cases. Marker files live in `/tmp`, which is world-writable and not shared across machines. Drift detection hashes file contents, not filenames, so renaming a decision file without changing its content won't trigger a re-review. Concurrent sessions share the verdict file, creating a small race window (the PostToolUse hook reads and deletes it immediately, so the window is the time between two architect agents finishing simultaneously).
 
 <span data-pull>The gate blocks the AI, not you.</span> The hooks constrain the agent's workflow. You control the hooks, the agent definition, and the decisions. If the architect flags something you disagree with, adjust the decision or the agent's instructions. The system is yours to tune.
 
