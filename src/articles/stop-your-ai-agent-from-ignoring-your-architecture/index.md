@@ -3,7 +3,7 @@ date: '2026-03-17'
 title: 'Stop your AI agent from ignoring your architecture'
 author: 'Tom Howard'
 tags: ['ai coding', 'claude code', 'software delivery']
-draft: true
+draft: false
 ---
 
 An AI agent makes architectural decisions constantly. Add a dependency, change a build script, restructure a config file. Each choice is reasonable in isolation. None of them get written down.
