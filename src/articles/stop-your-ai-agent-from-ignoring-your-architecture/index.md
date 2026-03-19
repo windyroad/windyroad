@@ -105,8 +105,6 @@ echo "$HASH" > "/tmp/architect-reviewed-${SESSION_ID}.hash"
 
 Before allowing an edit, the gate recomputes the hash and compares it to the stored value. If a decision file changed since the review, the marker is invalidated and a re-review is required. <span data-pull>The gate catches decisions that change under your feet, not just decisions that existed at review time.</span>
 
-The hash function is portable: it tries `md5sum`, falls back to `md5 -r` (macOS native), then `shasum`. The `stat` call for TTL checks tries GNU `stat -c%Y` before macOS `/usr/bin/stat -f%m`. The hooks run on both platforms without Homebrew dependencies.
-
 ## The reviewer
 
 The architect agent is defined in `.claude/agents/architect.md`. It has read-only access (Read, Glob, Grep) plus Bash for writing the verdict file. It cannot edit project files.
@@ -136,12 +134,6 @@ Or:
 >    - **Issue**: Adding `@shikijs/rehype` as a dependency. Decision 001 chose `rehype-highlight` over Shiki.
 >    - **Existing Decision**: 001-use-rehype-highlight-for-syntax-highlighting
 >    - **Action**: This conflicts with an accepted decision. Either update the decision or remove the dependency.
-
-After either verdict, the agent writes to the verdict file:
-
-```bash
-echo "PASS" > /tmp/architect-verdict
-```
 
 ## What gets gated
 
@@ -175,7 +167,7 @@ With verdict gating, the gate stays locked after ISSUES FOUND. The AI has two op
 
 Start with the agent file. Drop `.claude/agents/architect.md` into your repo. The embedded process works out of the box with an empty `docs/decisions/` directory. The first time the agent flags an undocumented decision, create the directory and the first record.
 
-Wire the five hooks into `.claude/settings.json`. Detection in `UserPromptSubmit`, gate in `PreToolUse` (matcher: `Edit|Write`), plan gate in `PreToolUse` (matcher: `ExitPlanMode`), unlock in `PostToolUse` (matcher: `Agent`), reset in `Stop`. The hook scripts are minimal shell scripts, each under 40 lines.
+Wire the five hooks (detection, gate, plan gate, unlock, reset) into `.claude/settings.json`. The full configuration, including matchers and hook scripts, is in the linked repo.
 
 Adjust the scope. The exclusion list matches this project's structure. If you want to gate only infrastructure files instead of everything, modify the case statement to match only the file types you care about. The pattern is the same.
 
