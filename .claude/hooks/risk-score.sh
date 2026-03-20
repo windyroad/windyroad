@@ -1,7 +1,8 @@
 #!/bin/bash
 # UserPromptSubmit hook: Delegates risk scoring to the risk-scorer agent.
-# Collects diff summary, injects instruction to call risk-scorer agent.
-# If a previous score >= 5 exists, adds a nudge to reduce changes.
+# Gathers full pipeline state via lib/pipeline-state.sh, injects instruction
+# to call risk-scorer agent for commit + push scoring.
+# Absorbs WIP nudge warnings (stale files, unpushed count).
 
 set -euo pipefail
 
@@ -13,143 +14,138 @@ data = json.load(sys.stdin)
 print(data.get('session_id', ''))
 " 2>/dev/null || echo "")
 
-SCORE_FILE="/tmp/risk-score-value-${SESSION_ID}"
-CLEAN_FILE="/tmp/risk-score-clean-${SESSION_ID}"
+COMMIT_SCORE_FILE="/tmp/risk-commit-${SESSION_ID}"
+PUSH_SCORE_FILE="/tmp/risk-push-${SESSION_ID}"
+CLEAN_FILE="/tmp/risk-clean-${SESSION_ID}"
 
-# --- Noise filter: lockfiles, binary assets, OS junk ---
-NOISE='(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|bun\.lockb|Gemfile\.lock|Pipfile\.lock|poetry\.lock|composer\.lock|Cargo\.lock|go\.sum|shrinkwrap\.json|\.DS_Store|node_modules|\.png$|\.svg$|\.jpg$|\.jpeg$|\.gif$|\.ico$|\.woff2?$|\.ttf$|\.eot$)'
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# --- Collect tracked changes (staged + unstaged vs HEAD) ---
-DIFF_STAT=$(git diff HEAD --stat -- . ':(exclude)package-lock.json' ':(exclude)yarn.lock' ':(exclude)pnpm-lock.yaml' ':(exclude)bun.lockb' ':(exclude)Gemfile.lock' ':(exclude)Pipfile.lock' ':(exclude)poetry.lock' ':(exclude)composer.lock' ':(exclude)Cargo.lock' ':(exclude)go.sum' ':(exclude)shrinkwrap.json' 2>/dev/null || echo "")
-DIFF_NAMES=$(git diff HEAD --name-only 2>/dev/null | grep -vE "$NOISE" || echo "")
-
-# --- Collect untracked files ---
-UNTRACKED=$(git ls-files --others --exclude-standard 2>/dev/null | grep -vE "$NOISE" || true)
+# --- Gather full pipeline state ---
+PIPELINE_STATE=$("$SCRIPT_DIR/lib/pipeline-state.sh" --all 2>/dev/null || echo "(pipeline state unavailable)")
 
 # --- Clean tree? Write marker and exit silently ---
-if [ -z "$DIFF_NAMES" ] && [ -z "$UNTRACKED" ]; then
+if echo "$PIPELINE_STATE" | grep -q "No uncommitted changes."; then
+    # Check if also no unpushed changes (fully clean)
     if [ -n "$SESSION_ID" ]; then
         printf '1' > "$CLEAN_FILE"
-        rm -f "$SCORE_FILE"
+        rm -f "$COMMIT_SCORE_FILE"
     fi
-    exit 0
+    # Even if tree is clean, if there are unpushed changes we still need push scoring
+    if echo "$PIPELINE_STATE" | grep -q "No unpushed commits."; then
+        rm -f "$PUSH_SCORE_FILE"
+        exit 0
+    fi
 fi
 
 # Dirty tree: remove clean marker if it exists
-rm -f "$CLEAN_FILE"
-
-# --- Build the change summary ---
-SUMMARY=""
-
-if [ -n "$DIFF_STAT" ]; then
-    SUMMARY="${SUMMARY}Tracked changes (git diff HEAD --stat):\n${DIFF_STAT}\n\n"
+if ! echo "$PIPELINE_STATE" | grep -q "No uncommitted changes."; then
+    rm -f "$CLEAN_FILE"
 fi
 
-if [ -n "$UNTRACKED" ]; then
-    UNTRACKED_COUNT=$(echo "$UNTRACKED" | wc -l | tr -d ' ')
-    SUMMARY="${SUMMARY}Untracked files (${UNTRACKED_COUNT}):\n${UNTRACKED}\n\n"
+# --- Build WIP warnings (absorbed from wip-nudge.sh) ---
+WARNINGS=""
+
+# Stale files warning
+if echo "$PIPELINE_STATE" | grep -q "uncommitted for over 24h"; then
+    STALE_LINE=$(echo "$PIPELINE_STATE" | grep "uncommitted for over 24h" | head -1)
+    WARNINGS="${WARNINGS}WIP: ${STALE_LINE}\n"
 fi
 
-# --- Categorise changed files ---
-ALL_FILES=""
-if [ -n "$DIFF_NAMES" ]; then
-    ALL_FILES="$DIFF_NAMES"
-fi
-if [ -n "$UNTRACKED" ]; then
-    if [ -n "$ALL_FILES" ]; then
-        ALL_FILES="${ALL_FILES}\n${UNTRACKED}"
-    else
-        ALL_FILES="$UNTRACKED"
-    fi
+# Unpushed commits warning
+UNPUSHED_COUNT=$(echo "$PIPELINE_STATE" | grep -oP 'Unpushed commits \(\K[0-9]+' || echo "0")
+if [ "$UNPUSHED_COUNT" -ge 3 ]; then
+    WARNINGS="${WARNINGS}WIP: ${UNPUSHED_COUNT} unpushed commits on master. Consider running \`npm run push:watch\`.\n"
 fi
 
-CATEGORIES=$(echo -e "$ALL_FILES" | python3 -c "
-import sys
-cats = {
-    'hooks': [], 'config': [], 'ci': [], 'ui': [], 'styles': [],
-    'content': [], 'generated': [], 'skills': [], 'docs': [],
-    'tests': [], 'lib': [], 'agents': [], 'other': []
-}
-for line in sys.stdin:
-    f = line.strip()
-    if not f:
-        continue
-    if '.claude/hooks/' in f:
-        cats['hooks'].append(f)
-    elif '.claude/agents/' in f:
-        cats['agents'].append(f)
-    elif '.claude/skills/' in f:
-        cats['skills'].append(f)
-    elif '.claude/' in f or f.endswith(('.json', '.toml', '.yml', '.yaml', '.mjs', '.cjs')) and '/' not in f:
-        cats['config'].append(f)
-    elif '.github/' in f:
-        cats['ci'].append(f)
-    elif f.endswith(('.tsx', '.jsx', '.html', '.vue', '.svelte')):
-        cats['ui'].append(f)
-    elif f.endswith(('.scss', '.css', '.less')):
-        cats['styles'].append(f)
-    elif f.endswith(('.md', '.mdx')):
-        if 'generated' in f or 'architecture' in f:
-            cats['generated'].append(f)
-        elif 'articles/' in f or 'content/' in f or 'posts/' in f:
-            cats['content'].append(f)
-        else:
-            cats['docs'].append(f)
-    elif 'generated/' in f:
-        cats['generated'].append(f)
-    elif f.endswith(('.test.ts', '.test.tsx', '.spec.ts', '.spec.tsx')):
-        cats['tests'].append(f)
-    elif f.endswith(('.ts', '.js')):
-        cats['lib'].append(f)
-    else:
-        cats['other'].append(f)
-out = []
-for cat, files in cats.items():
-    if files:
-        out.append(f'  {cat}: {len(files)} file(s)')
-if out:
-    print('\n'.join(out))
-" 2>/dev/null || echo "  (could not categorise)")
-
-SUMMARY="${SUMMARY}Categories:\n${CATEGORIES}"
-
-# --- Check for existing high score (nudge) ---
+# --- Check for existing high scores (nudge) ---
 NUDGE=""
-if [ -f "$SCORE_FILE" ]; then
-    PREV_SCORE=$(cat "$SCORE_FILE" 2>/dev/null || echo "")
+if [ -f "$COMMIT_SCORE_FILE" ]; then
+    PREV_COMMIT=$(cat "$COMMIT_SCORE_FILE" 2>/dev/null || echo "")
     IS_HIGH=$(python3 -c "
 try:
-    print('yes' if float('$PREV_SCORE') >= 5 else 'no')
+    print('yes' if float('$PREV_COMMIT') >= 5 else 'no')
 except:
     print('no')
 " 2>/dev/null || echo "no")
     if [ "$IS_HIGH" = "yes" ]; then
-        NUDGE="WARNING: Previous risk score was ${PREV_SCORE}/25. Reduce uncommitted changes (git stash, git checkout, revert) before committing. Edits are allowed -- use them to bring the score down. Then re-run risk-scorer.\n\n"
+        NUDGE="${NUDGE}WARNING: Previous commit risk rating was ${PREV_COMMIT}/25. Reduce uncommitted changes before committing.\n"
     fi
 fi
 
+if [ -f "$PUSH_SCORE_FILE" ]; then
+    PREV_PUSH=$(cat "$PUSH_SCORE_FILE" 2>/dev/null || echo "")
+    IS_HIGH=$(python3 -c "
+try:
+    print('yes' if float('$PREV_PUSH') >= 5 else 'no')
+except:
+    print('no')
+" 2>/dev/null || echo "no")
+    if [ "$IS_HIGH" = "yes" ]; then
+        NUDGE="${NUDGE}WARNING: Previous push risk rating was ${PREV_PUSH}/25. Consider pushing or reducing unpushed changes before continuing.\n"
+    fi
+fi
+
+# --- Determine which actions to score ---
+HAS_UNCOMMITTED=true
+HAS_UNPUSHED=true
+if echo "$PIPELINE_STATE" | grep -q "No uncommitted changes."; then
+    HAS_UNCOMMITTED=false
+fi
+if echo "$PIPELINE_STATE" | grep -q "No unpushed commits."; then
+    HAS_UNPUSHED=false
+fi
+
+SCORE_INSTRUCTIONS=""
+if [ "$HAS_UNCOMMITTED" = true ]; then
+    SCORE_INSTRUCTIONS="Score COMMIT risk. Write commit residual risk rating to: ${COMMIT_SCORE_FILE}
+Command: printf '%s' N > ${COMMIT_SCORE_FILE}"
+fi
+
+if [ "$HAS_UNPUSHED" = true ] || [ "$HAS_UNCOMMITTED" = true ]; then
+    SCORE_INSTRUCTIONS="${SCORE_INSTRUCTIONS}
+
+Score PUSH risk (the accumulated unpushed changes, including any uncommitted work that would be committed). Write push residual risk rating to: ${PUSH_SCORE_FILE}
+Command: printf '%s' N > ${PUSH_SCORE_FILE}"
+fi
+
 # --- Build the instruction ---
-INSTRUCTION="${NUDGE}RISK SCORE CHECK (mandatory, every prompt).
+INSTRUCTION="${WARNINGS}${NUDGE}RISK SCORE CHECK (mandatory, every prompt).
 
 You MUST call the risk-scorer agent (subagent_type: \"risk-scorer\") with this prompt:
 
-Give this a risk score out of 25.
+Produce risk reports for the following pipeline state.
 
-${SUMMARY}
+${PIPELINE_STATE}
 
-Write your score to: ${SCORE_FILE}
-Command: printf '%s' N > ${SCORE_FILE}
+${SCORE_INSTRUCTIONS}
 
-After the agent returns, report the score in your response: \"Risk score: N/25 (Label)\"."
+After the agent returns, include the full risk reports in your response."
 
-# --- Output as additionalContext ---
+# --- Output ---
 ESCAPED=$(echo -e "$INSTRUCTION" | python3 -c "
 import sys, json
 text = sys.stdin.read().strip()
 print(json.dumps(text))
 " 2>/dev/null || echo '""')
 
-cat <<EOF
+# Include WIP warnings as systemMessage if present
+if [ -n "$WARNINGS" ]; then
+    SYSTEM_MSG=$(echo -e "$WARNINGS" | python3 -c "
+import sys, json
+text = sys.stdin.read().strip()
+print(json.dumps(text))
+" 2>/dev/null || echo '""')
+    cat <<EOF
+{
+  "systemMessage": $SYSTEM_MSG,
+  "hookSpecificOutput": {
+    "hookEventName": "UserPromptSubmit",
+    "additionalContext": $ESCAPED
+  }
+}
+EOF
+else
+    cat <<EOF
 {
   "hookSpecificOutput": {
     "hookEventName": "UserPromptSubmit",
@@ -157,3 +153,4 @@ cat <<EOF
   }
 }
 EOF
+fi

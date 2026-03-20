@@ -1,6 +1,6 @@
 #!/bin/bash
-# PreToolUse hook: Denies git commit when risk score >= 5.
-# Reads score from /tmp/risk-score-value-{SESSION_ID}.
+# PreToolUse hook: Denies git commit when commit risk score >= 5.
+# Reads score from /tmp/risk-commit-{SESSION_ID}.
 
 set -euo pipefail
 
@@ -40,8 +40,8 @@ except:
 
 [ -n "$SESSION_ID" ] || exit 0
 
-CLEAN_FILE="/tmp/risk-score-clean-${SESSION_ID}"
-SCORE_FILE="/tmp/risk-score-value-${SESSION_ID}"
+CLEAN_FILE="/tmp/risk-clean-${SESSION_ID}"
+SCORE_FILE="/tmp/risk-commit-${SESSION_ID}"
 
 # Clean tree marker means no uncommitted changes when last checked
 if [ -f "$CLEAN_FILE" ]; then
@@ -81,7 +81,7 @@ if [ "$DENIED" = "yes" ]; then
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
     "permissionDecision": "deny",
-    "permissionDecisionReason": "Risk score ${SCORE}/25. Do not commit risky work. Reduce changes first: stash unrelated files, revert exploratory edits, or split your work. Then re-run the risk-scorer agent to get a lower score."
+    "permissionDecisionReason": "Commit risk score ${SCORE}/25. Do not commit risky work. Reduce changes first: stash unrelated files, revert exploratory edits, or split your work. Then re-run the risk-scorer agent to get a lower score."
   }
 }
 EOF

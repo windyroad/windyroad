@@ -36,14 +36,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/wip-nudge.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": ".claude/hooks/architect-detect.sh"
           }
         ]

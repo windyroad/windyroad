@@ -1,5 +1,5 @@
 ---
-status: "proposed"
+status: "superseded"
 first-released: 2026-03-09
 date: 2026-03-09
 decision-makers: [Tom Howard, Claude]
@@ -78,6 +78,10 @@ Remote checks (3-4) run in `scripts/push-watch.sh` after the push completes and 
 - Good: Simple, no prompt-time hook needed
 - Bad: No feedback about local accumulation between pushes
 - Bad: Uncommitted changes and unpushed commits go unnoticed
+
+## Superseded By
+
+[ADR 008 - Action-specific pipeline risk management](./008-action-specific-pipeline-risk-management.proposed.md). The local/remote split principle is preserved (no network calls in prompt-time hooks), but the implementation vehicle changes from `wip-nudge.sh` to `risk-score.sh` with `pipeline-state.sh`.
 
 ## Reassessment Criteria
 

@@ -10,7 +10,14 @@ print(data.get('session_id', ''))
 " 2>/dev/null)
 
 if [ -n "$SESSION_ID" ]; then
-    rm -f "/tmp/risk-score-value-${SESSION_ID}" "/tmp/risk-score-clean-${SESSION_ID}"
+    # New file names
+    rm -f "/tmp/risk-commit-${SESSION_ID}" \
+          "/tmp/risk-push-${SESSION_ID}" \
+          "/tmp/risk-release-${SESSION_ID}" \
+          "/tmp/risk-clean-${SESSION_ID}"
+    # Old file names (transition cleanup)
+    rm -f "/tmp/risk-score-value-${SESSION_ID}" \
+          "/tmp/risk-score-clean-${SESSION_ID}"
 fi
 
 exit 0

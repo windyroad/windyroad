@@ -1,10 +1,10 @@
 # Risk Policy
 
-Risk assessment for uncommitted changes, aligned with ISO 31000.
+Risk assessment for pipeline actions (commit, push, release), aligned with ISO 31000.
 
 ## Risk Appetite
 
-Residual risk score must be **< 5 (Low)** to commit. Scores >= 5 (Medium and above) must be reduced (stash, revert, split) before committing.
+Residual risk score must be **< 5 (Low)** for any pipeline action (commit, push, release). Scores >= 5 (Medium and above) must be reduced before proceeding.
 
 ## Impact Levels
 
@@ -52,26 +52,16 @@ Both dimensions contribute proportionally to the score on a 1-25 scale.
 | 10-16 | High |
 | 17-25 | Very High |
 
-## Control Register
+## Action-Specific Risk
 
-Controls reduce likelihood and/or impact. When assessing residual risk, account for which controls have been applied or will apply before the change reaches production.
+The risk appetite (< 5) applies uniformly to all pipeline actions: commit, push, and release. We are delivering change into production; the threshold does not change based on which stage the change is at. CI controls and preview deploys are mitigating controls that reduce residual risk, not reasons to accept higher risk.
 
-| Control | Hook/Gate | Reduces | Description |
-|---------|-----------|---------|-------------|
-| Architect review | `architect-detect.sh` + `architect-enforce-edit.sh` | Likelihood | Reviews all file edits against architectural decisions. Catches misalignment before code is written. |
-| Accessibility review | `a11y-team-eval.sh` + `a11y-enforce-edit.sh` | Likelihood, Impact | Reviews UI code for WCAG AA compliance. Prevents accessibility regressions. |
-| Voice and tone review | `voice-tone-eval.sh` + `voice-tone-enforce-edit.sh` | Likelihood | Reviews user-facing copy against voice guide. Prevents brand/tone violations. |
-| Secret leak gate | `secret-leak-gate.sh` | Impact | Blocks Edit/Write containing patterns matching secrets (.env values, API keys, tokens). |
-| Em-dash gate | `no-em-dash.sh` | Likelihood | Blocks em-dash characters in source files. Prevents encoding issues. |
-| Git push gate | `git-push-gate.sh` | Likelihood | Enforces `npm run push:watch` for pushes. Ensures CI runs before code reaches remote. |
-| Risk score commit gate | `risk-score-commit-gate.sh` | Impact | Blocks commits when residual risk >= 5 (Medium). Prevents risky accumulations from being committed. |
-| WIP nudge | `wip-nudge.sh` | Likelihood | Warns about stale uncommitted files and unpushed commits. |
+The risk scorer assesses the accumulated change at each stage, not just counts of commits or files. It must understand what the changes are to judge their impact and likelihood.
 
-## How to Assess
+## Back-Pressure
 
-1. Identify the **inherent impact** of the changes using the Impact Levels table.
-2. Identify the **inherent likelihood** of a defect using the Likelihood Levels table.
-3. Review the **Control Register**. For each applicable control, reduce the relevant dimension by 1 level (minimum 1).
-4. Compute **residual risk** = residual impact x residual likelihood.
-5. Look up the label from the Label Bands table.
-6. If residual risk >= 5 (Medium or above), the change is too risky to commit as-is.
+Each action must consider its effect on the next queue downstream. WIP accumulation acts as back-pressure through the pipeline:
+
+- Do not commit if the accumulated unpushed changes (including this commit) would have risk >= 5
+- Do not push if the accumulated unreleased changes (including this push) would have risk >= 5
+- Exception: actions that reduce downstream risk bypass back-pressure (e.g. adding tests when release risk is high)
