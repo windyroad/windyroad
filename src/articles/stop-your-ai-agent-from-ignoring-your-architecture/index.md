@@ -149,7 +149,7 @@ Decisions follow a lifecycle. They start as `proposed`, move to `accepted` after
 
 In this project, that decision started as proposed when the agent flagged `rehype-highlight` as an undocumented dependency. The MADR record captured why Shiki was rejected (bundle size, build complexity) and when to revisit (if rehype-highlight drops maintained status). Three deploys later, the decision moved to accepted. Now when the agent sees a new syntax highlighting dependency in `package.json`, it has context: not just what was chosen, but why, and under what conditions to reconsider.
 
-An earlier version of this system required manual renames to promote decisions. A post-release hook now handles it. The hook runs after each deploy as a drop-in script in `scripts/post-release.d/`, receiving the list of changed files on stdin and the release date as an environment variable.
+Without automation, promotion does not happen. Decisions stay `proposed` indefinitely because nothing triggers the rename after a successful deploy. A post-release hook closes this gap. It runs after each deploy as a drop-in script in `scripts/post-release.d/`, receiving the list of changed files on stdin and the release date as an environment variable.
 
 The hook works in two passes:
 
@@ -212,4 +212,4 @@ Wire the release hook. Drop `scripts/post-release.d/stamp-and-promote-decisions.
 
 The full configuration is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks) covers the full event model.
 
-The decision is still sound. Now the reasoning stays with it, because the gate won't let the agent proceed without writing it down.
+The gate writes the decision down. The release hook tracks when it ships. Fourteen days later, the decision earns its place in the record. The reasoning that used to vanish in a chat thread now outlives the conversation that produced it.
