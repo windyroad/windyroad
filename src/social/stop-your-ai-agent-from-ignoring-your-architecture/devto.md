@@ -4,7 +4,7 @@ article: /blog/stop-your-ai-agent-from-ignoring-your-architecture
 canonical_url: https://windyroad.com.au/blog/stop-your-ai-agent-from-ignoring-your-architecture
 title: Stop your AI agent from ignoring your architecture
 tags: [claudecode, ai, webdev, productivity]
-cover_image: https://windyroad.com.au/img/social/architect-five-hooks.png
+cover_image: https://windyroad.com.au/img/social/architect-five-hooks.svg
 cover_image_alt: Process flow diagram showing how the architect gate works: prompt starts the turn, AI attempts an edit, a gate check validates the marker, and if no marker exists the edit is denied until an architect agent reviews and passes. On PASS the marker is created and the AI retries. On FAIL the AI must fix issues and re-run the architect.
 published: false
 ---
@@ -13,7 +13,9 @@ An AI agent makes architectural decisions constantly. Add a dependency, change a
 
 This is the knowledge management version of technical debt. Six months later, someone asks why the project uses rehype-highlight instead of Shiki. The answer is in a conversation that no longer exists. The decision was sound. The reasoning is gone.
 
-A hook-based gate can close this gap. This implementation uses [Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks), but the pattern (detect, gate, review, unlock, reset) applies to any agent system that exposes lifecycle events.
+A hook-based gate can close this gap. This implementation uses [Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) ([source code](https://github.com/windyroad/windyroad)), but the pattern (detect, gate, review, unlock, reset) applies to any agent system that exposes lifecycle events.
+
+Claude Code hooks are shell scripts that run at specific points in the agent's lifecycle. `UserPromptSubmit` fires when the user sends a message. `PreToolUse` fires before the agent calls a tool (Edit, Write, Bash). `PostToolUse` fires after a tool call completes. `Stop` fires when the agent finishes its turn. Each hook receives JSON on stdin describing the event, and can inject context, allow the action, or deny it.
 
 The gate intercepts edits to project files and requires an architecture review before the edit proceeds. The reviewer checks proposed changes against existing decision records in `docs/decisions/` and flags when a new decision should be documented.
 
@@ -29,13 +31,21 @@ The same problem exists with compliance. If decision 001 says "use rehype-highli
 
 Five hooks enforce the gate. Four follow a cycle: detect that the project has an architect agent, block edits until the architect reviews them, unlock the block when the review passes, reset the block when the turn ends. A fifth hook blocks exiting plan mode without a review. This is a variation of the pattern used for [voice and tone enforcement](https://windyroad.com.au/blog/enforcing-voice-and-tone-with-claude-code-hooks), with additional hardening.
 
-![Flow diagram showing the five-hook architect gate](https://windyroad.com.au/img/social/architect-five-hooks.png)
+| Role | Hook event | Script | Purpose |
+|------|-----------|--------|---------|
+| Detect | `UserPromptSubmit` | `architect-detect.sh` | Inject review instructions on every prompt |
+| Gate | `PreToolUse` (Edit\|Write) | `architect-enforce-edit.sh` | Block edits without a valid session marker |
+| Plan gate | `PreToolUse` (ExitPlanMode) | `architect-plan-enforce.sh` | Block plan exit without review |
+| Unlock | `PostToolUse` (Agent) | `architect-mark-reviewed.sh` | Create marker when architect passes |
+| Reset | `Stop` | `architect-reset-marker.sh` | Remove marker so next turn starts locked |
+
+![Flow diagram showing the five-hook architect gate](https://windyroad.com.au/img/social/architect-five-hooks.svg)
 
 ### The gate
 
-The code samples below are excerpts. The complete hook scripts (each under 40 lines) are in the [linked repo](https://github.com/windyroad/windyroad).
+The code samples below are excerpts. The complete hook scripts are each under 40 lines. Common functions (portable mtime, hash computation, marker validation) are extracted into `lib/architect-gate.sh`, which the other scripts source.
 
-The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked:
+The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked. From `architect-enforce-edit.sh`:
 
 ```bash
 INPUT=$(cat)
@@ -58,7 +68,7 @@ If the file is not excluded (CSS, images, lockfiles, fonts, memory files) and no
 
 ### The unlock
 
-The unlock only fires after the architect agent returns. It reads a verdict file that the architect writes during its review:
+The unlock only fires after the architect agent returns. It reads a verdict file that the architect writes during its review. From `architect-mark-reviewed.sh`:
 
 ```bash
 VERDICT_FILE="/tmp/architect-verdict"
@@ -85,9 +95,9 @@ If the verdict is FAIL, no marker is created and edits stay blocked until the is
 
 A marker file in `/tmp` is not enough. Three checks run before the gate allows an edit through.
 
-![Marker validity flow diagram](https://windyroad.com.au/img/social/architect-marker-validity.png)
+![Marker validity flow diagram](https://windyroad.com.au/img/social/architect-marker-validity.svg)
 
-**TTL.** The marker has a configurable time-to-live, defaulting to 600 seconds. If the marker is older than this, it is removed and the gate blocks. The TTL is configurable via the `ARCHITECT_TTL` environment variable.
+**TTL.** The marker has a configurable time-to-live, defaulting to 600 seconds. If the marker is older than this, it is removed and the gate blocks. The TTL is configurable via the `ARCHITECT_TTL` environment variable. From `lib/architect-gate.sh`:
 
 ```bash
 TTL_SECONDS="${ARCHITECT_TTL:-600}"
@@ -101,7 +111,7 @@ fi
 
 **Sliding window.** Each successful gate pass refreshes the marker timestamp. A long editing session is not interrupted as long as edits are less than 10 minutes apart. The TTL catches abandoned markers, not active work.
 
-**Drift detection.** When the unlock hook creates a marker, it also stores a content hash of all files in `docs/decisions/`:
+**Drift detection.** When the unlock hook creates a marker, it also stores a content hash of all files in `docs/decisions/`. From `architect-mark-reviewed.sh`:
 
 ```bash
 HASH=$(find docs/decisions -name '*.md' -not -name 'README.md' \
@@ -110,13 +120,15 @@ HASH=$(find docs/decisions -name '*.md' -not -name 'README.md' \
 echo "$HASH" > "/tmp/architect-reviewed-${SESSION_ID}.hash"
 ```
 
-Before allowing an edit, the gate recomputes the hash and compares it to the stored value. If a decision file changed since the review, the marker is invalidated and a re-review is required. The gate catches decisions that change under your feet, not just decisions that existed at review time.
+Before allowing an edit, the gate recomputes the hash and compares it to the stored value. If a decision file changed since the review, the marker is invalidated and a re-review is required.
 
 ## The reviewer
 
 The architect agent is defined in `.claude/agents/architect.md`. It has read-only access (Read, Glob, Grep) plus Bash for writing the verdict file. It cannot edit project files.
 
-It checks five things, in order of importance:
+It checks five things, in order of importance. The first three affect the PASS/FAIL verdict. The last two are advisory.
+
+![Reviewer checks diagram](https://windyroad.com.au/img/social/architect-reviewer-checks.svg)
 
 **Existing decision compliance.** For each decision in `docs/decisions/`, does the proposed change conflict with the decision's outcome? Does it violate documented constraints or consequences?
 
@@ -144,21 +156,71 @@ Or:
 
 ## What gets gated
 
-Everything except stylesheets, images, lockfiles, fonts, and memory files. The architect agent is told to be pragmatic: a refactored function or a bug fix gets a quick PASS. A new API endpoint that skips an established pattern gets flagged.
+The gate excludes files by extension. From `architect-enforce-edit.sh`:
+
+```bash
+case "$FILE_PATH" in
+  *.css|*.scss|*.sass|*.less)             exit 0 ;;  # Styles
+  *.png|*.jpg|*.jpeg|*.gif|*.svg|*.ico)   exit 0 ;;  # Images
+  *.woff|*.woff2|*.ttf|*.eot)             exit 0 ;;  # Fonts
+  *package-lock.json|*yarn.lock)          exit 0 ;;  # Lockfiles
+  *.map)                                  exit 0 ;;  # Sourcemaps
+  *.changeset/*.md)                       exit 0 ;;  # Changesets
+  */MEMORY.md|*/.claude/projects/*)       exit 0 ;;  # Memory files
+  */.claude/plans/*.md)                   exit 0 ;;  # Plan files
+esac
+```
+
+Everything else goes through the gate. Adjust the list for your project: if you want to gate only infrastructure files, narrow the exclusions. The architect agent is told to be pragmatic: a refactored function or a bug fix gets a quick PASS. A new API endpoint that skips an established pattern gets flagged.
 
 ## Decisions as living documents
 
 Decisions follow a lifecycle. They start as `proposed`, move to `accepted` after production validation, and eventually get `deprecated` or `superseded`. The status lives in the filename: `001-use-rehype-highlight.proposed.md` becomes `001-use-rehype-highlight.accepted.md` after the site ships with rehype-highlight and nothing breaks.
 
+![Decision lifecycle diagram](https://windyroad.com.au/img/social/decision-lifecycle.svg)
+
 In this project, that decision started as proposed when the agent flagged `rehype-highlight` as an undocumented dependency. The MADR record captured why Shiki was rejected (bundle size, build complexity) and when to revisit (if rehype-highlight drops maintained status). Three deploys later, the decision moved to accepted. Now when the agent sees a new syntax highlighting dependency in `package.json`, it has context: not just what was chosen, but why, and under what conditions to reconsider.
 
-Status transitions are manual. You rename the file (`001-use-rehype-highlight.proposed.md` to `001-use-rehype-highlight.accepted.md`) and update the frontmatter. The architect agent does not promote decisions automatically because production validation requires human judgment. What the agent does is enforce compliance: it checks against `accepted` and `proposed` decisions but ignores `superseded` ones. A rejected decision prevents re-proposing the same approach without new evidence.
+Without automation, promotion does not happen. Decisions stay `proposed` indefinitely because nothing triggers the rename after a successful deploy. A post-release hook closes this gap. It runs after each deploy as a drop-in script in `scripts/post-release.d/`, receiving the list of changed files on stdin and the release date as an environment variable.
+
+The hook works in two passes. From `stamp-and-promote-decisions.sh`:
+
+```bash
+# Pass 1: Stamp first-released on proposed decisions included in this release
+for file in "$DECISIONS_DIR"/*.proposed.md; do
+  if has_field "$file" "first-released"; then
+    continue  # Already stamped
+  fi
+  if echo "$FILE_LIST" | grep -qF "$file"; then
+    sed "s/^status: *\"*proposed\"*/status: \"proposed\"\nfirst-released: $RELEASE_DATE/" \
+      "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+  fi
+done
+
+# Pass 2: Promote decisions past the 14-day threshold
+for file in "$DECISIONS_DIR"/*.proposed.md; do
+  FIRST_RELEASED=$(grep "^first-released:" "$file" | awk '{print $2}')
+  AGE_DAYS=$(( (NOW_EPOCH - $(date_to_epoch "$FIRST_RELEASED")) / 86400 ))
+  if [ "$AGE_DAYS" -ge "$PROMOTION_DAYS" ]; then
+    sed "s/^status: *\"*proposed\"*/status: \"accepted\"/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    git mv "$file" "$(echo "$file" | sed 's/\.proposed\.md$/.accepted.md/')"
+  fi
+done
+```
+
+Pass 1 stamps a `first-released` date on each proposed decision that shipped in the release. Pass 2 checks all stamped decisions and promotes any that have been in production longer than 14 days (configurable via `DECISION_PROMOTION_DAYS`). The promotion renames the file from `.proposed.md` to `.accepted.md`, updates the frontmatter status, and adds an `accepted-date` field. Any changes are committed and pushed as part of the release.
+
+The 14-day grace period exists so that decisions can be reverted if they cause production issues. A decision that ships on Monday and breaks something on Wednesday can be rolled back before it gets promoted. The architect agent enforces compliance against both `proposed` and `accepted` decisions but ignores `superseded` ones. A rejected decision prevents re-proposing the same approach without new evidence.
 
 ## Tradeoffs
 
 The architect agent call adds 10-20 seconds per turn that touches project files. The sliding TTL means this cost is paid once per session, not once per edit, as long as edits are less than 10 minutes apart.
 
-False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the pragmatism criteria were too generous, or because the change didn't match any detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates. The system is too new to have quantitative data on flag rates or false positive ratios. The smoke test example below is representative of the kinds of catches it makes, but systematic measurement is still ahead.
+False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the pragmatism criteria were too generous, or because the change didn't match any detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates.
+
+The system now runs in two repos. A second project ([bbstats](https://github.com/windyroad/bbstats)) has 33 architecture decisions: 11 promoted from proposed to accepted via the release hook, 3 superseded, and 19 still proposed. The hooks and agent definition were copied to the second repo without changes. Every major feature in that project's changelog references an ADR. Decisions accumulate at the `proposed` stage and batch-promote when a release crosses the 14-day threshold.
+
+## Verdict gating
 
 The verdict gating matters more than it looks. In an earlier version of this system (before the PASS/FAIL verdict file), the architect flagged issues but the gate unlocked regardless. The AI could proceed with edits while leaving the flagged issues unresolved.
 
@@ -174,12 +236,16 @@ The gate blocks the AI, not you. The hooks constrain the agent's workflow. You c
 
 Start with the agent file. Drop `.claude/agents/architect.md` into your repo. The embedded process works out of the box with an empty `docs/decisions/` directory. The first time the agent flags an undocumented decision, create the directory and the first record.
 
-Wire the five hooks (detection, gate, plan gate, unlock, reset) into `.claude/settings.json`. The full configuration, including matchers and hook scripts, is in the linked repo.
+Wire the five hooks (detection, gate, plan gate, unlock, reset) into `.claude/settings.json`. The full configuration, including matchers and hook scripts, is in the [source repo](https://github.com/windyroad/windyroad).
 
 Adjust the scope. The exclusion list matches this project's structure. If you want to gate only infrastructure files instead of everything, modify the case statement to match only the file types you care about. The pattern is the same.
 
 Bootstrap your decisions. Once the hooks are wired, ask the AI to survey the codebase and document the existing architectural choices as decision records. The architect agent already knows the MADR 4.0 format and will create records for the technology choices, patterns, and conventions it finds. Review what it produces, fill in any context the agent missed (the "why" behind a choice is often not in the code), and add reassessment criteria. This gives you a populated `docs/decisions/` directory in one session instead of building it incrementally over months.
 
+Wire the release hook. Drop `scripts/post-release.d/stamp-and-promote-decisions.sh` into your repo and call it from your release script after deploy. It handles both normal runs (file list on stdin) and cold-start backfill (checks git history for first-release dates). The 14-day promotion threshold is configurable via `DECISION_PROMOTION_DAYS`.
+
+The pattern works in any agent system that exposes lifecycle events. Cursor has Rules for AI that can inject context and constrain behavior. The key requirements are three: inject instructions before the agent acts, intercept file writes, and run a check after the agent finishes. The gate logic (marker files, TTL, drift detection) is plain shell and works anywhere.
+
 The full configuration is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks) covers the full event model.
 
-The decision is still sound. Now the reasoning stays with it, because the gate won't let the agent proceed without writing it down.
+The gate writes the decision down. The release hook tracks when it ships. Fourteen days later, the decision earns its place in the record. The reasoning that used to vanish in a chat thread now outlives the conversation that produced it.
