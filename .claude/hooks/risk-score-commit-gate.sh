@@ -1,5 +1,5 @@
 #!/bin/bash
-# PreToolUse hook: Denies git commit when risk score > 2.
+# PreToolUse hook: Denies git commit when risk score >= 5.
 # Reads score from /tmp/risk-score-value-{SESSION_ID}.
 
 set -euo pipefail
@@ -69,10 +69,10 @@ EOF
     exit 0
 fi
 
-# Compare: deny if score > 2
+# Compare: deny if score >= 5
 DENIED=$(python3 -c "
 score = float('$SCORE')
-print('yes' if score > 2 else 'no')
+print('yes' if score >= 5 else 'no')
 " 2>/dev/null || echo "yes")
 
 if [ "$DENIED" = "yes" ]; then
@@ -81,12 +81,12 @@ if [ "$DENIED" = "yes" ]; then
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
     "permissionDecision": "deny",
-    "permissionDecisionReason": "Risk score ${SCORE}/5. Do not commit risky work. Reduce changes first: stash unrelated files, revert exploratory edits, or split your work. Then re-run the risk-scorer agent to get a lower score."
+    "permissionDecisionReason": "Risk score ${SCORE}/25. Do not commit risky work. Reduce changes first: stash unrelated files, revert exploratory edits, or split your work. Then re-run the risk-scorer agent to get a lower score."
   }
 }
 EOF
     exit 0
 fi
 
-# Score <= 2, allow
+# Score < 5, allow
 exit 0

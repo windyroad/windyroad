@@ -1,7 +1,7 @@
 #!/bin/bash
 # UserPromptSubmit hook: Delegates risk scoring to the risk-scorer agent.
 # Collects diff summary, injects instruction to call risk-scorer agent.
-# If a previous score > 2 exists, adds a nudge to reduce changes.
+# If a previous score >= 5 exists, adds a nudge to reduce changes.
 
 set -euo pipefail
 
@@ -119,12 +119,12 @@ if [ -f "$SCORE_FILE" ]; then
     PREV_SCORE=$(cat "$SCORE_FILE" 2>/dev/null || echo "")
     IS_HIGH=$(python3 -c "
 try:
-    print('yes' if float('$PREV_SCORE') > 2 else 'no')
+    print('yes' if float('$PREV_SCORE') >= 5 else 'no')
 except:
     print('no')
 " 2>/dev/null || echo "no")
     if [ "$IS_HIGH" = "yes" ]; then
-        NUDGE="WARNING: Previous risk score was ${PREV_SCORE}/5. Reduce uncommitted changes (git stash, git checkout, revert) before committing. Edits are allowed -- use them to bring the score down. Then re-run risk-scorer.\n\n"
+        NUDGE="WARNING: Previous risk score was ${PREV_SCORE}/25. Reduce uncommitted changes (git stash, git checkout, revert) before committing. Edits are allowed -- use them to bring the score down. Then re-run risk-scorer.\n\n"
     fi
 fi
 
@@ -133,14 +133,14 @@ INSTRUCTION="${NUDGE}RISK SCORE CHECK (mandatory, every prompt).
 
 You MUST call the risk-scorer agent (subagent_type: \"risk-scorer\") with this prompt:
 
-Give this a risk score out of 5.
+Give this a risk score out of 25.
 
 ${SUMMARY}
 
 Write your score to: ${SCORE_FILE}
 Command: printf '%s' N > ${SCORE_FILE}
 
-After the agent returns, report the score in your response: \"Risk score: N/5\"."
+After the agent returns, report the score in your response: \"Risk score: N/25 (Label)\"."
 
 # --- Output as additionalContext ---
 ESCAPED=$(echo -e "$INSTRUCTION" | python3 -c "
