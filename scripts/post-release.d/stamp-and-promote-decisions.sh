@@ -71,8 +71,8 @@ for file in "$DECISIONS_DIR"/*.proposed.md; do
   fi
 
   if [ -n "$STAMP_DATE" ]; then
-    # Insert first-released after the status line in frontmatter
-    sed "s/^status: \"proposed\"/status: \"proposed\"\nfirst-released: $STAMP_DATE/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    # Insert first-released after the status line in frontmatter (handles quoted and unquoted)
+    sed "s/^status: *\"*proposed\"*/status: \"proposed\"\nfirst-released: $STAMP_DATE/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
     echo "Stamped first-released: $STAMP_DATE on $(basename "$file")"
   fi
 done
@@ -103,8 +103,8 @@ for file in "$DECISIONS_DIR"/*.proposed.md; do
   AGE_DAYS=$(( (NOW_EPOCH - RELEASED_EPOCH) / 86400 ))
 
   if [ "$AGE_DAYS" -ge "$PROMOTION_DAYS" ]; then
-    # Update status to accepted
-    sed "s/^status: \"proposed\"/status: \"accepted\"/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    # Update status to accepted (handles quoted and unquoted)
+    sed "s/^status: *\"*proposed\"*/status: \"accepted\"/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 
     # Add accepted-date after first-released
     sed "s/^first-released: .*/&\naccepted-date: $RELEASE_DATE/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
