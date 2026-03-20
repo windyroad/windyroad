@@ -40,7 +40,7 @@ Five hooks enforce the gate. Four follow a cycle: detect that the project has an
 
 ### The gate
 
-The code samples below are excerpts. The complete hook scripts are each under 40 lines.
+The code samples below are excerpts. The complete hook scripts are each under 40 lines. Common functions (portable mtime, hash computation, marker validation) are extracted into `lib/architect-gate.sh`, which the other scripts source.
 
 The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked. From `architect-enforce-edit.sh`:
 
@@ -217,6 +217,8 @@ False negatives are more dangerous than false positives. The agent might miss a 
 
 The system now runs in two repos. A second project ([bbstats](https://github.com/windyroad/bbstats)) has 33 architecture decisions: 11 promoted from proposed to accepted via the release hook, 3 superseded, and 19 still proposed. The hooks and agent definition were copied to the second repo without changes. Every major feature in that project's changelog references an ADR. Decisions accumulate at the `proposed` stage and batch-promote when a release crosses the 14-day threshold.
 
+## Verdict gating
+
 The verdict gating matters more than it looks. In an earlier version of this system (before the PASS/FAIL verdict file), the architect flagged issues but the gate unlocked regardless. The AI could proceed with edits while leaving the flagged issues unresolved.
 
 A real example: the AI was removing an unused API endpoint. The architect flagged that a smoke test depended on it and recommended updating the smoke test to check something that validates the health of the system. Without verdict gating, the AI proceeded with the rest of the task, left the API in place, left the smoke test unchanged, and moved on. The architect caught the problem. The AI chose the path of least resistance: do nothing about it.
@@ -231,7 +233,7 @@ The system has known edge cases. Marker files live in `/tmp`, which is world-wri
 
 Start with the agent file. Drop `.claude/agents/architect.md` into your repo. The embedded process works out of the box with an empty `docs/decisions/` directory. The first time the agent flags an undocumented decision, create the directory and the first record.
 
-Wire the five hooks (detection, gate, plan gate, unlock, reset) into `.claude/settings.json`. The full configuration, including matchers and hook scripts, is in the linked repo.
+Wire the five hooks (detection, gate, plan gate, unlock, reset) into `.claude/settings.json`. The full configuration, including matchers and hook scripts, is in the [source repo](https://github.com/windyroad/windyroad).
 
 Adjust the scope. The exclusion list matches this project's structure. If you want to gate only infrastructure files instead of everything, modify the case statement to match only the file types you care about. The pattern is the same.
 
