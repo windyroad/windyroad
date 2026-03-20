@@ -10,7 +10,9 @@ An AI agent makes architectural decisions constantly. Add a dependency, change a
 
 This is the knowledge management version of technical debt. Six months later, someone asks why the project uses rehype-highlight instead of Shiki. The answer is in a conversation that no longer exists. <span data-pull>The decision was sound. The reasoning is gone.</span>
 
-A hook-based gate can close this gap. This implementation uses [Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks), but the pattern (detect, gate, review, unlock, reset) applies to any agent system that exposes lifecycle events.
+A hook-based gate can close this gap. This implementation uses [Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) ([source code](https://github.com/windyroad/windyroad)), but the pattern (detect, gate, review, unlock, reset) applies to any agent system that exposes lifecycle events.
+
+Claude Code hooks are shell scripts that run at specific points in the agent's lifecycle. `UserPromptSubmit` fires when the user sends a message. `PreToolUse` fires before the agent calls a tool (Edit, Write, Bash). `PostToolUse` fires after a tool call completes. `Stop` fires when the agent finishes its turn. Each hook receives JSON on stdin describing the event, and can inject context, allow the action, or deny it.
 
 The gate intercepts edits to project files and requires an architecture review before the edit proceeds. The reviewer checks proposed changes against existing decision records in `docs/decisions/` and flags when a new decision should be documented.
 
@@ -26,11 +28,19 @@ The same problem exists with compliance. If decision 001 says "use rehype-highli
 
 Five hooks enforce the gate. Four follow a cycle: detect that the project has an architect agent, block edits until the architect reviews them, unlock the block when the review passes, reset the block when the turn ends. A fifth hook blocks exiting plan mode without a review. This is a variation of the pattern used for [voice and tone enforcement](/blog/enforcing-voice-and-tone-with-claude-code-hooks), with additional hardening.
 
+| Role | Hook event | Script | Purpose |
+|------|-----------|--------|---------|
+| Detect | `UserPromptSubmit` | `architect-detect.sh` | Inject review instructions on every prompt |
+| Gate | `PreToolUse` (Edit\|Write) | `architect-enforce-edit.sh` | Block edits without a valid session marker |
+| Plan gate | `PreToolUse` (ExitPlanMode) | `architect-plan-enforce.sh` | Block plan exit without review |
+| Unlock | `PostToolUse` (Agent) | `architect-mark-reviewed.sh` | Create marker when architect passes |
+| Reset | `Stop` | `architect-reset-marker.sh` | Remove marker so next turn starts locked |
+
 ![Flow diagram showing the five-hook architect gate: a UserPromptSubmit hook detects architect.md and injects context, a PreToolUse hook checks for a session marker with TTL and drift validation and blocks edits if invalid, a PostToolUse hook creates the marker only when the architect verdict is PASS, a Stop hook removes the marker so the next turn starts locked, and a fifth PreToolUse hook on ExitPlanMode checks the same marker to block plan exit without review.](/img/social/architect-five-hooks.svg)
 
 ### The gate
 
-The code samples below are excerpts. The complete hook scripts (each under 40 lines) are in the [linked repo](https://github.com/windyroad/windyroad).
+The code samples below are excerpts. The complete hook scripts are each under 40 lines.
 
 The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked:
 
@@ -107,7 +117,7 @@ HASH=$(find docs/decisions -name '*.md' -not -name 'README.md' \
 echo "$HASH" > "/tmp/architect-reviewed-${SESSION_ID}.hash"
 ```
 
-Before allowing an edit, the gate recomputes the hash and compares it to the stored value. If a decision file changed since the review, the marker is invalidated and a re-review is required. <span data-pull>The gate catches decisions that change under your feet, not just decisions that existed at review time.</span>
+Before allowing an edit, the gate recomputes the hash and compares it to the stored value. If a decision file changed since the review, the marker is invalidated and a re-review is required.
 
 ## The reviewer
 
@@ -141,11 +151,28 @@ Or:
 
 ## What gets gated
 
-Everything except stylesheets, images, lockfiles, fonts, and memory files. The architect agent is told to be pragmatic: a refactored function or a bug fix gets a quick PASS. A new API endpoint that skips an established pattern gets flagged.
+The gate excludes files by extension. The case statement in the PreToolUse hook:
+
+```bash
+case "$FILE_PATH" in
+  *.css|*.scss|*.sass|*.less)             exit 0 ;;  # Styles
+  *.png|*.jpg|*.jpeg|*.gif|*.svg|*.ico)   exit 0 ;;  # Images
+  *.woff|*.woff2|*.ttf|*.eot)             exit 0 ;;  # Fonts
+  *package-lock.json|*yarn.lock)          exit 0 ;;  # Lockfiles
+  *.map)                                  exit 0 ;;  # Sourcemaps
+  *.changeset/*.md)                       exit 0 ;;  # Changesets
+  */MEMORY.md|*/.claude/projects/*)       exit 0 ;;  # Memory files
+  */.claude/plans/*.md)                   exit 0 ;;  # Plan files
+esac
+```
+
+Everything else goes through the gate. Adjust the list for your project: if you want to gate only infrastructure files, narrow the exclusions. The architect agent is told to be pragmatic: a refactored function or a bug fix gets a quick PASS. A new API endpoint that skips an established pattern gets flagged.
 
 ## Decisions as living documents
 
 Decisions follow a lifecycle. They start as `proposed`, move to `accepted` after production validation, and eventually get `deprecated` or `superseded`. The status lives in the filename: `001-use-rehype-highlight.proposed.md` becomes `001-use-rehype-highlight.accepted.md` after the site ships with rehype-highlight and nothing breaks.
+
+![Decision lifecycle diagram showing four states: proposed decisions are new and enforced by the gate; when they ship, the release hook stamps a first-released date; after 14 days in production, the hook promotes them to accepted by renaming the file; accepted decisions can later be deprecated (no longer relevant, ignored by gate) or superseded (replaced by a newer decision, ignored by gate).](/img/social/decision-lifecycle.svg)
 
 In this project, that decision started as proposed when the agent flagged `rehype-highlight` as an undocumented dependency. The MADR record captured why Shiki was rejected (bundle size, build complexity) and when to revisit (if rehype-highlight drops maintained status). Three deploys later, the decision moved to accepted. Now when the agent sees a new syntax highlighting dependency in `package.json`, it has context: not just what was chosen, but why, and under what conditions to reconsider.
 
@@ -209,6 +236,8 @@ Adjust the scope. The exclusion list matches this project's structure. If you wa
 Bootstrap your decisions. Once the hooks are wired, ask the AI to survey the codebase and document the existing architectural choices as decision records. The architect agent already knows the MADR 4.0 format and will create records for the technology choices, patterns, and conventions it finds. Review what it produces, fill in any context the agent missed (the "why" behind a choice is often not in the code), and add reassessment criteria. This gives you a populated `docs/decisions/` directory in one session instead of building it incrementally over months.
 
 Wire the release hook. Drop `scripts/post-release.d/stamp-and-promote-decisions.sh` into your repo and call it from your release script after deploy. It handles both normal runs (file list on stdin) and cold-start backfill (checks git history for first-release dates). The 14-day promotion threshold is configurable via `DECISION_PROMOTION_DAYS`.
+
+The pattern works in any agent system that exposes lifecycle events. Cursor has Rules for AI that can inject context and constrain behavior. The key requirements are three: inject instructions before the agent acts, intercept file writes, and run a check after the agent finishes. The gate logic (marker files, TTL, drift detection) is plain shell and works anywhere.
 
 The full configuration is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks) covers the full event model.
 
