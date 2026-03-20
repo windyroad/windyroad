@@ -55,6 +55,14 @@
             "command": ".claude/hooks/risk-score.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/tdd-inject.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -122,6 +130,15 @@
         ]
       },
       {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/tdd-enforce-edit.sh"
+          }
+        ]
+      },
+      {
         "matcher": "ExitPlanMode",
         "hooks": [
           {
@@ -153,6 +170,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/risk-score-reset.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/tdd-reset.sh"
           }
         ]
       }
@@ -191,6 +216,15 @@
           {
             "type": "command",
             "command": ".claude/hooks/architect-refresh-hash.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/tdd-post-write.sh"
           }
         ]
       }

@@ -43,8 +43,9 @@ This project enforces quality through existing deterministic gates. Do not bypas
 
 **Claude Code hooks (`.claude/hooks/`):**
 
-- `secret-leak-gate.sh` — `PreToolUse` on Edit/Write. Blocks writing files that contain secret patterns (API keys, tokens, private keys). Mitigates WR-R2.
-- `project-health-check.sh` — `UserPromptSubmit`. Injects reminders when GitHub Actions workflows are missing (WR-R3) and when dependency install/update commands are detected, recommending `npx dry-aged-deps` for age+security checks (WR-R1).
+- `secret-leak-gate.sh` -- `PreToolUse` on Edit/Write. Blocks writing files that contain secret patterns (API keys, tokens, private keys). Mitigates WR-R2.
+- `project-health-check.sh` -- `UserPromptSubmit`. Injects reminders when GitHub Actions workflows are missing (WR-R3) and when dependency install/update commands are detected, recommending `npx dry-aged-deps` for age+security checks (WR-R1).
+- `tdd-*.sh` -- TDD enforcement via state machine (IDLE/RED/GREEN/BLOCKED). Blocks implementation file edits until a failing test is written. `tdd-inject.sh` (UserPromptSubmit) injects TDD instructions; `tdd-enforce-edit.sh` (PreToolUse Edit|Write) gates implementation files; `tdd-post-write.sh` (PostToolUse Edit|Write) runs tests and transitions state; `tdd-reset.sh` (Stop) cleans up. Shared logic in `lib/tdd-gate.sh`. Inactive when no `test` script exists in package.json. See ADR 006.
 
 Hooks are registered in `.claude/settings.json` and run automatically. Do not bypass them.
 
