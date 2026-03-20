@@ -149,13 +149,44 @@ Decisions follow a lifecycle. They start as `proposed`, move to `accepted` after
 
 In this project, that decision started as proposed when the agent flagged `rehype-highlight` as an undocumented dependency. The MADR record captured why Shiki was rejected (bundle size, build complexity) and when to revisit (if rehype-highlight drops maintained status). Three deploys later, the decision moved to accepted. Now when the agent sees a new syntax highlighting dependency in `package.json`, it has context: not just what was chosen, but why, and under what conditions to reconsider.
 
-Status transitions are manual. You rename the file (`001-use-rehype-highlight.proposed.md` to `001-use-rehype-highlight.accepted.md`) and update the frontmatter. The architect agent does not promote decisions automatically because production validation requires human judgment. What the agent does is enforce compliance: it checks against `accepted` and `proposed` decisions but ignores `superseded` ones. A rejected decision prevents re-proposing the same approach without new evidence.
+An earlier version of this system required manual renames to promote decisions. A post-release hook now handles it. The hook runs after each deploy as a drop-in script in `scripts/post-release.d/`, receiving the list of changed files on stdin and the release date as an environment variable.
+
+The hook works in two passes:
+
+```bash
+# Pass 1: Stamp first-released on proposed decisions included in this release
+for file in "$DECISIONS_DIR"/*.proposed.md; do
+  if has_field "$file" "first-released"; then
+    continue  # Already stamped
+  fi
+  if echo "$FILE_LIST" | grep -qF "$file"; then
+    sed "s/^status: *\"*proposed\"*/status: \"proposed\"\nfirst-released: $RELEASE_DATE/" \
+      "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+  fi
+done
+
+# Pass 2: Promote decisions past the 14-day threshold
+for file in "$DECISIONS_DIR"/*.proposed.md; do
+  FIRST_RELEASED=$(grep "^first-released:" "$file" | awk '{print $2}')
+  AGE_DAYS=$(( (NOW_EPOCH - $(date_to_epoch "$FIRST_RELEASED")) / 86400 ))
+  if [ "$AGE_DAYS" -ge "$PROMOTION_DAYS" ]; then
+    sed "s/^status: *\"*proposed\"*/status: \"accepted\"/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    git mv "$file" "$(echo "$file" | sed 's/\.proposed\.md$/.accepted.md/')"
+  fi
+done
+```
+
+Pass 1 stamps a `first-released` date on each proposed decision that shipped in the release. Pass 2 checks all stamped decisions and promotes any that have been in production longer than 14 days (configurable via `DECISION_PROMOTION_DAYS`). The promotion renames the file from `.proposed.md` to `.accepted.md`, updates the frontmatter status, and adds an `accepted-date` field. Any changes are committed and pushed as part of the release.
+
+The 14-day grace period exists so that decisions can be reverted if they cause production issues. A decision that ships on Monday and breaks something on Wednesday can be rolled back before it gets promoted. The architect agent enforces compliance against both `proposed` and `accepted` decisions but ignores `superseded` ones. A rejected decision prevents re-proposing the same approach without new evidence.
 
 ## Tradeoffs
 
 The architect agent call adds 10-20 seconds per turn that touches project files. The sliding TTL means this cost is paid once per session, not once per edit, as long as edits are less than 10 minutes apart.
 
-False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the pragmatism criteria were too generous, or because the change didn't match any detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates. The system is too new to have quantitative data on flag rates or false positive ratios. The smoke test example below is representative of the kinds of catches it makes, but systematic measurement is still ahead.
+False negatives are more dangerous than false positives. The agent might miss a decision-worthy change because the pragmatism criteria were too generous, or because the change didn't match any detection patterns. There's no exhaustive list of what constitutes an architectural decision. The agent approximates.
+
+The system now runs in two repos. A second project ([bbstats](https://github.com/windyroad/bbstats)) has 33 architecture decisions: 11 promoted from proposed to accepted via the release hook, 3 superseded, and 19 still proposed. The hooks and agent definition were copied to the second repo without changes. Every major feature in that project's changelog references an ADR. Decisions accumulate at the `proposed` stage and batch-promote when a release crosses the 14-day threshold.
 
 The verdict gating matters more than it looks. In an earlier version of this system (before the PASS/FAIL verdict file), the architect flagged issues but the gate unlocked regardless. The AI could proceed with edits while leaving the flagged issues unresolved.
 
@@ -176,6 +207,8 @@ Wire the five hooks (detection, gate, plan gate, unlock, reset) into `.claude/se
 Adjust the scope. The exclusion list matches this project's structure. If you want to gate only infrastructure files instead of everything, modify the case statement to match only the file types you care about. The pattern is the same.
 
 Bootstrap your decisions. Once the hooks are wired, ask the AI to survey the codebase and document the existing architectural choices as decision records. The architect agent already knows the MADR 4.0 format and will create records for the technology choices, patterns, and conventions it finds. Review what it produces, fill in any context the agent missed (the "why" behind a choice is often not in the code), and add reassessment criteria. This gives you a populated `docs/decisions/` directory in one session instead of building it incrementally over months.
+
+Wire the release hook. Drop `scripts/post-release.d/stamp-and-promote-decisions.sh` into your repo and call it from your release script after deploy. It handles both normal runs (file list on stdin) and cold-start backfill (checks git history for first-release dates). The 14-day promotion threshold is configurable via `DECISION_PROMOTION_DAYS`.
 
 The full configuration is in the public repo at [github.com/windyroad/windyroad](https://github.com/windyroad/windyroad). The [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks) covers the full event model.
 
