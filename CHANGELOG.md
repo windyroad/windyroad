@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.9.2
+
+### Patch Changes
+
+- ea82f55: Add PNG versions of architect article diagrams for Dev.to publishing
+
 ## 2.9.1
 
 ### Patch Changes
