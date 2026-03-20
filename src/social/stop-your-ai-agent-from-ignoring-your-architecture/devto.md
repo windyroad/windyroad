@@ -4,7 +4,7 @@ article: /blog/stop-your-ai-agent-from-ignoring-your-architecture
 canonical_url: https://windyroad.com.au/blog/stop-your-ai-agent-from-ignoring-your-architecture
 title: Stop your AI agent from ignoring your architecture
 tags: [claudecode, ai, webdev, productivity]
-cover_image: https://windyroad.com.au/img/social/architect-five-hooks.svg
+cover_image: https://windyroad.com.au/img/social/architect-five-hooks.png
 cover_image_alt: Process flow diagram showing how the architect gate works: prompt starts the turn, AI attempts an edit, a gate check validates the marker, and if no marker exists the edit is denied until an architect agent reviews and passes. On PASS the marker is created and the AI retries. On FAIL the AI must fix issues and re-run the architect.
 published: false
 ---
@@ -39,7 +39,7 @@ Five hooks enforce the gate. Four follow a cycle: detect that the project has an
 | Unlock | `PostToolUse` (Agent) | `architect-mark-reviewed.sh` | Create marker when architect passes |
 | Reset | `Stop` | `architect-reset-marker.sh` | Remove marker so next turn starts locked |
 
-![Flow diagram showing the five-hook architect gate](https://windyroad.com.au/img/social/architect-five-hooks.svg)
+![Flow diagram showing the five-hook architect gate](https://windyroad.com.au/img/social/architect-five-hooks.png)
 
 ### The gate
 
@@ -95,7 +95,7 @@ If the verdict is FAIL, no marker is created and edits stay blocked until the is
 
 A marker file in `/tmp` is not enough. Three checks run before the gate allows an edit through.
 
-![Marker validity flow diagram](https://windyroad.com.au/img/social/architect-marker-validity.svg)
+![Marker validity flow diagram](https://windyroad.com.au/img/social/architect-marker-validity.png)
 
 **TTL.** The marker has a configurable time-to-live, defaulting to 600 seconds. If the marker is older than this, it is removed and the gate blocks. The TTL is configurable via the `ARCHITECT_TTL` environment variable. From `lib/architect-gate.sh`:
 
@@ -128,7 +128,7 @@ The architect agent is defined in `.claude/agents/architect.md`. It has read-onl
 
 It checks five things, in order of importance. The first three affect the PASS/FAIL verdict. The last two are advisory.
 
-![Reviewer checks diagram](https://windyroad.com.au/img/social/architect-reviewer-checks.svg)
+![Reviewer checks diagram](https://windyroad.com.au/img/social/architect-reviewer-checks.png)
 
 **Existing decision compliance.** For each decision in `docs/decisions/`, does the proposed change conflict with the decision's outcome? Does it violate documented constraints or consequences?
 
@@ -177,7 +177,7 @@ Everything else goes through the gate. Adjust the list for your project: if you 
 
 Decisions follow a lifecycle. They start as `proposed`, move to `accepted` after production validation, and eventually get `deprecated` or `superseded`. The status lives in the filename: `001-use-rehype-highlight.proposed.md` becomes `001-use-rehype-highlight.accepted.md` after the site ships with rehype-highlight and nothing breaks.
 
-![Decision lifecycle diagram](https://windyroad.com.au/img/social/decision-lifecycle.svg)
+![Decision lifecycle diagram](https://windyroad.com.au/img/social/decision-lifecycle.png)
 
 In this project, that decision started as proposed when the agent flagged `rehype-highlight` as an undocumented dependency. The MADR record captured why Shiki was rejected (bundle size, build complexity) and when to revisit (if rehype-highlight drops maintained status). Three deploys later, the decision moved to accepted. Now when the agent sees a new syntax highlighting dependency in `package.json`, it has context: not just what was chosen, but why, and under what conditions to reconsider.
 
