@@ -42,7 +42,7 @@ Five hooks enforce the gate. Four follow a cycle: detect that the project has an
 
 The code samples below are excerpts. The complete hook scripts are each under 40 lines.
 
-The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked:
+The gate is fail-closed. It parses the hook input with `jq`, and if parsing fails, the edit is blocked. From `architect-enforce-edit.sh`:
 
 ```bash
 INPUT=$(cat)
@@ -65,7 +65,7 @@ If the file is not excluded (CSS, images, lockfiles, fonts, memory files) and no
 
 ### The unlock
 
-The unlock only fires after the architect agent returns. It reads a verdict file that the architect writes during its review:
+The unlock only fires after the architect agent returns. It reads a verdict file that the architect writes during its review. From `architect-mark-reviewed.sh`:
 
 ```bash
 VERDICT_FILE="/tmp/architect-verdict"
@@ -94,7 +94,7 @@ A marker file in `/tmp` is not enough. Three checks run before the gate allows a
 
 ![Marker validity flow: an edit attempt passes through three sequential checks. First, a TTL check verifies the marker is younger than ARCHITECT_TTL (default 600 seconds), blocking if stale. Second, a drift check compares the stored hash of docs/decisions/ files against the current hash, blocking if any decision file changed. Third, if both pass, the edit proceeds and the marker timestamp is refreshed, creating a sliding window so the next edit gets another 10 minutes.](/img/social/architect-marker-validity.svg)
 
-**TTL.** The marker has a configurable time-to-live, defaulting to 600 seconds. If the marker is older than this, it is removed and the gate blocks. The TTL is configurable via the `ARCHITECT_TTL` environment variable.
+**TTL.** The marker has a configurable time-to-live, defaulting to 600 seconds. If the marker is older than this, it is removed and the gate blocks. The TTL is configurable via the `ARCHITECT_TTL` environment variable. From `lib/architect-gate.sh`:
 
 ```bash
 TTL_SECONDS="${ARCHITECT_TTL:-600}"
@@ -108,7 +108,7 @@ fi
 
 **Sliding window.** Each successful gate pass refreshes the marker timestamp. A long editing session is not interrupted as long as edits are less than 10 minutes apart. The TTL catches abandoned markers, not active work.
 
-**Drift detection.** When the unlock hook creates a marker, it also stores a content hash of all files in `docs/decisions/`:
+**Drift detection.** When the unlock hook creates a marker, it also stores a content hash of all files in `docs/decisions/`. From `architect-mark-reviewed.sh`:
 
 ```bash
 HASH=$(find docs/decisions -name '*.md' -not -name 'README.md' \
@@ -123,7 +123,9 @@ Before allowing an edit, the gate recomputes the hash and compares it to the sto
 
 The architect agent is defined in `.claude/agents/architect.md`. It has read-only access (Read, Glob, Grep) plus Bash for writing the verdict file. It cannot edit project files.
 
-It checks five things, in order of importance:
+It checks five things, in order of importance. The first three affect the PASS/FAIL verdict. The last two are advisory.
+
+![Reviewer checks diagram showing five checks in priority order: (1) Existing decision compliance, (2) Confirmation criteria violations, and (3) New decision detection affect the PASS/FAIL verdict; (4) Decision quality (MADR format) and (5) Decision staleness (age, reassessment dates) are advisory only.](/img/social/architect-reviewer-checks.svg)
 
 **Existing decision compliance.** For each decision in `docs/decisions/`, does the proposed change conflict with the decision's outcome? Does it violate documented constraints or consequences?
 
@@ -151,7 +153,7 @@ Or:
 
 ## What gets gated
 
-The gate excludes files by extension. The case statement in the PreToolUse hook:
+The gate excludes files by extension. From `architect-enforce-edit.sh`:
 
 ```bash
 case "$FILE_PATH" in
@@ -178,7 +180,7 @@ In this project, that decision started as proposed when the agent flagged `rehyp
 
 Without automation, promotion does not happen. Decisions stay `proposed` indefinitely because nothing triggers the rename after a successful deploy. A post-release hook closes this gap. It runs after each deploy as a drop-in script in `scripts/post-release.d/`, receiving the list of changed files on stdin and the release date as an environment variable.
 
-The hook works in two passes:
+The hook works in two passes. From `stamp-and-promote-decisions.sh`:
 
 ```bash
 # Pass 1: Stamp first-released on proposed decisions included in this release

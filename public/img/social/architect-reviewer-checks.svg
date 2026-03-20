@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+    </style>
+  </defs>
+
+  <title>What the architect agent checks, in priority order</title>
+
+  <!-- Background -->
+  <rect width="1200" height="480" fill="#0F172A"/>
+
+  <!-- Header -->
+  <text x="600" y="44" text-anchor="middle" font-size="24" font-weight="700" fill="#F1F5F9">What the architect checks</text>
+  <text x="600" y="72" text-anchor="middle" font-size="15" fill="#94A3B8">Five checks in priority order. The first three affect the PASS/FAIL verdict.</text>
+  <line x1="60" y1="92" x2="1140" y2="92" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- Section label: PASS/FAIL -->
+  <rect x="60" y="110" width="140" height="28" rx="4" fill="#EF444420" stroke="#EF444450" stroke-width="1"/>
+  <text x="130" y="129" text-anchor="middle" font-size="12" font-weight="600" fill="#EF4444">AFFECTS VERDICT</text>
+
+  <!-- Check 1: Existing decision compliance -->
+  <rect x="60" y="148" width="1080" height="64" rx="10" fill="#1E293B" stroke="#EF444440" stroke-width="1.5"/>
+  <text x="100" y="176" font-size="28" font-weight="700" fill="#EF4444">1</text>
+  <text x="140" y="172" font-size="17" font-weight="600" fill="#F1F5F9">Existing decision compliance</text>
+  <text x="140" y="196" font-size="14" fill="#94A3B8">Does the change conflict with a decision's outcome, constraints, or consequences?</text>
+
+  <!-- Check 2: Confirmation criteria -->
+  <rect x="60" y="222" width="1080" height="64" rx="10" fill="#1E293B" stroke="#EF444440" stroke-width="1.5"/>
+  <text x="100" y="250" font-size="28" font-weight="700" fill="#EF4444">2</text>
+  <text x="140" y="246" font-size="17" font-weight="600" fill="#F1F5F9">Confirmation criteria</text>
+  <text x="140" y="270" font-size="14" fill="#94A3B8">Does the code violate a decision's Confirmation section? Flagged as [Confirmation Violation].</text>
+
+  <!-- Check 3: New decision detection -->
+  <rect x="60" y="296" width="1080" height="64" rx="10" fill="#1E293B" stroke="#EF444440" stroke-width="1.5"/>
+  <text x="100" y="324" font-size="28" font-weight="700" fill="#EF4444">3</text>
+  <text x="140" y="320" font-size="17" font-weight="600" fill="#F1F5F9">New decision detection</text>
+  <text x="140" y="344" font-size="14" fill="#94A3B8">Does the change represent an undocumented architectural choice? Pragmatic: version bumps pass, new ORMs flag.</text>
+
+  <!-- Section label: ADVISORY -->
+  <rect x="60" y="376" width="100" height="28" rx="4" fill="#64748B20" stroke="#64748B50" stroke-width="1"/>
+  <text x="110" y="395" text-anchor="middle" font-size="12" font-weight="600" fill="#64748B">ADVISORY</text>
+
+  <!-- Check 4: Decision quality -->
+  <rect x="60" y="410" width="530" height="50" rx="10" fill="#1E293B" stroke="#64748B30" stroke-width="1"/>
+  <text x="94" y="438" font-size="22" font-weight="700" fill="#64748B">4</text>
+  <text x="120" y="434" font-size="15" font-weight="600" fill="#94A3B8">Decision quality</text>
+  <text x="262" y="434" font-size="13" fill="#64748B">MADR 4.0 format, options, criteria</text>
+
+  <!-- Check 5: Decision staleness -->
+  <rect x="610" y="410" width="530" height="50" rx="10" fill="#1E293B" stroke="#64748B30" stroke-width="1"/>
+  <text x="644" y="438" font-size="22" font-weight="700" fill="#64748B">5</text>
+  <text x="670" y="434" font-size="15" font-weight="600" fill="#94A3B8">Decision staleness</text>
+  <text x="830" y="434" font-size="13" fill="#64748B">Accepted > 6 months, overdue reassessment</text>
+</svg>
