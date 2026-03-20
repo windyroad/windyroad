@@ -1,5 +1,12 @@
 # windy-road
 
+## 2.9.1
+
+### Patch Changes
+
+- 234f6fa: Add risk score gate: AI-scored uncommitted changes (1-5) block commits when score exceeds 2, preventing risky WIP accumulation
+- 4941be1: Improve /wardley skill with anchor validation, merge tests, analysis quality rules, platform dependency detection, convergence fragility checks, and observable decision triggers. Update Wardley Map with revised anchor, merged components, Claude Code dependency, and strategic analysis.
+
 ## 2.9.0
 
 ### Minor Changes
