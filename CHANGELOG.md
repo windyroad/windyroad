@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.10.0
+
+### Minor Changes
+
+- 2abfd90: Action-specific pipeline risk management with downstream back-pressure. Risk scoring now covers commit, push, and release actions with uniform threshold. Each action considers its effect on the next downstream queue. WIP nudge absorbed into the risk system.
+
 ## 2.9.2
 
 ### Patch Changes
