@@ -52,7 +52,8 @@ if echo "$PIPELINE_STATE" | grep -q "uncommitted for over 24h"; then
 fi
 
 # Unpushed commits warning
-UNPUSHED_COUNT=$(echo "$PIPELINE_STATE" | grep -oP 'Unpushed commits \(\K[0-9]+' || echo "0")
+UNPUSHED_COUNT=$(echo "$PIPELINE_STATE" | sed -n 's/.*Unpushed commits (\([0-9]*\)).*/\1/p' | head -1)
+UNPUSHED_COUNT="${UNPUSHED_COUNT:-0}"
 if [ "$UNPUSHED_COUNT" -ge 3 ]; then
     WARNINGS="${WARNINGS}WIP: ${UNPUSHED_COUNT} unpushed commits on master. Consider running \`npm run push:watch\`.\n"
 fi
