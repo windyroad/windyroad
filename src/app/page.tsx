@@ -135,9 +135,9 @@ export default function Home() {
             Here&apos;s what&apos;s slipping through.
           </h1>
           <p className={styles.sub}>
-            Copilot, Cursor, and Claude are writing your production code. I
-            partner with engineering leaders to make sure the speed doesn&apos;t
-            come at the cost of quality.
+            Copilot, Cursor, and Claude are writing your production code.
+            {' '}I&nbsp;partner with engineering leaders to make sure the speed
+            doesn&apos;t come at the cost of quality.
           </p>
           <div className={styles.cta}>
             <Button
