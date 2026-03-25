@@ -14,7 +14,7 @@ const problems = [
   '3\u00D7 faster shipping, quietly doubled defect rate',
   'AI code that \u201Clooks right\u201D but ships with security holes',
   'Tests that pass but test nothing, the real failure mode goes undetected',
-  'Junior devs who don\u2019t know enough to push back on AI suggestions',
+  'AI suggestions accepted without scrutiny, compounding risk across the team',
   'Dependencies nobody on your team chose, adding supply chain risk nobody is tracking',
 ];
 
@@ -257,6 +257,14 @@ export default function Home() {
                   <CheckIcon className={styles.checkIcon} />
                   {eng.outcome}
                 </div>
+                <Button
+                  href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
+                  variant="primary"
+                  size="large"
+                  external
+                >
+                  Book a Call
+                </Button>
               </li>
             ))}
           </ul>
