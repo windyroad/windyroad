@@ -38,16 +38,16 @@ const process = [
 
 const engagements = [
   {
-    name: 'Quick Wins Week',
-    price: '$5,000',
-    duration: '1 week',
+    name: 'Pipeline Assessment',
+    price: '$10,000',
+    duration: '2 weeks',
     description:
-      'I spend a week with your team: diagnose how AI tools are being used, identify the biggest gaps, and implement the first round of fixes. Pipeline guardrails, review process changes, or test coverage improvements. You get quick wins shipped plus a roadmap for what\u2019s next.',
-    outcome: 'Immediate improvements + prioritised roadmap',
+      'I audit your AI tool usage, map where risk concentrates in your pipeline, and implement the first controls. Risk scoring, quality gates, or test coverage for AI-specific failure modes. You get working improvements shipped plus a prioritised roadmap.',
+    outcome: 'Working controls + prioritised roadmap',
   },
   {
     name: 'Embedded Delivery Lead',
-    price: '$10,000/month',
+    price: '$20,000/month',
     duration: 'Ongoing, ~8\u201310 hrs/week',
     description:
       'I embed with your team part-time as a fractional delivery lead. Hands-on work: implementing quality gates, pairing on AI-generated PRs, building CI/CD guardrails, and coaching your developers on what to watch for.',
@@ -55,10 +55,10 @@ const engagements = [
   },
   {
     name: 'Delivery Sprint',
-    price: '$15,000\u2013$25,000',
-    duration: '2\u20134 weeks',
+    price: '$40,000',
+    duration: '4 weeks',
     description:
-      'A focused, project-based engagement with a defined outcome: a CI/CD pipeline with AI-specific quality gates, a test automation framework, or a working product increment with proper guardrails in place.',
+      'A focused, project-based engagement with a defined outcome: a CI/CD pipeline with AI-specific quality gates, a risk scoring system with automated back-pressure, or a test automation framework that catches semantic failures.',
     outcome: 'Specific deliverable, shipped',
   },
 ];
@@ -183,8 +183,8 @@ export default function Home() {
               loading="lazy"
             />
             <h2 className={styles.bioTitle}>
-              I&apos;ve shipped three profitable software products from
-              scratch: built them, found the customers, closed the sales.
+              I&apos;ve built pipeline controls, risk scoring systems, and
+              quality gates at Greater Bank, Westpac, and Pacific National.
             </h2>
           </div>
           <div className={styles.stats}>
@@ -244,7 +244,7 @@ export default function Home() {
         <div className={styles.inner}>
           <h2 className={styles.sectionTitle}>Engagements</h2>
           <p className={styles.pricingIntro}>
-            Engagements start at $5,000. No retainers, no long-term commitments.
+            Engagements start at $10,000. No retainers, no long-term commitments.
           </p>
           <ul className={styles.tiers} role="list">
             {engagements.map((eng) => (
