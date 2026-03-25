@@ -4,29 +4,69 @@ A Lean Startup Machine canvas for validating the Windy Road AI delivery
 consulting business. Based on the LSM validation board framework by
 Trevor Owens.
 
-## Customer Hypothesis
+## Customer Hypothesis (v1, PIVOTED)
 
-**Early-stage startup founders** (seed to Series A) who have used AI coding
-tools (Cursor, Claude Code, Copilot) to build and ship their MVP, and are
-now experiencing production instability as they onboard real users.
+~~**Early-stage startup founders** (seed to Series A) who have used AI
+coding tools to build and ship their MVP, and are now experiencing
+production instability as they onboard real users.~~
 
-## Problem Hypothesis
+**Why this was invalidated:** IH research (Experiment 2) showed that
+early-stage founders' #1 pain is getting users, not fixing code. Code
+quality is a step-3 problem; most IH founders are stuck at step 2
+(distribution). Voder AI customer discovery independently reached the
+same conclusion. r/vibecoding (89k members) had no recent "help me"
+posts from founders. LinkedIn blog posts about vibe-coding got 0
+conversions from founders. The target customer doesn't congregate
+where we looked, and may not prioritise this problem enough to pay.
 
-These founders **cannot confidently ship updates** to their AI-generated
-codebase because:
+## Customer Hypothesis (v2, CURRENT)
 
-1. They don't understand what the AI wrote well enough to debug it
-2. They have no test coverage, quality gates, or CI/CD guardrails
-3. Every change risks breaking something in production, slowing them down
-   at the exact moment they need to move fast (post-launch, pre-Series A)
+**Engineering leaders** (Heads of Engineering, CTOs, VPs of Engineering)
+at mid-to-large organisations whose teams are shipping code with AI
+agents (Claude Code, Cursor, Copilot) and need governance, quality
+gates, and risk controls in their pipeline.
 
-## Solution Hypothesis
+**Evidence:** LinkedIn post about pipeline risk scoring (2026-03-24)
+got 496 impressions, 3,141 views, 14 likes from IT leaders, 2
+comments, and 1 repost in 21 hours. This is organic engagement from
+the target audience without paid promotion. The content that resonated
+was not "your app is broken" but "give your AI agents a risk budget
+and gates that change how they work."
 
-A **fixed-scope diagnostic engagement** ($5k Vibe Code Audit) that gives
-the founder a clear, prioritised report of what's broken, what's risky,
-and what guardrails to implement, so they can make an informed
-build-vs-buy decision on remediation without committing to a large
-retainer upfront.
+## Problem Hypothesis (v1, PIVOTED)
+
+~~Founders cannot confidently ship updates to their AI-generated
+codebase.~~
+
+## Problem Hypothesis (v2, CURRENT)
+
+Engineering leaders **cannot trust what their AI agents push to
+production** because:
+
+1. AI agents ship code that looks right but introduces subtle
+   defects, security holes, and architectural drift
+2. Teams are shipping 3x faster but quietly doubling their defect rate
+3. Junior developers don't know enough to push back on AI suggestions
+4. There are no quality gates specifically designed for AI-generated
+   code in the pipeline
+
+## Solution Hypothesis (v1, PIVOTED)
+
+~~A $5k Vibe Code Audit for founders.~~
+
+## Solution Hypothesis (v2, CURRENT)
+
+An **embedded delivery lead** ($10k/month) who implements AI-specific
+pipeline guardrails: risk scoring, quality gates, review processes,
+and test coverage rules. The product is demonstrated in public
+through LinkedIn content showing the actual system working (dogfooding).
+
+Entry point: A **Quick Wins Week** ($5k, 1 week) to diagnose AI tool
+usage, identify gaps, and implement the first round of guardrails.
+
+**Key differentiator:** Not consulting theory. Working, demonstrated
+pipeline controls that the AI agent responds to autonomously. "The
+gate doesn't just stop bad pushes. It changes how the agent works."
 
 ---
 
@@ -302,3 +342,75 @@ and at least 1 takes the call.
 - Diagnostic value (#5): Is a free code review compelling?
 - Language fit: Does founder-language copy outperform our current
   developer-language content?
+
+**Status: SUPERSEDED (2026-03-25).** Customer hypothesis pivoted from
+founders to engineering leaders. See Experiment 3 below.
+
+---
+
+### Experiment 3: IT Leader Pivot (Testing new Customer Hypothesis v2)
+
+#### Evidence that triggered the pivot
+
+1. **IH "building vs getting users" post (2026-03-21):** Founders'
+   #1 pain is distribution, not code quality. Code quality is a
+   step-3 problem; most IH founders are stuck at step 2.
+2. **Voder AI research:** Independent customer discovery agent
+   reached the same conclusion.
+3. **r/vibecoding (2026-03-25):** No recent "help me" posts from
+   founders despite 89k members. Subreddit is developers learning,
+   not founders in pain.
+4. **IH posting gate:** Cannot create posts without earning
+   privileges through commenting first, limiting experiment velocity.
+5. **LinkedIn risk-scoring post (2026-03-24):** 496 impressions,
+   3,141 views, 14 likes from IT leaders, 2 comments, 1 repost in
+   21 hours. Organic engagement from engineering leaders without
+   any paid promotion.
+
+#### What the LinkedIn data tells us
+
+The content that resonated was not about broken apps or founder
+pain. It was about **engineering governance of AI agents**:
+- "I gave my AI agent a risk budget"
+- "Every push gets scored before it leaves the machine"
+- "The gate doesn't just stop bad pushes. It changes how the agent
+  works"
+
+This is a message for **engineering leaders managing teams**, not
+founders building solo. The audience is already on LinkedIn. The
+content already works. The channel is already proven.
+
+#### New riskiest assumptions (for v2 hypothesis)
+
+1. **Willingness to pay:** Will engineering leaders pay $5-10k/month
+   for pipeline guardrails they could theoretically build themselves?
+2. **Decision authority:** Can the people engaging on LinkedIn
+   actually approve a consulting engagement, or do they need to
+   sell it internally?
+3. **Conversion path:** Does LinkedIn engagement (likes, comments)
+   convert to calls and then to paid engagements?
+
+#### Experiment 3a: LinkedIn content doubling down
+
+**Goal:** Test whether continued LinkedIn content about AI pipeline
+governance generates inbound enquiries from engineering leaders.
+
+**Method:** Publish 3 more LinkedIn posts over the next 2 weeks
+showing the pipeline risk system in action. Each post should
+demonstrate a different aspect (risk scoring, quality gates,
+agent behaviour change). End each with "Book a call or DM me."
+
+**Tracking:**
+
+| Post topic | Date | Impressions | Likes | Comments | DMs | Calls |
+|------------|------|-------------|-------|----------|-----|-------|
+| Risk budget + gate (done) | 2026-03-24 | 496 | 14 | 2 | | |
+| | | | | | | |
+| | | | | | | |
+
+**Pass criteria:** 1+ DM or call booking from an engineering leader
+within 2 weeks.
+**Fail criteria:** High engagement (likes) but zero DMs or calls
+after 3 posts.
+
+**Timeline:** 2 weeks (assess by 2026-04-08).
