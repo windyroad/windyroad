@@ -11,18 +11,18 @@ export const metadata: Metadata = {
 };
 
 const problems = [
-  'Hallucinated dependencies that slip past review and into production',
+  '3\u00D7 faster shipping, quietly doubled defect rate',
   'AI code that \u201Clooks right\u201D but ships with security holes',
   'Tests that pass but test nothing, the real failure mode goes undetected',
-  '3\u00D7 faster shipping, quietly doubled defect rate',
   'Junior devs who don\u2019t know enough to push back on AI suggestions',
+  'Dependencies nobody on your team chose, adding supply chain risk nobody is tracking',
 ];
 
 const process = [
   {
     label: 'Diagnose',
     description:
-      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. I look at how your team uses AI tools: which ones, how generated code gets reviewed, what your pipeline catches and what slips through.',
+      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. I look at how your team uses AI tools: where the risk concentrates, what your pipeline catches, and what controls are missing.',
   },
   {
     label: 'Implement',
