@@ -43,8 +43,8 @@ export default function Header() {
         </svg>
       </Link>
       <nav aria-label="Main" className={styles.nav}>
-        <Link href="/ai-teams" className={styles.navLink}>
-          AI Teams
+        <Link href="/founders" className={styles.navLink}>
+          Founders
         </Link>
         <Link href="/blog" className={styles.navLink}>
           Blog

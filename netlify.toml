@@ -8,6 +8,12 @@
   NODE_VERSION = "20"
 
 [[redirects]]
+  from = "/ai-teams"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/2011/02/07/apache-ant-junit-xml-schema/"
   to = "/blog/apache-ant-junit-xml-schema"
   status = 301

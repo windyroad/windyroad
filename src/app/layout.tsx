@@ -13,11 +13,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Tom Howard | AI Delivery Consulting',
+  title: 'Tom Howard | AI Delivery Consulting for Engineering Teams',
   description:
-    'Ship with AI without the risk. 25+ years of delivery, quality, and risk expertise helping founders and engineering leaders deliver with AI safely.',
+    'Your team adopted Copilot, Cursor, or Claude. I partner with engineering leaders to make sure the speed doesn\u2019t come at the cost of quality.',
   keywords:
-    'AI consulting, software delivery, CI/CD, quality gates, risk management, fractional engineering leader',
+    'AI consulting, engineering teams, AI code quality, CI/CD guardrails, code review, fractional delivery lead',
 };
 
 export default function RootLayout({
