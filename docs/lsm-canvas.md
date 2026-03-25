@@ -414,3 +414,29 @@ within 2 weeks.
 after 3 posts.
 
 **Timeline:** 2 weeks (assess by 2026-04-08).
+
+#### Experiment 3b: Homepage swap (2026-03-25)
+
+**Goal:** Align the website with the pivoted customer hypothesis.
+LinkedIn traffic from engineering leaders should land on the right
+message, not a founder-focused "your vibe-coded app is broken" page.
+
+**Method:** Promote AI Teams page content to the homepage. Move
+the founder-focused content to /founders as a secondary path.
+
+**Changes made:**
+- AI Teams content now serves at / (homepage)
+- Previous homepage moved to /founders
+- /ai-teams redirects 301 to /
+- Nav updated: "AI Teams" link becomes "Founders"
+- Root metadata updated for engineering leader audience
+
+**What to track:**
+- Homepage engagement in Clarity (compare to baseline 67 views/month)
+- CTA click rates on new homepage vs old (baseline: 4.50% Book a Call)
+- Whether LinkedIn traffic converts better when landing on /
+- /founders page traffic (organic discovery of secondary path)
+
+**Pass criteria:** Homepage CTA engagement rate improves above 4.50%
+baseline, or 1+ call booked from homepage within 2 weeks.
+**Fail criteria:** Engagement drops below baseline after 2 weeks.
