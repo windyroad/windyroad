@@ -234,61 +234,71 @@ The homepage hero is close ("Something keeps breaking. You're scared
 to touch it.") but the rest of the site speaks developer, not
 founder.
 
-#### Experiment 2a: IH/Reddit direct engagement (low effort)
+#### Experiment 2a (original plan): Reply to founder posts
 
-**Goal:** Get in front of founders where they already are, using
-their language, and see if they respond to an offer of help.
+**Original method:** Find 5 recent IH/Reddit posts where a founder
+describes their vibe-coded app breaking. Reply with genuine help.
 
-**Method:** Reply to 5 IH posts where a founder describes a
-vibe-coded app breaking. Offer genuine help (not a sales pitch).
+**Status: BLOCKED (2026-03-25).** Browsed r/vibecoding sorted by
+New. Found no recent "help me" posts from founders. The subreddit
+(89k members) is predominantly developers sharing tools, tips, and
+wins. Founders whose apps broke may have already left, hired
+someone, or given up. They post once when it breaks, then they're
+gone.
 
-**Reply template** (adapt per post):
-> "This matches what I've been seeing. I help founders stabilise
-> vibe-coded apps (25 years in delivery engineering). If you want
-> a second pair of eyes on what's breaking, I'm happy to do a free
-> 20-min code review. No strings. DM me if interested."
+**What this tells us:** r/vibecoding is not where founders in pain
+congregate. The horror stories we found in our research (Experiment
+1a) were older posts, viral incidents, or thought leadership. The
+day-to-day subreddit is developers learning, not founders stuck.
+This narrows the channel hypothesis: Reddit may not be the right
+channel for reaching founders with this problem.
 
-**Target posts (identified 2026-03-24):**
+#### Experiment 2a (revised): Post offering free code reviews
 
-| # | Post | Why this one |
-|---|------|-------------|
-| 1 | [Notion for Songwriters in a Vibe-Coded Standstill](https://www.indiehackers.com/post/notion-for-songwriters-in-a-vibe-coded-standstill-615be642a6) | Founder stuck. App has input bugs. Title says "standstill." |
-| 2 | [I hit the "Credit Limit" wall with Vibe Coding](https://www.indiehackers.com/post/i-hit-the-credit-limit-wall-with-vibe-coding-here-is-how-i-fixed-it-e46fc970a5) | "Backend wires dangling unplugged, data were dummy, basic functionality broken." |
-| 3 | [Vibe coding has a security problem](https://www.indiehackers.com/post/tech/vibe-coding-has-a-security-problem-here-are-two-solutions-vLxyPTrTlZVwDo76oqvr) | Builder got hacked (exposed API keys, bypassed paywall). Commenters asking for help. |
-| 4 | [Changed my mind on vibe coding](https://www.indiehackers.com/post/changed-my-mind-on-vibe-coding-H0FoahUxjxAsUCgW4Z0H) | Shifted view after experience. Reply opportunities in comments. |
-| 5 | [The Reality of Vibe Coding](https://www.indiehackers.com/post/the-reality-of-vibe-coding-47c65d45d6) | Data-driven post about context collapse after 5,000 lines. Highly engaged thread. |
+**Goal:** Instead of replying to existing posts, be the post.
+Test whether founders on IH respond to a direct offer of help.
+
+**Method:** Post on IH offering free 20-min code reviews for
+founders with vibe-coded apps that are breaking in production.
+
+**Post copy** (honest, aligns with windyroad.com.au offering):
+> "I'm a delivery engineer with 25 years experience. I've shipped
+> 3 products from scratch and built the kind of quality gates and
+> guardrails that AI-generated codebases are usually missing.
+> I help founders stabilise vibe-coded apps that are breaking in
+> production. If yours is struggling, I'll do a free 20-min code
+> review. No pitch, just a genuine look at what's going on. DM me."
+
+**Why this copy works:**
+- Every claim is true and verifiable on windyroad.com.au
+- "25 years experience" and "3 products from scratch" match site
+- "quality gates and guardrails" matches site language
+- "help founders stabilise vibe-coded apps" is what the site offers
+- Free 20-min review leads naturally to the $5k Vibe Code Audit
+  if the founder wants to go further
+- Does not claim to have already reviewed vibe-coded apps
+
+**Where to post:**
+- IH main feed (indiehackers.com)
+- Also consider: IH vibe coding hub, r/SaaS, X/Twitter
 
 **Tracking table:**
 
-| # | Replied | Date | Response? | Call booked? | Notes |
-|---|---------|------|-----------|-------------|-------|
-| 1 | [ ] | | | | |
-| 2 | [ ] | | | | |
-| 3 | [ ] | | | | |
-| 4 | [ ] | | | | |
-| 5 | [ ] | | | | |
+| Platform | Posted | Date | Responses | Calls booked | Notes |
+|----------|--------|------|-----------|-------------|-------|
+| IH | [ ] | | | | |
+| r/SaaS | [ ] | | | | |
+| X/Twitter | [ ] | | | | |
 
-**Pass criteria:** 2 out of 5 take the call.
-**Fail criteria:** 0 responses, or responses only from developers.
+**Pass criteria:** 3+ founders respond across all platforms,
+and at least 1 takes the call.
+**Fail criteria:** 0 founder responses within 7 days.
 
-**Timeline:** 1 week (reply by 2026-03-25, assess by 2026-03-31).
+**Timeline:** Post by 2026-03-26, assess by 2026-04-02.
 
 **What this tests simultaneously:**
-- Channel reachability (#4): Are founders on IH/Reddit reachable?
+- Channel reachability (#4): Can we reach founders on IH/Reddit?
 - Solution-seeking (#2): Do they want outside help?
 - Diagnostic value (#5): Is a free code review compelling?
-
-#### Experiment 2b: Write one IH post in founder language
-
-**Goal:** Test whether content written in founder language (not
-developer language) generates engagement and inbound interest.
-
-**Method:** Write a short IH post titled something like: "I've
-reviewed 10 vibe-coded apps this month. Here's what keeps
-breaking." Use the language from the research (house of cards,
-the 70% problem, fix one thing destroy 10 others). End with an
-offer for a free code review.
-
-**Pass criteria:** 5+ founders respond or DM within 1 week.
-**Fail criteria:** Post gets engagement only from developers,
-or fewer than 3 founder responses.
+- Language fit: Does founder-language copy outperform our current
+  developer-language content?
