@@ -183,8 +183,8 @@ export default function Home() {
               loading="lazy"
             />
             <h2 className={styles.bioTitle}>
-              I&apos;ve built pipeline controls, risk scoring systems, and
-              quality gates at Greater Bank, Westpac, and Pacific National.
+              I&apos;ve built pipeline controls and quality gates at Greater
+              Bank, Essential Energy, MLC, AMP, and Pacific National.
             </h2>
           </div>
           <div className={styles.stats}>
