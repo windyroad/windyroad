@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import styles from './Header.module.scss';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     function onScroll() {
@@ -15,6 +16,19 @@ export default function Header() {
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [menuOpen]);
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
@@ -42,11 +56,41 @@ export default function Header() {
           </g>
         </svg>
       </Link>
-      <nav aria-label="Main" className={styles.nav}>
-        <Link href="/founders" className={styles.navLink}>
+
+      {/* Hamburger toggle - visible on mobile only */}
+      <button
+        type="button"
+        className={styles.hamburger}
+        aria-expanded={menuOpen}
+        aria-controls="main-nav"
+        aria-label="Menu"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          {menuOpen ? (
+            <>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </>
+          ) : (
+            <>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </>
+          )}
+        </svg>
+      </button>
+
+      <nav
+        id="main-nav"
+        aria-label="Main"
+        className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}
+      >
+        <Link href="/founders" className={styles.navLink} onClick={closeMenu}>
           Founders
         </Link>
-        <Link href="/blog" className={styles.navLink}>
+        <Link href="/blog" className={styles.navLink} onClick={closeMenu}>
           Blog
         </Link>
         <a
@@ -54,8 +98,9 @@ export default function Header() {
           target="_blank"
           rel="noopener noreferrer"
           className={styles.cta}
+          onClick={closeMenu}
         >
-          Book a Call
+          Book a Call<span className="sr-only"> (opens in new tab)</span>
         </a>
       </nav>
     </header>

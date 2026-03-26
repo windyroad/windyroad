@@ -30,6 +30,7 @@ export default function Button({
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {children}
+      {external && <span className="sr-only"> (opens in new tab)</span>}
     </a>
   );
 }
