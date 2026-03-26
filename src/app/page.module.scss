@@ -22,6 +22,7 @@
   justify-content: center;
   text-align: center;
   position: relative;
+  z-index: 0;
   clip-path: inset(0);
 
   &::before {
