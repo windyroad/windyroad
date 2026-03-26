@@ -8,6 +8,9 @@ export const metadata: Metadata = {
     'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through. | Windy Road Technology',
   description:
     'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. I fix that.',
+  alternates: {
+    canonical: 'https://windyroad.com.au',
+  },
   openGraph: {
     title: 'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through.',
     description:
@@ -341,7 +344,7 @@ export default function Home() {
           <h2 className={styles.sectionTitle}>Questions</h2>
           <div className={styles.faqList}>
             {faqs.map((faq) => (
-              <details key={faq.q} className={styles.faqItem} open>
+              <details key={faq.q} className={styles.faqItem}>
                 <summary className={styles.faqQuestion}>{faq.q}</summary>
                 <p className={styles.faqAnswer}>{faq.a}</p>
               </details>
@@ -367,6 +370,24 @@ export default function Home() {
           </Button>
         </div>
       </section>
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqs.map((faq) => ({
+              '@type': 'Question',
+              name: faq.q,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.a,
+              },
+            })),
+          }),
+        }}
+      />
     </>
   );
 }

@@ -43,6 +43,8 @@ export default function Footer() {
 
         <p className={styles.copyright}>
           &copy; {new Date().getFullYear()} Windy Road Technology Pty Ltd
+          <br />
+          ABN 86 131 679 475
         </p>
       </div>
     </footer>
