@@ -115,16 +115,19 @@
 
   .nav {
     display: none;
-    position: absolute;
+    position: fixed;
     top: var(--header-height);
     left: 0;
     right: 0;
+    bottom: 0;
     flex-direction: column;
     align-items: stretch;
+    justify-content: flex-start;
     gap: 0;
     background-color: rgba(10, 10, 15, 0.98);
     backdrop-filter: blur(8px);
-    padding: 0.5rem 0;
+    padding: 2rem 0;
+    overflow-y: auto;
   }
 
   .navOpen {

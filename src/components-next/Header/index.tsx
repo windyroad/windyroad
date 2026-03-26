@@ -20,6 +20,15 @@ export default function Header() {
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  useEffect(() => {
     if (!menuOpen) return;
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {

@@ -18,6 +18,14 @@ export const metadata: Metadata = {
     url: 'https://windyroad.com.au',
     siteName: 'Windy Road Technology',
     type: 'website',
+    images: [
+      {
+        url: 'https://windyroad.com.au/img/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Your team adopted AI tools. Here\u2019s what\u2019s slipping through.',
+      },
+    ],
   },
 };
 
@@ -186,7 +194,9 @@ export default function Home() {
         <div className={styles.inner}>
           <div className={styles.bioIntro}>
             <img
-              src="/img/tomhoward.jpg"
+              src="/img/tomhoward-240.jpg"
+              srcSet="/img/tomhoward-120.jpg 120w, /img/tomhoward-240.jpg 240w, /img/tomhoward.jpg 672w"
+              sizes="120px"
               alt="Tom Howard"
               className={styles.headshot}
               width={120}
