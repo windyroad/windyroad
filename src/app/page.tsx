@@ -8,6 +8,14 @@ export const metadata: Metadata = {
     'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through. | Windy Road Technology',
   description:
     'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. I fix that.',
+  openGraph: {
+    title: 'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through.',
+    description:
+      'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. I fix that.',
+    url: 'https://windyroad.com.au',
+    siteName: 'Windy Road Technology',
+    type: 'website',
+  },
 };
 
 const problems = [
@@ -295,6 +303,7 @@ export default function Home() {
       {/* Fit check */}
       <section className={`${styles.section} ${styles.dark} ${styles.fitSection}`}>
         <div className={styles.inner}>
+          <h2 className={styles.srOnly}>Is this a good fit?</h2>
           <div className={styles.fitColumns}>
             <div className={`${styles.fitColumn} ${styles.fitGood}`}>
               <h3 className={styles.fitTitle}>
