@@ -65,18 +65,18 @@ const engagements = [
 
 const testimonials = [
   {
-    theme: 'On fixing what\u2019s broken',
-    name: 'Mark Chan',
-    role: 'Senior Project Manager, Westpac',
+    theme: 'On engineering discipline',
+    name: 'Raymond Lay',
+    role: 'Product & AI Experience Design, Pacific National',
     quote:
-      'Resourced into a troubled project at WBC, he was able to reassure management regarding directions to stabilise and bring the project back on course. Tom projects well with all levels of staff and is highly regarded for his training efforts. I highly recommend Tom from a technical and management perspective.',
+      'He didn\u2019t simply manage BAU. He elevated it. By introducing structured root cause analysis, strengthening incident hygiene, and embedding Agile and Lean practices, he shifted the team from reactive fire-fighting to disciplined, data-driven service reliability. Reducing open incidents by half within a mission-critical freight system is a significant achievement.',
   },
   {
-    theme: 'On bridging tech and business',
-    name: 'Kasi Subramanian',
-    role: 'Manager, Rail Services at Pacific National',
+    theme: 'On delivery at scale',
+    name: 'David Tanconi',
+    role: 'Change Leadership, Westpac',
     quote:
-      'What set him apart was his technical strength \u2014 he could engage credibly with both the business and the team, managing expectations effectively while keeping everyone honest on what was truly achievable.',
+      'Taking compliance from 0% to 97%, rolling the solution out to more than 5,000 bankers and doing it with minimal disruption to day-to-day operations was a substantial achievement. What stood out to me wasn\u2019t just the numbers, but the way Tom achieved them. He led with calm focus, thought strategically about the bigger picture and stayed committed to getting the detail right.',
   },
 ];
 
