@@ -1,6 +1,7 @@
 ---
-status: "proposed"
+status: "accepted"
 first-released: 2026-03-09
+accepted-date: 2026-03-27
 date: 2026-03-09
 decision-makers: [Tom Howard, Claude]
 consulted: [accessibility-lead agent]
