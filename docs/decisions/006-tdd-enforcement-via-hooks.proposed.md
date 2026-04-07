@@ -66,7 +66,7 @@ Test command is configurable via environment variable:
 - `TDD_TEST_CMD` (default: `npm test --`)
 - `TDD_TEST_TIMEOUT` (default: 30 seconds)
 
-The hooks are inactive if no `test` script is defined in package.json.
+If no `test` script is defined in package.json, the hooks block implementation edits and direct the user to run `/wr-tdd:create` to configure a test framework. This ensures TDD is enforced from the start of every project, not just after testing is set up.
 
 ## Consequences
 
@@ -86,7 +86,7 @@ The hooks are inactive if no `test` script is defined in package.json.
 - Making the test pass transitions to GREEN
 - Exempt files are always writable regardless of state
 - Test runner timeout transitions to BLOCKED
-- Hooks are inactive when no test script exists in package.json
+- When no test script exists, implementation edits are blocked with direction to /wr-tdd:create
 
 ## Reassessment Criteria
 
