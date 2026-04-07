@@ -78,3 +78,7 @@ Chosen option: **Impact x likelihood product**, because it is the simplest formu
 
 - If the label bands produce unintuitive results for common change patterns
 - If a weighted model proves necessary to emphasise impact over likelihood
+
+## Delivery Mechanism
+
+As of ADR 009, the risk-scorer agent and related hooks are delivered via the `risk-scorer` plugin from the windyroad-claude-plugin marketplace rather than local files in `.claude/agents/` and `.claude/hooks/`. The scoring formula and behavior documented above is unchanged.

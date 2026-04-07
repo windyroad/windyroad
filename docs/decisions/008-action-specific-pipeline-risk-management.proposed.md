@@ -93,3 +93,7 @@ ADR 003 (Split WIP checks into local and remote). The local/remote split princip
 - If the two-report output becomes noisy and the agent struggles to produce concise responses
 - If back-pressure is too conservative and blocks legitimate work patterns
 - If release scoring latency (gh API calls) becomes problematic in the push gate
+
+## Delivery Mechanism
+
+As of ADR 009, the pipeline risk hooks (risk-score.sh, pipeline-state.sh, risk-score-commit-gate.sh, git-push-gate.sh, etc.) are delivered via the `risk-scorer` plugin from the windyroad-claude-plugin marketplace rather than local files in `.claude/hooks/`. The pipeline scoring behavior documented above is unchanged.

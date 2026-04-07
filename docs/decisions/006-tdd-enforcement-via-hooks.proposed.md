@@ -93,3 +93,7 @@ The hooks are inactive if no `test` script is defined in package.json.
 - If Claude Code adds native TDD enforcement
 - If test execution latency becomes a bottleneck (consider running tests in background)
 - If the project adopts a monorepo structure requiring per-package test commands
+
+## Delivery Mechanism
+
+As of ADR 009, the TDD hook scripts are delivered via the `tdd` plugin from the windyroad-claude-plugin marketplace rather than local files in `.claude/hooks/`. The functional behavior documented above is unchanged.
