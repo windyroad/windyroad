@@ -1,20 +1,22 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import Button from '@/src/components-next/Button';
+import Countdown from '@/src/components-next/Countdown';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
   title:
-    'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through. | Windy Road Technology',
+    'You\u2019re Taking Too Long to Patch Your Software | Windy Road Technology',
   description:
-    'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. We fix that.',
+    'AI-powered vulnerability discovery is measured in hours. Your patch cycle isn\u2019t. We help engineering teams get patch fit.',
+  keywords:
+    'patch fitness, dependency management, vulnerability patching, continuous patching, CI/CD, software supply chain',
   alternates: {
     canonical: 'https://windyroad.com.au',
   },
   openGraph: {
-    title: 'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through.',
+    title: 'You\u2019re Taking Too Long to Patch Your Software',
     description:
-      'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. We fix that.',
+      'AI-powered vulnerability discovery is measured in hours. Your patch cycle isn\u2019t. We help engineering teams get patch fit.',
     url: 'https://windyroad.com.au',
     siteName: 'Windy Road Technology',
     type: 'website',
@@ -23,61 +25,61 @@ export const metadata: Metadata = {
         url: 'https://windyroad.com.au/img/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Your team adopted AI tools. Here\u2019s what\u2019s slipping through.',
+        alt: 'You\u2019re taking too long to patch your software.',
       },
     ],
   },
 };
 
 const problems = [
-  '3\u00D7 faster shipping, quietly doubled defect rate',
-  'AI code that \u201Clooks right\u201D but ships with security holes',
-  'Tests that pass but test nothing, the real failure mode goes undetected',
-  'AI suggestions accepted without scrutiny, compounding risk across the team',
-  'Dependencies nobody on your team chose, adding supply chain risk nobody is tracking',
+  'You patch when something breaks, not before. The window between discovery and exploitation is collapsing.',
+  'Dependency trees full of libraries nobody on your team chose and nobody is tracking',
+  'We once found a 12-year-old version of Apache HTTP Components in production at a major financial services company. Nobody knew it was there.',
+  'Dependabot PRs piling up, ignored, breaking builds',
+  'Quarterly patching cycles leaving months of exposure',
 ];
 
 const process = [
   {
     label: 'Diagnose',
     description:
-      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. We look at how your team uses AI tools: where the risk concentrates, what your pipeline catches, and what controls are missing.',
+      'You get a clear picture of your dependency staleness: forgotten libraries, outdated transitive dependencies, and how long your current patch cycle takes end-to-end.',
   },
   {
     label: 'Implement',
     description:
-      'You get working guardrails: quality gates in your pipeline, review checklists for AI-generated code, test coverage rules that catch the failure modes these tools introduce.',
+      'You get automated dependency updates with CI gates that prevent regressions. Merge confidence scoring. Pipeline changes that make updating safe and routine.',
   },
   {
     label: 'Embed',
     description:
-      'Your team learns to catch the problems themselves. We pair on real PRs, coach developers on what to watch for in AI output, and tune the process based on what\u2019s happening in your codebase.',
+      'Your team owns continuous patching. Updates flow through the pipeline without heroics. A critical CVE patch deploys like any other change.',
   },
 ];
 
 const engagements = [
   {
-    name: 'Pipeline Assessment',
-    price: '$10,000',
-    duration: '2 weeks',
+    name: 'Patch Fitness Assessment',
+    price: '$5,000',
+    duration: '1 week',
     description:
-      'We audit your AI tool usage, map where risk concentrates in your pipeline, and implement the first controls. Risk scoring, quality gates, or test coverage for AI-specific failure modes. You get working improvements shipped plus a prioritised roadmap.',
-    outcome: 'Working controls + prioritised roadmap',
+      'We map dependency staleness across your codebase, measure your patch cycle time, and identify the riskiest gaps. You get first fixes shipped plus a prioritised remediation roadmap.',
+    outcome: 'Dependency map + first fixes shipped',
   },
   {
     name: 'Embedded Delivery Lead',
     price: '$20,000/month',
     duration: 'Ongoing, ~8\u201310 hrs/week',
     description:
-      'We embed with your team part-time as a fractional delivery lead. Hands-on work: implementing quality gates, pairing on AI-generated PRs, building CI/CD guardrails, and coaching your developers on what to watch for.',
-    outcome: 'Working guardrails + team capability uplift',
+      'We embed with your team part-time. Hands-on: automated dependency updates, CI gates, merge confidence scoring, and coaching your developers to own the process.',
+    outcome: 'Continuous patching + team capability uplift',
   },
   {
     name: 'Delivery Sprint',
     price: '$40,000',
     duration: '4 weeks',
     description:
-      'A focused, project-based engagement with a defined outcome: a CI/CD pipeline with AI-specific quality gates, a risk scoring system with automated back-pressure, or a test automation framework that catches semantic failures.',
+      'A focused engagement with a defined outcome: automated dependency pipeline with CI gates, patch cycle time reduced from weeks to hours, or supply chain visibility across your stack.',
     outcome: 'Specific deliverable, shipped',
   },
 ];
@@ -100,29 +102,29 @@ const testimonials = [
 ];
 
 const goodFit = [
-  'Your team is using Copilot, Cursor, or Claude and you\u2019re not sure what\u2019s getting through review',
-  'You\u2019ve shipped faster since adopting AI tools but defect rates or security issues are creeping up',
-  'You want guardrails implemented in your pipeline, not written up in a PDF',
+  'Your last dependency update was a multi-week project',
+  'You have Dependabot PRs piling up that nobody reviews',
+  'You patched Log4Shell as an emergency and nothing has changed since',
 ];
 
 const notFit = [
-  'You want a review process documented in a Word doc, not implemented in your pipeline',
-  'Your team isn\u2019t actually using AI tools yet',
+  'You already deploy continuously with automated dependency updates',
+  'Your pipeline catches regressions from dependency changes automatically',
   'You need someone to manage your team full-time',
 ];
 
 const faqs = [
   {
-    q: 'Can\u2019t we just add a linter?',
-    a: 'Linters catch syntax. They don\u2019t catch hallucinated dependencies, incorrect business logic, or tests that pass but test nothing. The failure modes AI tools introduce are semantic, not syntactic.',
+    q: 'We already use Dependabot.',
+    a: 'Dependabot is good at surfacing what\u2019s outdated. It opens the PRs. What it doesn\u2019t do is merge them, validate them, or handle the transitive conflicts that make teams ignore them. Patch fitness means updates flow through your pipeline with confidence, not pile up in a backlog.',
   },
   {
-    q: 'We already do code review.',
-    a: 'Most teams reviewing AI-generated code are pattern-matching against what looks right. AI output looks right by design. The gaps show up under load, during a security audit, or when someone leaves and nobody understands the code they approved.',
+    q: 'Our security team handles patching.',
+    a: 'Your security team is good at triaging alerts and prioritising risk. What they don\u2019t typically own is your build pipeline, your test suite, or the developer workflow that determines whether a patch ships in hours or weeks. Patch fitness is an engineering capability, not a security process.',
   },
   {
-    q: 'How is this different from hiring a senior dev?',
-    a: 'A senior hire takes 3\u20136 months to ramp up, costs $200k+ per year, and may not have specific experience with AI-generated code failure modes. We start delivering in week one and leave your team better equipped to catch the problems themselves.',
+    q: 'We patch quarterly and that\u2019s fine.',
+    a: 'A quarterly cycle means up to 90 days of exposure. When AI-powered vulnerability discovery makes exploits available in hours, 90 days is not a risk you can carry.',
   },
   {
     q: 'What stack do you work with?',
@@ -150,14 +152,20 @@ export default function Home() {
       <section className={`${styles.section} ${styles.dark} ${styles.hero}`}>
         <div className={styles.inner}>
           <h1 className={styles.headline}>
-            Your team adopted AI tools.<br />
-            Here&apos;s what&apos;s slipping through.
+            You&apos;re taking too long to patch your software.
           </h1>
           <p className={styles.sub}>
-            Copilot, Cursor, and Claude are writing your production code.
-            {' '}We&nbsp;partner with engineering leaders to make sure the speed
-            doesn&apos;t come at the cost of quality.
+            AI-powered vulnerability discovery is measured in hours. Your patch cycle isn&apos;t.
           </p>
+          <p className={styles.sub}>
+            Anthropic&apos;s Claude Mythos found a 27-year-old vulnerability in
+            OpenBSD overnight. Only 40 companies have access today. That won&apos;t last.
+          </p>
+          <Countdown
+            targetDate="2026-06-30"
+            probability={23}
+            sourceUrl="https://polymarket.com/event/claude-mythos-released-by"
+          />
           <div className={styles.cta}>
             <Button
               href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
@@ -167,8 +175,8 @@ export default function Home() {
             >
               Book a Call
             </Button>
-            <Button href="/founders" variant="ghost" size="large">
-              Building something yourself? <span aria-hidden="true">&rarr;</span>
+            <Button href="/ai-quality" variant="ghost" size="large">
+              AI code quality <span aria-hidden="true">&rarr;</span>
             </Button>
           </div>
         </div>
@@ -177,7 +185,7 @@ export default function Home() {
       {/* Problems */}
       <section className={`${styles.section} ${styles.light}`}>
         <div className={styles.inner}>
-          <h2 className={styles.sectionTitle}>What goes wrong</h2>
+          <h2 className={styles.sectionTitle}>What&apos;s coming</h2>
           <ul className={styles.problemList} role="list">
             {problems.map((problem) => (
               <li key={problem} className={styles.problemItem}>
@@ -204,7 +212,7 @@ export default function Home() {
               loading="lazy"
             />
             <h2 className={styles.bioTitle}>
-              I&apos;ve built pipeline controls and quality gates at Greater
+              I&apos;ve built delivery pipelines and operational controls at Greater
               Bank, Essential Energy, MLC, AMP, and Pacific National.
             </h2>
           </div>
@@ -224,10 +232,11 @@ export default function Home() {
           </div>
           <div className={styles.narrative}>
             <p>
-              I&apos;ve been working with AI since 1999: building autonomous
-              agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
-              co-authoring research papers. Which means I understand how these tools
-              reason and where they break.
+              Tom Howard founded Windy Road Technology. I&apos;ve been working
+              with AI since 1999: building autonomous agents at CSIRO, competing
+              at the RoboCup World Cup, holding a patent, co-authoring research
+              papers. Which means I understand how these tools reason and where
+              they break.
             </p>
             <p>
               At Greater Bank I introduced Software Delivery Fireteams that cut
@@ -243,7 +252,7 @@ export default function Home() {
       {/* Process */}
       <section className={`${styles.section} ${styles.light}`}>
         <div className={styles.inner}>
-          <h2 className={styles.sectionTitle}>What working with us looks like</h2>
+          <h2 className={styles.sectionTitle}>How we get you patch fit</h2>
           <ol className={styles.processList} role="list">
             {process.map((step, i) => (
               <li key={step.label} className={styles.step}>
@@ -265,7 +274,7 @@ export default function Home() {
         <div className={styles.inner}>
           <h2 className={styles.sectionTitle}>Engagements</h2>
           <p className={styles.pricingIntro}>
-            Engagements start at $10,000. No retainers, no long-term commitments.
+            Engagements start at $5,000. No retainers, no long-term commitments.
           </p>
           <ul className={styles.tiers} role="list">
             {engagements.map((eng) => (
@@ -367,8 +376,9 @@ export default function Home() {
       <section className={`${styles.section} ${styles.dark}`}>
         <div className={styles.inner}>
           <h2 className={styles.ctaTitle}>
-            The defect rate is already climbing. Let&apos;s get ahead of it
-            before it becomes a production incident.
+            Your patch cycle is measured in weeks. AI-powered vulnerability
+            discovery is measured in hours. We help engineering teams close
+            that gap.
           </h2>
           <Button
             href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
@@ -380,6 +390,7 @@ export default function Home() {
           </Button>
         </div>
       </section>
+
       {/* JSON-LD structured data */}
       <script
         type="application/ld+json"

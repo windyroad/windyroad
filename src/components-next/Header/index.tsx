@@ -96,8 +96,8 @@ export default function Header() {
         aria-label="Main"
         className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}
       >
-        <Link href="/founders" className={styles.navLink} onClick={closeMenu}>
-          Founders
+        <Link href="/ai-quality" className={styles.navLink} onClick={closeMenu}>
+          AI Quality
         </Link>
         <Link href="/blog" className={styles.navLink} onClick={closeMenu}>
           Blog
