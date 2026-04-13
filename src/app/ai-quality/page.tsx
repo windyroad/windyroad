@@ -5,17 +5,17 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = {
   title:
-    'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through. | Windy Road Technology',
+    'AI Code Quality for Engineering Teams | Windy Road Technology',
   description:
     'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. We fix that.',
   alternates: {
-    canonical: 'https://windyroad.com.au',
+    canonical: 'https://windyroad.com.au/ai-quality',
   },
   openGraph: {
-    title: 'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through.',
+    title: 'AI Code Quality for Engineering Teams',
     description:
       'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. We fix that.',
-    url: 'https://windyroad.com.au',
+    url: 'https://windyroad.com.au/ai-quality',
     siteName: 'Windy Road Technology',
     type: 'website',
     images: [
@@ -143,7 +143,7 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export default function Home() {
+export default function AIQualityPage() {
   return (
     <>
       {/* Hero */}
@@ -167,8 +167,8 @@ export default function Home() {
             >
               Book a Call
             </Button>
-            <Button href="/founders" variant="ghost" size="large">
-              Building something yourself? <span aria-hidden="true">&rarr;</span>
+            <Button href="/" variant="ghost" size="large">
+              Patch cycle taking too long? <span aria-hidden="true">&rarr;</span>
             </Button>
           </div>
         </div>
