@@ -33,6 +33,26 @@ the target audience without paid promotion. The content that resonated
 was not "your app is broken" but "give your AI agents a risk budget
 and gates that change how they work."
 
+## Customer Hypothesis (v3, CURRENT)
+
+**Engineering leaders** (CTOs, Heads of Engineering, VPs of Engineering)
+whose teams take days or weeks to get a critical security patch to
+production, and who face an imminent threat from AI-accelerated
+vulnerability discovery.
+
+**Evidence:** LinkedIn post (2026-04-09) about "patch fitness" and
+Anthropic's Claude Mythos, an AI that found a 27-year-old vulnerability
+in OpenBSD overnight. The post argues that when these capabilities
+become widely available, the window between vulnerability discovery and
+exploitation collapses to hours. Teams that can't patch quickly will be
+breached.
+
+**Why this customer:** This is the same persona as v2 (engineering
+leaders at mid-to-large organisations) but with a sharper, more urgent
+problem framing. The v2 hypothesis focused on AI-generated code quality;
+v3 focuses on **patch velocity** across the entire dependency tree, a
+problem that exists whether or not the team uses AI coding tools.
+
 ## Problem Hypothesis (v1, PIVOTED)
 
 ~~Founders cannot confidently ship updates to their AI-generated
@@ -49,6 +69,30 @@ production** because:
 3. Junior developers don't know enough to push back on AI suggestions
 4. There are no quality gates specifically designed for AI-generated
    code in the pipeline
+
+## Problem Hypothesis (v3, CURRENT)
+
+Engineering leaders **cannot get critical security patches to production
+fast enough** because:
+
+1. AI models like Claude Mythos can now find decades-old vulnerabilities
+   overnight, collapsing the window between discovery and exploitation
+   to hours
+2. Most teams take days or weeks to go from security alert to production
+   deploy, requiring committees, manual testing, and multi-step approval
+   chains
+3. Deep dependency trees contain forgotten libraries (e.g. a 12-year-old
+   Apache HTTP Components version in production at a major financial
+   services company) that nobody knows are there
+4. "Patch fitness" (the ability to rapidly ship a critical update) is not
+   something teams actively train for until after a breach
+
+**Key insight:** The companies that survive the Mythos era are not the
+ones spending the most on security. They are the ones that are "patch
+fit": teams that continuously update their dependencies so they are
+never sitting exposed, waiting for an alert that comes too late. Patch
+fitness is not about responding fast to alerts. It is about never
+needing the emergency response in the first place.
 
 ## Solution Hypothesis (v1, PIVOTED)
 
@@ -67,6 +111,37 @@ usage, identify gaps, and implement the first round of guardrails.
 **Key differentiator:** Not consulting theory. Working, demonstrated
 pipeline controls that the AI agent responds to autonomously. "The
 gate doesn't just stop bad pushes. It changes how the agent works."
+
+## Solution Hypothesis (v3, CURRENT)
+
+**Patch fitness consulting**: help engineering teams build the pipeline
+and habits to continuously update dependencies, so they are never
+sitting exposed when a vulnerability drops.
+
+**Engagement model:** Same as v2 (embedded delivery lead, $10k/month),
+but focused on:
+
+1. Dependency audit: mapping the full dependency tree and identifying
+   forgotten, outdated, or vulnerable libraries
+2. Continuous update pipeline: implementing automated dependency updates
+   (Dependabot, Renovate, or similar) with policies, auto-merge rules,
+   and test coverage that keep dependencies current without manual
+   intervention
+3. Pipeline confidence: building the test coverage, CI gates, and
+   rollback mechanisms that let teams merge dependency updates
+   continuously without fear of breakage
+4. Dependency hygiene culture: shifting the team from "update when
+   forced" to "always current," so a critical patch is just another
+   Tuesday, not a three-week project
+
+**Entry point:** A **Patch Fitness Assessment** ($5k, 1 week) that
+measures the team's current dependency staleness, maps their dependency
+tree, and delivers a prioritised plan to reach continuous patching.
+
+**Key differentiator:** This is not a security audit that produces a
+PDF. It is hands-on engineering work that makes continuous patching the
+default, not the exception. "If your last dependency update needed a
+committee and a prayer, you're already behind."
 
 ---
 

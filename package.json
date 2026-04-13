@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "test": "vitest run",
     "dev": "NEXT_TURBOPACK=0 next dev",
     "prebuild": "node scripts/generate-og-image.mjs",
     "build": "next build",
@@ -37,17 +38,22 @@
     "@changesets/cli": "2.30.0",
     "@eslint/js": "9.39.4",
     "@next/eslint-plugin-next": "^16.1.6",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.1",
     "dry-aged-deps": "^2.6.0",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
     "eslint-plugin-react": "^7.37.5",
+    "jsdom": "^29.0.2",
     "netlify-cli": "^24.0.1",
     "pa11y-ci": "^3",
     "playwright": "^1.58.2",
     "typescript": "^5",
-    "typescript-eslint": "^8.56.1"
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^4.1.4"
   }
 }
