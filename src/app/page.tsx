@@ -7,14 +7,14 @@ export const metadata: Metadata = {
   title:
     'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through. | Windy Road Technology',
   description:
-    'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. I fix that.',
+    'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. We fix that.',
   alternates: {
     canonical: 'https://windyroad.com.au',
   },
   openGraph: {
     title: 'Your Team Uses AI Tools. Here\u2019s What\u2019s Slipping Through.',
     description:
-      'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. I fix that.',
+      'Your team adopted Copilot, Cursor, or Claude. Hallucinated dependencies, security holes, and silent defect increases are slipping through review. We fix that.',
     url: 'https://windyroad.com.au',
     siteName: 'Windy Road Technology',
     type: 'website',
@@ -41,7 +41,7 @@ const process = [
   {
     label: 'Diagnose',
     description:
-      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. I look at how your team uses AI tools: where the risk concentrates, what your pipeline catches, and what controls are missing.',
+      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. We look at how your team uses AI tools: where the risk concentrates, what your pipeline catches, and what controls are missing.',
   },
   {
     label: 'Implement',
@@ -51,7 +51,7 @@ const process = [
   {
     label: 'Embed',
     description:
-      'Your team learns to catch the problems themselves. I pair on real PRs, coach developers on what to watch for in AI output, and tune the process based on what\u2019s happening in your codebase.',
+      'Your team learns to catch the problems themselves. We pair on real PRs, coach developers on what to watch for in AI output, and tune the process based on what\u2019s happening in your codebase.',
   },
 ];
 
@@ -61,7 +61,7 @@ const engagements = [
     price: '$10,000',
     duration: '2 weeks',
     description:
-      'I audit your AI tool usage, map where risk concentrates in your pipeline, and implement the first controls. Risk scoring, quality gates, or test coverage for AI-specific failure modes. You get working improvements shipped plus a prioritised roadmap.',
+      'We audit your AI tool usage, map where risk concentrates in your pipeline, and implement the first controls. Risk scoring, quality gates, or test coverage for AI-specific failure modes. You get working improvements shipped plus a prioritised roadmap.',
     outcome: 'Working controls + prioritised roadmap',
   },
   {
@@ -69,7 +69,7 @@ const engagements = [
     price: '$20,000/month',
     duration: 'Ongoing, ~8\u201310 hrs/week',
     description:
-      'I embed with your team part-time as a fractional delivery lead. Hands-on work: implementing quality gates, pairing on AI-generated PRs, building CI/CD guardrails, and coaching your developers on what to watch for.',
+      'We embed with your team part-time as a fractional delivery lead. Hands-on work: implementing quality gates, pairing on AI-generated PRs, building CI/CD guardrails, and coaching your developers on what to watch for.',
     outcome: 'Working guardrails + team capability uplift',
   },
   {
@@ -122,7 +122,7 @@ const faqs = [
   },
   {
     q: 'How is this different from hiring a senior dev?',
-    a: 'A senior hire takes 3\u20136 months to ramp up, costs $200k+ per year, and may not have specific experience with AI-generated code failure modes. I start delivering in week one and leave your team better equipped to catch the problems themselves.',
+    a: 'A senior hire takes 3\u20136 months to ramp up, costs $200k+ per year, and may not have specific experience with AI-generated code failure modes. We start delivering in week one and leave your team better equipped to catch the problems themselves.',
   },
   {
     q: 'What stack do you work with?',
@@ -155,7 +155,7 @@ export default function Home() {
           </h1>
           <p className={styles.sub}>
             Copilot, Cursor, and Claude are writing your production code.
-            {' '}I&nbsp;partner with engineering leaders to make sure the speed
+            {' '}We&nbsp;partner with engineering leaders to make sure the speed
             doesn&apos;t come at the cost of quality.
           </p>
           <div className={styles.cta}>
@@ -204,7 +204,7 @@ export default function Home() {
               loading="lazy"
             />
             <h2 className={styles.bioTitle}>
-              I&apos;ve built pipeline controls and quality gates at Greater
+              We&apos;ve built pipeline controls and quality gates at Greater
               Bank, Essential Energy, MLC, AMP, and Pacific National.
             </h2>
           </div>
@@ -224,15 +224,15 @@ export default function Home() {
           </div>
           <div className={styles.narrative}>
             <p>
-              I&apos;ve been working with AI since 1999: building autonomous
+              We&apos;ve been working with AI since 1999: building autonomous
               agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
-              co-authoring research papers. Which means I understand how these tools
+              co-authoring research papers. Which means we understand how these tools
               reason and where they break.
             </p>
             <p>
-              At Greater Bank I introduced Software Delivery Fireteams that cut
+              At Greater Bank we introduced Software Delivery Fireteams that cut
               cycle time from 24 to 8 days and increased developer throughput by
-              400%, while growing the team by 50%. At Westpac I led
+              400%, while growing the team by 50%. At Westpac we led
               FATCA/CRS compliance remediation across 5,300+ bankers, taking
               compliance from 0% to 97% in 10 months.
             </p>

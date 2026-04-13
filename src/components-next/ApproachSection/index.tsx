@@ -19,7 +19,7 @@ const process = [
   {
     label: 'Diagnose',
     description:
-      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. I look at how your AI tools are being used, how generated code gets reviewed, what your pipeline catches and what slips through.',
+      'You get a clear picture of where your risk is and what to fix first, before it costs you a production incident. We look at how your AI tools are being used, how generated code gets reviewed, what your pipeline catches and what slips through.',
   },
   {
     label: 'Implement',
@@ -29,7 +29,7 @@ const process = [
   {
     label: 'Embed',
     description:
-      'You learn to catch the problems yourself. I pair on real PRs, coach on what to watch for in AI output, and tune the process based on what\u2019s happening in your codebase.',
+      'You learn to catch the problems yourself. We pair on real PRs, coach on what to watch for in AI output, and tune the process based on what\u2019s happening in your codebase.',
   },
 ];
 
@@ -49,7 +49,7 @@ export default function ApproachSection() {
         ))}
       </div>
 
-      <h3 className={styles.processTitle}>What working with me looks like</h3>
+      <h3 className={styles.processTitle}>What working with us looks like</h3>
       <div className={styles.processSteps}>
         {process.map((step, i) => (
           <div key={step.label} className={styles.step}>

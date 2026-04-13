@@ -7,7 +7,7 @@ import styles from './FAQSection.module.scss';
 const faqs = [
   {
     q: 'What if we\u2019re already shipping fine?',
-    a: 'Then I\u2019ll tell you that. Most teams using AI tools have 5\u201310 hidden issues that only surface under load, during a security audit, or when someone leaves.',
+    a: 'Then we\u2019ll tell you that. Most teams using AI tools have 5\u201310 hidden issues that only surface under load, during a security audit, or when someone leaves.',
   },
   {
     q: 'What stack do you work with?',

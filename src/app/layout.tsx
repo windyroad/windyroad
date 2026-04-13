@@ -15,7 +15,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Tom Howard | AI Delivery Consulting for Engineering Teams',
   description:
-    'Your team adopted Copilot, Cursor, or Claude. I partner with engineering leaders to make sure the speed doesn\u2019t come at the cost of quality.',
+    'Your team adopted Copilot, Cursor, or Claude. We partner with engineering leaders to make sure the speed doesn\u2019t come at the cost of quality.',
   keywords:
     'AI consulting, engineering teams, AI code quality, CI/CD guardrails, code review, fractional delivery lead',
 };

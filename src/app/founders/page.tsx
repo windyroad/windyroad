@@ -12,7 +12,7 @@ import CTASection from '@/src/components-next/CTASection';
 export const metadata: Metadata = {
   title: 'Founders | Fix Your Vibe-Coded App | Windy Road Technology',
   description:
-    'Your vibe-coded app is in production and something keeps breaking. I make sure it works. 25+ years of delivery expertise.',
+    'Your vibe-coded app is in production and something keeps breaking. We make sure it works. 25+ years of delivery expertise.',
 };
 
 export default function FoundersPage() {

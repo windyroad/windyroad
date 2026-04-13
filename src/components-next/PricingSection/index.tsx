@@ -7,7 +7,7 @@ const engagements = [
     price: '$5,000',
     duration: '1 week',
     description:
-      'I spend a week with your team: diagnose how AI tools are being used, identify the biggest gaps, and implement the first round of fixes \u2014 pipeline guardrails, review process changes, or test coverage improvements. You get quick wins shipped plus a roadmap for what\u2019s next.',
+      'We spend a week with your team: diagnose how AI tools are being used, identify the biggest gaps, and implement the first round of fixes \u2014 pipeline guardrails, review process changes, or test coverage improvements. You get quick wins shipped plus a roadmap for what\u2019s next.',
     outcome: 'Immediate improvements + prioritised roadmap',
   },
   {
@@ -15,7 +15,7 @@ const engagements = [
     price: '$10,000/month',
     duration: 'Ongoing, ~8\u201310 hrs/week',
     description:
-      'I embed with your team part-time as a fractional delivery lead. Hands-on work: implementing quality gates, pairing on AI-generated PRs, building CI/CD guardrails, and coaching your developers on what to watch for.',
+      'We embed with your team part-time as a fractional delivery lead. Hands-on work: implementing quality gates, pairing on AI-generated PRs, building CI/CD guardrails, and coaching your developers on what to watch for.',
     outcome: 'Working guardrails + team capability uplift',
   },
   {

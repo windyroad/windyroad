@@ -22,7 +22,7 @@ const deliverables = [
   { title: 'Prioritised issue list', desc: 'What\'s critical vs. what can wait' },
   { title: 'Production risk assessment', desc: 'Where you\'ll break next as you scale' },
   { title: 'Fix recommendations', desc: 'Exactly what to change, in priority order' },
-  { title: 'Optional: I fix the critical issues', desc: 'Add implementation if you want it' },
+  { title: 'Optional: we fix the critical issues', desc: 'Add implementation if you want it' },
 ];
 
 const faqs = [
@@ -40,7 +40,7 @@ const faqs = [
   },
   {
     q: 'Do I need to give you access to my whole codebase?',
-    a: 'Yes, a real audit means reading what\'s actually there, not what you show me. Everything is treated as confidential. I sign an NDA before every engagement.',
+    a: 'Yes, a real audit means reading what\'s actually there, not what you show us. Everything is treated as confidential. We sign an NDA before every engagement.',
   },
   {
     q: 'How is this different from an agency?',
@@ -64,7 +64,7 @@ export default function VibeCodingAuditPage() {
           <p className={styles.eyebrow}>Vibe Code Audit</p>
           <h1 className={styles.heroHeadline}>
             Your vibe-coded app is breaking.<br />
-            <span className={styles.accent}>I fix that.</span>
+            <span className={styles.accent}>We fix that.</span>
           </h1>
           <p className={styles.heroSub}>
             $5,000. One week. A senior engineer tells you exactly what&apos;s broken and how to fix it.
@@ -127,7 +127,7 @@ export default function VibeCodingAuditPage() {
               <li>You know exactly what&apos;s broken and what to do about it</li>
             </ul>
             <p className={styles.pricingNote}>
-              If you decide to have me implement the fixes, the $5k applies toward a delivery engagement.
+              If you decide to have us implement the fixes, the $5k applies toward a delivery engagement.
             </p>
           </div>
           <p className={styles.agencyNote}>
@@ -139,7 +139,7 @@ export default function VibeCodingAuditPage() {
       {/* Credibility */}
       <section className={`${styles.section} ${styles.dark}`}>
         <div className={styles.inner}>
-          <h2 className={styles.sectionTitle}>Why trust me with your codebase</h2>
+          <h2 className={styles.sectionTitle}>Why trust us with your codebase</h2>
           <ul className={styles.credList} role="list">
             <li>Shipped 3 profitable software products from scratch</li>
             <li>25 years shipping production software</li>
@@ -177,8 +177,8 @@ export default function VibeCodingAuditPage() {
         <div className={styles.inner}>
           <h2 className={styles.ctaTitle}>Your app is breaking. Let&apos;s fix it.</h2>
           <p className={styles.ctaSub}>
-            Book a 15-minute call. I&apos;ll tell you if I can help, and if I can&apos;t,
-            I&apos;ll point you to someone who can.
+            Book a 15-minute call. We&apos;ll tell you if we can help, and if we can&apos;t,
+            we&apos;ll point you to someone who can.
           </p>
           <Button href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=15&overlayCalendar=true&layout=week_view" variant="primary" size="large" external>
             Book a 15-min Call

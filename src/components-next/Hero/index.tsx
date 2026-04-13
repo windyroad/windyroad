@@ -31,7 +31,7 @@ export default function Hero() {
           You&apos;re scared to touch it.
         </h1>
         <p className={styles.subheadline}>
-          I make sure it <span className={styles.accent}>works</span>.
+          We make sure it <span className={styles.accent}>works</span>.
         </p>
         <div className={styles.cta}>
           <Button
