@@ -1,8 +1,8 @@
 # Voice and Tone
 
-This guide defines how Windy Road Technology sounds across the website, landing pages, blog articles, and marketing copy. It exists so that anyone writing for the site produces copy that sounds like the same person wrote it.
+This guide defines how Windy Road Technology sounds across the website, landing pages, blog articles, and marketing copy. It exists so that anyone writing for the site produces copy that sounds like the same team wrote it.
 
-The site is a solo consulting practice. The voice is first-person. The audience is technical founders and engineering leaders who are under pressure and evaluating whether to hire.
+Windy Road is a consulting team. The voice is first-person plural ("we"). Tom Howard is the named founder and public face, introduced by name in credentials sections. Service copy uses "we help", "our team", "we've built". Blog articles may use "I" when the author is sharing personal experience. The audience is engineering leaders who need to get their teams patch fit, and (secondarily) technical founders with broken vibe-coded apps.
 
 ---
 
@@ -72,7 +72,7 @@ Tone shifts by context while the voice stays constant. Here's how to adjust.
 
 **Tone: Matter-of-fact.** Let the numbers do the work. Don't editorialize about what the numbers mean. "400% throughput increase per developer at Greater Bank" is stronger than "I dramatically transformed their development process."
 
-- Use the colon-and-list pattern for credentials: "I've shipped three products from scratch: built them, found the customers, closed the sales."
+- Use the colon-and-list pattern for credentials: "We've shipped three products from scratch: built them, found the customers, closed the sales."
 - Don't explain why a credential matters. If it needs explaining, it's the wrong credential for this audience.
 - Testimonials should be verbatim. Don't paraphrase or excerpt selectively.
 
@@ -116,11 +116,21 @@ Not: "You need someone who can implement the guardrails, not just recommend them
 - "Wrong Road" = describe the visitor's expectations
 - Neither column should contain feature claims or competitive positioning
 
+### External threats
+
+**Tone: Factual urgency grounded in the visitor's exposure.** When referencing real, verifiable external developments (e.g. AI-powered vulnerability discovery, new exploit capabilities), lead with how the visitor is affected, not with the technology's capabilities. State facts. Do not alarm for its own sake.
+
+- Lead with the visitor's situation: "Your patch cycle is measured in weeks" not "Claude Mythos found a vulnerability overnight"
+- Introduce the external development as context after establishing the visitor's exposure
+- Cite specific, verifiable facts (named models, dates, numbers) rather than vague warnings
+- Countdown or time-pressure components are acceptable when tied to a real, externally verifiable event (e.g. a Polymarket prediction market). Include the source link.
+- The goal is informed urgency, not fear. The visitor should think "I need to act" not "I'm being sold to"
+
 ### CTAs
 
 **Tone: Low-pressure, action-oriented.** Tell them what to do and make it easy. Don't manufacture urgency.
 
-> "Tell me what's breaking."
+> "Tell us what's breaking."
 
 Not: "Don't wait until it's too late! Schedule your consultation today!"
 
@@ -237,7 +247,7 @@ Not: "Excited to share a new blog post about how I built a Claude Code hook for 
 **No promotional framing.** Don't narrate your excitement about the post. Don't ask for engagement. Don't open with "I'm thrilled to announce" or close with "What do you think? Drop a comment below!" Write for peers who respect substance.
 
 Guidelines:
-- First person, same as blog articles
+- First person plural ("we") for service content, first person singular ("I") acceptable for personal observations
 - Short paragraphs: one to three sentences each
 - Numbered or bulleted lists work well for specifics that would otherwise blur together in a feed
 - No em-dashes (same constraint as all other copy)
@@ -400,6 +410,9 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | broke, breaking, broken | experiencing issues |
 | fix | remediate, resolve |
 | codebase | code assets |
+| patch fitness | patch management |
+| dependency staleness | technical debt (when referring to outdated dependencies) |
+| patch cycle time | time to patch |
 
 ### Avoid
 
@@ -428,13 +441,13 @@ These patterns have been identified and removed from the site. Don't reintroduce
 
 The site serves two audiences on separate pages:
 
-**Vibe-coded founders** (homepage, /vibe-code-audit): Non-technical or semi-technical founders who used AI tools to build something that's now in production and breaking. They're stressed, possibly embarrassed, and evaluating whether you understand their situation.
+**Engineering leaders** (homepage `/`, primary): CTOs, Heads of Engineering, VPs of Engineering whose teams take too long to patch. They need patch fitness: continuous dependency updating so they limit their exposure when AI-powered vulnerability discovery goes public. They're credential-sensitive, want demonstrated proof, and are making a decision that affects their team and their reputation.
 
-**Engineering leaders** (/ai-teams): Technical managers whose teams adopted AI coding tools and are seeing quality problems. They're credential-sensitive and making a decision that affects their team and their reputation.
+**Technical founders** (`/founders`, `/vibe-code-audit`, secondary): Non-technical or semi-technical founders who used AI tools to build something that's now in production and breaking. They're stressed, possibly embarrassed, and evaluating whether you understand their situation.
 
-The voice is the same for both. The tone shifts:
+The voice is the same for both ("we"). The tone shifts:
 
+- Engineering leaders get more specifics, more process detail, more proof (testimonials, stats, named companies), and external threat context (Mythos, patch velocity)
 - Founders get more empathy, shorter sentences, simpler language, and problem-first framing
-- Engineering leaders get more specifics, more process detail, and more proof (testimonials, stats, named companies)
 
 The fit check, FAQ, and pricing sections do the heaviest lifting in separating the two audiences. The voice principles apply equally to both.
