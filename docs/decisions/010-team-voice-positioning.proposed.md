@@ -66,7 +66,7 @@ To verify compliance with this decision:
 
 - **Service copy** (homepage, pricing, process, fit check, FAQ, CTA): uses "we help", "we've built", "our team". No "I help", "I partner", "I audit".
 - **Metadata** (title, description, OG tags): uses "we" or neutral phrasing. No "I".
-- **Credentials sections**: Tom Howard named as founder. Bio narrative uses "Tom Howard founded Windy Road" then "we" for team capabilities. Heading uses "Who we are" or similar, not "Why trust me".
+- **Credentials sections**: Tom Howard named as founder. Personal track record claims use "I" ("I've built pipeline controls at Greater Bank"). Team capabilities and current service delivery use "we". Heading uses "Who we are" or similar, not "Why trust me".
 - **Testimonials**: unchanged (third-party quotes referencing Tom by name or "he").
 - **Blog articles**: "I" is acceptable for practitioner voice. "We" for service references within articles.
 - **FAQ answers**: "we" for describing what Windy Road does.

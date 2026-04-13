@@ -2,7 +2,7 @@
 
 This guide defines how Windy Road Technology sounds across the website, landing pages, blog articles, and marketing copy. It exists so that anyone writing for the site produces copy that sounds like the same team wrote it.
 
-Windy Road is a consulting team. The voice is first-person plural ("we"). Tom Howard is the named founder and public face, introduced by name in credentials sections. Service copy uses "we help", "our team", "we've built". Blog articles may use "I" when the author is sharing personal experience. The audience is engineering leaders who need to get their teams patch fit, and (secondarily) technical founders with broken vibe-coded apps.
+Windy Road is a consulting team. The voice is first-person plural ("we") for service delivery. Tom Howard is the named founder and public face, introduced by name in credentials sections. Service copy uses "we help", "our team", "we've built". Personal track record claims use "I" ("I've built pipeline controls at Greater Bank") because they describe Tom's individual history. Blog articles may use "I" when the author is sharing personal experience. The audience is engineering leaders who need to get their teams patch fit, and (secondarily) technical founders with broken vibe-coded apps.
 
 ---
 

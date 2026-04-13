@@ -45,17 +45,17 @@ export default function OperatorSection() {
           know what it takes to ship something real.
         </p>
         <p>
-          We&apos;ve been working with AI since 1999: building autonomous
+          I&apos;ve been working with AI since 1999: building autonomous
           agents at CSIRO, competing at the RoboCup World Cup, holding a patent,
-          co-authoring research papers. Which means we understand how these tools
+          co-authoring research papers. Which means I understand how these tools
           reason and where they break.
         </p>
         <p>
-          At Greater Bank we introduced Software Delivery Fireteams that cut
+          At Greater Bank I introduced Software Delivery Fireteams that cut
           cycle time from 24 to 8 days and increased developer throughput by
-          400%, while growing the team by 50%. At Westpac we led
+          400%, while growing the team by 50%. At Westpac I led
           FATCA/CRS compliance remediation across 5,300+ bankers, taking entity
-          compliance from 0% to 97% in 10 months. At Pacific National we halved
+          compliance from 0% to 97% in 10 months. At Pacific National I halved
           open incidents and built the API platform behind their award-winning
           customer portal.
         </p>
