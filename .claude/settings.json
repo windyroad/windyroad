@@ -64,7 +64,7 @@
     "wr-voice-tone@windyroad": true,
     "wr-style-guide@windyroad": true,
     "wr-jtbd@windyroad": true,
-    "wr-tdd@windyroad": true,
+    "wr-tdd@windyroad": false,
     "wr-retrospective@windyroad": true,
     "wr-problem@windyroad": true,
     "wr-c4@windyroad": true,

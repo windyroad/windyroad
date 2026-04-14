@@ -4,9 +4,21 @@ import { useEffect, useState } from 'react';
 import styles from './Countdown.module.scss';
 
 interface CountdownProps {
-  targetDate: string;
+  manifoldSlug: string;
+}
+
+interface ManifoldAnswer {
+  text: string;
   probability: number;
-  sourceUrl: string;
+  midpoint: number;
+}
+
+interface MarketData {
+  targetDate: Date;
+  probability: number;
+  answerText: string;
+  marketUrl: string;
+  question: string;
 }
 
 function getTimeRemaining(target: Date) {
@@ -23,29 +35,58 @@ function getTimeRemaining(target: Date) {
   return { days, hours, minutes, seconds };
 }
 
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr + 'T00:00:00');
-  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+async function fetchMarketData(slug: string): Promise<MarketData | null> {
+  try {
+    const res = await fetch(`https://api.manifold.markets/v0/slug/${slug}`);
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    const answers: ManifoldAnswer[] = data.answers || [];
+    if (answers.length === 0) return null;
+
+    const best = answers.reduce((a, b) => (b.probability > a.probability ? b : a));
+
+    return {
+      targetDate: new Date(best.midpoint),
+      probability: Math.round(best.probability * 100),
+      answerText: best.text,
+      marketUrl: data.url || `https://manifold.markets/${slug}`,
+      question: data.question || '',
+    };
+  } catch {
+    return null;
+  }
 }
 
-export default function Countdown({ targetDate, probability, sourceUrl }: CountdownProps) {
-  const targetTimestamp = new Date(targetDate + 'T00:00:00').getTime();
-  const target = new Date(targetTimestamp);
-  const [time, setTime] = useState(() => getTimeRemaining(target));
+export default function Countdown({ manifoldSlug }: CountdownProps) {
+  const [market, setMarket] = useState<MarketData | null>(null);
+  const [time, setTime] = useState<ReturnType<typeof getTimeRemaining>>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [expired, setExpired] = useState(() => targetTimestamp <= Date.now());
+  const [expired, setExpired] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetchMarketData(manifoldSlug).then((data) => {
+      if (data) {
+        setMarket(data);
+        const remaining = getTimeRemaining(data.targetDate);
+        setTime(remaining);
+        setExpired(!remaining);
+      }
+      setLoaded(true);
+    });
+  }, [manifoldSlug]);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mq.matches);
+  }, []);
 
-    if (mq.matches) return;
+  useEffect(() => {
+    if (!market || reducedMotion || expired) return;
 
-    if (expired) return;
-
-    const t = new Date(targetTimestamp);
     const interval = setInterval(() => {
-      const remaining = getTimeRemaining(t);
+      const remaining = getTimeRemaining(market.targetDate);
       if (!remaining) {
         setExpired(true);
         setTime(null);
@@ -56,9 +97,11 @@ export default function Countdown({ targetDate, probability, sourceUrl }: Countd
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [targetTimestamp, expired]);
+  }, [market, reducedMotion, expired]);
 
-  const formattedDate = formatDate(targetDate);
+  if (!loaded) return null;
+  if (!market) return null;
+
   const approxDays = time ? time.days : 0;
 
   if (expired) {
@@ -68,11 +111,11 @@ export default function Countdown({ targetDate, probability, sourceUrl }: Countd
           The window is open.
         </div>
         <p className={styles.attribution}>
-          <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-            Polymarket
+          <a href={market.marketUrl} target="_blank" rel="noopener noreferrer">
+            Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          predicted a {probability}% chance by {formattedDate}.
+          predicted a {market.probability}% chance by {market.answerText}.
         </p>
       </div>
     );
@@ -82,14 +125,14 @@ export default function Countdown({ targetDate, probability, sourceUrl }: Countd
     return (
       <div className={styles.container}>
         <p className={styles.static}>
-          Approximately {approxDays} days until {formattedDate}.
+          Approximately {approxDays} days until {market.answerText}.
         </p>
         <p className={styles.attribution}>
-          <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-            Polymarket
+          <a href={market.marketUrl} target="_blank" rel="noopener noreferrer">
+            Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          gives a {probability}% chance Mythos goes public by then.
+          gives a {market.probability}% chance by then.
         </p>
       </div>
     );
@@ -97,13 +140,11 @@ export default function Countdown({ targetDate, probability, sourceUrl }: Countd
 
   return (
     <div className={styles.container}>
-      {/* Screen reader text */}
       <p className={styles.srOnly}>
-        Polymarket estimates a {probability}% chance Mythos goes public by{' '}
-        {formattedDate}. Approximately {approxDays} days from now.
+        Manifold Markets estimates a {market.probability}% chance by{' '}
+        {market.answerText}. Approximately {approxDays} days from now.
       </p>
 
-      {/* Visual countdown - hidden from screen readers */}
       {time && (
         <div aria-hidden="true" className={styles.grid}>
           <div className={styles.unit}>
@@ -126,11 +167,11 @@ export default function Countdown({ targetDate, probability, sourceUrl }: Countd
       )}
 
       <p className={styles.attribution}>
-        <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-          Polymarket
+        <a href={market.marketUrl} target="_blank" rel="noopener noreferrer">
+          Manifold Markets
           <span className={styles.srOnly}> (opens in new tab)</span>
         </a>{' '}
-        gives a {probability}% chance Mythos goes public by {formattedDate}.
+        gives a {market.probability}% chance by {market.answerText}.
       </p>
     </div>
   );

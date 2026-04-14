@@ -162,9 +162,7 @@ export default function Home() {
             OpenBSD overnight. Only 40 companies have access today. That won&apos;t last.
           </p>
           <Countdown
-            targetDate="2026-06-30"
-            probability={23}
-            sourceUrl="https://polymarket.com/event/claude-mythos-released-by"
+            manifoldSlug="when-will-a-claude-mythos-previewle"
           />
           <div className={styles.cta}>
             <Button

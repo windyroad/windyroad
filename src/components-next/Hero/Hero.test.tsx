@@ -7,6 +7,6 @@ describe('Hero', () => {
     const { container } = render(<Hero />);
     const text = container.textContent || '';
     expect(text).not.toMatch(/\bI make\b/);
-    expect(text).toMatch(/We make/i);
+    expect(text).toMatch(/We make/);
   });
 });
