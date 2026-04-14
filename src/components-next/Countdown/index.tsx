@@ -83,7 +83,10 @@ async function fetchMarketData(slug: string): Promise<MarketData | null> {
     const answers: ManifoldAnswer[] = data.answers || [];
     if (answers.length === 0) return null;
 
-    const sortedAnswers = [...answers].sort((a, b) => a.midpoint - b.midpoint);
+    const sorted = [...answers].sort((a, b) => a.midpoint - b.midpoint);
+    // Filter out catch-all "or later" bucket (no meaningful countdown date)
+    const sortedAnswers = sorted.filter((a) => !a.text.toLowerCase().includes('or later'));
+    if (sortedAnswers.length === 0) return null;
 
     return {
       sortedAnswers,
@@ -164,7 +167,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
 
   const slider = market.sortedAnswers.length > 1 && (
     <div className={styles.slider}>
-      <label htmlFor="probability-slider" className={styles.sliderLabel}>
+      <label htmlFor="probability-slider" className={styles.srOnly}>
         Probability threshold
       </label>
       <div className={styles.sliderTrack}>
@@ -197,9 +200,6 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
           ))}
         </div>
       </div>
-      <output htmlFor="probability-slider" className={styles.sliderValue}>
-        {currentAnswer.text} ({probability}%)
-      </output>
     </div>
   );
 

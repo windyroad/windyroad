@@ -14,6 +14,7 @@ const mockManifoldResponse = {
     { text: 'Jun 2026', probability: 0.32, midpoint: 1781481600000 },
     { text: 'Jul 2026', probability: 0.13, midpoint: 1784160000000 },
     { text: 'Aug 2026', probability: 0.10, midpoint: 1786838400000 },
+    { text: 'Nov 2026 or later', probability: 0.28, midpoint: 1794576000000 },
   ],
 };
 
@@ -265,6 +266,17 @@ describe('Countdown', () => {
         expect(dots[0].style.left).toBe('5%');
         expect(dots[2].style.left).toBe('49%');
         expect(dots[4].style.left).toBe('72%');
+      });
+    });
+
+    it('filters out catch-all "or later" bucket', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const text = container.textContent || '';
+        // "Nov 2026 or later" should not appear anywhere
+        expect(text).not.toMatch(/or later/i);
       });
     });
 
