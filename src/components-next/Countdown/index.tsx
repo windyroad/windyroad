@@ -214,7 +214,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
             Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          predicted a {probability}% chance of arrival by {currentAnswer.text}.
+          predicted a {probability}% chance of arrival by end of {currentAnswer.text}.
         </p>
       </div>
     );
@@ -224,7 +224,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
     return (
       <div className={styles.container}>
         <p className={styles.static}>
-          Approximately {approxDays} days until {currentAnswer.text}.
+          Approximately {approxDays} days until end of {currentAnswer.text}.
         </p>
         {slider}
         <p className={styles.attribution}>
@@ -241,7 +241,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
   return (
     <div className={styles.container}>
       <p className={styles.srOnly}>
-        Manifold Markets estimates a {probability}% chance of arrival by{' '}
+        Manifold Markets estimates a {probability}% chance of arrival by end of{' '}
         {currentAnswer.text}. Approximately {approxDays} days from now.
       </p>
 
@@ -273,7 +273,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
           Manifold Markets
           <span className={styles.srOnly}> (opens in new tab)</span>
         </a>{' '}
-        gives a {probability}% chance of arrival by {currentAnswer.text}.
+        gives a {probability}% chance of arrival by end of {currentAnswer.text}.
       </p>
     </div>
   );

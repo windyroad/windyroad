@@ -93,10 +93,13 @@
 
 .sliderTrack {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .sliderInput {
   width: 100%;
+  margin: 0;
   cursor: pointer;
   accent-color: var(--color-accent-on-dark);
 
