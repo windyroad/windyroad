@@ -42,6 +42,29 @@ function getCumulativeProbability(sortedAnswers: ManifoldAnswer[], index: number
   return Math.round(cumulative * 100);
 }
 
+function getAllCumulativeProbabilities(sortedAnswers: ManifoldAnswer[]): number[] {
+  const result: number[] = [];
+  let cumulative = 0;
+  for (const answer of sortedAnswers) {
+    cumulative += answer.probability;
+    result.push(Math.round(cumulative * 100));
+  }
+  return result;
+}
+
+function snapToNearest(value: number, stops: number[]): number {
+  let closest = 0;
+  let minDist = Math.abs(value - stops[0]);
+  for (let i = 1; i < stops.length; i++) {
+    const dist = Math.abs(value - stops[i]);
+    if (dist < minDist) {
+      minDist = dist;
+      closest = i;
+    }
+  }
+  return closest;
+}
+
 function getDefaultIndex(sortedAnswers: ManifoldAnswer[]): number {
   let cumulative = 0;
   for (let i = 0; i < sortedAnswers.length; i++) {
@@ -137,41 +160,42 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
   const approxDays = time ? time.days : 0;
   const valueText = `${currentAnswer.text}, ${probability}% cumulative probability`;
 
+  const cumulativeStops = market ? getAllCumulativeProbabilities(market.sortedAnswers) : [];
+
   const slider = market.sortedAnswers.length > 1 && (
     <div className={styles.slider}>
       <label htmlFor="probability-slider" className={styles.sliderLabel}>
-        Target month
+        Probability threshold
       </label>
-      <input
-        type="range"
-        id="probability-slider"
-        list="probability-stops"
-        min={0}
-        max={market.sortedAnswers.length - 1}
-        step={1}
-        value={bucketIndex}
-        aria-valuetext={valueText}
-        onChange={(e) => {
-          const newIndex = Number(e.target.value);
-          setBucketIndex(newIndex);
-          const newTarget = new Date(market.sortedAnswers[newIndex].midpoint);
-          const remaining = getTimeRemaining(newTarget);
-          setExpired(!remaining);
-          setTime(remaining);
-        }}
-        className={styles.sliderInput}
-      />
-      <datalist id="probability-stops">
-        {market.sortedAnswers.map((answer, i) => (
-          <option key={i} value={i} label={answer.text} />
-        ))}
-      </datalist>
-      <div className={styles.sliderTicks} aria-hidden="true">
-        {market.sortedAnswers.map((answer, i) => (
-          <span key={i} className={styles.sliderTick}>
-            {answer.text}
-          </span>
-        ))}
+      <div className={styles.sliderTrack}>
+        <input
+          type="range"
+          id="probability-slider"
+          min={0}
+          max={100}
+          step={1}
+          value={probability}
+          aria-valuetext={valueText}
+          onChange={(e) => {
+            const pct = Number(e.target.value);
+            const newIndex = snapToNearest(pct, cumulativeStops);
+            setBucketIndex(newIndex);
+            const newTarget = new Date(market.sortedAnswers[newIndex].midpoint);
+            const remaining = getTimeRemaining(newTarget);
+            setExpired(!remaining);
+            setTime(remaining);
+          }}
+          className={styles.sliderInput}
+        />
+        <div className={styles.sliderDots} aria-hidden="true">
+          {cumulativeStops.map((pct, i) => (
+            <span
+              key={i}
+              className={styles.sliderDot}
+              style={{ left: `${pct}%` }}
+            />
+          ))}
+        </div>
       </div>
       <output htmlFor="probability-slider" className={styles.sliderValue}>
         {currentAnswer.text} ({probability}%)

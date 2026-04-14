@@ -1,6 +1,6 @@
 # Problem 004: Slider position misleading for probability value
 
-**Status**: Known Error
+**Status**: Open
 **Reported**: 2026-04-14
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 
@@ -33,10 +33,9 @@ None identified yet. The output text below the slider shows the correct month an
 
 The slider uses `min=0`, `max=answers.length-1`, `step=1`, mapping each discrete answer bucket to an equally-spaced index position. The visual position of the thumb reflects the index (0,1,2,3,4) not the cumulative probability (5%, 17%, 49%, 62%, 72%).
 
-Possible fixes:
-- Accept the current behaviour (the slider controls month selection, not probability)
-- Relabel the slider to make it clear it controls the target month, not probability directly
-- Use a custom slider with non-linear stop positions proportional to cumulative probability
+Previous fix attempt (relabelling to "Target month") rejected. The slider label should remain "Probability threshold" and the stop positions must be at their actual cumulative probability percentage on the track.
+
+Required fix: Use a custom slider where the value range is 0-100 (percentage) and each discrete stop snaps to its cumulative probability value (e.g., 5, 17, 49, 62, 72). The thumb position then visually matches the displayed percentage.
 
 ### Investigation Tasks
 

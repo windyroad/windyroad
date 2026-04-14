@@ -1,6 +1,6 @@
 # Problem 005: Slider has no visual indicators for discrete stops
 
-**Status**: Known Error
+**Status**: Open
 **Reported**: 2026-04-14
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 
@@ -32,11 +32,9 @@ The output text below the slider ("Jul 2026 (61%)") updates on each stop, so use
 
 The slider uses a native `<input type="range">` with `step=1`, which provides the snapping behaviour but no visual tick marks. Native range inputs do not render tick marks by default. HTML5 provides `<datalist>` with `<option>` elements linked via the `list` attribute to render tick marks, but browser support and styling varies.
 
-Possible fixes:
-- Add a `<datalist>` element with `<option>` for each stop and link via `list` attribute on the input
-- Add CSS pseudo-elements or a separate row of tick marks below the slider track
-- Add month labels below the slider at each stop position
-- Use a custom slider component with visible stops
+Previous fix attempt (text labels below slider) rejected. User wants subtle visual indicators (circles, notches, dots) at each stop position, not text labels.
+
+Required fix: Render small circles or notch marks on the slider track at each stop position. These must be positioned proportionally to cumulative probability (aligned with P004 fix). No text labels.
 
 ### Investigation Tasks
 

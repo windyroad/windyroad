@@ -135,7 +135,7 @@ describe('Countdown', () => {
   });
 
   describe('probability slider', () => {
-    it('renders a range input with discrete stops matching answer count', async () => {
+    it('renders a percentage-based range input', async () => {
       mockFetchSuccess();
       const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
 
@@ -143,7 +143,7 @@ describe('Countdown', () => {
         const slider = container.querySelector('input[type="range"]');
         expect(slider).not.toBeNull();
         expect(slider?.getAttribute('min')).toBe('0');
-        expect(slider?.getAttribute('max')).toBe('4'); // 5 answers, 0-indexed
+        expect(slider?.getAttribute('max')).toBe('100');
         expect(slider?.getAttribute('step')).toBe('1');
       });
     });
@@ -167,11 +167,11 @@ describe('Countdown', () => {
       const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
 
       // Cumulative: Apr=5%, May=17%, Jun=49%, Jul=62%
-      // 50% threshold: first bucket where cumulative >= 0.5 is Jul (index 3)
+      // 50% threshold: first bucket where cumulative >= 0.5 is Jul (62%)
       await waitFor(() => {
         const slider = container.querySelector('input[type="range"]');
         expect(slider).not.toBeNull();
-        expect((slider as HTMLInputElement).value).toBe('3');
+        expect((slider as HTMLInputElement).value).toBe('62');
       });
     });
 
@@ -199,12 +199,12 @@ describe('Countdown', () => {
 
       const slider = container.querySelector('input[type="range"]')!;
       act(() => {
-        fireEvent.change(slider, { target: { value: '4' } });
+        // Slide to 72% (snaps to Aug 2026, cumulative 72%)
+        fireEvent.change(slider, { target: { value: '72' } });
       });
 
       await waitFor(() => {
         const text = container.textContent || '';
-        // After sliding to index 4 (Aug 2026), attribution should show Aug
         expect(text).toMatch(/Aug 2026/);
       });
     });
@@ -220,7 +220,8 @@ describe('Countdown', () => {
 
       const slider = container.querySelector('input[type="range"]')!;
       act(() => {
-        fireEvent.change(slider, { target: { value: '0' } });
+        // Slide to 3% (snaps to Apr 2026, cumulative 5%)
+        fireEvent.change(slider, { target: { value: '3' } });
       });
 
       await waitFor(() => {
@@ -251,28 +252,19 @@ describe('Countdown', () => {
       });
     });
 
-    it('renders month labels as tick marks below the slider', async () => {
+    it('renders dot indicators at each stop position', async () => {
       mockFetchSuccess();
       const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
 
       await waitFor(() => {
-        const tickContainer = container.querySelector('[class*="sliderTicks"]');
-        expect(tickContainer).not.toBeNull();
-        const ticks = tickContainer!.querySelectorAll('span');
-        expect(ticks.length).toBe(5);
-        expect(ticks[0].textContent).toBe('Apr 2026');
-        expect(ticks[4].textContent).toBe('Aug 2026');
-      });
-    });
-
-    it('labels the slider as Target month', async () => {
-      mockFetchSuccess();
-      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
-
-      await waitFor(() => {
-        const label = container.querySelector('label[for="probability-slider"]');
-        expect(label).not.toBeNull();
-        expect(label?.textContent).toMatch(/Target month/);
+        const dotContainer = container.querySelector('[class*="sliderDots"]');
+        expect(dotContainer).not.toBeNull();
+        const dots = dotContainer!.querySelectorAll('span');
+        expect(dots.length).toBe(5);
+        // Dots positioned at cumulative probabilities: 5%, 17%, 49%, 62%, 72%
+        expect(dots[0].style.left).toBe('5%');
+        expect(dots[2].style.left).toBe('49%');
+        expect(dots[4].style.left).toBe('72%');
       });
     });
 
