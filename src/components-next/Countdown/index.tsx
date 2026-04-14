@@ -14,9 +14,8 @@ interface ManifoldAnswer {
 }
 
 interface MarketData {
-  targetDate: Date;
-  probability: number;
-  answerText: string;
+  sortedAnswers: ManifoldAnswer[];
+  defaultIndex: number;
   marketUrl: string;
   question: string;
 }
@@ -35,6 +34,23 @@ function getTimeRemaining(target: Date) {
   return { days, hours, minutes, seconds };
 }
 
+function getCumulativeProbability(sortedAnswers: ManifoldAnswer[], index: number): number {
+  let cumulative = 0;
+  for (let i = 0; i <= index; i++) {
+    cumulative += sortedAnswers[i].probability;
+  }
+  return Math.round(cumulative * 100);
+}
+
+function getDefaultIndex(sortedAnswers: ManifoldAnswer[]): number {
+  let cumulative = 0;
+  for (let i = 0; i < sortedAnswers.length; i++) {
+    cumulative += sortedAnswers[i].probability;
+    if (cumulative >= 0.5) return i;
+  }
+  return sortedAnswers.length - 1;
+}
+
 async function fetchMarketData(slug: string): Promise<MarketData | null> {
   try {
     const res = await fetch(`https://api.manifold.markets/v0/slug/${slug}`);
@@ -44,31 +60,11 @@ async function fetchMarketData(slug: string): Promise<MarketData | null> {
     const answers: ManifoldAnswer[] = data.answers || [];
     if (answers.length === 0) return null;
 
-    // Sort answers chronologically by midpoint
-    const sorted = [...answers].sort((a, b) => a.midpoint - b.midpoint);
-
-    // Find the 50% cumulative probability threshold
-    let cumulative = 0;
-    let thresholdAnswer = sorted[sorted.length - 1]; // fallback to last
-    for (const answer of sorted) {
-      cumulative += answer.probability;
-      if (cumulative >= 0.5) {
-        thresholdAnswer = answer;
-        break;
-      }
-    }
-
-    // Calculate cumulative probability up to and including the threshold month
-    let cumulativeToThreshold = 0;
-    for (const answer of sorted) {
-      cumulativeToThreshold += answer.probability;
-      if (answer.midpoint >= thresholdAnswer.midpoint) break;
-    }
+    const sortedAnswers = [...answers].sort((a, b) => a.midpoint - b.midpoint);
 
     return {
-      targetDate: new Date(thresholdAnswer.midpoint),
-      probability: Math.round(cumulativeToThreshold * 100),
-      answerText: thresholdAnswer.text,
+      sortedAnswers,
+      defaultIndex: getDefaultIndex(sortedAnswers),
       marketUrl: data.url || `https://manifold.markets/${slug}`,
       question: data.question || '',
     };
@@ -79,6 +75,7 @@ async function fetchMarketData(slug: string): Promise<MarketData | null> {
 
 export default function Countdown({ manifoldSlug }: CountdownProps) {
   const [market, setMarket] = useState<MarketData | null>(null);
+  const [bucketIndex, setBucketIndex] = useState<number>(0);
   const [time, setTime] = useState<ReturnType<typeof getTimeRemaining>>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [expired, setExpired] = useState(false);
@@ -88,7 +85,9 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
     fetchMarketData(manifoldSlug).then((data) => {
       if (data) {
         setMarket(data);
-        const remaining = getTimeRemaining(data.targetDate);
+        setBucketIndex(data.defaultIndex);
+        const targetDate = new Date(data.sortedAnswers[data.defaultIndex].midpoint);
+        const remaining = getTimeRemaining(targetDate);
         setTime(remaining);
         setExpired(!remaining);
       }
@@ -101,27 +100,71 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
     setReducedMotion(mq.matches);
   }, []);
 
-  useEffect(() => {
-    if (!market || reducedMotion || expired) return;
+  const currentAnswer = market?.sortedAnswers[bucketIndex];
+  const midpoint = currentAnswer?.midpoint ?? null;
+  const targetDate = midpoint ? new Date(midpoint) : null;
+  const probability = market ? getCumulativeProbability(market.sortedAnswers, bucketIndex) : 0;
 
+  useEffect(() => {
+    if (!midpoint || reducedMotion || expired) return;
+
+    const target = new Date(midpoint);
+    const remaining = getTimeRemaining(target);
+    if (!remaining) {
+      setExpired(true);
+      setTime(null);
+      return;
+    }
+
+    setTime(remaining);
     const interval = setInterval(() => {
-      const remaining = getTimeRemaining(market.targetDate);
-      if (!remaining) {
+      const r = getTimeRemaining(target);
+      if (!r) {
         setExpired(true);
         setTime(null);
         clearInterval(interval);
       } else {
-        setTime(remaining);
+        setTime(r);
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [market, reducedMotion, expired]);
+  }, [midpoint, reducedMotion, expired]);
 
   if (!loaded) return null;
-  if (!market) return null;
+  if (!market || !currentAnswer) return null;
 
   const approxDays = time ? time.days : 0;
+  const valueText = `${currentAnswer.text}, ${probability}% cumulative probability`;
+
+  const slider = market.sortedAnswers.length > 1 && (
+    <div className={styles.slider}>
+      <label htmlFor="probability-slider" className={styles.sliderLabel}>
+        Probability threshold
+      </label>
+      <input
+        type="range"
+        id="probability-slider"
+        min={0}
+        max={market.sortedAnswers.length - 1}
+        step={1}
+        value={bucketIndex}
+        aria-valuetext={valueText}
+        onChange={(e) => {
+          const newIndex = Number(e.target.value);
+          setBucketIndex(newIndex);
+          const newTarget = new Date(market.sortedAnswers[newIndex].midpoint);
+          const remaining = getTimeRemaining(newTarget);
+          setExpired(!remaining);
+          setTime(remaining);
+        }}
+        className={styles.sliderInput}
+      />
+      <output htmlFor="probability-slider" className={styles.sliderValue}>
+        {currentAnswer.text} ({probability}%)
+      </output>
+    </div>
+  );
 
   if (expired) {
     return (
@@ -134,7 +177,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
             Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          predicted a {market.probability}% chance by {market.answerText}.
+          predicted a {probability}% chance by {currentAnswer.text}.
         </p>
       </div>
     );
@@ -144,14 +187,15 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
     return (
       <div className={styles.container}>
         <p className={styles.static}>
-          Approximately {approxDays} days until {market.answerText}.
+          Approximately {approxDays} days until {currentAnswer.text}.
         </p>
+        {slider}
         <p className={styles.attribution}>
           <a href={market.marketUrl} target="_blank" rel="noopener noreferrer">
             Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          gives a {market.probability}% chance by then.
+          gives a {probability}% chance by then.
         </p>
       </div>
     );
@@ -160,8 +204,8 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
   return (
     <div className={styles.container}>
       <p className={styles.srOnly}>
-        Manifold Markets estimates a {market.probability}% chance by{' '}
-        {market.answerText}. Approximately {approxDays} days from now.
+        Manifold Markets estimates a {probability}% chance by{' '}
+        {currentAnswer.text}. Approximately {approxDays} days from now.
       </p>
 
       {time && (
@@ -185,12 +229,14 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
         </div>
       )}
 
+      {slider}
+
       <p className={styles.attribution}>
         <a href={market.marketUrl} target="_blank" rel="noopener noreferrer">
           Manifold Markets
           <span className={styles.srOnly}> (opens in new tab)</span>
         </a>{' '}
-        gives a {market.probability}% chance by {market.answerText}.
+        gives a {probability}% chance by {currentAnswer.text}.
       </p>
     </div>
   );

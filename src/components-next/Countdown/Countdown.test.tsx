@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, waitFor, act } from '@testing-library/react';
+import { render, waitFor, act, fireEvent } from '@testing-library/react';
 import Countdown from './index';
 
 const MANIFOLD_SLUG = 'when-will-a-claude-mythos-previewle';
@@ -131,6 +131,143 @@ describe('Countdown', () => {
     await waitFor(() => {
       const liveRegion = container.querySelector('[aria-live="polite"]');
       expect(liveRegion).not.toBeNull();
+    });
+  });
+
+  describe('probability slider', () => {
+    it('renders a range input with discrete stops matching answer count', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        expect(slider).not.toBeNull();
+        expect(slider?.getAttribute('min')).toBe('0');
+        expect(slider?.getAttribute('max')).toBe('4'); // 5 answers, 0-indexed
+        expect(slider?.getAttribute('step')).toBe('1');
+      });
+    });
+
+    it('has an accessible label', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        expect(slider).not.toBeNull();
+        const sliderId = slider?.getAttribute('id');
+        expect(sliderId).toBeTruthy();
+        const label = container.querySelector(`label[for="${sliderId}"]`);
+        expect(label).not.toBeNull();
+      });
+    });
+
+    it('defaults to the 50% cumulative probability bucket', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      // Cumulative: Apr=5%, May=17%, Jun=49%, Jul=62%
+      // 50% threshold: first bucket where cumulative >= 0.5 is Jul (index 3)
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        expect(slider).not.toBeNull();
+        expect((slider as HTMLInputElement).value).toBe('3');
+      });
+    });
+
+    it('has aria-valuetext with month and cumulative probability', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        expect(slider).not.toBeNull();
+        const valueText = slider?.getAttribute('aria-valuetext');
+        expect(valueText).toMatch(/Jul 2026/);
+        expect(valueText).toMatch(/62%/);
+      });
+    });
+
+    it('updates countdown when slider value changes', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        expect(slider).not.toBeNull();
+      });
+
+      const slider = container.querySelector('input[type="range"]')!;
+      act(() => {
+        fireEvent.change(slider, { target: { value: '4' } });
+      });
+
+      await waitFor(() => {
+        const text = container.textContent || '';
+        // After sliding to index 4 (Aug 2026), attribution should show Aug
+        expect(text).toMatch(/Aug 2026/);
+      });
+    });
+
+    it('updates aria-valuetext when slider value changes', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        expect(slider).not.toBeNull();
+      });
+
+      const slider = container.querySelector('input[type="range"]')!;
+      act(() => {
+        fireEvent.change(slider, { target: { value: '0' } });
+      });
+
+      await waitFor(() => {
+        const valueText = slider.getAttribute('aria-valuetext');
+        expect(valueText).toMatch(/Apr 2026/);
+        expect(valueText).toMatch(/5%/);
+      });
+    });
+
+    it('renders slider in reduced-motion mode too', async () => {
+      vi.stubGlobal('matchMedia', vi.fn((query: string) => ({
+        matches: query === '(prefers-reduced-motion: reduce)',
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      })));
+      mockFetchSuccess();
+
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        expect(slider).not.toBeNull();
+      });
+    });
+
+    it('does not render slider when market has expired', async () => {
+      const pastResponse = {
+        ...mockManifoldResponse,
+        answers: [
+          { text: 'Jan 2025', probability: 0.50, midpoint: 1737331200000 },
+        ],
+      };
+      mockFetchSuccess(pastResponse);
+
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        expect(container.textContent).toMatch(/window is open/i);
+      });
+
+      const slider = container.querySelector('input[type="range"]');
+      expect(slider).toBeNull();
     });
   });
 });
