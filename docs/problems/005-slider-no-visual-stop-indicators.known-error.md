@@ -1,6 +1,6 @@
 # Problem 005: Slider has no visual indicators for discrete stops
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-14
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 

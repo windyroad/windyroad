@@ -140,11 +140,12 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
   const slider = market.sortedAnswers.length > 1 && (
     <div className={styles.slider}>
       <label htmlFor="probability-slider" className={styles.sliderLabel}>
-        Probability threshold
+        Target month
       </label>
       <input
         type="range"
         id="probability-slider"
+        list="probability-stops"
         min={0}
         max={market.sortedAnswers.length - 1}
         step={1}
@@ -160,6 +161,18 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
         }}
         className={styles.sliderInput}
       />
+      <datalist id="probability-stops">
+        {market.sortedAnswers.map((answer, i) => (
+          <option key={i} value={i} label={answer.text} />
+        ))}
+      </datalist>
+      <div className={styles.sliderTicks} aria-hidden="true">
+        {market.sortedAnswers.map((answer, i) => (
+          <span key={i} className={styles.sliderTick}>
+            {answer.text}
+          </span>
+        ))}
+      </div>
       <output htmlFor="probability-slider" className={styles.sliderValue}>
         {currentAnswer.text} ({probability}%)
       </output>

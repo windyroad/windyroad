@@ -102,9 +102,22 @@
   }
 }
 
+.sliderTicks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+  padding: 0 2px;
+}
+
+.sliderTick {
+  font-size: 0.625rem;
+  color: var(--color-text-muted-on-dark);
+  text-align: center;
+}
+
 .sliderValue {
   display: block;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   font-size: 0.875rem;
   color: var(--color-text-light);
 }

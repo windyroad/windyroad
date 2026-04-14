@@ -251,6 +251,31 @@ describe('Countdown', () => {
       });
     });
 
+    it('renders month labels as tick marks below the slider', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const tickContainer = container.querySelector('[class*="sliderTicks"]');
+        expect(tickContainer).not.toBeNull();
+        const ticks = tickContainer!.querySelectorAll('span');
+        expect(ticks.length).toBe(5);
+        expect(ticks[0].textContent).toBe('Apr 2026');
+        expect(ticks[4].textContent).toBe('Aug 2026');
+      });
+    });
+
+    it('labels the slider as Target month', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      await waitFor(() => {
+        const label = container.querySelector('label[for="probability-slider"]');
+        expect(label).not.toBeNull();
+        expect(label?.textContent).toMatch(/Target month/);
+      });
+    });
+
     it('does not render slider when market has expired', async () => {
       const pastResponse = {
         ...mockManifoldResponse,
