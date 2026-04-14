@@ -12,7 +12,7 @@ const engagements = [
   },
   {
     name: 'Embedded Delivery Lead',
-    price: '$10,000/month',
+    price: '$20,000/month',
     duration: 'Ongoing, ~8\u201310 hrs/week',
     description:
       'We embed with your team part-time as a fractional delivery lead. Hands-on work: implementing quality gates, pairing on AI-generated PRs, building CI/CD guardrails, and coaching your developers on what to watch for.',
@@ -20,8 +20,8 @@ const engagements = [
   },
   {
     name: 'Delivery Sprint',
-    price: '$15,000\u2013$25,000',
-    duration: '2\u20134 weeks',
+    price: '$40,000',
+    duration: '4 weeks',
     description:
       'A focused, project-based engagement with a defined outcome \u2014 a greenfield product built from scratch, a CI/CD pipeline with AI-specific quality gates, a test automation framework, or a working product increment with proper guardrails in place.',
     outcome: 'Specific deliverable, shipped',
