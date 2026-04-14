@@ -59,7 +59,7 @@ describe('Countdown', () => {
     await waitFor(() => {
       const srText = container.querySelector('.sr-only, [class*="srOnly"]');
       expect(srText).not.toBeNull();
-      expect(srText?.textContent).toMatch(/62%/);
+      expect(srText?.textContent).toMatch(/62%.*arrival/);
       expect(srText?.textContent).toMatch(/Jul/);
     });
   });
