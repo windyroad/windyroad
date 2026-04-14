@@ -7,7 +7,7 @@ import styles from './page.module.scss';
 export const metadata: Metadata = {
   title: 'Vibe Code Audit | Fix Your AI-Generated App | Windy Road Technology',
   description:
-    'Your vibe-coded app is breaking in production. $5,000. One week. A senior engineer audits your AI-generated code, tells you exactly what\'s broken, and how to fix it.',
+    'Your vibe-coded app is breaking in production. $9,000. One week. A senior engineer audits your AI-generated code, tells you exactly what\'s broken, and how to fix it.',
 };
 
 const problems = [
@@ -44,7 +44,7 @@ const faqs = [
   },
   {
     q: 'How is this different from an agency?',
-    a: 'One senior engineer reads your entire codebase, writes the report, and walks you through it. $5k. One week.',
+    a: 'One senior engineer reads your entire codebase, writes the report, and walks you through it. $9k. One week.',
   },
 ];
 
@@ -67,7 +67,7 @@ export default function VibeCodingAuditPage() {
             <span className={styles.accent}>We fix that.</span>
           </h1>
           <p className={styles.heroSub}>
-            $5,000. One week. A senior engineer tells you exactly what&apos;s broken and how to fix it.
+            $9,000. One week. A senior engineer tells you exactly what&apos;s broken and how to fix it.
           </p>
           <Button href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view" variant="primary" size="large" external>
             Book a Call
@@ -117,7 +117,7 @@ export default function VibeCodingAuditPage() {
           <div className={styles.pricingCard}>
             <div className={styles.pricingHeader}>
               <span className={styles.pricingName}>Vibe Code Audit</span>
-              <span className={styles.pricingPrice}>$5,000</span>
+              <span className={styles.pricingPrice}>$9,000</span>
             </div>
             <ul className={styles.pricingFeatures} role="list">
               <li>1 week turnaround</li>
@@ -127,11 +127,11 @@ export default function VibeCodingAuditPage() {
               <li>You know exactly what&apos;s broken and what to do about it</li>
             </ul>
             <p className={styles.pricingNote}>
-              If you decide to have us implement the fixes, the $5k applies toward a delivery engagement.
+              If you decide to have us implement the fixes, the $9k applies toward a delivery engagement.
             </p>
           </div>
           <p className={styles.agencyNote}>
-            $5,000. One week. Full codebase audit with a prioritised fix list.
+            $9,000. One week. Full codebase audit with a prioritised fix list.
           </p>
         </div>
       </section>

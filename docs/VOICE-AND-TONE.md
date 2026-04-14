@@ -34,7 +34,7 @@ The word "actually" is almost always a sign of defensive writing. If you need "a
 
 Use numbers, names, timeframes, and deliverables. Specificity is more persuasive than adjectives. "400% throughput increase at Greater Bank" beats "dramatically improved performance."
 
-> "$5,000. One week. Full codebase audit with a prioritised fix list."
+> "$9,000. One week. Full codebase audit with a prioritised fix list."
 
 Not: "Affordable, fast, comprehensive code review services."
 

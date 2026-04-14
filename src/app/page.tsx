@@ -60,7 +60,7 @@ const process = [
 const engagements = [
   {
     name: 'Patch Fitness Assessment',
-    price: '$5,000',
+    price: '$9,000',
     duration: '1 week',
     description:
       'We map dependency staleness across your codebase, measure your patch cycle time, and identify the riskiest gaps. You get first fixes shipped plus a prioritised remediation roadmap.',
@@ -271,7 +271,7 @@ export default function Home() {
         <div className={styles.inner}>
           <h2 className={styles.sectionTitle}>Engagements</h2>
           <p className={styles.pricingIntro}>
-            Engagements start at $5,000. No retainers, no long-term commitments.
+            Engagements start at $9,000. No retainers, no long-term commitments.
           </p>
           <ul className={styles.tiers} role="list">
             {engagements.map((eng) => (

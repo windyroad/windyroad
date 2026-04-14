@@ -35,7 +35,7 @@ describe('Homepage', () => {
     const { container } = render(<Home />);
     const text = container.textContent || '';
     expect(text).toMatch(/Patch Fitness Assessment/);
-    expect(text).toMatch(/\$5,000/);
+    expect(text).toMatch(/\$9,000/);
   });
 
   it('links to /ai-quality as secondary path', () => {

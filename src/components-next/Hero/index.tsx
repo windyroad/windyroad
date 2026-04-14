@@ -43,7 +43,7 @@ export default function Hero() {
             Book a Call
           </Button>
           <Button href="/vibe-code-audit" variant="inverted" size="large">
-            Vibe Code Audit: $5k
+            Vibe Code Audit: $9k
           </Button>
         </div>
         <p className={styles.statStrip}>

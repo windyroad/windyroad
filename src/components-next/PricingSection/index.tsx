@@ -4,7 +4,7 @@ import styles from './PricingSection.module.scss';
 const engagements = [
   {
     name: 'Quick Wins Week',
-    price: '$5,000',
+    price: '$9,000',
     duration: '1 week',
     description:
       'We spend a week with your team: diagnose how AI tools are being used, identify the biggest gaps, and implement the first round of fixes \u2014 pipeline guardrails, review process changes, or test coverage improvements. You get quick wins shipped plus a roadmap for what\u2019s next.',
@@ -32,7 +32,7 @@ export default function PricingSection() {
   return (
     <Section variant="dark" id="engagements">
       <p className={styles.intro}>
-        Engagements start at $5,000. No retainers, no long-term commitments.
+        Engagements start at $9,000. No retainers, no long-term commitments.
       </p>
       <ul className={styles.tiers}>
         {engagements.map((eng) => (

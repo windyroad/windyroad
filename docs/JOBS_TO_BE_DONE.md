@@ -19,7 +19,7 @@ This document defines the user personas, jobs, and desired outcomes for windyroa
 - Patch cycles measured in days or weeks, not hours
 - Credential-sensitive, want demonstrated proof over theory
 - Active on LinkedIn, engage with operational/governance content
-- Decision authority over consulting engagements ($5k-$40k range)
+- Decision authority over consulting engagements ($9k-$40k range)
 
 **What frustrates them:**
 - Dependabot PRs piling up with nobody reviewing them
@@ -84,7 +84,7 @@ This document defines the user personas, jobs, and desired outcomes for windyroa
 
 **Current solutions:** Internal engineering time, hiring a security firm for a one-off audit, ignoring the problem
 
-**Screen mapping:** Pricing section (Patch Fitness Assessment, $5k), process section (Diagnose step), Book a Call CTA
+**Screen mapping:** Pricing section (Patch Fitness Assessment, $9k), process section (Diagnose step), Book a Call CTA
 
 ### J3: Evaluation (Important)
 
@@ -158,7 +158,7 @@ This document defines the user personas, jobs, and desired outcomes for windyroa
 
 | Engagement | Price | Job served | Entry point for |
 |-----------|-------|-----------|----------------|
-| Patch Fitness Assessment | $5,000 / 1 week | J2 (Engagement) | Engineering leaders wanting proof before committing |
+| Patch Fitness Assessment | $9,000 / 1 week | J2 (Engagement) | Engineering leaders wanting proof before committing |
 | Embedded Delivery Lead | $20,000/month | J4 (Ongoing Ownership) | Teams ready for hands-on capability building |
 | Delivery Sprint | $40,000 / 4 weeks | J4 (Ongoing Ownership) | Teams wanting a specific deliverable shipped |
-| Vibe Code Audit | $5,000 / 1 week | J5 (Founder Stabilisation) | Founders with broken apps |
+| Vibe Code Audit | $9,000 / 1 week | J5 (Founder Stabilisation) | Founders with broken apps |

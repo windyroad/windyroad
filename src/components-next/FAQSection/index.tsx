@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: 'How is this different from an agency?',
-    a: 'One senior engineer reads your entire codebase. Engagements start at $5k \u2014 no account manager, no hand-off to juniors.',
+    a: 'One senior engineer reads your entire codebase. Engagements start at $9k \u2014 no account manager, no hand-off to juniors.',
   },
 ];
 
