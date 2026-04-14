@@ -7,6 +7,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   max-width: 400px;
+  margin: 0 auto;
 }
 
 .unit {
@@ -76,6 +77,8 @@
 .slider {
   margin-top: 1.5rem;
   max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .sliderLabel {
