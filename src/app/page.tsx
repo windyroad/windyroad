@@ -155,15 +155,11 @@ export default function Home() {
             You&apos;re taking too long to patch your software.
           </h1>
           <p className={styles.sub}>
-            AI-powered vulnerability discovery is measured in hours. Your patch cycle isn&apos;t.
+            AI-powered vulnerability discovery is measured in hours. Your patch
+            cycle isn&apos;t. Anthropic&apos;s Claude Mythos found a 27-year-old
+            vulnerability in OpenBSD overnight. Only 40 companies have access
+            today. That won&apos;t last.
           </p>
-          <p className={styles.sub}>
-            Anthropic&apos;s Claude Mythos found a 27-year-old vulnerability in
-            OpenBSD overnight. Only 40 companies have access today. That won&apos;t last.
-          </p>
-          <Countdown
-            manifoldSlug="when-will-a-claude-mythos-previewle"
-          />
           <div className={styles.cta}>
             <Button
               href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
@@ -177,6 +173,9 @@ export default function Home() {
               AI code quality <span aria-hidden="true">&rarr;</span>
             </Button>
           </div>
+          <Countdown
+            manifoldSlug="when-will-a-claude-mythos-previewle"
+          />
         </div>
       </section>
 

@@ -39,9 +39,10 @@
 }
 
 .attribution {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: var(--color-text-muted-on-dark);
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-light);
+  opacity: 0.8;
 
   a {
     color: var(--color-accent-on-dark);

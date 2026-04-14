@@ -44,12 +44,31 @@ async function fetchMarketData(slug: string): Promise<MarketData | null> {
     const answers: ManifoldAnswer[] = data.answers || [];
     if (answers.length === 0) return null;
 
-    const best = answers.reduce((a, b) => (b.probability > a.probability ? b : a));
+    // Sort answers chronologically by midpoint
+    const sorted = [...answers].sort((a, b) => a.midpoint - b.midpoint);
+
+    // Find the 50% cumulative probability threshold
+    let cumulative = 0;
+    let thresholdAnswer = sorted[sorted.length - 1]; // fallback to last
+    for (const answer of sorted) {
+      cumulative += answer.probability;
+      if (cumulative >= 0.5) {
+        thresholdAnswer = answer;
+        break;
+      }
+    }
+
+    // Calculate cumulative probability up to and including the threshold month
+    let cumulativeToThreshold = 0;
+    for (const answer of sorted) {
+      cumulativeToThreshold += answer.probability;
+      if (answer.midpoint >= thresholdAnswer.midpoint) break;
+    }
 
     return {
-      targetDate: new Date(best.midpoint),
-      probability: Math.round(best.probability * 100),
-      answerText: best.text,
+      targetDate: new Date(thresholdAnswer.midpoint),
+      probability: Math.round(cumulativeToThreshold * 100),
+      answerText: thresholdAnswer.text,
       marketUrl: data.url || `https://manifold.markets/${slug}`,
       question: data.question || '',
     };
