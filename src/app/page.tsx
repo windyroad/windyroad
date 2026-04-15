@@ -93,11 +93,11 @@ const testimonials = [
       'He didn\u2019t simply manage BAU. He elevated it. By introducing structured root cause analysis, strengthening incident hygiene, and embedding Agile and Lean practices, he shifted the team from reactive fire-fighting to disciplined, data-driven service reliability. Reducing open incidents by half within a mission-critical freight system is a significant achievement.',
   },
   {
-    theme: 'On delivery at scale',
-    name: 'David Tanconi',
-    role: 'Change Leadership, Westpac',
+    theme: 'On continuous delivery',
+    name: 'Sidney Shek',
+    role: 'Staff Engineer, Stripe',
     quote:
-      'Taking compliance from 0% to 97%, rolling the solution out to more than 5,000 bankers and doing it with minimal disruption to day-to-day operations was a substantial achievement. What stood out to me wasn\u2019t just the numbers, but the way Tom achieved them. He led with calm focus, thought strategically about the bigger picture and stayed committed to getting the detail right.',
+      'He has an excellent understanding of software engineering principles, and applies them in the work he does. On the project where we worked together, he was instrumental in setting up our lean development processes, and driving us towards a best practice Continuous Delivery model.',
   },
 ];
 
