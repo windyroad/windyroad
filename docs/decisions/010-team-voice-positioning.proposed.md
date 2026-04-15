@@ -1,5 +1,6 @@
 ---
-status: proposed
+status: "proposed"
+first-released: 2026-04-15
 date: 2026-04-13
 decision-makers: Tom Howard
 consulted: Voice/tone review agent

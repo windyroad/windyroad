@@ -1,6 +1,7 @@
 ---
-status: "proposed"
+status: "accepted"
 first-released: 2026-03-20
+accepted-date: 2026-04-15
 date: 2026-03-20
 decision-makers: [Tom Howard, Claude]
 consulted: []
