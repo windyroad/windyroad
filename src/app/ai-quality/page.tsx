@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://windyroad.com.au/img/og-image.png',
+        url: 'https://windyroad.com.au/img/og-image-patch-fitness.png',
         width: 1200,
         height: 630,
         alt: 'Your team adopted AI tools. Here\u2019s what\u2019s slipping through.',
