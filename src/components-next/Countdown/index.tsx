@@ -34,6 +34,12 @@ function getTimeRemaining(target: Date) {
   return { days, hours, minutes, seconds };
 }
 
+function getEndOfMonthUTC(midpoint: number): number {
+  const d = new Date(midpoint);
+  // Last ms of the month in UTC (start of next month minus 1ms)
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1) - 1;
+}
+
 function getCumulativeProbability(sortedAnswers: ManifoldAnswer[], index: number): number {
   let cumulative = 0;
   for (let i = 0; i <= index; i++) {
@@ -84,8 +90,11 @@ async function fetchMarketData(slug: string): Promise<MarketData | null> {
     if (answers.length === 0) return null;
 
     const sorted = [...answers].sort((a, b) => a.midpoint - b.midpoint);
-    // Filter out catch-all "or later" bucket (no meaningful countdown date)
-    const sortedAnswers = sorted.filter((a) => !a.text.toLowerCase().includes('or later'));
+    const now = Date.now();
+    // Filter out catch-all "or later" buckets and buckets whose end-of-month has passed
+    const sortedAnswers = sorted.filter(
+      (a) => !a.text.toLowerCase().includes('or later') && getEndOfMonthUTC(a.midpoint) > now,
+    );
     if (sortedAnswers.length === 0) return null;
 
     return {
@@ -112,7 +121,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
       if (data) {
         setMarket(data);
         setBucketIndex(data.defaultIndex);
-        const targetDate = new Date(data.sortedAnswers[data.defaultIndex].midpoint);
+        const targetDate = new Date(getEndOfMonthUTC(data.sortedAnswers[data.defaultIndex].midpoint));
         const remaining = getTimeRemaining(targetDate);
         setTime(remaining);
         setExpired(!remaining);
@@ -127,14 +136,14 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
   }, []);
 
   const currentAnswer = market?.sortedAnswers[bucketIndex];
-  const midpoint = currentAnswer?.midpoint ?? null;
-  const targetDate = midpoint ? new Date(midpoint) : null;
+  const endOfMonth = currentAnswer ? getEndOfMonthUTC(currentAnswer.midpoint) : null;
+  const targetDate = endOfMonth ? new Date(endOfMonth) : null;
   const probability = market ? getCumulativeProbability(market.sortedAnswers, bucketIndex) : 0;
 
   useEffect(() => {
-    if (!midpoint || reducedMotion || expired) return;
+    if (!endOfMonth || reducedMotion || expired) return;
 
-    const target = new Date(midpoint);
+    const target = new Date(endOfMonth);
     const remaining = getTimeRemaining(target);
     if (!remaining) {
       setExpired(true);
@@ -155,7 +164,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [midpoint, reducedMotion, expired]);
+  }, [endOfMonth, reducedMotion, expired]);
 
   if (!loaded) return null;
   if (!market || !currentAnswer) return null;
@@ -183,7 +192,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
             const pct = Number(e.target.value);
             const newIndex = snapToNearest(pct, cumulativeStops);
             setBucketIndex(newIndex);
-            const newTarget = new Date(market.sortedAnswers[newIndex].midpoint);
+            const newTarget = new Date(getEndOfMonthUTC(market.sortedAnswers[newIndex].midpoint));
             const remaining = getTimeRemaining(newTarget);
             setExpired(!remaining);
             setTime(remaining);
@@ -214,7 +223,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
             Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          predicted a {probability}% chance of arrival by end of {currentAnswer.text}.
+          predicted a {probability}% chance a Mythos-level model ships by end of {currentAnswer.text}.
         </p>
       </div>
     );
@@ -232,7 +241,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
             Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          gives a {probability}% chance of arrival by then.
+          gives a {probability}% chance a Mythos-level model ships by then.
         </p>
       </div>
     );
@@ -241,7 +250,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
   return (
     <div className={styles.container}>
       <p className={styles.srOnly}>
-        Manifold Markets estimates a {probability}% chance of arrival by end of{' '}
+        Manifold Markets estimates a {probability}% chance a Mythos-level model ships by end of{' '}
         {currentAnswer.text}. Approximately {approxDays} days from now.
       </p>
 
@@ -273,7 +282,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
           Manifold Markets
           <span className={styles.srOnly}> (opens in new tab)</span>
         </a>{' '}
-        gives a {probability}% chance of arrival by end of {currentAnswer.text}.
+        gives a {probability}% chance a Mythos-level model ships by end of {currentAnswer.text}.
       </p>
     </div>
   );

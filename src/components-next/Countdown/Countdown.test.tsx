@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, waitFor, act, fireEvent } from '@testing-library/react';
 import Countdown from './index';
 
@@ -25,7 +25,14 @@ function mockFetchSuccess(response = mockManifoldResponse) {
   }));
 }
 
+beforeEach(() => {
+  // Freeze "now" to before all mock answer midpoints so future-filter keeps them
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  vi.setSystemTime(new Date('2026-03-15T00:00:00Z'));
+});
+
 afterEach(() => {
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -60,7 +67,7 @@ describe('Countdown', () => {
     await waitFor(() => {
       const srText = container.querySelector('.sr-only, [class*="srOnly"]');
       expect(srText).not.toBeNull();
-      expect(srText?.textContent).toMatch(/62%.*arrival/);
+      expect(srText?.textContent).toMatch(/62%.*Mythos-level/);
       expect(srText?.textContent).toMatch(/Jul/);
     });
   });
@@ -100,7 +107,7 @@ describe('Countdown', () => {
     });
   });
 
-  it('shows expiry message when best answer date has passed', async () => {
+  it('renders nothing when all answer dates are in the past', async () => {
     const pastResponse = {
       ...mockManifoldResponse,
       answers: [
@@ -113,25 +120,7 @@ describe('Countdown', () => {
     const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
 
     await waitFor(() => {
-      const text = container.textContent || '';
-      expect(text).toMatch(/window is open/i);
-    });
-  });
-
-  it('has aria-live="polite" on expiry message', async () => {
-    const pastResponse = {
-      ...mockManifoldResponse,
-      answers: [
-        { text: 'Jan 2025', probability: 0.50, midpoint: 1737331200000 },
-      ],
-    };
-    mockFetchSuccess(pastResponse);
-
-    const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
-
-    await waitFor(() => {
-      const liveRegion = container.querySelector('[aria-live="polite"]');
-      expect(liveRegion).not.toBeNull();
+      expect(container.textContent).toBe('');
     });
   });
 
@@ -280,7 +269,7 @@ describe('Countdown', () => {
       });
     });
 
-    it('does not render slider when market has expired', async () => {
+    it('does not render slider when no future answers remain', async () => {
       const pastResponse = {
         ...mockManifoldResponse,
         answers: [
@@ -292,7 +281,7 @@ describe('Countdown', () => {
       const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
 
       await waitFor(() => {
-        expect(container.textContent).toMatch(/window is open/i);
+        expect(container.textContent).toBe('');
       });
 
       const slider = container.querySelector('input[type="range"]');
