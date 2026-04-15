@@ -35,7 +35,10 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
 
 const outputPath = new URL('../public/img/og-image.png', import.meta.url).pathname;
 
-await sharp(Buffer.from(svg))
+// Render the SVG at a higher density so text edges stay crisp when
+// LinkedIn and other platforms downscale the 1200x630 image for preview.
+await sharp(Buffer.from(svg), { density: 288 })
+  .resize(1200, 630)
   .png()
   .toFile(outputPath);
 
