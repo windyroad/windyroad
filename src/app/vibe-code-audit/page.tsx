@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: 'What stack do you work with?',
-    a: 'JavaScript/TypeScript, Python, and most modern web frameworks. If you\'re not sure, book a call and we\'ll figure it out.',
+    a: 'JavaScript/TypeScript, Python, Java, .NET, Go, and most modern stacks. If you\'re not sure, book a call and we\'ll figure it out.',
   },
   {
     q: 'Do I need to give you access to my whole codebase?',

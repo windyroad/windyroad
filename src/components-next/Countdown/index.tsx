@@ -34,6 +34,14 @@ function getTimeRemaining(target: Date) {
   return { days, hours, minutes, seconds };
 }
 
+function aOrAnForPercent(n: number): string {
+  // Numbers whose spoken form starts with a vowel sound: 8, 11, 18, 80-89
+  const s = String(n);
+  if (s === '8' || s === '11' || s === '18') return 'an';
+  if (s.length === 2 && s.startsWith('8')) return 'an';
+  return 'a';
+}
+
 function formatManifoldDate(midpoint: number): string {
   return new Intl.DateTimeFormat('en-GB', {
     day: 'numeric',
@@ -227,7 +235,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
             Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          predicted a {probability}% chance a Mythos-level model ships by {targetDateLabel}.
+          predicted {aOrAnForPercent(probability)} {probability}% chance a Mythos-level model ships by {targetDateLabel}.
         </p>
       </div>
     );
@@ -245,7 +253,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
             Manifold Markets
             <span className={styles.srOnly}> (opens in new tab)</span>
           </a>{' '}
-          gives a {probability}% chance a Mythos-level model ships by then.
+          gives {aOrAnForPercent(probability)} {probability}% chance a Mythos-level model ships by then.
         </p>
       </div>
     );
@@ -254,7 +262,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
   return (
     <div className={styles.container}>
       <p className={styles.srOnly}>
-        Manifold Markets estimates a {probability}% chance a Mythos-level model ships by{' '}
+        Manifold Markets estimates {aOrAnForPercent(probability)} {probability}% chance a Mythos-level model ships by{' '}
         {targetDateLabel}. Approximately {approxDays} days from now.
       </p>
 
@@ -286,7 +294,7 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
           Manifold Markets
           <span className={styles.srOnly}> (opens in new tab)</span>
         </a>{' '}
-        gives a {probability}% chance a Mythos-level model ships by {targetDateLabel}.
+        gives {aOrAnForPercent(probability)} {probability}% chance a Mythos-level model ships by {targetDateLabel}.
       </p>
     </div>
   );

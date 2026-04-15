@@ -128,7 +128,7 @@ const faqs = [
   },
   {
     q: 'What stack do you work with?',
-    a: 'JavaScript/TypeScript, Python, and most modern web frameworks. If you\u2019re not sure, book a call and we\u2019ll figure it out.',
+    a: 'JavaScript/TypeScript, Python, Java, .NET, Go, and most modern stacks. If you\u2019re not sure, book a call and we\u2019ll figure it out.',
   },
 ];
 
@@ -177,10 +177,13 @@ export default function Home() {
             manifoldSlug="when-will-a-claude-mythos-previewle"
           />
         </div>
+        <a href="#problems" className={styles.scrollCue} aria-label="Scroll to see more">
+          <span aria-hidden="true">&darr;</span>
+        </a>
       </section>
 
       {/* Problems */}
-      <section className={`${styles.section} ${styles.light}`}>
+      <section id="problems" className={`${styles.section} ${styles.light}`}>
         <div className={styles.inner}>
           <h2 className={styles.sectionTitle}>What&apos;s coming</h2>
           <ul className={styles.problemList} role="list">

@@ -21,6 +21,8 @@ This document defines the user personas, jobs, and desired outcomes for windyroa
 - Active on LinkedIn, engage with operational/governance content
 - Decision authority over consulting engagements ($9k-$40k range)
 
+**Stack coverage in scope:** JavaScript/TypeScript, Python, Java, .NET, Go, and most modern stacks. The patch fitness methodology (dependency audit, CI gates, remediation pipeline) applies across ecosystems. Past track record includes banking/FS enterprise stacks (Greater Bank, Westpac, Pacific National) where Java and .NET are common.
+
 **What frustrates them:**
 - Dependabot PRs piling up with nobody reviewing them
 - Patching as a multi-week project requiring committees and manual testing
