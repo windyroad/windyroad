@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Button from '@/src/components-next/Button';
 import Countdown from '@/src/components-next/Countdown';
+import { HERO_HEADLINE } from '@/src/lib/siteCopy.mjs';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
@@ -151,9 +152,7 @@ export default function Home() {
       {/* Hero */}
       <section className={`${styles.section} ${styles.dark} ${styles.hero}`}>
         <div className={styles.inner}>
-          <h1 className={styles.headline}>
-            You&apos;re taking too long to patch your software.
-          </h1>
+          <h1 className={styles.headline}>{HERO_HEADLINE}</h1>
           <p className={styles.sub}>
             AI-powered vulnerability discovery is measured in hours. Your patch
             cycle isn&apos;t. Anthropic&apos;s Claude Mythos found a 27-year-old
