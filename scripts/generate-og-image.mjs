@@ -33,7 +33,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   <text x="80" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#FFFFFF">windyroad.com.au</text>
 </svg>`;
 
-const outputPath = new URL('../public/img/og-image-patch-fitness.png', import.meta.url).pathname;
+const outputPath = new URL('../public/img/og-image.png', import.meta.url).pathname;
 
 // Render the SVG at a higher density so text edges stay crisp when
 // LinkedIn and other platforms downscale the 1200x630 image for preview.

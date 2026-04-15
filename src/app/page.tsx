@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://windyroad.com.au/img/og-image-patch-fitness.png',
+        url: 'https://windyroad.com.au/img/og-image.png',
         width: 1200,
         height: 630,
         alt: 'You\u2019re taking too long to patch your software.',
