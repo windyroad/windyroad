@@ -258,6 +258,22 @@ describe('Countdown', () => {
       });
     });
 
+    it('displays the exact Manifold midpoint date in DD MMM YYYY format', async () => {
+      mockFetchSuccess();
+      const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
+
+      // Jul 2026 midpoint 1784160000000 = 2026-07-16 UTC
+      await waitFor(() => {
+        const slider = container.querySelector('input[type="range"]');
+        const valueText = slider?.getAttribute('aria-valuetext') || '';
+        expect(valueText).toMatch(/16 Jul 2026/);
+      });
+
+      // Attribution line should also show the exact date
+      const text = container.textContent || '';
+      expect(text).toMatch(/16 Jul 2026/);
+    });
+
     it('filters out catch-all "or later" bucket', async () => {
       mockFetchSuccess();
       const { container } = render(<Countdown manifoldSlug={MANIFOLD_SLUG} />);
