@@ -178,7 +178,20 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
     return () => clearInterval(interval);
   }, [midpoint, reducedMotion, expired]);
 
-  if (!loaded) return null;
+  if (!loaded) {
+    return (
+      <div className={styles.container} aria-hidden="true">
+        <div className={styles.skeletonGrid}>
+          <div className={styles.skeletonUnit} />
+          <div className={styles.skeletonUnit} />
+          <div className={styles.skeletonUnit} />
+          <div className={styles.skeletonUnit} />
+        </div>
+        <div className={styles.skeletonSlider} />
+        <div className={styles.skeletonAttribution} />
+      </div>
+    );
+  }
   if (!market || !currentAnswer) return null;
 
   const approxDays = time ? time.days : 0;
