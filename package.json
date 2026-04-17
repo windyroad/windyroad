@@ -31,7 +31,7 @@
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
     "remark-rehype": "^11.1.2",
-    "sass": "1.98.0",
+    "sass": "1.99.0",
     "slugify": "1.6.9"
   },
   "devDependencies": {
