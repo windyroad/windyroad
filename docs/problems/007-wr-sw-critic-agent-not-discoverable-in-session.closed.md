@@ -1,7 +1,8 @@
 # Problem 007: Project-local subagents defined mid-session are not discoverable until Claude Code session restart
 
-**Status**: Open
+**Status**: Closed
 **Reported**: 2026-04-17
+**Closed**: 2026-04-17 (user-verified via `wr-sw-critic` smoke test in a fresh session: agent returned `CRITIC_AGENT_READY`).
 **Priority**: 6 (Medium-Low). Impact: Moderate (3) x Likelihood: Likely (2)
 
 ## Description
@@ -44,10 +45,15 @@ Longer-term options:
 
 ### Investigation Tasks
 
-- [ ] Confirm whether plugin-delivered agents (`~/.claude/plugins/.../agents/`) have the same no-refresh behaviour as project-local
-- [ ] Test whether renaming (not editing) a project-local agent triggers a refresh on any in-session file read
-- [ ] Document the workaround in `.claude/skills/wr-newsletter/SKILL.md` as a known failure mode
-- [ ] Consider whether to file an upstream Claude Code issue
+- [x] Confirm the restart workaround (2026-04-17): Tom restarted the Claude Code session; `wr-sw-critic` smoke test returned `CRITIC_AGENT_READY`; retroactive validation against `src/newsletters/drafts/2026-04-17.md` ran successfully with the full 25-check rubric.
+- [ ] Confirm whether plugin-delivered agents (`~/.claude/plugins/.../agents/`) have the same no-refresh behaviour as project-local (deferred, not required to close; the project-local restart workaround is sufficient for the `wr-newsletter` skill)
+- [ ] Test whether renaming (not editing) a project-local agent triggers a refresh on any in-session file read (deferred, same reason)
+- [ ] Document the workaround in `.claude/skills/wr-newsletter/SKILL.md` as a known failure mode (deferred, captured in `docs/BRIEFING.md` "What Will Surprise You" instead; future sessions will see the briefing)
+- [ ] Consider whether to file an upstream Claude Code issue (deferred, low urgency since the workaround is cheap)
+
+## Resolution
+
+Session restart registered the project-local `wr-sw-critic` agent. Smoke test in the fresh session returned `CRITIC_AGENT_READY`. Retroactive validation run against the 2026-04-17 draft confirmed the agent loads, reads the rubric, and scores all 25 checks. Closed as a known limitation of Claude Code's agent-registry bootstrap; the restart workaround is documented in `docs/BRIEFING.md` so future sessions know to restart after any `.claude/agents/*.md` change.
 
 ## Related
 
