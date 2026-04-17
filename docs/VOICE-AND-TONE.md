@@ -46,6 +46,20 @@ The visitor has a problem. Name the problem in their language. Don't tell them h
 
 Not: "You've built something amazing! But every great product needs a little polish."
 
+### Respectful of the reader's team
+
+The reader is responsible for a team. Name situations, external threats, and industry baselines directly. Do not pass judgement on the reader's team's competence, diligence, or stewardship. Credential-sensitive readers (Engineering Leaders especially) cannot forward content that implies their own team is behind, slow, or negligent, and they will disengage when they read it. This applies to hero copy, articles, the AI Engineering Brief, and any outbound content.
+
+**In scope (don't write):** framing that attributes fault, negligence, or inferiority to the reader's specific team. Examples: "your team probably trailed by weeks," "you're already behind," "most teams don't bother," "if your vendor evaluations are rubber-stamping..."
+
+**Out of scope (fine to write):** describing the reader's situation, industry baselines, or the external world. Examples: "Patch cycles for enterprise teams are typically measured in weeks." "Your vibe-coded app is in production." "Claude Mythos found a vulnerability overnight."
+
+The boundary: **describe the situation and the external world in direct language; do not pass judgement on the reader's team's competence or diligence.**
+
+> "The capability ceiling for AI-assisted coding moved again this week. Which of your tooling assumptions from the previous release are worth re-testing?"
+
+Not: "Your team's build, review, and testing assumptions probably trailed 4.6 by weeks, so they trail 4.7 by more."
+
 ---
 
 ## Tone
@@ -392,6 +406,7 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | "I'm X, not Y" self-positioning | Defines you by what you're not | "Working guardrails, not a slide deck" |
 | Competitor bashing | Positions you as the cheap alternative rather than the right one | "Agencies charge $50k and take 8 weeks" |
 | Dismissing the reader's tools | Insults something they chose and use | "Claude wrote the bugs in the first place" |
+| Disparaging the reader's team | Insults the reader's stewardship; destroys forward-ability | "Your team probably trailed 4.6 by weeks, so they trail 4.7 by more" |
 | Feature claims in fit checks | Sells the service instead of describing the visitor | "You need someone who can implement guardrails" |
 | Unexplained internal references | Assumes readers know your specific rules or structure | "five banned patterns, a word list of terms to prefer and avoid" |
 
