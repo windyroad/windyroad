@@ -1,6 +1,20 @@
-# Three-lens filter
+# Three-lens filter with Wardley preference
 
-Every candidate story is scored against three lenses. A story makes the brief only if it scores on at least two of three. Stories that hit all three are prioritised.
+Every candidate story passes a three-lens score (technical, operational, human; pass on at least two of three). Candidates that also anchor to an observable Wardley landscape map movement are prioritised; candidates without a clean map anchor can still qualify on three-lens strength alone.
+
+## Wardley map anchoring (preference, not precondition)
+
+The Wardley landscape map (`docs/ai-engineering-brief/ai-landscape.owm`) is the primary qualification path. A candidate anchors to a map movement when it triggers one of:
+
+- A component's evolution position shifts (for example, AI Coding Assistants moving further toward commodity).
+- A new component appears that the map does not yet show.
+- A component disappears or merges with another.
+- A dependency is added, removed, or redirected.
+- An existing map position is reinforced by new evidence worth naming.
+
+Tag each candidate as `MAP_ANCHORED` or `NO_MAP_ANCHOR` during the filter step. Map-anchored candidates get priority. Candidates without a clean map anchor can still qualify if they are three-lens-strong (significant on all three lenses, or significant-plus-clearly-relevant on two lenses) and matter to the Engineering Leader persona: an AI incident, a notable personnel move, a social dynamic inside engineering teams, a legal shift that does not map to a named component.
+
+Prioritisation rule: map-anchored candidates first, three-lens-strong candidates second. A week with zero map-anchored items is a signal that either the map needs new components or the week genuinely had no landscape movement; surface this in the Tom-summary. A month where every item is three-lens-only (no map anchors) is a signal that the filter is dropping the substrate discipline; revisit the map.
 
 ## Lens 1: Technical
 
@@ -29,9 +43,10 @@ Score **no** if: the story is purely technical with no visible human or organisa
 ## Scoring rule
 
 - Score each candidate on all three lenses: yes or no.
-- Keep only candidates scoring yes on at least two lenses.
-- Among the kept candidates, prioritise those scoring yes on all three.
-- Select three items for the brief. If fewer than three candidates clear the bar, note the shortfall in the summary for Tom rather than padding.
+- Tag each candidate as `MAP_ANCHORED` or `NO_MAP_ANCHOR`.
+- Keep candidates scoring yes on at least two lenses.
+- Prioritise in this order: (1) map-anchored and all-three-lens, (2) map-anchored and two-lens, (3) no-map-anchor but all-three-lens AND significant for the Engineering Leader persona.
+- Include every significant candidate in the brief. There is no upper cap; minimum three. If fewer than three candidates clear the bar, note the shortfall in the summary rather than padding. Significance means the candidate represents a meaningful change for the Engineering Leader persona.
 
 ## Target audience reminder
 
