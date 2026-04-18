@@ -36,8 +36,8 @@ Read the resolved persona config: `.claude/skills/wr-newsletter/personas/<person
 - `<publication-name>`: e.g. "The Shift" or "Tokens Spent". Used in headline subtitle and Tom-summary.
 - `<target-reader>`: e.g. "Engineering Leader (J1-J4)". Used in Tom-summary.
 - `<source-weighting>`: tier ordering specific to the persona. Used at step 4 to break ties when shortlisting.
-- `<three-lens-weighting>`: e.g. "human > operational > technical" or the inverse. Used at step 4 (lens scoring) and step 10 (item ordering and headline emphasis).
-- `<voice-addendum>`: persona-specific voice notes (vocabulary preferences, evidence-stance language). Combined with the base `docs/VOICE-AND-TONE.md` rules at step 10.
+- `<three-lens-weighting>`: e.g. "human > operational > technical" or the inverse. Used at step 4 (lens scoring) and step 9.5 (persona-weighted ranking, once the map has been updated).
+- `<voice-addendum>`: persona-specific voice notes (vocabulary preferences, evidence-stance language). Combined with the base `docs/VOICE-AND-TONE.md` rules at step 11 (drafting).
 - `<cta-description>` and `<cta-invitation>`: variants from the persona config; pick one each per edition, rotating week-to-week to avoid repetition.
 - `<welcome-line>`: persona-specific first-edition welcome text.
 - `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant.
@@ -98,26 +98,10 @@ Read `.claude/skills/wr-newsletter/assets/three-lens-filter.md` and `docs/ai-eng
 
 For every candidate:
 
-1. **Wardley precondition**: can this candidate be anchored to an observable map movement? If no, drop the candidate.
+1. **Wardley precondition**: can this candidate be anchored to an observable map movement? If no, drop the candidate. The "observable map movement" comparison uses the previous week's map as a baseline. The map update itself runs next at step 5, before per-item voice capture.
 2. **Three-lens scoring**: for surviving candidates, score yes or no on technical, operational, human. Keep those scoring yes on at least two.
-3. **Persona-weighted ranking**: among candidates that clear the filter, order by `<three-lens-weighting>` from the persona config. Items strong on the persona's primary lens rank above items strong only on secondary lenses. Ties broken by `<source-weighting>` (a primary-tier-source item beats a secondary-tier-source item on the same lens score).
 
-The filtered, persona-weighted list is the shortlist. There is no upper cap. Minimum three. If fewer than three candidates clear the filter, note the shortfall in the summary for Tom rather than padding.
-
-### 4.5. Per-item interactive voice capture (AskUserQuestion)
-
-For each shortlisted candidate, call the `AskUserQuestion` tool with:
-
-- **question**: `"Item <N>: <one-sentence story summary>. Our take: <1-2 sentences on why it matters or the angle we'd emphasise>. Source: <URL>. Agree, Adjust, or Drop?"`
-- **options**:
-  - `Agree`: carry the candidate forward with the original take.
-  - `Adjust`: Tom edits or adds via the "Other" free-text escape hatch. His text becomes source material for the item's Why-it-matters and Human-angle lines.
-  - `Drop`: remove from shortlist; record Tom's reason in internal metadata.
-- **multiSelect**: false
-
-Capture per-item responses. Adjusts feed the drafter (step 10): Why-it-matters and Human-angle lines incorporate Tom's phrasing where he gave any, otherwise use the original take. The "From Tom" opener (step 10) is assembled from the strongest POV across Tom's adjusts that week.
-
-If zero candidates get an Adjust with a strong POV, the opener defaults to a meta-observation about the week's theme (not a model-guess at Tom's voice). Note in the summary.
+The filtered list is the interim shortlist passed to steps 5 through 9. There is no upper cap. Minimum three. If fewer than three candidates clear the filter, note the shortfall in the summary for Tom rather than padding. **Persona-weighted ranking runs after the map is updated** (see step 9.5), because the ranking needs this week's map positions, not last week's.
 
 ### 5. Map-mutation gate (ADR 016 failure-mode rule)
 
@@ -175,13 +159,36 @@ prior_weaknesses: n/a"
 ```
 
 Parse the returned `CRITIC_REVIEW` block:
-- If `VERDICT: PASS`: proceed to step 10.
+- If `VERDICT: PASS`: proceed to step 9.5.
 - If `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in `ai-landscape.md` (or `.owm` if the weakness is structural). Re-invoke the critic with `round_number: 2` and `prior_weaknesses: <round-1 weaknesses verbatim>`.
-- Repeat for up to round 3. On `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`, save the review block with the artifacts and note the unresolved weaknesses in the summary, but still proceed to step 10. The map is the best we have this week; a weak map still beats no map.
+- Repeat for up to round 3. On `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`, save the review block with the artifacts and note the unresolved weaknesses in the summary, but still proceed to step 9.5. The map is the best we have this week; a weak map still beats no map.
 
 Capture the final critic block for inclusion in the saved draft.
 
-### 10. Draft the brief
+### 9.5. Persona-weighted ranking
+
+Among the candidates that cleared step 4, and using this week's updated map (steps 5-8) plus the Wardley critic's latest verdict (step 9), order by `<three-lens-weighting>` from the persona config. Items strong on the persona's primary lens rank above items strong only on secondary lenses. Ties broken by `<source-weighting>` (a primary-tier-source item beats a secondary-tier-source item on the same lens score). Map movement this week is explicit input to the ordering: candidates whose related map component moved this week rank above candidates with comparable lens scores whose components did not move.
+
+Output: the final persona-weighted shortlist. This is the input to step 10's per-item voice capture.
+
+### 10. Per-item interactive voice capture (AskUserQuestion)
+
+For each shortlisted candidate, call the `AskUserQuestion` tool with:
+
+- **question**: `"Item <N>: <one-sentence story summary>. Our take: <1-2 sentences on why it matters or the angle we'd emphasise, grounded in this week's map movement from step 8's analysis>. Source: <URL>. Agree, Adjust, or Drop?"`
+- **options**:
+  - `Agree`: carry the candidate forward with the original take.
+  - `Adjust`: Tom edits or adds via the "Other" free-text escape hatch. His text becomes source material for the item's Why-it-matters and Human-angle lines.
+  - `Drop`: remove from shortlist; record Tom's reason in internal metadata.
+- **multiSelect**: false
+
+Because the map has already been updated (steps 5-8) and the Wardley critic has already passed (step 9), the "Our take" presented per item is informed by this week's actual landscape movements, not by last week's analysis applied to raw candidates. Tom's adjusts land against the richer substrate, so the "From Tom" opener and Why-it-matters lines have more to push off.
+
+Capture per-item responses. Adjusts feed the drafter (step 11): Why-it-matters and Human-angle lines incorporate Tom's phrasing where he gave any, otherwise use the original take. The "From Tom" opener (step 11) is assembled from the strongest POV across Tom's adjusts that week.
+
+If zero candidates get an Adjust with a strong POV, the opener defaults to a meta-observation about the week's theme (not a model-guess at Tom's voice). Note in the summary.
+
+### 11. Draft the brief
 
 Before drafting, determine the edition number: count `<published-folder>/*.md` files (resolved at step 0) and add one for the current draft. Write the edition number into the draft frontmatter (`edition: N`) so the critic's check_25 can reason about first-edition vs ongoing framing. For edition 1, include the persona's `<welcome-line>` above the voice opener; for edition >=2, drop or freshly reframe the welcome line rather than repeating the first-edition text.
 
@@ -194,7 +201,7 @@ Produce a draft with:
 - One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened, Map movement, Why it matters to your team, The human angle, Source.
 - Closing CTA: pick one `<cta-description>` and one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`.
 
-Voice rules (enforced by step 11 voice gate):
+Voice rules (enforced by step 13 voice gate):
 - Team voice ("we"), not "I" (ADR 010). The "From Tom" opener is the only place where "I" is permitted.
 - Direct, specific, confident. Name the org, name the artifact, name the date.
 - No em-dashes. Use commas, periods, colons, or parentheses.
@@ -202,7 +209,7 @@ Voice rules (enforced by step 11 voice gate):
 - Respect the reader's team (ADR 015). Describe industry baselines and situations, not the reader's team's competence. This applies to both personas; the developer-audience equivalent is "do not call a developer's tool choice incompetent; criticise via evidence."
 - Apply the persona's `<voice-addendum>` for vocabulary preferences (leader-coded vs developer-coded language).
 
-### 11. Voice review gate (ADR 012)
+### 13. Voice review gate (ADR 012)
 
 ```
 Agent subagent_type: wr-voice-tone:agent
@@ -213,7 +220,7 @@ prompt: "Review the following AI Engineering Brief draft against docs/VOICE-AND-
 
 If FAIL: fix the flagged passages in the draft, re-run voice review. Do not proceed until PASS. Capture the final voice review block for the saved draft.
 
-### 12. Content-risk review gate (ADR 012 + ADR 015)
+### 14. Content-risk review gate (ADR 012 + ADR 015)
 
 Inline judgement. Score each axis on low, medium, or high:
 
@@ -234,11 +241,11 @@ Notes:
 - <flagged passage 1, or "no flags">
 ```
 
-If `VERDICT: REJECTED`: save the draft with the block, surface the rejection prominently in the Tom-summary, and skip step 13. Tom decides whether to rewrite or override.
+If `VERDICT: REJECTED`: save the draft with the block, surface the rejection prominently in the Tom-summary, and skip step 15. Tom decides whether to rewrite or override.
 
-If `VERDICT: PASS`: proceed to step 13.
+If `VERDICT: PASS`: proceed to step 15.
 
-### 13. Critic loop on the newsletter draft (ADR 016)
+### 15. Critic loop on the newsletter draft (ADR 016)
 
 ```
 Agent subagent_type: wr-sw-critic
@@ -251,32 +258,32 @@ prior_weaknesses: n/a"
 ```
 
 Parse the `CRITIC_REVIEW` block:
-- `VERDICT: PASS`: proceed to step 14.
+- `VERDICT: PASS`: proceed to step 16.
 - `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in the draft. Re-invoke with `round_number: 2` and `prior_weaknesses: <round-1 verbatim>`.
 - Up to round 3. On round-3 exhaustion, emit `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`; save the draft with the block and surface the unresolved weaknesses in the Tom-summary.
 
 Capture the final critic block for the saved draft.
 
-### 14. Save the draft
+### 16. Save the draft
 
 Compute today's date in ISO format (`YYYY-MM-DD`). Write `<draft-folder>/YYYY-MM-DD.md` (resolved at step 0, e.g. `src/newsletters/drafts/leader/YYYY-MM-DD.md` or `src/newsletters/drafts/developer/YYYY-MM-DD.md`) with this exact structure:
 
 ```
-<draft body from step 10, after any step-13 fixes>
+<draft body from step 11, after any step-15 fixes>
 
 ---
 
 ## Voice Review
 
-<voice review block from step 11>
+<voice review block from step 13>
 
 ## Content Risk Review
 
-<content-risk block from step 12>
+<content-risk block from step 14>
 
 ## Critic Review: Newsletter
 
-<critic block from step 13, or "N/A: content-risk returned REJECTED" if step 13 was skipped>
+<critic block from step 15, or "N/A: content-risk returned REJECTED" if step 15 was skipped>
 
 ## Critic Review: Wardley Artifacts
 
@@ -289,7 +296,7 @@ Compute today's date in ISO format (`YYYY-MM-DD`). Write `<draft-folder>/YYYY-MM
 
 Use the `Write` tool. If a file for today's date already exists, ask Tom whether to overwrite or append a suffix like `-2` to the filename.
 
-### 15. Summarise for Tom
+### 17. Summarise for Tom
 
 Report back in chat:
 
