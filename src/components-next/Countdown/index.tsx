@@ -148,7 +148,6 @@ export default function Countdown({ manifoldSlug }: CountdownProps) {
 
   const currentAnswer = market?.sortedAnswers[bucketIndex];
   const midpoint = currentAnswer?.midpoint ?? null;
-  const targetDate = midpoint ? new Date(midpoint) : null;
   const targetDateLabel = midpoint ? formatManifoldDate(midpoint) : '';
   const probability = market ? getCumulativeProbability(market.sortedAnswers, bucketIndex) : 0;
 
