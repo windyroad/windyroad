@@ -2,9 +2,18 @@
 
 AI-generated newsletter drafts produced by the `/wr-newsletter:generate` skill (see `.claude/skills/wr-newsletter/SKILL.md`) and awaiting Tom's editorial review.
 
+## Per-persona structure
+
+Drafts are split by persona since Stage 3 of the LSM plan (April 2026):
+
+- `leader/`: The Shift, targeting Engineering Leaders (J1-J4).
+- `developer/`: Tokens Spent, targeting Developers (J6-J11).
+
+The flat `2026-04-17.md` at the root of this folder is The Shift edition 1, predating the per-persona split. A one-time migration into `leader/` is a follow-up.
+
 ## Format
 
-Filename: `YYYY-MM-DD.md` (ISO date the skill ran).
+Filename: `<persona>/YYYY-MM-DD.md` (ISO date the skill ran).
 
 File structure:
 
@@ -38,7 +47,7 @@ CONTENT_RISK: factual=low|medium|high reputational=... claims=... attribution=..
 
 ## Workflow
 
-1. Skill produces a draft here.
-2. Tom reads, edits, publishes to LinkedIn.
-3. Tom moves the file to `src/newsletters/published/`.
+1. Skill produces a draft under `src/newsletters/drafts/<persona>/YYYY-MM-DD.md`.
+2. Tom reads, edits, publishes to LinkedIn (the persona's dedicated newsletter).
+3. Tom moves the file to `src/newsletters/published/<persona>/`.
 4. Tom runs `/wr-retrospective:run-retro` to capture learnings.

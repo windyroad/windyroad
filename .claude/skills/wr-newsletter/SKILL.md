@@ -1,19 +1,20 @@
 ---
 name: wr-newsletter:generate
-description: Draft the weekly AI Engineering Brief newsletter. Collects news from multiple sources, filters candidates through the Wardley precondition and three-lens criterion, updates the AI Engineering Landscape Wardley map, updates the map analysis, produces a brief that reports on what changed on the map, and runs voice + content-risk + SW-critic review gates with 3-round iteration. Saves the result to src/newsletters/drafts/YYYY-MM-DD.md. Run this weekly when Tom is ready to produce a new issue.
+description: Draft a weekly Windy Road newsletter. Defaults to The Shift (persona=leader, target Engineering Leaders). Pass persona=developer to draft Tokens Spent (target working Developers). Collects news from multiple sources, filters candidates through the Wardley precondition and three-lens criterion, updates the AI Engineering Landscape Wardley map, updates the map analysis, produces a brief that reports on what changed on the map, and runs voice + content-risk + SW-critic review gates with 3-round iteration. Saves the result to src/newsletters/drafts/<persona>/YYYY-MM-DD.md. Run weekly when Tom is ready to produce a new issue.
 allowed-tools: Read, Bash, WebFetch, Glob, Grep, Write, Edit, Skill, Agent, AskUserQuestion
 ---
 
-# AI Engineering Brief generator
+# Windy Road newsletter generator
 
-Weekly pipeline for the AI Engineering Brief. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. Three review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015), and SW-critic (ADR 016).
+Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona is resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Three review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015), and SW-critic (ADR 016).
 
 ## Reference
 
-- Plan: `docs/ai-engineering-brief/PLAN.md`
+- Plan: `docs/ai-engineering-brief/PLAN.md`, `docs/ai-engineering-brief/developer-newsletter-concept.md`
 - ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`
-- Voice: `docs/VOICE-AND-TONE.md`
-- Persona: `docs/JOBS_TO_BE_DONE.md` (Engineering Leader is the target reader)
+- Voice: `docs/VOICE-AND-TONE.md` (base) plus persona addendum from `personas/<persona>.md`
+- Personas: `docs/JOBS_TO_BE_DONE.md` (J1-J4 leader, J5 founder, J6-J11 developer)
+- Persona configs: `.claude/skills/wr-newsletter/personas/leader.md`, `.claude/skills/wr-newsletter/personas/developer.md`
 - Landscape map: `docs/ai-engineering-brief/ai-landscape.owm`, `docs/ai-engineering-brief/ai-landscape.md`
 - Rubrics: `.claude/skills/wr-newsletter/assets/wardley-critic-rubric.md`, `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`
 - Critic agent: `.claude/agents/wr-sw-critic.md`
@@ -23,6 +24,27 @@ Weekly pipeline for the AI Engineering Brief. The brief is structured as comment
 ## Pipeline
 
 Execute in order. Each numbered step is a distinct phase.
+
+### 0. Resolve persona
+
+Parse `$ARGUMENTS` for a `persona=<value>` pair. If absent, default to `persona=leader` (preserves the original behaviour where the skill drafts The Shift).
+
+Valid values: `leader`, `developer`. Reject any other value with: `ERROR: unknown persona '<value>'. Valid personas: leader, developer. See .claude/skills/wr-newsletter/personas/ for available configs.`
+
+Read the resolved persona config: `.claude/skills/wr-newsletter/personas/<persona>.md`. Bind the following variables for the rest of the pipeline:
+
+- `<publication-name>`: e.g. "The Shift" or "Tokens Spent". Used in headline subtitle and Tom-summary.
+- `<target-reader>`: e.g. "Engineering Leader (J1-J4)". Used in Tom-summary.
+- `<source-weighting>`: tier ordering specific to the persona. Used at step 4 to break ties when shortlisting.
+- `<three-lens-weighting>`: e.g. "human > operational > technical" or the inverse. Used at step 4 (lens scoring) and step 10 (item ordering and headline emphasis).
+- `<voice-addendum>`: persona-specific voice notes (vocabulary preferences, evidence-stance language). Combined with the base `docs/VOICE-AND-TONE.md` rules at step 10.
+- `<cta-description>` and `<cta-invitation>`: variants from the persona config; pick one each per edition, rotating week-to-week to avoid repetition.
+- `<welcome-line>`: persona-specific first-edition welcome text.
+- `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant.
+- `<draft-folder>`: e.g. `src/newsletters/drafts/leader/` or `src/newsletters/drafts/developer/`.
+- `<published-folder>`: e.g. `src/newsletters/published/leader/` or `src/newsletters/published/developer/`.
+
+Record the resolved persona in the draft summary and in any commit messages produced from this run.
 
 ### 1. Check the inbox
 
@@ -77,8 +99,9 @@ For every candidate:
 
 1. **Wardley precondition**: can this candidate be anchored to an observable map movement? If no, drop the candidate.
 2. **Three-lens scoring**: for surviving candidates, score yes or no on technical, operational, human. Keep those scoring yes on at least two.
+3. **Persona-weighted ranking**: among candidates that clear the filter, order by `<three-lens-weighting>` from the persona config. Items strong on the persona's primary lens rank above items strong only on secondary lenses. Ties broken by `<source-weighting>` (a primary-tier-source item beats a secondary-tier-source item on the same lens score).
 
-The filtered list is the shortlist. There is no upper cap. Minimum three. If fewer than three candidates clear the filter, note the shortfall in the summary for Tom rather than padding.
+The filtered, persona-weighted list is the shortlist. There is no upper cap. Minimum three. If fewer than three candidates clear the filter, note the shortfall in the summary for Tom rather than padding.
 
 ### 4.5. Per-item interactive voice capture (AskUserQuestion)
 
@@ -159,24 +182,24 @@ Capture the final critic block for inclusion in the saved draft.
 
 ### 10. Draft the brief
 
-Before drafting, determine the edition number: count `src/newsletters/published/YYYY-MM-DD.md` files and add one for the current draft. Write the edition number into the draft frontmatter (`edition: N`) so the critic's check_25 can reason about first-edition vs ongoing framing. For edition 1, include an "About The Shift" welcome line above the voice opener; for edition >=2, drop or freshly reframe the welcome line rather than repeating the first-edition text.
+Before drafting, determine the edition number: count `<published-folder>/*.md` files (resolved at step 0) and add one for the current draft. Write the edition number into the draft frontmatter (`edition: N`) so the critic's check_25 can reason about first-edition vs ongoing framing. For edition 1, include the persona's `<welcome-line>` above the voice opener; for edition >=2, drop or freshly reframe the welcome line rather than repeating the first-edition text.
 
-
-
-Read `docs/VOICE-AND-TONE.md`, `.claude/skills/wr-newsletter/assets/draft-template.md`, and `docs/ai-engineering-brief/ai-landscape.md`.
+Read `docs/VOICE-AND-TONE.md` (base) and the `<voice-addendum>` from the persona config, plus `.claude/skills/wr-newsletter/assets/draft-template.md` and `docs/ai-engineering-brief/ai-landscape.md`.
 
 Produce a draft with:
-- Headline: `# The AI Engineering Brief: Week ending YYYY-MM-DD`
+- Headline: a unique POV-carrying H1 (6-12 words), followed on the next non-blank line by the persona's `<headline-pattern>` subtitle (e.g. `*The Shift, AI engineering, week ending YYYY-MM-DD*` for leader, or `*Tokens Spent, AI engineering for developers, week ending YYYY-MM-DD*` for developer).
 - One-sentence intro naming the theme and the main map movement of the week.
-- One `### Item N` block per shortlisted candidate (minimum 3, no maximum). Each item has: What happened, Map movement, Why it matters to your team, The human angle, Source.
-- Closing CTA: "We help engineering teams navigate this. windyroad.com.au"
+- For developer persona, label each item's evidence stance as **shipped**, **benchmarked**, **demo**, or **not yet** (J9 + J11 paired). For leader persona, the evidence label is optional; business-consequence framing carries primary weight.
+- One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened, Map movement, Why it matters to your team, The human angle, Source.
+- Closing CTA: pick one `<cta-description>` and one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`.
 
 Voice rules (enforced by step 11 voice gate):
-- Team voice ("we"), not "I" (ADR 010).
+- Team voice ("we"), not "I" (ADR 010). The "From Tom" opener is the only place where "I" is permitted.
 - Direct, specific, confident. Name the org, name the artifact, name the date.
 - No em-dashes. Use commas, periods, colons, or parentheses.
 - No hype words.
-- Respect the reader's team (ADR 015). Describe industry baselines and situations, not the reader's team's competence.
+- Respect the reader's team (ADR 015). Describe industry baselines and situations, not the reader's team's competence. This applies to both personas; the developer-audience equivalent is "do not call a developer's tool choice incompetent; criticise via evidence."
+- Apply the persona's `<voice-addendum>` for vocabulary preferences (leader-coded vs developer-coded language).
 
 ### 11. Voice review gate (ADR 012)
 
@@ -235,7 +258,7 @@ Capture the final critic block for the saved draft.
 
 ### 14. Save the draft
 
-Compute today's date in ISO format (`YYYY-MM-DD`). Write `src/newsletters/drafts/YYYY-MM-DD.md` with this exact structure:
+Compute today's date in ISO format (`YYYY-MM-DD`). Write `<draft-folder>/YYYY-MM-DD.md` (resolved at step 0, e.g. `src/newsletters/drafts/leader/YYYY-MM-DD.md` or `src/newsletters/drafts/developer/YYYY-MM-DD.md`) with this exact structure:
 
 ```
 <draft body from step 10, after any step-13 fixes>
@@ -269,6 +292,7 @@ Use the `Write` tool. If a file for today's date already exists, ask Tom whether
 
 Report back in chat:
 
+- Persona resolved (`leader` / `developer`) and publication name (`The Shift` / `Tokens Spent`).
 - Candidate count by source tier (tier-1, tier-2, tier-3, inbox).
 - Source failures, if any.
 - Map-mutation status (mutated / skipped with reason).
@@ -279,8 +303,8 @@ Report back in chat:
 - Newsletter critic verdict and round count. If `REJECTED`, lead the summary with "VERDICT: REJECTED. Do not publish as-is. Rewrite and re-run." and quote the residual weaknesses.
 - Wardley critic verdict and round count.
 - Map delta (one sentence).
-- File path to the draft.
-- Reminder: "When you have published to LinkedIn, move the file to `src/newsletters/published/` and run `/wr-retrospective:run-retro` to capture learnings for next week."
+- File path to the draft (under the persona's `<draft-folder>`).
+- Reminder: "When you have published to LinkedIn, move the file to `<published-folder>` and run `/wr-retrospective:run-retro` to capture learnings for next week."
 
 ## Failure modes
 
