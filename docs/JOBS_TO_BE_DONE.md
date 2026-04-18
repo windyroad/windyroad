@@ -1,6 +1,6 @@
 # Jobs To Be Done
 
-Last reviewed: 2026-04-17
+Last reviewed: 2026-04-18
 
 This document defines the user personas, jobs, and desired outcomes for windyroad.com.au. The `wr-jtbd:agent` reads this file to review UI changes against documented user jobs.
 
@@ -56,7 +56,7 @@ This document defines the user personas, jobs, and desired outcomes for windyroa
 - Technically literate, pattern-match fast, allergic to hype
 - Limited time to keep up: a few hours a week between features, reviews, incidents
 - Vote with their tokens: try tools, abandon tools, recommend tools to their team
-- Active on Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning, r/ExperiencedDevs), technical blogs, YouTube
+- Active on Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning, r/ExperiencedDevs), technical blogs, YouTube, and the Tokens Spent newsletter on LinkedIn
 - Influence adoption upward: what a staff engineer champions often becomes what the Engineering Leader approves
 
 **What frustrates them:**
@@ -285,7 +285,8 @@ The Developer persona is distinct from Technical Founder: a founder ships a comm
 | `/founders` | J5 (Founder Stabilisation) | Technical Founder |
 | `/vibe-code-audit` | J5 (Founder Stabilisation) | Technical Founder |
 | `/blog` | J1 (Awareness), J3 (Evaluation) | Engineering Leader, Technical Founder |
-| The Shift newsletter (LinkedIn, off-site) | J6, J7, J8, J9, J10, J11 | Developer |
+| The Shift newsletter (LinkedIn, off-site) | J1 (Awareness), J2 (Engagement), J3 (Evaluation) | Engineering Leader |
+| Tokens Spent newsletter (LinkedIn, off-site) | J6, J7, J8, J9, J10, J11 | Developer |
 
 ---
 

@@ -34,23 +34,17 @@ Style implications:
 - **CTA:** community and subscribe loop. Examples: "Subscribe for the weekly signal cut", "Send a tool we should pressure-test next week". No consulting booking link in the body.
 - **Title per edition:** unique POV-carrying H1, same rule as The Shift. Publication name and date live in the subtitle.
 
-## Name candidates
+## Name
 
-Final name picked before the first edition. Three strong candidates with trade-offs:
+**Tokens Spent.**
 
-### Signal
+Locked after independent strengths/weaknesses critique across nine candidates (Signal, Tokens Spent, Ship It?, The Patch Notes, Shipping Lane, Mile Markers, Fork in the Road, Roadcraft, The Toolbox). Tokens Spent was the only candidate that carried the publication's POV in the name itself: attention as a finite budget, tokens-vote as the persona-defining developer behaviour. It is also distinct in the AI/dev publication landscape (no major existing publication owns the phrase).
 
-Short, clean, directly names the filter-from-noise POV. Pro: immediately legible; works in headlines ("This week's Signal:"). Con: generic, crowded space. Several newsletters and podcasts use this word, risking blending into the category it is trying to cut through.
+Trade-offs accepted:
+- Headline awkwardness on "This week in Tokens Spent". Workaround: edition titles use the same per-issue POV-carrying H1 convention as The Shift, so the publication name appears in subtitle position, not headline position.
+- Brand-tied alternatives (The Patch Notes, Roadcraft, Mile Markers) rejected. The Patch Notes had the best brand fit (patch-fitness) but heavy collision with existing gaming and infosec "Patch Notes" newsletters reduces SEO discoverability and risks readers parsing "patch" as the leader-serving practice rather than the dev publication.
 
-### Tokens Spent
-
-Ties directly to the Developer persona's tokens-vote behaviour and the upstream-influence rationale. Pro: AI-discoverable ("tokens" is AI-native vocabulary); evocative (what developers actually spend on AI tools, both literally in API budgets and figuratively in attention); distinct. Con: less intuitive at first glance for someone who has not internalised the tokens-vote framing.
-
-### Ship It?
-
-Question-mark POV. Addresses the trust and go-no-go framing directly, with every item answering the implicit "should we ship with this?". Pro: developer-native phrase; punchy; forces a verdict per item. Con: phrasing implies pure pass-fail, which loses the "pilot / watch / skip" nuance J8 Category Timing requires.
-
-Recommendation: **Tokens Spent**, because it carries the most POV of the three, is the most distinct, and ties the publication to the persona-defining behaviour rather than a generic stance. Open to changing if a stronger candidate emerges during Stage 2b naming review.
+Trade-offs preserved as future alternatives if cold-launch metrics show poor recognition: In Production (names shipped-vs-demo stance directly), Pressure Test (echoes the CTA copy and skeptical-default POV).
 
 ## Skill mechanism
 
