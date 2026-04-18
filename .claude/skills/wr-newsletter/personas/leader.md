@@ -16,7 +16,9 @@ Engineering Leaders. CTOs, Heads of Engineering, VPs of Engineering at mid-to-la
 
 Tier-1 (Anthropic, OpenAI, DeepMind) carry the bulk of the analytical weight. Major-vendor announcements drive map updates and the week's theme. Tier-2 (Hacker News AI, Simon Willison, Thoughtworks Radar, ArXiv) provide depth and counter-evidence. Tier-3 (regulatory: OAIC, EU AI Act, NIST, FTC, OECD) is high-priority for this audience. Reddit signals are background noise for this persona.
 
-Default tier-1 priority: Anthropic = OpenAI = DeepMind > HN > Simon Willison > Thoughtworks Radar > ArXiv > Reddit.
+Default tier-1 priority: Anthropic = OpenAI = DeepMind > HN > Simon Willison = AI Daily Brief > Thoughtworks Radar > ArXiv > Reddit.
+
+AI Daily Brief sits high for leaders because it reliably surfaces societal, policy, and personnel stories (for example: attacks on AI-company executives, regulatory developments, major hires) that tier-1 vendor feeds never cover. Those are J1-relevant context for an Engineering Leader audience.
 
 ## Three-lens weighting
 

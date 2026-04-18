@@ -18,7 +18,9 @@ The default verdict for any item is **skip**. Items must earn their slot.
 
 Tier-2 (Hacker News, Reddit r/LocalLLaMA, Reddit r/MachineLearning, Simon Willison, ArXiv applied) carries the bulk of the analytical weight for this audience. Engineer-written blogs and named-engineer tool reviews land harder than vendor announcements. Tier-1 (Anthropic, OpenAI, DeepMind) is treated as one set of inputs among many, not the dominant frame; vendor copy is examined skeptically against shipped-vs-demo evidence. Tier-3 (regulatory) is generally low-priority for this audience unless the regulation directly affects what developers can ship.
 
-Default priority: HN AI frontpage = HN AI /newest = Simon Willison > r/LocalLLaMA > r/MachineLearning > ArXiv applied > Anthropic = OpenAI = DeepMind > Thoughtworks Radar > regulatory tier-3.
+Default priority: HN AI frontpage = HN AI /newest = Simon Willison = AI Daily Brief > r/LocalLLaMA > r/MachineLearning > ArXiv applied > Anthropic = OpenAI = DeepMind > Thoughtworks Radar > regulatory tier-3.
+
+AI Daily Brief sits at the top of tier-2 for developers because it reliably surfaces societal, policy, and personnel stories (for example: attacks on AI-company executives, major AI-team departures, public-reaction events) that firehose sources like HN and Reddit bury under volume. Developer readers care because those stories shift category timing (J8) and trust signals (J11) even when they are not pure technical news.
 
 ## Three-lens weighting
 
