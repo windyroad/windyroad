@@ -132,10 +132,36 @@ Does at least one of the opener's claims thread into two or more items' framing 
 
 The draft frontmatter should include an `edition: N` field so the critic can reason about this check. For the first edition (N=1), a welcome line above the voice opener is required (example: "About The Shift: each issue covers what moved in AI engineering this week..."). UNMET for edition 1 if the welcome line is absent or if the voice opener leads with a bold prediction before orienting new subscribers. For subsequent editions (N>=2), a welcome line is optional but should not repeat the first-edition text verbatim; fresh framing or omission both MET. If the `edition:` frontmatter is missing, default to treating the draft as ongoing and score check_25 as PARTIAL with a note that edition numbering should be added.
 
+### check_26: Quantification of capability claims
+
+Every item that claims a capability shift (model improved, throughput increased, accuracy dropped, cost changed, adopter count grew) cites a concrete number or explicitly labels itself a qualitative observation in the evidence stance. "Opus 4.7 with stronger coding, agent, vision, and multi-step performance" is UNMET because "stronger" has no quantification; the fix is either to quote the benchmark delta or to widen the evidence stance to "qualitative, no published numbers" so the reader knows no number backs the claim. Trend items that describe inherently non-quantitative shifts (public-reaction patterns, organisational behaviour) are MET when the non-quantitative framing is named. This check scores the evidence side only and does not duplicate check_4 (which scores operational consequence).
+
+### check_27: First-person evidence verifiability
+
+Applies only when the body names a specific tool, codebase, or experiment from the author's own practice (for example "our JTBD plugin", "the Windy Road wr-architect agent", "we ran this on our own codebase"). The item must link the artifact, quote a specific observation from the practice, or remove the first-person claim. Generic anonymised perspective ("a CTO we spoke with") is scored under check_22, not here. check_27 triggers only when a named first-person artifact is offered as evidence. UNMET when a named first-person artifact appears without a link or a specific quoted observation.
+
+### check_28: Thesis diversity across items
+
+Count items that express the same underlying thesis. PARTIAL when two items share a thesis (for example two items both carrying "do not over-commit to this week's shiny tool"); one of them should be re-angled or compressed. UNMET when three or more items share a thesis. The fix is to cut the redundant items, reframe one around its distinct second-order consequence, or move them into "Also worth noting". A shared theme across items is fine and wanted (see check_24); this check triggers on shared thesis (the same load-bearing claim), not on shared theme.
+
+### check_29: At least one actionable recipe per edition
+
+Edition-scoped. At least one item in the edition contains a 3+ step concrete recipe (commands, steps, a framework to apply, a decision procedure) the reader could apply this week. "Run Ollama, pull a Qwen weight, point your existing eval prompts at it, compare outputs" is a recipe. "Treat each as a separate adoption decision" is not. check_29 is stricter than check_13 (which requires a Monday-decision per item) and is edition-scoped rather than item-scoped; do not double-penalise. An item that carries the recipe satisfies check_29 for the edition, and check_13 continues to evaluate Monday-decisions per item independently. UNMET if no item in the edition contains a 3+ step recipe.
+
+### check_30: No deference items
+
+An item that reduces to "another outlet's analysis is the mature read, go read theirs" without adding Windy Road synthesis is UNMET. Pointing to external analysis is fine; the item must still carry a named shift (check_3), an operational why-it-matters (check_4), a human angle (check_5), and at least one specific angle the reader could not get from the cited source alone. A deference item is the failure mode where the item becomes a wrapper around another publication's piece. UNMET when the Windy Road synthesis is absent, or generic enough that removing it would not change the item's meaning.
+
+### check_31: No platitude human angles (refinement of check_5)
+
+The human angle must either (a) name a specific behaviour change (who acts differently, and how), (b) describe a named sociological, psychological, or organisational dynamic beyond a generic "people feel X", or (c) be cut. MET examples: "Cloud inference feels like a vendor promise; local inference feels like a hammer you own" (specific relational feelings named). UNMET examples: "Most of the time the answer is neither" (tautology), "Addressing perceived inequality is the work" (abstract moralising without a dynamic named), "Every wave of process tooling gets sold on the promise that this time the up-front model is right" (generalisation without a named dynamic).
+
+Scoring note: this check is a refinement of check_5. If check_31 is UNMET on an item, check_5 is also UNMET on that item; do not double-count in round-exit arithmetic. The reverse does not hold: a human angle can be specific (check_31 MET) and still fail check_5 for other reasons (absent, off-topic).
+
 ## Round-specific exit criteria
 
-- **Round 1:** score all 25 checks. Report all UNMET and PARTIAL.
-- **Round 2:** score all 25 checks and confirm each round-1 weakness was addressed. A persistent round-1 weakness is `PARTIAL: still unmet from round 1`.
+- **Round 1:** score all 31 checks. Report all UNMET and PARTIAL.
+- **Round 2:** score all 31 checks and confirm each round-1 weakness was addressed. A persistent round-1 weakness is `PARTIAL: still unmet from round 1`.
 - **Round 3:** as round 2. Any remaining UNMET or PARTIAL triggers `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`.
 
 ## Strengths to look for
