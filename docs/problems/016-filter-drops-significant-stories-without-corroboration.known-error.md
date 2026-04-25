@@ -1,10 +1,12 @@
 # Problem 016: wr-newsletter filter step drops significant stories that lack a primary source without attempting corroboration
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-24
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 edition; workaround = manual flag in chat + Google News corroboration)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: M (SKILL.md step 4 filter logic change plus optional cross-source corroboration helper)
-**WSJF**: (16 x 1.0) / 2 = 8.0
+**WSJF**: (16 x 2.0) / 2 = 16.0
+**Re-rated 2026-04-25**: Status auto-transitioned to Known Error; WSJF 8.0 to 16.0 reflects Known Error multiplier.
 
 ## Description
 

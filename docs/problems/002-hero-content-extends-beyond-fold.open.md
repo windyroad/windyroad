@@ -2,7 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-04-14
-**Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
+**Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
+**Effort**: S (CSS adjustment in src/app/page.module.scss; min-height + padding rebalance)
+**WSJF**: (12 x 1.0) / 1 = 12.0
+**Re-rated 2026-04-25**: Likelihood Unlikely (2) to Possible (3). Fold issue visible to most visitors on standard 1080p viewports with no automated fold-fit check; review pass realigns Likelihood with the no-automated-control reality.
 
 ## Description
 

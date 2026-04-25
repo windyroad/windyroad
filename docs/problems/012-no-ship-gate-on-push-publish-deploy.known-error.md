@@ -1,8 +1,12 @@
 # Problem 012: No PreToolUse ship-gate blocks push/publish/deploy when risk is above appetite or CI is red
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-18
-**Priority**: 12 (High). Impact: Significant (4) x Likelihood: Likely (3)
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual Tom-in-the-loop review)
+**Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
+**Effort**: L (multi-file PreToolUse hook + verifier subagent + integration with existing risk-scorer)
+**WSJF**: (12 x 2.0) / 4 = 6.0
+**Re-rated 2026-04-25**: Likelihood label corrected from Likely (3) to Possible (3). 3 in the likelihood ladder is Possible; Likely is 4. Score 12 unchanged.
 
 ## Description
 

@@ -1,8 +1,12 @@
 # Problem 011: Visual artifacts iterated and presented without render-and-verify discipline
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-17
-**Priority**: 6 (Medium-Low). Impact: Moderate (3) x Likelihood: Likely (2)
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; render-and-verify workaround documented in BRIEFING.md)
+**Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2)
+**Effort**: S (add render-and-verify reminder to skills that produce visual output; optional sips wrapper script)
+**WSJF**: (6 x 2.0) / 1 = 12.0
+**Re-rated 2026-04-25**: Likelihood label corrected from Likely (2) to Unlikely (2). 2 in the likelihood ladder is Unlikely; Likely is 4. Score 6 unchanged.
 
 ## Description
 

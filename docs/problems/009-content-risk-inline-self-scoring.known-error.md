@@ -1,8 +1,12 @@
 # Problem 009: Content-risk review is inline self-scoring by the drafter, not a fresh-context subagent
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-17
-**Priority**: 9 (Medium). Impact: Significant (3) x Likelihood: Likely (3)
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed in description; workaround = inline scoring + Tom's external review)
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
+**Effort**: M (new wr-content-risk-scorer agent + new content-risk-rubric.md + ADR amendment + SKILL step 12 update)
+**WSJF**: (9 x 2.0) / 2 = 9.0
+**Re-rated 2026-04-25**: Impact label corrected from Significant (3) to Moderate (3). 3 in the impact ladder is Moderate; Significant is 4. Score 9 unchanged.
 
 ## Description
 

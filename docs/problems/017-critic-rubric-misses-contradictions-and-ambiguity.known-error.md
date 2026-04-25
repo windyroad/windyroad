@@ -1,10 +1,12 @@
 # Problem 017: Newsletter critic rubric does not check for internal contradictions or referential ambiguity
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-24
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 edition; workaround = Tom's external review)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
-**Effort**: L (M → L on 2026-04-24 scope expansion: original two checks (check_32, check_33) grew to seven after Tom's external editorial critique surfaced five additional rubric gaps on the same edition; consolidation keeps the rubric-gap concern in one ticket per the manage-problem "≥ 3 improvements to one output" rule)
-**WSJF**: (16 x 1.0) / 4 = 4.0
+**Effort**: L (M to L on 2026-04-24 scope expansion: original two checks (check_32, check_33) grew to seven after Tom's external editorial critique surfaced five additional rubric gaps on the same edition; consolidation keeps the rubric-gap concern in one ticket per the manage-problem rule on consolidating 3-or-more improvements to one output)
+**WSJF**: (16 x 2.0) / 4 = 8.0
+**Re-rated 2026-04-25**: Status auto-transitioned to Known Error; WSJF 4.0 to 8.0 reflects Known Error multiplier.
 
 ## Description
 

@@ -1,10 +1,12 @@
 # Problem 018: Newsletter publication takes too long on Friday morning; pipeline needs a pre-Friday prep phase
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-24
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 session; workaround = manual mid-week save + resume on Friday)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: M (SKILL.md phase split into prep + finalise, state handoff between sessions, inbox-for-late-week-additions behaviour)
-**WSJF**: (16 x 1.0) / 2 = 8.0
+**WSJF**: (16 x 2.0) / 2 = 16.0
+**Re-rated 2026-04-25**: Status auto-transitioned to Known Error; WSJF 8.0 to 16.0 reflects Known Error multiplier.
 
 ## Description
 

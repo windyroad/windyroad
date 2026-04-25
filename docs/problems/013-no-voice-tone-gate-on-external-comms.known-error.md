@@ -1,8 +1,12 @@
 # Problem 013: External-facing text (GitHub comments, LinkedIn teasers, PR bodies, release notes) has no automated voice/tone gate before posting
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-18
-**Priority**: 9 (Medium). Impact: Significant (3) x Likelihood: Likely (3)
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual voice-tone invocation)
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
+**Effort**: M (PreToolUse hook + voice-tone integration; pair with P012 ship-gate)
+**WSJF**: (9 x 2.0) / 2 = 9.0
+**Re-rated 2026-04-25**: Impact label corrected from Significant (3) to Moderate (3). 3 in the impact ladder is Moderate; Significant is 4. Likelihood label corrected from Likely (3) to Possible (3). Score 9 unchanged.
 
 ## Description
 

@@ -1,10 +1,12 @@
 # Problem 015: wr-newsletter drafter paraphrases per-item AskUserQuestion "Adjust" text into abstract commentary, losing Tom-voice fidelity
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-21
-**Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-19 edition; workaround = manual external review)
+**Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: L (multi-file change: SKILL.md drafter prompt, pipeline plumbing for transcript artifact, optional rubric check). Re-rate on architect review of the fix plan.
-**WSJF**: (12 x 1.0) / 4 = 3.0
+**WSJF**: (16 x 2.0) / 4 = 8.0
+**Re-rated 2026-04-25**: Likelihood Possible (3) to Likely (4). Frequency line in description says "every edition where Tom supplies Adjust text. Likely most editions"; aligns with Likely (4). Status auto-transitioned to Known Error.
 
 ## Description
 

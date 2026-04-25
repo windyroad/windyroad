@@ -4,6 +4,8 @@
 **Reported**: 2026-04-17
 **Transitioned to Known Error**: 2026-04-17 (root cause documented in-session; workaround is external review by Tom)
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Likely (3)
+**Effort**: L (option 2 editorial-sim subagent + new ADR + integration; rubric expansion already shipped to 31 checks)
+**WSJF**: (12 x 2.0) / 4 = 6.0
 
 ## Description
 

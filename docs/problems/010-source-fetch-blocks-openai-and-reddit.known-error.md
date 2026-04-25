@@ -1,8 +1,12 @@
 # Problem 010: Tier-1 and tier-2 source fetches blocked by bot protection (OpenAI) and tool-layer refusal (Reddit)
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-17
-**Priority**: 8 (Medium). Impact: Moderate (4) x Likelihood: Likely (2)
+**Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; OpenAI workaround applied; Reddit gap tracked in P014)
+**Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
+**Effort**: M (OpenAI Google News workaround applied; Reddit Playwright work captured in P014; closure waits on P014)
+**WSJF**: (12 x 2.0) / 2 = 12.0
+**Re-rated 2026-04-25**: Impact label corrected from Moderate (4) to Significant (4). 4 in the impact ladder is Significant; Moderate is 3. Likelihood Likely (2) to Possible (3). Score 8 to 12 reflects every weekly run still missing Reddit signal.
 
 ## Description
 
