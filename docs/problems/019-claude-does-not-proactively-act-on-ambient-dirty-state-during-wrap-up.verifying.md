@@ -1,10 +1,10 @@
 # Problem 019: Claude does not proactively act on ambient dirty state during retrospective and wrap-up
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-26
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
 **Effort**: S
-**WSJF**: 24.0 (Known Error: 12 x 2.0 / 1)
+**WSJF**: 0 (Verification Pending, excluded from dev-work ranking per ADR-022)
 
 ## Description
 
@@ -64,3 +64,11 @@ Write a feedback memory note at `~/.claude/projects/-Users-tomhoward-Projects-wi
 - ~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_act_on_obvious_decisions.md
 - docs/decisions/013-structured-user-interaction-for-governance-decisions.*.md
 - docs/problems/078-assistant-does-not-offer-problem-ticket-on-user-correction.*.md
+
+## Fix Released
+
+- **Release marker**: 2026-04-26 memory-tree write (commit d7b928c brought the ticket to Known Error; this transition records the out-of-tree fix as released).
+- **Artefact**: `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_act_on_ambient_dirty_state_at_wrap_up.md` (new feedback memory note encoding the rule with Why, How to apply, Trigger surface, Decision tree, and Anti-patterns sections), plus the index entry in `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/MEMORY.md`.
+- **Fix summary**: Added a feedback memory note in the user's persistent memory tree directing the assistant to commit or revert ambient dirty state directly at wrap-up, retro, or AFK iteration boundary when the file's nature plus prior preferences make the answer obvious; AskUserQuestion is reserved for genuinely ambiguous cases.
+- **Awaiting user verification**: confirm on the next AFK retro or wrap-up turn that finds dirty state. Expected behaviour: the assistant commits user-authored config drift (e.g. `.claude/settings.json` reorder) or reverts stray output without firing AskUserQuestion. If a wrap-up still surfaces an obvious-default decision via AskUserQuestion, the memory note has not loaded or has not landed; reopen.
+- **Exercise evidence from the releasing session**: none yet (the rule applies to future wrap-up turns, not the releasing turn itself). The retro at the end of this iteration is the first chance to dogfood the rule and may itself be the verification trace if it scans `git status` and acts without consulting.
