@@ -6,12 +6,12 @@ allowed-tools: Read, Bash, WebFetch, Glob, Grep, Write, Edit, Skill, Agent, AskU
 
 # Windy Road newsletter generator
 
-Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Three review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015), and SW-critic (ADR 016). Phase boundaries (ADR 017) split the pipeline so the time-expensive work runs mid-week (prep) and Friday morning is reserved for a tier-1 refresh plus publish (finalise).
+Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Four review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), and editor (ADR 020). Phase boundaries (ADR 017) split the pipeline so the time-expensive work runs mid-week (prep) and Friday morning is reserved for a tier-1 refresh plus publish (finalise).
 
 ## Reference
 
 - Plan: `docs/ai-engineering-brief/PLAN.md`, `docs/ai-engineering-brief/developer-newsletter-concept.md`
-- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`, `017-ai-brief-prep-and-finalise-phases.proposed.md`
+- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`, `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`
 - Voice: `docs/VOICE-AND-TONE.md` (base) plus persona addendum from `personas/<persona>.md`
 - Personas: `docs/JOBS_TO_BE_DONE.md` (J1-J4 leader, J5 founder, J6-J11 developer)
 - Persona configs: `.claude/skills/wr-newsletter/personas/leader.md`, `.claude/skills/wr-newsletter/personas/developer.md`
@@ -27,15 +27,15 @@ The pipeline runs in one of three phases, selected by the `phase` argument at st
 
 | phase     | When to run                          | Steps executed                              | Saves                              |
 |-----------|--------------------------------------|---------------------------------------------|------------------------------------|
-| `prep`    | Mid-week (Mon-Thu)                   | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 16 (as `.prep.md`), 17 | `<draft-folder>/YYYY-MM-DD.prep.md` with `phase: prep` frontmatter |
-| `finalise`| Friday morning                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 12 (re-render image only if hook changed), 13, 14, 15, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`), 17 | `<draft-folder>/YYYY-MM-DD.md` (final) |
-| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/YYYY-MM-DD.md` |
+| `prep`    | Mid-week (Mon-Thu)                   | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md`), 17 | `<draft-folder>/YYYY-MM-DD.prep.md` with `phase: prep` frontmatter |
+| `finalise`| Friday morning                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`), 17 | `<draft-folder>/YYYY-MM-DD.md` (final) |
+| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/YYYY-MM-DD.md` |
 
 Default behaviour when no `phase` argument is present: `phase=full` (preserves the original single-shot run for backward compatibility per ADR 017 line 51).
 
 The "prime" suffix on a step number means the finalise variant of that step. Where the prime variant is materially different (sources fetched, candidates filtered, items captured, sections drafted), the body of the step calls out the difference explicitly.
 
-The critic gates (steps 9, 13, 14, 15) run independently in prep and finalise. ADR 016's 3-round cap is read per-artifact-pass, not per-edition: prep produces `.prep.md` (one artifact pass, up to 3 rounds), finalise produces the final `.md` (a second artifact pass, up to 3 rounds). See ADR 017 lines 39-41.
+The critic gates (steps 9, 13, 14, 15, 15.25) run independently in prep and finalise. ADR 016's 3-round cap is read per-artifact-pass, not per-edition: prep produces `.prep.md` (one artifact pass, up to 3 rounds), finalise produces the final `.md` (a second artifact pass, up to 3 rounds). See ADR 017 lines 39-41.
 
 ## Pipeline
 
@@ -506,6 +506,57 @@ Capture the final critic block for the saved draft.
 
 **Phase variant `15-prime` (phase=finalise only):** runs against the finalise-time draft with a fresh per-artifact-pass budget (up to 3 rounds) under ADR 017 lines 39-41. The prep-time critic block is preserved in the saved draft alongside the finalise-time block (see step 16-prime); both are part of the audit trail. If finalise has no material changes (11-prime was a no-op AND 12-prime carried the image forward AND 13-prime/14-prime passed without edits), the prep-time critic block can be carried forward and 15-prime is a no-op. Default behaviour when in doubt: re-run.
 
+### 15.25. Editor review gate (ADR 020)
+
+Invoke the `wr-newsletter-editor` subagent (ADR 020). The subagent runs in fresh context, plays the role of an experienced LinkedIn newsletter editor, reads the persona's JTBD context, reads the in-progress draft body, and returns the `EDITOR_REVIEW` block in the format pinned by ADR 020 confirmation criterion 1. The three reader-experience axes (would-open, would-read-through, would-forward) and their persona constraints are documented inside the agent file, not in this skill.
+
+**Skip-on-upstream-REJECTED.** If the sw-critic loop at step 15 returned `VERDICT: REJECTED` (round-3 exhausted), skip step 15.25 entirely. The editor is not invoked on an analytically-rejected draft; reviewing reader-experience on a draft that already failed argument-quality is not useful. The skipped step is recorded in the saved file (step 16 save-block) as `<editor block> = "N/A: sw-critic returned REJECTED"`.
+
+```
+Agent subagent_type: wr-newsletter-editor
+prompt: "Review the newsletter draft as an experienced LinkedIn newsletter editor.
+
+artifact_path: <absolute path to the in-progress draft>
+persona: <leader|developer>
+edition_number: <N from step 11>"
+```
+
+Parse the returned block. The agent emits exactly:
+
+```
+EDITOR_REVIEW
+artifact: <artifact_path>
+persona: <leader|developer>
+edition: <N>
+
+WOULD_OPEN: <yes|no|tentative>
+Reason: ...
+
+WOULD_READ_THROUGH: <yes|no|tentative>
+Reason: ...
+
+WOULD_FORWARD: <yes|no|tentative>
+Reason: ...
+
+EDITORIAL_FINDINGS
+- axis: <preamble-density|through-line|item-count-proportionality|opener-authenticity|reader-orientation|other>
+  Passage: "<quoted passage>"
+  Issue: <one sentence>
+  Suggested fix: <concrete direction, not a rewrite>
+- axis: ...
+
+EDITOR_VERDICT: <PASS|NEEDS_EDITORIAL_REVISION>
+END_EDITOR_REVIEW
+```
+
+If `EDITOR_VERDICT: NEEDS_EDITORIAL_REVISION`: save the draft with the block, surface the verdict prominently in the Tom-summary (lead with the failing axes and Suggested fixes), and proceed to step 15.5 (LinkedIn post still drafts so Tom has both surfaces in the saved file). The editor does not auto-rewrite; Tom decides whether to revise the brief or override the verdict (per ADR 020 Decision Outcome).
+
+If `EDITOR_VERDICT: PASS`: proceed to step 15.5. Any `tentative` axis flagged with findings still emits `NEEDS_EDITORIAL_REVISION` per the agent's mechanical-verdict rule; a true PASS means three `yes` answers (or three answers with no findings).
+
+If the agent returns `EDITOR_ERROR: upstream gate returned REJECTED; editor will not run` despite the skip-on-REJECTED rule above, treat it as a skill-logic bug. Do not retry; surface the inconsistency in the Tom-summary so the gate orchestration can be fixed.
+
+**Phase variant `15.25-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same persona; the edition number is carried from prep frontmatter (it does not change between phases). A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the reader-experience surface (longer read, weaker through-line, item-count overflow). If finalise has no material changes (11-prime was a no-op AND 15-prime carried the prep critic block forward), the prep-time editor block can be carried forward and 15.25-prime is a no-op. Default behaviour when in doubt: re-run.
+
 ### 15.5. Draft the LinkedIn post
 
 Skip this step when `phase=prep`. The LinkedIn post is the publication-day artifact; drafting it during prep would burn tokens on a draft that finalise will likely re-do once late-breaking news lands.
@@ -574,6 +625,10 @@ Then the draft body, then the review-block separator, then this exact structure:
 ## Critic Review: Newsletter
 
 <critic block from step 15, or "N/A: content-risk returned REJECTED" if step 15 was skipped>
+
+## Editor Review
+
+<editor block from step 15.25, or "N/A: sw-critic returned REJECTED" if step 15.25 was skipped>
 
 ## Critic Review: Wardley Artifacts
 
@@ -646,6 +701,14 @@ The finalise-time output replaces the prep-time `.prep.md`. Two operations:
 
    <critic block carried from .prep.md>
 
+   ## Editor Review (finalise)
+
+   <editor block from step 15.25-prime, or "N/A: sw-critic returned REJECTED" if step 15.25-prime was skipped, or "N/A: carried from prep (no material change)" if 15.25-prime was a no-op>
+
+   ## Editor Review (prep)
+
+   <editor block carried from .prep.md>
+
    ## Critic Review: Wardley Artifacts
 
    <critic block from step 9-prime if Restructure ran, else carried from .prep.md>
@@ -674,7 +737,7 @@ cover-image: <path>
 ---
 ```
 
-Body and review sections follow the existing structure: draft body, separator, Voice Review, Content Risk Review, Critic Review: Newsletter, Critic Review: Wardley Artifacts, Map Delta, plus a `## LinkedIn Post` section after the body, immediately followed by a `## Voice Review (LinkedIn post)` section that captures the step-15.5 voice gate verdict (P013).
+Body and review sections follow the existing structure: draft body, separator, Voice Review, Content Risk Review, Critic Review: Newsletter, Editor Review (from step 15.25; or `N/A: sw-critic returned REJECTED` if skipped), Critic Review: Wardley Artifacts, Map Delta, plus a `## LinkedIn Post` section after the body, immediately followed by a `## Voice Review (LinkedIn post)` section that captures the step-15.5 voice gate verdict (P013).
 
 ### 17. Summarise for Tom
 
@@ -692,6 +755,7 @@ Report back in chat:
 - Voice review verdict (per phase if finalise).
 - Content-risk block with verdict (per phase if finalise).
 - Newsletter critic verdict and round count (per phase if finalise). If `REJECTED`, lead the summary with "VERDICT: REJECTED. Do not publish as-is. Rewrite and re-run." and quote the residual weaknesses.
+- Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, lead the summary with the failing reader-experience axes (would-open / would-read-through / would-forward) and the Suggested fixes from the EDITORIAL_FINDINGS list. If skipped (sw-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
 - Wardley critic verdict and round count.
 - Map delta (one sentence; for finalise, include any re-mutation delta).
 - Cover image: path, plus whether finalise re-rendered or carried prep image forward.
