@@ -1,11 +1,12 @@
 # Problem 018: Newsletter publication takes too long on Friday morning; pipeline needs a pre-Friday prep phase
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-24
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 session; workaround = manual mid-week save + resume on Friday)
+**Transitioned to Verification Pending**: 2026-04-25 (fix released: phase=prep, phase=finalise, phase=full added to wr-newsletter SKILL.md per ADR 017; awaiting back-test on next edition)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: M (SKILL.md phase split into prep + finalise, state handoff between sessions, inbox-for-late-week-additions behaviour)
-**WSJF**: (16 x 2.0) / 2 = 16.0
+**WSJF**: (16 x 2.0) / 2 = 16.0 (reduced to 0 effective per ADR-022 once Verification Pending; see README backlog)
 **Re-rated 2026-04-25**: Status auto-transitioned to Known Error; WSJF 8.0 to 16.0 reflects Known Error multiplier.
 
 ## Description
@@ -76,12 +77,12 @@ Validation: back-test by running `phase=prep` Thursday and `phase=finalise` Frid
 ### Investigation Tasks
 
 - [ ] Confirm with Tom that the prep/finalise split matches his preferred cadence (Tuesday or Wednesday prep, Friday finalise). A single prep pass late in the week is different from rolling prep throughout the week.
-- [ ] Design the `.prep.md` frontmatter schema (phase, prep-date, prep-source-cutoff, source-failures, map-mutation-status)
-- [ ] Decide the finalise-phase behaviour when a tier-1 story lands Thursday evening or Friday morning that is map-moving (minor-addition-via-Also-worth-noting vs major-restructure-of-draft branch)
-- [ ] Update SKILL.md step 0 to parse the `phase` argument and branch accordingly
-- [ ] Update SKILL.md steps 1-15 to tag which belong to prep vs finalise
-- [ ] Update SKILL.md step 16 to save as `.prep.md` when in prep phase
-- [ ] Add a new step 16b (finalise phase) covering the tier-1 refresh, inbox diff, and late-story handling
+- [x] Design the `.prep.md` frontmatter schema (phase, prep-date, prep-source-cutoff, source-failures, map-mutation-status) (released 2026-04-25; schema documented in SKILL.md step 16 phase=prep block and ADR 017 line 46)
+- [x] Decide the finalise-phase behaviour when a tier-1 story lands Thursday evening or Friday morning that is map-moving (released 2026-04-25; SKILL.md step 5-prime documents the AskUserQuestion branch with three options: Also-worth-noting, Restructure)
+- [x] Update SKILL.md step 0 to parse the `phase` argument and branch accordingly (released 2026-04-25)
+- [x] Update SKILL.md steps 1-15 to tag which belong to prep vs finalise (released 2026-04-25; phase-step matrix table added near top of SKILL.md plus per-step `*-prime` variants)
+- [x] Update SKILL.md step 16 to save as `.prep.md` when in prep phase (released 2026-04-25; frontmatter schema includes phase, prep-date, prep-source-cutoff, source-failures, map-mutation-status per ADR 017 line 46)
+- [x] Add finalise-phase steps covering tier-1 refresh, inbox diff, and late-story handling (released 2026-04-25; implemented as step 0.5 load-prep-state + step-prime variants 1-prime, 2-prime, 3-prime, 4-prime, 4b-prime, 5-prime late-story branch, 9-prime, 9.5-prime, 10-prime, 11-prime, 12-prime image re-render gate, 13-prime, 14-prime, 15-prime, plus step 15.5 LinkedIn post and step 16 phase-finalise rename .prep.md to .md)
 - [ ] Run `/wr-newsletter phase=prep` against the 2026-05-01 edition mid-week and `/wr-newsletter phase=finalise` the following Friday as validation
 - [ ] Measure Friday-morning session duration before and after
 
@@ -98,3 +99,29 @@ Validation: back-test by running `phase=prep` Thursday and `phase=finalise` Frid
 - ADR 011 (AI brief orchestration via Claude Code; the phase split is an extension of this orchestration model, probably worth an amendment ADR documenting the prep/finalise decision)
 - ADR 014 (Wardley mapping as strategic lens; map-mutation is a natural prep-phase step, with only marginal updates possible in finalise)
 - Memory: `feedback_each_review_is_separate_subagent.md` (every review is a fresh subagent call; prep and finalise critic passes are separate subagent invocations)
+
+## Verification
+
+Released 2026-04-25 in `.claude/skills/wr-newsletter/SKILL.md` per ADR 017.
+
+### Verification criteria (from ADR 017 Confirmation section)
+
+- [ ] `/wr-newsletter phase=prep` and `/wr-newsletter phase=finalise` both parse without error at SKILL.md step 0; default behaviour without the argument is the existing single-shot run.
+- [ ] A `.prep.md` draft created on a Tuesday or Wednesday resumes cleanly on the following Friday: finalise reads the frontmatter, re-fetches only tier-1, picks up new inbox items, re-runs gates only on changed material, and produces the final published artifact.
+- [ ] Friday-morning session duration drops below one hour for at least three of the next four editions where prep ran.
+- [ ] Inbox additions that land between prep and finalise are surfaced via per-item interactive capture during finalise; none are silently dropped.
+- [ ] The image is generated during prep when the hook stabilises; finalise only re-renders if the hook changes.
+- [ ] A late-breaking tier-1 story between prep and finalise triggers a documented branch (Also-worth-noting versus Restructure) via AskUserQuestion, not silent.
+
+### Verification plan
+
+Back-test on the next edition (target 2026-05-01):
+
+1. Run `/wr-newsletter phase=prep` on Tuesday or Wednesday 2026-04-29 or 2026-04-30. Confirm `.prep.md` lands at `src/newsletters/drafts/leader/2026-05-01.prep.md` with full frontmatter.
+2. Drop a test item into `src/newsletters/inbox/` between phases.
+3. Run `/wr-newsletter phase=finalise` Friday morning 2026-05-01. Confirm: tier-1 refresh runs (Anthropic, OpenAI, DeepMind), the test inbox item is surfaced via per-item capture, gates re-run, image carries forward unless headline changed, LinkedIn post drafts, file renames to `2026-05-01.md`.
+4. Compare Friday session duration against the 2026-04-24 baseline (multi-hour). Target: under one hour.
+
+### Closure trigger
+
+Close on the first edition that ships under one hour Friday-morning where prep ran successfully. If the back-test surfaces gaps (frontmatter parse failure, .prep.md not located, gate regression, image-rerender misfire), reopen as a fresh known-error and link from this ticket.

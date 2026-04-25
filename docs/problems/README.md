@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-04-25 (P016 verification pending - filter corroboration fix released in wr-newsletter SKILL.md step 4b and step 10).
+> Last reviewed: 2026-04-25 (P018 verification pending - prep+finalise phase split released in wr-newsletter SKILL.md per ADR 017; P016 verification pending - filter corroboration fix released in step 4b and step 10).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,7 +10,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID | Title | Severity | Status | Effort |
 |------|-----|-------|----------|--------|--------|
 | 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Medium) | Known Error | S |
-| 16.0 | P018 | Newsletter publication time pressure on Friday | 16 (High) | Known Error | M |
 | 12.0 | P002 | Hero content extends beyond the fold | 12 (High) | Open | S |
 | 12.0 | P010 | Source fetch blocks OpenAI and Reddit | 12 (High) | Known Error | M |
 | 12.0 | P011 | Visual artifacts shipped without render-verify | 6 (Medium) | Known Error | S |
@@ -29,7 +28,8 @@ Fix released, awaiting user verification. Ranked by release age, oldest first pe
 
 | ID | Title | Released | Fix summary | Likely verified? |
 |----|-------|----------|-------------|------------------|
-| P016 | Filter drops significant stories without corroboration | 2026-04-25 (this commit) | Added step 4b corroboration sub-step (Google News RSS) and step 10 weak-attribution escalation to wr-newsletter SKILL.md | no (0 days) |
+| P016 | Filter drops significant stories without corroboration | 2026-04-25 | Added step 4b corroboration sub-step (Google News RSS) and step 10 weak-attribution escalation to wr-newsletter SKILL.md | no (0 days) |
+| P018 | Newsletter publication time pressure on Friday | 2026-04-25 (this commit) | Added phase=prep, phase=finalise, phase=full to wr-newsletter SKILL.md with .prep.md state handoff per ADR 017 | no (0 days) |
 
 ## Closed
 
@@ -46,4 +46,4 @@ Closed tickets are listed for audit but excluded from the active backlog:
 - **P010 and P014**: cover the same root cause (OpenAI bot protection + Reddit tool-layer block). P010 tracks the original gap with workarounds applied; P014 captures the Playwright implementation work. P010 may close when P014 ships.
 - **P008, P015, P017**: form the substance-gap series. P008 covers rubric expansion (already shipped to 31 checks); P015 covers drafter-fidelity to capture transcript; P017 covers internal contradictions and referential ambiguity. All three driven by Tom's external editorial review surfacing categories the structural rubric cannot reach in isolation.
 - **P012 and P013**: pair on the ship-gate hook surface. P012 is the broader risk-and-CI ship-gate; P013 is the voice-tone extension over external-facing text.
-- **P016 and P018**: form the Friday-pressure cluster. P016 (verification pending as of 2026-04-25) fixes filter logic that drops significant stories; P018 splits the pipeline into prep + finalise phases to reduce Friday concentration. Verification of P016 fires on the next `/wr-newsletter` run when an aggregator-only candidate is processed.
+- **P016 and P018**: form the Friday-pressure cluster. P016 (verification pending as of 2026-04-25) fixes filter logic that drops significant stories. P018 (verification pending as of 2026-04-25) splits the pipeline into prep + finalise phases per ADR 017 to reduce Friday concentration. Verification of P016 fires on the next `/wr-newsletter` run when an aggregator-only candidate is processed; verification of P018 fires on the first edition where prep runs mid-week and finalise ships Friday under one hour.
