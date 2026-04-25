@@ -3,7 +3,9 @@
     "allow": [
       "*",
       "Bash",
-      "Edit"
+      "Edit",
+      "Edit(.claude/**)",
+      "Write(.claude/**)"
     ]
   },
   "hooks": {
