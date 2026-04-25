@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-04-26 (P019-P029 opened; pre-loop AFK setup pass captured 11 pipeline-instability and operational-gap signals from the prior 11-iteration AFK retrospective: P019 ambient-dirty-state proactivity, P020 dependency-update cadence, P021 architect-mark-reviewed strict-verdict parser, P022 architect-refresh-hash narrow scope, P023 architect-gate drift-recovery missing, P024 .claude/** Edit/Write permission denials in AFK, P025 no-em-dash.sh missing Bash-path coverage, P026 dry-aged-deps no AFK-bypass, P027 work-problems Step 5 doesn't handle is_error:true, P028 risk-scorer 30-min TTL expires mid-turn, P029 BRIEFING.md retro edits orphaned across iterations).
+> Last reviewed: 2026-04-26 (P026 known error and fix landed: pre-emptive `dry-aged-deps --update --yes` in `scripts/push-watch.sh` per new ADR 021; AFK orchestrator no longer halts on auto-resolvable stale-deps states; awaiting user verification on next AFK run that touches a stale-deps state. Prior pass on the same date opened P019-P029 from the prior 11-iteration AFK retrospective: P019 ambient-dirty-state proactivity, P020 dependency-update cadence, P021 architect-mark-reviewed strict-verdict parser, P022 architect-refresh-hash narrow scope, P023 architect-gate drift-recovery missing, P024 .claude/** Edit/Write permission denials in AFK, P025 no-em-dash.sh missing Bash-path coverage, P026 dry-aged-deps no AFK-bypass, P027 work-problems Step 5 doesn't handle is_error:true, P028 risk-scorer 30-min TTL expires mid-turn, P029 BRIEFING.md retro edits orphaned across iterations).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,9 +9,9 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort |
 |------|-----|-------|----------|--------|--------|
+| 32.0 | P026 | dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop | 16 (High) | Known Error | S |
 | 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Medium) | Known Error | S |
 | 16.0 | P021 | architect-mark-reviewed strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL | 16 (High) | Open | S |
-| 16.0 | P026 | dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop | 16 (High) | Open | S |
 | 12.0 | P002 | Hero content extends beyond the fold | 12 (High) | Known Error | S |
 | 12.0 | P019 | Claude does not proactively act on ambient dirty state during retrospective and wrap-up | 12 (Significant) | Open | S |
 | 12.0 | P020 | No dependency update cadence; AFK loop halts on stale-dep gate | 12 (Significant) | Open | S |
