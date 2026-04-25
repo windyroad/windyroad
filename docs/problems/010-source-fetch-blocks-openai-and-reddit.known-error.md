@@ -3,10 +3,10 @@
 **Status**: Known Error
 **Reported**: 2026-04-17
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; OpenAI workaround applied; Reddit gap tracked in P014)
-**Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
-**Effort**: M (OpenAI Google News workaround applied; Reddit Playwright work captured in P014; closure waits on P014)
-**WSJF**: (12 x 2.0) / 2 = 12.0
-**Re-rated 2026-04-25**: Impact label corrected from Moderate (4) to Significant (4). 4 in the impact ladder is Significant; Moderate is 3. Likelihood Likely (2) to Possible (3). Score 8 to 12 reflects every weekly run still missing Reddit signal.
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
+**Effort**: M (OpenAI Google News workaround landed in SKILL.md 2026-04-25; Reddit Playwright work captured in P014; closure waits on P014)
+**WSJF**: (9 x 2.0) / 2 = 9.0
+**Re-rated 2026-04-25 (post-fix)**: Impact narrowed Significant (4) to Moderate (3) after OpenAI Google News RSS workaround landed in SKILL.md step 2. Tier-1 OpenAI coverage now flows every run; the residual gap is Reddit (developer persona's tier-2), which mostly affects Tokens Spent (zero subscribers as of 2026-04-25) until P014 ships. Likelihood unchanged at Possible (3) (Reddit miss recurs every weekly run). Score 12 to 9 reflects the OpenAI fix; full closure still gated on P014.
 
 ## Description
 
@@ -25,9 +25,11 @@ OpenAI has a workable bypass (Google News RSS scoped `site:openai.com`). Reddit 
 
 ## Workaround
 
-**OpenAI**: swap to `https://news.google.com/rss/search?q=site:openai.com&hl=en-US&gl=US` as the tier-1 Anthropic-peer source. Update SKILL.md step 2 tier-1 list with the Google News URL and a note that the direct URL is bot-blocked.
+**OpenAI (applied 2026-04-25)**: SKILL.md step 2 tier-1 swapped from `https://openai.com/news/` to `https://news.google.com/rss/search?q=site:openai.com&hl=en-US&gl=US&ceid=US:en`. The Google News RSS aggregates openai.com syndications and is not bot-protected. Extraction prompt updated to reflect the aggregator format; downstream steps follow the Google News redirect to surface the canonical openai.com URL where present. The `.claude/skills/wr-newsletter/SKILL.md` step 2-prime path inherits the swap because it references tier-1 by name only (no separate URL list).
 
-**Reddit**: no workable workaround via WebFetch. Queued follow-up is a Playwright helper (`scripts/fetch-reddit.mjs`) that launches headless Chromium out-of-band, writes JSON to `tmp/`, and the skill reads the file. Playwright is already a devDependency per PLAN.md. Until the helper is written, Reddit feeds stay in `source_failures` every run.
+**Reddit (still open, tracked in P014)**: no workable workaround via WebFetch. SKILL.md now annotates the Reddit tier-2 entries as "Known source gap (P014)" and defaults them to `source_failures` every run. The entries are kept (not deleted) so the canonical config is in place for the P014 Playwright helper to consume once shipped. Until P014 ships, Reddit feeds stay in `source_failures` every run.
+
+**Other blocked sources documented in SKILL.md (2026-04-25)**: US FTC press releases (403, same Cloudflare-class as OpenAI) and OECD AI news (404, URL drift) are noted in the SKILL.md step 2 footer with the recommended fallback pattern: Google News RSS scoped to the site domain for bot-protection-class blocks; defer to P014 helper for tool-layer-refusal-class blocks.
 
 ## Impact Assessment
 
@@ -63,11 +65,11 @@ OpenAI has a workable bypass (Google News RSS scoped `site:openai.com`). Reddit 
 
 ### Investigation Tasks
 
-- [ ] Update SKILL.md step 2 with the OpenAI Google News workaround immediately
-- [ ] Write `scripts/fetch-reddit.mjs` Playwright helper as a follow-up commit
-- [ ] Update SKILL.md step 2 to invoke the helper once written
-- [ ] Test whether the helper works reliably across sessions (headless Chromium + Cloudflare interactions)
-- [ ] Consider other blocked sources surfaced during the first run (US FTC returned 403, OECD returned 404) and apply the same fix pattern
+- [x] Update SKILL.md step 2 with the OpenAI Google News workaround immediately (landed 2026-04-25; tier-1 OpenAI entry swapped, step 2-prime inherits via name-only reference)
+- [ ] Write `scripts/fetch-reddit.mjs` Playwright helper as a follow-up commit (deferred to P014; SKILL.md now annotates Reddit entries as "Known source gap (P014)" so the gap is visible rather than silent)
+- [ ] Update SKILL.md step 2 to invoke the helper once written (deferred to P014)
+- [ ] Test whether the helper works reliably across sessions (headless Chromium + Cloudflare interactions) (deferred to P014)
+- [x] Consider other blocked sources surfaced during the first run (US FTC returned 403, OECD returned 404) and apply the same fix pattern (documented in SKILL.md step 2 footer 2026-04-25 with the bot-protection-vs-tool-layer-refusal pattern; concrete URL swaps deferred until those failures recur on a non-tier-3 source or someone has bandwidth to apply the FTC/OECD-specific Google News queries)
 
 ## Related
 
