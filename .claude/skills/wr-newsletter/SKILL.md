@@ -470,6 +470,17 @@ For `phase=finalise` and `phase=full`, draft a LinkedIn post that:
 
 The LinkedIn post carries the cover image from step 12/12-prime as its hero image; alt text from step 12 is reused.
 
+**Voice review gate on the LinkedIn post (P013).** Before saving the post inline in the draft (step 16), run a voice review on the LinkedIn post text the same way step 13 runs on the brief body. The teaser is an external-facing surface; ADR 012 confirmation criterion 1 ("every AI-generated draft artifact has a Review results section showing voice and risk verdicts") applies to the LinkedIn post, not just the brief body. The 2026-04-17 first-edition session caught a reader-respect violation in the teaser via manual review; this gate makes the check automatic.
+
+```
+Agent subagent_type: wr-voice-tone:agent
+prompt: "Review the following LinkedIn post for The Shift / Tokens Spent against docs/VOICE-AND-TONE.md. Pay particular attention to em-dashes, word list, hype words, team voice (ADR 010), and the 'Respectful of the reader's team' clause (ADR 015). The audience is LinkedIn subscribers reading a one-screen teaser. Return PASS or FAIL plus specific findings.
+
+<paste the full LinkedIn post text here>"
+```
+
+If FAIL: fix the flagged passages in the LinkedIn post text and re-run. Do not proceed to step 16 with a voice-failing post. Capture the final voice review block; it is saved alongside the brief-body voice block at step 16 (see save-block layout: a `## Voice Review (LinkedIn post)` section sits adjacent to the existing `## Voice Review` / `## Voice Review (finalise)` block).
+
 Save the LinkedIn post inline in the saved draft (see step 16) under a `## LinkedIn Post` heading so it travels with the brief. Tom edits and posts manually per ADR 013.
 
 ### 16. Save the draft
@@ -555,6 +566,10 @@ The finalise-time output replaces the prep-time `.prep.md`. Two operations:
 
    <LinkedIn post from step 15.5>
 
+   ## Voice Review (LinkedIn post)
+
+   <voice review block from step 15.5's LinkedIn-post voice gate (P013)>
+
    ---
 
    ## Voice Review (finalise)
@@ -609,7 +624,7 @@ cover-image: <path>
 ---
 ```
 
-Body and review sections follow the existing structure: draft body, separator, Voice Review, Content Risk Review, Critic Review: Newsletter, Critic Review: Wardley Artifacts, Map Delta, plus a `## LinkedIn Post` section after the body.
+Body and review sections follow the existing structure: draft body, separator, Voice Review, Content Risk Review, Critic Review: Newsletter, Critic Review: Wardley Artifacts, Map Delta, plus a `## LinkedIn Post` section after the body, immediately followed by a `## Voice Review (LinkedIn post)` section that captures the step-15.5 voice gate verdict (P013).
 
 ### 17. Summarise for Tom
 

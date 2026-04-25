@@ -1,8 +1,9 @@
 # Problem 013: External-facing text (GitHub comments, LinkedIn teasers, PR bodies, release notes) has no automated voice/tone gate before posting
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-18
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual voice-tone invocation)
+**Transitioned to Verification Pending**: 2026-04-25 (Investigation Tasks 1 + 3 shipped via SKILL.md step 15.5 voice gate; Tasks 2 + 4 deferred to P012 ship-gate hook)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
 **Effort**: M (PreToolUse hook + voice-tone integration; pair with P012 ship-gate)
 **WSJF**: (9 x 2.0) / 2 = 9.0
@@ -54,10 +55,21 @@ Related but separate: the `wr-voice-tone:agent` should be enhanced with a "scan-
 
 ### Investigation Tasks
 
-- [ ] Add a step to `/wr-newsletter` SKILL.md that runs voice on the teaser before presenting (should have happened in the 2026-04-17 session by default)
-- [ ] Design a PreToolUse hook that intercepts `gh issue comment`, `gh pr create`, `gh release create`, extracts the body text, and runs voice review before allowing the command
-- [ ] Decide whether to enhance `wr-voice-tone:agent` with a scan-text mode or add a dedicated thin wrapper
-- [ ] Once hook is in place, test against recent outbound comms (GitHub issues, PR bodies) to confirm it catches AI-tells
+- [x] **Done (2026-04-25)**: Added a voice gate to `.claude/skills/wr-newsletter/SKILL.md` step 15.5 (Draft the LinkedIn post). The gate mirrors step 13's pattern: invokes `wr-voice-tone:agent` on the LinkedIn post text, FAIL means fix and re-run until PASS. The captured voice block is saved into the draft alongside the brief-body voice block under a `## Voice Review (LinkedIn post)` section (step 16 save-block layout updated for both phase=finalise and phase=full).
+- [ ] **Deferred to P012**: PreToolUse hook intercepting `gh issue comment`, `gh pr create`, `gh release create`, `npm publish`. This is P012's ship-gate scope. The hook will extract the body payload from each command, pass to `wr-voice-tone:agent`, and block on FAIL. Picks up automatically when P012 ships.
+- [x] **Done (2026-04-25, decision)**: The upstream `wr-voice-tone:agent` already accepts pasted text in the agent prompt. The `wr-newsletter` SKILL.md has used this pattern since 2026-04-17 (step 13 for the brief body, step 14 for the content-risk reviewer, and now step 15.5 for the LinkedIn post). The agent definition lives in an external marketplace plugin (`~/.claude/plugins/marketplaces/windyroad/packages/voice-tone/agents/agent.md`); modifying the upstream surface from this project is structurally awkward and unnecessary because the existing prompt-paste pattern already satisfies the "scan-this-text" use case. No new wrapper agent in this repo. Architect review confirmed this is defensible (no new ADR needed; ADR 011 reuse principle covers it).
+- [ ] **Deferred to P012**: Validation against recent outbound comms (GitHub issues, PR bodies). Live exercise after P012's hook ships, since the hook is the surface that handles those CLI surfaces.
+
+## Fix Released
+
+**2026-04-25 (iter 8 of AFK loop)**: Investigation Tasks 1 and 3 shipped via SKILL.md edit.
+
+**Verification path**:
+
+- The teaser-voice-gate part exercises on the next `/wr-newsletter phase=finalise` or `phase=full` run. Verification = the saved draft contains a `## Voice Review (LinkedIn post)` section with a captured voice agent verdict.
+- The hook part remains pending P012's ship-gate landing. Once P012 ships the PreToolUse infrastructure, the same voice agent is wired into `gh issue comment` / `gh pr create` / `gh release create` / `npm publish` per the strategy in this ticket's Fix Strategy section.
+
+**Out-of-scope-for-this-ticket parts pending P012**: Investigation Tasks 2 and 4. These are bundled with the ship-gate hook surface area; addressing them piecemeal here would just duplicate work P012 will do.
 
 ## Related
 
