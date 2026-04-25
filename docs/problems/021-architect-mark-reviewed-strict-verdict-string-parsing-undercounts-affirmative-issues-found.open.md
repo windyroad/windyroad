@@ -44,3 +44,4 @@ Agent-side discipline: emit "Architecture Review: PASS" verbatim when bottom-lin
 
 - ~/.claude/plugins/cache/windyroad/wr-architect/0.5.0/hooks/architect-mark-reviewed.sh
 - docs/decisions/ (architect review ADRs)
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready

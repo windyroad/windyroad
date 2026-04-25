@@ -47,3 +47,4 @@ Orchestrator adds a separate "BRIEFING hand-off" commit per iteration that touch
 - packages/itil/skills/work-problems/SKILL.md (Step 6 / Step 6.5 / Step 6.75)
 - docs/decisions/014-*.md (governance skills commit own work)
 - packages/wr-retrospective/skills/run-retro/SKILL.md
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready

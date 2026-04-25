@@ -45,3 +45,4 @@ Orchestrator-side `is_error` check plus retry-once policy. Already applied infor
 ## Related
 
 - packages/itil/skills/work-problems/SKILL.md (Step 5)
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready

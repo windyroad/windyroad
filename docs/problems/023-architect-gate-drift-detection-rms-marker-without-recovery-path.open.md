@@ -44,3 +44,4 @@ Manually `rm` plus re-write the hash file using the find/sort/md5 pipeline. Less
 
 - ~/.claude/plugins/cache/windyroad/wr-architect/0.5.0/hooks/lib/architect-gate.sh
 - ~/.claude/plugins/cache/windyroad/wr-architect/0.5.0/hooks/architect-enforce-edit.sh
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
