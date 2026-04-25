@@ -158,10 +158,76 @@ The human angle must either (a) name a specific behaviour change (who acts diffe
 
 Scoring note: this check is a refinement of check_5. If check_31 is UNMET on an item, check_5 is also UNMET on that item; do not double-count in round-exit arithmetic. The reverse does not hold: a human angle can be specific (check_31 MET) and still fail check_5 for other reasons (absent, off-topic).
 
+### check_32: Internal consistency
+
+For each item body and each preamble paragraph, the critic compares each declarative claim (pace, direction, magnitude, pattern) against any adjacent supporting or qualifying sentence in the same paragraph. UNMET when the asserted claim is contradicted by the evidence presented within the same paragraph.
+
+- UNMET: "Vendors are moving in weeks, regulators are moving in quarters" followed in the same paragraph by evidence of two regulator actions in seven days. The pace claim is directly contradicted by the next sentence's facts.
+- MET: "Vendors are moving in weeks, regulators are moving on much shorter cycles than they were a year ago" followed by evidence of two regulator actions in seven days. The framing matches the evidence.
+
+Disambiguation: check_18 (claim matches evidence) scopes to headline-versus-bullets and item-versus-source. check_32 scopes to within-paragraph claim-vs-adjacent-evidence. The two checks complement each other; do not double-count UNMET when the same contradiction triggers both.
+
+### check_33: Referential clarity
+
+For each pronoun and each repeated abstract noun in body sections (Why-it-matters, Human-angle, From Tom opener, bridge paragraphs), the critic checks whether the referent is unambiguous given the preceding 2-3 sentences. UNMET when a noun like "access", "the platform", "this", or "it" could plausibly refer to more than one antecedent in the recent context and the wording does not disambiguate.
+
+- UNMET: "It is whether your team has a manual path if access disappears." (in a paragraph that referenced both SaaS-vendor access and AI-vendor access; "access" could plausibly mean either)
+- MET: "It is whether your team has a manual path if AI-vendor access disappears." (the qualifier resolves the referent)
+
+Disambiguation: check_20 (plain-English readability) catches stacked-jargon noun clusters. check_33 catches unresolved referents even when each noun is itself plain. check_22 (author voice authenticity) scores presence of perspective; check_33 scores clarity of wording within that perspective.
+
+### check_34: Density and consultant-speak detection
+
+For each item body and the From Tom opener, count subculture-jargon noun-phrases per sentence ("decision-rights frame", "rolling vendor-evaluation cadence", "enforcement-capacity building", "operating-model implication"). UNMET when an item has more than one such phrase per two sentences, OR when sentence stacking produces three-clause-with-semicolon constructions in a body section.
+
+- UNMET: "The decision-rights frame here, against a rolling vendor-evaluation cadence, is what enforcement-capacity building looks like in practice." (three jargon noun-phrases in one sentence)
+- MET: "The question is who decides, and how often you re-evaluate the vendor." (the same idea, plain)
+
+Disambiguation: check_16 (LinkedIn readability) catches sentence length and run-on constructions. check_20 (plain-English) catches stacked-jargon noun clusters within a single sentence. check_34 catches the cumulative consultant-speak density pattern across sentences within a paragraph that escapes both.
+
+### check_35: Voice consistency across sections
+
+The "From Tom" opener voice is direct, first-person, and concrete; item bodies often slip into a more corporate, passive, or third-person register. UNMET when the item bodies' voice signature is detectably different from the opener's voice signature on two or more axes (active vs passive, first-person vs third-person, specific vs abstract, concrete imagery vs abstract noun phrasing).
+
+- UNMET: opener says "I told a CTO this week..." and item bodies say "Organisations should consider their vendor-evaluation cadence."
+- MET: opener says "I told a CTO this week..." and item bodies say "If you are running three coding agents in parallel, pick one and let the others go."
+
+The check operates by comparing voice signatures across sections, not by absolute scoring. Voice compliance against `docs/VOICE-AND-TONE.md` is the `wr-voice-tone:agent`'s concern; check_35 catches drift between sections of the same draft after the voice gate has run.
+
+### check_36: Item-headline distinctiveness
+
+Item mini-headlines following the same `Item N: <Vendor does X>` template can read as scaffolded rather than authored. UNMET when more than one item-headline is in the bare "Vendor does X" form without a sharper editorial framing.
+
+- UNMET: "Atlassian flips the default on customer data."
+- MET: "Atlassian flips the default. Your SaaS contract just aged a year."
+- UNMET: "OpenAI ships GPT-5.5 with extended context."
+- MET: "GPT-5.5 shipped. The real story is who owns the data you ran through it."
+
+The fix is to add a second clause that names the editorial framing or the consequence, not to remove the news-peg from the headline.
+
+### check_37: Headline thesis-first vs news-peg-first
+
+The H1 should lead with the thesis the edition is making, or carry the thesis as the dominant clause. UNMET when the H1 is purely descriptive of news with the thesis buried behind it; MET when the H1 leads with the thesis or sets it up so the news peg supports the thesis rather than overshadowing it.
+
+- UNMET: "GPT-5.5 ships, and the data-and-choice capture continues" (the thesis "data-and-choice capture" is buried behind the news peg)
+- MET: "GPT-5.5 shipped. The real story is who owns your data." (the thesis leads, the news peg supports)
+- UNMET: "Three big regulator moves this week" (pure news description, no thesis)
+- MET: "Regulators are moving faster than vendors expected. Three moves this week." (thesis leads, news supports)
+
+The check cross-references the H1 against the From Tom opener's framing to identify what the edition's thesis is. UNMET if the thesis is present in the opener but absent from the H1.
+
+### check_38: Author commitment honor-ability
+
+When the From Tom opener (or any body section) makes an explicit author commitment ("I'll track this monthly", "We'll publish quarterly results", "We will revisit this in three months"), the check flags it for human review. UNMET when a commitment is present but no clear honor-mechanism is visible in the project (no recurring task, no scheduled retrospective, no commitment-tracking artifact). MET when the commitment is removed, when the commitment is softened to an aspiration ("I would like to track this..."), or when a project-level honor mechanism is named.
+
+Pattern-match for commitment language: "I will", "we will", "I'll track", "monthly", "quarterly", numbered cadence promises, "every three months", "next quarter".
+
+The check surfaces the choice rather than letting it ship silently. The usual fix is to remove the commitment, not to add the mechanism, but the choice belongs to the author.
+
 ## Round-specific exit criteria
 
-- **Round 1:** score all 31 checks. Report all UNMET and PARTIAL.
-- **Round 2:** score all 31 checks and confirm each round-1 weakness was addressed. A persistent round-1 weakness is `PARTIAL: still unmet from round 1`.
+- **Round 1:** score all 38 checks. Report all UNMET and PARTIAL.
+- **Round 2:** score all 38 checks and confirm each round-1 weakness was addressed. A persistent round-1 weakness is `PARTIAL: still unmet from round 1`.
 - **Round 3:** as round 2. Any remaining UNMET or PARTIAL triggers `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`.
 
 ## Strengths to look for

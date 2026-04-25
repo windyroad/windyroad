@@ -72,10 +72,28 @@ The analysis is usable as context for drafting the weekly brief. Specifically, a
 
 The analysis calls out what moved *this week* (or, on the first issue, establishes the baseline). If the file appears unchanged from last week's version and the update step was run, either the map did not move (in which case the brief must note it), or the analysis was not updated. Cross-check via `git diff` on the `.owm` file if available. UNMET if the `.owm` file shows movement but the `.md` does not explain it.
 
+### check_17: Internal consistency in analysis prose
+
+For each section in `ai-landscape.md` (Differentiation, Evolution, Risk, Decisions), the critic compares each declarative claim against any adjacent supporting or qualifying sentence in the same paragraph. UNMET when an asserted position, direction of movement, or pattern is contradicted by the evidence presented within the same paragraph or section.
+
+- UNMET: a paragraph says "the agent-runtime layer did not move this week" then describes a new vendor entering the runtime market and a position shift on the map.
+- MET: a paragraph says "the agent-runtime layer moved leftward this week" then describes the new entrant as evidence of continued fragmentation.
+
+Mirror of newsletter check_32, scoped to analysis prose. Disambiguation: check_2 (phase naming matches evolution position) scopes to component-phase consistency between map and prose; check_17 scopes to within-paragraph claim-vs-adjacent-evidence in prose.
+
+### check_18: Referential clarity in analysis prose
+
+For each pronoun and each repeated abstract noun in analysis prose ("the platform", "this layer", "the dependency", "it"), the critic checks whether the referent is unambiguous given the preceding 2-3 sentences. UNMET when more than one plausible antecedent exists in the recent context and the wording does not disambiguate.
+
+- UNMET: "The dependency cannot survive a phase shift" (after a paragraph mentioning multiple dependencies; the referent is ambiguous)
+- MET: "The Engineering Team Capability dependency cannot survive the upstream commoditisation" (the referent is named)
+
+Mirror of newsletter check_33, scoped to analysis prose. The Differentiation, Evolution, Risk, and Decisions sections are most prone to this drift because they thread multiple components together.
+
 ## Round-specific exit criteria
 
-- **Round 1:** score all 16 checks. Report all UNMET and PARTIAL checks.
-- **Round 2:** in addition to scoring all 16 checks, confirm each round-1 weakness was addressed. If a round-1 weakness persists, mark it `PARTIAL: still unmet from round 1` in the WEAKNESSES block.
+- **Round 1:** score all 18 checks. Report all UNMET and PARTIAL checks.
+- **Round 2:** in addition to scoring all 18 checks, confirm each round-1 weakness was addressed. If a round-1 weakness persists, mark it `PARTIAL: still unmet from round 1` in the WEAKNESSES block.
 - **Round 3:** as round 2. Any remaining UNMET or PARTIAL triggers `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`.
 
 ## Strengths to look for

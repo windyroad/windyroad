@@ -1,8 +1,9 @@
 # Problem 017: Newsletter critic rubric does not check for internal contradictions or referential ambiguity
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-24
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 edition; workaround = Tom's external review)
+**Transitioned to Verification Pending**: 2026-04-25 (fix landed: 7 new checks added to newsletter-critic-rubric.md, 2 mirror checks added to wardley-critic-rubric.md)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: L (M to L on 2026-04-24 scope expansion: original two checks (check_32, check_33) grew to seven after Tom's external editorial critique surfaced five additional rubric gaps on the same edition; consolidation keeps the rubric-gap concern in one ticket per the manage-problem rule on consolidating 3-or-more improvements to one output)
 **WSJF**: (16 x 2.0) / 4 = 8.0
@@ -104,3 +105,21 @@ Two new checks (the original scope), plus five additional checks surfaced by Tom
 - `src/newsletters/drafts/leader/2026-04-24.md` (the edition where both the contradiction and the ambiguity were caught by Tom's external review after critic round 3 PASSed; the bridge paragraph and From Tom closing trio are the symptom records)
 - ADR 016 (SW-critic subagents and iteration loop; new checks must fit the 3-round exit criteria)
 - Memory: `feedback_rubric_pass_does_not_mean_newsletter_is_good.md` (the recurring pattern this ticket exemplifies for the third time after P008 and P015)
+
+## Fix Released
+
+**Released**: 2026-04-25 (riding with this transition commit)
+**Release marker**: this commit's SHA (transition commit, ADR-014)
+
+**Fix summary**: Added seven new checks (check_32 through check_38) to `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`, taking the rubric from 31 to 38 checks. Mirrored check_32 (internal consistency) and check_33 (referential clarity) into `.claude/skills/wr-newsletter/assets/wardley-critic-rubric.md` as check_17 and check_18, taking that rubric from 16 to 18 checks. Round-specific exit criteria updated in both files.
+
+The seven new newsletter checks:
+- check_32: Internal consistency. Claim vs adjacent evidence within paragraph.
+- check_33: Referential clarity. Pronoun and abstract-noun referent ambiguity.
+- check_34: Density and consultant-speak detection. Jargon-phrase density per sentence.
+- check_35: Voice consistency across sections. From Tom opener vs item bodies.
+- check_36: Item-headline distinctiveness. Anti-scaffolded "Vendor does X" template.
+- check_37: Headline thesis-first vs news-peg-first. H1 must lead with thesis.
+- check_38: Author commitment honor-ability. Flag commitments without honor mechanism.
+
+**Awaiting user verification**: next `/wr-newsletter` run where the critic loop runs against a new draft. Verification trigger is satisfied when the critic surfaces UNMET findings on the draft against any of checks 32 through 38, OR when the critic returns PASS on a draft that does not contain the failure modes those checks target. Back-testing against the 2026-04-24 The Shift edition is an investigation-task remainder that may be addressed in a follow-up but is not blocking for verification.
