@@ -326,6 +326,34 @@ After the main shortlist per-item capture completes, run a second pass for any c
 
 Weak-attribution handling preserves the signal that the earlier filter would have silently dropped. A weak-attribution candidate that Tom keeps joins the main draft as an Also-worth-noting entry (short paragraph, not a full Item). Tom's Drop reasons feed future filter tuning.
 
+**Capture transcript artifact (ADR 019).** After both passes (main shortlist plus weak-attribution) complete, write the per-item capture decisions to `<draft-folder>/YYYY-MM-DD.capture.md`. This file is the persisted reference the drafter (step 11) reads against to preserve verbatim spans, and the comparison surface for human editorial review. Format per ADR 019:
+
+```
+---
+persona: <leader|developer>
+edition: <N from step 11>
+date: <YYYY-MM-DD>
+phase-written: <prep|finalise|full>
+phase-last-appended: <prep|finalise|full>
+---
+
+# Capture transcript: <publication-name>, week ending YYYY-MM-DD
+
+## Item N: <one-sentence story summary>
+
+- **Outcome**: <Agree | Adjust | Drop | Keep as Also-worth-noting | Ask for help>
+- **Original take presented**: <the "Our take" sentence shown in the AskUserQuestion prompt>
+- **Source**: <URL>
+- **Adjust text** (if outcome is Adjust):
+
+  > <Tom's free-text verbatim, indented as quoted block>
+
+- **Drop reason** (if outcome is Drop): <Tom's reason>
+- **Ask for help question** (if outcome is Ask for help): <Tom's question>
+```
+
+For `phase=full` and `phase=prep`, write the file once after capture completes. Today's consumer is the drafter at step 11; future consumers (deferred `check_32` per P015 Part 3, possible voice / content-risk extensions) are scoped per ADR 019. The voice gate (step 13), content-risk gate (step 14), and SW-critic (step 15) do not read this file in the current pipeline.
+
 **Phase variant `10-prime` (phase=finalise only):** run per-item capture only on:
 
 1. New tier-1 items from step 2-prime that cleared step 4-prime, plus new inbox items from step 1-prime.
@@ -333,6 +361,16 @@ Weak-attribution handling preserves the signal that the earlier filter would hav
 3. New `WEAK_ATTRIBUTION` candidates from step 4b-prime (a separate pass, same as step 10's second pass).
 
 Prep-time per-item responses (Agree, Adjust, Drop) are carried forward via `<prep-shortlist-snapshot>` and not re-asked. Tom's prep-time Adjusts and Drops still drive the corresponding Item blocks in the finalise draft.
+
+**Capture transcript append (ADR 019).** Read the existing `<draft-folder>/YYYY-MM-DD.capture.md` written during prep. Append new-item sections (only the items captured in 10-prime: new tier-1, late-story Also-worth-noting, new WEAK_ATTRIBUTION). Update frontmatter `phase-last-appended: finalise`. Do not rewrite or delete prep-time entries. The append step must check for an existing item-section anchor before writing to avoid duplicates on a partial-failure re-run (ADR 019 Consequences/Bad).
+
+**Missing-capture-file handling (ADR 019).** If the expected `<draft-folder>/YYYY-MM-DD.capture.md` is absent at the start of 10-prime, surface to Tom via `AskUserQuestion`:
+
+- **question**: `"phase=finalise expected a capture transcript at <expected-path>. Continue without capture transcript (drafter discipline rule has no input for prep-time items), Recreate transcript from prep-time shortlist (best-effort, Adjust text will be empty), or Abort?"`
+- **options**: `Continue without capture transcript`, `Recreate transcript from prep-time shortlist`, `Abort`.
+- **multiSelect**: false
+
+Default branch when Tom is unavailable: `Continue without capture transcript`. The drafter loses the verbatim-preservation reference for prep-time items but does not block publication. Note the missing-file event in the Tom-summary at step 17.
 
 ### 11. Draft the brief
 
@@ -354,6 +392,18 @@ Voice rules (enforced by step 13 voice gate):
 - No hype words.
 - Respect the reader's team (ADR 015). Describe industry baselines and situations, not the reader's team's competence. This applies to both personas; the developer-audience equivalent is "do not call a developer's tool choice incompetent; criticise via evidence."
 - Apply the persona's `<voice-addendum>` for vocabulary preferences (leader-coded vs developer-coded language).
+
+**Capture fidelity (P015 + ADR 019).** When composing each Item block from a step-10 Adjust capture, preserve the load-bearing noun-phrases, first-person observations, and named artifacts from the Adjust text verbatim wherever the LinkedIn column can carry them. Specifically:
+
+- Named tools, products, vendors, model versions, repository names, dates, and quantitative claims appear verbatim in the rendered Item.
+- First-person observations Tom supplied (e.g. "we shipped this last quarter and it broke under load") survive as quoted or paraphrase-with-quote spans, not as flattened third-person commentary.
+- Paraphrase only connective tissue (transitions, headline framing, the lens-anchor sentence). Never paraphrase the load-bearing claim.
+- Optionally during generation, mark verbatim spans with `{{verbatim}}…{{/verbatim}}` markers so the drafter can self-check that fidelity holds before save. Strip these markers before the step-16 save; they must not appear in the final draft body or LinkedIn post.
+- Read `<draft-folder>/YYYY-MM-DD.capture.md` (written at step 10) as the persisted reference. The AskUserQuestion conversation history is also available in-context; both inputs feed the same fidelity discipline.
+
+The drafter is an inline main-assistant pass (not a subagent). The capture-fidelity rule lives in this skill prose because the inline drafter reads the skill as its working instructions. Promoting the drafter to a fresh-context subagent would lose access to the AskUserQuestion conversation history; ADR 019 documents the rationale.
+
+If `<draft-folder>/YYYY-MM-DD.capture.md` is absent (e.g. `phase=finalise` chose `Continue without capture transcript`), the drafter falls back to the in-context AskUserQuestion turn for any items captured in this session, and treats prep-time items without a transcript reference as best-effort (verbatim preservation cannot be checked against a persisted source).
 
 **Phase variant `11-prime` (phase=finalise only):** start from `<prep-draft-body>` rather than drafting from scratch. Apply changes only for:
 
@@ -646,7 +696,8 @@ Report back in chat:
 - Map delta (one sentence; for finalise, include any re-mutation delta).
 - Cover image: path, plus whether finalise re-rendered or carried prep image forward.
 - LinkedIn post: drafted (finalise/full) or skipped (prep).
-- File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/YYYY-MM-DD.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on Friday to publish." For finalise, this is `<draft-folder>/YYYY-MM-DD.md` with the reminder: "When you have published to LinkedIn, move the file to `<published-folder>` and run `/wr-retrospective:run-retro` to capture learnings for next week."
+- File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/YYYY-MM-DD.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on Friday to publish." For finalise, this is `<draft-folder>/YYYY-MM-DD.md` with the reminder: "When you have published to LinkedIn, move both `<draft-folder>/YYYY-MM-DD.md` AND `<draft-folder>/YYYY-MM-DD.capture.md` to `<published-folder>/<persona>/`, then run `/wr-retrospective:run-retro` to capture learnings for next week."
+- Capture transcript path: `<draft-folder>/YYYY-MM-DD.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
 
 ## Failure modes
 

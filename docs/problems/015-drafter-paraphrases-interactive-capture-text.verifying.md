@@ -1,8 +1,9 @@
 # Problem 015: wr-newsletter drafter paraphrases per-item AskUserQuestion "Adjust" text into abstract commentary, losing Tom-voice fidelity
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-21
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-19 edition; workaround = manual external review)
+**Transitioned to Verification Pending**: 2026-04-25 (Parts 1 + 2 of Fix Strategy released to wr-newsletter SKILL.md per ADR 019; Part 3 deferred per ticket)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: L (multi-file change: SKILL.md drafter prompt, pipeline plumbing for transcript artifact, optional rubric check). Re-rate on architect review of the fix plan.
 **WSJF**: (16 x 2.0) / 4 = 8.0
@@ -53,11 +54,27 @@ Three-part fix, all three needed for a durable result:
 
 ### Investigation Tasks
 
-- [ ] Confirm with Tom whether the drafter receiving the Adjust text is a subagent invocation or an inline pass; this determines where the verbatim-preservation instruction lands
-- [ ] Design the capture transcript file format (markdown with per-item sections; include persona, date, each item's Agree/Adjust/Drop outcome and Adjust text)
-- [ ] Update SKILL.md step 4.5 with the verbatim-preservation instruction and the transcript-write step
-- [ ] Decide whether `check_32: Capture fidelity` is worth the scope cost now or should wait for a baseline of N editions with the transcript artifact in place
-- [ ] Run the expanded rubric + transcript pipeline against a test edition and confirm Tom-voice lands
+- [x] Confirm with Tom whether the drafter receiving the Adjust text is a subagent invocation or an inline pass; this determines where the verbatim-preservation instruction lands. **Resolved 2026-04-25: inline main-assistant pass.** SKILL.md step 11 ("Draft the brief") has no Agent invocation; voice / content-risk / SW-critic gates that follow are subagents but the drafter itself is inline. Verbatim-preservation instruction lands as SKILL prose (the inline drafter reads SKILL.md as its working instructions). ADR 019 documents the rationale for keeping the drafter inline rather than promoting it to a fresh-context subagent (P015 is a discipline failure, not a confirmation-bias failure; subagent promotion would lose access to the AskUserQuestion conversation history).
+- [x] Design the capture transcript file format (markdown with per-item sections; include persona, date, each item's Agree/Adjust/Drop outcome and Adjust text). **Resolved 2026-04-25: format specified in ADR 019.** Sibling markdown file at `<draft-folder>/YYYY-MM-DD.capture.md` with frontmatter (persona, edition, date, phase-written, phase-last-appended) and per-item sections (Outcome, Original take presented, Source, Adjust text verbatim, Drop reason, Ask for help question).
+- [x] Update SKILL.md step 4.5 with the verbatim-preservation instruction and the transcript-write step. **Resolved 2026-04-25: actual step numbers are 10 (per-item capture, where transcript write lands) and 11 (drafter, where capture-fidelity rule lands), not 4.5.** SKILL.md step 10 now writes `<draft-folder>/YYYY-MM-DD.capture.md`; step 10-prime appends new-item entries during finalise and handles the missing-file case via AskUserQuestion. SKILL.md step 11 now includes a "Capture fidelity (P015 + ADR 019)" rule alongside the existing voice rules. Step 17 Tom-summary names the capture transcript path and bundles the published-folder move reminder.
+- [defer] Decide whether `check_32: Capture fidelity` is worth the scope cost now or should wait for a baseline of N editions with the transcript artifact in place. **Deferred 2026-04-25 per ticket Fix Strategy.** Parts 1 + 2 land first; check_32 lands after a baseline of editions-with-transcript exists and the discipline rule's effectiveness can be measured. Per ADR 019 confirmation criterion 7, when check_32 is taken up, an ADR 016 amendment ships alongside it adding a third input slot to the wr-sw-critic agent contract (currently `artifact_path` + `rubric_path`; check_32 needs a `reference_artifact_path` for the capture transcript).
+- [ ] Run the expanded rubric + transcript pipeline against a test edition and confirm Tom-voice lands. **Verification trigger.** Fires on the next `/wr-newsletter` run where Tom supplies Adjust text. Closure trigger: rendered items preserve Tom's load-bearing noun-phrases verbatim, validated by Tom's external review and by comparing the rendered Item against `<draft-folder>/YYYY-MM-DD.capture.md`.
+
+## Fix Released
+
+Released 2026-04-25 in commit covering:
+
+- `docs/decisions/019-capture-transcript-artifact.proposed.md` (new ADR documenting the file class, lifecycle, and inline-drafter rationale)
+- `.claude/skills/wr-newsletter/SKILL.md` step 10 (capture transcript artifact write), step 10-prime (append + missing-file branch), step 11 (Capture fidelity rule), step 17 (Tom-summary mentions transcript path and bundled-move reminder)
+
+Parts 1 + 2 of Fix Strategy landed:
+
+- **Part 1 (drafter discipline)**: SKILL.md step 11 now instructs the drafter to preserve load-bearing noun-phrases, first-person observations, named artifacts, model versions, dates, and quantitative claims from each item's Adjust capture verbatim. Paraphrase only connective tissue. Optional `{{verbatim}}…{{/verbatim}}` markers during generation, stripped before save.
+- **Part 2 (transcript artifact)**: SKILL.md step 10 writes `<draft-folder>/YYYY-MM-DD.capture.md` after the per-item capture completes. Step 10-prime appends new-item sections during finalise (ADR 019 lifecycle: append-and-survive, never deleted). Missing-file branch handled via AskUserQuestion (Continue without / Recreate / Abort).
+
+Part 3 (`check_32: Capture fidelity` in `newsletter-critic-rubric.md`) explicitly deferred. When taken up in a future iteration, an ADR 016 amendment ships alongside it (per ADR 019 confirmation criterion 7) adding a third input slot to the wr-sw-critic agent contract.
+
+Verification trigger: next `/wr-newsletter` run where Tom supplies Adjust text. Tom's external review compares the rendered Item against `<draft-folder>/YYYY-MM-DD.capture.md` to confirm verbatim preservation.
 
 ## Related
 
