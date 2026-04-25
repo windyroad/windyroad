@@ -16,7 +16,8 @@
 
 .hero {
   padding-top: calc(var(--header-height) + 4rem);
-  min-height: 45vh;
+  padding-bottom: 4rem;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,7 +43,11 @@
   }
 
   @media (max-width: 768px) {
-    min-height: 35vh;
+    min-height: 100svh;
+  }
+
+  @media (max-height: 600px) {
+    min-height: auto;
   }
 }
 

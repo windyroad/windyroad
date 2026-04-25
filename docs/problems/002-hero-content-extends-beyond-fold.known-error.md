@@ -1,7 +1,8 @@
 # Problem 002: Hero content extends beyond the fold
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-14
+**Known Error since**: 2026-04-25
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: S (CSS adjustment in src/app/page.module.scss; min-height + padding rebalance)
 **WSJF**: (12 x 1.0) / 1 = 12.0
@@ -44,9 +45,33 @@ Possible fixes:
 
 ### Investigation Tasks
 
-- [ ] Investigate root cause
-- [ ] Create reproduction test
-- [ ] Create INVEST story for permanent fix
+- [x] Investigate root cause - confirmed: `min-height: 45vh` (35vh on mobile) is well below the height needed to fit headline + sub + CTAs + Countdown (with slider + attribution). Asymmetric `padding-top` with no matching `padding-bottom` also breaks `align-items: center`.
+- [ ] Create reproduction test - automated fold-fit check is out of scope for the S envelope; covered by P012 (no ship-gate on push/publish/deploy) for future automation.
+- [x] Create INVEST story for permanent fix - landed inline as the SCSS-only fix below.
+
+## Fix Applied (awaiting browser verification)
+
+**Released**: 2026-04-25 (commit pending)
+**Scope**: SCSS-only change to `src/app/page.module.scss` `.hero` selector.
+
+Changes:
+- `min-height: 45vh` -> `min-height: 100svh`. `svh` (small viewport height) accounts for mobile browser chrome so 100% truly fits without the URL bar pushing content below.
+- Mobile breakpoint `min-height: 35vh` -> `min-height: 100svh` (same reasoning).
+- Added `padding-bottom: 4rem` to balance the existing `padding-top: calc(var(--header-height) + 4rem)`. Asymmetric padding was breaking `align-items: center`; with both sides padded, vertical centring is true.
+- Added `@media (max-height: 600px) { min-height: auto; }` short-viewport guard. Per accessibility-lead review, at 400% zoom (WCAG 1.4.10 Reflow) the effective viewport shrinks and forcing `100svh` would risk content overlap with the absolutely-positioned `scrollCue`. Dropping `min-height` on short viewports lets the hero collapse to its natural height; users can still scroll.
+
+Gates run before edit:
+- wr-style-guide:agent: PASS (svh already used elsewhere in the codebase).
+- accessibility-lead: CONDITIONAL PASS - 400% zoom mitigation incorporated; cognitive-a11y concern mitigated by retained scrollCue; minor scrollCue label suggestion deferred (out of S envelope).
+- wr-risk-scorer:pipeline: see commit message.
+
+Verification (next interactive session, browser):
+- 1080p desktop (1920x1080): all hero content (headline, sub, both CTAs, countdown, slider, attribution) above the fold.
+- Mobile (Safari iOS, Chrome Android): hero fills viewport including with browser chrome present.
+- 200% and 400% zoom on 1280x720: scrollCue does not overlap CTAs or Countdown; if viewport height drops below 600px, hero collapses to natural height.
+- Vertical centring visually balanced (top and bottom whitespace approximately equal).
+
+If verification holds, transition to `verifying.md` (Verification Pending) per ADR-022, then close after no regression for one release cycle.
 
 ## Related
 

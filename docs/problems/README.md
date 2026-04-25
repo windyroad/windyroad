@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-04-25 (P010 OpenAI arm landed - tier-1 OpenAI swapped to Google News RSS in wr-newsletter SKILL.md step 2 with Reddit gap annotated against P014; P011 verification pending - render-and-verify discipline note added to wr-newsletter SKILL.md step 12 and shared `scripts/render-svg.mjs` helper created; P018 verification pending - prep+finalise phase split released in wr-newsletter SKILL.md per ADR 017; P016 verification pending - filter corroboration fix released in step 4b and step 10).
+> Last reviewed: 2026-04-25 (P002 SCSS fold-fit fix landed - hero `min-height` raised to `100svh` with balancing `padding-bottom`, short-viewport zoom guard added; awaiting browser verification before transition to Verification Pending; P010 OpenAI arm landed - tier-1 OpenAI swapped to Google News RSS in wr-newsletter SKILL.md step 2 with Reddit gap annotated against P014; P011 verification pending - render-and-verify discipline note added to wr-newsletter SKILL.md step 12 and shared `scripts/render-svg.mjs` helper created; P018 verification pending - prep+finalise phase split released in wr-newsletter SKILL.md per ADR 017; P016 verification pending - filter corroboration fix released in step 4b and step 10).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,7 +10,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID | Title | Severity | Status | Effort |
 |------|-----|-------|----------|--------|--------|
 | 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Medium) | Known Error | S |
-| 12.0 | P002 | Hero content extends beyond the fold | 12 (High) | Open | S |
+| 12.0 | P002 | Hero content extends beyond the fold | 12 (High) | Known Error | S |
 | 9.0  | P009 | Content-risk inline self-scoring | 9 (Medium) | Known Error | M |
 | 9.0  | P010 | Source fetch blocks OpenAI and Reddit | 9 (Medium) | Known Error | M |
 | 9.0  | P013 | No voice/tone gate on external comms | 9 (Medium) | Known Error | M |
@@ -48,3 +48,4 @@ Closed tickets are listed for audit but excluded from the active backlog:
 - **P012 and P013**: pair on the ship-gate hook surface. P012 is the broader risk-and-CI ship-gate; P013 is the voice-tone extension over external-facing text.
 - **P016 and P018**: form the Friday-pressure cluster. P016 (verification pending as of 2026-04-25) fixes filter logic that drops significant stories. P018 (verification pending as of 2026-04-25) splits the pipeline into prep + finalise phases per ADR 017 to reduce Friday concentration. Verification of P016 fires on the next `/wr-newsletter` run when an aggregator-only candidate is processed; verification of P018 fires on the first edition where prep runs mid-week and finalise ships Friday under one hour.
 - **P011**: render-and-verify discipline note added to wr-newsletter SKILL.md step 12 and shared `scripts/render-svg.mjs` helper created (verifying as of 2026-04-25). Verification fires on the next visual-artifact iteration: logo rework, OG image update, or a fresh cover-image generation in step 12.
+- **P002**: hero fold-fit SCSS fix landed 2026-04-25 (`min-height` 45vh -> 100svh, mobile breakpoint 35vh -> 100svh, added `padding-bottom: 4rem` to balance the existing top-padding so vertical centring is true, added `@media (max-height: 600px) { min-height: auto; }` short-viewport guard for WCAG 1.4.10 Reflow at 400% zoom per accessibility-lead review). Held in Known Error pending Tom's browser verification across desktop/mobile/zoom; transitions to Verification Pending once verified.
