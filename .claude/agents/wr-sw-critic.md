@@ -99,5 +99,5 @@ END_CRITIC_REVIEW
 
 - `wr-voice-tone:agent`: runs *before* you on outbound copy. Voice failures are fixed before the critic sees the artifact. Do not re-adjudicate voice.
 - `wr-architect:agent` and `wr-jtbd:agent`: run at session/edit time via hooks, not as part of the skill's review chain. Not your concern unless the rubric explicitly cross-references.
-- Content-risk gate (inline in the skill per ADR 012/015): runs *before* you on newsletter drafts. If content-risk returned REJECTED, the skill should not invoke you; verify this via the saved review block in the artifact and emit `CRITIC_ERROR: upstream gate returned REJECTED; critic will not run` if the skill invoked you incorrectly.
+- Content-risk gate (`wr-content-risk-scorer:agent` per ADR 012, ADR 015, and ADR 018): runs *before* you on newsletter drafts as a fresh-context subagent. If content-risk returned REJECTED, the skill should not invoke you; verify this via the saved review block in the artifact and emit `CRITIC_ERROR: upstream gate returned REJECTED; critic will not run` if the skill invoked you incorrectly.
 - Your verdict is additive: a PASS from content-risk plus a REJECTED from you means the artifact should not publish. Tom decides whether to rewrite or override.

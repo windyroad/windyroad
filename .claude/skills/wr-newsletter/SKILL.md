@@ -408,19 +408,19 @@ If FAIL: fix the flagged passages in the draft, re-run voice review. Do not proc
 
 **Phase variant `13-prime` (phase=finalise only):** run the voice gate against the finalise-time draft body. The gate runs on the full draft (not a diff against `<prep-draft-body>`) so any voice regressions introduced by step 11-prime's edits are caught.
 
-### 14. Content-risk review gate (ADR 012 + ADR 015)
+### 14. Content-risk review gate (ADR 012 + ADR 015 + ADR 018)
 
-Inline judgement. Score each axis on low, medium, or high:
+Invoke the `wr-content-risk-scorer` subagent (ADR 018). The subagent runs in fresh context, reads the in-progress draft and the rubric, and returns the five-axis CONTENT_RISK block in the format pinned by ADR 015 confirmation criterion 3. The five axes (factual, reputational, claims, attribution, reader-respect) and their persona constraints live in the rubric file, not in this skill.
 
-- **factual**: how likely is any stated fact to be wrong? (named models, dates, capabilities, company actions, numbers).
-- **reputational**: is there anything here that could embarrass Tom or Windy Road? (dismissive tone toward a company, unfalsifiable predictions, punching down).
-- **claims**: are there predictions or "this means X" statements that need a source or qualifier?
-- **attribution**: is every source cited, and are any quotes properly attributed?
-- **reader-respect** (ADR 015): does the draft frame the reader's team as behind, slow, negligent, or inadequate? Score `high` if any passage passes judgement on the reader's team's competence. Score `low` if the draft describes industry baselines or external threats without attributing fault.
+```
+Agent subagent_type: wr-content-risk-scorer
+prompt: "Score the newsletter draft against the content-risk rubric.
 
-Compute verdict: any axis `high` yields `VERDICT: REJECTED`. Otherwise `VERDICT: PASS`.
+artifact_path: <absolute path to the in-progress draft>
+rubric_path: /Users/tomhoward/Projects/windyroad/.claude/skills/wr-newsletter/assets/content-risk-rubric.md"
+```
 
-Emit:
+Parse the returned block. The agent emits exactly:
 
 ```
 CONTENT_RISK: factual=<...> reputational=<...> claims=<...> attribution=<...> reader-respect=<...>
@@ -431,9 +431,9 @@ Notes:
 
 If `VERDICT: REJECTED`: save the draft with the block, surface the rejection prominently in the Tom-summary, and skip step 15. Tom decides whether to rewrite or override.
 
-If `VERDICT: PASS`: proceed to step 15.
+If `VERDICT: PASS`: proceed to step 15. Any `medium` flags listed in the Notes section are surfaced to Tom for optional touch-up but do not block the SW-critic.
 
-**Phase variant `14-prime` (phase=finalise only):** run on the finalise-time full draft body, same scoring rubric. A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the risk surface.
+**Phase variant `14-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same rubric path. A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the risk surface, so the agent runs again with the finalise-time draft.
 
 ### 15. Critic loop on the newsletter draft (ADR 016)
 
@@ -652,7 +652,7 @@ Report back in chat:
 
 ## Out of scope for this pipeline
 
-- A purpose-built `wr-content-risk-scorer` skill (follow-up to ADR 012).
+- ~~A purpose-built `wr-content-risk-scorer` skill (follow-up to ADR 012).~~ Landed as the `wr-content-risk-scorer` agent per ADR 018; see step 14.
 - Scheduling, cron, GitHub Actions automation (layer 6 in PLAN.md).
 - An archive page on windyroad.com.au (layer 7 in PLAN.md).
 - Promoting `wr-sw-critic` to a marketplace plugin (ADR 016 reassessment criterion).

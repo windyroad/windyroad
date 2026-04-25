@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-04-25 (P002 SCSS fold-fit fix landed - hero `min-height` raised to `100svh` with balancing `padding-bottom`, short-viewport zoom guard added; awaiting browser verification before transition to Verification Pending; P010 OpenAI arm landed - tier-1 OpenAI swapped to Google News RSS in wr-newsletter SKILL.md step 2 with Reddit gap annotated against P014; P011 verification pending - render-and-verify discipline note added to wr-newsletter SKILL.md step 12 and shared `scripts/render-svg.mjs` helper created; P018 verification pending - prep+finalise phase split released in wr-newsletter SKILL.md per ADR 017; P016 verification pending - filter corroboration fix released in step 4b and step 10).
+> Last reviewed: 2026-04-25 (P002 SCSS fold-fit fix landed - hero `min-height` raised to `100svh` with balancing `padding-bottom`, short-viewport zoom guard added; awaiting browser verification before transition to Verification Pending; P010 OpenAI arm landed - tier-1 OpenAI swapped to Google News RSS in wr-newsletter SKILL.md step 2 with Reddit gap annotated against P014; P011 verification pending - render-and-verify discipline note added to wr-newsletter SKILL.md step 12 and shared `scripts/render-svg.mjs` helper created; P018 verification pending - prep+finalise phase split released in wr-newsletter SKILL.md per ADR 017; P016 verification pending - filter corroboration fix released in step 4b and step 10; P009 verification pending - content-risk gate subagent-ised per ADR 018 with new rubric and wr-content-risk-scorer agent).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,7 +11,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 |------|-----|-------|----------|--------|--------|
 | 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Medium) | Known Error | S |
 | 12.0 | P002 | Hero content extends beyond the fold | 12 (High) | Known Error | S |
-| 9.0  | P009 | Content-risk inline self-scoring | 9 (Medium) | Known Error | M |
 | 9.0  | P010 | Source fetch blocks OpenAI and Reddit | 9 (Medium) | Known Error | M |
 | 9.0  | P013 | No voice/tone gate on external comms | 9 (Medium) | Known Error | M |
 | 8.0  | P015 | Drafter paraphrases interactive capture text | 16 (High) | Known Error | L |
@@ -30,6 +29,7 @@ Fix released, awaiting user verification. Ranked by release age, oldest first pe
 | P016 | Filter drops significant stories without corroboration | 2026-04-25 | Added step 4b corroboration sub-step (Google News RSS) and step 10 weak-attribution escalation to wr-newsletter SKILL.md | no (0 days) |
 | P018 | Newsletter publication time pressure on Friday | 2026-04-25 | Added phase=prep, phase=finalise, phase=full to wr-newsletter SKILL.md with .prep.md state handoff per ADR 017 | no (0 days) |
 | P011 | Visual artifacts shipped without render-verify | 2026-04-25 (this commit) | Added render-and-verify discipline note to wr-newsletter SKILL.md step 12 and created shared `scripts/render-svg.mjs` helper that wraps `sips` for SVG-to-PNG conversion | no (0 days) |
+| P009 | Content-risk inline self-scoring | 2026-04-25 (this commit) | Subagent-ised content-risk gate per ADR 018: new rubric at `.claude/skills/wr-newsletter/assets/content-risk-rubric.md`, new agent at `.claude/agents/wr-content-risk-scorer.md`, SKILL.md step 14 + 14-prime invoke the agent | no (0 days) |
 
 ## Closed
 
