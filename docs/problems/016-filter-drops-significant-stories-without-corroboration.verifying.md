@@ -1,6 +1,6 @@
 # Problem 016: wr-newsletter filter step drops significant stories that lack a primary source without attempting corroboration
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-24
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 edition; workaround = manual flag in chat + Google News corroboration)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
@@ -38,7 +38,7 @@ There is no automated workaround in the pipeline today.
 
 ## Impact Assessment
 
-- **Who is affected**: The Shift subscribers (Engineering Leader persona, JTBD-001 Awareness, JTBD-003 Evaluation) and Tokens Spent subscribers (Developer persona, JTBD-200 through JTBD-205). Both newsletters share the same filter logic at step 4.
+- **Who is affected**: The Shift subscribers (Engineering Leader persona, JTBD-002 Engagement and JTBD-003 Evaluation; JTBD-001 Awareness is scoped to patch-cycle / vulnerability exposure and is not the job this ticket serves) and Tokens Spent subscribers (Developer persona, primarily JTBD-200 Signal from Noise, JTBD-203 Peer Validation, JTBD-205 Trust Shipped vs Demo). Both newsletters share the same filter logic at step 4.
 - **Frequency**: Likely once per edition. Major industry stories regularly first surface via secondary aggregators (CEO transitions, M&A, leadership changes, industry-trend pieces, podcast-originated commentary). Quick scan: at least one such candidate per recent week.
 - **Severity**: Significant. Newsletter credibility depends on covering what subscribers will see covered elsewhere. Missing a Tim-Cook-stepping-back-level story that every major outlet ran on April 20-21 reads as either out-of-touch or asleep at the wheel; either reading erodes the trust the brief is trying to earn. Borderline Severe (5) for any edition that misses a flagship story; Significant (4) is the floor.
 - **Analytics**: Qualitative (Tom's own catches; subscriber feedback once the readership grows). No quantitative signal yet.
@@ -77,6 +77,28 @@ Three-part fix:
 - [ ] Update SKILL.md step 4 with the corroboration branch and the escalation branch
 - [ ] Update SKILL.md step 10 (per-item interactive capture) to also surface weak-attribution candidates if any exist
 - [ ] Decide whether the optional critic check is worth the scope cost or should wait for a baseline of N editions with the new step-4 logic
+
+## Fix Released
+
+Deployed in commit HEAD (wr-newsletter skill update landing with this transition) on 2026-04-25. Awaiting user verification.
+
+Three-part fix per the P016 Fix Strategy:
+
+1. **`.claude/skills/wr-newsletter/SKILL.md` step 4**: renamed to "Wardley preference + three-lens filter" to match the already-softened asset policy; added a new numbered step 3 at intake that tags each surviving candidate `HAS_PRIMARY_SOURCE` or `NO_PRIMARY_SOURCE`.
+2. **`.claude/skills/wr-newsletter/SKILL.md` step 4b (new sub-step)**: for every `NO_PRIMARY_SOURCE` candidate that scored yes on at least two lenses, run one Google News RSS query (`https://news.google.com/rss/search?q=<entity>&hl=en-US&gl=US&ceid=US:en`). Threshold: 3+ distinct primary outlets (from the primary-outlet allowlist in the asset) tags the candidate `CORROBORATED_PRIMARY` and promotes it to the main shortlist; 0 to 2 primary outlets tags it `WEAK_ATTRIBUTION` and carries it on a separate list for step 10 adjudication. Corroboration runs AFTER three-lens scoring (cheap-drop weak candidates first) and BEFORE the map-mutation gate (so corroborated candidates can anchor to map movement). The Google News RSS mechanism reuses the precedent already established for OpenAI tier-1 fallback (see ai-landscape.md Source-coverage notes and P010).
+3. **`.claude/skills/wr-newsletter/SKILL.md` step 10**: added a second pass after the main per-item capture that surfaces every `WEAK_ATTRIBUTION` candidate to Tom via `AskUserQuestion` with three options (`Keep as Also-worth-noting`, `Drop`, `Ask for help`), including the corroboration outcome (outlets found vs threshold) in the question body. This closes the silent-drop failure mode.
+4. **`.claude/skills/wr-newsletter/assets/three-lens-filter.md`**: added a full "Corroboration for aggregator-only candidates" section with the trigger, mechanism, primary-outlet allowlist (Reuters, AP, Bloomberg, FT, NYT, WaPo, WSJ, LA Times, CNN, CNBC, NBC, ABC, CBS, BBC, Guardian, Times, Le Monde, Der Spiegel, The Information, The Verge, Ars Technica, TechCrunch, Wired), threshold rule, and runtime-cost bound. Updated the Scoring rule section to include the `CORROBORATED_PRIMARY` and `WEAK_ATTRIBUTION` tag vocabulary alongside the existing `MAP_ANCHORED` tags.
+
+The `/wr-newsletter` skill Tom-summary (step 17) now reports corroboration outcomes: candidates that ran the corroboration query, count tagged `CORROBORATED_PRIMARY`, count tagged `WEAK_ATTRIBUTION`, and Tom's step-10 decision for each weak-attribution item.
+
+**Governance gates passed**:
+
+- `wr-architect:agent`: APPROVED. No new ADR is required as a blocker; the change lives within the scope of ADR-011 (skill is the host for filter-logic iteration) and strengthens ADR-012's attribution posture upstream of the content-risk gate. One advisory follow-up flagged: an ADR amendment codifying Google News RSS as a first-class pipeline primitive for both tier-1 fallback and aggregator corroboration. Not a blocker.
+- `wr-jtbd:agent`: ALIGNED. The change strengthens JTBD-200 (Signal from Noise) desired outcome "Confidence that items excluded from the list were excluded on purpose, not missed" directly, plus JTBD-203 (Peer Validation) and JTBD-205 (Trust Shipped vs Demo) on the developer side, and JTBD-002/003 on the leader side. One correction noted: JTBD-001 (patch-cycle awareness) is not the leader-side job this serves; updated above.
+
+**Verification path**: the next `/wr-newsletter` run exercises the new step 4b. A positive verification means an aggregator-only candidate that would previously have been silently dropped either appears as `CORROBORATED_PRIMARY` in the shortlist or surfaces in step 10 as `WEAK_ATTRIBUTION` for Tom's explicit decision.
+
+**Follow-up ticket**: open a new problem ticket for the advisory ADR amendment (Google News RSS as first-class pipeline primitive). Low priority; can bundle with other pipeline-primitive ADR work when P017 / P018 / P017-phase-split land.
 
 ## Related
 

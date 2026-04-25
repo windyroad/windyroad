@@ -92,16 +92,44 @@ Combine inbox items, tier-1, tier-2, and tier-3 extracted items into one candida
 
 Record per-tier counts and the `source_failures` list so the Tom-summary can report on source coverage.
 
-### 4. Apply the Wardley precondition + three-lens filter
+### 4. Apply the Wardley preference + three-lens filter
 
 Read `.claude/skills/wr-newsletter/assets/three-lens-filter.md` and `docs/ai-engineering-brief/ai-landscape.md`.
 
 For every candidate:
 
-1. **Wardley precondition**: can this candidate be anchored to an observable map movement? If no, drop the candidate. The "observable map movement" comparison uses the previous week's map as a baseline. The map update itself runs next at step 5, before per-item voice capture.
+1. **Wardley preference**: tag each candidate `MAP_ANCHORED` or `NO_MAP_ANCHOR` against the previous week's map. Map anchoring is a preference, not a precondition; a candidate without a clean map anchor can still qualify on three-lens strength alone (see the asset `three-lens-filter.md` for the full policy). The map update itself runs next at step 5, before per-item voice capture.
 2. **Three-lens scoring**: for surviving candidates, score yes or no on technical, operational, human. Keep those scoring yes on at least two.
+3. **Source tagging**: for each surviving candidate, inspect the URLs on the candidate. Tag `HAS_PRIMARY_SOURCE` if any URL is a tier-1 primary outlet (Anthropic, OpenAI, DeepMind, or any outlet in the primary-outlet allowlist in `three-lens-filter.md`). Tag `NO_PRIMARY_SOURCE` if the only URLs are secondary aggregators (AI Daily Brief, Stratechery, podcast notes, letsdatascience.com, aidailybrief.beehiiv.com). The corroboration sub-step 4b acts on the `NO_PRIMARY_SOURCE` set.
 
-The filtered list is the interim shortlist passed to steps 5 through 9. There is no upper cap. Minimum three. If fewer than three candidates clear the filter, note the shortfall in the summary for Tom rather than padding. **Persona-weighted ranking runs after the map is updated** (see step 9.5), because the ranking needs this week's map positions, not last week's.
+The filtered list is the interim shortlist passed to step 4b (corroboration) and then to steps 5 through 9. There is no upper cap. Minimum three. If fewer than three candidates clear the filter, note the shortfall in the summary for Tom rather than padding. **Persona-weighted ranking runs after the map is updated** (see step 9.5), because the ranking needs this week's map positions, not last week's.
+
+### 4b. Corroborate aggregator-only candidates (P016)
+
+For every candidate tagged `NO_PRIMARY_SOURCE` at step 4 that also scored yes on at least two lenses, attempt multi-outlet corroboration before finalising the shortlist. This step closes the P016 failure mode where the filter silently dropped the Tim Cook transition from the 2026-04-24 edition despite multi-outlet primary coverage being one query away.
+
+For each qualifying candidate:
+
+1. Extract the named entity from the candidate title (person, company, product, policy, or event).
+2. URL-encode the named entity and issue one Google News RSS query:
+
+   ```
+   WebFetch https://news.google.com/rss/search?q=<encoded-entity>&hl=en-US&gl=US&ceid=US:en
+   ```
+
+   Extraction prompt: "Extract the top 5-10 items. For each: outlet (publisher name), headline, absolute URL, publish date. Skip items that are clearly re-posts of a wire story (opening with 'per Reuters', 'via AP', etc.) rather than independent primary reporting."
+
+3. Count distinct primary outlets (see the primary-outlet allowlist in `three-lens-filter.md`). The same outlet domain counts once regardless of how many Google News entries it has; aggregator re-posts do not count.
+
+4. Apply the threshold:
+   - **3+ distinct primary outlets**: tag the candidate `CORROBORATED_PRIMARY`. Attach the 3 strongest outlet/URL pairs to the candidate's metadata (this becomes the Source line's attribution in step 11). Move the candidate into the main shortlist as if it were tier-1-sourced.
+   - **0 to 2 distinct primary outlets**: tag the candidate `WEAK_ATTRIBUTION`. Do NOT drop. Carry on a separate weak-attribution list that step 10 surfaces to Tom for explicit keep/drop/ask-for-help resolution.
+
+5. Record per-candidate corroboration outcome in internal metadata (count of distinct primary outlets, query used, top 3 outlets). The Tom-summary at step 17 reports on the corroboration pass.
+
+**Placement rationale** (P016 investigation task resolution): corroboration runs AFTER three-lens scoring so weak-three-lens candidates are cheap-dropped before burning a Google News query, and BEFORE the map-mutation gate (step 5) so `CORROBORATED_PRIMARY` candidates can legitimately anchor to map movement in step 6. Tier-1-sourced candidates bypass this step entirely; the expected fan-out is 0-2 Google News queries per edition in a typical week.
+
+**Precedent**: the Google News RSS mechanism is already established in the pipeline for OpenAI tier-1 source-fetch fallback (see `docs/ai-engineering-brief/ai-landscape.md` Source-coverage notes and P010). This sub-step reuses the same mechanism for a second use case; a follow-up ADR amendment codifying Google News RSS as a first-class pipeline primitive for both tier-1 fallback and aggregator corroboration is advisable (see `docs/decisions/016-sw-critic-subagents-and-iteration-loop.proposed.md`).
 
 ### 5. Map-mutation gate (ADR 016 failure-mode rule)
 
@@ -187,6 +215,17 @@ Because the map has already been updated (steps 5-8) and the Wardley critic has 
 Capture per-item responses. Adjusts feed the drafter (step 11): Why-it-matters and Human-angle lines incorporate Tom's phrasing where he gave any, otherwise use the original take. The "From Tom" opener (step 11) is assembled from the strongest POV across Tom's adjusts that week.
 
 If zero candidates get an Adjust with a strong POV, the opener defaults to a meta-observation about the week's theme (not a model-guess at Tom's voice). Note in the summary.
+
+After the main shortlist per-item capture completes, run a second pass for any candidates tagged `WEAK_ATTRIBUTION` at step 4b (P016). For each weak-attribution candidate, call `AskUserQuestion` with:
+
+- **question**: `"Weak-attribution item <N>: <one-sentence story summary>. Aggregator-only source: <aggregator URL>. Corroboration outcome: <N> distinct primary outlets found (<list of outlet names>); threshold for primary-sourced treatment is 3. Keep as Also-worth-noting, Drop, or Ask for help?"`
+- **options**:
+  - `Keep as Also-worth-noting`: include in the draft as an Also-worth-noting entry (not a full Item block). Attribution line names the aggregator plus any primary outlets that did surface.
+  - `Drop`: remove from consideration. Record reason in internal metadata.
+  - `Ask for help`: Tom wants to discuss further before deciding. Free-text capture via "Other". The drafter pauses on this item; the Tom-summary surfaces the unresolved question.
+- **multiSelect**: false
+
+Weak-attribution handling preserves the signal that the earlier filter would have silently dropped. A weak-attribution candidate that Tom keeps joins the main draft as an Also-worth-noting entry (short paragraph, not a full Item). Tom's Drop reasons feed future filter tuning.
 
 ### 11. Draft the brief
 
@@ -304,7 +343,8 @@ Report back in chat:
 - Candidate count by source tier (tier-1, tier-2, tier-3, inbox).
 - Source failures, if any.
 - Map-mutation status (mutated / skipped with reason).
-- Filtered count that cleared the Wardley precondition and three-lens bar.
+- Filtered count that cleared the Wardley preference and three-lens bar.
+- Corroboration outcome count (P016): candidates that ran the Google News corroboration query, of which N were tagged `CORROBORATED_PRIMARY` and N were tagged `WEAK_ATTRIBUTION`. For each `WEAK_ATTRIBUTION` candidate, note Tom's step-10 decision (Keep / Drop / Ask for help) and any unresolved Ask-for-help items.
 - Final item count (minimum 3, no cap).
 - Voice review verdict.
 - Content-risk block with verdict.
@@ -320,6 +360,7 @@ Report back in chat:
 - **Tier-1 source fails**: do not mutate the map this week. Run the brief against the previous map. Note the skip in the summary and in the draft's Map Delta section.
 - **Render fails at step 7**: revert the `.owm` edit, treat as a map-update failure, note in summary, continue against previous map.
 - **Fewer than three candidates clear the filter**: produce a two-item brief (or one-item if only one clears) rather than padding. Note the shortfall.
+- **Google News RSS corroboration query fails at step 4b**: treat the failure like a source-fetch failure, note in `source_failures`, and default the affected candidate to `WEAK_ATTRIBUTION`. Do NOT drop on corroboration-fetch-failure alone; the corroboration path failing is a pipeline signal, not a story signal.
 - **Voice review returns FAIL**: fix and re-run. Do not save a voice-failing draft.
 - **Content-risk returns `VERDICT: REJECTED`**: save the draft with the block for Tom's inspection, surface the rejection in the summary, skip the newsletter critic step. Tom decides.
 - **Wardley critic returns `VERDICT: REJECTED` (round-3 exhausted)**: save the critic block with the artifacts; proceed to draft the brief anyway. A weak map is still better than no map for this week's brief. Note the residual weaknesses in the summary so Tom can decide whether to rewrite the analysis.
