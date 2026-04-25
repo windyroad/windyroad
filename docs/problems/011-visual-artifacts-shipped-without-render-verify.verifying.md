@@ -1,8 +1,9 @@
 # Problem 011: Visual artifacts iterated and presented without render-and-verify discipline
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-17
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; render-and-verify workaround documented in BRIEFING.md)
+**Transitioned to Verification Pending**: 2026-04-25 (fix released: render-and-verify discipline note added to wr-newsletter SKILL.md step 12 with explicit 5-step flow; shared helper `scripts/render-svg.mjs` created; smoke-tested against `the-shift-logo.svg`. Verification fires on the next visual-artifact iteration: logo rework, OG image update, or cover-image generation.)
 **Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2)
 **Effort**: S (add render-and-verify reminder to skills that produce visual output; optional sips wrapper script)
 **WSJF**: (6 x 2.0) / 1 = 12.0
@@ -59,8 +60,9 @@ Longer-term:
 ### Investigation Tasks
 
 - [x] Capture the lesson in BRIEFING.md (done)
-- [ ] Add a "render and verify" reminder to the Logo section of any skill that produces visual output
-- [ ] Consider whether a shared helper script is warranted for SVG-to-PNG conversion
+- [x] Add a "render and verify" reminder to the Logo section of any skill that produces visual output (done 2026-04-25: discipline note added to `.claude/skills/wr-newsletter/SKILL.md` step 12; same pattern already lives in `wr-wardley:generate` step 9-10)
+- [x] Consider whether a shared helper script is warranted for SVG-to-PNG conversion (done 2026-04-25: `scripts/render-svg.mjs` wraps `sips -s format png -Z <size> in.svg --out out.png`; smoke-tested against `src/newsletters/assets/the-shift-logo.svg`)
+- [ ] Project-level convention extraction (CLAUDE.md or similar) is deferred. Effort is S only because items 1 and 2 are scoped to the newsletter skill; whether the pattern generalises to a project-wide convention is a separate design question to revisit if a third visual-output workflow appears.
 
 ## Related
 

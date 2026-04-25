@@ -370,6 +370,22 @@ Compose a cover image that supports the headline and the week's theme. The image
 - Carry alt text of 100-160 characters describing the image content (image is published alongside the LinkedIn post; alt text is required, not optional).
 - Be saved at `<draft-folder>/YYYY-MM-DD.cover.<ext>` so the finalise phase can locate it via the same date-anchored convention as the draft itself.
 
+**Render-and-verify discipline (P011).** When the cover (or any other visual artifact in this pipeline) is authored as SVG, do not present the SVG without first rendering and visually inspecting the result yourself. SVG output depends on font availability, stroke paths, coordinate systems, and layering, so describing the SVG's intent is not a substitute for looking at the rendered PNG. The flow is:
+
+1. Write the SVG (`Write` / `Edit`).
+2. Render to PNG via the shared helper:
+
+   ```bash
+   node scripts/render-svg.mjs <input.svg> <output.png> [--size <px>]
+   ```
+
+   The helper wraps `sips -s format png -Z <size> in.svg --out out.png` so the command is consistent across contributors. Default `--size` is 1200; choose smaller (e.g. 200-400) for quick visual checks.
+3. `Read` the output PNG. The harness renders the PNG inline in the tool result.
+4. Visually compare the rendered image against the brief and the brand assets. If anything is off (overlapping text, broken strokes, lines overshooting, monogram clashes, incorrect colours), fix the SVG and re-render before continuing.
+5. Only present the artifact to Tom once the rendered PNG matches intent.
+
+This is the same pattern as `wr-wardley:generate` step 9-10 and `owm-to-svg.mjs`; step 12 inherits it explicitly because cover-image work is where the discipline gap originally surfaced.
+
 If the image generation tooling fails or returns an unbranded result, do not block the pipeline: note the failure in the summary, fall back to a text-only edition, and continue.
 
 **Phase variant `12-prime` (phase=finalise only): re-render gate.** Compare the finalise-time headline (from step 11-prime) against the prep-time headline (from `<prep-draft-body>`). If the headline is unchanged AND the week's theme is unchanged, carry `<prep-image-path>` forward without re-rendering. If either changed materially, re-render the cover image against the finalise-time headline. The re-render check is a string compare on the H1 line plus a semantic check on the intro sentence (a single-word edit that does not change meaning is "unchanged"; a re-framed theme is "changed"). When in doubt, re-render: image work in finalise is the explicit ADR 017 safety valve for late-breaking news.
