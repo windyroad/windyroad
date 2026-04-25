@@ -56,6 +56,15 @@
             "command": ".claude/hooks/a11y-mark-reviewed.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/no-em-dash-bash.sh"
+          }
+        ]
       }
     ],
     "Stop": []
