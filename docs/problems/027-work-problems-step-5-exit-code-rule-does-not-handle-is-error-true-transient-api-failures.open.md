@@ -45,4 +45,12 @@ Orchestrator-side `is_error` check plus retry-once policy. Already applied infor
 ## Related
 
 - packages/itil/skills/work-problems/SKILL.md (Step 5)
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/81 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/81
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
