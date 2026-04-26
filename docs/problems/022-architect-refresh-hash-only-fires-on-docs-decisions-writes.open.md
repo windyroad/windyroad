@@ -48,4 +48,12 @@ find docs/decisions -name '*.md' -not -name 'README.md' -print0 | sort -z | xarg
 
 - ~/.claude/plugins/cache/windyroad/wr-architect/0.5.0/hooks/architect-refresh-hash.sh
 - ~/.claude/plugins/cache/windyroad/wr-architect/0.5.0/hooks/lib/architect-gate.sh
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/79 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/79
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
