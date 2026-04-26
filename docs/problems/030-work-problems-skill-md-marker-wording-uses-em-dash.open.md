@@ -47,3 +47,12 @@ Whitelist line in `.claude/hooks/no-em-dash-bash.sh`. Acceptable while in place;
 - docs/VOICE-AND-TONE.md (em-dash policy)
 - packages/itil/skills/work-problems/SKILL.md (upstream marker definition)
 - packages/itil/skills/manage-problem/SKILL.md (AFK-fallback marker mirror)
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/84 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/84
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
