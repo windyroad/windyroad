@@ -74,4 +74,12 @@ Optional fallback: if `${CLAUDE_PLUGIN_ROOT}` is unset (e.g. the skill is invoke
 - `~/.claude/plugins/cache/windyroad/wr-itil/0.20.0/skills/manage-problem/SKILL.md` Step 0 (the call site with the hardcoded vendored path)
 - `~/.claude/plugins/cache/windyroad/wr-itil/0.20.0/scripts/reconcile-readme.sh` (the script in its marketplace-cache install location)
 - P027 (work-problems Step 5 exit-code rule; same plugin upstream)
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/85 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/85
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
