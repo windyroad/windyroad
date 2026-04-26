@@ -1,6 +1,6 @@
 # Problem 024: .claude/** Edit/Write permission gate not satisfied by */Edit allow list in AFK subprocesses
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-04-26
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
 
@@ -59,6 +59,32 @@ Architect (PASS) and JTBD (PASS, scope: internal tooling out of commercial JTBD 
 Awaiting user verification: the next AFK `claude -p` subprocess that attempts an Edit/Write under `.claude/**` should succeed without the python3 fallback. The current subprocess loaded settings at startup so its own behaviour is not the verification surface; verification fires on the next AFK iteration that touches a `.claude/` path.
 
 If the parenthesised form does not resolve the gate in the next AFK iteration, fall back to the colon form (`Edit:.claude/**`, `Write:.claude/**`) as a second experiment per the architect's contingency.
+
+## Retry Attempt 2 (2026-04-27)
+
+Verification of attempt 1 was NEGATIVE. Subsequent AFK iterations against `.claude/skills/**` and `.claude/agents/**` paths still hit the same `"haven't granted it yet"` denial despite the parenthesised `Edit(.claude/**)` and `Write(.claude/**)` matchers from commit `5665454` being live in `.claude/settings.json` `permissions.allow`. Reproduced again live in this very iteration: the first attempt to apply attempt 2's settings change via the Edit tool hit the gate on `.claude/settings.json` itself, falling back to the python3 heredoc fallback documented in the Workaround section above.
+
+User authorised the colon-form retry, scoped to `.claude/skills/**` only (NOT `.claude/agents/**`, which keeps the parenthesised-only baseline as a control surface for the A/B comparison). Attempt 2 appends two colon-form matchers alongside the existing parenthesised entries:
+
+```json
+"allow": [
+  "*",
+  "Bash",
+  "Edit",
+  "Edit(.claude/**)",
+  "Write(.claude/**)",
+  "Edit:.claude/skills/**",
+  "Write:.claude/skills/**"
+]
+```
+
+Architect PASS (no ADR governs allow-list shape; the verifying.md text at line 61 pre-authorised the colon-form contingency; coexisting both forms creates a useful empirical signal). JTBD PASS (internal tooling, out of commercial JTBD set; no user-facing surface affected).
+
+**Verification trigger**: next AFK iteration that issues an Edit or Write against `.claude/skills/wr-newsletter/SKILL.md` (or any `.claude/skills/**` path) without falling back to the python3 heredoc workaround. If the colon form succeeds where the parenthesised form failed, that confirms the engine treats the two grammars differently and the project should standardise on the colon form for all `.claude/**` matchers (a future ADR-worthy convention; not codified yet).
+
+If the colon form ALSO fails verification, the residual hypothesis is that Claude Code's core "sensitive file" gate refuses ANY allow-list entry for the `.claude/**` subtree under bypassPermissions, and the python3 heredoc remains the only viable path. That outcome would graduate this ticket from infrastructure-fix to upstream-blocked and a new ticket would track the engine-side request.
+
+`.claude/agents/**` is explicitly NOT included in this attempt: keeping it on the parenthesised-only baseline lets a future iteration that edits an agent file confirm whether the colon-form is the differentiator (skills succeed, agents still fail) or whether the engine has a global `.claude/**` block (both paths still fail). User-scoped to skills only by design.
 
 ## Dependencies
 
