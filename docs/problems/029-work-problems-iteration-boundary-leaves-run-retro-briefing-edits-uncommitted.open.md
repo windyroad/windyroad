@@ -47,4 +47,12 @@ Orchestrator adds a separate "BRIEFING hand-off" commit per iteration that touch
 - packages/itil/skills/work-problems/SKILL.md (Step 6 / Step 6.5 / Step 6.75)
 - docs/decisions/014-*.md (governance skills commit own work)
 - packages/wr-retrospective/skills/run-retro/SKILL.md
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/83 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/83
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
