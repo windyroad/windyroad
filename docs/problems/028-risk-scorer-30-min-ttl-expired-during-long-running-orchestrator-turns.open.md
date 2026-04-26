@@ -45,4 +45,12 @@ Re-score before commit if turn duration approaches TTL. Adds extra subagent invo
 
 - ~/.claude/plugins/cache/windyroad/wr-risk-scorer/ (TTL config)
 - docs/decisions/015-*.md (risk-scorer split-skill ADR)
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/82 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/82
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
