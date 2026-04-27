@@ -95,3 +95,4 @@ Reference: 2026-04-27 retro session.
 - Problem 008 (editorial-sim subagent; this CI-status gate is parallel to the editor gate but upstream of it)
 - Problem 013 (voice/tone gate on external comms; pairs with this ticket's CLI-level surface)
 - `docs/BRIEFING.md` "Cross-project patterns" (risk-scorer above appetite is a hard stop, confirmed implemented)
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
