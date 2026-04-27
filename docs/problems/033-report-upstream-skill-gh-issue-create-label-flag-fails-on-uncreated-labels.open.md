@@ -75,4 +75,12 @@ Option 1 is preferred because it matches the working pattern actually exercised 
 - docs/decisions/024-cross-project-problem-reporting-contract.proposed.md (ADR governing the skill)
 - docs/decisions/033-report-upstream-classifier-problem-first.proposed.md (problem-first classifier)
 - 2026-04-27 upstream-batch retro session
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/87 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/87
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes, upstream issue body contains the local ticket reference
