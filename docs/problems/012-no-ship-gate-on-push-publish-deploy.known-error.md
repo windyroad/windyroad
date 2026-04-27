@@ -95,4 +95,12 @@ Reference: 2026-04-27 retro session.
 - Problem 008 (editorial-sim subagent; this CI-status gate is parallel to the editor gate but upstream of it)
 - Problem 013 (voice/tone gate on external comms; pairs with this ticket's CLI-level surface)
 - `docs/BRIEFING.md` "Cross-project patterns" (risk-scorer above appetite is a hard stop, confirmed implemented)
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/86 (2026-04-27)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/86
+- **Reported**: 2026-04-27
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes (issue body contains downstream ticket reference)
