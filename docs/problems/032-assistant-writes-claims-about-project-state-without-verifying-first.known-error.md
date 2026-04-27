@@ -1,6 +1,6 @@
 # Problem 032: Assistant writes ticket bodies and claims about project state without verifying current code/config first
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-27
 **Priority**: 16 (Significant). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: S (memory-note + optional hook + optional CLAUDE.md addition)
@@ -53,11 +53,11 @@ Recommend starting with lever 1 (memory) and lever 3 (CLAUDE.md). Defer lever 2 
 
 ### Investigation Tasks
 
-- [ ] Write `feedback_verify_project_state_before_writing.md` with body matching the lever 1 description above.
-- [ ] Update `MEMORY.md` index with the new entry.
-- [ ] Cross-reference `feedback_verify_from_own_observation.md` in the new memory.
-- [ ] Add the CLAUDE.md discipline note (lever 3) and confirm it survives the next session restart.
-- [ ] Defer lever 2 (hook) until a follow-up session demonstrates lever 1 + 3 are insufficient.
+- [x] Write `feedback_verify_project_state_before_writing.md` with body matching the lever 1 description above.
+- [x] Update `MEMORY.md` index with the new entry.
+- [x] Cross-reference `feedback_verify_from_own_observation.md` in the new memory.
+- [x] Add the CLAUDE.md discipline note (lever 3) and confirm it survives the next session restart.
+- [x] Defer lever 2 (hook) until a follow-up session demonstrates lever 1 + 3 are insufficient.
 
 ## Dependencies
 
@@ -71,3 +71,16 @@ Recommend starting with lever 1 (memory) and lever 3 (CLAUDE.md). Defer lever 2 
 - Memory `feedback_verify_from_own_observation.md` (existing scan-for-evidence preference; this ticket extends it to project-state claims)
 - This 2026-04-27 retro session\'s correction events: P012 rescope, .claude/** scope correction, architect-PASS marker semantics
 - P012 (rescoped 2026-04-27 after this exact verification gap landed wrong framing)
+- **Upstream report pending**: false positive; detection misfire (P063 strict detection fired on the descriptive phrase "upstream patterns" in the ticket prose; this ticket is internal-toolchain assistant discipline, not an external dependency)
+
+## Fix Released
+
+**Released**: 2026-04-27
+
+**Fix summary**: Two of the three planned levers shipped. Lever 2 (the optional UserPromptSubmit hook) deferred per the original Fix Strategy until lever 1 + 3 prove insufficient.
+
+- **Lever 1 (memory note)**: `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_verify_project_state_before_writing.md` written. Encodes the "read the file before asserting hook/skill/config behaviour" discipline, cross-references the three correction events from this session (P012 framing, .claude/** scope, architect-PASS marker semantics), and lists anti-patterns the rule blocks. MEMORY.md index updated with a sibling pointer line.
+- **Lever 3 (CLAUDE.md addition)**: New "Verify before asserting" section appended to project `CLAUDE.md` immediately after the `<!-- accessibility-agents: end -->` marker. One paragraph that cites the memory note path and references P032 as origin. Survives session restart since CLAUDE.md is loaded into every fresh main-session context.
+- **Lever 2 (UserPromptSubmit hook)**: deferred. Re-open this ticket if a future session shows the memory + CLAUDE.md combination is insufficient.
+
+**Verification trigger**: the next assistant turn that asserts current project state (hook contents, gate behaviour, config file shape) should now READ the file before asserting, not paraphrase prior-session ticket prose. If a correction-signal fires on a project-state claim ("are you sure...?", "DON\'T claim X without checking") within the next few sessions, levers 1 + 3 are insufficient and lever 2 (the hook) needs to land.
