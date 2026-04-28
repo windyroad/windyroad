@@ -1,0 +1,51 @@
+title AI Engineering Landscape (Week ending 2026-04-24)
+
+// context: the Engineering Leader persona is responsible for shipping software
+// while the AI tooling underneath them shifts weekly. This map shows the
+// components in that landscape and where they sit on the evolution axis.
+// It is the living reference the AI Engineering Brief updates each week.
+
+anchor Ship Software Under AI Disruption [0.95, 0.50]
+
+component Shipped Product [0.88, 0.45]
+component Engineering Team Capability [0.82, 0.25]
+component Delivery Pipeline [0.70, 0.55]
+component AI Coding Assistants [0.62, 0.60]
+component AI Agent Runtimes [0.55, 0.34]
+component Agentic Engineering Practices [0.78, 0.15]
+component Prompt and Context Management [0.45, 0.30]
+component Model Evaluation Frameworks [0.42, 0.24]
+component AI Security Tooling [0.38, 0.14]
+component Foundation Models [0.32, 0.62]
+component Model Hosting and Inference [0.22, 0.70]
+component AI Regulation and Compliance [0.60, 0.28]
+component Compute and GPU Infrastructure [0.10, 0.82]
+
+Ship Software Under AI Disruption->Shipped Product
+Shipped Product->Engineering Team Capability
+Shipped Product->Delivery Pipeline
+Engineering Team Capability->AI Coding Assistants
+Delivery Pipeline->AI Coding Assistants
+Delivery Pipeline->AI Security Tooling
+AI Coding Assistants->Foundation Models
+AI Coding Assistants->Model Hosting and Inference
+AI Coding Assistants->Prompt and Context Management
+AI Agent Runtimes->Foundation Models
+AI Agent Runtimes->Model Hosting and Inference
+AI Agent Runtimes->Prompt and Context Management
+AI Agent Runtimes->Model Evaluation Frameworks
+AI Security Tooling->AI Coding Assistants
+AI Security Tooling->AI Agent Runtimes
+AI Regulation and Compliance->Engineering Team Capability
+Engineering Team Capability->Agentic Engineering Practices
+Foundation Models->Compute and GPU Infrastructure
+Model Hosting and Inference->Compute and GPU Infrastructure
+
+evolve AI Coding Assistants 0.82
+evolve AI Agent Runtimes 0.52
+evolve Foundation Models 0.84
+evolve Model Evaluation Frameworks 0.44
+evolve AI Security Tooling 0.30
+evolve Prompt and Context Management 0.48
+evolve AI Regulation and Compliance 0.48
+evolve Agentic Engineering Practices 0.35

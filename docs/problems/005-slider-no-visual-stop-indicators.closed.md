@@ -1,7 +1,8 @@
 # Problem 005: Slider has no visual indicators for discrete stops
 
-**Status**: Open
+**Status**: Closed
 **Reported**: 2026-04-14
+**Closed**: 2026-04-17 (user-verified fix in production). Slider now renders subtle dot indicators at each stop position on the track.
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 
 ## Description

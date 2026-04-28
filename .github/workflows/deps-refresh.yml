@@ -1,0 +1,50 @@
+name: deps-refresh
+
+on:
+  schedule:
+    # Mondays 09:00 UTC, weekly. Lands review surface in working-week overlap
+    # for AU / EU / US-east. Cadence per ADR-022.
+    - cron: '0 9 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    name: Refresh stale dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Refresh stale dependencies
+        run: npx dry-aged-deps --update --yes
+
+      - name: Open PR if manifests changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/deps-refresh
+          delete-branch: true
+          commit-message: 'chore(deps): scheduled refresh of stale dependencies'
+          title: 'chore(deps): scheduled refresh of stale dependencies'
+          body: |
+            Scheduled refresh of dependencies past the staleness windows in `.dry-aged-deps.json`.
+
+            - Cadence: weekly, Mondays 09:00 UTC (per ADR-022).
+            - Composes with ADR-021 (reactive bypass in `scripts/push-watch.sh`).
+            - Closes P020 (no dependency update cadence).
+
+            Review the diff for any unexpected major-version bumps before merging.
+          add-paths: |
+            package.json
+            package-lock.json

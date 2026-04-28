@@ -101,3 +101,7 @@ Type `/` followed by a command name to invoke the corresponding specialist direc
 For tasks that do not involve any user-facing web content (backend logic, scripts, database work), these requirements do not apply.
 <!-- accessibility-agents: end -->
 
+# Verify before asserting
+
+Before writing a ticket body, framing a problem, or asserting how a hook / skill / gate currently behaves, READ the actual file from disk. Ticket prose is a hypothesis to verify, not a fact. Tickets drift as code changes around them; the source of truth is the file on disk. One verification read is cheap; a wrong claim that lands in a ticket or commit message is expensive (rescopes, re-opens, polluted audit trail). See `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_verify_project_state_before_writing.md` (P032).
+

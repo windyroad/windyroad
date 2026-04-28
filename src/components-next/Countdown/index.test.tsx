@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, waitFor, act, fireEvent } from '@testing-library/react';
+
 import Countdown from './index';
 
 const MANIFOLD_SLUG = 'when-will-a-claude-mythos-previewle';

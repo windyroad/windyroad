@@ -4,6 +4,8 @@ This guide defines how Windy Road Technology sounds across the website, landing 
 
 Windy Road is a consulting team. The voice is first-person plural ("we") for service delivery. Tom Howard is the named founder and public face, introduced by name in credentials sections. Service copy uses "we help", "our team", "we've built". Personal track record claims use "I" ("I've built pipeline controls at Greater Bank") because they describe Tom's individual history. Blog articles may use "I" when the author is sharing personal experience. The audience is engineering leaders who need to get their teams patch fit, and (secondarily) technical founders with broken vibe-coded apps.
 
+**Last reviewed:** 2026-04-28 (link-text rule added)
+
 ---
 
 ## Voice
@@ -45,6 +47,20 @@ The visitor has a problem. Name the problem in their language. Don't tell them h
 > "Your vibe-coded app is in production. Something keeps breaking. You're scared to touch it."
 
 Not: "You've built something amazing! But every great product needs a little polish."
+
+### Respectful of the reader's team
+
+The reader is responsible for a team. Name situations, external threats, and industry baselines directly. Do not pass judgement on the reader's team's competence, diligence, or stewardship. Credential-sensitive readers (Engineering Leaders especially) cannot forward content that implies their own team is behind, slow, or negligent, and they will disengage when they read it. This applies to hero copy, articles, the AI Engineering Brief, and any outbound content.
+
+**In scope (don't write):** framing that attributes fault, negligence, or inferiority to the reader's specific team. Examples: "your team probably trailed by weeks," "you're already behind," "most teams don't bother," "if your vendor evaluations are rubber-stamping..."
+
+**Out of scope (fine to write):** describing the reader's situation, industry baselines, or the external world. Examples: "Patch cycles for enterprise teams are typically measured in weeks." "Your vibe-coded app is in production." "Claude Mythos found a vulnerability overnight."
+
+The boundary: **describe the situation and the external world in direct language; do not pass judgement on the reader's team's competence or diligence.**
+
+> "The capability ceiling for AI-assisted coding moved again this week. Which of your tooling assumptions from the previous release are worth re-testing?"
+
+Not: "Your team's build, review, and testing assumptions probably trailed 4.6 by weeks, so they trail 4.7 by more."
 
 ---
 
@@ -382,6 +398,28 @@ Guidelines:
 
 ---
 
+## Reading level and jargon load
+
+Voice is the constant. Jargon load is the constraint. The test is the same in every context: can the intended reader parse a sentence on first pass without stopping to translate?
+
+Targets by content type:
+
+- **Hero copy, blog openers and closers, fit checks, CTAs, social posts**: Grade 9-10. Short sentences, concrete nouns, every in-group term glossed on first use.
+- **Mechanism sections** (code walkthroughs, hook internals, scoring tables): denser is fine. The reader opted in by the time they reach them.
+
+Two rules:
+
+1. **Gloss on first use.** Every term not in general-interest tech vocabulary, including three-letter abbreviations (PAT, MCP, TTL, CI), is expanded or contextually glossed on first use. The cost is one parenthetical. It protects the page for readers outside the in-group.
+2. **Concrete over abstract.** Prefer concrete examples over abstract noun phrases. If a sentence stacks two or more in-group terms without a gloss, rewrite it.
+
+> "an attacker who found the token in a leaked log"
+
+Not: "an exfiltrated credential running from a CI box"
+
+The standing test: would a competent CTO from a non-AI-native company read the opener without stopping to translate? If not, the section is too dense for that location.
+
+---
+
 ## Banned patterns
 
 These patterns have been identified and removed from the site. Don't reintroduce them.
@@ -392,8 +430,10 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | "I'm X, not Y" self-positioning | Defines you by what you're not | "Working guardrails, not a slide deck" |
 | Competitor bashing | Positions you as the cheap alternative rather than the right one | "Agencies charge $50k and take 8 weeks" |
 | Dismissing the reader's tools | Insults something they chose and use | "Claude wrote the bugs in the first place" |
+| Disparaging the reader's team | Insults the reader's stewardship; destroys forward-ability | "Your team probably trailed 4.6 by weeks, so they trail 4.7 by more" |
 | Feature claims in fit checks | Sells the service instead of describing the visitor | "You need someone who can implement guardrails" |
 | Unexplained internal references | Assumes readers know your specific rules or structure | "five banned patterns, a word list of terms to prefer and avoid" |
+| Ambiguous link text ("here", "click here", "read more", "this", "more info") | Out of context the link conveys nothing. Fails WCAG 2.4.4 (Link Purpose in Context) and reads as a flat list of "here, here, here" to screen-reader users navigating by link list. | "([here](/blog/pipeline-discipline))" → "[pipeline discipline](/blog/pipeline-discipline)" |
 
 ---
 

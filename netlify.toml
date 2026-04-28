@@ -17,3 +17,11 @@
   from = "/2011/02/07/apache-ant-junit-xml-schema/"
   to = "/blog/apache-ant-junit-xml-schema"
   status = 301
+
+# Slugify config switched to strict on 2026-04-28. The apostrophe-bearing form
+# was the canonical URL between this article's ship date and the switch.
+# Keep this redirect durable so external links (RSS, social, archives) resolve.
+[[redirects]]
+  from = "/blog/your-ai-agent-doesn't-know-when-to-stop-committing"
+  to = "/blog/your-ai-agent-doesnt-know-when-to-stop-committing"
+  status = 301

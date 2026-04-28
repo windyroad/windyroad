@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Defence in depth: four layers between intent and production</title>
+  <desc id="svg-desc">Vertical stack of four numbered layer cards. Layer 1: Agent has no production access; production credentials live in CI/CD secrets, used only by pipeline jobs; owner is the team; PocketOS state is missing. Layer 2: API tokens scoped by operation, environment, and resource; owner is the infrastructure provider; PocketOS state is missing. Layer 3: Destructive API requires authorisation linked to an audited change record, not just authentication; owner is the provider or platform; PocketOS state is missing. Layer 4: Pipeline risk-scoring gate fires on commit, push, and release against a written policy; owner is the agent harness; PocketOS state is replaced with system-prompt text. A footer caption reads: no layer 1, no layer 2, no layer 3, and a paragraph of system-prompt text where layer 4 should have been.</desc>
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0F172A"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#3B82F6"/>
+
+  <!-- Header -->
+  <text x="600" y="46" text-anchor="middle" font-size="26" font-weight="700" fill="#F1F5F9">Defence in depth: four layers between intent and production</text>
+  <text x="600" y="72" text-anchor="middle" font-size="14" fill="#94A3B8">If a layer holds, no later layer matters. The PocketOS incident hit none.</text>
+
+  <!-- Column header for PocketOS state -->
+  <text x="1130" y="105" text-anchor="end" font-size="11" font-weight="600" fill="#64748B" letter-spacing="0.10em">POCKETOS STATE</text>
+
+  <!-- ===== LAYER 1 ===== -->
+  <rect x="60" y="115" width="1080" height="100" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="115" cy="165" r="28" fill="#0F172A" stroke="#475569" stroke-width="1.5"/>
+  <text x="115" y="173" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F5F9">1</text>
+  <text x="170" y="148" font-size="17" font-weight="600" fill="#F1F5F9">Agent has no production access</text>
+  <text x="170" y="171" font-size="13" fill="#94A3B8">Production credentials live in CI/CD secrets, used only by pipeline jobs.</text>
+  <text x="170" y="194" font-size="11" fill="#64748B" letter-spacing="0.05em">OWNER: YOUR TEAM</text>
+  <rect x="980" y="148" width="140" height="32" rx="16" fill="#3B0E0E" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="1050" y="169" text-anchor="middle" font-size="12" font-weight="700" fill="#F87171" letter-spacing="0.08em">MISSING</text>
+
+  <!-- Connector arrow 1 -> 2 -->
+  <line x1="600" y1="220" x2="600" y2="232" stroke="#475569" stroke-width="2"/>
+  <polygon points="600,239 594,229 606,229" fill="#475569"/>
+
+  <!-- ===== LAYER 2 ===== -->
+  <rect x="60" y="244" width="1080" height="100" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="115" cy="294" r="28" fill="#0F172A" stroke="#475569" stroke-width="1.5"/>
+  <text x="115" y="302" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F5F9">2</text>
+  <text x="170" y="277" font-size="17" font-weight="600" fill="#F1F5F9">API tokens scoped by operation, environment, resource</text>
+  <text x="170" y="300" font-size="13" fill="#94A3B8">A domain-only token cannot call `volumeDelete`. Scope reduces blast radius.</text>
+  <text x="170" y="323" font-size="11" fill="#64748B" letter-spacing="0.05em">OWNER: INFRASTRUCTURE PROVIDER</text>
+  <rect x="980" y="277" width="140" height="32" rx="16" fill="#3B0E0E" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="1050" y="298" text-anchor="middle" font-size="12" font-weight="700" fill="#F87171" letter-spacing="0.08em">MISSING</text>
+
+  <!-- Connector arrow 2 -> 3 -->
+  <line x1="600" y1="349" x2="600" y2="361" stroke="#475569" stroke-width="2"/>
+  <polygon points="600,368 594,358 606,358" fill="#475569"/>
+
+  <!-- ===== LAYER 3 ===== -->
+  <rect x="60" y="373" width="1080" height="100" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="115" cy="423" r="28" fill="#0F172A" stroke="#475569" stroke-width="1.5"/>
+  <text x="115" y="431" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F5F9">3</text>
+  <text x="170" y="406" font-size="17" font-weight="600" fill="#F1F5F9">Destructive API requires authorised change, not just a token</text>
+  <text x="170" y="429" font-size="13" fill="#94A3B8">Token authenticates. Approved change record authorises. Audit lands in both.</text>
+  <text x="170" y="452" font-size="11" fill="#64748B" letter-spacing="0.05em">OWNER: PROVIDER / PLATFORM</text>
+  <rect x="980" y="406" width="140" height="32" rx="16" fill="#3B0E0E" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="1050" y="427" text-anchor="middle" font-size="12" font-weight="700" fill="#F87171" letter-spacing="0.08em">MISSING</text>
+
+  <!-- Connector arrow 3 -> 4 -->
+  <line x1="600" y1="478" x2="600" y2="490" stroke="#475569" stroke-width="2"/>
+  <polygon points="600,497 594,487 606,487" fill="#475569"/>
+
+  <!-- ===== LAYER 4 ===== -->
+  <rect x="60" y="502" width="1080" height="100" rx="8" fill="#1E2940" stroke="#3B82F650" stroke-width="1.5"/>
+  <circle cx="115" cy="552" r="28" fill="#0A1628" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="115" y="560" text-anchor="middle" font-size="22" font-weight="700" fill="#93C5FD">4</text>
+  <text x="170" y="535" font-size="17" font-weight="600" fill="#F1F5F9">Pipeline risk-scoring gate on commit, push, release</text>
+  <text x="170" y="558" font-size="13" fill="#94A3B8">Hook scores each pipeline action against `RISK-POLICY.md`; denies above threshold.</text>
+  <text x="170" y="581" font-size="11" fill="#64748B" letter-spacing="0.05em">OWNER: YOUR AGENT HARNESS</text>
+  <rect x="950" y="535" width="170" height="32" rx="16" fill="#3B0E0E" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="1035" y="556" text-anchor="middle" font-size="11" font-weight="700" fill="#F87171" letter-spacing="0.06em">SYSTEM PROMPT</text>
+  <text x="1035" y="582" text-anchor="middle" font-size="9" fill="#FCA5A580">advisory text instead</text>
+
+  <!-- Footer -->
+  <text x="600" y="623" text-anchor="middle" font-size="11" fill="#64748B">PocketOS: no layer 1, no layer 2, no layer 3, and a paragraph of system-prompt text where layer 4 should have been.</text>
+</svg>

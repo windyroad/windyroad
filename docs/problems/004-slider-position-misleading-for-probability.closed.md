@@ -1,7 +1,8 @@
 # Problem 004: Slider position misleading for probability value
 
-**Status**: Open
+**Status**: Closed
 **Reported**: 2026-04-14
+**Closed**: 2026-04-17 (user-verified fix in production). Slider reworked to use percentage-based positioning so each stop sits at its actual cumulative-probability position on the track.
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 
 ## Description

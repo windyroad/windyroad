@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import Button from '@/src/components-next/Button';
 import styles from './page.module.scss';
 

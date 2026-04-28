@@ -34,6 +34,22 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
 fi
 git pull --rebase
 [ "$STASHED" = "1" ] && git stash pop
+
+# Pre-emptively resolve auto-resolvable stale dependencies before the push.
+# The pre-push hook (.git/hooks/pre-push) runs `dry-aged-deps --check` and
+# halts on stale deps. AFK orchestrator runs (e.g. /wr-itil:work-problems)
+# cannot clear the gate without a human, so apply --update --yes here.
+# Anything not auto-resolvable stays stale and the pre-push gate still fires.
+# See ADR 021 for the policy and ADR-008 risk-reducing-bypass framing.
+if ! npx dry-aged-deps --update --yes; then
+  echo "  (dry-aged-deps auto-update non-fatal; pre-push gate will fire if state is still stale)"
+fi
+if ! git diff --quiet -- package.json package-lock.json; then
+  echo "Auto-deps refresh changed root manifests; committing as chore(deps)."
+  git add package.json package-lock.json
+  git commit -m "chore(deps): refresh stale dependencies (P026)"
+fi
+
 PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)

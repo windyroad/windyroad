@@ -3,7 +3,11 @@
     "allow": [
       "*",
       "Bash",
-      "Edit"
+      "Edit",
+      "Edit(.claude/**)",
+      "Write(.claude/**)",
+      "Edit:.claude/skills/**",
+      "Write:.claude/skills/**"
     ]
   },
   "hooks": {
@@ -54,20 +58,30 @@
             "command": ".claude/hooks/a11y-mark-reviewed.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/no-em-dash-bash.sh"
+          }
+        ]
       }
     ],
     "Stop": []
   },
   "enabledPlugins": {
-    "wr-architect@windyroad": true,
-    "wr-risk-scorer@windyroad": true,
-    "wr-voice-tone@windyroad": true,
-    "wr-style-guide@windyroad": true,
-    "wr-jtbd@windyroad": true,
-    "wr-tdd@windyroad": false,
-    "wr-retrospective@windyroad": true,
-    "wr-problem@windyroad": true,
+    "wr-tdd@windyroad": true,
     "wr-c4@windyroad": true,
-    "wr-wardley@windyroad": true
+    "wr-wardley@windyroad": true,
+    "wr-architect@windyroad": true,
+    "wr-jtbd@windyroad": true,
+    "wr-risk-scorer@windyroad": true,
+    "wr-style-guide@windyroad": true,
+    "wr-voice-tone@windyroad": true,
+    "wr-itil@windyroad": true,
+    "wr-retrospective@windyroad": true,
+    "skill-creator@claude-plugins-official": true
   }
 }

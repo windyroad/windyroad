@@ -2,6 +2,7 @@
 
 **Status**: Closed
 **Reported**: 2026-04-14
+**Closed**: 2026-04-17 (user-verified fix in production). Countdown grid and slider now centred in the hero via `margin: 0 auto` on `.grid` and `.slider` in `Countdown.module.scss`.
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 
 ## Description
@@ -37,9 +38,9 @@ Fix: add `margin: 0 auto` to `.grid` and `.slider` in `Countdown.module.scss`.
 
 ### Investigation Tasks
 
-- [ ] Investigate root cause
-- [ ] Create reproduction test
-- [ ] Create INVEST story for permanent fix
+- [x] Investigate root cause (hero `text-align: center` does not centre block-level elements with `max-width: 400px` unless they also carry `margin: 0 auto`)
+- [x] Apply fix (`margin: 0 auto` on `.grid` and `.slider` in `Countdown.module.scss`)
+- [x] User-verified in production on 2026-04-17
 
 ## Related
 

@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Sign versus Control</title>
+  <desc id="svg-desc">Two-column comparison. Left column titled Sign lists three failure conditions of the PocketOS access pattern: agent has production credentials, a single API call destroys production, system prompt says don't. Arrow leads to a red outcome badge labelled production deleted. Right column titled Control lists three structural fixes: production credentials live in CI/CD secrets only, production changes flow through the pipeline, pipeline gate scores commit push and release. Arrow leads to a green outcome badge labelled denied at the boundary.</desc>
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0F172A"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#3B82F6"/>
+
+  <!-- Header -->
+  <text x="600" y="50" text-anchor="middle" font-size="28" font-weight="700" fill="#F1F5F9">Sign vs Control</text>
+  <text x="600" y="78" text-anchor="middle" font-size="16" fill="#94A3B8">A sign asks the agent to behave. A control fires every time.</text>
+
+  <!-- Column headers -->
+  <text x="320" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#F87171" letter-spacing="0.12em">SIGN</text>
+  <text x="880" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#60A5FA" letter-spacing="0.12em">CONTROL</text>
+
+  <!-- Centre divider line -->
+  <line x1="600" y1="100" x2="600" y2="540" stroke="#1E293B" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- ===== LEFT COLUMN: Sign ===== -->
+  <!-- Box 1 -->
+  <rect x="80" y="156" width="480" height="62" rx="8" fill="#2A0F12" stroke="#7F1D1D" stroke-width="1.5"/>
+  <text x="320" y="183" text-anchor="middle" font-size="15" font-weight="600" fill="#FCA5A5">Agent has production credentials</text>
+  <text x="320" y="204" text-anchor="middle" font-size="12" fill="#FCA5A580">Token sits in a file the agent can read</text>
+
+  <!-- Down arrow -->
+  <line x1="320" y1="226" x2="320" y2="244" stroke="#7F1D1D" stroke-width="2"/>
+  <polygon points="320,252 314,240 326,240" fill="#7F1D1D"/>
+
+  <!-- Box 2 -->
+  <rect x="80" y="258" width="480" height="62" rx="8" fill="#2A0F12" stroke="#7F1D1D" stroke-width="1.5"/>
+  <text x="320" y="285" text-anchor="middle" font-size="15" font-weight="600" fill="#FCA5A5">A single API call destroys production</text>
+  <text x="320" y="306" text-anchor="middle" font-size="12" fill="#FCA5A580">No confirmation, no environment scope</text>
+
+  <!-- Down arrow -->
+  <line x1="320" y1="328" x2="320" y2="346" stroke="#7F1D1D" stroke-width="2"/>
+  <polygon points="320,354 314,342 326,342" fill="#7F1D1D"/>
+
+  <!-- Box 3 -->
+  <rect x="80" y="360" width="480" height="62" rx="8" fill="#2A0F12" stroke="#7F1D1D" stroke-width="1.5"/>
+  <text x="320" y="387" text-anchor="middle" font-size="15" font-weight="600" fill="#FCA5A5">System prompt says &#8220;don&#8217;t&#8221;</text>
+  <text x="320" y="408" text-anchor="middle" font-size="12" fill="#FCA5A580">Advisory text. Models comply most of the time.</text>
+
+  <!-- Down arrow to outcome -->
+  <line x1="320" y1="430" x2="320" y2="448" stroke="#EF4444" stroke-width="2.5"/>
+  <polygon points="320,458 312,444 328,444" fill="#EF4444"/>
+
+  <!-- Outcome badge: production deleted -->
+  <rect x="80" y="464" width="480" height="58" rx="29" fill="#3B0E0E" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="320" y="492" text-anchor="middle" font-size="18" font-weight="700" fill="#EF4444">PRODUCTION DELETED</text>
+  <text x="320" y="512" text-anchor="middle" font-size="11" fill="#FCA5A580">9 seconds, no review, no recoverable backup</text>
+
+  <!-- ===== RIGHT COLUMN: Control ===== -->
+  <!-- Box 1 -->
+  <rect x="640" y="156" width="480" height="62" rx="8" fill="#0A1628" stroke="#1E40AF" stroke-width="1.5"/>
+  <text x="880" y="180" text-anchor="middle" font-size="15" font-weight="600" fill="#93C5FD">Production credentials in CI/CD</text>
+  <text x="880" y="200" text-anchor="middle" font-size="15" font-weight="600" fill="#93C5FD">secrets only (not on the agent)</text>
+
+  <!-- Down arrow -->
+  <line x1="880" y1="226" x2="880" y2="244" stroke="#1E40AF" stroke-width="2"/>
+  <polygon points="880,252 874,240 886,240" fill="#1E40AF"/>
+
+  <!-- Box 2 -->
+  <rect x="640" y="258" width="480" height="62" rx="8" fill="#0A1628" stroke="#1E40AF" stroke-width="1.5"/>
+  <text x="880" y="282" text-anchor="middle" font-size="15" font-weight="600" fill="#93C5FD">Production changes flow through</text>
+  <text x="880" y="302" text-anchor="middle" font-size="15" font-weight="600" fill="#93C5FD">the pipeline (commit, push, release)</text>
+
+  <!-- Down arrow -->
+  <line x1="880" y1="328" x2="880" y2="346" stroke="#1E40AF" stroke-width="2"/>
+  <polygon points="880,354 874,342 886,342" fill="#1E40AF"/>
+
+  <!-- Box 3 -->
+  <rect x="640" y="360" width="480" height="62" rx="8" fill="#0A1628" stroke="#1E40AF" stroke-width="1.5"/>
+  <text x="880" y="384" text-anchor="middle" font-size="15" font-weight="600" fill="#93C5FD">Pipeline gate scores every</text>
+  <text x="880" y="404" text-anchor="middle" font-size="15" font-weight="600" fill="#93C5FD">action against written policy</text>
+
+  <!-- Down arrow to outcome -->
+  <line x1="880" y1="430" x2="880" y2="448" stroke="#22C55E" stroke-width="2.5"/>
+  <polygon points="880,458 872,444 888,444" fill="#22C55E"/>
+
+  <!-- Outcome badge: denied at the boundary -->
+  <rect x="640" y="464" width="480" height="58" rx="29" fill="#0A2E18" stroke="#22C55E" stroke-width="1.5"/>
+  <text x="880" y="492" text-anchor="middle" font-size="18" font-weight="700" fill="#4ADE80">DENIED AT THE BOUNDARY</text>
+  <text x="880" y="512" text-anchor="middle" font-size="11" fill="#86EFAC90">Risky commit, push, or release blocked</text>
+
+  <!-- Footer -->
+  <text x="600" y="572" text-anchor="middle" font-size="13" fill="#64748B">Same agent, same intent, same API. The outcome depends on whether the agent can reach production at all.</text>
+  <text x="600" y="592" text-anchor="middle" font-size="13" fill="#64748B">No production access, plus a control on the path that is left.</text>
+</svg>
