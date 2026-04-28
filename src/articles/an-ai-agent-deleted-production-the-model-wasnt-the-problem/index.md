@@ -14,11 +14,11 @@ tags:
   ]
 ---
 
-Last week an AI coding agent deleted a production database in 9 seconds. [The thread documenting it](https://x.com/lifeof_jer/status/2048103471019434248) has been read as a story about AI safety: a flagship model went rogue, the guardrails didn't hold, another company learned the cost. That reading is wrong. The agent is the least interesting part of the story.
+Last week an AI coding agent deleted a production database in 9 seconds. [The thread documenting it](https://x.com/lifeof_jer/status/2048103471019434248) and [The Register's coverage](https://www.theregister.com/2026/04/27/cursoropus_agent_snuffs_out_pocketos/) have been read as a story about AI safety: a flagship model went rogue, the guardrails didn't hold, another company learned the cost. That reading is wrong. The agent is the least interesting part of the story.
 
 The agent was working for PocketOS, a SaaS that car-rental businesses run their day-to-day on. It had been assigned a routine task in the staging environment. The credentials it was using did not match what Railway expected. Rather than ask, it decided to fix the mismatch by deleting a Railway volume. It ran one `curl` call. The production volume was gone, and because Railway stores volume-level backups inside the same volume, the backups went with it. Three months of recoverable history, erased.
 
-The token that authorised the call had not been created for this. It had been created weeks earlier for adding and removing custom domains via the Railway CLI. Same token. Same `volumeDelete` permission across the entire Railway GraphQL API. Per Jer Crane's account, Railway tokens have no operation-level scope, no resource-level scope, no environment-level scope. Every CLI token is effectively root.
+The token that authorised the call had not been created for this. It had been created weeks earlier for adding and removing custom domains via the Railway CLI. Same token. Same `volumeDelete` permission across the entire Railway GraphQL API. Railway does ship some scoping today: workspace tokens are scoped to a workspace, project tokens to a single environment, and Enterprise customers get [environment-level RBAC](https://docs.railway.com/enterprise/environment-rbac). What it does not ship is operation-level scope on the CLI tokens most teams use. Per Jer Crane's account, the token he held could authenticate any GraphQL mutation, including `volumeDelete`, against any environment in his workspace. Railway CEO Jake Cooper [responded publicly](https://www.theregister.com/2026/04/27/cursoropus_agent_snuffs_out_pocketos/) that the deletion "1000% shouldn't be possible."
 
 The harness, the tool that ran the agent, was Cursor. The model was Anthropic's Claude Opus 4.6. Asked to explain itself, the agent produced a written confession enumerating the safety rules it had violated. The thread quotes the confession. It is also the wrong thing to read.
 
@@ -38,7 +38,7 @@ The PocketOS pattern predates AI. Two versions of the same incident, before agen
 The AI-agent versions, in the months before PocketOS:
 
 - **Replit, July 2025.** SaaStr had declared a code freeze: a deliberate no-deploy window. The AI coding agent deleted the production database anyway, fabricated 4,000 fake user records, and told the operator that recovery was impossible. Recovery turned out to be possible. Founder Jason Lemkin documented the incident in real time. ([Lemkin's thread](https://x.com/jasonlk/status/1946069562723897802), [The Register](https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/))
-- **Cursor Plan Mode, December 2025.** An agent in Plan Mode (Cursor's mode for proposing changes before running them) deleted around 70 source files tracked in Git and terminated processes on remote machines after the user typed "DO NOT RUN ANYTHING." Cursor publicly acknowledged a critical bug: the mode did not enforce its own constraints. ([Cursor forum thread](https://forum.cursor.com/t/catastrophic-damage-and-chaos-in-plan-mode/145523))
+- **Cursor Plan Mode, December 2025.** An agent in Plan Mode (Cursor's mode for proposing changes before running them) deleted around 70 source files tracked in Git and terminated processes on remote machines after the user typed "DO NOT RUN ANYTHING." A Cursor team member acknowledged a critical bug in the same thread: the mode did not enforce its own constraints. ([Cursor forum thread, with Cursor staff reply](https://forum.cursor.com/t/catastrophic-damage-and-chaos-in-plan-mode/145523))
 
 Different operators, different tools, different decades. The shared variable is the access pattern, not the model and not the harness. In every case, a session held credentials that could destroy production, and someone or something invoked them. The shape of the failure does not change.
 
@@ -216,7 +216,7 @@ This pattern is one layer in a stack. It is not a complete answer.
 The right model is layered:
 
 1. The agent has no production access. Its credentials are development-only. Production credentials live in CI/CD secrets, used only by pipeline jobs.
-2. The infrastructure provider scopes API tokens by operation, environment, and resource. CLI tokens for domain operations cannot call `volumeDelete`. Per Jer's account, Railway has not shipped this. Until they do, the layers above and below carry the load.
+2. The infrastructure provider scopes API tokens by operation, environment, and resource. CLI tokens for domain operations cannot call `volumeDelete`. Railway has shipped workspace and project-environment scoping; operation-level scoping on the CLI tokens most teams use has not. Until that ships, the layers above and below carry the load.
 3. The destructive API treats destructive calls like deployments: they require authorisation linked to an audited change, not just authentication. Routine destructive operations carry their authorisation in the change record (an approved cleanup, a scheduled rotation). Where explicit human sign-off is required for a specific call, the API requires something the agent cannot self-issue.
 4. The pipeline has a risk-scoring gate on commit, push, and release.
 
