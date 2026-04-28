@@ -7,7 +7,7 @@
       .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; }
     </style>
     <marker id="arrow-grey" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
     </marker>
     <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#EF4444"/>
@@ -26,39 +26,39 @@
   <text x="600" y="78" text-anchor="middle" font-size="15" fill="#94A3B8">Hook intercepts every tool call. The score check decides.</text>
 
   <!-- ===== STEP 1: Agent intent ===== -->
-  <text x="140" y="128" font-size="11" font-weight="600" fill="#64748B" letter-spacing="0.10em">1. AGENT INTENT</text>
-  <rect x="60" y="142" width="200" height="146" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="140" y="128" font-size="11" font-weight="600" fill="#94A3B8" letter-spacing="0.10em">1. AGENT INTENT</text>
+  <rect x="60" y="142" width="200" height="146" rx="8" fill="#1E293B" stroke="#64748B" stroke-width="1.5"/>
 
   <!-- Code chips inside agent intent box -->
-  <rect x="76" y="160" width="168" height="32" rx="6" fill="#0D1117" stroke="#30363D" stroke-width="1"/>
+  <rect x="76" y="160" width="168" height="32" rx="6" fill="#0D1117" stroke="#94A3B8" stroke-width="1"/>
   <text x="160" y="180" text-anchor="middle" font-size="12" fill="#93C5FD" class="mono">git commit</text>
 
-  <rect x="76" y="200" width="168" height="32" rx="6" fill="#0D1117" stroke="#30363D" stroke-width="1"/>
+  <rect x="76" y="200" width="168" height="32" rx="6" fill="#0D1117" stroke="#94A3B8" stroke-width="1"/>
   <text x="160" y="220" text-anchor="middle" font-size="12" fill="#93C5FD" class="mono">git push</text>
 
-  <rect x="76" y="240" width="168" height="32" rx="6" fill="#0D1117" stroke="#30363D" stroke-width="1"/>
+  <rect x="76" y="240" width="168" height="32" rx="6" fill="#0D1117" stroke="#94A3B8" stroke-width="1"/>
   <text x="160" y="260" text-anchor="middle" font-size="12" fill="#93C5FD" class="mono">gh pr merge</text>
 
   <!-- Arrow 1→2 -->
-  <line x1="270" y1="215" x2="334" y2="215" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-grey)"/>
+  <line x1="270" y1="215" x2="334" y2="215" stroke="#64748B" stroke-width="2.5" marker-end="url(#arrow-grey)"/>
 
   <!-- ===== STEP 2: PreToolUse hook ===== -->
-  <text x="424" y="128" font-size="11" font-weight="600" fill="#64748B" letter-spacing="0.10em">2. HOOK INTERCEPTS</text>
-  <rect x="344" y="172" width="200" height="86" rx="8" fill="#1E2940" stroke="#3B82F650" stroke-width="1.5"/>
+  <text x="424" y="128" font-size="11" font-weight="600" fill="#94A3B8" letter-spacing="0.10em">2. HOOK INTERCEPTS</text>
+  <rect x="344" y="172" width="200" height="86" rx="8" fill="#1E2940" stroke="#3B82F6" stroke-width="1.5"/>
   <text x="444" y="200" text-anchor="middle" font-size="14" font-weight="600" fill="#93C5FD">PreToolUse hook</text>
   <text x="444" y="222" text-anchor="middle" font-size="11" fill="#94A3B8">on Bash | Edit | Write</text>
-  <text x="444" y="242" text-anchor="middle" font-size="11" fill="#64748B" class="mono">regex match action</text>
+  <text x="444" y="242" text-anchor="middle" font-size="11" fill="#94A3B8" class="mono">regex match action</text>
 
   <!-- Arrow 2→3 -->
-  <line x1="554" y1="215" x2="618" y2="215" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-grey)"/>
+  <line x1="554" y1="215" x2="618" y2="215" stroke="#64748B" stroke-width="2.5" marker-end="url(#arrow-grey)"/>
 
   <!-- ===== STEP 3: Score check (decision) ===== -->
-  <text x="708" y="128" font-size="11" font-weight="600" fill="#64748B" letter-spacing="0.10em">3. SCORE CHECK</text>
-  <rect x="628" y="142" width="200" height="146" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="708" y="128" font-size="11" font-weight="600" fill="#94A3B8" letter-spacing="0.10em">3. SCORE CHECK</text>
+  <rect x="628" y="142" width="200" height="146" rx="8" fill="#1E293B" stroke="#64748B" stroke-width="1.5"/>
   <text x="728" y="166" text-anchor="middle" font-size="13" font-weight="600" fill="#F1F5F9">check_risk_gate</text>
-  <text x="728" y="182" text-anchor="middle" font-size="10" fill="#64748B">(fail-closed)</text>
+  <text x="728" y="182" text-anchor="middle" font-size="10" fill="#94A3B8">(fail-closed)</text>
 
-  <line x1="648" y1="194" x2="808" y2="194" stroke="#334155" stroke-width="1"/>
+  <line x1="648" y1="194" x2="808" y2="194" stroke="#64748B" stroke-width="1"/>
   <text x="728" y="212" text-anchor="middle" font-size="11" fill="#94A3B8">1. exists?</text>
   <text x="728" y="228" text-anchor="middle" font-size="11" fill="#94A3B8">2. fresh?  (TTL 1h)</text>
   <text x="728" y="244" text-anchor="middle" font-size="11" fill="#94A3B8">3. drift?  (state hash)</text>
@@ -80,24 +80,24 @@
   <!-- ===== PERMIT branch: Action runs ===== -->
   <rect x="900" y="142" width="220" height="60" rx="8" fill="#0A2E18" stroke="#22C55E" stroke-width="1.5"/>
   <text x="1010" y="168" text-anchor="middle" font-size="14" font-weight="600" fill="#4ADE80">Action runs</text>
-  <text x="1010" y="188" text-anchor="middle" font-size="11" fill="#86EFAC90">commit, push, or release proceeds</text>
+  <text x="1010" y="188" text-anchor="middle" font-size="11" fill="#86EFAC">commit, push, or release proceeds</text>
 
   <!-- ===== DENY branch: risk-scorer subagent ===== -->
-  <text x="1010" y="338" font-size="11" font-weight="600" fill="#64748B" letter-spacing="0.10em" text-anchor="middle">4. RISK-SCORER SUBAGENT</text>
-  <rect x="900" y="352" width="220" height="100" rx="8" fill="#2A0F12" stroke="#7F1D1D" stroke-width="1.5"/>
+  <text x="1010" y="338" font-size="11" font-weight="600" fill="#94A3B8" letter-spacing="0.10em" text-anchor="middle">4. RISK-SCORER SUBAGENT</text>
+  <rect x="900" y="352" width="220" height="100" rx="8" fill="#2A0F12" stroke="#DC2626" stroke-width="1.5"/>
   <text x="1010" y="377" text-anchor="middle" font-size="13" font-weight="600" fill="#FCA5A5">wr-risk-scorer:pipeline</text>
-  <text x="1010" y="397" text-anchor="middle" font-size="11" fill="#FCA5A580">reads diff + conversation</text>
-  <text x="1010" y="415" text-anchor="middle" font-size="11" fill="#FCA5A580">scores impact &#215; likelihood</text>
-  <text x="1010" y="433" text-anchor="middle" font-size="11" fill="#FCA5A580">against RISK-POLICY.md</text>
+  <text x="1010" y="397" text-anchor="middle" font-size="11" fill="#FCA5A5">reads diff + conversation</text>
+  <text x="1010" y="415" text-anchor="middle" font-size="11" fill="#FCA5A5">scores impact &#215; likelihood</text>
+  <text x="1010" y="433" text-anchor="middle" font-size="11" fill="#FCA5A5">against RISK-POLICY.md</text>
 
   <!-- Arrow scorer → score file -->
-  <line x1="900" y1="402" x2="836" y2="402" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-grey)"/>
+  <line x1="900" y1="402" x2="836" y2="402" stroke="#64748B" stroke-width="2.5" marker-end="url(#arrow-grey)"/>
 
   <!-- ===== STEP 5: Score file written ===== -->
-  <text x="728" y="338" font-size="11" font-weight="600" fill="#64748B" letter-spacing="0.10em" text-anchor="middle">5. SCORE WRITTEN</text>
-  <rect x="628" y="352" width="200" height="100" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="728" y="338" font-size="11" font-weight="600" fill="#94A3B8" letter-spacing="0.10em" text-anchor="middle">5. SCORE WRITTEN</text>
+  <rect x="628" y="352" width="200" height="100" rx="8" fill="#1E293B" stroke="#64748B" stroke-width="1.5"/>
   <text x="728" y="378" text-anchor="middle" font-size="13" font-weight="600" fill="#F1F5F9">Score file</text>
-  <text x="728" y="396" text-anchor="middle" font-size="10" fill="#64748B" class="mono">${TMPDIR}/claude-risk-${sid}/</text>
+  <text x="728" y="396" text-anchor="middle" font-size="10" fill="#94A3B8" class="mono">${TMPDIR}/claude-risk-${sid}/</text>
   <text x="728" y="416" text-anchor="middle" font-size="11" fill="#94A3B8">+ state-hash</text>
   <text x="728" y="434" text-anchor="middle" font-size="11" fill="#94A3B8">+ TTL stamp</text>
 
@@ -110,7 +110,7 @@
   <line x1="60" y1="490" x2="1140" y2="490" stroke="#1E293B" stroke-width="1.5"/>
 
   <!-- ===== Legend ===== -->
-  <text x="60" y="518" font-size="11" font-weight="600" fill="#64748B" letter-spacing="0.10em">LEGEND</text>
+  <text x="60" y="518" font-size="11" font-weight="600" fill="#94A3B8" letter-spacing="0.10em">LEGEND</text>
 
   <rect x="60" y="532" width="68" height="24" rx="12" fill="#0A2E18" stroke="#22C55E" stroke-width="1.5"/>
   <text x="94" y="548" text-anchor="middle" font-size="10" font-weight="700" fill="#4ADE80">PERMIT</text>
@@ -120,5 +120,5 @@
   <text x="94" y="582" text-anchor="middle" font-size="10" font-weight="700" fill="#F87171">DENY</text>
   <text x="140" y="582" font-size="12" fill="#94A3B8">Score missing, expired, drifted, or above threshold</text>
 
-  <text x="600" y="610" text-anchor="middle" font-size="12" fill="#64748B">Block threshold: residual score &#8805; 5 (Medium band) &#8226; State hash invalidates the score when the diff changes</text>
+  <text x="600" y="610" text-anchor="middle" font-size="12" fill="#94A3B8">Block threshold: residual score &#8805; 5 (Medium band) &#8226; State hash invalidates the score when the diff changes</text>
 </svg>

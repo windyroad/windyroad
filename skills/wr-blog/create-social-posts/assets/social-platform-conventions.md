@@ -150,6 +150,25 @@ published: false
 
 **Body adaptations**: `<span data-pull>...` markup does not render on dev.to. Convert pull quotes to standard blockquotes (`> `). Keep code blocks as-is. Keep image references as absolute URLs to `https://windyroad.com.au/img/...`.
 
+## Image contrast rules (WCAG AA)
+
+The cover image and any article-body diagrams must pass WCAG AA contrast before they ship. The orchestrator runs the `contrast-master` subagent against the SVG source for every diagram referenced in the article. Targets:
+
+- 4.5:1 for normal text.
+- 3:1 for large text (>=18px regular or >=14px bold) and UI borders.
+
+Common windyroad-palette failure patterns to test against (audit run on 2026-04-29 across four article SVGs):
+
+| Pattern | Failure | Fix |
+|---|---|---|
+| `#XXXXXX80` / `#XXXXXX90` alpha suffix on subtext | composes to 3.0 to 4.4:1 on saturated dark fills | drop alpha, use full-alpha hex; rely on font size and weight for hierarchy |
+| `#64748B` slate-500 body text on slate-900 / slate-800 | 3.05 to 3.75:1 | use `#94A3B8` slate-400 (5.7 to 7.0:1) |
+| `#7F1D1D` red-800 border on page or card bg | 1.78:1 | use `#DC2626` red-600 (3.70:1) |
+| `#1E40AF` blue-700 (or alpha-blue `#3B82F650`) border | 1.57 to 2.08:1 | use `#3B82F6` blue-500 (4.85:1), drop alpha |
+| `#334155` slate-700 / `#475569` slate-600 card stroke | 1.72 to 1.93:1 | use `#64748B` slate-500 (3.18 to 3.75:1) |
+
+Do not ship a cover image (or any article diagram) with known contrast failures. Apply fixes to the SVG, re-render with `node scripts/render-svg.mjs`, re-audit until AA passes.
+
 ## Image alt-text rules
 
 Alt text on the cover image is the same on every platform. It must:

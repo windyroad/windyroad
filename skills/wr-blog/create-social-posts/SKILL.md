@@ -58,6 +58,16 @@ If `src/social/<slug>/cover.png` is missing:
 1. Identify the article's primary social diagram. Convention: the first SVG referenced in the article body, or `public/img/social/<slug-prefix>.svg` if a per-article render exists.
 2. Render to PNG via `node scripts/render-svg.mjs <input.svg> src/social/<slug>/cover.png`.
 3. Read the PNG via the Read tool and confirm visually that text fits, arrows land on targets, and the palette matches existing diagrams. The diagram-inspection-checklist in the sibling `wr-blog:render-diagrams` skill applies.
+4. **Contrast audit (mandatory).** Delegate to the `contrast-master` subagent against the SVG source. Audit every text-on-background pair (4.5:1 AA for normal text, 3:1 for large text >=18px or >=14px bold) and every UI border pair (3:1). Common windyroad-palette failure patterns to watch for:
+   - Alpha-channel suffixes on subtext fills (`#XXXXXX80`, `#XXXXXX90`) drop into the 3:1 to 4.4:1 band on saturated dark fills. Use full-alpha hex; rely on font size and weight for hierarchy.
+   - Slate-500 (`#64748B`) body text on slate-900 (`#0F172A`) page bg or slate-800 (`#1E293B`) card bg fails 4.5:1. Use slate-400 (`#94A3B8`) or lighter.
+   - Saturated dark borders (`#7F1D1D` red-800, `#1E40AF` blue-700, `#334155` slate-700) on the page or card bg fail 3:1. Use red-600 (`#DC2626`), blue-500 (`#3B82F6`), slate-500 (`#64748B`) instead.
+
+   Apply every measured FAIL fix to the SVG before re-rendering the PNG. Re-run the audit after fixes to confirm AA compliance. Do not ship a cover image with known contrast failures.
+
+### 2.5. Article diagrams
+
+If the article includes additional SVG diagrams beyond the cover, run the contrast audit (step 2.4) against each one. The same patterns apply across the windyroad palette. Article body diagrams are visitor-facing accessibility surfaces, not just social-share assets.
 
 ### 3. Per-platform draft
 
