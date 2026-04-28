@@ -93,6 +93,19 @@ Before save, every post must pass these mechanical checks:
 
 If any check fails, rewrite that sentence and re-run the check.
 
+### 4.5. Platform character-limit check (mandatory)
+
+For platforms with a hard character limit, count the post and confirm it fits. URL counting differs per platform; refer to `assets/social-platform-conventions.md` for the per-platform rule. Hard limits and counting:
+
+- **Twitter / X**: 280 chars. URLs auto-shorten to `t.co` ~23 chars. Hook + URL + space must be <= 280.
+- **Bluesky**: 300 chars. **URLs are counted as their full length** (Bluesky does NOT shorten). Body + 2 (blank line) + URL.length must be <= 300. For an 88-char canonical URL, body budget is ~210 chars.
+- **LinkedIn**: 3000 chars. Effectively unbounded for our long-form posts; no check needed.
+- **Reddit**: 40000 chars body. Effectively unbounded.
+- **Hacker News / Lobsters**: link-only, no body.
+- **dev.to**: no length limit on the body.
+
+For Twitter and Bluesky, count the actual saved post (body + URL + newlines). If over budget, tighten the body and re-count. Do not save a post that exceeds the platform limit; the platform composer will reject it on paste-in or display a negative count (e.g. Bluesky's `-30`).
+
 ### 5. Voice gate (subagent)
 
 For every drafted post, invoke a fresh-context `wr-voice-tone:agent` subagent with the post path. Apply findings. If findings include items the gate considers blocking, the post does not save until those are addressed.

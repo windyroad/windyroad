@@ -38,13 +38,15 @@ image_alt: <descriptive alt text>
 ---
 ```
 
-**Length**: hook is at most 280 characters. Tight, punchy, structural. Skip preambles.
+**Length**: hook is at most 280 characters. Twitter shortens URLs via `t.co` to ~23 characters regardless of original length, so URL cost is fixed at 23 plus a space. Body budget is roughly 280 - 24 = 256 chars when a URL is included in the hook itself. Reply tweet (URL on its own) does not count against the hook.
 
 **Image**: cover.png attached to the hook.
 
 ## Bluesky
 
 **Shape**: one post, 300 character limit, then the article URL on its own line.
+
+**Length counting**: Bluesky counts the URL as its full character length (e.g. an 88-character canonical URL costs 88 of the 300 budget). It does NOT shorten URLs the way Twitter does. Plan body length around `300 - URL_length - 2 (blank line between body and URL)`. For windyroad's 88-char canonical URLs, that means the body must fit in roughly 210 characters.
 
 **Frontmatter**:
 
@@ -58,6 +60,8 @@ image_alt: <descriptive alt text>
 ```
 
 **Tone**: practitioner. Slightly looser than Twitter; one extra sentence is fine within the 300 limit.
+
+**Verification**: before save, count body chars + URL chars + 2 newlines. Must be <= 300. If over, tighten the body. Bluesky's web composer shows a negative count (e.g. -30) when over budget; that count is the source of truth.
 
 ## Hacker News
 
