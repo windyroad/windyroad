@@ -87,7 +87,7 @@
   <!-- Outcome badge: denied at the boundary -->
   <rect x="640" y="464" width="480" height="58" rx="29" fill="#0A2E18" stroke="#22C55E" stroke-width="1.5"/>
   <text x="880" y="492" text-anchor="middle" font-size="18" font-weight="700" fill="#4ADE80">DENIED AT THE BOUNDARY</text>
-  <text x="880" y="512" text-anchor="middle" font-size="11" fill="#86EFAC90">Risky commit, push, or release blocked. Agent must split, add a control, or invoke a structured bypass.</text>
+  <text x="880" y="512" text-anchor="middle" font-size="11" fill="#86EFAC90">Risky commit, push, or release blocked</text>
 
   <!-- Footer -->
   <text x="600" y="572" text-anchor="middle" font-size="13" fill="#64748B">Same agent, same intent, same API. The outcome depends on whether the agent can reach production at all.</text>

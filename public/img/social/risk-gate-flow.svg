@@ -65,17 +65,17 @@
   <text x="728" y="260" text-anchor="middle" font-size="11" fill="#94A3B8">4. valid?</text>
   <text x="728" y="276" text-anchor="middle" font-size="11" fill="#94A3B8">5. residual &lt; 5?</text>
 
-  <!-- Arrow 3 → permit (up + right) -->
-  <path d="M 838 195 L 870 195 L 870 145" stroke="#22C55E" stroke-width="2.5" fill="none" marker-end="url(#arrow-green)"/>
+  <!-- Arrow 3 → permit (up + right, lands on Action runs box at y=172) -->
+  <path d="M 838 195 L 870 195 L 870 172 L 898 172" stroke="#22C55E" stroke-width="2.5" fill="none" marker-end="url(#arrow-green)"/>
 
   <!-- PERMIT label -->
-  <text x="858" y="133" font-size="10" font-weight="700" fill="#4ADE80" letter-spacing="0.08em">PERMIT</text>
+  <text x="870" y="158" text-anchor="middle" font-size="10" font-weight="700" fill="#4ADE80" letter-spacing="0.08em">PERMIT</text>
 
-  <!-- Arrow 3 → deny (down + right) -->
-  <path d="M 838 235 L 870 235 L 870 290" stroke="#EF4444" stroke-width="2.5" fill="none" marker-end="url(#arrow-red)"/>
+  <!-- Arrow 3 → deny (down + right, lands on risk-scorer subagent box at y=402) -->
+  <path d="M 838 235 L 870 235 L 870 402 L 898 402" stroke="#EF4444" stroke-width="2.5" fill="none" marker-end="url(#arrow-red)"/>
 
   <!-- DENY label -->
-  <text x="864" y="305" font-size="10" font-weight="700" fill="#F87171" letter-spacing="0.08em">DENY</text>
+  <text x="878" y="320" font-size="10" font-weight="700" fill="#F87171" letter-spacing="0.08em">DENY</text>
 
   <!-- ===== PERMIT branch: Action runs ===== -->
   <rect x="900" y="142" width="220" height="60" rx="8" fill="#0A2E18" stroke="#22C55E" stroke-width="1.5"/>
@@ -118,8 +118,7 @@
 
   <rect x="60" y="566" width="68" height="24" rx="12" fill="#3B0E0E" stroke="#EF4444" stroke-width="1.5"/>
   <text x="94" y="582" text-anchor="middle" font-size="10" font-weight="700" fill="#F87171">DENY</text>
-  <text x="140" y="582" font-size="12" fill="#94A3B8">Score missing, expired, drifted, or above threshold. Action blocked.</text>
+  <text x="140" y="582" font-size="12" fill="#94A3B8">Score missing, expired, drifted, or above threshold</text>
 
-  <text x="600" y="556" text-anchor="middle" font-size="12" fill="#64748B">Block threshold: residual score &#8805; 5 (Medium band)</text>
-  <text x="600" y="582" text-anchor="middle" font-size="12" fill="#64748B">Score is session-scoped. State hash invalidates the score when the diff changes.</text>
+  <text x="600" y="610" text-anchor="middle" font-size="12" fill="#64748B">Block threshold: residual score &#8805; 5 (Medium band) &#8226; State hash invalidates the score when the diff changes</text>
 </svg>
