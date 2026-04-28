@@ -90,6 +90,8 @@ The pipeline itself needs a control. To work, the control must:
 2. Decide from a written policy, not from the agent's judgement.
 3. Have a structured bypass that lands in an audit trail, not an escape the agent can take on its own.
 
+The plugin today implements all three, with one caveat on (3): the incident bypass currently logs but does not require a structured reason. An agent labelling its action an incident can self-issue it. That is a gap worth fixing, named here rather than in the adoption notes because a bypass without a structured reason is closer to a rule than a control.
+
 Production-bound changes pass through three observable actions. Commit records the change locally and accumulates toward a push. Push sends the commits to the remote and triggers CI; this is where the change first enters the pipeline. Release promotes the queued unreleased work to production. The implementation here uses [Changesets](https://github.com/changesets/changesets) to accumulate unreleased changes in a release PR; merging that PR via the `release:watch` npm script triggers publish. A gate on each of the three actions catches risky changes at the boundary the agent cannot avoid.
 
 [`@windyroad/risk-scorer`](https://github.com/windyroad/agent-plugins) is one such gate: a risk-scoring hook on commit, push, and release.
@@ -187,7 +189,9 @@ The production version carries one refinement worth calling out: a staleness che
 
 The score is not a vibe check. It comes from a written policy and a structured calculation.
 
-The framework follows [ISO 31000](https://www.iso.org/standard/65694.html), the international standard for risk management. The terminology (impact, likelihood, inherent risk, residual risk, appetite, control) and the matrix structure are taken from there, not invented for this purpose. `RISK-POLICY.md` defines impact levels (1 Negligible to 5 Severe), likelihood levels (1 Rare to 5 Almost certain), and a 1-25 risk matrix. The risk-scorer subagent reads the diff and produces a structured report with one entry per identified risk. Each entry names the failure scenario, scores impact and likelihood, lists the controls that reduce inherent risk to residual risk, and ends with the residual number.
+The framework follows [ISO 31000](https://www.iso.org/standard/65694.html), the international standard for risk management. The terminology (impact, likelihood, inherent risk, residual risk, appetite, control) and the matrix structure are taken from there, not invented for this purpose. `RISK-POLICY.md` defines impact levels (1 Negligible to 5 Severe), likelihood levels (1 Rare to 5 Almost certain), and a 1-25 risk matrix.
+
+The obvious objection: the scoring is done by an LLM, so isn't that just another rule the model can ignore? The answer is that the score is a discrete artefact, a number written to a file, checked by a deterministic gate. The model's compliance with the policy ends at the moment the file is written. From there, every check is shell. The probabilistic step is bounded by the policy and converted into a fixed value before the gate runs. The risk-scorer subagent reads the diff and produces a structured report with one entry per identified risk. Each entry names the failure scenario, scores impact and likelihood, lists the controls that reduce inherent risk to residual risk, and ends with the residual number.
 
 In a CI/CD-only world, the agent does not call `volumeDelete` directly. It edits `infra/railway.ts` to remove the `prod-pg-volume` resource, then attempts to commit. The commit gate fires. The risk-scorer reads the diff and scores it like this:
 
@@ -240,7 +244,9 @@ This is the kind of thing we set up for clients running AI agents against produc
 
 Two prerequisites. First, your agents work in development environments. Production credentials live in CI/CD secrets and are not accessible to interactive sessions. Second, your team ships through a pipeline. Code is committed, pushed, and released through known checkpoints.
 
-If both are in place, the simplest path is to install the plugin:
+The prerequisites are hardest for solo developers, small teams without a CI/CD platform, infrastructure that is not yet codified, and emergency break-glass debugging of production incidents. The cheapest first step there is to separate development and production credentials and store the production credential somewhere the agent's tools cannot read: not your shell history, not a dotfile in the project, not the `.env` you source at session start. The pipeline gate is the next step once a pipeline exists.
+
+If both prerequisites are in place, the simplest path is to install the plugin:
 
 ```bash
 npx @windyroad/risk-scorer
@@ -270,4 +276,4 @@ The portable lessons:
 
 Even with all four layers, the model has gaps. Malware already running on the developer's machine reads tokens without going through the agent. A poisoned dependency, slipped in upstream, lands in the agent's path before any of the layers fire. A maintenance script written months ago, against a setup that has since changed, flows through the pipeline normally; its diff looks small, scores low, and nothing in the change signals its real effect. The layered model reduces the space of possible failures. It does not eliminate it.
 
-The next problem is what risk policy looks like for your business, since the gate is only as good as the matrix it scores against. We have written about pipeline discipline ([here](/blog/enforcing-pipeline-discipline-with-claude-code-hooks)), architecture enforcement ([here](/blog/stop-your-ai-agent-from-ignoring-your-architecture)), and the WIP back-pressure that the same risk-scorer brings to commits ([here](/blog/your-ai-agent-doesnt-know-when-to-stop-committing)). The plugin source is in [windyroad/agent-plugins](https://github.com/windyroad/agent-plugins).
+The next problem is what risk policy looks like for your business, since the gate is only as good as the matrix it scores against. We have written about pipeline discipline ([here](/blog/enforcing-pipeline-discipline-with-claude-code-hooks)), architecture enforcement ([here](/blog/stop-your-ai-agent-from-ignoring-your-architecture)), and the WIP back-pressure that the same risk-scorer brings to commits ([here](/blog/your-ai-agent-doesn't-know-when-to-stop-committing)). The plugin source is in [windyroad/agent-plugins](https://github.com/windyroad/agent-plugins).
