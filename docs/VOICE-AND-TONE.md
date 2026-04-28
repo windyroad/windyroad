@@ -4,6 +4,8 @@ This guide defines how Windy Road Technology sounds across the website, landing 
 
 Windy Road is a consulting team. The voice is first-person plural ("we") for service delivery. Tom Howard is the named founder and public face, introduced by name in credentials sections. Service copy uses "we help", "our team", "we've built". Personal track record claims use "I" ("I've built pipeline controls at Greater Bank") because they describe Tom's individual history. Blog articles may use "I" when the author is sharing personal experience. The audience is engineering leaders who need to get their teams patch fit, and (secondarily) technical founders with broken vibe-coded apps.
 
+**Last reviewed:** 2026-04-28
+
 ---
 
 ## Voice
@@ -393,6 +395,28 @@ Guidelines:
 - Links can go inline (no algorithmic suppression)
 - No em-dashes
 - No avoided words from the word list
+
+---
+
+## Reading level and jargon load
+
+Voice is the constant. Jargon load is the constraint. The test is the same in every context: can the intended reader parse a sentence on first pass without stopping to translate?
+
+Targets by content type:
+
+- **Hero copy, blog openers and closers, fit checks, CTAs, social posts**: Grade 9-10. Short sentences, concrete nouns, every in-group term glossed on first use.
+- **Mechanism sections** (code walkthroughs, hook internals, scoring tables): denser is fine. The reader opted in by the time they reach them.
+
+Two rules:
+
+1. **Gloss on first use.** Every term not in general-interest tech vocabulary, including three-letter abbreviations (PAT, MCP, TTL, CI), is expanded or contextually glossed on first use. The cost is one parenthetical. It protects the page for readers outside the in-group.
+2. **Concrete over abstract.** Prefer concrete examples over abstract noun phrases. If a sentence stacks two or more in-group terms without a gloss, rewrite it.
+
+> "an attacker who found the token in a leaked log"
+
+Not: "an exfiltrated credential running from a CI box"
+
+The standing test: would a competent CTO from a non-AI-native company read the opener without stopping to translate? If not, the section is too dense for that location.
 
 ---
 
