@@ -11,6 +11,6 @@ The same access pattern produces the same outcome regardless of who pulls the tr
 
 The fix is structural. Agents have no production access. Production credentials live in CI/CD secrets only. The pipeline (commit, push, release) is the boundary where risk-scoring belongs. Apollo Research's work on in-context scheming explains why a separate subagent doing the scoring (not the agent driving the commit) is structurally important: the agent that wants the commit to land has incentive to under-score risk; the scorer has incentive to score accurately.
 
-Full write-up has the four-layer model, the bash for the gate, and a Monday test you can run on your own credentials.
+Full write-up has the four-layer model, the bash for the gate, and a test you can run today on your own credentials.
 
 https://windyroad.com.au/blog/an-ai-agent-deleted-production-the-model-wasnt-the-problem
