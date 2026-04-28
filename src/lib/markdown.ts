@@ -12,6 +12,15 @@ import { visit } from 'unist-util-visit';
 import type { Root, Element, Text, ElementContent } from 'hast';
 import slugify from 'slugify';
 
+/**
+ * Generates a URL-safe slug from a post title. Strips apostrophes, periods, and
+ * other punctuation so slugs survive copy-paste, RSS readers, link checkers,
+ * and host migrations without normalisation tricks.
+ */
+export function slugFromTitle(title: string): string {
+  return slugify(title, { lower: true, strict: true });
+}
+
 /** Adds role="note" to <aside> elements to prevent landmark clutter. */
 function rehypeAsideRole() {
   return (tree: Root) => {
@@ -161,7 +170,7 @@ export function getAllPosts(): Post[] {
       const { data, content } = matter(fileContents);
       const frontmatter = data as PostFrontmatter;
 
-      const slug = slugify(frontmatter.title, { lower: true });
+      const slug = slugFromTitle(frontmatter.title);
 
       // Generate excerpt: strip markdown links → text only, strip remaining
       // markup, trim to last word boundary ≤ 250 chars, append ellipsis.
