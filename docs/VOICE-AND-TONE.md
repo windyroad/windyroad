@@ -4,7 +4,7 @@ This guide defines how Windy Road Technology sounds across the website, landing 
 
 Windy Road is a consulting team. The voice is first-person plural ("we") for service delivery. Tom Howard is the named founder and public face, introduced by name in credentials sections. Service copy uses "we help", "our team", "we've built". Personal track record claims use "I" ("I've built pipeline controls at Greater Bank") because they describe Tom's individual history. Blog articles may use "I" when the author is sharing personal experience. The audience is engineering leaders who need to get their teams patch fit, and (secondarily) technical founders with broken vibe-coded apps.
 
-**Last reviewed:** 2026-04-28
+**Last reviewed:** 2026-04-28 (link-text rule added)
 
 ---
 
@@ -433,6 +433,7 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | Disparaging the reader's team | Insults the reader's stewardship; destroys forward-ability | "Your team probably trailed 4.6 by weeks, so they trail 4.7 by more" |
 | Feature claims in fit checks | Sells the service instead of describing the visitor | "You need someone who can implement guardrails" |
 | Unexplained internal references | Assumes readers know your specific rules or structure | "five banned patterns, a word list of terms to prefer and avoid" |
+| Ambiguous link text ("here", "click here", "read more", "this", "more info") | Out of context the link conveys nothing. Fails WCAG 2.4.4 (Link Purpose in Context) and reads as a flat list of "here, here, here" to screen-reader users navigating by link list. | "([here](/blog/pipeline-discipline))" → "[pipeline discipline](/blog/pipeline-discipline)" |
 
 ---
 
