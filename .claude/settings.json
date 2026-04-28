@@ -81,6 +81,7 @@
     "wr-style-guide@windyroad": true,
     "wr-voice-tone@windyroad": true,
     "wr-itil@windyroad": true,
-    "wr-retrospective@windyroad": true
+    "wr-retrospective@windyroad": true,
+    "skill-creator@claude-plugins-official": true
   }
 }
