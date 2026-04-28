@@ -71,11 +71,11 @@
   <!-- PERMIT label -->
   <text x="870" y="158" text-anchor="middle" font-size="10" font-weight="700" fill="#4ADE80" letter-spacing="0.08em">PERMIT</text>
 
-  <!-- Arrow 3 → deny (right + down, enters top of risk-scorer subagent box at x=1010) -->
-  <path d="M 838 250 L 1010 250 L 1010 348" stroke="#EF4444" stroke-width="2.5" fill="none" marker-end="url(#arrow-red)"/>
+  <!-- Arrow 3 → deny (right + down + right, enters left edge of risk-scorer subagent box at y=370) -->
+  <path d="M 838 235 L 870 235 L 870 370 L 898 370" stroke="#EF4444" stroke-width="2.5" fill="none" marker-end="url(#arrow-red)"/>
 
   <!-- DENY label -->
-  <text x="1015" y="300" font-size="10" font-weight="700" fill="#F87171" letter-spacing="0.08em">DENY</text>
+  <text x="878" y="320" font-size="10" font-weight="700" fill="#F87171" letter-spacing="0.08em">DENY</text>
 
   <!-- ===== PERMIT branch: Action runs ===== -->
   <rect x="900" y="142" width="220" height="60" rx="8" fill="#0A2E18" stroke="#22C55E" stroke-width="1.5"/>
