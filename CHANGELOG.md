@@ -1,5 +1,43 @@
 # windy-road
 
+## 2.12.0
+
+### Minor Changes
+
+- 35d8798: New article: "An AI agent deleted production. The model wasn't the problem." Root-cause guide that uses the PocketOS / Railway incident as the entry point and reframes recent AI-agent destruction stories as access-pattern failures. Argues that agents must have no production access and that the pipeline (commit, push, release) is the boundary where risk-scoring belongs. Includes precedent cases (Pixar 1998, GitLab 2017, Replit 2025, Cursor Plan Mode 2025) showing the pattern predates AI. Three social-card SVGs added at `public/img/social/`.
+
+  Also: `docs/VOICE-AND-TONE.md` gains a "Reading level and jargon load" section that codifies the targets (Grade 9-10 for openers and closers, denser permitted in mechanism sections) and the gloss-on-first-use and concrete-over-abstract rules. Surfaced during the article's plain-English review.
+
+### Patch Changes
+
+- 26aa6e1: Iteration on "An AI agent deleted production" article: add layered-defence SVG diagram (`public/img/social/layered-defence.svg`) for the four-layer model in "What the gate doesn't catch"; fix overflow and missing-target arrows in `risk-gate-flow.svg`; shorten the overflowing subtitle in `sign-vs-control.svg`; reframe "human in the loop" rejection and layer 3 of the layered model around authorisation linked to an audited change rather than out-of-band human approval; add ISO 31000 reference to "The score" section; disambiguate "tokens" to "API tokens" where AI-token confusion was possible.
+- 5f84cad: Add seven platform-specific social posts for "An AI agent deleted production. The model wasn't the problem." in `src/social/an-ai-agent-deleted-production-the-model-wasnt-the-problem/`: LinkedIn (long-form), Twitter (hook plus URL reply), Bluesky (single post), Hacker News (link), Lobsters (link with `ai`, `security`, `devops` tags), Reddit (r/ClaudeAI Coding flair, crossposted to r/ChatGPTCoding, r/devops, r/cursor), and dev.to (full body cross-post with `published: false`). Each long-form post passed the voice gate, content-risk gate, SW-critic loop, and cognitive-accessibility gate.
+
+  Also adds the four diagram PNG renders (`sign-vs-control.png`, `risk-gate-flow.png`, `risk-score-anatomy.png`, `layered-defence.png`) that the dev.to cover image and the social cover.png reference, generated via `scripts/render-svg.mjs` from the SVG sources already shipped with the article.
+
+- d7752a0: Fix LinkedIn CTA wording for the "An AI agent deleted production" post. The cog-a11y pass earlier shortened "Monday-morning test" to "Monday test", which lost the idiom and read as either scheduled-for-Monday or about-Monday. Aligned to the article's section heading "A test you can run today" so the CTA mirrors the section it points to.
+- 553ee60: Expand RISK-POLICY.md with explicit business context (solo operator, no QA team, public repo, newsletter as primary lead-gen) and a Confidential Information section enumerating revenue, subscriber-count, conversion-rate, and unpublished client-name categories that must not appear in any committed file. Tighten the impact-level descriptions to cover both the marketing site and the newsletter pipeline. Justify the existing < 5 (Low) residual-risk appetite against the solo-operator context. Last-reviewed date stamped 2026-04-28.
+- 22c3f56: Blog post slug generator now uses `slugify({ strict: true })` so titles with apostrophes or periods produce URL-safe slugs without normalisation tricks. Two affected URLs: `your-ai-agent-doesn't-know-when-to-stop-committing` becomes `your-ai-agent-doesnt-know-when-to-stop-committing` (a 301 redirect in `netlify.toml` keeps the apostrophe form resolving for external links already in the wild); `an-ai-agent-deleted-production.-the-model-wasn't-the-problem.` becomes `an-ai-agent-deleted-production-the-model-wasnt-the-problem` (only existed on the release-pr-32 preview, no redirect needed). Slug logic extracted to a `slugFromTitle()` helper with a vitest spec covering apostrophes, periods, and trailing punctuation.
+- 9d8508c: Voice guide gains a banned-patterns row for ambiguous link text ("here", "click here", "read more", "this", "more info"). Reason: out of context these links convey nothing, fail WCAG 2.4.4 (Link Purpose in Context), and read as a flat list of "here, here, here" to screen-reader users navigating by link list. Surfaced after Tom flagged three "(here)" links in the AI-agent-deleted-production article and we replaced them with descriptive link text on the topic phrases.
+- f7ea109: Scaffold the `wr-blog` skill family that codifies the windyroad blog-creation workflow learned in the "An AI agent deleted production" article session. Source files live at `skills/wr-blog/` in the repo root and are surfaced to Claude Code via a `.claude/skills/wr-blog` symlink so iteration edits do not trigger per-edit `.claude/` permission prompts.
+
+  Four skills planned:
+
+  - `wr-blog:create-article` (orchestrator, populated via skill-creator).
+  - `wr-blog:render-diagrams` (sips-based PNG render-and-inspect, populated via skill-creator).
+  - `wr-blog:review-article` (review-only gate chain, populated via skill-creator).
+  - `wr-blog:create-social-posts` (per-platform social-post orchestrator, populated this commit).
+
+  This commit ships:
+
+  - The `create-social-posts` SKILL.md plus its two assets (`social-platform-conventions.md` covering LinkedIn / Twitter / Bluesky / Hacker News / Lobsters / Reddit / dev.to, and `social-critic-rubric.md` for long-form posts).
+  - The shared `assets/article-critic-rubric.md` (10-check rubric promoted from `/tmp` and reformatted to match `wr-newsletter`'s rubric structure).
+  - The `assets/genres/root-cause-guide.md` genre asset capturing the door-not-room opener, diagnose-then-prescribe shape, pre-empt-easy-answers section, and McKenzie / Cantrill / Charity-Majors-style wrap-up convention.
+  - Empty placeholders for the three skill-creator-driven skills.
+  - `.claude/settings.json` enables `skill-creator@claude-plugins-official` so the skill-creator workflow is available in this project.
+
+  The `create-article`, `render-diagrams`, and `review-article` SKILL.md files are populated in a follow-up via the skill-creator's eval-driven workflow (deferred until Claude Code is restarted with the new marketplace registered).
+
 ## 2.11.4
 
 ### Patch Changes
