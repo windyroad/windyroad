@@ -2,35 +2,60 @@
 
 Risk assessment for pipeline actions (commit, push, release), aligned with ISO 31000.
 
+**Last reviewed:** 2026-04-28
+
+## Business Context
+
+Windy Road is a public GitHub repository containing the static marketing site at windyroad.com.au (Next.js, deployed to Netlify) and the LinkedIn newsletter pipeline (The Shift for engineering leaders, Tokens Spent for developers). Visitor-facing surfaces include the home page, blog, founders page, AI Quality page, Vibe Code Audit page, and the published newsletters distributed via LinkedIn.
+
+Material constraints that shape risk assessment:
+
+- **Solo operator, no QA team.** Automated controls (hooks, tests, CI gates, agent reviews) are the only safety net between a change and visitors. This justifies a tight risk appetite.
+- **No paying users, no SLA, no PII storage.** There are no contractual uptime obligations and no regulated data. Severe impact is bounded by reputation and trust, not contract or compliance penalties.
+- **Newsletter is the primary lead-generation channel.** Failures in the newsletter pipeline (bad drafts reaching LinkedIn, voice or content-risk gate bypass, publication failures) directly affect acquisition.
+- **Public repository.** Source code, commits, and changesets are world-readable. Confidential business information must not appear in any committed file.
+
+## Confidential Information
+
+This repository is public. The following categories of information are confidential and MUST NOT appear in any committed file (source, docs, problem tickets, briefings, changesets, commit messages, or risk reports):
+
+- Revenue figures, contract values, deal sizes
+- Subscriber counts, user counts, traffic volumes (page views, sessions, unique visitors)
+- Pricing details for engagements not otherwise published on the site
+- Conversion rates, funnel metrics, marketing performance data
+- Client names not otherwise public, including in case studies that have not been approved for publication
+
+When discussing such information in tickets or briefings, use generic descriptions ("low single-digit subscribers", "early-stage traffic", "below threshold") instead of exact figures. The risk-scorer flags any diff containing apparent business metrics as a standalone information-disclosure risk.
+
 ## Risk Appetite
 
 Residual risk score must be **< 5 (Low)** for any pipeline action (commit, push, release). Scores >= 5 (Medium and above) must be reduced before proceeding.
+
+The tight appetite reflects the solo-operator context. With no second pair of eyes, and automated controls as the only safety net, accepting Medium residual risk would mean shipping changes that the existing controls cannot reliably catch.
 
 ## Impact Levels
 
 | Level | Label | Description |
 |-------|-------|-------------|
-| 1 | Negligible | No visitor impact. Site behaviour, content, and availability unchanged. |
-| 2 | Minor | No visitor impact. Dev tooling or build affected but the published site is unaffected. |
-| 3 | Moderate | Deployment disruption. Netlify builds broken or delayed; site updates cannot be published. |
-| 4 | Significant | Visitor-facing disruption. Blog content, service pages, booking CTA, or Vibe Code Audit page degraded or inaccessible. |
-| 5 | Severe | Reputation or trust damage. Broken accessibility, misleading content, exposed secrets, or site fully offline. |
+| 1 | Negligible | No visitor or reader impact. Site behaviour, content, newsletter pipeline, and availability unchanged. |
+| 2 | Minor | No visitor or reader impact. Dev tooling, hooks, or local build affected, but the published site and newsletter pipeline are unaffected. |
+| 3 | Moderate | Deployment or publication disruption. Netlify build broken or delayed, newsletter pipeline broken before draft generation, OR confidential business metrics (revenue, subscriber counts, pricing, traffic volumes) committed to the public repository (an information disclosure requiring immediate remediation but not yet affecting visitor-facing service). |
+| 4 | Significant | Visitor-facing or reader-facing degradation. Blog content, founders page, AI Quality page, Vibe Code Audit page, or booking CTA degraded or inaccessible; newsletter draft pipeline ships poor-quality content past the voice, content-risk, or SW-critic gates; published newsletter on LinkedIn renders incorrectly or contains broken links. |
+| 5 | Severe | Reputation, trust, or availability destroyed. Site fully offline, broken accessibility, misleading or factually wrong content reaching visitors or LinkedIn readers, exposed secrets or credentials, voice-violating outbound copy that frames readers' teams as behind, or newsletter content that misrepresents sources. |
 
 ## Likelihood Levels
 
 | Level | Label | Description |
 |-------|-------|-------------|
-| 1 | Rare | Almost no chance of reaching visitors. Hooks, build, and static export would catch the issue first. |
-| 2 | Unlikely | Low chance of visitor impact. Existing controls (architect, a11y, voice-and-tone hooks) mitigate effectively. |
-| 3 | Possible | Reasonable chance of reaching the published site. Controls only partially cover the affected area. |
-| 4 | Likely | High chance of visitor impact. No hooks or automated checks cover this area of the site. |
-| 5 | Almost certain | Impact will reach visitors. No safety net between the change and the live site. |
+| 1 | Rare | Almost no chance of reaching visitors or readers. Hooks, build, static export, or pre-publish gates would catch the issue first. |
+| 2 | Unlikely | Low chance of impact. Existing controls (architect, accessibility, voice-and-tone, content-risk hooks) mitigate effectively. |
+| 3 | Possible | Reasonable chance of reaching the published surface. Controls only partially cover the affected area. |
+| 4 | Likely | High chance of impact. No hooks or automated checks cover this area of the site or newsletter pipeline. |
+| 5 | Almost certain | Impact will reach visitors or readers. No safety net between the change and the live site or LinkedIn publication. |
 
 ## Risk Matrix
 
-Residual risk = impact x likelihood (after controls are applied).
-
-Both dimensions contribute proportionally to the score on a 1-25 scale.
+Residual risk = impact x likelihood (after controls are applied). Both dimensions contribute proportionally to the score on a 1-25 scale.
 
 ### Product Reference Table
 
@@ -51,6 +76,8 @@ Both dimensions contribute proportionally to the score on a 1-25 scale.
 | 5-9 | Medium |
 | 10-16 | High |
 | 17-25 | Very High |
+
+This risk matrix is the single source of truth for both the **risk-scorer agent** (pipeline risk assessment for commit, push, release) and the **problem management process** (problem severity classification via the manage-problem skill).
 
 ## Action-Specific Risk
 
