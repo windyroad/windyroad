@@ -1,4 +1,4 @@
-import Button from '@/src/components-next/Button';
+import FullyBookedCTA from '@/src/components-next/FullyBookedCTA';
 import styles from './CTASection.module.scss';
 
 export default function CTASection() {
@@ -11,14 +11,7 @@ export default function CTASection() {
           we can usually start this week.
         </p>
         <div className={styles.buttonWrap}>
-          <Button
-            href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-            variant="primary"
-            size="large"
-            external
-          >
-            Book a Call
-          </Button>
+          <FullyBookedCTA source="founders_cta" size="large" />
         </div>
         <div className={styles.contact}>
           <a href="tel:+61402756685" className={styles.contactItem}>

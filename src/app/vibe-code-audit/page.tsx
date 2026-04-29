@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Button from '@/src/components-next/Button';
+import FullyBookedCTA from '@/src/components-next/FullyBookedCTA';
 import NotifyForm from '@/src/components-next/NotifyForm';
 import styles from './page.module.scss';
 
@@ -69,9 +69,7 @@ export default function VibeCodingAuditPage() {
           <p className={styles.heroSub}>
             $9,000. One week. A senior engineer tells you exactly what&apos;s broken and how to fix it.
           </p>
-          <Button href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view" variant="primary" size="large" external>
-            Book a Call
-          </Button>
+          <FullyBookedCTA source="vibe_audit_hero" size="large" />
         </div>
       </section>
 
@@ -180,9 +178,7 @@ export default function VibeCodingAuditPage() {
             Book a 15-minute call. We&apos;ll tell you if we can help, and if we can&apos;t,
             we&apos;ll point you to someone who can.
           </p>
-          <Button href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=15&overlayCalendar=true&layout=week_view" variant="primary" size="large" external>
-            Book a 15-min Call
-          </Button>
+          <FullyBookedCTA source="vibe_audit_15min" size="large" />
         </div>
       </section>
 

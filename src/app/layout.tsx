@@ -3,6 +3,10 @@ import { Inter } from 'next/font/google';
 import Header from '@/src/components-next/Header';
 import Footer from '@/src/components-next/Footer';
 import Clarity from '@/src/components-next/Clarity';
+import {
+  FullyBookedStatus,
+  FullyBookedStatusProvider,
+} from '@/src/components-next/FullyBookedStatus';
 import '../styles/globals.scss';
 
 const inter = Inter({
@@ -30,9 +34,12 @@ export default function RootLayout({
       <body>
         <Clarity projectId="vpxikrum5k" />
         <a href="#main-content" className="skip-link">Skip to main content</a>
-        <Header />
-        <main id="main-content">{children}</main>
-        <Footer />
+        <FullyBookedStatusProvider>
+          <Header />
+          <main id="main-content">{children}</main>
+          <Footer />
+          <FullyBookedStatus />
+        </FullyBookedStatusProvider>
       </body>
     </html>
   );

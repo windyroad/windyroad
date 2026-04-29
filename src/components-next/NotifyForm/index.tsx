@@ -51,7 +51,7 @@ export default function NotifyForm() {
           role="status"
           tabIndex={-1}
         >
-          Thanks! I&apos;ll be in touch.
+          Thanks. We&apos;ll send one note when we open up.
         </p>
       </div>
     );
@@ -60,11 +60,10 @@ export default function NotifyForm() {
   return (
     <div className={styles.notifySection}>
       <h3 className={styles.heading} id="notify-heading">
-        Not sure where to start?
+        Want to know when we&apos;re taking work again?
       </h3>
       <p className={styles.desc}>
-        Tell me what&apos;s breaking and I&apos;ll give you an honest
-        read, no pitch, no obligation.
+        Leave your email. We&apos;ll send one note when we open up. No pitch, no list churn.
       </p>
 
       <form
@@ -112,25 +111,12 @@ export default function NotifyForm() {
           )}
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="notify-message" className={styles.label}>
-            What&apos;s breaking?
-          </label>
-          <textarea
-            id="notify-message"
-            name="message"
-            rows={3}
-            className={styles.messageInput}
-            placeholder="e.g. Stripe webhooks fail randomly, or the app crashes under load"
-          />
-        </div>
-
         <button
           type="submit"
           className={styles.submitBtn}
           disabled={status === 'submitting'}
         >
-          {status === 'submitting' ? 'Sending\u2026' : 'Send'}
+          {status === 'submitting' ? 'Sending\u2026' : 'Notify me'}
         </button>
 
         <div

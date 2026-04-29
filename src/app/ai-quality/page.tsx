@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Button from '@/src/components-next/Button';
+import FullyBookedCTA from '@/src/components-next/FullyBookedCTA';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
@@ -158,14 +159,7 @@ export default function AIQualityPage() {
             doesn&apos;t come at the cost of quality.
           </p>
           <div className={styles.cta}>
-            <Button
-              href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-              variant="primary"
-              size="large"
-              external
-            >
-              Book a Call
-            </Button>
+            <FullyBookedCTA source="ai_quality_hero" size="large" />
             <Button href="/" variant="ghost" size="large">
               Patch cycle taking too long? <span aria-hidden="true">&rarr;</span>
             </Button>
@@ -267,7 +261,7 @@ export default function AIQualityPage() {
             Engagements start at $10,000. No retainers, no long-term commitments.
           </p>
           <ul className={styles.tiers} role="list">
-            {engagements.map((eng) => (
+            {engagements.map((eng, i) => (
               <li key={eng.name} className={styles.tier}>
                 <h3 className={styles.tierName}>{eng.name}</h3>
                 <p className={styles.tierPrice}>{eng.price}</p>
@@ -277,14 +271,9 @@ export default function AIQualityPage() {
                   <CheckIcon className={styles.checkIcon} />
                   {eng.outcome}
                 </div>
-                <Button
-                  href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-                  variant="primary"
-                  size="large"
-                  external
-                >
-                  Book a Call
-                </Button>
+                {i === 0 && <FullyBookedCTA source="ai_quality_pricing_t1" size="large" />}
+                {i === 1 && <FullyBookedCTA source="ai_quality_pricing_t2" size="large" />}
+                {i === 2 && <FullyBookedCTA source="ai_quality_pricing_t3" size="large" />}
               </li>
             ))}
           </ul>
@@ -369,14 +358,7 @@ export default function AIQualityPage() {
             The defect rate is already climbing. Let&apos;s get ahead of it
             before it becomes a production incident.
           </h2>
-          <Button
-            href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-            variant="primary"
-            size="large"
-            external
-          >
-            Book a Call
-          </Button>
+          <FullyBookedCTA source="ai_quality_final" size="large" />
         </div>
       </section>
       {/* JSON-LD structured data */}

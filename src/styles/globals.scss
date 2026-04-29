@@ -20,6 +20,10 @@
   --color-white: #FFFFFF;
   --color-border: rgba(255, 255, 255, 0.12);
   --color-border-light: rgba(0, 0, 0, 0.1);
+  --color-disabled-bg: #E5E5E5;
+  --color-disabled-border: #9E9E9E;
+  --color-disabled-bg-on-dark: #2A2A2A;
+  --color-disabled-border-on-dark: #5A5A5A;
 
   /* Typography */
   --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;

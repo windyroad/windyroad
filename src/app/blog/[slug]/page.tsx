@@ -2,11 +2,8 @@ import Link from 'next/link';
 import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
-import Button from '@/src/components-next/Button';
 import styles from '../post.module.scss';
 import 'highlight.js/styles/github-dark.css';
-
-const CTA_TAGS = ['ai coding', 'ai-coding', 'vibe coding', 'claude code'];
 
 
 export async function generateStaticParams() {
@@ -43,8 +40,6 @@ export default async function BlogPost({
     'MMMM yyyy',
   );
 
-  const showCTA = frontmatter.tags?.some((tag) => CTA_TAGS.includes(tag));
-
   const moreLink = frontmatter.link ? (
     <a
       href={frontmatter.link}
@@ -78,27 +73,6 @@ export default async function BlogPost({
             {moreLink}
           </section>
         </article>
-
-        {showCTA && (
-          <section className={styles.cta}>
-            <hr className={styles.ctaDivider} />
-            <h2 className={styles.ctaHeadline}>
-              Want these controls on your codebase?
-            </h2>
-            <p className={styles.ctaBody}>
-              I set up CI/CD pipelines, quality gates, and deployment
-              guardrails for teams shipping with AI. Book a call and
-              I&apos;ll tell you exactly what your project needs.
-            </p>
-            <Button
-              href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-              variant="primary"
-              external
-            >
-              Book a Call
-            </Button>
-          </section>
-        )}
       </div>
     </div>
   );

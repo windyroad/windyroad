@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import FullyBookedCTA from '@/src/components-next/FullyBookedCTA';
 import styles from './Header.module.scss';
 
 export default function Header() {
@@ -102,15 +103,7 @@ export default function Header() {
         <Link href="/blog" className={styles.navLink} onClick={closeMenu}>
           Blog
         </Link>
-        <a
-          href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.cta}
-          onClick={closeMenu}
-        >
-          Book a Call<span className="sr-only"> (opens in new tab)</span>
-        </a>
+        <FullyBookedCTA source="header" />
       </nav>
     </header>
   );

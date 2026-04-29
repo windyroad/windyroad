@@ -9,6 +9,7 @@
 - [006 - Enforce Red-Green-Refactor via Claude Code hooks](./006-tdd-enforcement-via-hooks.proposed.md)
 - [007 - Use impact x likelihood product for risk scoring](./007-risk-matrix-calculation.proposed.md)
 - [008 - Action-specific pipeline risk management](./008-action-specific-pipeline-risk-management.proposed.md)
+- [023 - Pause the commercial funnel via a "Fully Booked" CTA pattern](./023-pause-commercial-funnel-via-fully-booked-cta.proposed.md)
 
 ## Superseded Decisions
 

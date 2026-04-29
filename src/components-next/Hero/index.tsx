@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Button from '@/src/components-next/Button';
+import FullyBookedCTA from '@/src/components-next/FullyBookedCTA';
 import styles from './Hero.module.scss';
 
 export default function Hero() {
@@ -34,14 +35,7 @@ export default function Hero() {
           We make sure it <span className={styles.accent}>works</span>.
         </p>
         <div className={styles.cta}>
-          <Button
-            href="https://cal.com/tomhoward/meeting?user=tomhoward&duration=30&overlayCalendar=true&layout=week_view"
-            variant="primary"
-            size="large"
-            external
-          >
-            Book a Call
-          </Button>
+          <FullyBookedCTA source="founders_hero" size="large" />
           <Button href="/vibe-code-audit" variant="inverted" size="large">
             Vibe Code Audit: $9k
           </Button>
