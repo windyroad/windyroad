@@ -1,5 +1,48 @@
 # windy-road
 
+## 2.13.0
+
+### Minor Changes
+
+- b97bc0b: Pause the consulting funnel via a "Fully Booked" CTA pattern. Tom is starting a full-time engineering role and has no capacity to take Windy Road clients; the newsletter and blog continue. Per ADR-023, every "Book a Call" anchor across the site is replaced with a non-navigating `FullyBookedCTA` button that visibly marks the offering as paused while preserving the credibility content on `/founders`, `/vibe-code-audit`, and `/ai-quality`.
+
+  Visible label is `~~Book a Call~~ Fully Booked`. The button is `aria-disabled="true"` (not HTML `disabled`), keeping it focusable and click-capturable. A single `aria-live="polite"` region in the root layout announces "We're fully booked right now. Subscribe to The Shift for a note when that changes." on click. Click and hover fire Microsoft Clarity custom events (`fully_booked_click`, `fully_booked_hover`) tagged with the call-site `source`, so demand signal is measurable per surface.
+
+  Contract changes:
+
+  - New `FullyBookedCTA` component at `src/components-next/FullyBookedCTA/`. Sibling to `Button` (which stays anchor-only by contract). Variants `primary` / `inverted`, sizes `default` / `large`, required `source` prop typed against the surface enum.
+  - New `FullyBookedStatus` context + polite live region at `src/components-next/FullyBookedStatus/`, mounted once in `src/app/layout.tsx`. `setStatus` clears then re-sets via `requestAnimationFrame` to force re-announcement of identical messages.
+  - New typed analytics helper at `src/components-next/Clarity/track.ts` (`trackEvent(name, tags?)`). After this change the Clarity wrapper module is the only importer of `@microsoft/clarity`; leaf components never reach for the SDK directly.
+  - Four new disabled-look tokens in `src/styles/globals.scss`: `--color-disabled-bg`, `--color-disabled-border`, and the `-on-dark` variants. Each pair meets WCAG AA at 4.5:1 (text) / 3:1 (border) without relying on opacity.
+  - The conditional CTA section on AI/vibe-coding tagged blog posts (`src/app/blog/[slug]/page.tsx`) is removed. Per JTBD review, Developer readers (JTBD-200, JTBD-201, JTBD-205) are doing content consumption; a struck-through pitch reads as a dead-end. Restore when the funnel reopens.
+  - Footer adds the caption "Fully booked. Not taking new engagements right now." Phone, email, and LinkedIn stay as peer-contact channels.
+  - `NotifyForm` on `/vibe-code-audit` is repurposed as a waitlist (heading "Want to know when we're taking work again?", helper "Leave your email. We'll send one note when we open up. No pitch, no list churn.", button "Notify me", success "Thanks. We'll send one note when we open up."). The "What's breaking?" textarea is removed.
+
+  Reversal: swap `FullyBookedCTA` back to the active `Book a Call` anchor and restore the blog `{showCTA && ...}` block. ADR-023 records the reassessment criteria (90 days, or fewer than one click per week for four weeks).
+
+  ADR-023 references `docs/jtbd/README.md` Job-to-Screen mapping as the canonical reference for which jobs each surface must re-serve when the funnel restarts.
+
+### Patch Changes
+
+- d6cc6d9: Fix WCAG AA contrast failures across all four diagrams in the "An AI agent deleted production" article (`sign-vs-control.svg`, `risk-gate-flow.svg`, `risk-score-anatomy.svg`, `layered-defence.svg`). Tom flagged the cover image as low-contrast; the `contrast-master` audit found the same patterns repeated across all four SVGs.
+
+  Patterns fixed (consistent palette swaps, identity preserved):
+
+  - Drop alpha-channel suffixes on subtext fills (`#FCA5A580` and `#86EFAC90` composed to 3.0 to 4.4:1 on saturated dark fills). Use full-alpha hex; rely on font size and weight for hierarchy.
+  - Slate-500 body text (`#64748B`) on slate-900 page bg or slate-800 cards (3.05 to 3.75:1) lifted to slate-400 (`#94A3B8`, 5.7 to 7.0:1).
+  - Red-800 borders (`#7F1D1D`) on dark backgrounds (1.78:1) lifted to red-600 (`#DC2626`, 3.70:1).
+  - Blue-700 (`#1E40AF`) and alpha-blue (`#3B82F650`) borders (1.57 to 2.08:1) lifted to blue-500 (`#3B82F6`, 4.85:1).
+  - Slate-700 card strokes (`#334155`) and slate-600 inner strokes (`#475569`) lifted to slate-500 (`#64748B`).
+  - Code-chip strokes in `risk-gate-flow.svg` lifted to slate-400 (`#94A3B8`) for AA against both chip fill and card.
+
+  Re-rendered all four PNGs at `public/img/social/` and updated the cover image at `src/social/an-ai-agent-deleted-production-the-model-wasnt-the-problem/cover.png`. Re-audited via `contrast-master`; all four SVGs now pass WCAG 2.2 AA (1.4.3 Text Contrast and 1.4.11 Non-text Contrast).
+
+  Also updates the `wr-blog:create-social-posts` skill to require a `contrast-master` pass on every cover image and article-body diagram, codifies the windyroad-palette failure patterns, and adds a shared `skills/wr-blog/assets/diagram-inspection-checklist.md` that the planned `wr-blog:render-diagrams` skill will reference.
+
+- b196c18: Trim the Bluesky social post for the "An AI agent deleted production" article so it fits the 300-character limit. The original body was 296 chars; with the 88-character canonical URL plus a blank line it overshot the limit by 30 (Bluesky counts URLs as their full length, unlike Twitter's `t.co` shortening). New body is 199 chars; total post including URL is 289 chars.
+
+  Also updates the `wr-blog:create-social-posts` skill: adds step 4.5 (mandatory platform character-limit check before save) and documents per-platform URL-counting behaviour in `assets/social-platform-conventions.md` (Bluesky counts URLs full-length; Twitter shortens via `t.co` to ~23 chars; LinkedIn / Reddit / dev.to are effectively unbounded for our use cases).
+
 ## 2.11.4
 
 ### Patch Changes
