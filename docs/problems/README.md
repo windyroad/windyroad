@@ -1,30 +1,41 @@
 # Problem Backlog
 
-> Last reviewed: 2026-04-27 (P032 verifying, levers 1+3 of the verify-first discipline fix shipped: memory note + CLAUDE.md addition; lever 2 hook deferred; review pass: P033 opened (report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created the label; recommended fix is to drop the flag entirely since problem-report.yml frontmatter auto-applies labels on form submit; WSJF 12.0 Open S); P012 reported upstream as windyroad/agent-plugins#86 (git-push-gate.sh CI-status check missing) per /wr-itil:report-upstream Step 7 back-write; P028 enriched with batch-redundancy evidence (## Additional Evidence 2026-04-27 section: 8 sequential commits each fired a fresh wr-risk-scorer:pipeline subagent and all returned identical 1/25 Very Low verdicts on isomorphic single-line ## Reported Upstream appends; suggests shape-recognition caching as a candidate fix). All 18 dev-work tickets re-verified against on-disk inventory; 11 verifying tickets unchanged (none yet at the 14-day Likely-verified threshold); 0 parked. WSJF rankings stable since the prior pass except for the new P033 row inserted at the WSJF 12.0 cluster. P057 staging-trap signal observed in this session but not local-ticketed: upstream P057 covers the same root cause (manage-problem Step 7 staging trap, fix landed inline as the Edit-tool re-stage rule); decision logged in this iteration's retro per Task 4 default.
+> Last reviewed: 2026-05-02 README reconciled (12 drift entries): added P034..P044 to WSJF Rankings, reordered Closed before Parked to match reconcile-readme.sh section-order assumption (false-positive STALE on P031 cleared). Reconciliation contract per P118 + ADR-014.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
 
 Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) and Parked (`.parked.md`, multiplier 0) tickets are excluded per ADR-022 and surfaced in their own sections below. Sorted WSJF descending.
 
-| WSJF | ID | Title | Severity | Status | Effort |
-|------|-----|-------|----------|--------|--------|
-| 32.0 | P026 | dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop | 16 (High) | Known Error | S |
-| 24.0 | P012 | No CI-status check on push/release; conditional-commitment verification missing (rescoped 2026-04-27) | 12 (Significant) | Known Error | S |
-| 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Medium) | Known Error | S |
-| 16.0 | P021 | architect-mark-reviewed strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL | 16 (High) | Open | S |
-| 12.0 | P002 | Hero content extends beyond the fold | 12 (High) | Known Error | S |
-| 12.0 | P022 | architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes | 12 (Significant) | Open | S |
-| 12.0 | P024 | .claude/** Edit/Write permission gate not satisfied by */Edit allow list | 12 (Significant) | Known Error | S |
-| 12.0 | P027 | work-problems Step 5 exit-code rule does not handle is_error:true transient API failures | 12 (Significant) | Open | S |
-| 12.0 | P028 | risk-scorer 30-min TTL expired during long-running orchestrator turns | 12 (Significant) | Open | S |
-| 12.0 | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created the label | 12 (Significant) | Open | S |
-| 9.0  | P010 | Source fetch blocks OpenAI and Reddit | 9 (Medium) | Known Error | M |
-| 6.0  | P014 | Playwright helper for tool-blocked sources | 12 (High) | Known Error | L |
-| 6.0  | P029 | work-problems iteration boundary leaves run-retro BRIEFING.md edits uncommitted | 12 (Significant) | Open | M |
-| 4.5  | P023 | architect-gate drift detection rm\'s marker without offering recovery path | 9 (Moderate) | Open | M |
-| 3.0  | P001 | Next.js build hangs locally | 6 (Medium) | Open | M |
-| 2.0  | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M |
+| WSJF | ID | Title | Severity | Status | Effort | Reported |
+|------|-----|-------|----------|--------|--------|----------|
+| 32.0 | P026 | dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop | 16 (High) | Known Error | S | 2026-04-26 |
+| 32.0 | P035 | /wr-newsletter drafter paraphrases quantitative claims away from source | 16 (Significant) | Open | S | 2026-05-01 |
+| 32.0 | P038 | /wr-newsletter step 16 mandates inline review blocks in brief; creates confirmation-bias risk for next reviewer | 16 (Significant) | Open | S | 2026-05-01 |
+| 24.0 | P012 | No CI-status check on push/release; conditional-commitment verification missing (rescoped 2026-04-27) | 12 (Significant) | Known Error | S | 2026-04-18 |
+| 24.0 | P036 | /wr-newsletter drafter leaks editorial-process meta-commentary into reader-facing body | 12 (Significant) | Open | S | 2026-05-01 |
+| 24.0 | P041 | /wr-newsletter step 16 keeps LinkedIn post + image notes + alt text inline in brief; risks accidental publication of meta content | 12 (Significant) | Open | S | 2026-05-01 |
+| 20.0 | P034 | /wr-newsletter generates plausible-but-invented URLs and skips verification before save | 20 (Critical) | Open | M | 2026-05-01 |
+| 18.0 | P040 | /wr-newsletter draft and companion files use prep run date instead of Friday publish date | 9 (Moderate) | Open | S | 2026-05-01 |
+| 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Medium) | Known Error | S | 2026-04-15 |
+| 16.0 | P021 | architect-mark-reviewed strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL | 16 (High) | Open | S | 2026-04-26 |
+| 16.0 | P039 | sw-critic round-3 REJECTED-with-author-overrides verdict obscures publish-decision signal | 8 (Moderate) | Open | S | 2026-05-01 |
+| 16.0 | P043 | /wr-newsletter three-lens scoring lets non-leader-actionable items through; persona relevance is post-filter, not in scoring | 16 (Significant) | Open | M | 2026-05-01 |
+| 12.0 | P002 | Hero content extends beyond the fold | 12 (High) | Known Error | S | 2026-04-14 |
+| 12.0 | P024 | .claude/** Edit/Write permission gate not satisfied by */Edit allow list | 12 (Significant) | Known Error | S | 2026-04-26 |
+| 12.0 | P022 | architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes | 12 (Significant) | Open | S | 2026-04-26 |
+| 12.0 | P027 | work-problems Step 5 exit-code rule does not handle is_error:true transient API failures | 12 (Significant) | Open | S | 2026-04-26 |
+| 12.0 | P028 | risk-scorer 30-min TTL expired during long-running orchestrator turns | 12 (Significant) | Open | S | 2026-04-26 |
+| 12.0 | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn\'t pre-created the label | 12 (Significant) | Open | S | 2026-04-27 |
+| 12.0 | P042 | jtbd-enforce-edit hook uses relative docs/jtbd path; fails when cwd is not project root | 12 (Significant) | Open | S | 2026-05-01 |
+| 12.0 | P037 | /wr-newsletter cover-image step requires 15+ iteration rounds; brand-asset grep + font-rendering diagnostics missing | 12 (Significant) | Open | M | 2026-05-01 |
+| 12.0 | P044 | /wr-newsletter needs a dedicated cover-image skill (templated SVG + render script) for consistent weekly output | 12 (Significant) | Open | M | 2026-05-01 |
+| 9.0  | P010 | Source fetch blocks OpenAI and Reddit | 9 (Medium) | Known Error | M | 2026-04-17 |
+| 6.0  | P014 | Playwright helper for tool-blocked sources | 12 (High) | Known Error | L | 2026-04-19 |
+| 6.0  | P029 | work-problems iteration boundary leaves run-retro BRIEFING.md edits uncommitted | 12 (Significant) | Open | M | 2026-04-26 |
+| 4.5  | P023 | architect-gate drift detection rm\'s marker without offering recovery path | 9 (Moderate) | Open | M | 2026-04-26 |
+| 3.0  | P001 | Next.js build hangs locally | 6 (Medium) | Open | M | 2026-04-14 |
+| 2.0  | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 |
 
 ## Verification Queue
 
@@ -44,14 +55,6 @@ Fix released, awaiting user verification. Ranked by release age, oldest first pe
 | P020 | No dependency update cadence; AFK loop halts on stale-dep gate | 2026-04-26 | Added `.github/workflows/deps-refresh.yml` weekly cron (Mondays 09:00 UTC) running `npx dry-aged-deps --update --yes` and opening a PR via `peter-evans/create-pull-request@v7` when root manifests change. New ADR 022 records the proactive cadence sibling to ADR 021\'s reactive bypass. Verification triggers on first scheduled run or manual `gh workflow run deps-refresh.yml` dispatch, plus a future AFK drain that does not halt on accumulated drift. | no (1 day) |
 | P025 | no-em-dash.sh has zero coverage of Bash-path file writes | 2026-04-26 | PostToolUse:Bash hook `.claude/hooks/no-em-dash-bash.sh` added and wired into `.claude/settings.json` PostToolUse section, matcher `Bash`. Hook drains the PostToolUse JSON payload, scans the working tree via `git status --porcelain` plus `git diff` for added-line filtering, and blocks on U+2014 in modified files. The hook contains zero literal em-dashes (search bytes built via `printf '\\xe2\\x80\\x94'`). A narrow whitelist exempts the contractual `- **Upstream report pending** (em-dash) external dependency identified` marker that the upstream `wr-itil:work-problems` SKILL appends on `upstream-blocked` parks; whitelist removal tracked in P030. Architect PASS (precedent-following Pre+Post pairing per ADR-006), JTBD PASS (internal toolchain). Five inline test cases verified during implementation: clean tree, untracked-with-em-dash, untracked-marker-only, untracked-marker-plus-extra, tracked-diff-em-dash. Verification triggers on the next AFK iteration that issues a Bash-path file write with an em-dash and gets blocked, plus a deliberate orchestrator marker-append flow that gets through unblocked. | no (1 day) |
 
-## Parked
-
-Parked tickets are excluded from WSJF ranking. They surface here so the upstream blocker stays visible.
-
-| ID | Title | Reason | Parked since |
-|----|-------|--------|--------------|
-| P031 | manage-problem Step 0 reconcile-readme.sh hits exit 127 on marketplace consumers | upstream-blocked (windyroad/agent-plugins#85) | 2026-05-02 |
-
 ## Closed
 
 Closed tickets are listed for audit but excluded from the active backlog:
@@ -61,6 +64,14 @@ Closed tickets are listed for audit but excluded from the active backlog:
 - P005 (Slider has no visual stop indicators)
 - P007 (wr-sw-critic agent not discoverable in session)
 - P032 (Assistant writes ticket bodies and claims about project state without verifying current code/config first). Closed 2026-05-02 on session-evidence per run-retro Step 4a. Verify-before-assert discipline exercised five times in iter 1: read SKILL.md, plugin-cache versions, gh issue 85 state, packages/ absence, gh repo ownership before any ticket-body or external claim landed.
+
+## Parked
+
+Parked tickets are excluded from WSJF ranking. They surface here so the upstream blocker stays visible.
+
+| ID | Title | Reason | Parked since |
+|----|-------|--------|--------------|
+| P031 | manage-problem Step 0 reconcile-readme.sh hits exit 127 on marketplace consumers | upstream-blocked (windyroad/agent-plugins#85) | 2026-05-02 |
 
 ## Notes
 
