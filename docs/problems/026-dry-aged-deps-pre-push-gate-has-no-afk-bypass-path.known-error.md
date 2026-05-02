@@ -3,8 +3,8 @@
 **Status**: Known Error
 **Reported**: 2026-04-26
 **Priority**: 16 (Significant). Impact: Significant (4) x Likelihood: Likely (4)
-**Effort**: XL <!-- transitive: XL via upstream wr-itil skill build (re-rated 2026-05-02: S to XL after fix-strategy correction supersedes ADR 021; new strategy requires building wr-itil:update-stale-deps in the wr-itil plugin which is cross-package, multi-day, plus a new ADR superseding ADR 021) -->
-**WSJF**: 4.0 = (16 x 2.0) / 8 (re-rated 2026-05-02 per Step 7 pre-flight; effort S to XL)
+**Effort**: TBD <!-- previously rated S, then XL "transitive via upstream wr-itil skill build". Both ratings rest on the assumption that the new update-stale-deps skill belongs in the wr-itil plugin upstream. Tom corrected 2026-05-02 (mid AFK iter 2) that (a) we cannot dictate placement to the agent-plugins maintainers, (b) the skill probably does not belong in agent-plugins at all. The skill operates on this project's package.json, lockfile, and test suite, so it is windyroad-specific. Re-rating deferred to a future review pass once the local placement and scope are settled. -->
+**WSJF**: TBD (re-rate pending; previously 4.0 = (16 x 2.0) / 8 based on transitive-via-upstream framing now invalidated)
 
 ## Description
 
@@ -38,11 +38,13 @@ The gate itself is correct: it surfaces stale deps before they ship. What is mis
 
 Tom corrected the strategy on 2026-05-02. `dry-aged-deps` stays in the pre-push hook. When it fires, the resolution is NOT to auto-bypass the gate. The resolution is to update the recommended dependency, one package per commit, including test and code changes that the update requires. Major-version updates are not exempt.
 
+**Placement (corrected mid AFK iter 2 on 2026-05-02):** the new skill is **windyroad-local**, not upstream in the wr-itil plugin or anywhere else in the agent-plugins repo. Two reasons. First, this project cannot dictate placement to agent-plugins maintainers. Second, the skill operates on this project's `package.json`, `package-lock.json`, and test suite; the per-package update logic, breaking-change handling, and "agent diagnoses test/code fixes that a dep bump requires" all run against windyroad's actual code surface. A generic version may eventually be worth pulling upstream, but only after a local implementation has shown what the right abstraction is.
+
 The mechanism:
 
 1. **Pre-push hook unchanged.** `npm run deps:check` continues to run `dry-aged-deps --check` and exit non-zero on stale state. The gates safety surface is preserved.
 
-2. **New skill: `wr-itil:update-stale-deps`** (built via skill-creator). When invoked, the skill:
+2. **New windyroad-local skill: `update-stale-deps`** (built via skill-creator, located in this project's skills tree, e.g. `.claude/skills/update-stale-deps/`). When invoked, the skill:
    - Reads the staleness report (which packages are over threshold, what version each should move to).
    - For each stale package, in dependency-order where possible:
      - Runs `npx dry-aged-deps --update <package>` (one package only).
@@ -53,7 +55,7 @@ The mechanism:
 
 3. **Major-version updates**: same path. The loop does not exempt majors. The agent reads release notes and applies breaking-change updates per package. If the agent cannot resolve a major autonomously (genuinely needs human judgement), the loop halts on that specific package and surfaces partial progress: N packages updated, package X needs human review.
 
-4. **Wiring**: `wr-itil:update-stale-deps` fires on ANY caller that hits a `dry-aged-deps` pre-push failure, not just `/wr-itil:work-problems`. The trigger surfaces include:
+4. **Wiring**: the skill fires on ANY caller that hits a `dry-aged-deps` pre-push failure, not just `/wr-itil:work-problems`. The trigger surfaces include:
    - Manual `git push` from the developer terminal (the pre-push hook prints a message naming the skill; the developer invokes it explicitly).
    - `scripts/push-watch.sh` (after the auto-resolve revert): when the wrapped `git push` fails on `dry-aged-deps`, the script invokes the skill before retry.
    - `/wr-itil:work-problems` Step 0: when the orchestrator detects `npm run deps:check` returns non-zero before attempting work, the skill runs to clear the gate.
@@ -63,22 +65,24 @@ This supersedes the auto-bypass approach in ADR 021, which moved `dry-aged-deps 
 
 ### Investigation Tasks
 
-- [x] Decide insertion point: original choice (push-watch.sh auto-bypass) is superseded by Toms 2026-05-02 correction. New insertion point is a dedicated skill (`wr-itil:update-stale-deps`) invoked by the orchestrator before push.
+- [x] Decide insertion point: original choice (push-watch.sh auto-bypass) is superseded by Toms 2026-05-02 correction. New insertion point is a dedicated skill invoked by the orchestrator before push.
 - [x] Architect review of ADR 021: completed for the original strategy. ADR 021 now needs supersede.
 - [x] Implement fix in `scripts/push-watch.sh` with non-fatal failure handling: the auto-resolve and auto-commit behaviour added by ADR 021 must be reverted in `scripts/push-watch.sh`. Pre-push gate stays.
-- [ ] Supersede ADR 021 with a new ADR documenting the one-package-per-commit policy, including the major-version case (no exemption) and the AFK orchestrator integration boundary.
+- [x] **Decide skill placement** (corrected 2026-05-02): windyroad-local, NOT upstream in agent-plugins. Skill operates on this project's package.json, lockfile, and test suite; placement is project-local.
+- [ ] Supersede ADR 021 with a new ADR documenting the one-package-per-commit policy, including the major-version case (no exemption) and the AFK orchestrator integration boundary. Note new placement (windyroad-local skill) in the new ADR.
 - [ ] Revert `scripts/push-watch.sh` auto-resolve and auto-commit modifications.
-- [ ] Build `wr-itil:update-stale-deps` skill via skill-creator. Inputs: stale-dep report. Behaviour: per-package update, test run, agent-led test/code fixes if needed, normal-risk commit, loop. Halt on packages the agent cannot resolve autonomously.
-- [ ] Wire `wr-itil:update-stale-deps` into every pre-push failure surface: pre-push hook printout, `scripts/push-watch.sh` retry path, `/wr-itil:work-problems` Step 0. The skill is the single resolution path; no caller bypasses or duplicates the logic.
+- [ ] Build the `update-stale-deps` skill locally (e.g. `.claude/skills/update-stale-deps/`) via skill-creator. Inputs: stale-dep report. Behaviour: per-package update, test run, agent-led test/code fixes if needed, normal-risk commit, loop. Halt on packages the agent cannot resolve autonomously.
+- [ ] Wire the skill into every pre-push failure surface: pre-push hook printout, `scripts/push-watch.sh` retry path, `/wr-itil:work-problems` Step 0. The skill is the single resolution path; no caller bypasses or duplicates the logic.
 - [ ] Reproduction test: deferred unless a recurrence in the new mechanism justifies the cost. Reproducing requires backdating the lockfile by the staleness threshold and invoking the new skill.
 - [ ] User verification on next AFK orchestrator run that touches a stale-deps state, against the new skill (not the push-watch.sh auto-resolve path).
+- [ ] Re-rate Effort and WSJF after placement and ADR-supersede tasks are scoped (current: TBD, previous values invalidated by placement correction).
 
 
 ## Dependencies
 
 - **Blocks**: (none)
-- **Blocked by**: upstream wr-itil plugin skill build (wr-itil:update-stale-deps); cross-package work owned by windyroad/agent-plugins repo. No local ticket ID for the upstream blocker.
-- **Composes with**: P020 (cadence): same root surface; closing P020 reduces P026 trigger frequency
+- **Blocked by**: nothing upstream. Previously framed as "blocked by upstream wr-itil:update-stale-deps skill build in agent-plugins"; that framing was invalidated by the 2026-05-02 placement correction. Local work, no external dependencies.
+- **Composes with**: P020 (cadence): same root surface; closing P020 reduces P026 trigger frequency. P045 (assistant parrots upstream-placement framing without questioning): the discipline ticket capturing the meta-pattern that produced the original wrong framing on this ticket.
 
 ## Related
 
@@ -86,5 +90,6 @@ This supersedes the auto-bypass approach in ADR 021, which moved `dry-aged-deps 
 - ADR-008 (action-specific pipeline risk management; "Risk-reducing bypass" sub-section): docs/decisions/008-action-specific-pipeline-risk-management.proposed.md
 - `scripts/push-watch.sh` (fix site)
 - `.git/hooks/pre-push` (the gate this fix avoids tripping on)
-- packages/itil/skills/work-problems/SKILL.md (Step 0 / Step 6.5 push paths)
+- `~/.claude/plugins/cache/windyroad/wr-itil/0.23.1/skills/work-problems/SKILL.md` (Step 0 / Step 6.5 push paths; orchestrator caller, not the skill's home)
 - npm dry-aged-deps package
+- P045 (meta-pattern: assistant accepted the original "upstream wr-itil skill build" framing on this ticket without questioning whether the skill belongs upstream at all)
