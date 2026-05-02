@@ -80,8 +80,8 @@
     "wr-risk-scorer@windyroad": true,
     "wr-style-guide@windyroad": true,
     "wr-voice-tone@windyroad": true,
+    "skill-creator@claude-plugins-official": true,
     "wr-itil@windyroad": true,
-    "wr-retrospective@windyroad": true,
-    "skill-creator@claude-plugins-official": true
+    "wr-retrospective@windyroad": true
   }
 }
