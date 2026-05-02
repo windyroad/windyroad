@@ -1,6 +1,6 @@
 # Problem 031: manage-problem Step 0 reconcile-readme.sh hits exit 127 on marketplace consumers; script only on disk for vendored installs
 
-**Status**: Open
+**Status**: Parked
 **Reported**: 2026-04-27
 **Priority**: 12 (Significant). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: S (single path-resolution edit in upstream `manage-problem` SKILL.md Step 0)
@@ -83,3 +83,12 @@ Optional fallback: if `${CLAUDE_PLUGIN_ROOT}` is unset (e.g. the skill is invoke
 - **Template used**: problem-report.yml
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes
+
+## Parked
+
+- **Reason**: upstream-blocked. The genuine fix lives in the `wr-itil:manage-problem` SKILL.md Step 0 path-resolution logic, which is owned by `windyroad/agent-plugins` and cannot be edited from this marketplace consumer (per ADR-009). A project-local wrapper at `packages/itil/scripts/reconcile-readme.sh` would manufacture a fake source-tree shape (this project has no `packages/` directory) just to placate the upstream hardcoded path; that creates maintenance debt and contradicts the marketplace-consumer model.
+- **Verified persistence**: latest cached plugin version `0.23.1` still hardcodes `bash packages/itil/scripts/reconcile-readme.sh docs/problems` at SKILL.md line 189 (verified 2026-05-02). All cached versions installed on this machine (0.19.1, 0.19.4, 0.19.6, 0.20.0, 0.21.1, 0.22.0, 0.23.1) carry the same bug. Live reproduction in this project root: `bash packages/itil/scripts/reconcile-readme.sh docs/problems` returns exit 127 (`No such file or directory`).
+- **Upstream issue status**: windyroad/agent-plugins#85 is OPEN with no comments and no labels as of 2026-05-02 (last updated 2026-04-26). Comment with the 0.23.1 persistence evidence appended this iteration.
+- **Un-park trigger**: a new `wr-itil` plugin release lands in `~/.claude/plugins/cache/windyroad/wr-itil/` whose `skills/manage-problem/SKILL.md` Step 0 resolves the script via `${CLAUDE_PLUGIN_ROOT}` (or equivalent) instead of the hardcoded vendored path. Verify by running `bash "${CLAUDE_PLUGIN_ROOT}/scripts/reconcile-readme.sh" docs/problems` from a manage-problem invocation in this project and confirming exit 0.
+- **Local impact while parked**: Step 0 reconciliation drift detection stays disabled for marketplace-consumer manage-problem invocations in this project. The orchestrator's existing informal skip-on-127 workaround continues to absorb the failure. Drift, if any, surfaces on the next manual `/wr-itil:reconcile-readme` run.
+- **Date parked**: 2026-05-02
