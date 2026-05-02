@@ -405,6 +405,15 @@ The drafter is an inline main-assistant pass (not a subagent). The capture-fidel
 
 If `<draft-folder>/YYYY-MM-DD.capture.md` is absent (e.g. `phase=finalise` chose `Continue without capture transcript`), the drafter falls back to the in-context AskUserQuestion turn for any items captured in this session, and treats prep-time items without a transcript reference as best-effort (verbatim preservation cannot be checked against a persisted source).
 
+**Source-article quantitative-claim fidelity (P035, interim).** The capture-fidelity rule above governs Tom's Adjust text. A separate discipline applies to numbers cited from the source article body. When an Item references a count, percentage, ratio, range, or currency value drawn from the source article (as distinct from Tom's Adjust capture), the value must appear verbatim from the article body, not paraphrased from the news-fetch one-sentence summary. Specifically:
+
+- Do not round or "tidy" counts (write `26,904` not `27,000`; `42.7%` not `~40%`).
+- Do not collapse a range into a single value or replace a specific count with a magnitude phrase ("thousands of", "tens of thousands").
+- Do not duplicate one value across distinct denominators (e.g. "27,000 queries got 27,000 different answers" when the source's count of queries and count of distinct answers are not the same number).
+- If the article body is unavailable in this session (Cloudflare block, Playwright fetch failure, paywall, or the news-fetch surfaced only a redirect URL), cite the qualitative claim ("varied widely", "across thousands of queries") rather than fabricating a number.
+
+This rule is **interim defence-in-depth**. ADR-024 (URL verification gate) owns this responsibility structurally. Its fresh-context subagent compares article body against the brief's specific claim and returns SUPPORTED / REFUTED / NOT MENTIONED, which catches quantitative drift as a side-effect of body-content semantic comparison. Until ADR-024 confirmation criterion 1 is met (step 11.5 documented and exercised across one full prep-finalise cycle without user intervention on URLs), the drafter operates this rule as in-context discipline. Once met, this sub-section reduces to a one-line cross-reference to ADR-024.
+
 **Phase variant `11-prime` (phase=finalise only):** start from `<prep-draft-body>` rather than drafting from scratch. Apply changes only for:
 
 1. New Item blocks for kept new tier-1 items from step 10-prime.
