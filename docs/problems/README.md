@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-02 README reconciled (12 drift entries): added P034..P044 to WSJF Rankings, reordered Closed before Parked to match reconcile-readme.sh section-order assumption (false-positive STALE on P031 cleared). Reconciliation contract per P118 + ADR-014.
+> Last reviewed: 2026-05-02 P026 re-rated (Effort S to XL, WSJF 32.0 to 4.0): fix-strategy correction supersedes ADR 021; new strategy requires building wr-itil:update-stale-deps skill upstream in wr-itil plugin per Step 7 pre-flight discipline. Re-rate audit-trail captured in ticket Effort line HTML comment.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported |
 |------|-----|-------|----------|--------|--------|----------|
-| 32.0 | P026 | dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop | 16 (High) | Known Error | S | 2026-04-26 |
 | 32.0 | P035 | /wr-newsletter drafter paraphrases quantitative claims away from source | 16 (Significant) | Open | S | 2026-05-01 |
 | 32.0 | P038 | /wr-newsletter step 16 mandates inline review blocks in brief; creates confirmation-bias risk for next reviewer | 16 (Significant) | Open | S | 2026-05-01 |
 | 24.0 | P012 | No CI-status check on push/release; conditional-commitment verification missing (rescoped 2026-04-27) | 12 (Significant) | Known Error | S | 2026-04-18 |
@@ -34,6 +33,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P014 | Playwright helper for tool-blocked sources | 12 (High) | Known Error | L | 2026-04-19 |
 | 6.0  | P029 | work-problems iteration boundary leaves run-retro BRIEFING.md edits uncommitted | 12 (Significant) | Open | M | 2026-04-26 |
 | 4.5  | P023 | architect-gate drift detection rm\'s marker without offering recovery path | 9 (Moderate) | Open | M | 2026-04-26 |
+| 4.0  | P026 | dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop (re-rated 2026-05-02: upstream skill build) | 16 (High) | Known Error | XL | 2026-04-26 |
 | 3.0  | P001 | Next.js build hangs locally | 6 (Medium) | Open | M | 2026-04-14 |
 | 2.0  | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 |
 

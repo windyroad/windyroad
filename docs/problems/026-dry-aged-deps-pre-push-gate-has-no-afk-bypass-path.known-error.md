@@ -3,8 +3,8 @@
 **Status**: Known Error
 **Reported**: 2026-04-26
 **Priority**: 16 (Significant). Impact: Significant (4) x Likelihood: Likely (4)
-**Effort**: S
-**WSJF**: 32.0 = (16 x 2.0) / 1
+**Effort**: XL <!-- transitive: XL via upstream wr-itil skill build (re-rated 2026-05-02: S to XL after fix-strategy correction supersedes ADR 021; new strategy requires building wr-itil:update-stale-deps in the wr-itil plugin which is cross-package, multi-day, plus a new ADR superseding ADR 021) -->
+**WSJF**: 4.0 = (16 x 2.0) / 8 (re-rated 2026-05-02 per Step 7 pre-flight; effort S to XL)
 
 ## Description
 
@@ -77,7 +77,7 @@ This supersedes the auto-bypass approach in ADR 021, which moved `dry-aged-deps 
 ## Dependencies
 
 - **Blocks**: (none)
-- **Blocked by**: (none)
+- **Blocked by**: upstream wr-itil plugin skill build (wr-itil:update-stale-deps); cross-package work owned by windyroad/agent-plugins repo. No local ticket ID for the upstream blocker.
 - **Composes with**: P020 (cadence): same root surface; closing P020 reduces P026 trigger frequency
 
 ## Related
