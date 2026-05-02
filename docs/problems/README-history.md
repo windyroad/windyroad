@@ -9,3 +9,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-05-02 README reconciled (12 drift entries): added P034..P044 to WSJF Rankings, reordered Closed before Parked to match reconcile-readme.sh section-order assumption (false-positive STALE on P031 cleared). Reconciliation contract per P118 + ADR-014.
 
 > Last reviewed: 2026-05-02 P026 re-rated (Effort S to XL, WSJF 32.0 to 4.0): fix-strategy correction supersedes ADR 021; new strategy requires building wr-itil:update-stale-deps skill upstream in wr-itil plugin per Step 7 pre-flight discipline. Re-rate audit-trail captured in ticket Effort line HTML comment.
+
+> Last reviewed: 2026-05-02 P045 opened (assistant accepts ticket Fix Strategy upstream-placement framing without questioning), Open M WSJF 6.0; P026 re-rated to TBD (placement correction: skill is windyroad-local not upstream wr-itil per Tom mid AFK iter 2; previous 4.0/XL invalidated by upstream-framing reversal). Composes-with for P045 set to P032.
