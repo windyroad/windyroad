@@ -36,17 +36,43 @@ The gate itself is correct: it surfaces stale deps before they ship. What is mis
 
 ### Fix Strategy
 
-Pre-emptively run `npx dry-aged-deps --update --yes` inside `scripts/push-watch.sh` before the `git push`. The command is bounded to the auto-resolvable subset within the configured staleness tolerance. When it changes root manifests (`package.json`, `package-lock.json`), the script auto-commits the change as `chore(deps): refresh stale dependencies (P026)` so it rides the same push. Anything not auto-resolvable stays stale and the pre-push gate still fires (preserving the gate's safety surface). Failures of the pre-emptive command are non-fatal.
+Tom corrected the strategy on 2026-05-02. `dry-aged-deps` stays in the pre-push hook. When it fires, the resolution is NOT to auto-bypass the gate. The resolution is to update the recommended dependency, one package per commit, including test and code changes that the update requires. Major-version updates are not exempt.
 
-The auto-commit invokes ADR-008's "Risk-reducing bypass" principle to skip `risk-score-commit-gate.sh`. A stale-deps refresh shrinks the staleness gap that would otherwise fail the pre-push gate, so it is risk-reducing by definition. No changeset is required because the windyroad root package is `private: true` (`package.json:7`) and the auto-commit is scoped to root manifests only. ADR 021 records the policy in full.
+The mechanism:
+
+1. **Pre-push hook unchanged.** `npm run deps:check` continues to run `dry-aged-deps --check` and exit non-zero on stale state. The gates safety surface is preserved.
+
+2. **New skill: `wr-itil:update-stale-deps`** (built via skill-creator). When invoked, the skill:
+   - Reads the staleness report (which packages are over threshold, what version each should move to).
+   - For each stale package, in dependency-order where possible:
+     - Runs `npx dry-aged-deps --update <package>` (one package only).
+     - Runs the test suite. If tests fail, the agent diagnoses and fixes the test, code, or type changes the dep update requires. The orchestrator loop pays agent turns here; it does not skip to the next package.
+     - Once tests pass, commits as `chore(deps): bump <package> to <version> (P026)`. The risk-score-commit-gate runs normally; no bypass.
+     - Moves to the next package.
+   - When all packages clear, the loop exits and the push proceeds.
+
+3. **Major-version updates**: same path. The loop does not exempt majors. The agent reads release notes and applies breaking-change updates per package. If the agent cannot resolve a major autonomously (genuinely needs human judgement), the loop halts on that specific package and surfaces partial progress: N packages updated, package X needs human review.
+
+4. **Wiring**: `wr-itil:update-stale-deps` fires on ANY caller that hits a `dry-aged-deps` pre-push failure, not just `/wr-itil:work-problems`. The trigger surfaces include:
+   - Manual `git push` from the developer terminal (the pre-push hook prints a message naming the skill; the developer invokes it explicitly).
+   - `scripts/push-watch.sh` (after the auto-resolve revert): when the wrapped `git push` fails on `dry-aged-deps`, the script invokes the skill before retry.
+   - `/wr-itil:work-problems` Step 0: when the orchestrator detects `npm run deps:check` returns non-zero before attempting work, the skill runs to clear the gate.
+   - Any future caller that wraps push: same contract, same skill. The skill is the single resolution path; no caller bypasses it.
+
+This supersedes the auto-bypass approach in ADR 021, which moved `dry-aged-deps --update --yes` into `push-watch.sh` and silently auto-committed root-manifest changes. ADR 021 is to be marked superseded by a new ADR that codifies the one-package-per-commit policy. Risk-reducing-bypass per ADR-008 still applies for genuinely-trivial dep refreshes (patches within tolerance) but the mechanism moves from "do it silently inside push-watch.sh" to "do it explicitly inside the update-stale-deps skill, with full test runs and per-package commits."
 
 ### Investigation Tasks
 
-- [x] Decide insertion point for fix: chose `scripts/push-watch.sh` over orchestrator Step 0. The AFK halt is a property of `push-watch.sh`; fixing it there benefits any future caller, not just `/wr-itil:work-problems`.
-- [x] Architect review: completed. ADR 021 written and reviewed. ADR-008 risk-reducing-bypass framing confirmed sound.
-- [x] Implement fix in `scripts/push-watch.sh` with non-fatal failure handling
-- [ ] Reproduction test: deferred. Reproducing requires backdating the lockfile by the staleness threshold and invoking `push-watch.sh`. The existing ticket's symptom evidence (react/react-dom 16-day halt on a prior AFK session) is sufficient evidence of the failure mode. A formal regression test would require a fixture lockfile and a sandboxed dry-aged-deps install; defer until a recurrence justifies the cost.
-- [ ] User verification on next AFK orchestrator run that touches a stale-deps state
+- [x] Decide insertion point: original choice (push-watch.sh auto-bypass) is superseded by Toms 2026-05-02 correction. New insertion point is a dedicated skill (`wr-itil:update-stale-deps`) invoked by the orchestrator before push.
+- [x] Architect review of ADR 021: completed for the original strategy. ADR 021 now needs supersede.
+- [x] Implement fix in `scripts/push-watch.sh` with non-fatal failure handling: the auto-resolve and auto-commit behaviour added by ADR 021 must be reverted in `scripts/push-watch.sh`. Pre-push gate stays.
+- [ ] Supersede ADR 021 with a new ADR documenting the one-package-per-commit policy, including the major-version case (no exemption) and the AFK orchestrator integration boundary.
+- [ ] Revert `scripts/push-watch.sh` auto-resolve and auto-commit modifications.
+- [ ] Build `wr-itil:update-stale-deps` skill via skill-creator. Inputs: stale-dep report. Behaviour: per-package update, test run, agent-led test/code fixes if needed, normal-risk commit, loop. Halt on packages the agent cannot resolve autonomously.
+- [ ] Wire `wr-itil:update-stale-deps` into every pre-push failure surface: pre-push hook printout, `scripts/push-watch.sh` retry path, `/wr-itil:work-problems` Step 0. The skill is the single resolution path; no caller bypasses or duplicates the logic.
+- [ ] Reproduction test: deferred unless a recurrence in the new mechanism justifies the cost. Reproducing requires backdating the lockfile by the staleness threshold and invoking the new skill.
+- [ ] User verification on next AFK orchestrator run that touches a stale-deps state, against the new skill (not the push-watch.sh auto-resolve path).
+
 
 ## Dependencies
 
