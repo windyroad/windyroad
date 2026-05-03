@@ -81,4 +81,12 @@ Per P045 verify-upstream-placement-before-propagating:
 - P045 (assistant accepts ticket Fix Strategy upstream-placement framing without questioning): the discipline applied to classify this fix.
 - `~/.claude/plugins/cache/windyroad/wr-risk-scorer/0.4.2/skills/assess-release/SKILL.md` step 5 (the fix site).
 - ADR-015 (on-demand assessment skills): the parent decision describing the SKILL-vs-subagent delegation pattern.
-- **Upstream report pending**. external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/110 (2026-05-02)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/110
+- **Reported**: 2026-05-02
+- **Template used**: problem-report.yml
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
