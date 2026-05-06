@@ -1,10 +1,25 @@
 # Problem 026: dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop on every stale-dep state
 
-**Status**: Known Error
+**Status**: Closed
 **Reported**: 2026-04-26
+**Closed**: 2026-05-07
 **Priority**: 16 (Significant). Impact: Significant (4) x Likelihood: Likely (4)
-**Effort**: TBD <!-- previously rated S, then XL "transitive via upstream wr-itil skill build". Both ratings rest on the assumption that the new update-stale-deps skill belongs in the wr-itil plugin upstream. Tom corrected 2026-05-02 (mid AFK iter 2) that (a) we cannot dictate placement to the agent-plugins maintainers, (b) the skill probably does not belong in agent-plugins at all. The skill operates on this project's package.json, lockfile, and test suite, so it is windyroad-specific. Re-rating deferred to a future review pass once the local placement and scope are settled. -->
-**WSJF**: TBD (re-rate pending; previously 4.0 = (16 x 2.0) / 8 based on transitive-via-upstream framing now invalidated)
+**Effort**: N/A (closed as misframed; no fix shipped)
+**WSJF**: N/A (closed)
+
+## Closure note (2026-05-07)
+
+Closed as misframed on Tom's direction. The dry-aged-deps gate is intentional discipline, not a missing AFK bypass. Tom's framing: "it does have an AFK bypass. Do the necessary upgrades. It's there to make sure we do this. It's like brushing your teeth."
+
+The "AFK bypass" the original ticket title looked for is doing the upgrades the gate exists to enforce. There is no escape valve and there shouldn't be one. The Fix Strategy (build a windyroad-local `update-stale-deps` skill that auto-bumps packages per commit with agent-led test fixes) over-engineers around the gate when the correct response is to clear stale state by upgrading.
+
+P020 (verifying) covers the legitimate complement: proactive cadence via `.github/workflows/deps-refresh.yml` weekly cron. As of 2026-05-07 the cron has run twice (2026-04-27, 2026-05-04) and `npx dry-aged-deps` reports zero outdated packages with mature versions. The gate has not halted an AFK loop since P020 shipped, which is itself evidence that the cadence is the right shape of fix.
+
+The principle is captured in user memory `feedback_dry_aged_deps_is_intentional_discipline.md` so future iters do not re-open this framing. Future AFK halts on this gate should run upgrades (or escalate to the user when upgrades introduce breaking changes), not park / re-rate / classify-upstream.
+
+ADR 021 (auto-resolve stale deps in push:watch) remains in proposed state. Whether to mark it superseded, withdrawn, or accepted-as-shipped is a separate decision; not in scope for this closure.
+
+---
 
 ## Description
 

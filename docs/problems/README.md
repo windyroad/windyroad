@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-02 P047/P048/P049 opened (multi-concern split from iter 2 + iter 3 outstanding-questions queue): P047 wr-risk-scorer assess-release SKILL prose Skill-tool/Agent-tool ambiguity (Open S WSJF 12), P048 manage-problem P094 README refresh bypassed on bulk-creation paths (Open M WSJF 6.0), P049 reconcile-readme.sh section-order assumption produces false-positive STALE (Open S WSJF 12). All three composing with P045's placement-discipline. P047 tagged for /wr-itil:report-upstream.
+> Last reviewed: 2026-05-07 P026 closed as misframed on Tom's direction (gate is intentional discipline, not a missing bypass; "it's like brushing your teeth"). P020 verification fires naturally: deps-refresh.yml cron has run twice (2026-04-27, 2026-05-04) and `npx dry-aged-deps` reports zero outdated mature packages, so the gate has not halted AFK loops since P020 shipped. Memory `feedback_dry_aged_deps_is_intentional_discipline.md` captures the principle for future iters. AFK outstanding-questions queue cleared (3 of 4 entries already actioned by P047/P048/P049 tickets; 4th resolved by P026 closure).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -39,7 +39,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 4.5  | P023 | architect-gate drift detection rm\'s marker without offering recovery path | 9 (Moderate) | Open | M | 2026-04-26 |
 | 3.0  | P001 | Next.js build hangs locally | 6 (Medium) | Open | M | 2026-04-14 |
 | 2.0  | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 |
-| TBD  | P026 | dry-aged-deps pre-push gate has no AFK-bypass path; halts work-problems loop (re-rated 2026-05-02: windyroad-local skill, not upstream; previous 4.0/XL invalidated; awaiting Effort+WSJF re-rate) | 16 (High) | Known Error | TBD | 2026-04-26 |
 
 ## Verification Queue
 
@@ -69,6 +68,7 @@ Closed tickets are listed for audit but excluded from the active backlog:
 - P005 (Slider has no visual stop indicators)
 - P007 (wr-sw-critic agent not discoverable in session)
 - P032 (Assistant writes ticket bodies and claims about project state without verifying current code/config first). Closed 2026-05-02 on session-evidence per run-retro Step 4a. Verify-before-assert discipline exercised five times in iter 1: read SKILL.md, plugin-cache versions, gh issue 85 state, packages/ absence, gh repo ownership before any ticket-body or external claim landed.
+- P026 (dry-aged-deps pre-push gate has no AFK-bypass path). Closed 2026-05-07 as misframed on Tom's direction. Gate is intentional discipline (per the brushing-teeth analogy); the "AFK bypass" is doing the upgrades the gate exists to enforce. P020 (verifying) covers the legitimate proactive-cadence complement; deps-refresh.yml has kept the gate green since shipping. Principle captured in user memory `feedback_dry_aged_deps_is_intentional_discipline.md`.
 
 ## Parked
 
