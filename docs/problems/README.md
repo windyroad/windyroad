@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-07 P026 closed as misframed on Tom's direction (gate is intentional discipline, not a missing bypass; "it's like brushing your teeth"). P020 verification fires naturally: deps-refresh.yml cron has run twice (2026-04-27, 2026-05-04) and `npx dry-aged-deps` reports zero outdated mature packages, so the gate has not halted AFK loops since P020 shipped. Memory `feedback_dry_aged_deps_is_intentional_discipline.md` captures the principle for future iters. AFK outstanding-questions queue cleared (3 of 4 entries already actioned by P047/P048/P049 tickets; 4th resolved by P026 closure).
+> Last reviewed: 2026-05-07 P038 + P040 + P041 fix released as a single SKILL.md edit per ADR-014 batch-grain rule (all three amend step 16 simultaneously). ADR-026 (already proposed 2026-05-02) provided the spec; architect ALIGNED-WITH-FOLLOWUPS, JTBD PASS. Brief now contains only frontmatter + body + CTA; reviews live in `<publication-date>.reviews.md`; LinkedIn post + image + notes live in `<publication-date>.linkedin.md`; LinkedIn-post voice review specifically placed in `.reviews.md` (not `.linkedin.md`) for fresh-context discipline. P040's `<publication-date>` binding (next-Friday-from-local-time) replaces `YYYY-MM-DD` in steps 0, 10, 11, 12, 16, 17. Verification triggers on tonight's prep run + tomorrow's finalise. Earlier this session: P026 closed as misframed (gate is intentional discipline, "like brushing teeth"); P020 cron verified live; AFK outstanding-questions queue cleared.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,12 +9,9 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported |
 |------|-----|-------|----------|--------|--------|----------|
-| 32.0 | P038 | /wr-newsletter step 16 mandates inline review blocks in brief; creates confirmation-bias risk for next reviewer | 16 (Significant) | Open | S | 2026-05-01 |
 | 24.0 | P012 | No CI-status check on push/release; conditional-commitment verification missing (rescoped 2026-04-27) | 12 (Significant) | Known Error | S | 2026-04-18 |
 | 24.0 | P036 | /wr-newsletter drafter leaks editorial-process meta-commentary into reader-facing body | 12 (Significant) | Open | S | 2026-05-01 |
-| 24.0 | P041 | /wr-newsletter step 16 keeps LinkedIn post + image notes + alt text inline in brief; risks accidental publication of meta content | 12 (Significant) | Open | S | 2026-05-01 |
 | 20.0 | P034 | /wr-newsletter generates plausible-but-invented URLs and skips verification before save | 20 (Critical) | Open | M | 2026-05-01 |
-| 18.0 | P040 | /wr-newsletter draft and companion files use prep run date instead of Friday publish date | 9 (Moderate) | Open | S | 2026-05-01 |
 | 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Medium) | Known Error | S | 2026-04-15 |
 | 16.0 | P021 | architect-mark-reviewed strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL | 16 (High) | Open | S | 2026-04-26 |
 | 16.0 | P039 | sw-critic round-3 REJECTED-with-author-overrides verdict obscures publish-decision signal | 8 (Moderate) | Open | S | 2026-05-01 |
@@ -46,6 +43,9 @@ Fix released, awaiting user verification. Ranked by release age, oldest first pe
 
 | ID | Title | Released | Fix summary | Likely verified? |
 |----|-------|----------|-------------|------------------|
+| P038 | /wr-newsletter step 16 mandates inline review blocks in brief; creates confirmation-bias risk | 2026-05-07 | Step 16 rewritten per ADR-026: brief now frontmatter + body + CTA only; six review classes plus LinkedIn-post voice review now live in `<publication-date>.reviews.md` sibling. Bundled with P040 + P041 per ADR-014. Verification triggers on tonight's prep + tomorrow's finalise. | no (0 days) |
+| P040 | /wr-newsletter draft files use prep date instead of publish-Friday date | 2026-05-07 | Added `<publication-date>` step-0 binding (next-Friday-from-local-time, with Sat/Sun forward-resolution); replaced `YYYY-MM-DD` placeholders across steps 0, 10, 11, 12, 16, 17. Verification triggers on tonight's prep (2026-05-07 Thu) writing files named `2026-05-08.X` not `2026-05-07.X`. | no (0 days) |
+| P041 | /wr-newsletter step 16 keeps LinkedIn post + image notes inline in brief; risks accidental publication | 2026-05-07 | LinkedIn post body + image + alt text + posting notes now live in `<publication-date>.linkedin.md` sibling per ADR-026; LinkedIn-post voice review specifically placed in `.reviews.md` (not `.linkedin.md`) per architect direction for fresh-context discipline. Bundled with P038 + P040. Verification triggers on tomorrow's finalise. | no (0 days) |
 | P016 | Filter drops significant stories without corroboration | 2026-04-25 | Added step 4b corroboration sub-step (Google News RSS) and step 10 weak-attribution escalation to wr-newsletter SKILL.md | no (2 days) |
 | P018 | Newsletter publication time pressure on Friday | 2026-04-25 | Added phase=prep, phase=finalise, phase=full to wr-newsletter SKILL.md with .prep.md state handoff per ADR 017 | no (2 days) |
 | P011 | Visual artifacts shipped without render-verify | 2026-04-25 | Added render-and-verify discipline note to wr-newsletter SKILL.md step 12 and created shared `scripts/render-svg.mjs` helper that wraps `sips` for SVG-to-PNG conversion | no (2 days) |

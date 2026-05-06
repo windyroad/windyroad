@@ -1,10 +1,19 @@
 # Problem 040: /wr-newsletter draft and companion files use prep run date instead of Friday publish date
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-01
+**Released**: 2026-05-07
 **Priority**: 9 (Moderate). Impact: Moderate (3) x Likelihood: Likely (3)
 **Effort**: S
 **WSJF**: (9 x 2.0) / 1 = 18.0 (weight 2.0: newsletter is primary repo activity per 2026-05-02 direction)
+
+## Fix released (2026-05-07)
+
+Added `<publication-date>` binding to step 0 of `.claude/skills/wr-newsletter/SKILL.md`, computed as: if today (local time) is Friday, use today; else use the next Friday after today (Mon-Thu resolves forward to this Friday; Sat-Sun resolves forward to next Friday). Audited all path references in the SKILL and replaced `YYYY-MM-DD` placeholders with `<publication-date>` in steps 10, 11, 12, 16, and 17 (per architect's audit list). The brief is now published-Friday-pinned regardless of when prep runs.
+
+Bundled with P038 (sibling-file refactor) and P041 (LinkedIn-post sibling) per ADR-014 because all three amend step 16 simultaneously. Architect ALIGNED-WITH-FOLLOWUPS; JTBD PASS (no documented job depends on prep-time-date filenames).
+
+Verification triggers on tonight's `/wr-newsletter phase=prep` run (2026-05-07 Thursday): all output files should be named `2026-05-08.X` (next Friday), not `2026-05-07.X`. Tomorrow's `phase=finalise` (2026-05-08 Friday) should resolve `<publication-date>` to today (2026-05-08) and the file-naming should be unchanged.
 
 ## Description
 

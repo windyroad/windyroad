@@ -1,10 +1,21 @@
 # Problem 041: /wr-newsletter step 16 keeps LinkedIn post + image notes + alt text inline in brief; risks accidental publication of meta content
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-01
+**Released**: 2026-05-07
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Almost certain (4)
 **Effort**: S
 **WSJF**: (12 x 2.0) / 1 = 24.0 (weight 2.0: newsletter is primary repo activity per 2026-05-02 direction)
+
+## Fix released (2026-05-07)
+
+Step 16 of `.claude/skills/wr-newsletter/SKILL.md` rewritten per ADR-026: LinkedIn post body, image description, alt text, and posting notes now live in `<draft-folder>/<publication-date>.linkedin.md` (post-type frontmatter `linkedin-share` plus `companion-to: <publication-date>.md`). Brief frontmatter declares `companion-files.linkedin-post: <publication-date>.linkedin.md`. Aligns with the published convention `src/newsletters/published/leader/2026-04-24.linkedin.md`.
+
+Per architect direction, the LinkedIn-post voice review block does NOT travel with the LinkedIn post; it lives in `<publication-date>.reviews.md` alongside the other review blocks so the next voice gate run does not see its own prior verdict (fresh-context discipline per ADR-026).
+
+Bundled with P038 (reviews sibling file) and P040 (Friday-date naming) per ADR-014. Architect ALIGNED-WITH-FOLLOWUPS; JTBD PASS.
+
+Verification triggers on tomorrow's `/wr-newsletter phase=finalise` run, which writes the LinkedIn-post sibling file. Confirm `<publication-date>.md` brief contains no `## LinkedIn Post`, `## Image`, or `## Notes for posting` sections.
 
 ## Description
 

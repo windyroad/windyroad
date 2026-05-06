@@ -11,7 +11,7 @@ Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=d
 ## Reference
 
 - Plan: `docs/ai-engineering-brief/PLAN.md`, `docs/ai-engineering-brief/developer-newsletter-concept.md`
-- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`, `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`
+- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`, `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`, `026-reviews-and-meta-content-to-sibling-files.proposed.md`
 - Voice: `docs/VOICE-AND-TONE.md` (base) plus persona addendum from `personas/<persona>.md`
 - Personas: `docs/JOBS_TO_BE_DONE.md` (J1-J4 leader, J5 founder, J6-J11 developer)
 - Persona configs: `.claude/skills/wr-newsletter/personas/leader.md`, `.claude/skills/wr-newsletter/personas/developer.md`
@@ -27,9 +27,9 @@ The pipeline runs in one of three phases, selected by the `phase` argument at st
 
 | phase     | When to run                          | Steps executed                              | Saves                              |
 |-----------|--------------------------------------|---------------------------------------------|------------------------------------|
-| `prep`    | Mid-week (Mon-Thu)                   | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md`), 17 | `<draft-folder>/YYYY-MM-DD.prep.md` with `phase: prep` frontmatter |
-| `finalise`| Friday morning                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`), 17 | `<draft-folder>/YYYY-MM-DD.md` (final) |
-| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/YYYY-MM-DD.md` |
+| `prep`    | Mid-week (Mon-Thu)                   | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
+| `finalise`| Friday morning                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 
 Default behaviour when no `phase` argument is present: `phase=full` (preserves the original single-shot run for backward compatibility per ADR 017 line 51).
 
@@ -68,6 +68,7 @@ Read the resolved persona config: `.claude/skills/wr-newsletter/personas/<person
 - `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant.
 - `<draft-folder>`: e.g. `src/newsletters/drafts/leader/` or `src/newsletters/drafts/developer/`.
 - `<published-folder>`: e.g. `src/newsletters/published/leader/` or `src/newsletters/published/developer/`.
+- `<publication-date>` (ADR-026, P040): the ISO-format date (`YYYY-MM-DD`) used for all draft and companion-file paths in this run. Compute as follows: if today (local time) is Friday, use today; otherwise use the next Friday after today (Mon-Thu resolves forward to this Friday; Sat-Sun resolves forward to next Friday). The brief is published Friday, so all `<draft-folder>/<publication-date>.X` paths share the publication-Friday date regardless of when prep runs. This binding is the single date source for steps 10, 11, 12, 16, and 17.
 
 Branch on phase:
 
@@ -102,13 +103,14 @@ If a `.prep.md` is found, read it and parse its frontmatter. Required fields:
 
 Bind the prior-prep state for downstream steps:
 
-- `<prep-draft-body>`: the full body content above the `---` review-block separator.
+- `<prep-draft-body>`: the full body content after the frontmatter (per ADR-026, the prep `.prep.md` contains only frontmatter + body; no review-block separator is present).
 - `<prep-shortlist-snapshot>`: the list of items represented in the prep draft (parse the `### Item N` blocks).
 - `<prep-inbox-snapshot>`: the inbox files that were resolved during the prep run (recorded in the `.prep.md` frontmatter or, if absent, derived from the prep-date by re-globbing `src/newsletters/inbox/*.md` and filtering to mtime <= prep-source-cutoff).
 - `<prep-tier1-snapshot>`: the tier-1 candidate set as recorded in prep metadata (or, if absent, the tier-1 items resolvable from the prep-draft Source lines).
 - `<prep-image-path>`: the path to the cover image generated in step 12 of the prep run, if any.
 - `<prep-source-failures>`: the list of source URLs that failed in prep.
 - `<prep-map-mutation-status>`: whether the map was mutated in prep.
+- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta) for the carry-forward sections in the finalise reviews file at step 16.
 
 Continue to step 1-prime.
 
@@ -326,7 +328,7 @@ After the main shortlist per-item capture completes, run a second pass for any c
 
 Weak-attribution handling preserves the signal that the earlier filter would have silently dropped. A weak-attribution candidate that Tom keeps joins the main draft as an Also-worth-noting entry (short paragraph, not a full Item). Tom's Drop reasons feed future filter tuning.
 
-**Capture transcript artifact (ADR 019).** After both passes (main shortlist plus weak-attribution) complete, write the per-item capture decisions to `<draft-folder>/YYYY-MM-DD.capture.md`. This file is the persisted reference the drafter (step 11) reads against to preserve verbatim spans, and the comparison surface for human editorial review. Format per ADR 019:
+**Capture transcript artifact (ADR 019).** After both passes (main shortlist plus weak-attribution) complete, write the per-item capture decisions to `<draft-folder>/<publication-date>.capture.md`. This file is the persisted reference the drafter (step 11) reads against to preserve verbatim spans, and the comparison surface for human editorial review. Format per ADR 019:
 
 ```
 ---
@@ -337,7 +339,7 @@ phase-written: <prep|finalise|full>
 phase-last-appended: <prep|finalise|full>
 ---
 
-# Capture transcript: <publication-name>, week ending YYYY-MM-DD
+# Capture transcript: <publication-name>, week ending <publication-date>
 
 ## Item N: <one-sentence story summary>
 
@@ -362,9 +364,9 @@ For `phase=full` and `phase=prep`, write the file once after capture completes. 
 
 Prep-time per-item responses (Agree, Adjust, Drop) are carried forward via `<prep-shortlist-snapshot>` and not re-asked. Tom's prep-time Adjusts and Drops still drive the corresponding Item blocks in the finalise draft.
 
-**Capture transcript append (ADR 019).** Read the existing `<draft-folder>/YYYY-MM-DD.capture.md` written during prep. Append new-item sections (only the items captured in 10-prime: new tier-1, late-story Also-worth-noting, new WEAK_ATTRIBUTION). Update frontmatter `phase-last-appended: finalise`. Do not rewrite or delete prep-time entries. The append step must check for an existing item-section anchor before writing to avoid duplicates on a partial-failure re-run (ADR 019 Consequences/Bad).
+**Capture transcript append (ADR 019).** Read the existing `<draft-folder>/<publication-date>.capture.md` written during prep. Append new-item sections (only the items captured in 10-prime: new tier-1, late-story Also-worth-noting, new WEAK_ATTRIBUTION). Update frontmatter `phase-last-appended: finalise`. Do not rewrite or delete prep-time entries. The append step must check for an existing item-section anchor before writing to avoid duplicates on a partial-failure re-run (ADR 019 Consequences/Bad).
 
-**Missing-capture-file handling (ADR 019).** If the expected `<draft-folder>/YYYY-MM-DD.capture.md` is absent at the start of 10-prime, surface to Tom via `AskUserQuestion`:
+**Missing-capture-file handling (ADR 019).** If the expected `<draft-folder>/<publication-date>.capture.md` is absent at the start of 10-prime, surface to Tom via `AskUserQuestion`:
 
 - **question**: `"phase=finalise expected a capture transcript at <expected-path>. Continue without capture transcript (drafter discipline rule has no input for prep-time items), Recreate transcript from prep-time shortlist (best-effort, Adjust text will be empty), or Abort?"`
 - **options**: `Continue without capture transcript`, `Recreate transcript from prep-time shortlist`, `Abort`.
@@ -399,11 +401,11 @@ Voice rules (enforced by step 13 voice gate):
 - First-person observations Tom supplied (e.g. "we shipped this last quarter and it broke under load") survive as quoted or paraphrase-with-quote spans, not as flattened third-person commentary.
 - Paraphrase only connective tissue (transitions, headline framing, the lens-anchor sentence). Never paraphrase the load-bearing claim.
 - Optionally during generation, mark verbatim spans with `{{verbatim}}…{{/verbatim}}` markers so the drafter can self-check that fidelity holds before save. Strip these markers before the step-16 save; they must not appear in the final draft body or LinkedIn post.
-- Read `<draft-folder>/YYYY-MM-DD.capture.md` (written at step 10) as the persisted reference. The AskUserQuestion conversation history is also available in-context; both inputs feed the same fidelity discipline.
+- Read `<draft-folder>/<publication-date>.capture.md` (written at step 10) as the persisted reference. The AskUserQuestion conversation history is also available in-context; both inputs feed the same fidelity discipline.
 
 The drafter is an inline main-assistant pass (not a subagent). The capture-fidelity rule lives in this skill prose because the inline drafter reads the skill as its working instructions. Promoting the drafter to a fresh-context subagent would lose access to the AskUserQuestion conversation history; ADR 019 documents the rationale.
 
-If `<draft-folder>/YYYY-MM-DD.capture.md` is absent (e.g. `phase=finalise` chose `Continue without capture transcript`), the drafter falls back to the in-context AskUserQuestion turn for any items captured in this session, and treats prep-time items without a transcript reference as best-effort (verbatim preservation cannot be checked against a persisted source).
+If `<draft-folder>/<publication-date>.capture.md` is absent (e.g. `phase=finalise` chose `Continue without capture transcript`), the drafter falls back to the in-context AskUserQuestion turn for any items captured in this session, and treats prep-time items without a transcript reference as best-effort (verbatim preservation cannot be checked against a persisted source).
 
 **Source-article quantitative-claim fidelity (P035, interim).** The capture-fidelity rule above governs Tom's Adjust text. A separate discipline applies to numbers cited from the source article body. When an Item references a count, percentage, ratio, range, or currency value drawn from the source article (as distinct from Tom's Adjust capture), the value must appear verbatim from the article body, not paraphrased from the news-fetch one-sentence summary. Specifically:
 
@@ -432,7 +434,7 @@ Compose a cover image that supports the headline and the week's theme. The image
 
 - Use the brand palette and typography established in the asset audit.
 - Carry alt text of 100-160 characters describing the image content (image is published alongside the LinkedIn post; alt text is required, not optional).
-- Be saved at `<draft-folder>/YYYY-MM-DD.cover.<ext>` so the finalise phase can locate it via the same date-anchored convention as the draft itself.
+- Be saved at `<draft-folder>/<publication-date>.cover.<ext>` so the finalise phase can locate it via the same date-anchored convention as the draft itself. The `<publication-date>` binding (resolved at step 0 per ADR-026 / P040) is the publish-Friday date, even when prep runs Mon-Thu.
 
 **Render-and-verify discipline (P011).** When the cover (or any other visual artifact in this pipeline) is authored as SVG, do not present the SVG without first rendering and visually inspecting the result yourself. SVG output depends on font availability, stroke paths, coordinate systems, and layering, so describing the SVG's intent is not a substitute for looking at the rendered PNG. The flow is:
 
@@ -580,7 +582,7 @@ For `phase=finalise` and `phase=full`, draft a LinkedIn post that:
 
 The LinkedIn post carries the cover image from step 12/12-prime as its hero image; alt text from step 12 is reused.
 
-**Voice review gate on the LinkedIn post (P013).** Before saving the post inline in the draft (step 16), run a voice review on the LinkedIn post text the same way step 13 runs on the brief body. The teaser is an external-facing surface; ADR 012 confirmation criterion 1 ("every AI-generated draft artifact has a Review results section showing voice and risk verdicts") applies to the LinkedIn post, not just the brief body. The 2026-04-17 first-edition session caught a reader-respect violation in the teaser via manual review; this gate makes the check automatic.
+**Voice review gate on the LinkedIn post (P013).** Before step 16 writes the LinkedIn-post sibling file, run a voice review on the LinkedIn post text the same way step 13 runs on the brief body. The teaser is an external-facing surface; ADR 012 confirmation criterion 1 ("every AI-generated draft artifact has a Review results section showing voice and risk verdicts") applies to the LinkedIn post, not just the brief body. The 2026-04-17 first-edition session caught a reader-respect violation in the teaser via manual review; this gate makes the check automatic.
 
 ```
 Agent subagent_type: wr-voice-tone:agent
@@ -589,19 +591,21 @@ prompt: "Review the following LinkedIn post for The Shift / Tokens Spent against
 <paste the full LinkedIn post text here>"
 ```
 
-If FAIL: fix the flagged passages in the LinkedIn post text and re-run. Do not proceed to step 16 with a voice-failing post. Capture the final voice review block; it is saved alongside the brief-body voice block at step 16 (see save-block layout: a `## Voice Review (LinkedIn post)` section sits adjacent to the existing `## Voice Review` / `## Voice Review (finalise)` block).
+If FAIL: fix the flagged passages in the LinkedIn post text and re-run. Do not proceed to step 16 with a voice-failing post. Capture the final voice review block; per ADR-026 it is saved in `<draft-folder>/<publication-date>.reviews.md` under a `## Voice Review (LinkedIn post)` heading alongside the brief-body voice review block, NOT in `<publication-date>.linkedin.md`. The separation preserves fresh-context discipline so the next voice-gate run on the LinkedIn post does not see its own prior verdict.
 
-Save the LinkedIn post inline in the saved draft (see step 16) under a `## LinkedIn Post` heading so it travels with the brief. Tom edits and posts manually per ADR 013.
+Step 16 writes the LinkedIn post body, image description, alt text, and posting notes to `<draft-folder>/<publication-date>.linkedin.md` (per ADR-026). Tom edits and posts manually per ADR 013.
 
 ### 16. Save the draft
 
-Compute today's date in ISO format (`YYYY-MM-DD`). Use the `Write` tool. If a file for today's date already exists, ask Tom whether to overwrite or append a suffix like `-2` to the filename.
+This step writes the brief and its sibling artefact files. Per ADR-026 (companion tickets P038 + P041), reviews and meta content live in sibling files, not inline in the brief: the brief contains only frontmatter + body + CTA. Per P040, all draft and companion-file paths use the `<publication-date>` binding (resolved at step 0 to the publish-Friday date), not the prep-run date.
+
+Use the `Write` tool. If a file for `<publication-date>` already exists at the path being written, ask Tom whether to overwrite or append a suffix like `-2` to the filename.
 
 Branch on phase:
 
-#### phase=prep: save as `.prep.md`
+#### phase=prep: save brief as `.prep.md` and reviews as `.reviews.md`
 
-Write `<draft-folder>/YYYY-MM-DD.prep.md` with the following frontmatter at the top of the file:
+Write `<draft-folder>/<publication-date>.prep.md` with the following structure:
 
 ```
 ---
@@ -613,14 +617,21 @@ source-failures:
 map-mutation-status: <"mutated" or "skipped: <reason>" per step 5>
 edition: <N from step 11>
 persona: <leader|developer>
+cover-image: <path>
+companion-files:
+  capture-transcript: <publication-date>.capture.md
+  reviews: <publication-date>.reviews.md
 ---
-```
 
-Then the draft body, then the review-block separator, then this exact structure:
-
-```
 <draft body from step 11, after any step-15 fixes>
+```
 
+Write `<draft-folder>/<publication-date>.reviews.md` with the following structure:
+
+```
+---
+companion-to: <publication-date>.prep.md
+phase: prep
 ---
 
 ## Voice Review
@@ -648,13 +659,13 @@ Then the draft body, then the review-block separator, then this exact structure:
 <one-sentence summary of what moved in ai-landscape.owm this run, or "MAP_UPDATE_SKIPPED: <reason>" if step 5 blocked the update>
 ```
 
-The LinkedIn post is NOT included in the prep save (step 15.5 was skipped). Image path (from step 12) is recorded in frontmatter as `cover-image: <path>` for finalise to pick up.
+The LinkedIn post is NOT generated in prep (step 15.5 is skipped); no `<publication-date>.linkedin.md` is written in prep. Image path (from step 12) is recorded in the brief's frontmatter as `cover-image: <path>` for finalise to pick up.
 
-#### phase=finalise: rename `.prep.md` to `.md` and write final body
+#### phase=finalise: rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`
 
-The finalise-time output replaces the prep-time `.prep.md`. Two operations:
+The finalise-time output replaces the prep-time `.prep.md` and refreshes the reviews sibling. Four operations:
 
-1. Write the final body to `<draft-folder>/YYYY-MM-DD.md` with this structure:
+1. Write brief to `<draft-folder>/<publication-date>.md` with this structure:
 
    ```
    ---
@@ -670,20 +681,21 @@ The finalise-time output replaces the prep-time `.prep.md`. Two operations:
    edition: <carried from prep frontmatter>
    persona: <leader|developer>
    cover-image: <path>
+   companion-files:
+     capture-transcript: <publication-date>.capture.md
+     reviews: <publication-date>.reviews.md
+     linkedin-post: <publication-date>.linkedin.md
    ---
 
    <final draft body from step 11-prime>
+   ```
 
+2. Write reviews to `<draft-folder>/<publication-date>.reviews.md`, replacing the prep-time file. The finalise reviews file carries forward prep blocks alongside finalise blocks so the audit trail is intact:
+
+   ```
    ---
-
-   ## LinkedIn Post
-
-   <LinkedIn post from step 15.5>
-
-   ## Voice Review (LinkedIn post)
-
-   <voice review block from step 15.5's LinkedIn-post voice gate (P013)>
-
+   companion-to: <publication-date>.md
+   phase: finalise
    ---
 
    ## Voice Review (finalise)
@@ -692,7 +704,11 @@ The finalise-time output replaces the prep-time `.prep.md`. Two operations:
 
    ## Voice Review (prep)
 
-   <voice review block carried from .prep.md>
+   <voice review block carried from prep .reviews.md>
+
+   ## Voice Review (LinkedIn post)
+
+   <voice review block from step 15.5's LinkedIn-post voice gate (P013); this lives here, not alongside the LinkedIn post in `.linkedin.md`, so the next voice gate run does not see its prior verdict (fresh-context discipline per ADR-026)>
 
    ## Content Risk Review (finalise)
 
@@ -700,7 +716,7 @@ The finalise-time output replaces the prep-time `.prep.md`. Two operations:
 
    ## Content Risk Review (prep)
 
-   <content-risk block carried from .prep.md>
+   <content-risk block carried from prep .reviews.md>
 
    ## Critic Review: Newsletter (finalise)
 
@@ -708,7 +724,7 @@ The finalise-time output replaces the prep-time `.prep.md`. Two operations:
 
    ## Critic Review: Newsletter (prep)
 
-   <critic block carried from .prep.md>
+   <critic block carried from prep .reviews.md>
 
    ## Editor Review (finalise)
 
@@ -716,37 +732,68 @@ The finalise-time output replaces the prep-time `.prep.md`. Two operations:
 
    ## Editor Review (prep)
 
-   <editor block carried from .prep.md>
+   <editor block carried from prep .reviews.md>
 
    ## Critic Review: Wardley Artifacts
 
-   <critic block from step 9-prime if Restructure ran, else carried from .prep.md>
+   <critic block from step 9-prime if Restructure ran, else carried from prep .reviews.md>
 
    ## Map Delta
 
    <prep-time map delta line, plus "+ <one-sentence finalise re-mutation summary>" if step 5-prime restructured, else prep delta unchanged>
    ```
 
-2. Delete the `.prep.md` file. The audit trail lives in the finalise file's carried-forward review blocks plus git history of the `.prep.md`.
+3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md`. The LinkedIn-post voice review does NOT appear here; it lives in the reviews sibling above:
 
-#### phase=full: save as `.md` (legacy single-shot)
+   ```
+   ---
+   post-type: linkedin-share
+   companion-to: <publication-date>.md
+   ---
 
-Write `<draft-folder>/YYYY-MM-DD.md` with the same structure as the existing pre-ADR-017 behaviour. Frontmatter:
+   ## LinkedIn Post
 
-```
----
-phase: full
-source-cutoff: <ISO timestamp recorded at end of step 2>
-source-failures:
-  - <URL of any tier-1/2/3 source that failed>
-map-mutation-status: <"mutated" or "skipped: <reason>" per step 5>
-edition: <N from step 11>
-persona: <leader|developer>
-cover-image: <path>
----
-```
+   <LinkedIn post body from step 15.5>
 
-Body and review sections follow the existing structure: draft body, separator, Voice Review, Content Risk Review, Critic Review: Newsletter, Editor Review (from step 15.25; or `N/A: sw-critic returned REJECTED` if skipped), Critic Review: Wardley Artifacts, Map Delta, plus a `## LinkedIn Post` section after the body, immediately followed by a `## Voice Review (LinkedIn post)` section that captures the step-15.5 voice gate verdict (P013).
+   ## Image
+
+   <image description and alt text>
+
+   ## Notes for posting
+
+   <any posting notes, e.g. preferred publish window, hashtag suggestions>
+   ```
+
+4. Delete the `.prep.md` file. The audit trail lives in the carried-forward prep review blocks inside `<publication-date>.reviews.md` plus the git history of the `.prep.md`.
+
+#### phase=full: save brief as `.md`, reviews as `.reviews.md`, linkedin as `.linkedin.md`
+
+Single-pass equivalent of the prep + finalise pair. Three operations:
+
+1. Write brief to `<draft-folder>/<publication-date>.md`:
+
+   ```
+   ---
+   phase: full
+   source-cutoff: <ISO timestamp recorded at end of step 2>
+   source-failures:
+     - <URL of any tier-1/2/3 source that failed>
+   map-mutation-status: <"mutated" or "skipped: <reason>" per step 5>
+   edition: <N from step 11>
+   persona: <leader|developer>
+   cover-image: <path>
+   companion-files:
+     capture-transcript: <publication-date>.capture.md
+     reviews: <publication-date>.reviews.md
+     linkedin-post: <publication-date>.linkedin.md
+   ---
+
+   <draft body from step 11>
+   ```
+
+2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same six-block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta), plus a seventh block `## Voice Review (LinkedIn post)` that captures the step-15.5 LinkedIn-post voice gate verdict (P013). No prep / finalise distinction in the section headings (single-pass).
+
+3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md` with the same shape as the finalise variant above (post body + image + notes; no voice review block).
 
 ### 17. Summarise for Tom
 
@@ -769,8 +816,9 @@ Report back in chat:
 - Map delta (one sentence; for finalise, include any re-mutation delta).
 - Cover image: path, plus whether finalise re-rendered or carried prep image forward.
 - LinkedIn post: drafted (finalise/full) or skipped (prep).
-- File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/YYYY-MM-DD.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on Friday to publish." For finalise, this is `<draft-folder>/YYYY-MM-DD.md` with the reminder: "When you have published to LinkedIn, move both `<draft-folder>/YYYY-MM-DD.md` AND `<draft-folder>/YYYY-MM-DD.capture.md` to `<published-folder>/<persona>/`, then run `/wr-retrospective:run-retro` to capture learnings for next week."
-- Capture transcript path: `<draft-folder>/YYYY-MM-DD.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
+- File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/<publication-date>.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on Friday to publish." For finalise, this is `<draft-folder>/<publication-date>.md` with the reminder: "When you have published to LinkedIn, move all four files (`<publication-date>.md`, `<publication-date>.reviews.md`, `<publication-date>.linkedin.md`, `<publication-date>.capture.md`) from `<draft-folder>` to `<published-folder>/<persona>/`, then run `/wr-retrospective:run-retro` to capture learnings for next week."
+- Capture transcript path: `<draft-folder>/<publication-date>.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
+- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all six review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta) plus the LinkedIn-post voice review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body, image description, alt text, and posting notes. Confirm both siblings were written.
 
 ## Failure modes
 
