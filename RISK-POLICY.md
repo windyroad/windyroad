@@ -2,7 +2,7 @@
 
 Risk assessment for pipeline actions (commit, push, release), aligned with ISO 31000.
 
-**Last reviewed:** 2026-04-28
+**Last reviewed:** 2026-05-10
 
 ## Business Context
 
@@ -39,9 +39,9 @@ The tight appetite reflects the solo-operator context. With no second pair of ey
 |-------|-------|-------------|
 | 1 | Negligible | No visitor or reader impact. Site behaviour, content, newsletter pipeline, and availability unchanged. |
 | 2 | Minor | No visitor or reader impact. Dev tooling, hooks, or local build affected, but the published site and newsletter pipeline are unaffected. |
-| 3 | Moderate | Deployment or publication disruption. Netlify build broken or delayed, newsletter pipeline broken before draft generation, OR confidential business metrics (revenue, subscriber counts, pricing, traffic volumes) committed to the public repository (an information disclosure requiring immediate remediation but not yet affecting visitor-facing service). |
-| 4 | Significant | Visitor-facing or reader-facing degradation. Blog content, founders page, AI Quality page, Vibe Code Audit page, or booking CTA degraded or inaccessible; newsletter draft pipeline ships poor-quality content past the voice, content-risk, or SW-critic gates; published newsletter on LinkedIn renders incorrectly or contains broken links. |
-| 5 | Severe | Reputation, trust, or availability destroyed. Site fully offline, broken accessibility, misleading or factually wrong content reaching visitors or LinkedIn readers, exposed secrets or credentials, voice-violating outbound copy that frames readers' teams as behind, or newsletter content that misrepresents sources. |
+| 3 | Moderate | Static-site visitor degradation, OR newsletter pipeline disruption that does not reach readers. Blog content, founders page, AI Quality page, or Vibe Code Audit page degraded or inaccessible (the static site is reference material for the LinkedIn-led funnel; commercial CTAs are paused per ADR 023). Netlify build broken or delayed. Newsletter pipeline broken before draft generation (caught before publish, rescheduling possible). Confidential business metrics (revenue, subscriber counts, pricing, traffic volumes) committed to the public repository (information disclosure requiring immediate remediation but not yet affecting visitor-facing service). |
+| 4 | Significant | Newsletter content quality failure caught at a gate, OR site fully offline. Newsletter draft pipeline ships poor-quality content past one of the voice, content-risk, SW-critic, or editor gates (caught at finalise but indicates gate weakness). Published newsletter on LinkedIn renders incorrectly or contains broken links. Site fully offline (LinkedIn-newsletter article links break; credibility hit at the destination of the funnel). |
+| 5 | Severe | Newsletter content failure reaching LinkedIn readers (the primary channel), OR catastrophic content / trust / security failure on visitor surface. Newsletter content factually wrong or misrepresenting sources reaches LinkedIn readers. Voice-violating outbound copy that frames readers' teams as behind. Misleading or factually wrong content reaching site visitors. Broken accessibility (WCAG AA violation reaching readers or visitors). Exposed secrets or credentials. |
 
 ## Likelihood Levels
 
