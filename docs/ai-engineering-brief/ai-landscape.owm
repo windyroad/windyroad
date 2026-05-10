@@ -1,4 +1,4 @@
-title AI Engineering Landscape (Week ending 2026-05-01)
+title AI Engineering Landscape (Week ending 2026-05-08)
 
 // context: the Engineering Leader persona is responsible for shipping software
 // while the AI tooling underneath them shifts weekly. This map shows the
@@ -8,17 +8,17 @@ title AI Engineering Landscape (Week ending 2026-05-01)
 anchor Ship Software Under AI Disruption [0.95, 0.50]
 
 component Shipped Product [0.88, 0.45]
-component Engineering Team Capability [0.82, 0.27]
+component Engineering Team Capability [0.82, 0.30]
 component Delivery Pipeline [0.70, 0.55]
 component AI Coding Assistants [0.62, 0.60]
-component AI Agent Runtimes [0.55, 0.38]
+component AI Agent Runtimes [0.55, 0.40]
 component Agentic Engineering Practices [0.78, 0.15]
 component Prompt and Context Management [0.45, 0.30]
-component Model Evaluation Frameworks [0.42, 0.26]
+component Model Evaluation Frameworks [0.42, 0.28]
 component AI Security Tooling [0.38, 0.16]
 component Foundation Models [0.32, 0.64]
 component Model Hosting and Inference [0.22, 0.70]
-component AI Regulation and Compliance [0.60, 0.30]
+component AI Regulation and Compliance [0.60, 0.32]
 component Compute and GPU Infrastructure [0.10, 0.82]
 
 Ship Software Under AI Disruption->Shipped Product
@@ -42,9 +42,9 @@ Foundation Models->Compute and GPU Infrastructure
 Model Hosting and Inference->Compute and GPU Infrastructure
 
 evolve AI Coding Assistants 0.84
-evolve AI Agent Runtimes 0.56
+evolve AI Agent Runtimes 0.58
 evolve Foundation Models 0.86
-evolve Model Evaluation Frameworks 0.44
+evolve Model Evaluation Frameworks 0.46
 evolve AI Security Tooling 0.32
 evolve Prompt and Context Management 0.48
 evolve AI Regulation and Compliance 0.50
