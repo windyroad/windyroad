@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-07 Pre-prep newsletter cleanup: P038 + P040 + P041 fix released as one SKILL.md commit per ADR-014 batch-grain (all three amend step 16; ADR-026 spec). Then P036 fix released as a separate SKILL.md commit (interim editorial-meta rule in step 11 voice rules; reassessment trigger after 4 editions; JTBD carve-outs preserve evidence-stance labels and Source-line attribution per JTBD review). All four tickets now in Verification Queue; verification triggers on tonight's prep run + tomorrow's finalise. Earlier this session: P026 closed as misframed (gate is intentional discipline, "like brushing teeth"); P020 cron verified live; AFK outstanding-questions queue cleared.
+> Last reviewed: 2026-05-10 README reconciled (2 drift entries corrected): P050 and P051 added to WSJF Rankings as deferred-WSJF placeholders (3.0 each, re-rate at next /wr-itil:review-problems). Both captured in-session via /wr-itil:capture-problem (P050 scope-creep on user corrections; P051 tier-1 source list missing US regulatory-news outlets). Reconciliation contract per P118 + ADR-014.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -34,6 +34,8 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P048 | /wr-itil:manage-problem Step 5 P094 README refresh contract bypassed on bulk-creation paths | 12 (Significant) | Open | M | 2026-05-02 |
 | 4.5  | P023 | architect-gate drift detection rm\'s marker without offering recovery path | 9 (Moderate) | Open | M | 2026-04-26 |
 | 3.0  | P001 | Next.js build hangs locally | 6 (Medium) | Open | M | 2026-04-14 |
+| 3.0  | P050 | Assistant scope-creeps on user-flagged corrections, changing more than asked (deferred, re-rate at next /wr-itil:review-problems) | 3 (Medium) | Open | M | 2026-05-08 |
+| 3.0  | P051 | Newsletter tier-1 source list misses US regulatory-news outlets (deferred, re-rate at next /wr-itil:review-problems) | 3 (Medium) | Open | M | 2026-05-08 |
 | 2.0  | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 |
 
 ## Verification Queue
