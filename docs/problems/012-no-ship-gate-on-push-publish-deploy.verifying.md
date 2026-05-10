@@ -1,8 +1,9 @@
 # Problem 012: No CI-status check on push/release; conditional-commitment verification missing
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-18
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual Tom-in-the-loop review)
+**Transitioned to Verification Pending**: 2026-05-11 (windyroad-local fix shipped via `scripts/ci-status-check.sh`; ADR-028 records the decision; verification = next push:watch or release:watch attempt with red CI on the relevant branch is blocked).
 **Rescoped 2026-04-27**: Verified existing gate coverage by direct read of `git-push-gate.sh`. Push and release ARE gated on risk score; publish + deploy are CI-only for this project. Fix scope narrowed to CI-status check on push/release; conditional-commitment verification is a separate problem class and is being split out (see Update section below).
 **Priority**: 12 (Significant). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: S (extend existing `git-push-gate.sh` with one `gh run list` check; conditional-commitment piece split out)
@@ -77,6 +78,31 @@ Implementation notes:
 - [ ] Decide bypass-marker name (`red-ci-acknowledged` proposed) and lifecycle (single-shot? session-scoped?).
 - [ ] Apply to both `npm run push:watch` and `npm run release:watch`.
 - [ ] Open a sibling ticket for conditional-commitment verification (XL open research; different problem class).
+
+## Update 2026-05-11
+
+Implemented the windyroad-local CI-status check at the wrapper layer (defence-in-depth on top of the unmoved upstream issue `windyroad/agent-plugins#86`, OPEN since 2026-04-27, zero comments). ADR-028 records the decision.
+
+**Files changed**:
+
+- `scripts/ci-status-check.sh` (new): single source of CI-status-check logic; accepts a branch argument; honours single-shot bypass marker `/tmp/wr-push-watch-${CLAUDE_SESSION_ID:-no-session}/red-ci-acknowledged`; non-fatal on `gh` failure.
+- `scripts/push-watch.sh`: invokes `bash scripts/ci-status-check.sh "$(git branch --show-current)"` after the dry-aged-deps refresh, before `git push`.
+- `scripts/release-watch.sh`: invokes `bash scripts/ci-status-check.sh master` after locating the open release PR, before `gh pr merge`. The branch is `master` (not `publish`, the PR base) because the release PR carries diff sourced from `master`.
+- `docs/decisions/028-ci-status-check-in-push-and-release-watch.proposed.md` (new): records the decision, considered options, bypass-marker namespace, interaction with the upstream gate, robustness, retirement criteria.
+
+**Verification path**:
+
+1. The next push:watch or release:watch attempt that runs against a red CI conclusion on the relevant branch surfaces the block message from `ci-status-check.sh` and exits 1.
+2. The acknowledge marker (`mkdir -p /tmp/wr-push-watch-${SESSION_ID} && touch /tmp/wr-push-watch-${SESSION_ID}/red-ci-acknowledged`) consumes single-shot and allows the next attempt through.
+3. A `gh` transient failure does not block (degrades to "no block" non-fatally).
+
+**Closure criterion**: a real-world (not synthetic) red-CI block is observed and behaves as documented; OR upstream `windyroad/agent-plugins#86` lands and the wrapper-layer check is retired per ADR-028's reassessment criteria.
+
+**Smoke tests run during implementation**:
+
+- Green-CI path: `bash scripts/ci-status-check.sh master` exits 0 against current green master.
+- Marker-bypass path: marker present, script consumes it, prints bypass message, exits 0.
+- Missing-arg path: usage message, exits 1.
 
 ## Update 2026-04-27
 

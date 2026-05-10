@@ -50,6 +50,13 @@ if ! git diff --quiet -- package.json package-lock.json; then
   git commit -m "chore(deps): refresh stale dependencies (P026)"
 fi
 
+# Defence-in-depth: block on red CI on the branch we're about to push to.
+# See ADR-028 and P012. The upstream wr-risk-scorer plugin gate scores risk
+# but does not check CI status; this wrapper closes that gap until the
+# upstream issue (windyroad/agent-plugins#86) lands.
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+bash "$SCRIPT_DIR/ci-status-check.sh" "$(git branch --show-current)"
+
 PUSH_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)

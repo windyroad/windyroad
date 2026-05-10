@@ -35,6 +35,13 @@ if [ -z "$PR_NUMBER" ]; then
   exit 1
 fi
 
+# Defence-in-depth: block on red CI on master before merging the release PR.
+# The release PR carries diff sourced from master; the relevant lagging
+# signal is the most recent main-pipeline run on master (not on the PR
+# base, "publish"). See ADR-028 and P012.
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+bash "$SCRIPT_DIR/ci-status-check.sh" master
+
 echo "Merging release PR: $PR_URL"
 gh pr merge "$PR_NUMBER" --merge
 echo ""

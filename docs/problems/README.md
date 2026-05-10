@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-10 Backlog re-rated against new RISK-POLICY.md Impact rubric per ADR 027 (newsletter primacy encoded in rubric, folklore "weight 2.0" annotations dropped, P002 Known-Error multiplier corrected). 4 deferred placeholders scored (P050, P051, P052, P053). Top of queue: P012 (24.0, ship-gate KE), P002 (18.0, hero-fold KE), P006 (16.0, OG image KE), P039 (12.0, sw-critic verdict), P034 (10.0, invented URLs L5 Severe).
+> Last reviewed: 2026-05-11 P012 (CI-status check on push/release) shipped via `scripts/ci-status-check.sh` and ADR-028; transitioned to Verification Pending (verifies on next push:watch or release:watch attempt against red CI). Prior context (2026-05-10): backlog re-rated against new RISK-POLICY.md Impact rubric per ADR 027 (newsletter primacy encoded in rubric, folklore "weight 2.0" annotations dropped, P002 Known-Error multiplier corrected). 4 deferred placeholders scored (P050, P051, P052, P053). Top of queue: P002 (18.0, hero-fold KE), P006 (16.0, OG image KE), P039 (12.0, sw-critic verdict), P034 (10.0, invented URLs L5 Severe), P010 (9.0, source fetch KE).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported |
 |------|-----|-------|----------|--------|--------|----------|
-| 24.0 | P012 | No CI-status check on push/release; conditional-commitment verification missing | 12 (Significant) | Known Error | S | 2026-04-18 |
 | 18.0 | P002 | Hero content extends beyond the fold | 9 (Moderate) | Known Error | S | 2026-04-14 |
 | 16.0 | P006 | OG share image does not track homepage copy pivots | 8 (Significant) | Known Error | S | 2026-04-15 |
 | 12.0 | P039 | sw-critic round-3 REJECTED-with-author-overrides verdict obscures publish-decision signal | 12 (Moderate) | Open | S | 2026-05-01 |
@@ -46,6 +45,7 @@ Fix released, awaiting user verification. Ranked by release age, oldest first pe
 
 | ID | Title | Released | Fix summary | Likely verified? |
 |----|-------|----------|-------------|------------------|
+| P012 | No CI-status check on push/release; conditional-commitment verification missing | 2026-05-11 | Shipped windyroad-local defence-in-depth `scripts/ci-status-check.sh` per new ADR-028 (proposed); wired into `scripts/push-watch.sh` (current branch) and `scripts/release-watch.sh` (master). Bypass marker `red-ci-acknowledged` lives in wrapper-owned `/tmp/wr-push-watch-${SESSION_ID}/` namespace (no layering violation against upstream plugin's `/tmp/risk-${SESSION_ID}/`). Non-fatal degradation on `gh` failure mirrors ADR-021's robustness shape. Architect PASS (with revisions applied: shared script, wrapper-owned marker dir, new ADR not extension). JTBD ALIGNED (operator scope; protects windyroad.com.au integrity). Conditional-commitment verification piece remains split-out per 2026-04-27 rescope. Verification triggers on next push:watch or release:watch attempt against red CI on the relevant branch, OR upstream `windyroad/agent-plugins#86` landing (which would retire the wrapper check per ADR-028 reassessment criteria). | no (0 days) |
 | P036 | /wr-newsletter drafter leaks editorial-process meta-commentary into reader-facing body | 2026-05-07 | Added "No editorial-process meta-commentary" rule to step 11 voice rules with five banned-pattern categories (corroboration assurance, editorial-cycle time-window tags, evidence-stance hedge prose ABOUT the rating system, business-state disclosure, surfacing-attribution prose). JTBD carve-outs preserve evidence-stance labels (JTBD-205) and Source-line attribution (JTBD-203 + check_4). Interim discipline pattern (mirrors ADR-019); reassessment trigger after 4 editions if corrections-per-edition does not drop below 1. | no (3 days) |
 | P038 | /wr-newsletter step 16 mandates inline review blocks in brief; creates confirmation-bias risk | 2026-05-07 | Step 16 rewritten per ADR-026: brief now frontmatter + body + CTA only; six review classes plus LinkedIn-post voice review now live in `<publication-date>.reviews.md` sibling. Bundled with P040 + P041 per ADR-014. Verification triggers on tonight's prep + tomorrow's finalise. | no (3 days) |
 | P040 | /wr-newsletter draft files use prep date instead of publish-Friday date | 2026-05-07 | Added `<publication-date>` step-0 binding (next-Friday-from-local-time, with Sat/Sun forward-resolution); replaced `YYYY-MM-DD` placeholders across steps 0, 10, 11, 12, 16, 17. Verification triggers on tonight's prep (2026-05-07 Thu) writing files named `2026-05-08.X` not `2026-05-07.X`. | no (3 days) |
