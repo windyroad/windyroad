@@ -2,9 +2,9 @@
 
 **Status**: Open
 **Reported**: 2026-05-01
-**Priority**: 20 (Critical). Impact: Major (5) x Likelihood: Almost certain (4)
+**Priority**: 20 (Critical). Impact: Severe (5) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: invented URLs in saved drafts can reach LinkedIn readers, L5 Severe; manual finalise review catches some, Likely)
 **Effort**: M
-**WSJF**: (20 x 2.0) / 2 = 20.0 (weight 2.0: newsletter is primary repo activity per 2026-05-02 direction)
+**WSJF**: (20 x 1.0) / 2 = 10.0 (folklore weight 2.0 dropped per ADR 027; newsletter primacy now encoded in RISK-POLICY.md Impact rubric)
 
 ## Description
 

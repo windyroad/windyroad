@@ -17,3 +17,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-05-07
 
 > Last reviewed: 2026-05-07 Pre-prep newsletter cleanup: P038 + P040 + P041 fix released as one SKILL.md commit per ADR-014 batch-grain (all three amend step 16; ADR-026 spec). Then P036 fix released as a separate SKILL.md commit (interim editorial-meta rule in step 11 voice rules; reassessment trigger after 4 editions; JTBD carve-outs preserve evidence-stance labels and Source-line attribution per JTBD review). All four tickets now in Verification Queue; verification triggers on tonight's prep run + tomorrow's finalise. Earlier this session: P026 closed as misframed (gate is intentional discipline, "like brushing teeth"); P020 cron verified live; AFK outstanding-questions queue cleared.
+
+## 2026-05-10
+
+> Last reviewed: 2026-05-10 README reconciled (2 drift entries corrected): P050 and P051 added to WSJF Rankings as deferred-WSJF placeholders (3.0 each, re-rate at next /wr-itil:review-problems). Both captured in-session via /wr-itil:capture-problem (P050 scope-creep on user corrections; P051 tier-1 source list missing US regulatory-news outlets). Reconciliation contract per P118 + ADR-014.

@@ -2,8 +2,9 @@
 
 **Status**: Open
 **Reported**: 2026-05-08
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred, re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-05-10 per ADR 027: scope-creep affects newsletter pipeline quality at pre-publish stage, L3 Moderate; recurrence 3x in one session = Possible)
+**Effort**: M
+**WSJF**: (9 x 1.0) / 2 = 4.5
 
 ## Description
 

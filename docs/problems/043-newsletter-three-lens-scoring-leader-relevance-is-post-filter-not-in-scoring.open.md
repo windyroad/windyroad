@@ -2,9 +2,9 @@
 
 **Status**: Open
 **Reported**: 2026-05-01
-**Priority**: 16 (Significant). Impact: Major (4) x Likelihood: Likely (4)
+**Priority**: 16 (Significant). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: three-lens leak past gate is newsletter content quality at gate, L4 Significant)
 **Effort**: M
-**WSJF**: (16 x 2.0) / 2 = 16.0 (weight 2.0: newsletter is primary repo activity per 2026-05-02 direction)
+**WSJF**: (16 x 1.0) / 2 = 8.0 (folklore weight 2.0 dropped per ADR 027)
 
 ## Description
 

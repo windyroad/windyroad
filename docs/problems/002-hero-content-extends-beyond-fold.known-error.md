@@ -3,9 +3,9 @@
 **Status**: Known Error
 **Reported**: 2026-04-14
 **Known Error since**: 2026-04-25
-**Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-05-10 per ADR 027: static-site visitor degradation now L3 Moderate, ADR 023 paused-CTA reference-material context)
 **Effort**: S (CSS adjustment in src/app/page.module.scss; min-height + padding rebalance)
-**WSJF**: (12 x 1.0) / 1 = 12.0
+**WSJF**: (9 x 2.0) / 1 = 18.0 (Known Error multiplier 2.0 per upstream wr-itil:manage-problem; prior 12.0 was missing the multiplier)
 **Re-rated 2026-04-25**: Likelihood Unlikely (2) to Possible (3). Fold issue visible to most visitors on standard 1080p viewports with no automated fold-fit check; review pass realigns Likelihood with the no-automated-control reality.
 
 ## Description

@@ -2,8 +2,9 @@
 
 **Status**: Open
 **Reported**: 2026-05-10
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred, re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: missing cog-a11y step risks Grade 12+ prose reaching readers without inline workaround; pre-publish pipeline disruption L3 Moderate, Likely without the formal step)
+**Effort**: M
+**WSJF**: (12 x 1.0) / 2 = 6.0
 
 ## Description
 
