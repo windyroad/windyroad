@@ -507,15 +507,35 @@ Step 17 summarises this table for Tom (final-line headline only; full table live
 
 ### 12. Generate cover image
 
-Brand assets must be discovered before any image generation: grep for existing brand-asset paths and styles per BRIEFING.md "What You Need to Know" rule, then design the cover against those assets.
+**Step 12.a (mandatory brand-asset read, fail-fast).** Before composing any SVG, read both canonical references. This is not "grep for what might exist", it is an enumerated read of two specific paths. Recreating the brand mark, wordmark, monogram, or accent stripe from approximations is the documented P037 failure mode and is not permitted.
 
-Compose a cover image that supports the headline and the week's theme. The image must:
+1. Read `src/newsletters/assets/the-shift-logo.svg`. This file is the canonical source for: the 6-speed + reverse shift-gate path coordinates, the WR monogram path, the WINDYROAD wordmark vector paths, the dark background `#1A1A1A`, the accent orange `#E8644A`, the warm-white text `#F5F5F5`, the muted-grey subtitle `#AAAAAA`, and the Futura-stack font family.
+2. Read the most recent prior cover for the same persona: the highest-dated `src/newsletters/published/<persona>/*.cover.svg` (e.g. `src/newsletters/published/leader/2026-05-01.cover.svg`). This is the canonical layout + typography reference: heading size, subtitle size, hook-line sizes, monogram scale, rule-line positions, accent stripe geometry. Treat this file as the template; the new cover should diff from it by hook lines, issue number, and week-ending stamp, not by structural changes.
+3. If either file is missing or unreadable, halt step 12 and surface the missing-asset path in the Tom-summary; do not improvise from approximations.
 
-- Use the brand palette and typography established in the asset audit.
+Reuse path data verbatim where possible (the shift-gate `line` coordinates and the WR monogram `d` attribute should be copied, not re-drawn). The brand mark is fixed geometry; only the canvas-relative position scales.
+
+**Step 12.b (typography conventions, encoded in the prior cover).** The font conventions below are the conventions discovered through P037's 15-round iteration on the 2026-05-01 edition. They are now the canonical conventions for the persona-leader cover:
+
+- Wordmark "The Shift": `font-family="'Futura Lt BT', 'Futura', 'Helvetica Neue', Arial, sans-serif"`, `font-weight="300"`, `letter-spacing="2"`.
+- Subtitle "AI ENGINEERING, WEEKLY · ISSUE 0X": same font-family, `font-weight="400"`, `letter-spacing="5"`, fill `#AAAAAA`.
+- Two-line hook (white + accent): `font-family="'Avenir Next', sans-serif"`, `font-weight="500"`. Avenir Next Medium is chosen because it renders at the intended weight through `sips`; HelveticaNeue weights at or above 700 fall into the silent-substitution trap below.
+- URL wordmark `WINDYROAD.COM.AU` and week-ending stamp: Futura-stack at `font-weight="600"` / `font-weight="500"` respectively.
+
+**Step 12.c (sips silent-substitution traps, font-rendering diagnostics).** macOS `sips` resolves font weights against the installed font files and silently substitutes the nearest available face. The two confirmed traps:
+
+- `HelveticaNeue.ttc` weights 700, 800, 900 resolve to **Condensed Bold**, not the intended Helvetica Neue Bold. If a hook line looks compressed in the rendered PNG, this is the cause; switch to `Avenir Next` weight 500 (the documented convention above).
+- `Futura.ttc` has no Light variant; `font-weight="300"` on the Futura stack falls through to **Helvetica Neue Light**. This is acceptable for the "The Shift" wordmark (it is the convention in the canonical logo), but be aware that the rendered glyphs are Helvetica Neue Light, not Futura Light.
+
+Diagnostic surface: if the rendered PNG's typography looks wrong, do not iterate on the SVG blindly. Author a multi-row test SVG with the suspect font + weight combinations and render it to confirm which face `sips` is actually picking before changing the cover SVG. This converts "what's wrong with the cover" into "which font spec is sips substituting" in one render-and-read cycle.
+
+**Step 12.d (compose the cover).** With the canonical assets and conventions in hand, compose the cover image to support the headline and the week's theme. The image must:
+
+- Use the brand palette and typography established above (no new colours, no new font families without an ADR amendment).
 - Carry alt text of 100-160 characters describing the image content (image is published alongside the LinkedIn post; alt text is required, not optional).
 - Be saved at `<draft-folder>/<publication-date>.cover.<ext>` so the finalise phase can locate it via the same date-anchored convention as the draft itself. The `<publication-date>` binding (resolved at step 0 per ADR-026 / P040) is the publish-Friday date, even when prep runs Mon-Thu.
 
-**Render-and-verify discipline (P011).** When the cover (or any other visual artifact in this pipeline) is authored as SVG, do not present the SVG without first rendering and visually inspecting the result yourself. SVG output depends on font availability, stroke paths, coordinate systems, and layering, so describing the SVG's intent is not a substitute for looking at the rendered PNG. The flow is:
+**Step 12.e (render-and-verify discipline, P011).** When the cover (or any other visual artifact in this pipeline) is authored as SVG, do not present the SVG without first rendering and visually inspecting the result yourself. SVG output depends on font availability, stroke paths, coordinate systems, and layering, so describing the SVG's intent is not a substitute for looking at the rendered PNG. The flow is:
 
 1. Write the SVG (`Write` / `Edit`).
 2. Render to PNG via the shared helper:
@@ -526,10 +546,12 @@ Compose a cover image that supports the headline and the week's theme. The image
 
    The helper wraps `sips -s format png -Z <size> in.svg --out out.png` so the command is consistent across contributors. Default `--size` is 1200; choose smaller (e.g. 200-400) for quick visual checks.
 3. `Read` the output PNG. The harness renders the PNG inline in the tool result.
-4. Visually compare the rendered image against the brief and the brand assets. If anything is off (overlapping text, broken strokes, lines overshooting, monogram clashes, incorrect colours), fix the SVG and re-render before continuing.
+4. Visually compare the rendered image against the brief, the canonical brand SVG (step 12.a item 1), and the prior-edition cover (step 12.a item 2). If anything is off (overlapping text, broken strokes, lines overshooting, monogram clashes, incorrect colours, compressed weights per step 12.c traps), fix the SVG and re-render before continuing.
 5. Only present the artifact to Tom once the rendered PNG matches intent.
 
 This is the same pattern as `wr-wardley:generate` step 9-10 and `owm-to-svg.mjs`; step 12 inherits it explicitly because cover-image work is where the discipline gap originally surfaced.
+
+**Follow-up.** P044 tracks the full templated cover-generator skill (templated SVG + Playwright/Chromium render pipeline) that would replace this hand-composition flow with deterministic generation. Until P044 lands, steps 12.a through 12.e are the authoritative procedure.
 
 If the image generation tooling fails or returns an unbranded result, do not block the pipeline: note the failure in the summary, fall back to a text-only edition, and continue.
 
