@@ -11,7 +11,7 @@ Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=d
 ## Reference
 
 - Plan: `docs/ai-engineering-brief/PLAN.md`, `docs/ai-engineering-brief/developer-newsletter-concept.md`
-- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`, `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`, `026-reviews-and-meta-content-to-sibling-files.proposed.md`
+- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`, `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`, `025-pass-with-author-overrides-verdict-for-sw-critic.proposed.md`, `026-reviews-and-meta-content-to-sibling-files.proposed.md`
 - Voice: `docs/VOICE-AND-TONE.md` (base) plus persona addendum from `personas/<persona>.md`
 - Personas: `docs/JOBS_TO_BE_DONE.md` (J1-J4 leader, J5 founder, J6-J11 developer)
 - Persona configs: `.claude/skills/wr-newsletter/personas/leader.md`, `.claude/skills/wr-newsletter/personas/developer.md`
@@ -269,9 +269,9 @@ Read the current `docs/ai-engineering-brief/ai-landscape.md` and update:
 - Check that every `evolve` arrow in the `.owm` has a corresponding Evolution-section explanation (rubric check_14).
 - Check that every component in Genesis or Custom-Built phase appears in Differentiation (rubric check_9).
 
-### 9. Critic loop on the Wardley artifacts (ADR 016)
+### 9. Critic loop on the Wardley artifacts (ADR 016, ADR 025)
 
-Run the critic agent against the updated map + analysis.
+Run the critic agent against the updated map + analysis. The Wardley critic has no documented author overrides; pass an empty `accepted_overrides` list at rounds 2 and 3. Wardley rubric checks are factual structure checks (every Genesis component appears in Differentiation; every `evolve` arrow has an Evolution-section explanation); these are not editorial-judgement overrides. If a Wardley rubric check is being routinely overridden, the rubric or the map shape is wrong, not the override list.
 
 ```
 Agent subagent_type: wr-sw-critic
@@ -280,13 +280,15 @@ prompt: "Review the Wardley artifact.
 artifact_path: /Users/tomhoward/Projects/windyroad/docs/ai-engineering-brief/ai-landscape.md
 rubric_path: /Users/tomhoward/Projects/windyroad/.claude/skills/wr-newsletter/assets/wardley-critic-rubric.md
 round_number: 1
-prior_weaknesses: n/a"
+prior_weaknesses: n/a
+accepted_overrides: []"
 ```
 
 Parse the returned `CRITIC_REVIEW` block:
 - If `VERDICT: PASS`: proceed to step 9.5.
-- If `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in `ai-landscape.md` (or `.owm` if the weakness is structural). Re-invoke the critic with `round_number: 2` and `prior_weaknesses: <round-1 weaknesses verbatim>`.
-- Repeat for up to round 3. On `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`, save the review block with the artifacts and note the unresolved weaknesses in the summary, but still proceed to step 9.5. The map is the best we have this week; a weak map still beats no map.
+- If `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in `ai-landscape.md` (or `.owm` if the weakness is structural). Re-invoke the critic with `round_number: 2`, `prior_weaknesses: <round-1 weaknesses verbatim>`, and `accepted_overrides: []`.
+- Repeat for up to round 3. On `VERDICT: PASS_WITH_AUTHOR_OVERRIDES`: in practice unreachable for the Wardley critic because the override list is empty (any remaining UNMET or PARTIAL has no override-list entry to absorb it). If it ever fires (the override list was widened in a future edition), proceed to step 9.5 because the variant is publish-ready.
+- On `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`, save the review block with the artifacts and note the unresolved weaknesses in the summary, but still proceed to step 9.5. The map is the best we have this week; a weak map still beats no map.
 
 Capture the final critic block for inclusion in the saved draft.
 
@@ -505,7 +507,7 @@ If `VERDICT: PASS`: proceed to step 15. Any `medium` flags listed in the Notes s
 
 **Phase variant `14-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same rubric path. A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the risk surface, so the agent runs again with the finalise-time draft.
 
-### 15. Critic loop on the newsletter draft (ADR 016)
+### 15. Critic loop on the newsletter draft (ADR 016, ADR 025)
 
 ```
 Agent subagent_type: wr-sw-critic
@@ -514,13 +516,24 @@ prompt: "Review the newsletter draft.
 artifact_path: <path to the in-progress draft>
 rubric_path: /Users/tomhoward/Projects/windyroad/.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md
 round_number: 1
-prior_weaknesses: n/a"
+prior_weaknesses: n/a
+accepted_overrides: [check_6, check_19, check_23, check_26]"
 ```
 
+The `accepted_overrides` list (ADR 025) names the documented author overrides for the newsletter critic. Pass it on every round; the agent only acts on it at round 3. Each ID maps to a deliberate editorial choice the rubric does not yet model:
+
+- `check_6` ("Every item cites a source (inline-linked)"): the rubric prefers a `Source:` block; the brief uses inline-linked source words in the body to keep the LinkedIn-newsletter render readable. Editorial override.
+- `check_19` ("CTA has description and invitation"): the rubric expects a multi-sentence CTA; the brief uses a single subscribing-loop line per ADR 023's commercial-funnel pause. Editorial override.
+- `check_23` ("Item-count proportionality"): the rubric prefers four-or-five items; the brief includes every story that clears the Wardley precondition and three-lens criterion (P017 minimum-three-no-cap rule). Editorial override.
+- `check_26` ("Quantification of capability claims"): some weeks' stories are about qualitative shifts (a vendor changes posture, a regulatory body issues guidance) where numeric capability claims do not apply. The rubric treats absence as PARTIAL; the editorial position is N/A on those items. Editorial override.
+
 Parse the `CRITIC_REVIEW` block:
-- `VERDICT: PASS`: proceed to step 16.
-- `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in the draft. Re-invoke with `round_number: 2` and `prior_weaknesses: <round-1 verbatim>`.
-- Up to round 3. On round-3 exhaustion, emit `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`; save the draft with the block and surface the unresolved weaknesses in the Tom-summary.
+- `VERDICT: PASS`: proceed to step 16. The `OVERRIDDEN:` line should read `n/a`.
+- `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in the draft. Re-invoke with `round_number: 2`, `prior_weaknesses: <round-1 verbatim>`, and the same `accepted_overrides` list.
+- `VERDICT: PASS_WITH_AUTHOR_OVERRIDES`: publish-ready. The `OVERRIDDEN:` line names which override IDs were satisfied this round. Proceed to step 16.
+- Up to round 3. On round-3 exhaustion (any remaining UNMET or PARTIAL **not** in `accepted_overrides`), the agent emits `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`. Save the draft with the block and surface the unresolved weaknesses in the Tom-summary.
+
+If a new override candidate appears across consecutive editions (the round-3 REJECTED weakness is the same check ID twice in a row, and Tom's retrospective notes the rubric does not yet model the editorial position), file an ADR amendment or a problem ticket; do not silently extend the list inline. ADR 025's reassessment criterion is: if the override list grows past six checks across consecutive editions, the rubric needs amendment, not the override mechanism.
 
 Capture the final critic block for the saved draft.
 
@@ -530,7 +543,7 @@ Capture the final critic block for the saved draft.
 
 Invoke the `wr-newsletter-editor` subagent (ADR 020). The subagent runs in fresh context, plays the role of an experienced LinkedIn newsletter editor, reads the persona's JTBD context, reads the in-progress draft body, and returns the `EDITOR_REVIEW` block in the format pinned by ADR 020 confirmation criterion 1. The three reader-experience axes (would-open, would-read-through, would-forward) and their persona constraints are documented inside the agent file, not in this skill.
 
-**Skip-on-upstream-REJECTED.** If the sw-critic loop at step 15 returned `VERDICT: REJECTED` (round-3 exhausted), skip step 15.25 entirely. The editor is not invoked on an analytically-rejected draft; reviewing reader-experience on a draft that already failed argument-quality is not useful. The skipped step is recorded in the saved file (step 16 save-block) as `<editor block> = "N/A: sw-critic returned REJECTED"`.
+**Skip-on-upstream-REJECTED.** If the sw-critic loop at step 15 returned `VERDICT: REJECTED` (round-3 exhausted), skip step 15.25 entirely. The editor is not invoked on an analytically-rejected draft; reviewing reader-experience on a draft that already failed argument-quality is not useful. The skipped step is recorded in the saved file (step 16 save-block) as `<editor block> = "N/A: sw-critic returned REJECTED"`. A `VERDICT: PASS_WITH_AUTHOR_OVERRIDES` from step 15 does **not** skip step 15.25; the variant is publish-ready (ADR 025) and the editor runs against it as it would against a `PASS`.
 
 ```
 Agent subagent_type: wr-newsletter-editor
@@ -819,7 +832,11 @@ Report back in chat:
 - Final item count (minimum 3, no cap).
 - Voice review verdict (per phase if finalise).
 - Content-risk block with verdict (per phase if finalise).
-- Newsletter critic verdict and round count (per phase if finalise). If `REJECTED`, lead the summary with "VERDICT: REJECTED. Do not publish as-is. Rewrite and re-run." and quote the residual weaknesses.
+- Newsletter critic verdict and round count (per phase if finalise). Surface per the variant:
+  - `PASS`: report as "Newsletter critic: PASS (round N)".
+  - `PASS_WITH_AUTHOR_OVERRIDES`: report as "Newsletter critic: publish-ready with N documented overrides (round 3)". Quote the `OVERRIDDEN:` list verbatim so the audit trail is visible in chat. Do **not** lead with rejection language; the variant is publish-ready (ADR 025).
+  - `REJECTED`: lead the summary with "VERDICT: REJECTED. Do not publish as-is. Rewrite and re-run." and quote the residual weaknesses.
+  - The variant is read from the saved structured verdict, not inferred from the weakness list. If the saved verdict and the inferred verdict disagree (e.g. the agent emitted REJECTED but every remaining weakness is in the override list), treat as a skill-logic bug and surface the inconsistency rather than re-classifying the verdict.
 - Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, lead the summary with the failing reader-experience axes (would-open / would-read-through / would-forward) and the Suggested fixes from the EDITORIAL_FINDINGS list. If skipped (sw-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
 - Wardley critic verdict and round count.
 - Map delta (one sentence; for finalise, include any re-mutation delta).
@@ -841,6 +858,7 @@ Report back in chat:
 - **Content-risk returns `VERDICT: REJECTED`**: save the draft with the block for Tom's inspection, surface the rejection in the summary, skip the newsletter critic step. Tom decides.
 - **Wardley critic returns `VERDICT: REJECTED` (round-3 exhausted)**: save the critic block with the artifacts; proceed to draft the brief anyway. A weak map is still better than no map for this week's brief. Note the residual weaknesses in the summary so Tom can decide whether to rewrite the analysis.
 - **Newsletter critic returns `VERDICT: REJECTED` (round-3 exhausted)**: save the draft with the block. Surface the rejection prominently. Tom decides whether to rewrite or override.
+- **Newsletter critic returns `VERDICT: PASS_WITH_AUTHOR_OVERRIDES` (ADR 025)**: save the draft with the block; this is a publish-ready verdict. Surface "publish-ready with N documented overrides" in the Tom-summary along with the `OVERRIDDEN:` list. Editor (step 15.25) and downstream steps run as if the verdict were `PASS`.
 - **Upstream gate returned REJECTED but critic was invoked anyway**: the critic will emit `CRITIC_ERROR: upstream gate returned REJECTED; critic will not run`. Fix the skill logic; do not ignore the error.
 - **`phase=finalise` invoked with no `.prep.md` available**: handled at step 0.5 via `AskUserQuestion`. Default options: rebind to `phase=full` or abort. Do not silently fall back; the difference between phase=full and phase=finalise is meaningful.
 - **`.prep.md` frontmatter missing required fields**: surface the missing fields in the summary, default missing values where safe (`map-mutation-status` defaults to `unknown`, triggering a fresh map evaluation), and continue. Do not abort: a partial prep is better than re-running everything.
