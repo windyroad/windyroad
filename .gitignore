@@ -67,6 +67,7 @@ out
 .claude/settings.local.json
 .claude/.a11y-agent-manifest
 .claude/.accessibility-agents-version
+.claude/scheduled_tasks.lock
 
 # Old/archive directories
 old/

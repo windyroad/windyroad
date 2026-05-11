@@ -75,13 +75,13 @@
     "wr-tdd@windyroad": true,
     "wr-c4@windyroad": true,
     "wr-wardley@windyroad": true,
-    "wr-architect@windyroad": true,
-    "wr-jtbd@windyroad": true,
-    "wr-risk-scorer@windyroad": true,
     "wr-style-guide@windyroad": true,
     "wr-voice-tone@windyroad": true,
     "skill-creator@claude-plugins-official": true,
+    "wr-architect@windyroad": true,
     "wr-itil@windyroad": true,
-    "wr-retrospective@windyroad": true
+    "wr-jtbd@windyroad": true,
+    "wr-retrospective@windyroad": true,
+    "wr-risk-scorer@windyroad": true
   }
 }
