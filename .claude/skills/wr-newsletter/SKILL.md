@@ -27,9 +27,9 @@ The pipeline runs in one of three phases, selected by the `phase` argument at st
 
 | phase     | When to run                          | Steps executed                              | Saves                              |
 |-----------|--------------------------------------|---------------------------------------------|------------------------------------|
-| `prep`    | Mid-week (Mon-Thu)                   | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
-| `finalise`| Friday morning                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
-| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `prep`    | Mid-week (Mon-Thu)                   | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
+| `finalise`| Friday morning                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 
 Default behaviour when no `phase` argument is present: `phase=full` (preserves the original single-shot run for backward compatibility per ADR 017 line 51).
 
@@ -110,7 +110,7 @@ Bind the prior-prep state for downstream steps:
 - `<prep-image-path>`: the path to the cover image generated in step 12 of the prep run, if any.
 - `<prep-source-failures>`: the list of source URLs that failed in prep.
 - `<prep-map-mutation-status>`: whether the map was mutated in prep.
-- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta) for the carry-forward sections in the finalise reviews file at step 16.
+- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) for the carry-forward sections in the finalise reviews file at step 16.
 
 Continue to step 1-prime.
 
@@ -437,6 +437,74 @@ This rule is **interim defence-in-depth**. ADR-024 (URL verification gate) owns 
 
 If no material changes apply, `11-prime` is a no-op and `<prep-draft-body>` is the finalise draft body unchanged.
 
+### 11.5. URL verification gate (ADR-024)
+
+For every URL that appears in the draft body, verify the URL resolves and the article body matches the brief's specific claim. Block save on REFUTED or 404. This step is non-skippable in `phase=prep`, `phase=finalise`, and `phase=full`; ADR-024 owns the decision shape and P034 documents the failure mode this gate prevents.
+
+**URL scope.** Verify every URL that appears in any of the following surfaces in the step-11 draft:
+
+- Item Source lines.
+- Inline citation URLs inside any Item body (`What happened`, `Map movement`, `Why it matters to your team`, `The human angle`).
+- Also-worth-noting block URLs.
+- The From-Tom opener (rare; some editions cite a personal artefact).
+- Frontmatter source links (if any).
+
+Do NOT verify outbound CTA URLs that are part of the persona's `<cta-description>` / `<cta-invitation>` rotation (windyroad.com.au and friends); those are owned by the persona config and verified there, not per-edition.
+
+**Transport selection (per URL).** Choose the fetch transport based on publisher class:
+
+1. **JS-protected publishers** (CNBC, Business Insider, NYT, LA Times, Bloomberg, FT, WSJ, The Information, The Verge, TechCrunch, Wired, Reuters when JS-required, and similar): use `node scripts/playwright-fetch.mjs <url>`. The helper returns TITLE, FINAL_URL, and the first 4000 chars of `document.body.innerText`. Inspect the title and FINAL_URL for resolution (HTTP-level 404 surfaces as a TITLE like "Page not found"; redirect chains surface as a non-matching FINAL_URL). Pass the BODY output to the semantic verification subagent below.
+2. **Static / RSS-style hosts** (status.claude.com, anthropic.com news, GitHub blog, status.openai.com, dev.to, GitHub README files): use `curl -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' -L -s -o /tmp/wr-url-<short-hash>.html -w '%{http_code}' <url>`. HTTP 200 plus a body that matches the URL slug content counts as resolved; 404 / 403 / 5xx counts as 404 for the save-gate.
+3. **Cloudflare-blocked from this environment** (openai.com article pages, anthropic.com article pages when fronted by Cloudflare bot protection, web.archive.org snapshots, some Substack writers): a DuckDuckGo HTML search (`curl -A '<browser-UA>' 'https://html.duckduckgo.com/html/?q=<urlencoded-query>'`) is used to confirm the URL exists on the public web, then the semantic verification step runs against the search-result snippet rather than the article body. Tag the URL `INDIRECT_CONFIRMED` as a **transport-class outcome** (set BEFORE the semantic step runs); it is not a fourth semantic verdict. The semantic subagent still returns SUPPORTED / REFUTED / NOT MENTIONED against the snippet.
+
+Choice of transport is a per-URL judgement; do not run all three. Start with the cheapest viable transport and escalate only on failure.
+
+**Semantic verification subagent contract.** For each fetched body (or DuckDuckGo snippet for `INDIRECT_CONFIRMED`), spawn a fresh-context subagent:
+
+```
+Agent subagent_type: general-purpose
+prompt: "Compare the article body below against the specific claim. Return one of SUPPORTED, REFUTED, or NOT MENTIONED, plus a verbatim quote from the article body that justifies the verdict where applicable.
+
+CLAIM (verbatim from the brief): <quoted claim sentence from the Item block>
+
+ARTICLE BODY:
+<paste the playwright-fetch BODY output, or the curl-fetched HTML body text, or the DuckDuckGo snippet for INDIRECT_CONFIRMED URLs>
+
+Rules:
+- SUPPORTED: the article body asserts the claim (verbatim or by clear paraphrase).
+- REFUTED: the article body asserts something incompatible with the claim (different number, different actor, different outcome).
+- NOT MENTIONED: the article body does not address the claim either way (the brief inferred or extrapolated beyond what the source says).
+- You do NOT have access to the brief outside the claim above; do not infer from headline tokens. Treat the article body as the only ground truth.
+- Return verdict on the first line, then a one-line verbatim quote on the second line (or 'no supporting quote' if NOT MENTIONED).
+"
+```
+
+Fresh-context isolation matters: the subagent must NOT see the rest of the brief, the per-item capture transcript, or the Wardley map. ADR 016 / 018 / 020 establish this pattern; the URL verifier is a direct application of the same isolation rule.
+
+**Save-gate semantics.** Block the save unless every URL clears:
+
+| Verdict / outcome      | Action                                                                                                                                                                                                |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SUPPORTED`            | Pass. Proceed to step 12 (cover image) once all URLs report.                                                                                                                                          |
+| `INDIRECT_CONFIRMED` + `SUPPORTED` (semantic) | Pass. Note the transport outcome in the audit trail; readers cannot tell the difference but Tom can audit which URLs ran via DuckDuckGo at retro. |
+| `REFUTED`              | Fix the brief (rewrite the claim to match the article body, citing the verbatim quote) OR replace the URL with one whose body supports the claim. Re-run step 11.5 on the affected URL. Do NOT save while any URL remains REFUTED.    |
+| HTTP 404 (or 403/5xx)  | Replace the URL with a verified canonical URL (use DuckDuckGo HTML search to find the canonical), or drop the source link entirely. Re-run step 11.5 on the replacement URL.                          |
+| `NOT MENTIONED`        | Escalate to Tom via `AskUserQuestion` with the claim and the article-body excerpt. Default action: treat as REFUTED (fix the brief or swap the URL). Tom may explicitly approve an inferred-but-unstated framing, in which case the verdict is downgraded to `NOT MENTIONED (author-approved inference)` and recorded in the audit trail.   |
+
+**Phase variant `11.5-prime` (phase=finalise only).** Re-run step 11.5 only on URLs that are NEW or CHANGED in `11-prime`. URLs that were verified in prep and have not changed (URL string identical AND surrounding claim sentence identical) carry their prep-time verdict forward. If a claim sentence was rewritten in `11-prime` but the URL is unchanged, the URL must re-verify against the new claim (the URL is the same, the claim is not). Record any carry-forwards in the audit trail as `<verdict> (carried from prep)`.
+
+**Audit trail.** Write per-URL verdicts to `<draft-folder>/<publication-date>.reviews.md` under a new `## URL Verification` block (per ADR-026 sibling-file convention). One row per URL:
+
+```
+| URL | Transport | Semantic verdict | Note |
+|-----|-----------|------------------|------|
+| https://www.example.com/article-slug | playwright | SUPPORTED | "<verbatim quote>" |
+| https://status.claude.com/incidents/abc123 | curl | REFUTED | replaced with https://... before save |
+| https://openai.com/index/<slug> | duckduckgo | INDIRECT_CONFIRMED + SUPPORTED | snippet quoted |
+```
+
+Step 17 summarises this table for Tom (final-line headline only; full table lives in `.reviews.md`).
+
 ### 12. Generate cover image
 
 Brand assets must be discovered before any image generation: grep for existing brand-asset paths and styles per BRIEFING.md "What You Need to Know" rule, then design the cover against those assets.
@@ -679,6 +747,10 @@ phase: prep
 ## Map Delta
 
 <one-sentence summary of what moved in ai-landscape.owm this run, or "MAP_UPDATE_SKIPPED: <reason>" if step 5 blocked the update>
+
+## URL Verification
+
+<per-URL verdict table from step 11.5: URL | Transport | Semantic verdict | Note. Per ADR-024.>
 ```
 
 The LinkedIn post is NOT generated in prep (step 15.5 is skipped); no `<publication-date>.linkedin.md` is written in prep. Image path (from step 12) is recorded in the brief's frontmatter as `cover-image: <path>` for finalise to pick up.
@@ -763,6 +835,14 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
    ## Map Delta
 
    <prep-time map delta line, plus "+ <one-sentence finalise re-mutation summary>" if step 5-prime restructured, else prep delta unchanged>
+
+   ## URL Verification (finalise)
+
+   <per-URL verdict table from step 11.5-prime: URL | Transport | Semantic verdict | Note. Carry-forward rows tagged "(carried from prep)" per step 11.5-prime rules.>
+
+   ## URL Verification (prep)
+
+   <URL Verification block carried from prep .reviews.md>
    ```
 
 3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md`. The LinkedIn-post voice review does NOT appear here; it lives in the reviews sibling above:
@@ -813,7 +893,7 @@ Single-pass equivalent of the prep + finalise pair. Three operations:
    <draft body from step 11>
    ```
 
-2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same six-block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta), plus a seventh block `## Voice Review (LinkedIn post)` that captures the step-15.5 LinkedIn-post voice gate verdict (P013). No prep / finalise distinction in the section headings (single-pass).
+2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same seven-block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus an eighth block `## Voice Review (LinkedIn post)` that captures the step-15.5 LinkedIn-post voice gate verdict (P013). No prep / finalise distinction in the section headings (single-pass).
 
 3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md` with the same shape as the finalise variant above (post body + image + notes; no voice review block).
 
@@ -840,11 +920,12 @@ Report back in chat:
 - Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, lead the summary with the failing reader-experience axes (would-open / would-read-through / would-forward) and the Suggested fixes from the EDITORIAL_FINDINGS list. If skipped (sw-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
 - Wardley critic verdict and round count.
 - Map delta (one sentence; for finalise, include any re-mutation delta).
+- URL verification (step 11.5 / 11.5-prime): per-URL verdict summary as a one-line headline (e.g. "URL verification: 9 SUPPORTED, 1 INDIRECT_CONFIRMED, 0 REFUTED, 0 NOT MENTIONED across 10 URLs"). Surface any save-gate interventions inline: REFUTED fixes (with old URL and replacement URL), 404 replacements, NOT MENTIONED escalations to Tom (with the eventual disposition: dropped, swapped, or author-approved). Full per-URL table lives in `<publication-date>.reviews.md` under `## URL Verification`. Per ADR-024 confirmation criterion 4.
 - Cover image: path, plus whether finalise re-rendered or carried prep image forward.
 - LinkedIn post: drafted (finalise/full) or skipped (prep).
 - File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/<publication-date>.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on Friday to publish." For finalise, this is `<draft-folder>/<publication-date>.md` with the reminder: "When you have published to LinkedIn, move all four files (`<publication-date>.md`, `<publication-date>.reviews.md`, `<publication-date>.linkedin.md`, `<publication-date>.capture.md`) from `<draft-folder>` to `<published-folder>/<persona>/`, then run `/wr-retrospective:run-retro` to capture learnings for next week."
 - Capture transcript path: `<draft-folder>/<publication-date>.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
-- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all six review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta) plus the LinkedIn-post voice review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body, image description, alt text, and posting notes. Confirm both siblings were written.
+- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all seven review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body, image description, alt text, and posting notes. Confirm both siblings were written.
 
 ## Failure modes
 
@@ -863,6 +944,9 @@ Report back in chat:
 - **`phase=finalise` invoked with no `.prep.md` available**: handled at step 0.5 via `AskUserQuestion`. Default options: rebind to `phase=full` or abort. Do not silently fall back; the difference between phase=full and phase=finalise is meaningful.
 - **`.prep.md` frontmatter missing required fields**: surface the missing fields in the summary, default missing values where safe (`map-mutation-status` defaults to `unknown`, triggering a fresh map evaluation), and continue. Do not abort: a partial prep is better than re-running everything.
 - **Image generation fails at step 12 or 12-prime**: continue without image. Note in summary. The LinkedIn post adapts to a text-only format.
+- **URL verification gate (step 11.5) returns REFUTED the drafter cannot resolve**: surface to Tom via `AskUserQuestion` with the specific claim and the article-body excerpt (verbatim quote from the semantic subagent). Default to dropping the claim or swapping in a different verified URL. Do NOT save the brief while any URL remains REFUTED. Record the disposition (`fixed-by-rewrite`, `url-replaced`, `claim-dropped`) in the audit-trail table.
+- **URL verification gate (step 11.5) fetch fails on a non-Cloudflare URL**: retry once. If the retry fails, escalate to Tom: (a) treat as 404 and apply 404 handling (replace or drop), or (b) tag the URL `FETCH_FAILED` in the audit trail and accept the gap for this edition with explicit author approval. Default to (a). The `FETCH_FAILED` outcome is a transport-class outcome (no semantic verdict ran); it is not a fourth semantic verdict.
+- **URL verification gate (step 11.5) returns NOT MENTIONED across multiple URLs in the same edition**: this is a signal that the drafter is over-extrapolating from headlines. Surface to Tom in a single `AskUserQuestion` rather than one-at-a-time, and consider it diagnostic data for the next retrospective (does the drafter need stronger capture-fidelity rules around quantitative claims? Does the brief have an over-extrapolation pattern?). Default action per URL is unchanged (treat as REFUTED unless author-approved).
 
 ## Out of scope for this pipeline
 
