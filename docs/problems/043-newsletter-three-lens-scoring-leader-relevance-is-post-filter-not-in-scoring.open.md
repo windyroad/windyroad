@@ -46,6 +46,16 @@ User has named the desired direction: **incorporate leader-relevance into the sc
 - **Shape**: skill (filter rubric amendment)
 - **Target file**: `.claude/skills/wr-newsletter/assets/three-lens-filter.md`
 
+## User direction (loop-end batched answer, 2026-05-11)
+
+User picked: **Option C** (redefine each lens through leader-action). Matches the ticket's documented recommendation.
+
+Follow-up work for next session:
+- Rewrite `.claude/skills/wr-newsletter/assets/three-lens-filter.md` so each of Technical / Operational / Human lenses requires a named leader action this quarter (procurement question, capability investment, risk audit, measurement update, hiring or policy change). Lens definitions retain T/O/H structure but tighten the yes-criterion.
+- Add a `named_action` field to candidate metadata. Lens evaluation MUST cite the action as one sentence; a candidate with no nameable action fails the lens.
+- Update `/wr-newsletter` step 5 to drop the post-filter "no-map-anchor but all-three-lens AND significant for the Engineering Leader persona" qualifier; the lens-tightening absorbs it.
+- Surfaced 2026-05-11 via /wr-itil:work-problems loop-end Step 2.5b after iter selection skipped this ticket on the user-answerable design queue.
+
 ## Related
 
 - P016 (filter drops significant stories), companion ticket on the inverse axis

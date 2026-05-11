@@ -44,6 +44,15 @@ Shipped 2026-05-11 in a single commit on local master (release pending; verifyin
 - `.claude/skills/wr-newsletter/SKILL.md`: step 9 (Wardley critic) passes `accepted_overrides: []`; step 15 (newsletter critic) passes the documented four overrides (`[check_6, check_19, check_23, check_26]`) with per-check editorial-rationale notes; step 15.25 explicitly notes `PASS_WITH_AUTHOR_OVERRIDES` does NOT trigger the skip-on-upstream-REJECTED path; step 17 Tom-summary surfaces variant-specific phrasing; Failure modes section adds the new variant.
 - ADR 025 status remains `proposed` (transitions to accepted via ADR-005 first-released on next release).
 
+## User direction (loop-end batched answer, 2026-05-11)
+
+User picked: **Add runtime auto-degrade threshold** to ADR-025.
+
+Follow-up work for next session:
+- Amend ADR-025 with a runtime auto-degrade rule: override-list size above N triggers `REJECTED` instead of `PASS_WITH_AUTHOR_OVERRIDES`. Threshold value N is TBD by the user; the architect's iter-3 review suggested a small ceiling but did not pin a value, so the next session captures the value before implementing.
+- Implement the threshold check in `.claude/agents/wr-sw-critic.md` round-3 priority-ordered logic (insert between current `all-in-overrides` branch and `PASS_WITH_AUTHOR_OVERRIDES` emit).
+- Surfaced 2026-05-11 via /wr-itil:work-problems loop-end Step 2.5b after iter 3 architect-design queue entry.
+
 ## Related
 
 - ADR 016 (sw-critic 3-round loop)
