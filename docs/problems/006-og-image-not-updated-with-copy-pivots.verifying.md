@@ -1,6 +1,6 @@
 # Problem 006: OG share image does not track homepage copy pivots
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-15
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 **Effort**: S (await prod release; flush LinkedIn cache via Post Inspector; user verification)
@@ -60,7 +60,15 @@ Longer-term options (not yet implemented):
 
 ## Fix Released
 
-Short-term content fix deployed in commit 754a04a. Permanent fix (shared `src/lib/siteCopy.mjs` constants with reproduction test) applied in the follow-up commit. Both on master, awaiting the next production release to reach https://windyroad.com.au. After production release, run the homepage URL through https://www.linkedin.com/post-inspector/ to flush LinkedIn's cache. Awaiting user verification once the production OG image matches expectations.
+Short-term content fix deployed in commit 754a04a. Permanent fix (shared `src/lib/siteCopy.mjs` constants with reproduction test) applied in commit 100df63. Both commits on origin/master.
+
+### Verification trigger
+
+1. Production deploy of origin/master to https://windyroad.com.au (Vercel auto-deploy on master push, or manual promotion).
+2. Flush LinkedIn's OG cache by submitting the homepage URL through https://www.linkedin.com/post-inspector/ and clicking "Inspect" then "Re-scrape" if the cached preview still shows the old AI-quality tagline.
+3. Visual confirmation: share the homepage URL in a LinkedIn post draft (or open the Post Inspector preview) and confirm the OG preview renders the patch fitness headline "You're taking too long to patch your software." with no personal attribution footer.
+
+Transition to Closed once all three steps confirm the fix on the deployed site.
 
 ## Related
 
