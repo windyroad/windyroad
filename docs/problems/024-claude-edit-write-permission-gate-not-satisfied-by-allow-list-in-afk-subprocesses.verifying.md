@@ -1,6 +1,6 @@
 # Problem 024: .claude/** Edit/Write permission gate not satisfied by */Edit allow list in AFK subprocesses
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-26
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
 
@@ -85,6 +85,25 @@ Architect PASS (no ADR governs allow-list shape; the verifying.md text at line 6
 If the colon form ALSO fails verification, the residual hypothesis is that Claude Code's core "sensitive file" gate refuses ANY allow-list entry for the `.claude/**` subtree under bypassPermissions, and the python3 heredoc remains the only viable path. That outcome would graduate this ticket from infrastructure-fix to upstream-blocked and a new ticket would track the engine-side request.
 
 `.claude/agents/**` is explicitly NOT included in this attempt: keeping it on the parenthesised-only baseline lets a future iteration that edits an agent file confirm whether the colon-form is the differentiator (skills succeed, agents still fail) or whether the engine has a global `.claude/**` block (both paths still fail). User-scoped to skills only by design.
+
+## Verification Outcome (attempt 2)
+
+Verification PASS for the `.claude/skills/**` colon-form matcher, partial pending for `.claude/agents/**`.
+
+Empirical evidence from the 2026-05-11 AFK loop iters 3-6 (no python3 heredoc fallback, no Edit gate denials cited in any iter retro):
+
+- Commit `fcd87e4` (P039 sw-critic verdict variant): Edit to `.claude/skills/wr-newsletter/SKILL.md` and `.claude/agents/wr-sw-critic.md`.
+- Commit `4dd2485` (P034 URL verification gate): Edit to `.claude/skills/wr-newsletter/SKILL.md` (step 11.5 insertion).
+- Commit `586c21e` (P037 step 12 brand-asset enumeration): Edit to `.claude/skills/wr-newsletter/SKILL.md`.
+- Commit `95cd9c6` (P044 wr-newsletter-cover skill): new file `.claude/skills/wr-newsletter-cover/SKILL.md` plus templated assets.
+
+Four Edit/Write operations against `.claude/skills/**` succeeded without falling back to the python3 heredoc workaround documented above. The 2026-05-11 retros for iters 3, 4, 5, and 6 do not cite P024 friction. This confirms the engine accepts the colon-form `Edit:.claude/skills/**` / `Write:.claude/skills/**` matchers for the scoped subtree where the parenthesised `Edit(.claude/**)` form alone did not.
+
+`.claude/agents/**` A/B control surface: commit `fcd87e4` did edit `.claude/agents/wr-sw-critic.md` successfully, which is one data point that the agents subtree may already work. However, that single observation is insufficient to retire the carve-out (the matcher list at attempt-2 time included both the parenthesised `Edit(.claude/**)` and the colon-form `Edit:.claude/skills/**`; the parenthesised entry already nominally covers agents, so a single success there does not distinguish "parenthesised finally works" from "settings reload picked up some other change"). Full verification of agents subtree is queued behind a future intentional iteration that edits a `.claude/agents/*.md` path under conditions where the python3 fallback is explicitly NOT permitted as a covert recovery path.
+
+Closure trigger: one additional AFK iteration that edits a `.claude/agents/*.md` path with no python3 fallback and the operator records the Edit as a clean success in the iter retro. Until then, ticket remains in Verification Pending with the agents-subtree caveat explicit in the README Fix summary.
+
+Skills-subtree convention: colon-form `Edit:.claude/skills/**` works empirically; whether to codify as a project-wide convention waits on the agents A/B resolution. Pre-emptive ADR not warranted yet per architect review (single-subtree evidence is insufficient signal to flip the project default).
 
 ## Dependencies
 
