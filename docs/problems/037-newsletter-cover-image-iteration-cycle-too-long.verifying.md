@@ -1,6 +1,6 @@
 # Problem 037: /wr-newsletter cover-image step requires 15+ iteration rounds; brand-asset grep + font-rendering diagnostics missing
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-01
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: cover-image iteration is pre-publish pipeline disruption at L3 Moderate)
 **Effort**: M
@@ -80,3 +80,9 @@ A "Follow-up" line points to P044 for the full templated solution so future read
 - P011 (render-and-verify discipline, cross-referenced in step 12.e)
 - ADR-017 (AI brief prep and finalise phases, confirmation criterion 5)
 - This retrospective: 2026-05-01 edition retro
+
+## Fix Released
+
+Released 2026-05-12 to `origin/master` in commit `586c21e`: step 12 rewritten into five labelled sub-steps (mandatory brand-asset read, typography conventions, sips silent-substitution traps, compose-the-cover, render-and-verify).
+
+Awaiting user verification. Verification trigger: next finalise producing the cover in fewer than 5 iteration rounds with no brand-mark, monogram, or font-weight reverts.

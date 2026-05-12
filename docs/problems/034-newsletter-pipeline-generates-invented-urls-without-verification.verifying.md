@@ -1,6 +1,6 @@
 # Problem 034: /wr-newsletter generates plausible-but-invented URLs and skips verification before save
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-01
 **Priority**: 20 (Critical). Impact: Severe (5) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: invented URLs in saved drafts can reach LinkedIn readers, L5 Severe; manual finalise review catches some, Likely)
 **Effort**: M
@@ -78,3 +78,9 @@ On verification PASS, transition Known Error -> Verification Pending (.verifying
 - ADR-024 (`docs/decisions/024-url-verification-gate-in-wr-newsletter.proposed.md`), URL verification gate decision shape
 - Companion ticket P035 (paraphrasing drift; ADR-024 catches quantitative drift as a side-effect of body-content semantic comparison)
 - `scripts/playwright-fetch.mjs` (durable transport for JS-protected publishers; committed in `a0f4a8f`)
+
+## Fix Released
+
+Released 2026-05-12 to `origin/master` in commit `4dd2485`: step 11.5 URL verification gate with scope plus transport selection plus fresh-context semantic subagent plus save-gate semantics plus phase variant 11.5-prime plus audit-trail table.
+
+Awaiting user verification. Verification trigger: next prep + finalise cycle without user URL intervention plus edition zero-invented-URL spot-check.
