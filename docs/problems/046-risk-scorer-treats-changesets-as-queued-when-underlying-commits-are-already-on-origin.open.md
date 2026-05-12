@@ -93,3 +93,5 @@ In the orchestrator skills (`/wr-itil:work-problems` Step 6.5, `/wr-itil:manage-
 - ADR-042 (above-appetite remediation loop): the consumer that misroutes when the scorer's release-layer score is inflated.
 - Live example commits in this session: `d6cc6d9` (contrast fix), `b196c18` (Bluesky length fix), `b97bc0b` (Fully Booked CTA pivot), `db9ee6b` (changesets-action release PR sitting on `origin/changeset-release/publish`).
 - `~/.claude/plugins/cache/windyroad/wr-risk-scorer/` (current cached plugin location for the scorer subagent and its rubric, for reference).
+
+**Upstream placement confirmed 2026-05-13** (user direction via AskUserQuestion batch-2 answer 1): file upstream via `/wr-itil:report-upstream` next interactive session. Fix Strategy default (upstream wr-risk-scorer subagent-prompt extension per P045 discipline applied in the ticket body) stands. Ticket is in `upstream-blocked` state for AFK iters until upstream lands.
