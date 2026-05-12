@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-12 P045 (Assistant accepts ticket Fix Strategy upstream-placement framing without questioning) transitioned Open to Verification Pending per ADR-022. AFK iter 6 of 2026-05-12 work-problems loop. Lever 1 completed: memory file `feedback_verify_upstream_placement_before_propagating.md` shipped 2026-05-02; CLAUDE.md "Verify before asserting" extension shipped this iter as a second paragraph sibling to the existing P032 note, naming the trigger (Fix Strategy upstream-placement claim), the two verification questions (domain fit, placement authority), and the parroting anti-pattern. Architect ALIGNED (no new ADR; sibling-shape extension). JTBD PASS (internal note). Levers 2 and 3 deferred per the ticket default. Verification triggers on the next iteration that processes upstream-placement prose.
+> Last reviewed: 2026-05-13 Review pass (pragmatic, scoped to fold new captures). P056 (manage-problem ADR-014 misattribution), P057 (no-em-dash.sh Edit-tool whitelist port), and P058 (architect+JTBD retros exclusion) added to WSJF Rankings as deferred-WSJF placeholders (P056: 1.5, Severity 3, Effort M; P057: 3.0, Severity 3, Effort S; P058: 3.0, Severity 3, Effort S). Full per-ticket re-rate deferred (23 dev-work tickets, requires deep read per ticket). 28-ticket Verification Queue prompt skipped per ADR-013 Rule 6 fail-safe at end-of-loop wall-clock; queue recorded as-is for next interactive session. No auto-transitions Open to Known Error fired this pass. Reconciliation contract per P118 + ADR-014 amended.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -26,9 +26,12 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3.0  | P001 | Next.js build hangs locally | 6 (Minor) | Open | M | 2026-04-14 |
 | 3.0  | P023 | architect-gate drift detection rm\'s marker without offering recovery path | 6 (Minor) | Open | M | 2026-04-26 |
 | 3.0  | P048 | /wr-itil:manage-problem Step 5 P094 README refresh contract bypassed on bulk-creation paths | 6 (Minor) | Open | M | 2026-05-02 |
+| 3.0  | P057 | no-em-dash.sh (Edit/Write surface) lacks the contractual-marker whitelist that no-em-dash-bash.sh already carries | 3 (Medium) | Open | S | 2026-05-13 |
+| 3.0  | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Medium) | Open | S | 2026-05-13 |
 | 2.0  | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 |
 | 1.5  | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 (Medium) | Open | M | 2026-05-12 |
 | 1.5  | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 (Medium) | Open | M | 2026-05-12 |
+| 1.5  | P056 | manage-problem SKILL.md misattributes ADR-014 to single-commit governance in 6+ blocks | 3 (Medium) | Open | M | 2026-05-13 |
 
 ## Verification Queue
 
