@@ -1,0 +1,22 @@
+# Ask Hygiene Trail. 2026-05-12 AFK iter 5
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (no AskUserQuestion calls this iter) | n/a | n/a |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Iter dispatched non-interactively per AFK constraint. Selection was framework-mediated end-to-end. WSJF rank + tie-break ladder identified P014 (Known Error, L, transitive=4) as the highest-WSJF candidate in the 6.0 tier, but the ticket's first Investigation Task explicitly reads "Verify Playwright headed-mode fetch of `https://openai.com/news/` succeeds locally (manual confirmation before writing code)". This is a manual-confirmation gate that classifies as needs-user-input under the work-problems classifier. P046 (next at 6.0 M tier per tie-break, 2026-05-02) carries the P045-discipline default placement claim (`Default placement (until evidence shows otherwise): upstream wr-risk-scorer subagent prompt extension`) which routes to the upstream-recommendation path, same shape as upstream-blocked for AFK work-classification purposes. Per the user pacing guidance ("prefer substantive code/data work this iter over another marker-only append; if every remaining 6.0-M ticket is also pure-upstream-blocked, classify and proceed to the 4.0/3.0 tier for code progress rather than appending another marker"), worked P051 at the 6.0 tier. P051 is a local SKILL.md amendment with the ticket's default proposal (Politico + Axios + Reuters tier-1, NYT + Bloomberg + WSJ tier-2, via combined Google News RSS scoped queries) clearly framed and non-interactively progressable. All decisions framework-mediated; zero AskUserQuestion branches required.
+
+Pipeline-instability observation 1 (queued for `outstanding_questions` per AFK constraint): two-pass architect review. First pass returned "Architecture Review: ISSUES FOUND" with an affirmative bottom-line ("Land the proposed SKILL.md edit as scoped" plus four mechanical-cleanup items: SKILL.md line 182 staleness, line 219 staleness, ADR-017 line 47 constraint update, defer three-lens-filter.md allowlist). Per the P021 hook contract (`architect-mark-reviewed.sh` writes the marker only on literal `Architecture Review: PASS`), the FAIL classification means no marker, blocking the SKILL.md edit. Second invocation with the revised plan (incorporating all four findings plus the JTBD widening-trade-off mitigation of single-combined-query) returned `Architecture Review: PASS` and the marker landed. Cost: one extra subagent invocation. Same root-cause family as P021 (already reported upstream as `windyroad/agent-plugins#78`); no new ticket needed.
+
+Pipeline-instability observation 2 (queued for `outstanding_questions` per AFK constraint, **needs verification before propagating per P032 / P045 discipline**): architect pass-2 advisory note flagged that the manage-problem SKILL.md repeatedly cites "ADR-014" for "single-commit governance" but, per the architect's read, ADR-014 is the Wardley mapping ADR and does not contain a single-commit governance rule. The convention pervades the skill (Step 5 P094 block, Step 6 P094 block, Step 7 P062 block, Step 9e commit step, Step 11 commit step all reference ADR-014). The architect advisory was non-blocking ("the single-commit practice is fine independent of the citation") but suggests a documentation drift that may have systemic impact across cross-references. Surfacing for user to verify ADR-014's actual content on return; do not propagate the architect's claim into a ticket until ADR-014 is read directly.
+
+Pipeline-instability observation 3: em-dash hook fired twice on Edit-tool prose composition during this iter (line 131 back-reference rewrite and ticket Fix Strategy section). Distinct from iter 4's hook-protocol friction observation (which was about missing contractual-marker whitelist on the Edit-tool hook). Today's blocks were on agent-composed em-dashes in regular prose, which the hook is supposed to catch. Semicolon substitution worked cleanly both times. Not a friction signal; the hook operated as designed.
+
+R6 numeric gate (lazy count >=2 across 3 consecutive retros) check via cross-session trend: this iter's lazy count is 0. Combined with iter 3 (lazy count 0) and iter 4 (lazy count 0), the 3-retro window for the 2026-05-12 loop reads 0/0/0. R6 gate does not fire.
