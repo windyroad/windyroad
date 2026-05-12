@@ -1,10 +1,10 @@
 # Problem 050: Assistant scope-creeps on user-flagged corrections, changing more than asked
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-08
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-05-10 per ADR 027: scope-creep affects newsletter pipeline quality at pre-publish stage, L3 Moderate; recurrence 3x in one session = Possible)
 **Effort**: M
-**WSJF**: (9 x 1.0) / 2 = 4.5
+**WSJF**: 0 (Verification Pending; excluded from dev-work ranking per ADR-022)
 
 ## Description
 
@@ -58,3 +58,13 @@ User flags the over-correction explicitly and waits for a second pass. Friction 
 ## Related
 
 Captured via /wr-itil:capture-problem on 2026-05-08 from the finalise session. Duplicate-check matched P032 and P045 by title keyword "assistant"; the matches are part of the same assistant-discipline family, not duplicates of this ticket. Expand investigation at next /wr-itil:review-problems pass.
+
+## Fix Released
+
+**Release marker:** 2026-05-12 AFK iter 3 (no project-tree commit; memory layer is outside the repo).
+
+**Fix summary:** Lever 1 of the three-lever fix shipped per the ticket's default. New feedback memory note at `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_smallest_change_satisfies_correction.md` directs the assistant, on any correction signal (FFS, "no don't", "I said X but you did Y", "FUCK", "wait", explicit reversal), to execute the smallest change that satisfies the literal correction. Do not redesign adjacent surfaces, retune neighbouring parameters, or reshape the structure around the corrected element. Each additional change beyond the literal request is its own scope-creep that costs another correction round. MEMORY.md index updated to surface the new note.
+
+The memory note follows the established three-lever template applied to P032 and P045 (assistant-discipline family): ship lever 1 (memory) first; defer lever 2 (CLAUDE.md amendment) until recurrence persists; reserve lever 3 (UserPromptSubmit hook) for repeat surfaces. Reassessment trigger inlined in the memory note's tail: if scope-creep on corrections persists past 3 sessions after this memory note is in place, ship Lever 2 and re-evaluate the friction class against P032 + P045 to see if the meta-pattern needs a higher-leverage fix.
+
+Awaiting user verification. Verification triggers on the next correction-signal turn (FFS pattern, ADR-013 correction-signal hook fires) where the assistant executes the smallest atomic change and does NOT bundle adjacent redesigns. Compose-with-P032-and-P045 means the family is partially complete: P032 (assertion scope) + P045 (placement-claim scope) + P050 (correction-action scope). The meta-pattern "assistant infers a larger scope than the input warrants" is now covered across all three observed surfaces.
