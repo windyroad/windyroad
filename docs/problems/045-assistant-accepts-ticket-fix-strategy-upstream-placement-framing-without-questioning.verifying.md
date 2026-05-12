@@ -1,10 +1,14 @@
 # Problem 045: Assistant accepts a ticket's Fix Strategy framing about where upstream work should land, without questioning whether the work belongs upstream at all
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-02
 **Priority**: 12 (Significant). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: M
 **WSJF**: 6.0 = (12 x 1.0) / 2
+
+## Fix Released
+
+Lever 1 of the three-lever fix completed on 2026-05-12 (AFK iter 6). Lever 1 per the ticket is "memory file plus `CLAUDE.md` 'Verify before asserting' extension". Memory file `feedback_verify_upstream_placement_before_propagating.md` shipped 2026-05-02; the second half (CLAUDE.md extension) shipped this iter as a new paragraph appended to the existing `# Verify before asserting` section, sibling to the P032 paragraph and mirroring its shape (trigger condition + verify-two-things + cost framing + memory-file reference). The two verification questions named: (a) does the proposed home's domain match the work's domain? (b) is this project in a position to place work there? The note also names the parroting anti-pattern explicitly. Architect ALIGNED (no new ADR required; sibling-shape extension of the existing P032 pattern). JTBD PASS (internal agent-discipline note, no persona/screen impact). Levers 2 (manage-problem review-path placement-verification check) and 3 (work-problems Step 5 iter-prompt instruction) remain deferred per the ticket's default until pattern recurrence justifies them. Verification triggers on the next AFK iteration or interactive session that processes a ticket with upstream-placement prose: did the worker pause and verify domain fit and placement authority, or did it parrot the framing? Reassessment if scope-creep recurs past 3 sessions.
 
 ## Description
 
