@@ -85,3 +85,4 @@ Single-file fix; no behavioral change for README orderings that currently work; 
 - P045 (assistant accepts ticket Fix Strategy upstream-placement framing without questioning): discipline applied to classify the fix surface.
 - `~/.claude/plugins/cache/windyroad/wr-itil/0.23.1/scripts/reconcile-readme.sh:89` (the fix site).
 - Live example: iter 2 (2026-05-02) reported false-positive STALE for P031; workaround was section-ordering reorder in commit 8352016.
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
