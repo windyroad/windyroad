@@ -94,6 +94,14 @@ Total: ~3 hours end-to-end across one focused session.
 - [ ] Prototype `scripts/fetchers/playwright-newsroom.mjs` against OpenAI first, measure fetch time.
 - [ ] Extend SKILL step 2 with the fallback logic once the walking skeleton works.
 
+## Dependencies
+
+- **Blocks**: P010
+- **Blocked by**: (none)
+- **Composes with**: (none)
+
+P010 (source-tier fetch failures for OpenAI and Reddit) cannot close until this Playwright helper ships. Captured 2026-05-12 per the P076 transitive-effort rule to formalise the dependency that the ticket prose has documented since 2026-04-25.
+
 ## Related
 
 - P010 (OpenAI 403 + Reddit block, original ticket flagging the issue). This ticket is the implementation follow-up; P010 may close when P014 ships.

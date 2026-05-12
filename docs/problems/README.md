@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-12 **README reconciled** (1 drift entry corrected): P055 (AFK iter subprocess `Stream idle timeout` API errors recur at high rate) added to WSJF Rankings as a deferred-WSJF placeholder (1.5, Severity 3, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
+> Last reviewed: 2026-05-12 P010 (source-tier fetch blocked by OpenAI bot protection + Reddit tool-layer refusal) re-rated 9.0 to 4.5 via P076 transitive-effort rule. Added formal `## Dependencies` block to P010 (Blocked by P014) and mirror `Blocks: P010` to P014. Effort propagates marginal M to transitive L through the P014 dependency since the Reddit half of P010 has no in-pipeline workaround absent P014's Playwright helper. Honest WSJF prevents P010 out-ranking its blocker. Ticket order at the 4.5 tier: P010 (Known Error, L) before P050 (Open, M) per the canonical tie-break ladder.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported |
 |------|-----|-------|----------|--------|--------|----------|
-| 9.0  | P010 | Source fetch blocks OpenAI and Reddit | 9 (Moderate) | Known Error | M | 2026-04-17 |
 | 8.0  | P021 | architect-mark-reviewed strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL | 8 (Minor) | Open | S | 2026-04-26 |
 | 8.0  | P028 | risk-scorer 30-min TTL expired during long-running orchestrator turns | 8 (Minor) | Open | S | 2026-04-26 |
 | 8.0  | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn\'t pre-created the label | 8 (Minor) | Open | S | 2026-04-27 |
@@ -23,6 +22,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P051 | Newsletter tier-1 source list misses US regulatory-news outlets | 12 (Moderate) | Open | M | 2026-05-08 |
 | 6.0  | P052 | Ticket-family completeness check missing before declaring friction done | 12 (Moderate) | Open | M | 2026-05-10 |
 | 6.0  | P053 | /wr-newsletter formal gate sequence missing a cog-a11y step | 12 (Moderate) | Open | M | 2026-05-10 |
+| 4.5  | P010 | Source fetch blocks OpenAI and Reddit | 9 (Moderate) | Known Error | L (transitive via P014) | 2026-04-17 |
 | 4.5  | P050 | Assistant scope-creeps on user-flagged corrections, changing more than asked | 9 (Moderate) | Open | M | 2026-05-08 |
 | 4.0  | P029 | work-problems iteration boundary leaves run-retro BRIEFING.md edits uncommitted | 8 (Minor) | Open | M | 2026-04-26 |
 | 3.0  | P001 | Next.js build hangs locally | 6 (Minor) | Open | M | 2026-04-14 |

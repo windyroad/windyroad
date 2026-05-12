@@ -4,9 +4,10 @@
 **Reported**: 2026-04-17
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; OpenAI workaround applied; Reddit gap tracked in P014)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
-**Effort**: M (OpenAI Google News workaround landed in SKILL.md 2026-04-25; Reddit Playwright work captured in P014; closure waits on P014)
-**WSJF**: (9 x 2.0) / 2 = 9.0
+**Effort**: L (transitive via P014, see Dependencies; marginal M for the Reddit cutover work in this ticket once the helper exists) <!-- transitive: L via P014 -->
+**WSJF**: (9 x 2.0) / 4 = 4.5
 **Re-rated 2026-04-25 (post-fix)**: Impact narrowed Significant (4) to Moderate (3) after OpenAI Google News RSS workaround landed in SKILL.md step 2. Tier-1 OpenAI coverage now flows every run; the residual gap is Reddit (developer persona's tier-2), which mostly affects Tokens Spent (zero subscribers as of 2026-04-25) until P014 ships. Likelihood unchanged at Possible (3) (Reddit miss recurs every weekly run). Score 12 to 9 reflects the OpenAI fix; full closure still gated on P014.
+**Re-rated 2026-05-12 (P076 transitive)**: Effort marginal M to transitive L. Closure of P010 is strictly blocked on P014 (Playwright helper shipping); the Reddit workaround does not exist absent P014. Formalised the dependency via `## Dependencies` block below; transitive-effort rule (P076) propagates P014's L upward. WSJF 9.0 to 4.5 reflects the honest cost-to-deliver and prevents this ticket from out-ranking its blocker.
 
 ## Description
 
@@ -70,6 +71,14 @@ OpenAI has a workable bypass (Google News RSS scoped `site:openai.com`). Reddit 
 - [ ] Update SKILL.md step 2 to invoke the helper once written (deferred to P014)
 - [ ] Test whether the helper works reliably across sessions (headless Chromium + Cloudflare interactions) (deferred to P014)
 - [x] Consider other blocked sources surfaced during the first run (US FTC returned 403, OECD returned 404) and apply the same fix pattern (documented in SKILL.md step 2 footer 2026-04-25 with the bot-protection-vs-tool-layer-refusal pattern; concrete URL swaps deferred until those failures recur on a non-tier-3 source or someone has bandwidth to apply the FTC/OECD-specific Google News queries)
+
+## Dependencies
+
+- **Blocks**: (none)
+- **Blocked by**: P014
+- **Composes with**: (none)
+
+Closure of P010 is strictly blocked on P014 (Playwright helper for tool-blocked sources) shipping. The Reddit half of P010's symptom set has no in-pipeline workaround; only P014's helper can land a fix. OpenAI workaround already shipped 2026-04-25 (Google News RSS scoped to `site:openai.com`), so that half is functionally addressed but the ticket cannot close until both source-tier symptoms clear. Transitive-effort rule (P076) propagates P014's L upward; see WSJF re-rate dated 2026-05-12 above.
 
 ## Related
 
