@@ -88,7 +88,7 @@ Total: ~3 hours end-to-end across one focused session.
 
 ### Investigation Tasks
 
-- [ ] Verify Playwright headed-mode fetch of `https://openai.com/news/` succeeds locally (manual confirmation before writing code).
+- [x] Verify Playwright headed-mode fetch of `https://openai.com/news/` succeeds locally (manual confirmation before writing code). **Verified 2026-05-13** via `/tmp/openai-news-headed-check.mjs` (headed Chromium 1.59.1, macOS user-agent, 1280x900 viewport). HTTP 200. Page rendered the canonical OpenAI News landing: "All" headline, Company/Research/Product/Safety/Engineering/Security/Global-Affairs/AI-Adoption tag filters, three current article tiles (OpenAI Campus Network, OpenAI Deployment, Running Codex safely at OpenAI). No bot-protection challenge, no 403, no captcha. Tom visually confirmed `looks good` on the live browser window. Screenshot at `/tmp/openai-news-headed-screenshot.png`. IT-1 unblocked. The M-effort helper scope is viable. Subsequent ITs (Reddit access, cache location, prototype fetcher, SKILL step 2 fallback) are now AFK-progressable.
 - [ ] Confirm Reddit old.reddit.com or .json JSON listings are accessible via Playwright without authentication.
 - [ ] Decide on cache location: `src/newsletters/cache/` (tracked but gitignored?) vs `.cache/newsletters/` (fully gitignored).
 - [ ] Prototype `scripts/fetchers/playwright-newsroom.mjs` against OpenAI first, measure fetch time.
