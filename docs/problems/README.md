@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-12 Batch transition (5 tickets) Known Error to Verification Pending per ADR-022 after push:watch drained 12 commits to `origin/master`: P034 (URL verification gate, commit `4dd2485`), P037 (cover-image step rewrite, `586c21e`), P039 (PASS_WITH_AUTHOR_OVERRIDES verdict variant, `fcd87e4`), P043 (three-lens named_action lens-tightening, `219377b`), P044 (templated cover-image skill, `95cd9c6`). All 5 ride the same /wr-itil:transition-problems batch commit per ADR-014 batch grain. P024 remains in Verification Pending with the `.claude/agents/**` A/B carve-out (transitioned earlier today, commit `4ffccac`). Iter 2 of today's AFK loop hit stream-idle-timeout API errors twice; orchestrator main turn completed the iter-2 work + the batch transition manually per ADR-013 Rule 1 interactive recovery. iter-1 + iter-2-retry JSON envelopes preserved at `.afk-run-state/resolved/`.
+> Last reviewed: 2026-05-12 **README reconciled** (1 drift entry corrected): P055 (AFK iter subprocess `Stream idle timeout` API errors recur at high rate) added to WSJF Rankings as a deferred-WSJF placeholder (1.5, Severity 3, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -31,6 +31,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3.0  | P048 | /wr-itil:manage-problem Step 5 P094 README refresh contract bypassed on bulk-creation paths | 6 (Minor) | Open | M | 2026-05-02 |
 | 2.0  | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 |
 | 1.5  | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 (Medium) | Open | M | 2026-05-12 |
+| 1.5  | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 (Medium) | Open | M | 2026-05-12 |
 
 ## Verification Queue
 
