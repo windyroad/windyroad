@@ -42,3 +42,4 @@ Should use `${CLAUDE_PROJECT_DIR}/docs/jtbd` or resolve to absolute via `git rev
 ## Related
 
 - 2026-05-01 retro turn (hook regression observed mid-retro)
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
