@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-12 P010 (source-tier fetch blocked by OpenAI bot protection + Reddit tool-layer refusal) re-rated 9.0 to 4.5 via P076 transitive-effort rule. Added formal `## Dependencies` block to P010 (Blocked by P014) and mirror `Blocks: P010` to P014. Effort propagates marginal M to transitive L through the P014 dependency since the Reddit half of P010 has no in-pipeline workaround absent P014's Playwright helper. Honest WSJF prevents P010 out-ranking its blocker. Ticket order at the 4.5 tier: P010 (Known Error, L) before P050 (Open, M) per the canonical tie-break ladder.
+> Last reviewed: 2026-05-12 Iter 3 review pass: no Priority/Effort/WSJF changes versus iter 1. Iter 2 (commit `31ffd77`) appended the upstream-pending marker to P042 (jtbd-enforce-edit hook relative-path bug), joining P021/P028/P033 with formal `## Reported Upstream` sections. The entire 8.0 tier now carries upstream markers and is classified upstream-blocked by /wr-itil:work-problems for non-interactive AFK iters. Effective top-of-queue for AFK runs: 6.0 tier. P014 (Playwright helper, Known Error, L) leads per the Known-Error-first rung, then P022/P027/P047/P049 (Open, S) by Effort-asc + Reported-asc tie-break ladder, then P046/P051/P052/P053 (Open, M). Verification Queue surfaces 24 entries; AFK fallback per Step 4 records the queue without firing AskUserQuestion (P130 transient user).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
