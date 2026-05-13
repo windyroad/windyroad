@@ -1,6 +1,6 @@
 # Problem 059: `npm run push:watch` exits 141 (SIGPIPE) on successful push, skipping post-push pipeline-watch
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-13
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred, re-rate at next /wr-itil:review-problems)
 **Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
