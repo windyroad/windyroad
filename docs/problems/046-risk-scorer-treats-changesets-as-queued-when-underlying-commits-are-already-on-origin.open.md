@@ -95,3 +95,13 @@ In the orchestrator skills (`/wr-itil:work-problems` Step 6.5, `/wr-itil:manage-
 - `~/.claude/plugins/cache/windyroad/wr-risk-scorer/` (current cached plugin location for the scorer subagent and its rubric, for reference).
 
 **Upstream placement confirmed 2026-05-13** (user direction via AskUserQuestion batch-2 answer 1): file upstream via `/wr-itil:report-upstream` next interactive session. Fix Strategy default (upstream wr-risk-scorer subagent-prompt extension per P045 discipline applied in the ticket body) stands. Ticket is in `upstream-blocked` state for AFK iters until upstream lands.
+
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/121 (2026-05-13)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/121
+- **Reported**: 2026-05-13
+- **Template used**: problem-report.yml (problem-shaped, per ADR-033 primary classifier)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes (issue body contains downstream ticket reference)
