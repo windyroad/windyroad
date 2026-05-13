@@ -68,11 +68,11 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 # Check 3: Pushed but unreleased commits without changesets
 UNRELEASED=$(git rev-list --count origin/publish..origin/master 2>/dev/null || echo "0")
 if [ "$UNRELEASED" -gt 0 ]; then
-    CHANGESET_COUNT=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ')
+    CHANGESET_COUNT=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ' || true)
     if [ "$CHANGESET_COUNT" -eq 0 ]; then
         SHOULD_NUDGE=false
         AGE_DETAIL=""
-        OLDEST_UNRELEASED=$(git log --format='%aI' --reverse origin/publish..origin/master 2>/dev/null | head -1)
+        OLDEST_UNRELEASED=$(git log --format='%aI' --reverse origin/publish..origin/master 2>/dev/null | head -1 || true)
         if [ -n "$OLDEST_UNRELEASED" ]; then
             UNRELEASED_AGE_HOURS=$(python3 -c "
 from datetime import datetime, timezone
@@ -188,7 +188,7 @@ for i in $(seq 1 30); do
     --branch master \
     --limit 10 \
     --json databaseId,headSha \
-    --jq ".[] | select(.headSha == \"$COMMIT_SHA\") | .databaseId" 2>/dev/null | head -1)
+    --jq ".[] | select(.headSha == \"$COMMIT_SHA\") | .databaseId" 2>/dev/null | head -1 || true)
   [ -n "$RUN_ID" ] && break
   printf '.'
   sleep 2
@@ -210,7 +210,7 @@ fi
 
 # ── 4. Test deploy URL ────────────────────────────────────────────────────────
 TEST_URL=$(netlify api listSiteDeploys --data "{\"site_id\": \"$SITE_ID\", \"per_page\": 20}" 2>/dev/null | \
-  jq -r --arg t "main-$COMMIT_SHA" '.[] | select(.title == $t) | .deploy_url' | head -1)
+  jq -r --arg t "main-$COMMIT_SHA" '.[] | select(.title == $t) | .deploy_url' | head -1 || true)
 echo ""
 [ -n "$TEST_URL" ] && [ "$TEST_URL" != "null" ] \
   && echo "✓ Test deploy:  $TEST_URL" \
@@ -222,7 +222,7 @@ PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number // empty')
 PR_URL=$(echo "$PR_JSON" | jq -r '.[0].url // empty')
 
 if [ -z "$PR_NUMBER" ]; then
-  CHANGESET_COUNT=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ')
+  CHANGESET_COUNT=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ' || true)
   echo ""
   if [ "$CHANGESET_COUNT" -eq 0 ]; then
     echo "No pending changesets. Run \`npx changeset\` to describe what's shipping."
@@ -240,7 +240,7 @@ echo ""
 # ── 6. Find and watch release-pr-preview ─────────────────────────────────────
 # Only wait if changeset files exist. If the release PR is from a previous
 # changeset that was since removed, no preview pipeline will trigger.
-CURRENT_CHANGESETS=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ')
+CURRENT_CHANGESETS=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -20 | wc -l | tr -d ' ' || true)
 if [ "$CURRENT_CHANGESETS" -eq 0 ]; then
   echo "Release PR exists but no changeset files found. Skipping preview pipeline wait."
   echo ""
@@ -281,7 +281,7 @@ fi
 
 # ── 7. Preview deploy URL ─────────────────────────────────────────────────────
 PREVIEW_URL=$(netlify api listSiteDeploys --data "{\"site_id\": \"$SITE_ID\", \"per_page\": 20}" 2>/dev/null | \
-  jq -r --arg t "release-pr-$PR_NUMBER" '.[] | select(.title == $t) | .deploy_url' | head -1)
+  jq -r --arg t "release-pr-$PR_NUMBER" '.[] | select(.title == $t) | .deploy_url' | head -1 || true)
 
 echo ""
 [ -n "$PREVIEW_URL" ] && [ "$PREVIEW_URL" != "null" ] \
