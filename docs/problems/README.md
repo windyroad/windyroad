@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-13 Review pass (pragmatic, scoped to fold new captures). P056 (manage-problem ADR-014 misattribution), P057 (no-em-dash.sh Edit-tool whitelist port), and P058 (architect+JTBD retros exclusion) added to WSJF Rankings as deferred-WSJF placeholders (P056: 1.5, Severity 3, Effort M; P057: 3.0, Severity 3, Effort S; P058: 3.0, Severity 3, Effort S). Full per-ticket re-rate deferred (23 dev-work tickets, requires deep read per ticket). 28-ticket Verification Queue prompt skipped per ADR-013 Rule 6 fail-safe at end-of-loop wall-clock; queue recorded as-is for next interactive session. No auto-transitions Open to Known Error fired this pass. Reconciliation contract per P118 + ADR-014 amended.
+> Last reviewed: 2026-05-13 **README reconciled** (1 drift entry corrected): P059 (`npm run push:watch` exits 141 (SIGPIPE) on successful push) added to WSJF Rankings as a deferred-WSJF placeholder (1.5, Severity 3, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -32,6 +32,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5  | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 (Medium) | Open | M | 2026-05-12 |
 | 1.5  | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 (Medium) | Open | M | 2026-05-12 |
 | 1.5  | P056 | manage-problem SKILL.md misattributes ADR-014 to single-commit governance in 6+ blocks | 3 (Medium) | Open | M | 2026-05-13 |
+| 1.5  | P059 | `npm run push:watch` exits 141 (SIGPIPE) on successful push, skipping post-push pipeline-watch | 3 (Medium) | Open | M | 2026-05-13 |
 
 ## Verification Queue
 
