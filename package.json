@@ -15,7 +15,8 @@
     "changeset:version": "changeset version",
     "deps:check": "dry-aged-deps --check",
     "push:watch": "bash scripts/push-watch.sh",
-    "release:watch": "bash scripts/release-watch.sh"
+    "release:watch": "bash scripts/release-watch.sh",
+    "fetch:newsroom": "node scripts/fetchers/playwright-newsroom.mjs"
   },
   "dependencies": {
     "@microsoft/clarity": "^1.0.2",
