@@ -41,6 +41,41 @@ export function parseArgs(argv) {
   return parsed;
 }
 
+const ISO_TIMESTAMP_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})$/;
+
+export function validateCacheEntry(entry) {
+  if (!entry || typeof entry !== 'object') {
+    throw new Error('cache entry must be an object');
+  }
+  if (typeof entry.source !== 'string' || entry.source.length === 0) {
+    throw new Error('source must be a non-empty string');
+  }
+  if (typeof entry.fetched_at !== 'string' || !ISO_TIMESTAMP_PATTERN.test(entry.fetched_at)) {
+    throw new Error('fetched_at must be an ISO 8601 timestamp');
+  }
+  if (!Array.isArray(entry.items)) {
+    throw new Error('items must be an array');
+  }
+  entry.items.forEach((item, index) => {
+    if (!item || typeof item !== 'object') {
+      throw new Error(`item[${index}] must be an object`);
+    }
+    if (typeof item.title !== 'string' || item.title.length === 0) {
+      throw new Error(`item[${index}].title must be a non-empty string`);
+    }
+    if (typeof item.url !== 'string' || !/^https?:\/\//.test(item.url)) {
+      throw new Error(`item[${index}].url must start with http:// or https://`);
+    }
+    if (typeof item.date !== 'string') {
+      throw new Error(`item[${index}].date must be a string`);
+    }
+    if (typeof item.summary !== 'string') {
+      throw new Error(`item[${index}].summary must be a string`);
+    }
+  });
+  return entry;
+}
+
 export function buildCacheEntry({ source, items, now = new Date() }) {
   if (!source) {
     throw new Error('source is required');
@@ -48,11 +83,12 @@ export function buildCacheEntry({ source, items, now = new Date() }) {
   if (!Array.isArray(items)) {
     throw new Error('items must be an array');
   }
-  return {
+  const entry = {
     source,
     fetched_at: now.toISOString(),
     items,
   };
+  return validateCacheEntry(entry);
 }
 
 const OPENAI_CATEGORIES = [
@@ -195,13 +231,27 @@ async function main(argv) {
   });
   const page = await context.newPage();
 
+  const runFetch = async () => {
+    if (source === 'openai') {
+      return await fetchOpenAINews(page);
+    }
+    if (source === 'reddit-locallama' || source === 'reddit-ml') {
+      return await fetchRedditTop(page, SOURCE_URLS[source]);
+    }
+    return [];
+  };
+
   let items = [];
   let error = null;
   try {
-    if (source === 'openai') {
-      items = await fetchOpenAINews(page);
-    } else if (source === 'reddit-locallama' || source === 'reddit-ml') {
-      items = await fetchRedditTop(page, SOURCE_URLS[source]);
+    items = await runFetch();
+    if (items.length === 0) {
+      // P014d: retry once on transient zero-items result.
+      // Possible causes: slow render, network hiccup, transient DOM lazy-load lag.
+      // Do NOT retry on thrown errors (those propagate to the catch below).
+      console.error('zero items on first attempt; waiting 2s then retrying once (P014d)');
+      await page.waitForTimeout(2000);
+      items = await runFetch();
     }
   } catch (err) {
     error = err;

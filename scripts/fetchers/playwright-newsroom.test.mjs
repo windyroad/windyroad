@@ -5,6 +5,7 @@ import {
   cacheFilePath,
   cleanOpenAITitle,
   buildRedditItem,
+  validateCacheEntry,
   SUPPORTED_SOURCES,
 } from './playwright-newsroom.mjs';
 
@@ -105,6 +106,85 @@ describe('buildRedditItem', () => {
         commentCount: '1',
       }),
     ).toThrow(/postTitle is required/);
+  });
+});
+
+describe('validateCacheEntry (P014d)', () => {
+  const goodEntry = {
+    source: 'openai-news',
+    fetched_at: '2026-05-13T09:00:00.000Z',
+    items: [
+      {
+        title: 'Some title',
+        url: 'https://openai.com/index/something',
+        date: '2026-05-12',
+        summary: 'Research',
+      },
+    ],
+  };
+
+  it('returns the entry when shape is valid', () => {
+    expect(validateCacheEntry(goodEntry)).toBe(goodEntry);
+  });
+
+  it('accepts an empty items array (zero-item runs are valid)', () => {
+    const empty = { ...goodEntry, items: [] };
+    expect(validateCacheEntry(empty)).toBe(empty);
+  });
+
+  it('rejects a missing source field', () => {
+    const bad = { ...goodEntry, source: undefined };
+    expect(() => validateCacheEntry(bad)).toThrow(/source must be a non-empty string/);
+  });
+
+  it('rejects a non-ISO fetched_at', () => {
+    const bad = { ...goodEntry, fetched_at: 'yesterday' };
+    expect(() => validateCacheEntry(bad)).toThrow(/fetched_at must be an ISO 8601 timestamp/);
+  });
+
+  it('rejects items that is not an array', () => {
+    const bad = { ...goodEntry, items: { not: 'array' } };
+    expect(() => validateCacheEntry(bad)).toThrow(/items must be an array/);
+  });
+
+  it('rejects an item missing title', () => {
+    const bad = {
+      ...goodEntry,
+      items: [{ url: 'https://x.com', date: '2026-05-12', summary: '' }],
+    };
+    expect(() => validateCacheEntry(bad)).toThrow(/item\[0\]\.title must be a non-empty string/);
+  });
+
+  it('rejects an item with a non-http URL', () => {
+    const bad = {
+      ...goodEntry,
+      items: [{ title: 'x', url: 'not-a-url', date: '2026-05-12', summary: '' }],
+    };
+    expect(() => validateCacheEntry(bad)).toThrow(/item\[0\]\.url must start with http/);
+  });
+
+  it('reports the index of the offending item in multi-item arrays', () => {
+    const bad = {
+      ...goodEntry,
+      items: [
+        { title: 'good', url: 'https://x.com', date: '2026-05-12', summary: '' },
+        { title: 'good2', url: 'https://y.com', date: '2026-05-13', summary: '' },
+        { title: '', url: 'https://z.com', date: '2026-05-13', summary: '' },
+      ],
+    };
+    expect(() => validateCacheEntry(bad)).toThrow(/item\[2\]\.title must be a non-empty string/);
+  });
+});
+
+describe('buildCacheEntry validates the result (P014d)', () => {
+  it('throws if a malformed item slips into items', () => {
+    expect(() =>
+      buildCacheEntry({
+        source: 'openai-news',
+        items: [{ title: '', url: 'https://x.com', date: '2026-05-13', summary: '' }],
+        now: new Date('2026-05-13T09:00:00Z'),
+      }),
+    ).toThrow(/item\[0\]\.title must be a non-empty string/);
   });
 });
 

@@ -1,6 +1,6 @@
 # Problem 014: OpenAI news and Reddit return 403 or block at the tool layer during `/wr-newsletter`, depriving the map of tier-1 and tier-2 signal
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-19
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = OpenAI via Google News, Reddit gap accepted; phased Playwright plan documented)
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
@@ -94,7 +94,20 @@ Total: ~3 hours end-to-end across one focused session.
 - [x] Prototype `scripts/fetchers/playwright-newsroom.mjs` against OpenAI first, measure fetch time. **Landed 2026-05-13** (P014a walking skeleton). End-to-end fetch including headless Chromium launch + 2s render settle: ~3-4s. Wrote 10 items to `.cache/newsletters/openai-news/2026-05-13.json`. Items have canonical `openai.com/index/...` URLs (the primary value-add over the Google News RSS lander URLs), ISO dates parsed from the OpenAI tile suffix, and category (Research/Company/Product/Safety/Engineering/Security/Global Affairs/AI Adoption/Policy) captured as `summary`. Pure-function unit tests (vitest, 17 passing) cover `parseArgs`, `buildCacheEntry`, `cacheFilePath`, `cleanOpenAITitle`. Live network test is manual via `npm run fetch:newsroom -- --source=openai` per architect Q4 direction.
 - [x] Extend SKILL step 2 with the fallback logic once the walking skeleton works. **Landed 2026-05-13**: `.claude/skills/wr-newsletter/SKILL.md` OpenAI tier-1 entry now lists the ADR-029 fallback precedence as a numbered rung list (Playwright cache fresh, then Google News RSS, then `source_failures`). The "Known source gap (P014)" note was rewritten as "Known source gap (P014b)" to reflect that OpenAI is now wired and Reddit is the remaining gap.
 
-## P014a-b Status (walking skeleton + Reddit coverage landed)
+## Fix Released
+
+Released 2026-05-13 across 4 commits on local master (not yet pushed). All four sub-phases shipped in this session:
+
+- **P014a** (commit `530171f`): walking skeleton fetcher for OpenAI news, cache at `.cache/newsletters/openai-news/<date>.json`, SKILL step 2 OpenAI entry rewritten as three-rung precedence list.
+- **P014b** (commit `c2aa2db`): Reddit coverage for r/LocalLLaMA + r/MachineLearning via `shreddit-post` web-component HTML scrape. SKILL step 2 Reddit entries rewritten as three-rung precedence lists.
+- **P014c** (this commit): SKILL step 2 auto-invokes the fetcher via `Bash npm run fetch:newsroom -- --source=<X>` when the cache is missing or stale, rather than requiring a manual pre-run.
+- **P014d** (this commit): `validateCacheEntry` JSON-shape validation gates `buildCacheEntry` output (rejects malformed source / fetched_at / items / per-item title / non-http URL / wrong types). `main` retries once after 2s wait when the first fetch returns zero items (transient slow-render or DOM lazy-load lag).
+
+Awaiting user verification on next `/wr-newsletter` prep+finalise cycle. Expected verification signals: tier-1 OpenAI items surface from the cache with canonical `openai.com/index/...` URLs (not Google News landers); r/LocalLLaMA + r/MachineLearning items surface in the tier-2 candidate set with `<score> upvotes, <count> comments` summaries; no `source_failures` entries for `openai-news`, `reddit-locallama`, or `reddit-machinelearning`; the SKILL step 2 auto-invoke path produces a `wrote N items to ...` log line during the run.
+
+Unblocks P010 (source-tier fetch failures): P014 was the documented prerequisite per the P010 / P014 cross-reference. P010 may now follow the same Known Error → Verification Pending transition once exercised in a newsletter run.
+
+## P014a-d Status (all phases landed)
 
 P014a (walking skeleton, OpenAI) shipped 2026-05-13:
 
@@ -113,10 +126,17 @@ P014b (Reddit coverage) shipped 2026-05-13:
 - SKILL step 2 Reddit entries rewritten as three-rung precedence lists (cache fresh, no RSS fallback for Reddit, then `source_failures` per tier-2 continue-on-fail policy).
 - Live end-to-end smoke tests: 10 items each from r/LocalLLaMA and r/MachineLearning with canonical permalinks, ISO dates, and `<score> upvotes, <count> comments` summary.
 
-Remaining phases (ticket stays Known Error until both ship):
+P014c (auto-invoke fallback smarts) shipped 2026-05-13:
 
-- **P014c**: Fallback smarts (SKILL step 2 auto-invokes the fetcher on WebFetch 403 / Reddit refusal rather than requiring manual `npm run fetch:newsroom`) (~30 min).
-- **P014d**: JSON schema validation + retry-once-on-transient-failure (~30 min).
+- SKILL.md step 2 OpenAI block: rung 2 inserted between cache-read and RSS-fallback. Rung 2 runs `Bash npm run fetch:newsroom -- --source=openai` to populate the cache, then retries rung 1.
+- SKILL.md step 2 Reddit blocks (r/LocalLLaMA + r/MachineLearning): rung 2 inserted between cache-read and `source_failures`. Rung 2 runs `Bash npm run fetch:newsroom -- --source=<reddit-locallama|reddit-ml>`.
+- No retry within the same SKILL run; exit code 2 (zero items) and non-zero (Playwright failure) advance to the next rung.
+
+P014d (schema validation + retry-once-on-transient-failure) shipped 2026-05-13:
+
+- `validateCacheEntry` exported as a pure helper; called from `buildCacheEntry` so any malformed cache writes throw before the JSON lands on disk. Validates source non-empty, fetched_at ISO timestamp, items array, each item has title non-empty, url starting with http(s), date string, summary string.
+- `main` orchestrator retries the fetch once after a 2s wait when the first attempt returns zero items. The retry runs in the same browser context (cheaper than a fresh launch; works for slow-render and lazy-load lag).
+- 9 new vitest cases for the validation surface (33 tests total now passing across the file).
 
 ## Dependencies
 
