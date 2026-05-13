@@ -67,4 +67,12 @@ The architect-enforce-edit + jtbd-enforce-edit hooks maintain an exclusion list 
 
 (captured via inline-Write during 2026-05-12 AFK work-problems loop wrap-up; user-directed via AskUserQuestion batch-1 "Add docs/retros/ to exclusion list"; placement-pending verification before propagating to upstream report; expand at next investigation)
 
-(Upstream report pending: external dependency identified, invoke /wr-itil:report-upstream when ready.)
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/120 (2026-05-13)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/120
+- **Reported**: 2026-05-13
+- **Template used**: problem-report.yml (problem-shaped, per ADR-033 primary classifier)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes (issue body contains downstream ticket reference)
