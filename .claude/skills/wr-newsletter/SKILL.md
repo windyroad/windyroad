@@ -6,7 +6,7 @@ allowed-tools: Read, Bash, WebFetch, Glob, Grep, Write, Edit, Skill, Agent, AskU
 
 # Windy Road newsletter generator
 
-Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Four review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), and editor (ADR 020). Phase boundaries (ADR 017) split the pipeline so the time-expensive work runs mid-week (prep) and Friday morning is reserved for a tier-1 refresh plus publish (finalise).
+Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Five review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), editor (ADR 020), and cognitive accessibility (P053; one-round-with-optional-remediation pass against WCAG 2.2 cognitive SC + reading-grade-level target). Phase boundaries (ADR 017) split the pipeline so the time-expensive work runs mid-week (prep) and Friday morning is reserved for a tier-1 refresh plus publish (finalise).
 
 ## Reference
 
@@ -110,7 +110,7 @@ Bind the prior-prep state for downstream steps:
 - `<prep-image-path>`: the path to the cover image generated in step 12 of the prep run, if any.
 - `<prep-source-failures>`: the list of source URLs that failed in prep.
 - `<prep-map-mutation-status>`: whether the map was mutated in prep.
-- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) for the carry-forward sections in the finalise reviews file at step 16.
+- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) for the carry-forward sections in the finalise reviews file at step 16.
 
 Continue to step 1-prime.
 
@@ -667,6 +667,42 @@ If the agent returns `EDITOR_ERROR: upstream gate returned REJECTED; editor will
 
 **Phase variant `15.25-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same persona; the edition number is carried from prep frontmatter (it does not change between phases). A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the reader-experience surface (longer read, weaker through-line, item-count overflow). If finalise has no material changes (11-prime was a no-op AND 15-prime carried the prep critic block forward), the prep-time editor block can be carried forward and 15.25-prime is a no-op. Default behaviour when in doubt: re-run.
 
+### 15.4. Cognitive accessibility gate (P053)
+
+Invoke the `cognitive-accessibility` subagent on the in-progress brief body. The agent reviews reading-level (target Grade 10 or lower for the Engineering Leader audience; tier-2 stories of technical depth may exceed Grade 10 without failing), plain-language clarity, unusual-words density, abbreviation/acronym handling, sentence length, and the WCAG 2.2 cognitive success criteria (3.1.5 Reading Level, 3.1.3 Unusual Words, 3.1.4 Abbreviations, 3.1.4 Abbreviations, 3.2.4 Consistent Identification).
+
+**One-round pass with optional remediation** (per the P053 default proposal confirmed 2026-05-13). No iteration loop: the agent fires once, returns findings, and the brief either gets remediated by Tom (or by a subsequent edit pass) or proceeds with the findings surfaced to the Tom-summary.
+
+**Skip-on-upstream-REJECTED.** If step 15 sw-critic returned `VERDICT: REJECTED`, skip step 15.4 entirely. Reviewing reading-level on an analytically-rejected draft is not useful. Recorded in the saved file as `<cog-a11y block> = "N/A: sw-critic returned REJECTED"`. A `PASS_WITH_AUTHOR_OVERRIDES` from step 15 does NOT skip 15.4 (variant is publish-ready per ADR 025).
+
+```
+Agent subagent_type: cognitive-accessibility
+prompt: "Review the in-progress newsletter brief body for cognitive accessibility.
+
+artifact_path: <absolute path to the in-progress draft>
+persona: <leader|developer>
+edition_number: <N from step 11>
+target_reading_level: Grade 10 (leader) or Grade 11 (developer)
+
+Return:
+- Reading grade level (Flesch-Kincaid or equivalent)
+- Findings by severity (critical / medium / advisory) with line citations and suggested fixes
+- WCAG 2.2 SC findings (3.1.3, 3.1.4, 3.1.5) if applicable
+- One-line verdict: PASS / NEEDS_REVISION / NEEDS_REVISION_OPTIONAL
+
+PASS = no critical findings AND grade level at or below target.
+NEEDS_REVISION = any critical finding OR grade level more than 2 above target.
+NEEDS_REVISION_OPTIONAL = grade level 1-2 above target OR medium findings present."
+```
+
+Capture the agent's full prose output verbatim. Parse the trailing verdict line.
+
+If `COGA_VERDICT: NEEDS_REVISION`: save the draft with the block, surface the verdict prominently in the Tom-summary (lead with the failing findings + grade level + suggested fixes), and proceed to step 15.5. The agent does not auto-rewrite; Tom decides whether to revise the brief or override per the same pattern as the editor gate.
+
+If `COGA_VERDICT: NEEDS_REVISION_OPTIONAL` or `PASS`: proceed to step 15.5. Optional-revision findings still surface in the Tom-summary but do not block.
+
+**Phase variant `15.4-prime` (phase=finalise only):** re-run only if the finalise-time brief body changed since prep. If 11-prime was a no-op (no new candidates from step 2-prime), carry forward the prep-time cog-a11y block from `<prep-reviews-path>` without re-invocation. If 11-prime introduced new items or restructured framing, re-run the agent against the finalise body. Default behaviour when in doubt: re-run.
+
 ### 15.5. Draft the LinkedIn post
 
 Skip this step when `phase=prep`. The LinkedIn post is the publication-day artifact; drafting it during prep would burn tokens on a draft that finalise will likely re-do once late-breaking news lands.
@@ -748,6 +784,10 @@ phase: prep
 ## Editor Review
 
 <editor block from step 15.25, or "N/A: sw-critic returned REJECTED" if step 15.25 was skipped>
+
+## Cognitive Accessibility Review
+
+<cog-a11y block from step 15.4, or "N/A: sw-critic returned REJECTED" if step 15.4 was skipped>
 
 ## Critic Review: Wardley Artifacts
 
@@ -836,6 +876,14 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
    ## Editor Review (prep)
 
    <editor block carried from prep .reviews.md>
+
+   ## Cognitive Accessibility Review (finalise)
+
+   <cog-a11y block from step 15.4-prime, or "N/A: sw-critic returned REJECTED" if step 15.4-prime was skipped, or "N/A: carried from prep (no material change)" if 15.4-prime was a no-op>
+
+   ## Cognitive Accessibility Review (prep)
+
+   <cog-a11y block carried from prep .reviews.md>
 
    ## Critic Review: Wardley Artifacts
 

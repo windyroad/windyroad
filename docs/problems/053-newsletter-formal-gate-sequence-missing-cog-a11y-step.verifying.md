@@ -1,6 +1,6 @@
 # Problem 053: /wr-newsletter formal gate sequence missing a cog-a11y step
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-10
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: missing cog-a11y step risks Grade 12+ prose reaching readers without inline workaround; pre-publish pipeline disruption L3 Moderate, Likely without the formal step)
 **Effort**: M
@@ -36,10 +36,22 @@ Inline invocation of `cognitive-accessibility` agent after editor gate. Manual; 
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Decide gate placement. Default proposal: insert after editor (ADR 020) and before final write at SKILL.md step 15.5 or step 16. The cog-a11y check operates on near-final prose, so placing it after the four substantive gates makes sense; placing it before content-risk would force re-runs of content-risk after remediation.
-- [ ] Decide round-cap discipline. The four existing gates have a 3-round cap per ADR 016. Cog-a11y findings tend to be deterministic (Grade level, unusual words, abbreviations); a 1-round pass with optional remediation may be sufficient.
-- [ ] Decide finalise vs prep gate. Default: run on prep (so cog-a11y findings drive the prep-state remediation) and re-run on finalise only if the body has changed since prep (per the existing finalise step contract).
-- [ ] Reproduction test: after the new step ships, a re-run on the 2026-05-08 brief draft should reproduce the 20 findings without inline workaround.
+- [x] Decide gate placement. **Decided 2026-05-13**: step 15.4, between editor (15.25) and LinkedIn-draft (15.5), per the default proposal confirmed 2026-05-13. Avoids re-running content-risk after cog-a11y remediation.
+- [x] Decide round-cap discipline. **Decided 2026-05-13**: 1-round pass with optional remediation per the default proposal. Verdict shape: PASS / NEEDS_REVISION / NEEDS_REVISION_OPTIONAL. Critical findings or grade level >12 produce NEEDS_REVISION; grade 10-12 or medium findings produce NEEDS_REVISION_OPTIONAL.
+- [x] Decide finalise vs prep gate. **Decided 2026-05-13**: phase variant 15.4-prime mirrors the existing 15.25-prime pattern (re-run on finalise only if 11-prime introduced material changes; otherwise carry forward the prep-time block).
+- [ ] Reproduction test: after the new step ships, a re-run on the 2026-05-08 brief draft should reproduce the 20 findings without inline workaround. (Awaiting verification on next /wr-newsletter prep+finalise cycle.)
+
+## Fix Released
+
+Released 2026-05-13 on local master (not yet pushed) in the same commit as P014's transition. Three SKILL.md edits land the cog-a11y gate:
+
+1. Step 15.4 inserted between editor (15.25) and LinkedIn-draft (15.5), invoking the `cognitive-accessibility` subagent on the in-progress brief body. Returns reading-grade-level + findings by severity (critical / medium / advisory) + WCAG 2.2 SC findings + verdict (PASS / NEEDS_REVISION / NEEDS_REVISION_OPTIONAL). Critical findings or grade >12 surface NEEDS_REVISION (block-aware: surface in Tom-summary, no auto-rewrite). Optional findings surface in Tom-summary but do not block.
+2. Phase variant 15.4-prime mirrors 15.25-prime: re-run on finalise only if 11-prime introduced material changes; otherwise carry forward the prep-time block from `<prep-reviews-path>`.
+3. Step 16 save templates updated for both phase=prep and phase=finalise to capture `## Cognitive Accessibility Review` heading. Header summary line at top of SKILL.md updated from "Four review gates" to "Five review gates".
+
+Skip-on-upstream-REJECTED honoured (per the editor gate precedent): if step 15 sw-critic returned `VERDICT: REJECTED`, step 15.4 is skipped and recorded as N/A in the saved review block. `PASS_WITH_AUTHOR_OVERRIDES` does NOT skip.
+
+Awaiting user verification on next `/wr-newsletter` prep+finalise cycle. Expected verification signal: the 2026-05-08 brief draft, re-run against the new step 15.4, reproduces the original 20 findings (8 critical, 8 medium, 4 advisory) without an inline workaround. The 1-round pass surface allows Tom to remediate or override per the editor-gate precedent.
 
 ## Dependencies
 
