@@ -4,6 +4,7 @@ import {
   buildCacheEntry,
   cacheFilePath,
   cleanOpenAITitle,
+  buildRedditItem,
   SUPPORTED_SOURCES,
 } from './playwright-newsroom.mjs';
 
@@ -29,6 +30,81 @@ describe('parseArgs', () => {
 
   it('SUPPORTED_SOURCES includes openai in P014a', () => {
     expect(SUPPORTED_SOURCES).toContain('openai');
+  });
+
+  it('SUPPORTED_SOURCES includes reddit-locallama and reddit-ml in P014b', () => {
+    expect(SUPPORTED_SOURCES).toContain('reddit-locallama');
+    expect(SUPPORTED_SOURCES).toContain('reddit-ml');
+  });
+
+  it('parseArgs accepts reddit-locallama', () => {
+    expect(parseArgs(['--source=reddit-locallama'])).toEqual({
+      source: 'reddit-locallama',
+      out: '.cache/newsletters',
+    });
+  });
+
+  it('parseArgs accepts reddit-ml', () => {
+    expect(parseArgs(['--source=reddit-ml'])).toEqual({
+      source: 'reddit-ml',
+      out: '.cache/newsletters',
+    });
+  });
+});
+
+describe('buildRedditItem', () => {
+  it('normalises shreddit-post attributes into the ADR-029 item shape', () => {
+    const item = buildRedditItem({
+      permalink: '/r/LocalLLaMA/comments/1t6pw92/collected_the_infinity_stones/',
+      postTitle: 'Collected the infinity stones',
+      createdTimestamp: '2026-05-07T22:39:57.516000+0000',
+      score: '1883',
+      commentCount: '269',
+    });
+    expect(item).toEqual({
+      title: 'Collected the infinity stones',
+      url: 'https://www.reddit.com/r/LocalLLaMA/comments/1t6pw92/collected_the_infinity_stones/',
+      date: '2026-05-07',
+      summary: '1883 upvotes, 269 comments',
+    });
+  });
+
+  it('handles posts with missing score or comment count gracefully', () => {
+    const item = buildRedditItem({
+      permalink: '/r/MachineLearning/comments/abc/test/',
+      postTitle: 'Test',
+      createdTimestamp: '2026-05-10T00:00:00.000000+0000',
+      score: '',
+      commentCount: '',
+    });
+    expect(item.title).toBe('Test');
+    expect(item.url).toBe('https://www.reddit.com/r/MachineLearning/comments/abc/test/');
+    expect(item.date).toBe('2026-05-10');
+    expect(item.summary).toBe('0 upvotes, 0 comments');
+  });
+
+  it('throws when permalink is missing', () => {
+    expect(() =>
+      buildRedditItem({
+        permalink: '',
+        postTitle: 'Test',
+        createdTimestamp: '2026-05-10T00:00:00.000000+0000',
+        score: '1',
+        commentCount: '1',
+      }),
+    ).toThrow(/permalink is required/);
+  });
+
+  it('throws when postTitle is missing', () => {
+    expect(() =>
+      buildRedditItem({
+        permalink: '/r/x/comments/y/z/',
+        postTitle: '',
+        createdTimestamp: '2026-05-10T00:00:00.000000+0000',
+        score: '1',
+        commentCount: '1',
+      }),
+    ).toThrow(/postTitle is required/);
   });
 });
 

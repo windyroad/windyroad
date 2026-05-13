@@ -2,14 +2,18 @@ import { chromium } from 'playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
-export const SUPPORTED_SOURCES = ['openai'];
+export const SUPPORTED_SOURCES = ['openai', 'reddit-locallama', 'reddit-ml'];
 
 const SOURCE_SLUGS = {
   openai: 'openai-news',
+  'reddit-locallama': 'reddit-locallama',
+  'reddit-ml': 'reddit-machinelearning',
 };
 
 const SOURCE_URLS = {
   openai: 'https://openai.com/news/',
+  'reddit-locallama': 'https://www.reddit.com/r/LocalLLaMA/top/?t=week',
+  'reddit-ml': 'https://www.reddit.com/r/MachineLearning/top/?t=week',
 };
 
 const DEFAULT_OUT = '.cache/newsletters';
@@ -87,6 +91,23 @@ export function cleanOpenAITitle(raw) {
   };
 }
 
+export function buildRedditItem({ permalink, postTitle, createdTimestamp, score, commentCount }) {
+  if (!permalink) {
+    throw new Error('permalink is required');
+  }
+  if (!postTitle) {
+    throw new Error('postTitle is required');
+  }
+  const scoreNum = parseInt(score, 10);
+  const commentsNum = parseInt(commentCount, 10);
+  return {
+    title: postTitle,
+    url: `https://www.reddit.com${permalink}`,
+    date: createdTimestamp ? createdTimestamp.slice(0, 10) : '',
+    summary: `${Number.isFinite(scoreNum) ? scoreNum : 0} upvotes, ${Number.isFinite(commentsNum) ? commentsNum : 0} comments`,
+  };
+}
+
 export function cacheFilePath(cacheDir, source, when = new Date()) {
   if (!cacheDir) {
     throw new Error('cacheDir is required');
@@ -130,12 +151,48 @@ export async function fetchOpenAINews(page) {
   });
 }
 
+export async function fetchRedditTop(page, subredditUrl) {
+  await page.goto(subredditUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  await page.waitForTimeout(2000);
+
+  // Reddit lazy-loads posts; scroll until we have >= MAX_ITEMS shreddit-post elements
+  // or until the count stops growing.
+  let lastCount = 0;
+  for (let i = 0; i < 5; i++) {
+    await page.evaluate(() => window.scrollBy(0, 2000));
+    await page.waitForTimeout(1500);
+    const count = await page.locator('shreddit-post').count();
+    if (count >= MAX_ITEMS || count === lastCount) break;
+    lastCount = count;
+  }
+
+  const rawPosts = await page.$$eval(
+    'shreddit-post',
+    (els, max) =>
+      els.slice(0, max).map((el) => ({
+        permalink: el.getAttribute('permalink') || '',
+        postTitle: el.getAttribute('post-title') || '',
+        createdTimestamp: el.getAttribute('created-timestamp') || '',
+        score: el.getAttribute('score') || '',
+        commentCount: el.getAttribute('comment-count') || '',
+      })),
+    MAX_ITEMS,
+  );
+
+  return rawPosts
+    .filter((p) => p.permalink && p.postTitle)
+    .map((p) => buildRedditItem(p));
+}
+
 async function main(argv) {
   const { source, out } = parseArgs(argv);
   const sourceSlug = SOURCE_SLUGS[source];
 
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ userAgent: USER_AGENT });
+  const context = await browser.newContext({
+    userAgent: USER_AGENT,
+    viewport: { width: 1280, height: 900 },
+  });
   const page = await context.newPage();
 
   let items = [];
@@ -143,6 +200,8 @@ async function main(argv) {
   try {
     if (source === 'openai') {
       items = await fetchOpenAINews(page);
+    } else if (source === 'reddit-locallama' || source === 'reddit-ml') {
+      items = await fetchRedditTop(page, SOURCE_URLS[source]);
     }
   } catch (err) {
     error = err;

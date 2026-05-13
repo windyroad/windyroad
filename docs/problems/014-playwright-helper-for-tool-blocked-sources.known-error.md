@@ -89,26 +89,33 @@ Total: ~3 hours end-to-end across one focused session.
 ### Investigation Tasks
 
 - [x] Verify Playwright headed-mode fetch of `https://openai.com/news/` succeeds locally (manual confirmation before writing code). **Verified 2026-05-13** via `/tmp/openai-news-headed-check.mjs` (headed Chromium 1.59.1, macOS user-agent, 1280x900 viewport). HTTP 200. Page rendered the canonical OpenAI News landing: "All" headline, Company/Research/Product/Safety/Engineering/Security/Global-Affairs/AI-Adoption tag filters, three current article tiles (OpenAI Campus Network, OpenAI Deployment, Running Codex safely at OpenAI). No bot-protection challenge, no 403, no captcha. Tom visually confirmed `looks good` on the live browser window. Screenshot at `/tmp/openai-news-headed-screenshot.png`. IT-1 unblocked. The M-effort helper scope is viable. Subsequent ITs (Reddit access, cache location, prototype fetcher, SKILL step 2 fallback) are now AFK-progressable.
-- [ ] Confirm Reddit old.reddit.com or .json JSON listings are accessible via Playwright without authentication. (P014b)
+- [x] Confirm Reddit old.reddit.com or .json JSON listings are accessible via Playwright without authentication. **Verified 2026-05-13** (P014b): the `.json` endpoint returns "blocked by network security" at both `old.reddit.com` and `www.reddit.com` (Akamai-class bot protection on the API). The modern Reddit HTML page at `www.reddit.com/r/<sub>/top/?t=week` is reachable anonymously; 2x scroll cycles load 27+ posts; `shreddit-post` web-component attributes (`permalink`, `post-title`, `created-timestamp`, `score`, `comment-count`) give clean structured data. No consent gate, no age gate, no persistent profile required. Strategy decided: HTML scrape via Playwright, not the JSON API.
 - [x] Decide on cache location. **Decided 2026-05-13**: `.cache/newsletters/<source-slug>/YYYY-MM-DD.json` per ADR-029 (out-of-band source-fetch cache for newsletter Playwright fallback). Architect direction: `.cache/` matches the existing project-root gitignored-state convention (`.afk-run-state/`, `.risk-reports/`, `.netlify`, `.next`); already gitignored at .gitignore line 49; avoids the tracked-tree-with-hidden-cache anomaly that `src/newsletters/cache/` would introduce.
 - [x] Prototype `scripts/fetchers/playwright-newsroom.mjs` against OpenAI first, measure fetch time. **Landed 2026-05-13** (P014a walking skeleton). End-to-end fetch including headless Chromium launch + 2s render settle: ~3-4s. Wrote 10 items to `.cache/newsletters/openai-news/2026-05-13.json`. Items have canonical `openai.com/index/...` URLs (the primary value-add over the Google News RSS lander URLs), ISO dates parsed from the OpenAI tile suffix, and category (Research/Company/Product/Safety/Engineering/Security/Global Affairs/AI Adoption/Policy) captured as `summary`. Pure-function unit tests (vitest, 17 passing) cover `parseArgs`, `buildCacheEntry`, `cacheFilePath`, `cleanOpenAITitle`. Live network test is manual via `npm run fetch:newsroom -- --source=openai` per architect Q4 direction.
 - [x] Extend SKILL step 2 with the fallback logic once the walking skeleton works. **Landed 2026-05-13**: `.claude/skills/wr-newsletter/SKILL.md` OpenAI tier-1 entry now lists the ADR-029 fallback precedence as a numbered rung list (Playwright cache fresh, then Google News RSS, then `source_failures`). The "Known source gap (P014)" note was rewritten as "Known source gap (P014b)" to reflect that OpenAI is now wired and Reddit is the remaining gap.
 
-## P014a Status (walking skeleton landed)
+## P014a-b Status (walking skeleton + Reddit coverage landed)
 
-P014a (walking skeleton) shipped 2026-05-13:
+P014a (walking skeleton, OpenAI) shipped 2026-05-13:
 
-- `scripts/fetchers/playwright-newsroom.mjs` (Playwright Node script, OpenAI source only) plus colocated vitest unit tests (17 passing).
+- `scripts/fetchers/playwright-newsroom.mjs` Playwright Node script plus colocated vitest unit tests.
 - `.cache/newsletters/openai-news/YYYY-MM-DD.json` cache shape per ADR-029.
 - `npm run fetch:newsroom` invocation entrypoint in package.json.
 - SKILL step 2 OpenAI entry rewritten as a three-rung precedence list (Playwright cache fresh, then Google News RSS, then `source_failures`).
-- ADR-029 captures the cache layout, 48h freshness default, and fallback precedence (status `proposed`; canonical expansion deferred per the lightweight capture-adr contract).
-- Live end-to-end fetch verified 2026-05-13 against `https://openai.com/news/`: 10 canonical `openai.com/index/...` URLs retrieved with ISO dates and category tags. Fetch latency ~3-4s including Chromium launch.
+- ADR-029 captures the cache layout, 48h freshness default, and fallback precedence (status `proposed`).
 
-Remaining phases (ticket stays Known Error until all ship):
+P014b (Reddit coverage) shipped 2026-05-13:
 
-- **P014b**: Reddit coverage (r/LocalLLaMA, r/MachineLearning), subreddit listing parsing, consent-gate handling, persistent browser profile (~45 min).
-- **P014c**: Fallback smarts (SKILL step 2 auto-invokes the fetcher on WebFetch 403 rather than requiring manual `npm run fetch:newsroom`) (~30 min).
+- Same `scripts/fetchers/playwright-newsroom.mjs` extended with `reddit-locallama` and `reddit-ml` sources. New pure helper `buildRedditItem` covered by vitest cases (24 tests total passing across both phases).
+- `.cache/newsletters/reddit-locallama/YYYY-MM-DD.json` + `.cache/newsletters/reddit-machinelearning/YYYY-MM-DD.json` populated via `npm run fetch:newsroom -- --source=reddit-locallama` (and `reddit-ml`).
+- Strategy: HTML scrape of `https://www.reddit.com/r/<sub>/top/?t=week` (the `.json` API is blocked by Akamai-class protection at both old. and www. subdomains; HTML page is reachable anonymously). 2x 2000px scrolls with 1.5s settle each loads the top 27+ posts; we take the top 10. `shreddit-post` web-component attributes provide canonical permalinks, ISO timestamps, score, and comment count.
+- No persistent browser profile required (anonymous access works; ADR-029 out-of-scope item "persistent browser profiles" resolves to "not needed for P014b").
+- SKILL step 2 Reddit entries rewritten as three-rung precedence lists (cache fresh, no RSS fallback for Reddit, then `source_failures` per tier-2 continue-on-fail policy).
+- Live end-to-end smoke tests: 10 items each from r/LocalLLaMA and r/MachineLearning with canonical permalinks, ISO dates, and `<score> upvotes, <count> comments` summary.
+
+Remaining phases (ticket stays Known Error until both ship):
+
+- **P014c**: Fallback smarts (SKILL step 2 auto-invokes the fetcher on WebFetch 403 / Reddit refusal rather than requiring manual `npm run fetch:newsroom`) (~30 min).
 - **P014d**: JSON schema validation + retry-once-on-transient-failure (~30 min).
 
 ## Dependencies
