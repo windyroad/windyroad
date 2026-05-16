@@ -29,11 +29,11 @@ The caller (typically `/wr-newsletter` step 12) supplies:
 | `persona` | `leader` or `developer` | `leader` | Selects publication wordmark and subtitle prefix. |
 | `edition_number` | int, padded to 2 digits | `04` | Used in the subtitle ("ISSUE 04") and the `<title>` / `<desc>` strings. |
 | `publication_date` | `YYYY-MM-DD` (publish-Friday per ADR-026 and P040) | `2026-05-08` | Output filename anchor and the "WEEK ENDING ..." stamp. |
-| `hook_line_1` | string, around 30 chars max | `Six AI shifts this week.` | White hook line, rendered at 80px. |
-| `hook_line_2` | string, around 45 chars max | `All of them measurement problems.` | Accent-orange hook line, rendered at 60px. |
+| `hook_line_1` | string, around 28 chars max | `Six AI shifts this week.` | White hook line, rendered at 80px. LinkedIn preview crops slightly on the right edge, so 30+ chars risks shaving the final character (P-issue observed 2026-05-14 with "AI cyber capabilities shipped."). Stay at or below 28 chars to keep the trailing punctuation in the preview. |
+| `hook_line_2` | string, around 45 chars max | `All of them measurement problems.` | Accent-orange hook line, rendered at 60px. Smaller font has more horizontal headroom; 28-char hooks here have not clipped to date. |
 | `draft_folder` | path | `src/newsletters/drafts/leader/` | Output directory; outputs land at `<draft-folder>/<publication-date>.cover.{svg,png}`. |
 
-Hook lines should fit on one rendered line each. Re-render and visually inspect (step 4 below) if either line wraps or overlaps.
+Hook lines should fit on one rendered line each. Re-render and visually inspect (step 4 below) if either line wraps or overlaps. Always preview against LinkedIn's share-card crop before publish; the safe-area lives ~2 character-widths inside each margin.
 
 ## Persona defaults
 
