@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-15 README reconciled. 9 newsletter / capture-adr / assistant-gate friction tickets captured from /wr-retrospective:run-retro session: P060 P061 P062 P063 P064 P065 P066 P067 P068. Reconciliation contract per P118 + ADR-014.
+> Last reviewed: 2026-05-16 P028 (risk-scorer 30-min TTL expired during long-running orchestrator turns) Open to Known Error per ADR-022. Root cause confirmed upstream in `@windyroad/risk-scorer` v0.9.0: three-band TTL policy (Band A age<TTL/2 passes silently; Band B TTL/2<=age<TTL slides marker forward on invariant state-hash, bounded by 2*TTL hard cap, CHANGELOG `43e9cc0`) plus subprocess-return slide mechanism (`slide-marker-on-subprocess-return.bats`). Default TTL also bumped 1800s to 3600s per upstream P107 symptom-treatment in an earlier release. Investigation tasks 1-5 all answered upstream; no local fix required. Verification will land on the Known Error to Verification Pending transition immediately following.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,7 +10,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID | Title | Severity | Status | Effort | Reported |
 |------|-----|-------|----------|--------|--------|----------|
 | 8.0  | P021 | architect-mark-reviewed strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL | 8 (Minor) | Open | S | 2026-04-26 |
-| 8.0  | P028 | risk-scorer 30-min TTL expired during long-running orchestrator turns | 8 (Minor) | Open | S | 2026-04-26 |
+| 8.0  | P028 | risk-scorer 30-min TTL expired during long-running orchestrator turns | 8 (Minor) | Known Error | S | 2026-04-26 |
 | 8.0  | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn\'t pre-created the label | 8 (Minor) | Open | S | 2026-04-27 |
 | 8.0  | P042 | jtbd-enforce-edit hook uses relative docs/jtbd path; fails when cwd is not project root | 8 (Minor) | Open | S | 2026-05-01 |
 | 6.0  | P022 | architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes | 6 (Minor) | Open | S | 2026-04-26 |

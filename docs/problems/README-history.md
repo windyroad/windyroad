@@ -54,3 +54,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-05-13 P053 (/wr-newsletter formal gate sequence missing cog-a11y) Open to Verification Pending per ADR-022. SKILL step 15.4 inserted between editor (15.25) and LinkedIn-draft (15.5) per the P053 default proposal confirmed 2026-05-13: invokes `cognitive-accessibility` subagent on the brief body, one-round-with-optional-remediation pass, phase variant 15.4-prime mirrors 15.25-prime. Step 16 save templates updated for both phases. Skip-on-upstream-REJECTED honoured.
 
 > Last reviewed: 2026-05-13 P059 (`npm run push:watch` exits 141 SIGPIPE) Open to Verification Pending per ADR-022. `scripts/push-watch.sh` 7 pipe-to-head chains (lines 71, 75, 191, 213, 225, 243, 284) now append `|| true` inside the command substitution; pipefail-induced 141 from SIGPIPE is neutralized. Each chain captures into a variable; downstream callers already handle empty/zero degraded-failure cases. ADR-021 "Robustness shape" precedent. Architect PASS. Audit-trail correction: ticket initially named 5 chains; verification found 7.
+
+## 2026-05-15
+
+> Last reviewed: 2026-05-15 README reconciled. 9 newsletter / capture-adr / assistant-gate friction tickets captured from /wr-retrospective:run-retro session: P060 P061 P062 P063 P064 P065 P066 P067 P068. Reconciliation contract per P118 + ADR-014.

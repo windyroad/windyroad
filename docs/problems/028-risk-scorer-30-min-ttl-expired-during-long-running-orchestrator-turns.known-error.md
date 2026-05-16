@@ -1,6 +1,6 @@
 # Problem 028: risk-scorer 30-min TTL expired during long-running orchestrator turns
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-26
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
 
@@ -27,13 +27,25 @@ Re-score before commit if turn duration approaches TTL. Adds extra subagent invo
 
 ## Root Cause Analysis
 
+Root cause sits in the upstream `@windyroad/risk-scorer` plugin's commit-gate hook (`hooks/risk-score-commit-gate.sh`), which delegated to `check_risk_gate` with a fixed-TTL binary check (age < TTL was pass; age >= TTL was halt). The binary policy did not distinguish "tree changed since scoring, so re-score legitimately required" from "tree unchanged since scoring, so TTL is a stale heuristic". Long orchestrator turns hit the second case, paying a fresh subagent invocation for no informational gain.
+
+Upstream (agent-plugins repo) has shipped a fix in `wr-risk-scorer` v0.9.0 that replaces the binary TTL with a three-band policy plus a subprocess-return slide mechanism. Verified on disk at `~/.claude/plugins/cache/windyroad/wr-risk-scorer/0.9.0/hooks/risk-score-commit-gate.sh` and CHANGELOG entry 43e9cc0:
+
+- **Band A** (age < TTL/2): pass silently (unchanged from binary behaviour).
+- **Band B** (TTL/2 <= age < TTL): consult the pipeline state-hash; if invariant since scoring, pass AND slide the marker forward (`touch` the score file). Bounded by a `2 * TTL` hard-cap via a new `<action>-born` sibling marker, so an unchanged-but-idle tree cannot ride one score indefinitely.
+- **Band C** (age >= TTL): halt with the existing expired message (unchanged).
+
+A companion `slide-marker-on-subprocess-return` mechanism (tested at `0.9.0/hooks/test/slide-marker-on-subprocess-return.bats`) ensures sub-Task subagent turns do not count against the parent turn's TTL.
+
+Default TTL was also bumped from 1800s to 3600s in an earlier release (per the upstream's P107 symptom-treatment), so the operating window grew from 30 minutes to 60 minutes before the three-band policy now extends it further when the tree is unchanged.
+
 ### Investigation Tasks
 
-- [ ] Review the 1800s TTL choice; why 30 min specifically?
-- [ ] Decide fix: TTL extension OR auto-refresh on near-expiry OR commit-gate-side fallback scoring
-- [ ] Consider: does TTL serve a real purpose if no commits happened between scoring and gate check?
-- [ ] Create reproduction test (long turn with score-then-commit-after-30min)
-- [ ] Create INVEST story for permanent fix
+- [x] Review the 1800s TTL choice; why 30 min specifically? Answered upstream: default TTL is now 3600s (60 min); the original 30-min figure was an arbitrary half-of-typical-session window with no formal grounding (upstream P107).
+- [x] Decide fix: TTL extension OR auto-refresh on near-expiry OR commit-gate-side fallback scoring. Answered upstream: three-band policy (Band B auto-slides the marker on invariant state-hash); chosen over flat TTL extension because it preserves halt-on-drift semantics.
+- [x] Consider: does TTL serve a real purpose if no commits happened between scoring and gate check? Answered upstream: TTL serves as the "tree must be revisited" expiry; the three-band policy carves out the "tree unchanged" subcase explicitly via state-hash invariance, separating "TTL expired" from "score stale" as two independent concerns.
+- [x] Create reproduction test (long turn with score-then-commit-after-30min). Referenced upstream: `~/.claude/plugins/cache/windyroad/wr-risk-scorer/0.9.0/hooks/test/risk-gate.bats` covers all three bands and the 2*TTL hard cap; `slide-marker-on-subprocess-return.bats` covers the subprocess-return slide.
+- [x] Create INVEST story for permanent fix. Not required locally: the permanent fix is upstream-shipped in v0.9.0; remaining local work is verification only.
 
 ## Dependencies
 
