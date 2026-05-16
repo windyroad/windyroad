@@ -38,6 +38,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5  | P064 | Newsletter critic round-3 budget exhausted on fixable micro-issues; rubric checks need leader-register calibration | 3 (Medium) | Open | M | 2026-05-15 |
 | 1.5  | P065 | Newsletter cog-a11y persistently scores Grade 11+ vs Grade 10 target on leader register | 3 (Medium) | Open | M | 2026-05-15 |
 | 1.0  | P067 | Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection | 2 (Low) | Open | M | 2026-05-15 |
+| 3.0  | P069 | work-problems orchestrator WSJF ranking does not factor placement-authority | 3 (Medium) | Open | M | 2026-05-16 |
 
 ## Verification Queue
 
