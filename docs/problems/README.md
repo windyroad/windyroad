@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-13 P059 (`npm run push:watch` exits 141 SIGPIPE) Verification Pending to Closed per ADR-022. User confirmed the SIGPIPE-safe `|| true` chains in `scripts/push-watch.sh` (lines 71, 75, 191, 213, 225, 243, 284) survive a real push without exit 141.
+> Last reviewed: 2026-05-15 README reconciled. 9 newsletter / capture-adr / assistant-gate friction tickets captured from /wr-retrospective:run-retro session: P060 P061 P062 P063 P064 P065 P066 P067 P068. Reconciliation contract per P118 + ADR-014.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -30,6 +30,15 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5  | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 (Medium) | Open | M | 2026-05-12 |
 | 1.5  | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 (Medium) | Open | M | 2026-05-12 |
 | 1.5  | P056 | manage-problem SKILL.md misattributes ADR-014 to single-commit governance in 6+ blocks | 3 (Medium) | Open | M | 2026-05-13 |
+| 4.0  | P066 | Voice guide LinkedIn-posts section needs amendment; rules conflict with editorial direction on three axes | 4 (Medium) | Open | S | 2026-05-15 |
+| 4.0  | P068 | Newsletter URL discovery via Google News RSS strips canonical to outlet root; misses real article URL | 4 (Medium) | Open | S | 2026-05-15 |
+| 3.0  | P060 | `capture-adr` SKILL.md template frontmatter sentinel carries U+2014 that no-em-dash hook blocks | 3 (Medium) | Open | S | 2026-05-14 |
+| 3.0  | P062 | Newsletter persona-config edition-count rule globs sibling files and undercounts editions | 3 (Medium) | Open | S | 2026-05-15 |
+| 3.0  | P063 | Newsletter cover `hook_line_1` budget too loose for LinkedIn preview crop | 3 (Medium) | Open | S | 2026-05-15 |
+| 2.0  | P061 | assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared | 4 (Medium) | Open | M | 2026-05-14 |
+| 1.5  | P064 | Newsletter critic round-3 budget exhausted on fixable micro-issues; rubric checks need leader-register calibration | 3 (Medium) | Open | M | 2026-05-15 |
+| 1.5  | P065 | Newsletter cog-a11y persistently scores Grade 11+ vs Grade 10 target on leader register | 3 (Medium) | Open | M | 2026-05-15 |
+| 1.0  | P067 | Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection | 2 (Low) | Open | M | 2026-05-15 |
 
 ## Verification Queue
 
