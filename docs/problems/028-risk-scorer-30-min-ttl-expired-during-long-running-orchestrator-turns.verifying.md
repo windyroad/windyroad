@@ -1,6 +1,6 @@
 # Problem 028: risk-scorer 30-min TTL expired during long-running orchestrator turns
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-26
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
 
@@ -86,3 +86,10 @@ This widens the original P028 framing. The TTL is the **lifecycle parameter**; t
 Recommend (1) as the primary path: it composes cleanly with the existing per-commit gate contract, does not change TTL semantics, and the shape signature is already implicit in the scorer's prompt (the staged diff is the input). Implementation hint: add the cache between the gate hook's marker check and the subagent dispatch; on cache hit, write the bypass marker directly without firing the subagent.
 
 This evidence does not change P028's WSJF ranking (Severity 12 x Effort S = 12.0 Open) but enriches the upstream report (issue #82) with a concrete cost model for the redundancy: 8 subagent turns wasted in a single 30-minute window, all returning the same verdict on the same shape.
+
+## Fix Released
+
+- **Release marker**: `@windyroad/risk-scorer` v0.9.0 (CHANGELOG entry `43e9cc0`). Installed locally for this project per `~/.claude/plugins/installed_plugins.json` (verified 2026-05-16).
+- **Fix summary**: three-band TTL policy in `check_risk_gate` (Band A passes silently when age < TTL/2; Band B slides the marker forward on invariant state-hash bounded by a 2*TTL hard cap; Band C halts as before); companion `slide-marker-on-subprocess-return` ensures sub-Task subagent turns do not count against the parent turn's TTL. Default TTL also bumped 1800s to 3600s in an earlier release per upstream P107.
+- **Awaiting user verification**: the next long AFK orchestrator turn (>30 min between scoring and committing on an unchanged tree) should pass the commit gate without an extra `wr-risk-scorer:pipeline` invocation. Expected behaviour: when the gate fires after the TTL midpoint with the staged-tree state-hash unchanged since scoring, the gate slides the marker forward (Band B) and admits the commit. When the staged tree has drifted since scoring, the gate still halts (correct halt-on-drift semantics preserved).
+- **Exercise evidence (this iteration)**: this same iteration's two transition commits both relied on a single `wr-risk-scorer:pipeline` invocation up-front; the second commit gate (the Known Error to Verification Pending transition) is the live verification surface.
