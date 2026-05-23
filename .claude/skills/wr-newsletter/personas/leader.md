@@ -4,6 +4,8 @@ publication-name: The Shift
 target-reader: Engineering Leader (JOBS_TO_BE_DONE.md J1-J4)
 draft-folder: src/newsletters/drafts/leader/
 published-folder: src/newsletters/published/leader/
+publish-day: Monday
+publish-timezone: Australia/Sydney
 ---
 
 # Leader persona config: The Shift
@@ -58,7 +60,7 @@ Closing line: `windyroad.com.au`
 ## Welcome line (first edition only)
 
 ```
-About The Shift: each issue covers what moved in AI engineering this week, what it means for engineering leaders, and where we think the industry is going. Opinions included. Published weekly, 4-5 stories plus shorter notes.
+About The Shift: each issue covers what moved in AI engineering this week, what it means for engineering leaders, and where we think the industry is going. Opinions included. Published Monday mornings AEST, 4-5 stories plus shorter notes.
 ```
 
 For edition >= 2, drop or freshly reframe; do not repeat verbatim.

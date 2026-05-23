@@ -1,12 +1,12 @@
 ---
 name: wr-newsletter:generate
-description: Draft a weekly Windy Road newsletter. Defaults to The Shift (persona=leader, target Engineering Leaders). Pass persona=developer to draft Tokens Spent (target working Developers). Pipeline runs in three phases (ADR 017): pass phase=prep for mid-week research and drafting, phase=finalise on Friday for tier-1 refresh and publish, or phase=full (default) for the legacy single-shot run. Collects news from multiple sources, filters candidates through the Wardley precondition and three-lens criterion, updates the AI Engineering Landscape Wardley map, updates the map analysis, produces a brief that reports on what changed on the map, and runs voice + content-risk + SW-critic review gates with 3-round iteration. Saves the result to src/newsletters/drafts/<persona>/YYYY-MM-DD.md (or .prep.md during the prep phase). Run weekly when Tom is ready to produce a new issue.
+description: Draft a weekly Windy Road newsletter. Defaults to The Shift (persona=leader, target Engineering Leaders, publishes Monday mornings AEST per ADR 030). Pass persona=developer to draft Tokens Spent (target working Developers). Pipeline runs in three phases (ADR 017): pass phase=prep for pre-publish-day research and drafting, phase=finalise on the persona's publish-day for tier-1 refresh and publish, or phase=full (default) for the legacy single-shot run. Collects news from multiple sources, filters candidates through the Wardley precondition and three-lens criterion, updates the AI Engineering Landscape Wardley map, updates the map analysis, produces a brief that reports on what changed on the map, and runs voice + content-risk + SW-critic review gates with 3-round iteration. Saves the result to src/newsletters/drafts/<persona>/YYYY-MM-DD.md (or .prep.md during the prep phase). Run weekly when Tom is ready to produce a new issue.
 allowed-tools: Read, Bash, WebFetch, Glob, Grep, Write, Edit, Skill, Agent, AskUserQuestion
 ---
 
 # Windy Road newsletter generator
 
-Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Five review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), editor (ADR 020), and cognitive accessibility (P053; one-round-with-optional-remediation pass against WCAG 2.2 cognitive SC + reading-grade-level target). Phase boundaries (ADR 017) split the pipeline so the time-expensive work runs mid-week (prep) and Friday morning is reserved for a tier-1 refresh plus publish (finalise).
+Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Five review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), editor (ADR 020), and cognitive accessibility (P053; one-round-with-optional-remediation pass against WCAG 2.2 cognitive SC + reading-grade-level target). Phase boundaries (ADR 017, refined by ADR 030) split the pipeline so the time-expensive work runs in the days before the persona's publish-day (prep) and publish-day morning is reserved for a tier-1 refresh plus publish (finalise).
 
 ## Reference
 
@@ -27,8 +27,8 @@ The pipeline runs in one of three phases, selected by the `phase` argument at st
 
 | phase     | When to run                          | Steps executed                              | Saves                              |
 |-----------|--------------------------------------|---------------------------------------------|------------------------------------|
-| `prep`    | Mid-week (Mon-Thu)                   | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
-| `finalise`| Friday morning                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `prep`    | Days before `<publish-day>` (e.g. Sat-Sun for The Shift's Monday publish per ADR 030) | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
+| `finalise`| `<publish-day>` morning (Monday morning AEST for The Shift)                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 | `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 
 Default behaviour when no `phase` argument is present: `phase=full` (preserves the original single-shot run for backward compatibility per ADR 017 line 51).
@@ -68,7 +68,17 @@ Read the resolved persona config: `.claude/skills/wr-newsletter/personas/<person
 - `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant.
 - `<draft-folder>`: e.g. `src/newsletters/drafts/leader/` or `src/newsletters/drafts/developer/`.
 - `<published-folder>`: e.g. `src/newsletters/published/leader/` or `src/newsletters/published/developer/`.
-- `<publication-date>` (ADR-026, P040): the ISO-format date (`YYYY-MM-DD`) used for all draft and companion-file paths in this run. Compute as follows: if today (local time) is Friday, use today; otherwise use the next Friday after today (Mon-Thu resolves forward to this Friday; Sat-Sun resolves forward to next Friday). The brief is published Friday, so all `<draft-folder>/<publication-date>.X` paths share the publication-Friday date regardless of when prep runs. This binding is the single date source for steps 10, 11, 12, 16, and 17.
+- `<publish-day>`: the day-of-week the persona publishes (e.g. `Monday` for leader / The Shift per ADR 030). Read from the persona-config frontmatter `publish-day` field. Required.
+- `<publish-timezone>`: the IANA timezone the publish-day is anchored to (e.g. `Australia/Sydney` for leader, which is AEST/AEDT). Read from the persona-config frontmatter `publish-timezone` field. Required. The day-of-week comparison in `<publication-date>` uses this timezone, not the host's local time, so prep and finalise resolve the same publish-day regardless of where Tom runs them.
+
+If either `publish-day` or `publish-timezone` is absent from the resolved persona config, do NOT guess or default to a hard-coded day. Surface to Tom via `AskUserQuestion` (per ADR 030 backward-compatibility clause):
+
+- **question**: `"Persona '<persona>' config is missing publish-day and/or publish-timezone. ADR 030 requires both to be set per persona. Backfill now, or abort?"`
+- **options**:
+  - `Backfill now`: ask Tom for the day and timezone, then write them to the persona config frontmatter before continuing.
+  - `Abort`: stop the pipeline. Tom can edit the persona config and re-invoke.
+- **multiSelect**: false
+- `<publication-date>` (ADR-026, P040, ADR 030): the ISO-format date (`YYYY-MM-DD`) used for all draft and companion-file paths in this run. Compute as follows: if today in `<publish-timezone>` is `<publish-day>`, use today; otherwise use the next `<publish-day>` after today. The brief is published on `<publish-day>`, so all `<draft-folder>/<publication-date>.X` paths share the publication-day date regardless of when prep runs. This binding is the single date source for steps 10, 11, 12, 16, and 17.
 
 Branch on phase:
 
@@ -128,7 +138,7 @@ Read any matching files. Each file contains a link plus a one-sentence note (see
 
 Fetch the following in parallel where possible. Each source has an extraction prompt attached.
 
-**Phase variant `2-prime` (phase=finalise only):** re-fetch tier 1 only (all tier-1 sources; see the tier-1 block below). Tier 2 and tier 3 are carried forward from `<prep-shortlist-snapshot>` and the prep-time `source_failures` list. The tier-1 refresh is the entire point of finalise: it picks up Thursday-evening or Friday-morning launches that the prep run could not have seen. New tier-1 items are diffed against `<prep-tier1-snapshot>` (by URL); only the new entries are carried into step 3-prime (build candidate list).
+**Phase variant `2-prime` (phase=finalise only):** re-fetch tier 1 only (all tier-1 sources; see the tier-1 block below). Tier 2 and tier 3 are carried forward from `<prep-shortlist-snapshot>` and the prep-time `source_failures` list. The tier-1 refresh is the entire point of finalise: it picks up launches that landed after the prep cutoff and could not have been seen mid-prep. For The Shift specifically (Monday-morning AEST publish, ADR 030), this window captures Friday US/EU launches that broke after the weekend prep run. New tier-1 items are diffed against `<prep-tier1-snapshot>` (by URL); only the new entries are carried into step 3-prime (build candidate list).
 
 **Tier 1 (critical, fail the map update if any of these fail):**
 
@@ -530,7 +540,7 @@ Skill: wr-newsletter-cover
 args:
   persona: <leader|developer>
   edition_number: <NN, two digits>
-  publication_date: <YYYY-MM-DD, publish-Friday from step 0>
+  publication_date: <YYYY-MM-DD, the `<publish-day>` date from step 0>
   hook_line_1: <first hook line, white, around 30 chars max>
   hook_line_2: <second hook line, accent orange, around 45 chars max>
   draft_folder: <persona draft folder from the persona config>
@@ -732,7 +742,7 @@ Step 16 writes the LinkedIn post body, image description, alt text, and posting 
 
 ### 16. Save the draft
 
-This step writes the brief and its sibling artefact files. Per ADR-026 (companion tickets P038 + P041), reviews and meta content live in sibling files, not inline in the brief: the brief contains only frontmatter + body + CTA. Per P040, all draft and companion-file paths use the `<publication-date>` binding (resolved at step 0 to the publish-Friday date), not the prep-run date.
+This step writes the brief and its sibling artefact files. Per ADR-026 (companion tickets P038 + P041), reviews and meta content live in sibling files, not inline in the brief: the brief contains only frontmatter + body + CTA. Per P040, all draft and companion-file paths use the `<publication-date>` binding (resolved at step 0 to the `<publish-day>` date in `<publish-timezone>`), not the prep-run date.
 
 Use the `Write` tool. If a file for `<publication-date>` already exists at the path being written, ask Tom whether to overwrite or append a suffix like `-2` to the filename.
 
@@ -980,7 +990,7 @@ Report back in chat:
 - URL verification (step 11.5 / 11.5-prime): per-URL verdict summary as a one-line headline (e.g. "URL verification: 9 SUPPORTED, 1 INDIRECT_CONFIRMED, 0 REFUTED, 0 NOT MENTIONED across 10 URLs"). Surface any save-gate interventions inline: REFUTED fixes (with old URL and replacement URL), 404 replacements, NOT MENTIONED escalations to Tom (with the eventual disposition: dropped, swapped, or author-approved). Full per-URL table lives in `<publication-date>.reviews.md` under `## URL Verification`. Per ADR-024 confirmation criterion 4.
 - Cover image: path, plus whether finalise re-rendered or carried prep image forward.
 - LinkedIn post: drafted (finalise/full) or skipped (prep).
-- File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/<publication-date>.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on Friday to publish." For finalise, this is `<draft-folder>/<publication-date>.md` with the reminder: "When you have published to LinkedIn, move all four files (`<publication-date>.md`, `<publication-date>.reviews.md`, `<publication-date>.linkedin.md`, `<publication-date>.capture.md`) from `<draft-folder>` to `<published-folder>/<persona>/`, then run `/wr-retrospective:run-retro` to capture learnings for next week."
+- File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/<publication-date>.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on `<publish-day>` to publish." For finalise, this is `<draft-folder>/<publication-date>.md` with the reminder: "When you have published to LinkedIn, move all four files (`<publication-date>.md`, `<publication-date>.reviews.md`, `<publication-date>.linkedin.md`, `<publication-date>.capture.md`) from `<draft-folder>` to `<published-folder>/<persona>/`, then run `/wr-retrospective:run-retro` to capture learnings for next week."
 - Capture transcript path: `<draft-folder>/<publication-date>.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
 - Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all seven review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body, image description, alt text, and posting notes. Confirm both siblings were written.
 
