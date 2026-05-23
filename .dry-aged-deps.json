@@ -2,6 +2,7 @@
   "dev": { "minAge": 30 },
   "prod": { "minAge": 14 },
   "exclude": {
-    "@eslint/js": "Must upgrade together with eslint when eslint v10 peer deps are resolved"
+    "@eslint/js": "Must upgrade together with eslint when eslint v10 peer deps are resolved",
+    "typescript": "TS 6.0.x breaks CSS/SCSS side-effect imports (TS2882 in src/app/blog/[slug]/page.tsx and src/app/layout.tsx) and surfaces a vitest/rolldown vs vite peer-type mismatch in vitest.config.ts (rolldownVersion missing in PluginContextMeta). Hold at TS 5.9.x until Next.js + vitest ship TS-6-compatible types. Verified 2026-05-23."
   }
 }
