@@ -155,7 +155,7 @@ Tier gating per ADR 016: if any tier-1 source fails, the map is not mutated this
 | Australia OAIC | WebFetch `https://www.oaic.gov.au/newsroom` | AU privacy and automated decisions |
 | EU AI Act | WebFetch `https://artificialintelligenceact.eu/` | EU implementation updates |
 | UK AI Safety Institute | WebFetch `https://www.aisi.gov.uk/work` | UK AI safety publications |
-| NIST AI | WebFetch `https://www.nist.gov/artificial-intelligence/news` | US standards, frameworks |
+| NIST AI | WebFetch `https://www.nist.gov/news-events/news/search?key=&topic-op=or&topic-area-fieldset%5B%5D=2753736` | US standards, frameworks (AI-topic-filtered news search; the `/artificial-intelligence/news` path 404s, corrected 2026-05-24) |
 | US FTC AI actions | WebFetch `https://www.ftc.gov/news-events/news/press-releases` | US enforcement, consumer protection |
 | OECD AI | WebFetch `https://oecd.ai/en/wonk/news` | International policy |
 

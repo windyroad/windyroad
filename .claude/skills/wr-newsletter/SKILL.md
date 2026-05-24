@@ -65,7 +65,7 @@ Read the resolved persona config: `.claude/skills/wr-newsletter/personas/<person
 - `<voice-addendum>`: persona-specific voice notes (vocabulary preferences, evidence-stance language). Combined with the base `docs/VOICE-AND-TONE.md` rules at step 11 (drafting).
 - `<cta-description>` and `<cta-invitation>`: variants from the persona config; pick one each per edition, rotating week-to-week to avoid repetition.
 - `<welcome-line>`: persona-specific first-edition welcome text.
-- `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant.
+- `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant. The `YYYY-MM-DD` in "week ending" is `<week-ending>` (the Sunday), not `<publication-date>` (the publish day).
 - `<draft-folder>`: e.g. `src/newsletters/drafts/leader/` or `src/newsletters/drafts/developer/`.
 - `<published-folder>`: e.g. `src/newsletters/published/leader/` or `src/newsletters/published/developer/`.
 - `<publish-day>`: the day-of-week the persona publishes (e.g. `Monday` for leader / The Shift per ADR 030). Read from the persona-config frontmatter `publish-day` field. Required.
@@ -78,7 +78,8 @@ If either `publish-day` or `publish-timezone` is absent from the resolved person
   - `Backfill now`: ask Tom for the day and timezone, then write them to the persona config frontmatter before continuing.
   - `Abort`: stop the pipeline. Tom can edit the persona config and re-invoke.
 - **multiSelect**: false
-- `<publication-date>` (ADR-026, P040, ADR 030): the ISO-format date (`YYYY-MM-DD`) used for all draft and companion-file paths in this run. Compute as follows: if today in `<publish-timezone>` is `<publish-day>`, use today; otherwise use the next `<publish-day>` after today. The brief is published on `<publish-day>`, so all `<draft-folder>/<publication-date>.X` paths share the publication-day date regardless of when prep runs. This binding is the single date source for steps 10, 11, 12, 16, and 17.
+- `<publication-date>` (ADR-026, P040, ADR 030): the ISO-format date (`YYYY-MM-DD`) used for all draft and companion-file paths in this run. Compute as follows: if today in `<publish-timezone>` is `<publish-day>`, use today; otherwise use the next `<publish-day>` after today. The brief is published on `<publish-day>`, so all `<draft-folder>/<publication-date>.X` paths share the publication-day date regardless of when prep runs. This binding is the single date source for all FILE PATHS (steps 10, 11, 12, 16, and 17).
+- `<week-ending>` (ADR 030): the reader-facing "week ending" label, distinct from `<publication-date>`. A week does not end on the publication Monday, so the label uses the Sunday that ends the editorial week: the most recent Sunday on or before `<publication-date>`. For the leader persona's Monday publish-day this is `<publication-date>` minus one day (e.g. publication-date 2026-05-25 gives week-ending 2026-05-24). `<week-ending>` is a DISPLAY LABEL ONLY: it appears in the headline subtitle, the cover "WEEK ENDING" stamp, and the capture-transcript header, and it NEVER appears in a file path (P040's single path-source binding remains `<publication-date>`). Use `<week-ending>` everywhere the text reads "week ending"; use `<publication-date>` for every filename.
 
 Branch on phase:
 
@@ -181,7 +182,7 @@ Fetch the following in parallel where possible. Each source has an extraction pr
 - **Australia OAIC**: `WebFetch https://www.oaic.gov.au/newsroom` with prompt: "Extract the 5 most recent news items mentioning AI, automated decision-making, or data privacy. For each: title, URL, date, one-sentence summary."
 - **EU AI Act updates**: `WebFetch https://artificialintelligenceact.eu/` with prompt: "Extract the most recent developments, implementation updates, or guidance documents. For each: title, URL, date, one-sentence summary."
 - **UK AI Safety Institute**: `WebFetch https://www.aisi.gov.uk/work` with prompt: "Extract the 5 most recent publications or announcements. For each: title, URL, date, one-sentence summary."
-- **NIST AI**: `WebFetch https://www.nist.gov/artificial-intelligence/news` with prompt: "Extract the 5 most recent AI-related news items or publications. For each: title, URL, date, one-sentence summary."
+- **NIST AI**: `WebFetch https://www.nist.gov/news-events/news/search?key=&topic-op=or&topic-area-fieldset%5B%5D=2753736` with prompt: "Extract the 5 most recent AI-related news items or publications. For each: title, URL, date, one-sentence summary." (URL corrected 2026-05-24: the prior `/artificial-intelligence/news` path 404s. This is the NIST news-search endpoint; the `topic-area-fieldset[]=2753736` query param is the load-bearing filter, where `2753736` is NIST's topic ID for the AI topic area. If NIST renumbers its topic taxonomy this feed breaks silently; re-derive the ID from the AI filter on the news-search page. NIST is low-velocity, so expect the most recent items to be weeks or months old.)
 - **US FTC AI actions**: `WebFetch https://www.ftc.gov/news-events/news/press-releases` with prompt: "Extract the 5 most recent press releases that mention artificial intelligence, AI, machine learning, or automated decision-making. For each: title, URL, date, one-sentence summary."
 - **OECD AI**: `WebFetch https://oecd.ai/en/wonk/news` with prompt: "Extract the 5 most recent news items. For each: title, URL, date, one-sentence summary."
 
@@ -367,7 +368,7 @@ phase-written: <prep|finalise|full>
 phase-last-appended: <prep|finalise|full>
 ---
 
-# Capture transcript: <publication-name>, week ending <publication-date>
+# Capture transcript: <publication-name>, week ending <week-ending>
 
 ## Item N: <one-sentence story summary>
 
@@ -409,7 +410,7 @@ Before drafting, determine the edition number: count `<published-folder>/*.md` f
 Read `docs/VOICE-AND-TONE.md` (base) and the `<voice-addendum>` from the persona config, plus `.claude/skills/wr-newsletter/assets/draft-template.md` and `docs/ai-engineering-brief/ai-landscape.md`.
 
 Produce a draft with:
-- Headline: a unique POV-carrying H1 (6-12 words), followed on the next non-blank line by the persona's `<headline-pattern>` subtitle (e.g. `*The Shift, AI engineering, week ending YYYY-MM-DD*` for leader, or `*Tokens Spent, AI engineering for developers, week ending YYYY-MM-DD*` for developer).
+- Headline: a unique POV-carrying H1 (6-12 words), followed on the next non-blank line by the persona's `<headline-pattern>` subtitle (e.g. `*The Shift, AI engineering, week ending YYYY-MM-DD*` for leader, or `*Tokens Spent, AI engineering for developers, week ending YYYY-MM-DD*` for developer). The `YYYY-MM-DD` is `<week-ending>` (the Sunday), not `<publication-date>`.
 - One-sentence intro naming the theme and the main map movement of the week.
 - For developer persona, label each item's evidence stance as **shipped**, **benchmarked**, **demo**, or **not yet** (J9 + J11 paired). For leader persona, the evidence label is optional; business-consequence framing carries primary weight.
 - One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened, Map movement, Why it matters to your team, The human angle, Source.
@@ -540,7 +541,8 @@ Skill: wr-newsletter-cover
 args:
   persona: <leader|developer>
   edition_number: <NN, two digits>
-  publication_date: <YYYY-MM-DD, the `<publish-day>` date from step 0>
+  publication_date: <YYYY-MM-DD, the `<publish-day>` date from step 0; output filename anchor>
+  week_ending: <YYYY-MM-DD, `<week-ending>` from step 0; the Sunday rendered as the "WEEK ENDING" stamp>
   hook_line_1: <first hook line, white, around 30 chars max>
   hook_line_2: <second hook line, accent orange, around 45 chars max>
   draft_folder: <persona draft folder from the persona config>

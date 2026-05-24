@@ -28,7 +28,8 @@ The caller (typically `/wr-newsletter` step 12) supplies:
 |---|---|---|---|
 | `persona` | `leader` or `developer` | `leader` | Selects publication wordmark and subtitle prefix. |
 | `edition_number` | int, padded to 2 digits | `04` | Used in the subtitle ("ISSUE 04") and the `<title>` / `<desc>` strings. |
-| `publication_date` | `YYYY-MM-DD` (publish-Friday per ADR-026 and P040) | `2026-05-08` | Output filename anchor and the "WEEK ENDING ..." stamp. |
+| `publication_date` | `YYYY-MM-DD` (the publish-day date per ADR-026, P040, ADR 030) | `2026-05-25` | Output filename anchor only. |
+| `week_ending` | `YYYY-MM-DD` (the Sunday ending the editorial week per ADR 030; publish-day date minus one day for a Monday publish) | `2026-05-24` | The "WEEK ENDING ..." stamp and the date inside the `<title>` / `<desc>` strings. Distinct from `publication_date` because the week does not end on the publish Monday. |
 | `hook_line_1` | string, around 28 chars max | `Six AI shifts this week.` | White hook line, rendered at 80px. LinkedIn preview crops slightly on the right edge, so 30+ chars risks shaving the final character (P-issue observed 2026-05-14 with "AI cyber capabilities shipped."). Stay at or below 28 chars to keep the trailing punctuation in the preview. |
 | `hook_line_2` | string, around 45 chars max | `All of them measurement problems.` | Accent-orange hook line, rendered at 60px. Smaller font has more horizontal headroom; 28-char hooks here have not clipped to date. |
 | `draft_folder` | path | `src/newsletters/drafts/leader/` | Output directory; outputs land at `<draft-folder>/<publication-date>.cover.{svg,png}`. |
@@ -68,7 +69,7 @@ The `<title>` and `<desc>` are the screen-reader narration of the cover image (a
 
 | Field | Pattern | Example |
 |---|---|---|
-| `TITLE_TEXT` | `<publication-name> Issue <NN>, week ending <YYYY-MM-DD>` | `The Shift Issue 04, week ending 2026-05-08` |
+| `TITLE_TEXT` | `<publication-name> Issue <NN>, week ending <week_ending>` | `The Shift Issue 06, week ending 2026-05-24` |
 | `DESC_TEXT` | One sentence describing the cover composition, ending with the headline | `Cover for The Shift Issue 04. Dark background with the orange shift-gate brand mark, "The Shift" wordmark, "AI ENGINEERING, WEEKLY · ISSUE 04" subtitle, and the headline "<hook_line_1> <hook_line_2>".` |
 
 The full `DESC_TEXT` paraphrase is fine; do not pad past 200 chars. The returned alt-text (step 5) is a 100-160 char compression of the same content.
@@ -84,7 +85,7 @@ node scripts/render-cover.mjs \
   --subtitle "<persona subtitle with ISSUE 0N substituted>" \
   --hook-1 "<hook_line_1>" \
   --hook-2 "<hook_line_2>" \
-  --week-ending "<publication-date>" \
+  --week-ending "<week_ending>" \
   --title "<TITLE_TEXT>" \
   --desc "<DESC_TEXT>"
 ```
@@ -125,7 +126,7 @@ The caller writes `alt_text` into the brief frontmatter (`cover-image:` block) a
 
 ## Idempotency
 
-The script is deterministic: same inputs produce byte-identical output. `/wr-newsletter` step 12-prime (phase=finalise) can therefore compare the prep-time inputs against the finalise-time inputs and skip re-rendering when the headline and theme are unchanged. The output filenames are date-anchored to `<publication-date>` (publish-Friday) so the prep and finalise phases write to the same path.
+The script is deterministic: same inputs produce byte-identical output. `/wr-newsletter` step 12-prime (phase=finalise) can therefore compare the prep-time inputs against the finalise-time inputs and skip re-rendering when the headline and theme are unchanged. The output filenames are date-anchored to `<publication-date>` (the publish-day date) so the prep and finalise phases write to the same path.
 
 ## When to extend the template
 

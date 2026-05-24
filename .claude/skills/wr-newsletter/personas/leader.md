@@ -40,6 +40,8 @@ Per-edition unique POV-carrying H1, plus subtitle:
 *The Shift, AI engineering, week ending YYYY-MM-DD*
 ```
 
+The `YYYY-MM-DD` in "week ending" is `<week-ending>` (the Sunday that ends the editorial week), not the Monday publish date. The Shift publishes Monday (ADR 030), so the week-ending Sunday is the publish date minus one day. Filenames still use the Monday `<publication-date>`.
+
 ## CTA
 
 Description variants (rotate weekly):
