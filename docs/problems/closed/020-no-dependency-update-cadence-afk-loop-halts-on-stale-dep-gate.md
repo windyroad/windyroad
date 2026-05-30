@@ -1,7 +1,9 @@
 # Problem 020: No dependency update cadence; AFK loop halts on stale-dep gate when deps fall out of date
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-26
+**Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
 **Effort**: S
 **WSJF**: 12.0 (Severity 12 x Open multiplier 1.0 / Effort divisor 1)

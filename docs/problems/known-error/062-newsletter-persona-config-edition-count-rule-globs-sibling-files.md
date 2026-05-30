@@ -2,9 +2,11 @@
 
 **Status**: Known Error
 **Reported**: 2026-05-15
+**Origin**: internal
 **Known Error confirmed**: 2026-05-30 (fix landed in commit de6c165; root cause = broken `<published>/*.md` glob predates ADR-026 sibling-file convention)
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 3 (deferred, re-rate at next /wr-itil:review-problems)
-**Effort**: S (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
+**Effort**: S
+**WSJF**: 18 = (9 x 2) / 1
 **Type**: technical
 
 ## Description

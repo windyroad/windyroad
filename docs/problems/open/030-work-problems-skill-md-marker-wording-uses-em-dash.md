@@ -2,7 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-04-26
-**Priority**: 4 (Low). Impact: Minor (2) x Likelihood: Possible (2)
+**Origin**: internal
+**Priority**: 4 (Low). Impact: Minor (2) x Likelihood: Unlikely (2)
+**Effort**: M
+**WSJF**: 2 = (4 x 1) / 2
 
 ## Description
 

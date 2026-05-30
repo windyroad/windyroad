@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-05-08
+**Origin**: internal
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-05-10 per ADR 027: scope-creep affects newsletter pipeline quality at pre-publish stage, L3 Moderate; recurrence 3x in one session = Possible)
 **Effort**: M
 **WSJF**: 0 (Verification Pending; excluded from dev-work ranking per ADR-022)

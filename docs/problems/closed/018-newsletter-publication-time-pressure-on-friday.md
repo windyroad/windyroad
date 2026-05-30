@@ -1,7 +1,9 @@
 # Problem 018: Newsletter publication takes too long on Friday morning; pipeline needs a pre-Friday prep phase
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-24
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 session; workaround = manual mid-week save + resume on Friday)
 **Transitioned to Verification Pending**: 2026-04-25 (fix released: phase=prep, phase=finalise, phase=full added to wr-newsletter SKILL.md per ADR 017; awaiting back-test on next edition)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)

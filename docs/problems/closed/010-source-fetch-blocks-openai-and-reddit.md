@@ -1,7 +1,9 @@
 # Problem 010: Tier-1 and tier-2 source fetches blocked by bot protection (OpenAI) and tool-layer refusal (Reddit)
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-17
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; OpenAI workaround applied; Reddit gap tracked in P014)
 **Transitioned to Verification Pending**: 2026-05-30 (P014 Playwright helper shipped 2026-05-13 across 4 commits; fix path exercised end-to-end in the 2026-05-25 published edition)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)

@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-05-01
+**Origin**: internal
 **Priority**: 16 (Significant). Impact: Major (4) x Likelihood: Likely (4)
 **Effort**: S
 **WSJF**: 0 (excluded; verification-pending tickets are out of dev-work ranking per ADR-022)

@@ -1,7 +1,9 @@
 # Problem 017: Newsletter critic rubric does not check for internal contradictions or referential ambiguity
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-24
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 edition; workaround = Tom's external review)
 **Transitioned to Verification Pending**: 2026-04-25 (fix landed: 7 new checks added to newsletter-critic-rubric.md, 2 mirror checks added to wardley-critic-rubric.md)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)

@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-24
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 edition; workaround = manual flag in chat + Google News corroboration)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: M (SKILL.md step 4 filter logic change plus optional cross-source corroboration helper)

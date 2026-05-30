@@ -2,7 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-25
+**Origin**: internal
 **Priority**: 3 (Low). Impact: Negligible (1) x Likelihood: Possible (3)
+**Effort**: S
+**WSJF**: 3 = (3 x 1) / 1
 
 ## Description
 

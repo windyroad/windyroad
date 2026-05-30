@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-05-15
+**Origin**: internal
 **Transitioned to Verification Pending**: 2026-05-30 (AFK iter 3; three carve-out paragraphs amended into `docs/VOICE-AND-TONE.md` LinkedIn-posts section; JTBD PASS, voice-tone PASS round 2 after `actually` word-list fix)
 **Priority**: 4 (Medium). Impact: 3 x Likelihood: 5 (deferred, re-rate at next /wr-itil:review-problems)
 **Effort**: S (deferred, re-rate at next /wr-itil:review-problems)

@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-21
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-19 edition; workaround = manual external review)
 **Transitioned to Verification Pending**: 2026-04-25 (Parts 1 + 2 of Fix Strategy released to wr-newsletter SKILL.md per ADR 019; Part 3 deferred per ticket)
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)

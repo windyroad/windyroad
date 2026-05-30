@@ -1,7 +1,9 @@
 # Problem 019: Claude does not proactively act on ambient dirty state during retrospective and wrap-up
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-26
+**Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
 **Effort**: S
 **WSJF**: 0 (Verification Pending, excluded from dev-work ranking per ADR-022)

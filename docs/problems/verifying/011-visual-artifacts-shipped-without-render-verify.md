@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-17
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; render-and-verify workaround documented in BRIEFING.md)
 **Transitioned to Verification Pending**: 2026-04-25 (fix released: render-and-verify discipline note added to wr-newsletter SKILL.md step 12 with explicit 5-step flow; shared helper `scripts/render-svg.mjs` created; smoke-tested against `the-shift-logo.svg`. Verification fires on the next visual-artifact iteration: logo rework, OG image update, or cover-image generation.)
 **Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2)

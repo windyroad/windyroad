@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-14
+**Origin**: internal
 **Known Error since**: 2026-04-25
 **Verification Pending since**: 2026-05-11
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-05-10 per ADR 027: static-site visitor degradation now L3 Moderate, ADR 023 paused-CTA reference-material context)

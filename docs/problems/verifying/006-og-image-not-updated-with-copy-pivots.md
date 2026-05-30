@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-15
+**Origin**: internal
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
 **Effort**: S (await prod release; flush LinkedIn cache via Post Inspector; user verification)
 **WSJF**: (8 x 2.0) / 1 = 16.0

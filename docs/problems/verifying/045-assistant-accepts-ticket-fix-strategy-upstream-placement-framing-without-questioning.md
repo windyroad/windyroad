@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-05-02
+**Origin**: internal
 **Priority**: 12 (Significant). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: M
 **WSJF**: 6.0 = (12 x 1.0) / 2

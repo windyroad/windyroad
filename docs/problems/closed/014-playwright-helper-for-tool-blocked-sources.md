@@ -1,7 +1,9 @@
 # Problem 014: OpenAI news and Reddit return 403 or block at the tool layer during `/wr-newsletter`, depriving the map of tier-1 and tier-2 signal
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-19
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = OpenAI via Google News, Reddit gap accepted; phased Playwright plan documented)
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: L (phased multi-script: walking skeleton, Reddit coverage, fallback smarts, schema validation; ~3 hours focused work)

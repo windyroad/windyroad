@@ -1,7 +1,9 @@
 # Problem 008: SW-critic rubric consistently misses weaknesses that an external editorial review catches
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-17
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-17 (root cause documented in-session; workaround is external review by Tom)
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Likely (3)
 **Effort**: L (option 2 editorial-sim subagent + new ADR + integration; rubric expansion already shipped to 31 checks)

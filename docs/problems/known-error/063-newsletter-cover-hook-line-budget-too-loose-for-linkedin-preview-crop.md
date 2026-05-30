@@ -2,8 +2,10 @@
 
 **Status**: Known Error
 **Reported**: 2026-05-15
-**Priority**: 3 (Medium). Impact: 2 x Likelihood: 4 (deferred, re-rate at next /wr-itil:review-problems)
-**Effort**: S (deferred, re-rate at next /wr-itil:review-problems)
+**Origin**: internal
+**Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
+**Effort**: S
+**WSJF**: 16 = (8 x 2) / 1
 **Type**: technical
 
 ## Description

@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-05-01
+**Origin**: internal
 **Released**: 2026-05-07
 **Priority**: 16 (Significant). Impact: Major (4) x Likelihood: Likely (4)
 **Effort**: S

@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-18
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual voice-tone invocation)
 **Transitioned to Verification Pending**: 2026-04-25 (Investigation Tasks 1 + 3 shipped via SKILL.md step 15.5 voice gate; Tasks 2 + 4 deferred to P012 ship-gate hook)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)

@@ -2,6 +2,7 @@
 
 **Status**: Parked
 **Reported**: 2026-04-27
+**Origin**: internal
 **Priority**: 12 (Significant). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: S (single path-resolution edit in upstream `manage-problem` SKILL.md Step 0)
 **WSJF**: (12 x 1.0) / 1 = 12.0

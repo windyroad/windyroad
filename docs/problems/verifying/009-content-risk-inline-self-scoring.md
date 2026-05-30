@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-17
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed in description; workaround = inline scoring + Tom's external review)
 **Transitioned to Verification Pending**: 2026-04-25 (fix released: ADR 018 + content-risk-rubric.md + wr-content-risk-scorer agent + SKILL step 14/14-prime updated to invoke the subagent)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)

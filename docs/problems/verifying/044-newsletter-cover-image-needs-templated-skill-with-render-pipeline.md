@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-05-01
+**Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: templated cover-image skill is pre-publish pipeline disruption at L3 Moderate)
 **Effort**: M
 **WSJF**: (12 x 1.0) / 2 = 6.0 (folklore weight 2.0 dropped per ADR 027)

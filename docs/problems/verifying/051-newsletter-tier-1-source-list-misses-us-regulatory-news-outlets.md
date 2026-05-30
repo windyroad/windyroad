@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-05-08
+**Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: tier-1 source coverage gap is pre-publish pipeline disruption at L3 Moderate; recurs every edition with US regulatory news, Likely)
 **Effort**: M
 **WSJF**: (12 x 1.0) / 2 = 6.0

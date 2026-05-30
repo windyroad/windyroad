@@ -1,7 +1,9 @@
 # Problem 025: no-em-dash.sh has zero coverage of Bash-path file writes
 
-**Status**: Verification Pending
+**Status**: Closed
+**Closed**: 2026-05-30 (review-problems verification batch close on observed evidence + Tom confirmation; composes with P186 evidence-first rule)
 **Reported**: 2026-04-26
+**Origin**: internal
 **Fix Released**: 2026-04-26
 **Priority**: 9 (Moderate). Impact: Moderate (3) x Likelihood: Possible (3)
 

@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-10
-**Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: process-discipline gap that misclassifies friction "done" affects newsletter pipeline quality at L3 Moderate; live this session in three friction classes simultaneously, Likely)
+**Origin**: internal
+**Priority**: 12 (High). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: process-discipline gap that misclassifies friction "done" affects newsletter pipeline quality at L3 Moderate; live this session in three friction classes simultaneously, Likely)
 **Effort**: M
-**WSJF**: (12 x 1.0) / 2 = 6.0
+**WSJF**: 6 = (12 x 1) / 2
 
 ## Description
 

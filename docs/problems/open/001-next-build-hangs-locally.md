@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-04-14
+**Origin**: internal
 **Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3)
 **Effort**: M (root-cause investigation; possibly resolved by fresh shell or system restart)
-**WSJF**: (6 x 1.0) / 2 = 3.0
+**WSJF**: 3 = (6 x 1) / 2
 
 ## Description
 

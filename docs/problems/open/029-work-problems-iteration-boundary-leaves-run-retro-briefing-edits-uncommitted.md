@@ -2,7 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-04-26
-**Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
+**Origin**: internal
+**Priority**: 12 (High). Impact: Moderate (3) x Likelihood: Likely (4)
+**Effort**: M
+**WSJF**: 6 = (12 x 1) / 2
 
 ## Description
 

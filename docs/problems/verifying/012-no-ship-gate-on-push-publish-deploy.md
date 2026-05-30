@@ -2,6 +2,7 @@
 
 **Status**: Verification Pending
 **Reported**: 2026-04-18
+**Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual Tom-in-the-loop review)
 **Transitioned to Verification Pending**: 2026-05-11 (windyroad-local fix shipped via `scripts/ci-status-check.sh`; ADR-028 records the decision; verification = next push:watch or release:watch attempt with red CI on the relevant branch is blocked).
 **Rescoped 2026-04-27**: Verified existing gate coverage by direct read of `git-push-gate.sh`. Push and release ARE gated on risk score; publish + deploy are CI-only for this project. Fix scope narrowed to CI-status check on push/release; conditional-commitment verification is a separate problem class and is being split out (see Update section below).
