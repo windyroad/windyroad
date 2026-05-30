@@ -45,9 +45,22 @@ The persona config was authored when the published folder contained only brief `
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Read both persona configs (`leader.md`, `developer.md`) and confirm both carry the broken rule.
-- [ ] Replace the glob-based rule with "increment the most recent edition's frontmatter `edition:` value across published + drafts".
-- [ ] Add a step to the /wr-newsletter SKILL.md drafter step to assert the computed edition number is exactly one greater than the most recent prior edition's `edition:` value; fail fast if not.
+- [x] Read both persona configs (`leader.md`, `developer.md`) and confirm both carry the broken rule. (2026-05-30: confirmed identical broken `Count <published>/*.md plus the current draft` rule in both files)
+- [x] Replace the glob-based rule with "increment the most recent edition's frontmatter `edition:` value across published + drafts". (2026-05-30: applied to both persona configs; scan filter narrowed to `YYYY-MM-DD.md` canonical brief shape so ADR-026 sibling files and `README.md` are excluded by construction)
+- [x] Add a step to the /wr-newsletter SKILL.md drafter step to assert the computed edition number is exactly one greater than the most recent prior edition's `edition:` value; fail fast if not. (2026-05-30: SKILL.md step 11 rewritten to defer to persona-config rule, scan across published + drafts with `YYYY-MM-DD.md` filter, assert max+1 invariant and surface to Tom on mismatch rather than publishing wrong issue number)
+
+### Resolution
+
+Fix landed 2026-05-30 across three files:
+- `.claude/skills/wr-newsletter/personas/leader.md` (Edition counting section)
+- `.claude/skills/wr-newsletter/personas/developer.md` (Edition counting section)
+- `.claude/skills/wr-newsletter/SKILL.md` step 11 first paragraph
+
+Rule shape: read frontmatter `edition:` value from highest-numbered prior edition across BOTH `published/<persona>/` and `drafts/<persona>/`, take max + 1. Scan filtered to canonical `YYYY-MM-DD.md` filenames (eight digits and dashes, then `.md`) so ADR-026 sibling files (`.linkedin.md`, `.reviews.md`, `.capture.md`) and `README.md` are excluded by construction rather than by enumerated negative-list.
+
+SKILL.md step 11 also gained an explicit assert-then-abort safeguard: if the computed edition is not exactly max+1, surface to Tom rather than publishing with a wrong issue number.
+
+Verification: deferred to next live /wr-newsletter run (transition to Verifying). The next leader edition should compute as Issue 6 (or whatever max(published.edition, draft.edition)+1 reveals) without manual correction.
 
 ## Dependencies
 

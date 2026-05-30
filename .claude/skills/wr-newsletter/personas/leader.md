@@ -69,4 +69,8 @@ For edition >= 2, drop or freshly reframe; do not repeat verbatim.
 
 ## Edition counting
 
-Count `src/newsletters/published/leader/*.md` plus the current draft.
+Determine the next edition number by reading the frontmatter `edition:` value from the highest-numbered prior edition across BOTH `src/newsletters/published/leader/` and `src/newsletters/drafts/leader/`, then incrementing by 1.
+
+Scan only files whose filename matches the canonical brief shape `YYYY-MM-DD.md` (eight digits and dashes, then `.md`). This excludes ADR-026 sibling files (`.linkedin.md`, `.reviews.md`, `.capture.md`) and folder index files (`README.md`) by construction.
+
+If no prior edition file exists in either folder, the next edition is 1.
