@@ -1,10 +1,23 @@
 # Problem 066: Voice guide LinkedIn-posts section needs amendment; rules conflict with editorial direction on three axes
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-15
+**Transitioned to Verification Pending**: 2026-05-30 (AFK iter 3; three carve-out paragraphs amended into `docs/VOICE-AND-TONE.md` LinkedIn-posts section; JTBD PASS, voice-tone PASS round 2 after `actually` word-list fix)
 **Priority**: 4 (Medium). Impact: 3 x Likelihood: 5 (deferred, re-rate at next /wr-itil:review-problems)
 **Effort**: S (deferred, re-rate at next /wr-itil:review-problems)
 **Type**: technical
+
+## Fix Summary
+
+Three carve-out paragraphs added to `docs/VOICE-AND-TONE.md` § LinkedIn posts:
+
+1. **"End with the link" auto-share carve-out**: rule applies when manual linking is needed; LinkedIn auto-share posts (recurring newsletter editions auto-published from a LinkedIn-newsletter article) have the article URL auto-injected on publish. Do NOT include a manual URL in the body.
+2. **"No promotional framing" recurring-newsletter cadence-anchor carve-out**: banned pattern is one-off post excitement; recurring newsletter editions MAY anchor the first line with "Issue N of <Newsletter Name> is out" as legitimate cadence signal.
+3. **"Don't ask for generic engagement" (split out as separate bullet) substantive-question carve-out**: generic bait remains banned; a one-line CTA tied to a specific item's editorial thread is legitimate. Test: the question only makes sense if the reader has engaged with one of the post's items.
+
+The previously-combined "No promotional framing" rule was split into two bullets so the engagement-bait rule is independently citable.
+
+Verification triggers on the next `/wr-newsletter` LinkedIn-post finalise run (Issue 06 onward); zero round-1 voice-gate violations on the three previously-failing axes (URL-on-its-own-line, promotional framing for issue-number anchor, generic-engagement flag on substantive content-tied CTA) constitutes verification.
 
 ## Description
 

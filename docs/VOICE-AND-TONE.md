@@ -258,9 +258,17 @@ Not: "Excited to share a new blog post about how I built a Claude Code hook for 
 
 **End with the link.** The article link at the end is the point of the post, not a promotional closer. No "Check it out!" or "Link in comments." Just the URL on its own line.
 
+Carve-out for auto-share posts: this rule applies when manual linking is needed (free-text LinkedIn posts that promote an article hosted elsewhere). LinkedIn auto-share posts, meaning recurring newsletter editions that auto-publish from a LinkedIn-newsletter article, have the article URL auto-injected on publish; the URL doesn't exist until you post. Do NOT include a manual URL in the body of an auto-share post.
+
 **No hashtag spam.** Zero to two hashtags maximum, and only if they're genuinely useful for discovery (e.g., `#cicd`). A wall of hashtags signals marketing, not craft.
 
-**No promotional framing.** Don't narrate your excitement about the post. Don't ask for engagement. Don't open with "I'm thrilled to announce" or close with "What do you think? Drop a comment below!" Write for peers who respect substance.
+**No promotional framing.** Don't narrate your excitement about the post. Don't open with "I'm thrilled to announce" or close with "So excited to share." Write for peers who respect substance.
+
+Carve-out for recurring-newsletter cadence anchors: the banned pattern is one-off post excitement ("I'm thrilled to announce", "So excited to share"). Recurring newsletter editions MAY anchor the first line with "Issue N of <Newsletter Name> is out" as a legitimate cadence signal. Readers expect the cadence cue, and the issue-number anchor names the brand without performing excitement.
+
+**Don't ask for generic engagement.** No "What do you think? Drop a comment below!" or "Tag a friend who needs to see this." Generic engagement bait reads as marketing.
+
+Carve-out for substantive content-tied questions: a one-line CTA tied to a specific item's editorial thread is legitimate. "What does your team's AI-usage metric reward today?" is a substantive question grounded in one of the post's threads. It invites discussion of the content, not engagement-for-engagement's-sake. The test: the question only makes sense if the reader has engaged with one of the post's items. Generic prompts ("thoughts?") fail the test; substance-led prompts pass.
 
 Guidelines:
 - First person plural ("we") for service content, first person singular ("I") acceptable for personal observations
