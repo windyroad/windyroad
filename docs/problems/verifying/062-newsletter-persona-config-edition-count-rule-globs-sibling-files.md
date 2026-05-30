@@ -1,12 +1,13 @@
 # Problem 062: Newsletter persona-config edition-count rule globs sibling files and undercounts editions
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-15
 **Origin**: internal
 **Known Error confirmed**: 2026-05-30 (fix landed in commit de6c165; root cause = broken `<published>/*.md` glob predates ADR-026 sibling-file convention)
+**Released**: 2026-05-30 (commit de6c165; local-skill change, no changeset required because `.claude/skills/wr-newsletter/` is project-local, not plugin-distributed)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
 **Effort**: S
-**WSJF**: 18 = (9 x 2) / 1
+**WSJF**: 18 = (9 x 2) / 1 <!-- excluded from WSJF ranking at .verifying.md; preserved here as historical -->
 **Type**: technical
 
 ## Description
@@ -63,7 +64,13 @@ Rule shape: read frontmatter `edition:` value from highest-numbered prior editio
 
 SKILL.md step 11 also gained an explicit assert-then-abort safeguard: if the computed edition is not exactly max+1, surface to Tom rather than publishing with a wrong issue number.
 
-Verification: deferred to next live /wr-newsletter run (transition to Verifying). The next leader edition should compute as Issue 6 (or whatever max(published.edition, draft.edition)+1 reveals) without manual correction.
+Verification: deferred to next live /wr-newsletter run. The next leader edition should compute as Issue 7 without manual correction. Static spot-check (2026-05-30 AFK iter): applying the rule manually to `src/newsletters/published/leader/` + `src/newsletters/drafts/leader/` returns max(frontmatter `edition:` across `YYYY-MM-DD.md` matches) = 6, so next = 7. The old buggy glob would have returned ~11 (6 published briefs + 5 draft sibling files matched by `*.md`). Static spot-check supports the fix; live confirmation pending on next /wr-newsletter run.
+
+## Fix Released
+
+Released 2026-05-30 in commit `de6c165` (`fix(wr-newsletter): edition-counting rule scans frontmatter edition: across published+drafts, filters to YYYY-MM-DD.md (P062)`). Local-skill change at `.claude/skills/wr-newsletter/` (no changeset required, no npm publish gating). Awaiting user verification on next live `/wr-newsletter` run.
+
+Exercise evidence from this session (AFK iter): static rule application to current folder state returns next edition = 7 (max frontmatter `edition:` across `YYYY-MM-DD.md` briefs across both folders is 6). Old glob would have returned ~11.
 
 ## Dependencies
 

@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 README reconciled (1 drift entry corrected): P073 added to WSJF Rankings at WSJF=8 cluster. Reconciliation contract per P118 + ADR-014.
+> Last reviewed: 2026-05-30 P062 (newsletter persona-config edition-count rule globs sibling files) Known Error to Verification Pending per ADR-022; fix released 2026-05-30 in commit `de6c165` (local-skill change in `.claude/skills/wr-newsletter/`, no changeset required). Static spot-check this iter: rule produces next leader edition = 7 from max(frontmatter `edition:` across `YYYY-MM-DD.md` matches) = 6 across published+drafts; old `*.md` glob would have returned ~11. Awaiting live verification on next `/wr-newsletter` run. AFK iter 1.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 18 | P062 | Newsletter persona-config edition-count rule globs sibling files and undercounts editions | 9 (Medium) | Known Error | S | 2026-05-15 | internal |
 | 16 | P063 | Newsletter cover `hook_line_1` budget too loose for LinkedIn preview crop | 8 (Medium) | Known Error | S | 2026-05-15 | internal |
 | 16 | P021 | architect-mark-reviewed.sh strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FA… | 16 (High) | Open | S | 2026-04-26 | internal |
 | 12 | P022 | architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes, leaving cross-session drift on othe… | 12 (High) | Open | S | 2026-04-26 | internal |
@@ -72,6 +71,7 @@ Fix released, awaiting user verification (driven off the dual-tolerant glob `doc
 | P053 | /wr-newsletter formal gate sequence missing a cog-a11y step | 2026-05-13 | SKILL step 15.4 inserted between editor gate (15.25) and LinkedIn-draft (15.5); invokes `cognitive-accessibility` subagent on the brief body; returns reading-grade-level + findings by severity + WCAG 2.2 SC findings; one-round-with-optional-remediation verdict. Triggers on next prep+finalise reproducing 2026-05-08 brief's 20 findings without inline workaround. | no (not observed) |
 | P028 | risk-scorer 30-min TTL expired during long-running orchestrator turns | 2026-05-16 | Three-band TTL policy shipped in upstream `@windyroad/risk-scorer` v0.9.0 (`43e9cc0`); Band A age<TTL/2 passes silently, Band B TTL/2<=age<TTL slides marker forward on invariant state-hash, Band C unchanged. Default TTL also bumped 1800s to 3600s. Triggers on next long AFK orchestrator turn (>30 min between scoring and committing). | no (not observed) |
 | P057 | no-em-dash.sh (Edit/Write surface) lacks the contractual-marker whitelist that no-em-dash-bash.sh already car… | 2026-05-30 | WHITELIST_LINE check ported from `no-em-dash-bash.sh` to `no-em-dash.sh` (PreToolUse Edit/Write surface). Both hooks now carry matching 3-entry whitelist: P063 upstream-pending marker + capture-problem deferred-placeholder Priority + Effort lines. 6 inline smoke tests verified. Triggers on next AFK iter or capture-problem invocation that appends a marker without Bash workaround. | no (not observed) |
+| P062 | Newsletter persona-config edition-count rule globs sibling files and undercounts editions | 2026-05-30 | Persona configs (`leader.md`, `developer.md`) + SKILL.md step 11 rewritten in commit `de6c165`: read `max(frontmatter edition:)+1` across `published/<persona>/` + `drafts/<persona>/`, filename filter `YYYY-MM-DD.md` excludes ADR-026 sibling files + `README.md` by construction; SKILL.md step 11 also asserts max+1 invariant and surfaces to Tom on mismatch. Local-skill change, no changeset. Triggers on next `/wr-newsletter` run (live drafter exercise). | no (not observed) |
 | P066 | Voice guide LinkedIn-posts section needs amendment; rules conflict with editorial direction on three axes | 2026-05-30 | Three carve-outs in `docs/VOICE-AND-TONE.md` § LinkedIn posts: (a) "End with the link" auto-share carve-out (URL auto-injected on publish); (b) "No promotional framing" recurring-newsletter cadence-anchor carve-out (`Issue N of <Newsletter Name> is out` legitimate); (c) substantive content-tied question CTA carve-out (`thoughts?` remains banned). JTBD PASS, voice-tone PASS round 2. Triggers on next LinkedIn-post finalise. | no (not observed) |
 
 ## Inbound Upstream Reports
