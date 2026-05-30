@@ -1,74 +1,89 @@
-# Problem 064: Newsletter critic round-3 budget exhausted on fixable micro-issues; rubric checks need leader-register calibration
+# Problem 064: Newsletter critic uses a 38-check structured rubric that was never approved; simplify back to strengths/weaknesses + context
 
 **Status**: Open
 **Reported**: 2026-05-15
 **Origin**: internal
-**Priority**: 12 (High). Impact: Moderate (3) x Likelihood: Likely (4)
+**Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-05-31; the structured rubric is actively producing wrong-shaped REJECTED verdicts on briefs the reader-facing critic should pass; affects every edition)
 **Effort**: M
-**WSJF**: 6 = (12 x 1) / 2
+**WSJF**: 12 = (16 x 1) / 2 (re-rated 2026-05-31 from 6.0 = (12 x 1) / 2; user direction on critic shape elevates priority)
 **Type**: technical
 
 ## Description
 
-The newsletter critic (`wr-sw-critic` on the newsletter-critic-rubric) round-3 budget exhausted in this session's prep phase on two PARTIAL micro-issues (check_16 LinkedIn sentence length on Item 1 Human-angle 32-word sentence; check_35 voice consistency drift on Item 2 Human-angle third-person abstract phrasing). The critic's own suggested fixes were both single-sentence rewrites that took 30 seconds to apply post-round-3. The 3-round budget per ADR-016 fired before the fix iteration could converge, returning `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`.
+The newsletter critic (`wr-sw-critic` agent invoked via `/wr-newsletter` SKILL.md step 15) currently runs against `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`, a 38-check structured rubric (check_1 through check_38). The rubric was never approved as the intended critic shape. Per user direction 2026-05-31:
 
-The same draft re-ran in finalise (per ADR-017 fresh per-artifact-pass budget) with the post-round-3 fixes applied; round-3 finalise returned `PASS_WITH_AUTHOR_OVERRIDES` per ADR-025.
+> "I never approved a strength/weaknesses rubric. It's supposed to be a simple 'what are the strengths and weaknesses of the document, maybe with some additional relevant context'. That's it. Nothing more. Cog-a11y, voice and tone and risk are all run separately."
 
-Pattern observation: the rubric checks check_16 (LinkedIn sentence length, ~25-word threshold) and check_35 (voice consistency across sections) flagged in BOTH prep AND finalise rounds. Each flag was addressable but the structural pattern (catching long sentences, cross-section voice drift in a long-form leader brief) recurs every edition. The rubric thresholds may be miscalibrated for the leader register, which carries more abstract noun-phrases and longer sentences than the developer register the rubric was originally tuned for.
+The wr-sw-critic agent's own description matches that simpler shape ("Strengths/weaknesses critic for AI-generated artifacts. Reads the artifact and a rubric, returns a structured STRENGTHS + WEAKNESSES block"), but the parameterised rubric-path input pattern (ADR-016) lets the rubric grow into the 38-check structured shape that produces the wrong-shape REJECTED verdicts the original symptoms describe.
+
+This ticket was originally framed (2026-05-15) as "round-3 budget exhausted on fixable micro-issues; rubric checks need leader-register calibration." That framing accepts the 38-check rubric as the correct shape and tries to calibrate within it. Per the user direction above, the rubric structure itself is the problem; calibration is a wrong-shape fix.
 
 ## Symptoms
 
-- Critic returns WEAKNESSES_FOUND round 1 with 5+ PARTIAL flags.
+- Critic returns WEAKNESSES_FOUND round 1 with 5+ PARTIAL flags against rubric checks.
 - Round 2 fixes 3-4 of them but introduces 1-2 new sentence-length or voice-drift flags from the rewrite.
 - Round 3 exhausts budget with 1-2 PARTIAL flags remaining, each with critic-suggested single-sentence fixes.
 - Verdict is REJECTED on critic-loop-exhausted, requiring author override or finalise-round retry.
 
+Iter 18 audit evidence (uncommitted, discarded per 2026-05-31 user direction) is informative about WHY the structured rubric is wrong-shaped: cross-edition check-flag review across 4 reviews.md (2026-05-01, 2026-05-08, 2026-05-15, 2026-05-25) found that check_16 (LinkedIn sentence length ~25-word threshold) and check_34 (consultant-speak density) are the consistent recurring offenders, both flagging on leader-register content that is actually fine for the audience. The structured rubric mis-fires systematically on the register the brief is written for. This is structural evidence the rubric needs simplification, not calibration.
+
 ## Workaround
 
-Apply the round-3 critic-suggested fixes post-round-3 manually. Re-run in finalise to confirm. Document author overrides on rubric checks that consistently mis-fire on the leader register (currently check_6, check_19, check_26 are documented overrides per the SKILL spec).
+Apply round-3 critic-suggested fixes post-round-3 manually; re-run in finalise to confirm. Document author overrides on rubric checks that consistently mis-fire (currently check_6, check_19, check_23, check_26 in accepted_overrides list at .claude/skills/wr-newsletter/SKILL.md:609 = 4 entries; ADR-025 ceiling is 6).
 
 ## Impact Assessment
 
 - **Who is affected**: Tom; every edition of The Shift.
-- **Frequency**: every prep run has trended toward round-3 exhaustion in the last 3 editions (Issue 03, Issue 04, Issue 05). Pattern is consistent.
-- **Severity**: Medium. REJECTED verdict obscures publish-readiness signal (P039 already captures a related concern about PASS_WITH_AUTHOR_OVERRIDES verdict clarity). Each iteration burns tokens on rounds 2-3 that ultimately get superseded by manual post-round-3 fixes.
+- **Frequency**: every prep run has trended toward round-3 exhaustion in the last 3-4 editions (Issue 03, Issue 04, Issue 05, Issue 06). Pattern is consistent.
+- **Severity**: Significant. REJECTED verdict on the structured rubric obscures publish-readiness signal AND consumes drafter cycles on rewrites that ultimately get superseded by manual post-round-3 fixes. Per user direction 2026-05-31, the deeper severity is that the structured rubric is itself the wrong shape; calibration would be polishing the wrong artefact.
 - **Analytics**: deferred to investigation.
 
 ## Root Cause Analysis
 
-### Hypothesis
+### Hypothesis (revised 2026-05-31)
 
-The newsletter-critic-rubric checks check_16 (LinkedIn sentence length) and check_35 (voice consistency) were calibrated against draft samples that are shorter and structurally tighter than the leader-register brief shape. The leader brief carries:
+The structured 38-check rubric (`.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`) landed in commit 30ea2a9 (initial newsletter shipment) and grew via P015 (commit 26a089c, checks 26-31) and P017 (commit f394f64, 7 substance checks). The rubric structure was not approved as the intended critic shape; it accreted as feature work without explicit human-oversight confirmation.
 
-1. Longer Item bodies (~600-800 words/item) because the Engineering Leader audience needs the operational consequence unpacked.
-2. More abstract noun-phrases ("vendor-services-partner pattern", "compounding-capability story", "capability-acceleration framing") because the substrate is business-decision framing.
-3. Cross-section voice drift between the From-Tom opener (first-person, concrete) and Items (third-person, analytical) is structural to the form, not a defect.
+Per user direction 2026-05-31, the intended critic shape is:
 
-Three possible fixes:
+> "What are the strengths and weaknesses of the document, maybe with some additional relevant context. That's it. Nothing more."
 
-a. **Calibrate the rubric**: raise check_16's word threshold from ~25 to ~30 for leader register, OR add a leader-register-specific exception list of common noun-phrases ("services-arm", "capability curve") that don't trip jargon detection.
-b. **Add overrides**: add check_16 and check_35 to the accepted_overrides list in `/wr-newsletter` SKILL.md Step 15 alongside check_6/check_19/check_26.
-c. **Change the rubric structure**: split the rubric into a leader-register subset and a developer-register subset, with different thresholds.
+The cog-a11y (P053-shipped SKILL step 15.4 invokes cognitive-accessibility subagent), voice-and-tone (wr-voice-tone:agent), and content-risk (ADR-012, ADR-015 wr-risk-scorer:external-comms) reviews ARE already separate sibling gates in the SKILL.md pipeline. The sw-critic should not be replicating their coverage areas via numbered rubric checks.
+
+### Fix Strategy (revised 2026-05-31)
+
+Simplify `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md` to a single brief instruction:
+
+> Read the artifact. Return STRENGTHS (what the piece does well, with specific citations) and WEAKNESSES (what the piece does not do well, with specific citations and concrete fixes). Optionally include RELEVANT CONTEXT (e.g. recurring patterns observed across editions, structural notes the drafter should consider for future work). Nothing else.
+
+Drop the 38 numbered checks. Drop the accepted_overrides allowlist mechanism (it exists to override structured rubric checks; with no structured checks, no overrides needed). Update `.claude/skills/wr-newsletter/SKILL.md` step 15 invocation prose to match the simplified rubric shape.
+
+This composes with P071 (supersede ADR-016 parameterised sw-critic pattern with domain-specific critic). P071's scope is the parameterised pattern itself; this ticket is the specific newsletter-critic instance. Implementation order: amend ADR-016 first (records the simplification decision), then simplify the newsletter rubric, then re-evaluate whether the parameterised pattern needs full supersession per P071 or can stay with the simpler shape.
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Compare the 5 most recent editions' critic round-3 PARTIAL flags to see if check_16 and check_35 are the consistent offenders.
-- [ ] Decide on fix shape (rubric calibration vs override addition vs rubric split).
-- [ ] If option (b), update `/wr-newsletter` SKILL.md Step 15 accepted_overrides list.
-- [ ] If option (a) or (c), edit `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md` and document the calibration rationale.
+- [x] Compare the 5 most recent editions' critic round-3 PARTIAL flags to see which checks are the consistent offenders. (Done 2026-05-31 iter 18 audit; check_16 + check_34 confirmed recurring across 2026-05-15 and 2026-05-25 editions.)
+- [x] Confirm critic shape with user. (Done 2026-05-31: simplify to S/W + optional context.)
+- [ ] Draft ADR-016 amendment scoping sw-critic agent to S/W + context output; reject structured-rubric input pattern.
+- [ ] Simplify .claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md to the brief instruction shape above.
+- [ ] Update .claude/skills/wr-newsletter/SKILL.md step 15 invocation prose to drop accepted_overrides mechanism.
+- [ ] Run the simplified critic against a prior edition (2026-05-25.md) as smoke test; confirm STRENGTHS + WEAKNESSES + CONTEXT shape outputs.
+- [ ] Coordinate with P071 (parameterised sw-critic supersession) for cross-ticket implementation order.
 
 ## Dependencies
 
 - **Blocks**: (none)
-- **Blocked by**: (none)
-- **Composes with**: P039 (PASS_WITH_AUTHOR_OVERRIDES verdict obscures publish signal). Related concern: the REJECTED verdict on critic-loop-exhausted on fixable micro-issues is the same class of clarity-of-signal issue.
+- **Blocked by**: ADR-016 amendment (this ticket's first investigation task) per ADR-074 substance-confirm-before-build guard.
+- **Composes with**: P071 (supersede ADR-016 parameterised sw-critic pattern with domain-specific critic). The parameterised pattern is the surface; this ticket is the newsletter-critic instance. P039 (PASS_WITH_AUTHOR_OVERRIDES verdict obscures publish signal) is related and may be auto-resolved if the accepted_overrides mechanism is dropped per Fix Strategy.
 
 ## Related
 
-- .claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md (rubric file)
-- /wr-newsletter SKILL.md Step 15 (critic invocation + accepted_overrides)
-- ADR-016 (sw-critic 3-round loop)
-- ADR-025 (PASS_WITH_AUTHOR_OVERRIDES verdict)
-- P039 (related signal-clarity concern)
-- Captured via /wr-retrospective:run-retro on 2026-05-15 session.
+- .claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md (38-check rubric file to be simplified)
+- .claude/agents/wr-sw-critic.md (parameterised sw-critic agent; the agent description already matches the simpler shape)
+- /wr-newsletter SKILL.md step 15 (critic invocation, accepted_overrides list)
+- ADR-016 (sw-critic 3-round loop; to be amended)
+- ADR-025 (PASS_WITH_AUTHOR_OVERRIDES verdict; may be retired with accepted_overrides mechanism)
+- P071 (supersede ADR-016 parameterised sw-critic pattern; composes)
+- P039 (PASS_WITH_AUTHOR_OVERRIDES verdict obscures publish signal; may be auto-resolved by simplification)
+- P015, P017 (rubric expansion history)
+- Captured via /wr-retrospective:run-retro on 2026-05-15 session; reframed via /wr-itil:work-problems orchestrator main turn 2026-05-31 per user direction.

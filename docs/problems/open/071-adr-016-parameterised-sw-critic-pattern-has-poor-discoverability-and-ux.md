@@ -3,9 +3,9 @@
 **Status**: Open
 **Reported**: 2026-05-30
 **Origin**: internal
-**Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
+**Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-05-31 from 8.0; user direction on critic shape SUBSTANTIALLY elevates priority. The parameterised pattern is the root mechanism allowing the wrong-shape 38-check newsletter rubric per P064; supersession is now the strategic fix path for both this ticket AND P064 simultaneously.)
 **Effort**: M
-**WSJF**: 4 = (8 x 1) / 2
+**WSJF**: 12 = (16 x 1) / 2 (re-rated 2026-05-31 from 4.0)
 **Type**: technical
 
 ## Description
@@ -50,3 +50,4 @@ User direction (2026-05-30, ADR-016 rejection in architect oversight drain): sup
 - Captured via `/wr-itil:capture-problem` on 2026-05-30 during `/wr-architect:review-decisions` drain after user rejected ADR-016.
 - ADR-016 frontmatter carries `human-oversight: rejected-pending-supersede` + `supersede-ticket: P071`.
 - Rationale verbatim from user: "Parameterised skills have poor discoverability and UX".
+- Re-rated 2026-05-31 (WSJF 4.0 to 12.0) during `/wr-itil:work-problems` orchestrator main turn after user direction reframed P064: the newsletter critic's 38-check structured rubric is the wrong shape; the parameterised pattern is the mechanism that allowed it to accrete. Supersession path now serves both this ticket AND P064. User rationale verbatim 2026-05-31: "I never approved a strength/weaknesses rubric. It's supposed to be a simple 'what are the strengths and weaknesses of the document, maybe with some additional relevant context'. That's it. Nothing more. Cog-a11y, voice and tone and risk are all run separately."
