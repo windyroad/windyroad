@@ -1,11 +1,12 @@
 # Problem 061: assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-14
+**Released**: 2026-05-30 (commit `9f42130`)
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
 **Effort**: M
-**WSJF**: 8 = (8 x 2) / 2
+**WSJF**: 0 (excluded from dev-work ranking per ADR-022; user-side verification remaining)
 **Type**: technical
 
 ## Description
@@ -66,6 +67,14 @@ Captured via /wr-itil:capture-problem on 2026-05-14 following user correction at
 
 Both follow-ups are tracked as upstream proposals; they raise robustness but do not gate this ticket's transition to Known Error. The model-layer memory extension is the in-project lever.
 
+## Fix Released
+
+Released 2026-05-30 in commit `9f42130` ("docs(problems): P061 Open to Known Error, memory-layer deferral-prose fix"). The release marker for this ticket is the commit itself, NOT a tagged npm release. The fix surface is project-local user memory at `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_no_pitching_act_on_obvious_decisions.md`, which is not git-tracked and has no release pipeline. The same pattern applies as P062 (project-local `.claude/skills/wr-newsletter/` change, commit as release marker) and P063 (project-local `.claude/skills/wr-newsletter-cover/` change). User-memory edits are live on disk the moment they ship; KE to Verification Pending fires on commit-as-release-marker rather than waiting for an npm tag that will never come.
+
+Fix mechanism: `feedback_no_pitching_act_on_obvious_decisions.md` carries a new "Wrap-up surface for policy-authorised post-clearance actions (P061)" section enumerating four canonical deferral-prose phrasings ("Push decision still deferred pending explicit user direction", "Awaiting clearance to push", "Holding off on push pending your call", "Push remains deferred pending direction"), the post-risk-scorer-clearance trigger condition (every commit in chain within RISK-POLICY appetite, CI presumed green), the equivalence rule (treat deferral-prose as a pitch; same forced round-trip outcome as a direct pitch, just grammatically inverted to evade the upstream `itil-assistant-output-review.sh` direct-pitch regex), and the 2026-05-14 source incident as anti-pattern witness.
+
+Awaiting user verification per ADR-022. Verification trigger as documented in the next section.
+
 ## Verification
 
-Verification trigger fires on the next AFK iter or interactive session wrap-up where: (a) risk-scorer has cleared every commit in the chain within RISK-POLICY.md appetite, AND (b) the assistant performs the push (or release-watch) directly without emitting any of the four canonical deferral-prose phrasings or naming the user as the gate. Status transitions Known Error to Verification Pending on next release containing this ticket's commit.
+Verification trigger fires on the next AFK iter or interactive session wrap-up where: (a) risk-scorer has cleared every commit in the chain within RISK-POLICY.md appetite, AND (b) the assistant performs the push (or release-watch) directly without emitting any of the four canonical deferral-prose phrasings or naming the user as the gate. With Status now Verification Pending (transitioned 2026-05-30, commit-as-release-marker per ADR-022 user-memory carve-out), the queue position surfaces in the Verification Queue table for user closure on next observed clean-wrap-up exercise.
