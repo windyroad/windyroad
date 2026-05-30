@@ -42,3 +42,26 @@ Notes:
 
 - Investigation-only iteration on P001 (Next.js build hangs locally). No direction questions arose; the iter's load-bearing observation (original 2026-04-14 repro non-applicable on current Next 16 runtime) is purely diagnostic, not direction-setting.
 - No deferrals to next interactive session from this iter.
+
+---
+
+# Ask Hygiene 2026-05-30 (AFK work-problems iter 10, P061)
+
+This iteration ran inside the AFK `/wr-itil:work-problems` loop. The loop's standing constraints forbid `AskUserQuestion` mid-iter, so the agent could not have fired any asks regardless of classification.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (no AskUserQuestion calls this iter) | n/a | AFK loop constraint: "never AskUserQuestion mid-loop" |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes:
+
+- P061 (assistant gates policy-authorised actions on user permission) Open to Known Error. Root cause was diagnostic (deferral-prose evades direct-pitch detector); fix shape was mechanical (extend existing memory note with the wrap-up surface). No direction-setting question arose.
+- Memory-layer fix shipped at `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_no_pitching_act_on_obvious_decisions.md` (not version-controlled; project-local user memory). Upstream-blocked follow-ups (PROSE_ASK_PATTERNS extension, check-ask-hygiene.sh measurement-layer extension) recorded on the ticket as deferred.
+- No deferrals to next interactive session from this iter.
