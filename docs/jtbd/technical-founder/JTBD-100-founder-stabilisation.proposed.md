@@ -1,5 +1,7 @@
 ---
 status: proposed
+human-oversight: confirmed
+oversight-date: 2026-05-30
 job-id: founder-stabilisation
 persona: technical-founder
 date-created: 2026-04-20

@@ -1,6 +1,8 @@
 ---
 name: developer
 description: Working engineers using AI coding tools day-to-day; influence upward on employer tool decisions
+human-oversight: confirmed
+oversight-date: 2026-05-30
 ---
 
 # Developer (Influence, non-commercial)

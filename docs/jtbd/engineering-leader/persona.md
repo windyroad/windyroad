@@ -1,6 +1,8 @@
 ---
 name: engineering-leader
 description: CTOs, Heads of Engineering, VPs at mid-to-large organisations with AI-coding-tool-equipped teams
+human-oversight: confirmed
+oversight-date: 2026-05-30
 ---
 
 # Engineering Leader (Primary)

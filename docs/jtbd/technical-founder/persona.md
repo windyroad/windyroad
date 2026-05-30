@@ -1,6 +1,8 @@
 ---
 name: technical-founder
 description: Non-technical to semi-technical founders with AI-generated apps in production that break unpredictably
+human-oversight: confirmed
+oversight-date: 2026-05-30
 ---
 
 # Technical Founder (Secondary)
