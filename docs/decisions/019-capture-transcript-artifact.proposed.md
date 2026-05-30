@@ -1,6 +1,8 @@
 ---
 status: "proposed"
 date: 2026-04-25
+human-oversight: confirmed
+oversight-date: 2026-05-30
 decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []
@@ -51,6 +53,8 @@ Chosen option: **"Sibling markdown file at `<draft-folder>/YYYY-MM-DD.capture.md
 persona: <leader|developer>
 edition: <N from step 11>
 date: <YYYY-MM-DD>
+human-oversight: confirmed
+oversight-date: 2026-05-30
 phase-written: <prep|finalise|full>
 phase-last-appended: <prep|finalise|full>
 ---

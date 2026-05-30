@@ -1,6 +1,9 @@
 ---
 status: "proposed"
 date: 2026-04-17
+human-oversight: rejected-pending-supersede
+oversight-date: 2026-05-30
+supersede-ticket: P071
 decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []

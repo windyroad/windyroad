@@ -2,6 +2,9 @@
 status: "proposed"
 first-released:
 date: 2026-04-26
+human-oversight: rejected-pending-supersede
+oversight-date: 2026-05-30
+supersede-ticket: P072
 decision-makers: [Tom Howard, Claude]
 consulted: [wr-architect agent]
 informed: []

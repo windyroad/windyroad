@@ -3,6 +3,8 @@ status: "accepted"
 first-released: 2026-04-15
 accepted-date: 2026-05-02
 date: 2026-04-13
+human-oversight: confirmed
+oversight-date: 2026-05-30
 decision-makers: Tom Howard
 consulted: Voice/tone review agent
 informed: n/a

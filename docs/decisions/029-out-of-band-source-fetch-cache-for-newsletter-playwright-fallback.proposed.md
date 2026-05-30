@@ -1,6 +1,8 @@
 ---
 status: "proposed"
 date: 2026-05-13
+human-oversight: confirmed
+oversight-date: 2026-05-30
 decision-makers: [unspecified, fill at canonical review]
 consulted: []
 informed: []

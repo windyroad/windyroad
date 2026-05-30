@@ -3,6 +3,8 @@ status: "accepted"
 first-released: 2026-03-09
 accepted-date: 2026-03-27
 date: 2026-03-09
+human-oversight: confirmed
+oversight-date: 2026-05-30
 decision-makers: [Tom Howard, Claude]
 consulted: [accessibility-lead agent]
 informed: []
