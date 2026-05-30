@@ -40,12 +40,28 @@ Likely caused by resource exhaustion from accumulated zombie `vitest` and `next 
 
 Alternative hypothesis: Next.js worker pool initialization may deadlock when system resources are constrained by other Node.js processes.
 
+### Investigation 2026-05-30 (AFK iter 9)
+
+Quick non-reproducing diagnostics (build NOT run, to avoid blocking the loop):
+
+- No `next build` processes for this project currently in `ps aux`. The original "process accumulation" symptom is not currently observable.
+- Node `v22.17.1` (current LTS-line).
+- Next.js has been bumped from the 15.x era (when the ticket was filed) to `^16` in `package.json`. The runtime that exhibited the hang is no longer the runtime in use.
+- `next.config.mjs` unchanged since the ticket was filed; uses `output: 'export'` (static SSG). No exotic webpack or turbopack customisation.
+- No `.next/` directory present (clean state).
+- Lockfile churn since 2026-04-14 limited to react `19.2.5` to `19.2.6`, sass `1.98.0` to `1.99.0`, typescript hold, slugify, playwright. No Next.js plugin changes.
+- Aside: `~/.npm` is 22 GB (large, but not a hang root cause; flag for future hygiene, not this ticket).
+- Aside: stale `next-server v15.5.18` from `voder-mcp-hub` project running since 2026-05-27. Unrelated to this repo's build.
+
+The session-specific stuck-process hypothesis from 2026-04-14 cannot be reproduced today, and the underlying Next.js version has since crossed a major boundary. The ticket should be re-verified against current state rather than treated as a load-bearing live bug.
+
 ### Investigation Tasks
 
 - [ ] Verify build succeeds in CI (clean environment)
-- [ ] Reproduce in a fresh terminal session with no stale processes
-- [ ] Check if `next build` works after a full system restart
-- [ ] Investigate whether TDD hook test runner needs process cleanup on timeout
+- [ ] **Re-verify locally on Next 16**: run `npm run build` once during normal working hours (not inside the AFK loop) and observe. If it completes, transition to Verifying.
+- [ ] Reproduce in a fresh terminal session with no stale processes (only if re-verification still hangs)
+- [ ] Check if `next build` works after a full system restart (only if re-verification still hangs)
+- [ ] Investigate whether TDD hook test runner needs process cleanup on timeout (only if re-verification still hangs)
 
 ## Related
 
