@@ -156,3 +156,35 @@ Notes:
 - Step 2b pipeline-instability scan: this iter staged the ticket rename + ticket edit + README refresh + this retro append together BEFORE the principal commit, proactively mitigating the P057 staging-trap recurrence that split iters 5, 6, 7 into two commits each. Single-commit landing verified post-commit.
 - Step 2b README inventory-currency advisory failed open (`packages/` directory absent in this consumer project) per ADR-013 Rule 6 fail-soft contract; recorded as expected behaviour, not a regression.
 - Four deferrals to next interactive session, all surfaced via `outstanding_questions` in the ITERATION_SUMMARY block per ADR-044 cat-1 direction-question classification.
+
+---
+
+# Ask Hygiene 2026-05-30 (AFK work-problems iter 9, P049)
+
+This iteration ran inside the AFK `/wr-itil:work-problems` loop. The loop's standing constraints forbid `AskUserQuestion` mid-iter, so the agent could not have fired any asks regardless of classification.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (no AskUserQuestion calls this iter) | n/a | AFK loop constraint: "never AskUserQuestion mid-loop" |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes:
+
+- P049 (reconcile-readme.sh section-order assumption produces false-positive STALE for tickets in section-after-Closed) Open to Parked, upstream-blocked. Fix site `packages/itil/scripts/reconcile-readme.sh` does NOT exist in this project's working tree; script lives in the `wr-itil` plugin at `~/.claude/plugins/cache/windyroad/wr-itil/<version>/scripts/reconcile-readme.sh`. This project is a downstream marketplace consumer of `@windyroad/wr-itil`. A consumer cannot edit the cached script without losing the change on next plugin update.
+- Verified 2026-05-30 on cached `0.38.0`: lines 130-132 still ship the fallback-chain anti-pattern across THREE section-end computations. `WSJF_END=${VQ_START:-${INBOUND_START:-${CLOSED_START:-${PARKED_START:-$END_LINE}}}}` (line 130), `VQ_END=${INBOUND_START:-${CLOSED_START:-${PARKED_START:-$END_LINE}}}` (line 131), `CLOSED_END=${PARKED_START:-$END_LINE}` (line 132). All three use "first non-empty" rather than "min subsequent section start". `CLOSED_END` on line 132 is particularly fragile if PARKED precedes CLOSED (negative-span sed slice).
+- Bug is currently latent under this project's README layout (WSJF, VQ, Inbound, Closed, Parked, Notes): `INBOUND_START=71` is picked as `VQ_END` and happens to be the correct next-section-start. The Closed-before-Parked workaround from iter 2 (2026-05-02 commit 8352016) remains the operating contract; any future README reorder that places `## Parked` before `## Closed` re-triggers the false-positive STALE.
+- No upstream issue exists for P049 specifically. `gh issue list -R windyroad/agent-plugins --search "reconcile-readme"` on 2026-05-30 returned `#126`, `#85`, `#76`, `#180`; none cover the lines 130-132 section-order assumption. Ticket carries the standing "Upstream report pending" note. Per the AFK discipline observed in iters 3-8, the `/wr-itil:report-upstream` invocation is deferred to a batched filing pass at session boundary rather than fired in-loop.
+- Un-park trigger: a new `wr-itil` plugin release whose `reconcile-readme.sh` replaces the lines 130-132 fallback chains with either (a) a min-of-subsequent-section-starts loop (the concrete bash sketched in this ticket's Fix Strategy), or (b) explicit section-position validation. Verify by re-reading the cached script in the new version, then re-running `/wr-itil:work-problems` Step 0 reconcile against both README section orderings (Closed-before-Parked and Parked-before-Closed) and confirming clean exit 0 in both.
+- Composes-with iters 3 (P021), 4 (P022), 5 (P027), 6 (P033), 7 (P042), 8 (P047) plus P031 (parked 2026-05-02, same script, different surface): all seven share the same marketplace-consumer-cannot-edit-cached-plugin pattern. P049 extends the wr-itil surface from SKILL.md prose (P027, P031) to script logic (`reconcile-readme.sh`).
+- Architect review (this iter): PASS on substance (no ADR conflicts, no decision violations, no unratified dependency, no runtime-path triggers). NEEDS DIRECTION on three queued questions for next interactive session. (a) Codify the now-7-ticket marketplace-consumer-cannot-edit-cached-plugin park pattern as an ADR. Three substance options: (A) "fix site is in an upstream plugin cache that this project does not author" - broad, captures all seven; (B) "fix site is in an upstream plugin AND no in-project workaround is viable" - narrower; (C) "fix site is in an upstream plugin AND the issue is filed upstream" - strictest. Architect advisory lean: (A). (b) Upstream-report batching discipline. P042 and now P049 share "Upstream report pending" status with no filed issue. (A) per-park `/wr-itil:report-upstream` invocation immediately; (B) single batched upstream filing pass at session boundary. Architect advisory lean: (B). (c) Companion CLOSED_END fix scope is already covered mechanically by the un-park trigger's structural-fix requirement; architect classifies as a grain question, not a substantive one - no AskUserQuestion needed.
+- JTBD review (this iter): PASS, no edits blocked. Pure operator backlog hygiene; no documented commercial-reader job is touched. The change does not modify any homepage, `/ai-quality`, `/founders`, `/vibe-code-audit`, `/blog`, or newsletter surface. No `// @jtbd` annotations apply (markdown ticket files are not in the annotation surface). Reviewer flagged the park-only-vs-add-a-local-Closed-before-Parked-guard question as out of scope for JTBD: neither alternative changes any documented commercial-persona surface; the call belongs to the operator-workflow/WSJF lane and the iter 3-8 precedent (six consecutive identical parks) is the strongest signal for staying consistent.
+- Step 4a verification-close drain: README Verification Queue's `Likely verified?` cells remain `no (not observed)` or `no (observed regression)` across the row range; no `yes - observed:` rows surface for the P282 prior-session evidence drain on this bookkeeping-only iter.
+- Step 2b pipeline-instability scan: this iter co-staged all touched paths (ticket rename + ticket edit + README refresh) BEFORE the principal commit and landed the park in a single commit (`ec81581`). The P057 staging-trap mitigation pattern from iter 8 holds for iter 9; combined-stage discipline now verified across two consecutive iters.
+- Step 2b README inventory-currency advisory failed open (`packages/` directory absent in this consumer project) per ADR-013 Rule 6 fail-soft contract; recorded as expected behaviour, not a regression.
+- Three deferrals to next interactive session via `outstanding_questions` in the ITERATION_SUMMARY block per ADR-044 cat-1 direction-question classification (ADR codification of 7-ticket pattern; upstream-report batching; whether to expand the recurring marketplace-consumer-park pattern's WSJF re-rank logic to recognise the now-7-ticket cohort).
