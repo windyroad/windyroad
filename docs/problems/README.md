@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 batch re-rate per /wr-itil:review-problems: Origin field stamped on all 65 tickets per ADR-076 (no inbound channels configured; all internal); Priority/WSJF math corrected on 30 open/known-error tickets (Severity band labels normalised from "Significant"/"Moderate" to canonical High/Medium per RISK-POLICY label bands; deferred re-rate placeholders resolved); 7 tickets lacking Effort lines (P021, P022, P023, P027, P029, P030, P070) gained concrete Effort + WSJF; dependency-graph traversal found one active edge (P023 blocked by P021 + P022) with no transitive propagation needed. No auto-transitions Open to Known Error fired this pass: the eligible-by-criteria cluster is dominated by upstream-blocked tickets per P069, and promoting to KE with multiplier 2.0 would worsen the upstream cycling problem before the placement-authority signal lands. Verification Queue uses P186 evidence-first cells (only P010 carries observed evidence; remainder marked `no - not observed` pending verification triggers). Top of dev-work queue: P062 (18.0 KE S newsletter persona-config edition-count), P063 (16.0 KE S cover hook_line_1 budget), P021 (16.0 Open S architect-mark-reviewed strict-verdict).
+> Last reviewed: 2026-05-30 README reconciled (1 drift entry corrected): P073 added to WSJF Rankings at WSJF=8 cluster. Reconciliation contract per P118 + ADR-014.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -21,6 +21,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 12 | P068 | Newsletter URL discovery via Google News RSS strips canonical to outlet root; misses real article URL | 12 (High) | Open | S | 2026-05-15 | internal |
 | 8 | P061 | assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has alrea… | 8 (Medium) | Known Error | M | 2026-05-14 | internal |
 | 8 | P060 | `capture-adr` SKILL.md template frontmatter sentinel carries U+2014 that no-em-dash hook blocks | 8 (Medium) | Open | S | 2026-05-14 | internal |
+| 8 | P073 | P186 evidence-first cell canonical shape uses U+2014 separator that no-em-dash hook blocks during README rend… | 8 (Medium) | Open | S | 2026-05-30 | internal |
 | 6 | P029 | work-problems iteration boundary leaves run-retro BRIEFING.md edits uncommitted | 12 (High) | Open | M | 2026-04-26 | internal |
 | 6 | P046 | Risk scorer treats changesets as queued when underlying commits are already on origin | 12 (High) | Open | M | 2026-05-02 | internal |
 | 6 | P048 | /wr-itil:manage-problem Step 5 P094 README refresh contract bypassed on bulk-creation paths | 12 (High) | Open | M | 2026-05-02 | internal |
