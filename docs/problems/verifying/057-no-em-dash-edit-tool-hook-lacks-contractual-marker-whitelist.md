@@ -1,7 +1,8 @@
 # Problem 057: no-em-dash.sh (Edit/Write surface) lacks the contractual-marker whitelist that no-em-dash-bash.sh already carries
 
-**Status**: Open
+**Status**: Verifying
 **Reported**: 2026-05-13
+**Transitioned**: 2026-05-30 (Open -> Verifying: whitelist ported to `no-em-dash.sh`, bash hook expanded to matching 3-entry whitelist for symmetry; smoke tests in commit body verify canonical markers pass and non-whitelisted em-dashes still block)
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred, re-rate at next /wr-itil:review-problems)
 **Effort**: S (deferred, re-rate at next /wr-itil:review-problems)
 **Type**: technical

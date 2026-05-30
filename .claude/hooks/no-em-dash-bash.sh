@@ -25,13 +25,23 @@ fi
 # U+2014 in UTF-8 is the byte sequence E2 80 94.
 EMDASH=$(printf '\xe2\x80\x94')
 
-# Whitelist: contractual marker line appended by the upstream
-# `wr-itil:work-problems` SKILL when an iteration parks a ticket with the
-# `upstream-blocked` reason. The marker wording is fixed by upstream
-# SKILL.md and contains a literal em-dash. A follow-up problem ticket
-# tracks amending the upstream marker wording so this whitelist can be
-# removed.
-WHITELIST_LINE="- **Upstream report pending** ${EMDASH} external dependency identified"
+# Whitelist: contractual marker lines authored by upstream wr-itil skills.
+# The `work-problems` SKILL appends the upstream-pending marker when an
+# iteration parks a ticket with the `upstream-blocked` reason; the
+# `capture-problem` SKILL writes the deferred-placeholder template's
+# Priority + Effort lines on every new-ticket capture. All three carry
+# literal em-dashes by upstream SKILL.md contract. Sibling hook
+# no-em-dash.sh (Edit/Write surface) carries the matching whitelist.
+WHITELIST_LINES=(
+    "- **Upstream report pending** ${EMDASH} external dependency identified"
+    "**Priority**: 3 (Medium) ${EMDASH} Impact: 3 x Likelihood: 1 (deferred ${EMDASH} re-rate at next /wr-itil:review-problems)"
+    "**Effort**: M (deferred ${EMDASH} re-rate at next /wr-itil:review-problems)"
+)
+# Build a multi-pattern grep -v invocation: one -e per whitelist line.
+WHITELIST_GREP_ARGS=()
+for line in "${WHITELIST_LINES[@]}"; do
+    WHITELIST_GREP_ARGS+=(-e "$line")
+done
 
 OFFENDERS=()
 while IFS= read -r status_line; do
@@ -48,16 +58,16 @@ while IFS= read -r status_line; do
 
     if git ls-files --error-unmatch -- "$file" >/dev/null 2>&1; then
         # Tracked file: check added lines (working-tree vs HEAD) for em-dashes,
-        # excluding the whitelisted marker line.
+        # excluding the whitelisted marker lines.
         added=$(git diff --no-color HEAD -- "$file" 2>/dev/null \
             | grep -E '^\+[^+]' \
-            | grep -v -F -e "$WHITELIST_LINE" || true)
+            | grep -v -F "${WHITELIST_GREP_ARGS[@]}" || true)
         if [ -n "$added" ] && printf '%s' "$added" | grep -q -F -e "$EMDASH"; then
             OFFENDERS+=("$file")
         fi
     else
-        # Untracked file: full content scan, excluding the whitelisted line.
-        if grep -v -F -e "$WHITELIST_LINE" "$file" 2>/dev/null \
+        # Untracked file: full content scan, excluding the whitelisted lines.
+        if grep -v -F "${WHITELIST_GREP_ARGS[@]}" "$file" 2>/dev/null \
             | grep -q -F -e "$EMDASH"; then
             OFFENDERS+=("$file")
         fi
