@@ -1,11 +1,11 @@
 # Problem 046: Risk scorer treats changesets as queued when underlying commits are already on origin
 
-**Status**: Open
+**Status**: Parked
 **Reported**: 2026-05-02
 **Origin**: internal
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: M
-**WSJF**: 6 = (12 x 1) / 2
+**WSJF**: 0 (parked, excluded from ranking)
 
 ## Description
 
@@ -106,3 +106,13 @@ In the orchestrator skills (`/wr-itil:work-problems` Step 6.5, `/wr-itil:manage-
 - **Template used**: problem-report.yml (problem-shaped, per ADR-033 primary classifier)
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes (issue body contains downstream ticket reference)
+
+## Parked
+
+- **Reason**: upstream-blocked. The genuine fix lives in the `wr-risk-scorer` plugin at `~/.claude/plugins/cache/windyroad/wr-risk-scorer/<version>/` (specifically the `pipeline` agent reasoning rubric at `agents/pipeline.md` and / or the `assess-release` SKILL prompt-build at `skills/assess-release/SKILL.md` step 4), inside the `windyroad/agent-plugins` repo. The local repo has no `packages/wr-risk-scorer/` directory; this project is a downstream marketplace consumer of `@windyroad/wr-risk-scorer`. A consumer cannot edit the cached agent prose or SKILL.md without losing the change on next plugin update, so the only durable fix is upstream. The Option 2 caller-side defensive wrapper named in the ticket's Fix Strategy (re-verify `.changeset/*.md` introducing-commit ancestry in the orchestrator skills before acting on a Layer 1 release-risk score) is itself orchestrator-side prose that lives in upstream `wr-itil` SKILL.md files (`work-problems/SKILL.md` Step 6.5, `manage-problem/SKILL.md` Step 12), the same marketplace-consumer-cannot-edit-cached-plugin shape just one plugin over. No local-codifiable surface exists.
+- **Verified persistence**: latest cached plugin version `0.11.2` still ships the bug. `skills/assess-release/SKILL.md` step 2 (lines 36 to 37) lists `.changeset/*.md` filenames via `ls .changeset/*.md 2>/dev/null | head -20` and step 4 (lines 59 to 62) passes "the changeset list (if any)" to the pipeline subagent without any `git merge-base --is-ancestor` push-state verification. The `agents/pipeline.md` rubric does not contain the P046-recommended `git log --diff-filter=A` plus `git merge-base --is-ancestor <commit> origin/<base>` introducing-commit ancestry check anywhere in its release-layer scoring guidance: a `grep -n` for `changeset|merge-base|--is-ancestor` returns 16 hits on `changeset` referencing graduation-from-holding logic (ADR-061 / ADR-042) and zero on the P046 push-state-verification rule. Verified 2026-05-31 by reading the cached files.
+- **Upstream issue status**: `windyroad/agent-plugins#121` OPEN as of 2026-05-31 (last updated 2026-05-15T05:31:56Z, no labels). Filed 2026-05-13 via problem-report.yml template; cross-reference confirmed in the "Reported Upstream" section above. No fix committed upstream yet.
+- **Un-park trigger**: a new `wr-risk-scorer` plugin release lands in `~/.claude/plugins/cache/windyroad/wr-risk-scorer/` whose `agents/pipeline.md` release-layer scoring guidance (or, alternatively, `skills/assess-release/SKILL.md` step 4 prompt-build) implements the Option 1 introducing-commit ancestry check: for each file in `.changeset/*.md`, identify the introducing commit (`git log --diff-filter=A --oneline -- <file>`) and check `git merge-base --is-ancestor <commit> origin/<base>`. If ancestor, score the changeset's release contribution at "underlying code already pushed; release queue pending drain only" (residual ≤ 2/25); only apply forward-looking risk treatment when the introducing commit is NOT yet on `origin/<base>`. Verify by re-reading the cached prose in the new version. Close P046 once a session producing release-cadence checks against `.changeset/*.md` files committed-and-pushed (but undrained through changesets-action release PR) returns residual ≤ 2/25 instead of the current false-high 8/25.
+- **Local impact while parked**: existing Workaround (Tom corrects in-session; orchestrator skill can re-verify via `git log --diff-filter=A --oneline origin/<base> -- .changeset/<name>.md` before acting on the scorer's release-layer score) remains the operating contract. The risk is asymmetric and false-high, not false-low. When the scorer over-scores release risk for a pushed-but-undrained changeset queue, the AFK orchestrator's Step 6.5 above-appetite branch halts the loop or surfaces phantom remediations to the user (per ADR-042), and the user catches up at next interactive session. The Step 6.5 halt is recoverable; the scoring asymmetry never costs the project a deploy.
+- **Composes with**: P028 (verifying 2026-05-16, upstream `windyroad/agent-plugins` `wr-risk-scorer` TTL-band policy shipped in v0.9.0); P047 (parked 2026-05-30, upstream `windyroad/agent-plugins#110` `wr-risk-scorer` assess-release SKILL.md step 5 prose). All three share the `wr-risk-scorer` plugin and the marketplace-consumer-cannot-edit-cached-plugin shape; P028 differs in that the upstream fix has already shipped (verifying not parked). P046 extends the surface from TTL-band policy plus delegation prose to release-layer scoring logic.
+- **Date parked**: 2026-05-31
