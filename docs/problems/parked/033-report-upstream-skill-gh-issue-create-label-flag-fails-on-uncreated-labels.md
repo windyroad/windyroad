@@ -1,11 +1,11 @@
 # Problem 033: report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created the label
 
-**Status**: Open
+**Status**: Parked
 **Reported**: 2026-04-27
 **Origin**: internal
 **Priority**: 12 (High). Impact: Moderate (3) x Likelihood: Likely (4)
 **Effort**: S
-**WSJF**: 12 = (12 x 1) / 1
+**WSJF**: 0 (parked, excluded from ranking)
 
 ## Description
 
@@ -85,3 +85,13 @@ Option 1 is preferred because it matches the working pattern actually exercised 
 - **Template used**: problem-report.yml
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes, upstream issue body contains the local ticket reference
+
+## Parked
+
+- **Reason**: upstream-blocked. The genuine fix lives in `skills/report-upstream/SKILL.md` Step 5 example invocation inside the `windyroad/agent-plugins` `wr-itil` plugin (consumed via `~/.claude/plugins/cache/windyroad/wr-itil/<version>/skills/report-upstream/SKILL.md`). A marketplace consumer cannot edit the cached SKILL.md without losing the change on next plugin update, so the only durable fix is upstream. The workaround (drop the `--label` flag at invocation time) is operator discipline rather than codified policy and cannot be enforced locally because the dispatch path is the cached SKILL.md itself.
+- **Verified persistence**: latest cached plugin version `0.38.0` still ships `--label "${MATCHED_TEMPLATE_LABEL_IF_ANY}"` at `skills/report-upstream/SKILL.md` line 405 (verified 2026-05-30 by reading the cached file). No amended example, no guard-with-pre-flight-check variant, no Step 3 prose update clarifying that template frontmatter labels are authoritative.
+- **Upstream issue status**: `windyroad/agent-plugins#87` is OPEN as of 2026-05-30 (last updated 2026-05-15). Tracked upstream as `docs/problems/open/207-...md` (P207, classified safe-and-valid with safe-low-fix-risk via `/wr-itil:review-problems` Step 4.5e). No labels applied; no resolution committed upstream yet.
+- **Un-park trigger**: a new `wr-itil` plugin release lands in `~/.claude/plugins/cache/windyroad/wr-itil/` whose `skills/report-upstream/SKILL.md` Step 5 either (a) drops the `--label` line from the example invocation (Option 1 from the Fix Strategy section above, recommended), or (b) ships an alternative guard such as a `gh label list`-based pre-flight check (Option 2). Verify by re-reading the SKILL.md in the new cache version. Close P033 once a subsequent `/wr-itil:report-upstream` invocation against a fresh upstream (one whose label names have not been pre-created) succeeds first try with the upgraded SKILL.md.
+- **Local impact while parked**: operators (and AFK orchestrators) running `/wr-itil:report-upstream` against a fresh upstream must drop the `--label` flag manually on the first failure, or omit it from the outset. The workaround is loud (first-try exit-1 with `could not add label: 'X' not found`) and self-corrects after the operator drops the flag, but AFK orchestrators may need to recognise the failure mode and retry without the flag rather than halting the loop on first failure.
+- **Composes with**: P022 (parked 2026-05-30, same upstream `windyroad/agent-plugins` `wr-itil` plugin surface, also upstream-blocked); P027 (parked 2026-05-30, same plugin upstream); P031 (parked 2026-05-02, same `wr-itil` plugin upstream surface).
+- **Date parked**: 2026-05-30

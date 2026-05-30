@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 P027 (work-problems Step 5 exit-code rule does not handle is_error:true transient API failures, 529 Overloaded) Open to Parked, upstream-blocked. Fix lives in the `wr-itil` plugin SKILL.md Step 5 at `~/.claude/plugins/cache/windyroad/wr-itil/<version>/skills/work-problems/SKILL.md`; a marketplace consumer cannot edit the cached SKILL.md without losing the change on next plugin update, and the orchestrator-side workaround is not codified locally either (dispatch wrapper is a transient `/tmp/wr-iter-N-dispatch.sh` generated per-iter by the SKILL.md). Verified 2026-05-30: latest cached `0.38.0` still ships the halt-on-no-staged-work branch at lines 485 to 490; the P261 amendment salvages only `is_error: true` WITH staged files, while the ELSE branch at line 488 halts on `is_error: true` with nothing staged, which is exactly the 529 Overloaded shape (`total_cost_usd: 0, num_turns: 1`). Upstream `windyroad/agent-plugins#81` is OPEN (last updated 2026-05-15 per `gh issue view 81`); tracked upstream as P214 (safe-low-fix-risk). Un-park trigger: a new `wr-itil` plugin release whose `work-problems/SKILL.md` Step 5 extends the salvage carve-out to retry-once on `is_error: true` with `total_cost_usd: 0` (or ships an alternative distinguishing transient API failures from work-completion failures). AFK iter 5.
+> Last reviewed: 2026-05-30 P033 (report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created the label) Open to Parked, upstream-blocked. Fix lives in the `wr-itil` plugin SKILL.md Step 5 at `~/.claude/plugins/cache/windyroad/wr-itil/<version>/skills/report-upstream/SKILL.md`; a marketplace consumer cannot edit the cached SKILL.md without losing the change on next plugin update. Verified 2026-05-30: latest cached `0.38.0` still ships `--label "${MATCHED_TEMPLATE_LABEL_IF_ANY}"` at line 405 (no amended example, no guard-with-pre-flight variant). Upstream `windyroad/agent-plugins#87` is OPEN (last updated 2026-05-15); tracked upstream as P207 (safe-low-fix-risk per `/wr-itil:review-problems` Step 4.5e). Un-park trigger: a new `wr-itil` plugin release whose `report-upstream/SKILL.md` Step 5 either (a) drops the `--label` line entirely (Option 1, recommended), or (b) ships a guard such as a `gh label list` pre-flight check (Option 2). AFK iter 6.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 12 | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created th… | 12 (High) | Open | S | 2026-04-27 | internal |
 | 12 | P042 | jtbd-enforce-edit hook uses relative `docs/jtbd` path; fails when cwd is not project root | 12 (High) | Open | S | 2026-05-01 | internal |
 | 12 | P047 | wr-risk-scorer:assess-release SKILL.md step 5 contract violation (Skill-tool prose vs Agent-tool parameter) | 12 (High) | Open | S | 2026-05-02 | internal |
 | 12 | P049 | reconcile-readme.sh section-order assumption produces false-positive STALE for tickets in section-after-Closed | 12 (High) | Open | S | 2026-05-02 | internal |
@@ -107,6 +106,7 @@ Parked tickets are excluded from WSJF ranking. They surface here so the upstream
 | P022 | architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes, leaving cross-session drift on othe… | upstream-blocked (windyroad/agent-plugins#79) | 2026-05-30 |
 | P027 | work-problems Step 5 exit-code rule does not handle is_error:true transient API failures (529 Overloaded) | upstream-blocked (windyroad/agent-plugins#81) | 2026-05-30 |
 | P031 | manage-problem Step 0 reconcile-readme.sh hits exit 127 on marketplace consumers; script only on disk for ven… | upstream-blocked (windyroad/agent-plugins#85) | 2026-05-02 |
+| P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created th… | upstream-blocked (windyroad/agent-plugins#87) | 2026-05-30 |
 
 ## Notes
 
