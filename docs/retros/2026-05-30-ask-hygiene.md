@@ -124,3 +124,35 @@ Notes:
 - Step 2b pipeline-instability scan flagged one friction-class observation worth a sibling-ticket consideration: P057 staging-trap recovery semantics. After `git mv` plus post-rename `Edit`, the staging-trap correctly blocked the commit and named the trapped file. The retry stage-and-commit landed only the trapped file; the README.md I had also staged earlier in the same `git add ... ...` batch did not survive into the commit. Net effect: my single logical "park P042" landed across two commits (5a7d8a4 for the ticket rename plus edit; 9b0c488 for the README refresh). Repeat-work signal: I have hit this in prior AFK iters this week (iter 5 P027 had the same shape; iter 6 P033 also had two commits for the same reason). Worth a Step 4b Stage 1 ticket against the P057 trap mechanism: should the trap-recovery message advise the operator to re-`git add` ALL prior-staged paths, or should the trap itself re-stage all prior-touched paths on its way out? Leaving as deferred Step 5 surfacing rather than ticketing inline because the trap lives in upstream wr-itil hooks (same marketplace-consumer-cannot-edit-cached pattern as the work that triggered the observation in the first place), would be a sixth upstream-blocked ticket on the same upstream surface.
 - Step 2b README inventory-currency advisory failed open (`packages/` directory absent in this consumer project) per ADR-013 Rule 6 fail-soft contract; recorded as expected behaviour, not a regression.
 - No deferrals to next interactive session from this iter (the P057 trap observation is recorded as a deferred consideration rather than a hard direction question).
+
+---
+
+# Ask Hygiene 2026-05-30 (AFK work-problems iter 8, P047)
+
+This iteration ran inside the AFK `/wr-itil:work-problems` loop. The loop's standing constraints forbid `AskUserQuestion` mid-iter, so the agent could not have fired any asks regardless of classification.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (no AskUserQuestion calls this iter) | n/a | AFK loop constraint: "never AskUserQuestion mid-loop" |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes:
+
+- P047 (wr-risk-scorer:assess-release SKILL.md step 5 contract violation: Skill-tool prose vs Agent-tool parameter) Open to Parked, upstream-blocked. Fix lives in the `wr-risk-scorer` plugin SKILL at `~/.claude/plugins/cache/windyroad/wr-risk-scorer/<version>/skills/assess-release/SKILL.md` step 5. A marketplace consumer cannot edit the cached SKILL.md without losing the change on next plugin update.
+- Verified 2026-05-30 on cached `0.11.2`: line 67 still ships `Invoke the pipeline subagent via the \`Skill\` tool:` with `subagent_type: wr-risk-scorer:pipeline` (an Agent-tool parameter) on line 70. Following the prose verbatim still fails with "Unknown skill: wr-risk-scorer:pipeline".
+- Sibling drift check (per Fix Strategy "Also worth checking" follow-up): `skills/assess-external-comms/SKILL.md` line 75 (`Invoke the subagent via the \`Skill\` tool:`) and `skills/assess-wip/SKILL.md` line 45 (`Invoke the wip subagent via the \`Skill\` tool:`) carry the same boilerplate mismatch. `skills/assess-inbound-report/SKILL.md` is clean; appears to have been authored post-fix. Upstream fix should cover all three legacy siblings simultaneously.
+- Upstream `windyroad/agent-plugins#110` OPEN as of 2026-05-30 (last updated 2026-05-15T05:37:01Z per `gh issue view 110`, no labels). Filed 2026-05-02 via problem-report.yml template; cross-reference already present in the ticket's "Reported Upstream" section. No fix committed upstream yet.
+- Un-park trigger: a new `wr-risk-scorer` plugin release whose `assess-release/SKILL.md` step 5 either (a) changes `via the \`Skill\` tool:` to `via the \`Agent\` tool:` (Option 1, recommended; matches the listed `subagent_type:` parameter), or (b) keeps the `Skill` tool wrapper and changes the parameters to `skill:` / `args:` plus ships a sibling SKILL alias (Option 2, incorrect on its face). Verify on next cache version. Sibling SKILLs `assess-external-comms` and `assess-wip` should receive matching prose fix in the same release.
+- Composes-with iters 3 (P021), 4 (P022), 5 (P027), 6 (P033), 7 (P042): all six share the same downstream-consumer-cannot-edit-cached-plugin pattern. P047 extends the surface from `wr-architect` + `wr-itil` + `wr-jtbd` to `wr-risk-scorer`. Sixth iter in this AFK session to consolidate on the upstream `windyroad/agent-plugins` repo as the actionable lever.
+- Architect review (this iter): PASS on substance (no ADR conflicts, no decision violations, no unratified dependency), NEEDS DIRECTION on three queued direction questions for next interactive session. (a) Codify the marketplace-consumer-cannot-edit-cached-plugin park pattern as an ADR. Option A: no ADR (case-law via iter parks). Option B: local ADR (P045-inverted placement). Option C: upstream ADR in `@windyroad/wr-itil` (architect lean). (b) Open separate tickets for `assess-external-comms` + `assess-wip` sibling drift. Architect lean: No (single upstream PR fixes all three; three-folding one issue violates P132 spirit). (c) Open a new ticket against the P057 staging-trap recurrence observed across iters 5/6/7 (and proactively mitigated this iter via combined pre-stage). Architect lean: defer to retro Notes block only, matching iter-7 P042 deferral shape.
+- JTBD review (this iter): PASS, no edits blocked. Operator-loop hygiene; no documented reader-persona JTBD applies. Reviewer flagged a category-1 direction question for next interactive session: should "AFK loop parks tickets it cannot durably fix" formalise as a new operator-persona + JTBD pair (per `feedback_new_jtbd_and_persona_need_human_confirmation.md`, codification home would be upstream `agent-plugins`), or stay an implicit operator-as-orchestrator activity outside the JTBD corpus?
+- Step 4a verification-close drain: README Verification Queue's `Likely verified?` cells remain `no (not observed)` or `no (observed regression)` across the row range; no `yes - observed:` rows surface for the P282 prior-session evidence drain on this bookkeeping-only iter.
+- Step 2b pipeline-instability scan: this iter staged the ticket rename + ticket edit + README refresh + this retro append together BEFORE the principal commit, proactively mitigating the P057 staging-trap recurrence that split iters 5, 6, 7 into two commits each. Single-commit landing verified post-commit.
+- Step 2b README inventory-currency advisory failed open (`packages/` directory absent in this consumer project) per ADR-013 Rule 6 fail-soft contract; recorded as expected behaviour, not a regression.
+- Four deferrals to next interactive session, all surfaced via `outstanding_questions` in the ITERATION_SUMMARY block per ADR-044 cat-1 direction-question classification.

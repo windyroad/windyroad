@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 P042 (jtbd-enforce-edit hook uses relative `docs/jtbd` path; fails when cwd is not project root) Open to Parked, upstream-blocked. Fix lives in the `wr-jtbd` plugin hook at `~/.claude/plugins/cache/windyroad/wr-jtbd/<version>/hooks/jtbd-enforce-edit.sh`; a marketplace consumer cannot edit the cached hook without losing the change on next plugin update. Verified 2026-05-30: latest cached `0.10.0` still ships `if [ -d "docs/jtbd" ]; then JTBD_PATH="docs/jtbd"; fi` at lines 110-112 (no `${CLAUDE_PROJECT_DIR}` resolution, no `git rev-parse --show-toplevel` fallback). Upstream issue not yet filed against `windyroad/agent-plugins`; defer `/wr-itil:report-upstream` to next operator-at-keyboard session (heavy interactive skill). Un-park trigger: a new `wr-jtbd` plugin release whose `hooks/jtbd-enforce-edit.sh` replaces the relative `docs/jtbd` check with either (a) `${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || .)}/docs/jtbd` (recommended), or (b) an alternative absolute-path resolution mechanism. AFK iter 7.
+> Last reviewed: 2026-05-30 P047 (wr-risk-scorer:assess-release SKILL.md step 5 contract violation: Skill-tool prose vs Agent-tool parameter) Open to Parked, upstream-blocked. Fix lives in the `wr-risk-scorer` plugin SKILL at `~/.claude/plugins/cache/windyroad/wr-risk-scorer/<version>/skills/assess-release/SKILL.md` step 5; a marketplace consumer cannot edit the cached SKILL.md without losing the change on next plugin update. Verified 2026-05-30: latest cached `0.11.2` still ships `Invoke the pipeline subagent via the \`Skill\` tool:` at line 67 with `subagent_type: wr-risk-scorer:pipeline` (Agent-tool parameter) at line 70. Sibling drift persists in `assess-external-comms/SKILL.md` line 75 and `assess-wip/SKILL.md` line 45; `assess-inbound-report/SKILL.md` is clean. Upstream `windyroad/agent-plugins#110` OPEN as of 2026-05-30 (last updated 2026-05-15); no fix committed yet. Un-park trigger: a new `wr-risk-scorer` plugin release whose `assess-release/SKILL.md` step 5 changes `via the \`Skill\` tool:` to `via the \`Agent\` tool:` (recommended; matches the listed `subagent_type:` parameter) or a sibling SKILL alias path. AFK iter 8.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 12 | P047 | wr-risk-scorer:assess-release SKILL.md step 5 contract violation (Skill-tool prose vs Agent-tool parameter) | 12 (High) | Open | S | 2026-05-02 | internal |
 | 12 | P049 | reconcile-readme.sh section-order assumption produces false-positive STALE for tickets in section-after-Closed | 12 (High) | Open | S | 2026-05-02 | internal |
 | 12 | P068 | Newsletter URL discovery via Google News RSS strips canonical to outlet root; misses real article URL | 12 (High) | Open | S | 2026-05-15 | internal |
 | 8 | P061 | assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has alrea… | 8 (Medium) | Known Error | M | 2026-05-14 | internal |
@@ -107,6 +106,7 @@ Parked tickets are excluded from WSJF ranking. They surface here so the upstream
 | P031 | manage-problem Step 0 reconcile-readme.sh hits exit 127 on marketplace consumers; script only on disk for ven… | upstream-blocked (windyroad/agent-plugins#85) | 2026-05-02 |
 | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created th… | upstream-blocked (windyroad/agent-plugins#87) | 2026-05-30 |
 | P042 | jtbd-enforce-edit hook uses relative `docs/jtbd` path; fails when cwd is not project root | upstream-blocked (windyroad/agent-plugins, wr-jtbd plugin; upstream issue not yet filed) | 2026-05-30 |
+| P047 | wr-risk-scorer:assess-release SKILL.md step 5 contract violation (Skill-tool prose vs Agent-tool parameter) | upstream-blocked (windyroad/agent-plugins#110) | 2026-05-30 |
 
 ## Notes
 
