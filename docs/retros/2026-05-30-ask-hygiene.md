@@ -20,3 +20,25 @@ Notes:
 - JTBD ratification ask that WOULD have been a cat-1 direction ask: "Confirm leader + developer personas and JTBD-001/002/003/200 currently `.proposed.md`?" Per `feedback_new_jtbd_and_persona_need_human_confirmation.md`, JTBD ratification is direction-setting. Deferred.
 
 All three deferrals were recorded in the P070 ticket's Investigation update section so the next interactive session has the full picture.
+
+---
+
+# Ask Hygiene 2026-05-30 (AFK work-problems iter 9, P001)
+
+This iteration ran inside the AFK `/wr-itil:work-problems` loop. The loop's standing constraints forbid `AskUserQuestion` mid-iter, so the agent could not have fired any asks regardless of classification.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (no AskUserQuestion calls this iter) | n/a | AFK loop constraint: "never AskUserQuestion mid-loop" |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes:
+
+- Investigation-only iteration on P001 (Next.js build hangs locally). No direction questions arose; the iter's load-bearing observation (original 2026-04-14 repro non-applicable on current Next 16 runtime) is purely diagnostic, not direction-setting.
+- No deferrals to next interactive session from this iter.
