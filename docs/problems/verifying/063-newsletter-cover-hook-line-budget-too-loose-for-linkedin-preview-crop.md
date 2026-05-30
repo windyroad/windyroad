@@ -1,6 +1,6 @@
 # Problem 063: Newsletter cover `hook_line_1` budget too loose for LinkedIn preview crop
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
@@ -43,6 +43,12 @@ The cover template's text box geometry was sized against the SVG canvas, not aga
 - [ ] Confirm whether `hook_line_2` (60px, around 45 chars max) also crops in LinkedIn preview. Witnessed 2026-05-15: a 28-char line 2 did not clip; the 45-char budget may also need tightening for longer lines.
 - [ ] Consider an automated check in `/wr-newsletter-cover` Step 4 verify pass that simulates the LinkedIn crop and warns if hooks land within the unsafe margin.
 - [ ] Alternatively, widen the template's text box safe area on the right edge so the 30-char budget can hold without LinkedIn-side cropping.
+
+## Fix Released
+
+Released 2026-05-16 in commit `eb0e8be` (`docs(newsletter): publish The Shift Issue 05 (2026-05-15, leader)`). `.claude/skills/wr-newsletter-cover/SKILL.md` line 33 now reads `hook_line_1 | string, around 28 chars max` with the LinkedIn-crop rationale inline citing the witnessed 2026-05-14 30-char crop ("AI cyber capabilities shipped."); line 37 adds a safe-area preview-discipline note ("safe-area lives ~2 character-widths inside each margin"). Local-skill change, no changeset / npm publish required. Awaiting user verification on the next `/wr-newsletter-cover` invocation that produces a hook_line_1 at or below 28 chars with no LinkedIn preview crop.
+
+Verification trigger: next live `/wr-newsletter` run that calls the cover skill with a long-ish hook_line_1 (say 26-28 chars) and Tom visually inspects the LinkedIn share-card preview to confirm the terminal punctuation lands inside the crop.
 
 ## Dependencies
 
