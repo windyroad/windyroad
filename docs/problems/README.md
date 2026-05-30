@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 P033 (report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created the label) Open to Parked, upstream-blocked. Fix lives in the `wr-itil` plugin SKILL.md Step 5 at `~/.claude/plugins/cache/windyroad/wr-itil/<version>/skills/report-upstream/SKILL.md`; a marketplace consumer cannot edit the cached SKILL.md without losing the change on next plugin update. Verified 2026-05-30: latest cached `0.38.0` still ships `--label "${MATCHED_TEMPLATE_LABEL_IF_ANY}"` at line 405 (no amended example, no guard-with-pre-flight variant). Upstream `windyroad/agent-plugins#87` is OPEN (last updated 2026-05-15); tracked upstream as P207 (safe-low-fix-risk per `/wr-itil:review-problems` Step 4.5e). Un-park trigger: a new `wr-itil` plugin release whose `report-upstream/SKILL.md` Step 5 either (a) drops the `--label` line entirely (Option 1, recommended), or (b) ships a guard such as a `gh label list` pre-flight check (Option 2). AFK iter 6.
+> Last reviewed: 2026-05-30 P042 (jtbd-enforce-edit hook uses relative `docs/jtbd` path; fails when cwd is not project root) Open to Parked, upstream-blocked. Fix lives in the `wr-jtbd` plugin hook at `~/.claude/plugins/cache/windyroad/wr-jtbd/<version>/hooks/jtbd-enforce-edit.sh`; a marketplace consumer cannot edit the cached hook without losing the change on next plugin update. Verified 2026-05-30: latest cached `0.10.0` still ships `if [ -d "docs/jtbd" ]; then JTBD_PATH="docs/jtbd"; fi` at lines 110-112 (no `${CLAUDE_PROJECT_DIR}` resolution, no `git rev-parse --show-toplevel` fallback). Upstream issue not yet filed against `windyroad/agent-plugins`; defer `/wr-itil:report-upstream` to next operator-at-keyboard session (heavy interactive skill). Un-park trigger: a new `wr-jtbd` plugin release whose `hooks/jtbd-enforce-edit.sh` replaces the relative `docs/jtbd` check with either (a) `${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || .)}/docs/jtbd` (recommended), or (b) an alternative absolute-path resolution mechanism. AFK iter 7.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 12 | P042 | jtbd-enforce-edit hook uses relative `docs/jtbd` path; fails when cwd is not project root | 12 (High) | Open | S | 2026-05-01 | internal |
 | 12 | P047 | wr-risk-scorer:assess-release SKILL.md step 5 contract violation (Skill-tool prose vs Agent-tool parameter) | 12 (High) | Open | S | 2026-05-02 | internal |
 | 12 | P049 | reconcile-readme.sh section-order assumption produces false-positive STALE for tickets in section-after-Closed | 12 (High) | Open | S | 2026-05-02 | internal |
 | 12 | P068 | Newsletter URL discovery via Google News RSS strips canonical to outlet root; misses real article URL | 12 (High) | Open | S | 2026-05-15 | internal |
@@ -107,6 +106,7 @@ Parked tickets are excluded from WSJF ranking. They surface here so the upstream
 | P027 | work-problems Step 5 exit-code rule does not handle is_error:true transient API failures (529 Overloaded) | upstream-blocked (windyroad/agent-plugins#81) | 2026-05-30 |
 | P031 | manage-problem Step 0 reconcile-readme.sh hits exit 127 on marketplace consumers; script only on disk for ven… | upstream-blocked (windyroad/agent-plugins#85) | 2026-05-02 |
 | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created th… | upstream-blocked (windyroad/agent-plugins#87) | 2026-05-30 |
+| P042 | jtbd-enforce-edit hook uses relative `docs/jtbd` path; fails when cwd is not project root | upstream-blocked (windyroad/agent-plugins, wr-jtbd plugin; upstream issue not yet filed) | 2026-05-30 |
 
 ## Notes
 
