@@ -1,11 +1,11 @@
 # Problem 021: architect-mark-reviewed.sh strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL
 
-**Status**: Open
+**Status**: Parked
 **Reported**: 2026-04-26
 **Origin**: internal
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: S
-**WSJF**: 16 = (16 x 1) / 1
+**WSJF**: 0 (parked, excluded from ranking)
 
 ## Description
 
@@ -56,3 +56,12 @@ Agent-side discipline: emit "Architecture Review: PASS" verbatim when bottom-lin
 - **Template used**: problem-report.yml
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes
+
+## Parked
+
+- **Reason**: upstream-blocked. The genuine fix lives in `architect-mark-reviewed.sh` inside the `windyroad/agent-plugins` `wr-architect` plugin (consumed via `~/.claude/plugins/cache/windyroad/wr-architect/<version>/hooks/architect-mark-reviewed.sh`). A marketplace consumer cannot edit the cached hook without losing the change on next plugin update, so the only durable fix is upstream.
+- **Verified persistence**: latest cached plugin version `0.12.2` still ships the strict `grep -q "Architecture Review: PASS"` parser at `hooks/architect-mark-reviewed.sh` lines 27 to 30. The `ISSUES FOUND` branch still routes to `VERDICT="FAIL"` unconditionally. Verified 2026-05-30 by reading the file in the cache.
+- **Upstream issue status**: `windyroad/agent-plugins#78` is OPEN as of 2026-05-30. Upstream tracks the same bug as their local `P217` with the `safe-low-fix-risk` label, per Tom's own 2026-05-15 comment on issue 78 confirming the local mirror.
+- **Un-park trigger**: a new `wr-architect` plugin release lands in `~/.claude/plugins/cache/windyroad/wr-architect/` whose `hooks/architect-mark-reviewed.sh` parser either (a) recognises affirmative-bottom-line `ISSUES FOUND` verdicts as PASS, or (b) ships an alternative marker the agent can emit to signal "issues found but bottom-line affirmative". Verify by re-reading the hook in the new cache version. Close P021 once the upstream behaviour change is exercised in a session that previously hit the FAIL classification.
+- **Local impact while parked**: agent-side discipline (the existing workaround in the Workaround section) remains the operating contract. Emit `Architecture Review: PASS` verbatim whenever the architect's bottom line is affirmative even if individual issues exist. Sessions that drift from this discipline will still hit the Edit-blocked retry path until upstream lands.
+- **Date parked**: 2026-05-30
