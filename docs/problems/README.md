@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 P021 (architect-mark-reviewed.sh strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FAIL) Open to Parked, upstream-blocked. Fix lives in the `wr-architect` plugin hook at `~/.claude/plugins/cache/windyroad/wr-architect/<version>/hooks/architect-mark-reviewed.sh`; a marketplace consumer cannot edit the cached hook without losing the change on next plugin update. Verified 2026-05-30: latest cached `0.12.2` still ships the strict `grep -q "Architecture Review: PASS"` parser at lines 27 to 30 (the `ISSUES FOUND` branch unconditionally routes to `VERDICT="FAIL"`). Upstream `windyroad/agent-plugins#78` is OPEN; upstream tracks it locally as P217 with the `safe-low-fix-risk` label. Un-park trigger: a new `wr-architect` plugin release whose parser recognises affirmative-bottom-line `ISSUES FOUND` verdicts as PASS. AFK iter 3.
+> Last reviewed: 2026-05-30 P022 (architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes, leaving cross-session drift on other gated paths) Open to Parked, upstream-blocked. Fix lives in the `wr-architect` plugin hook at `~/.claude/plugins/cache/windyroad/wr-architect/<version>/hooks/architect-refresh-hash.sh`; a marketplace consumer cannot edit the cached hook without losing the change on next plugin update. Verified 2026-05-30: latest cached `0.12.2` still ships the `docs/decisions/*`-only matcher at lines 20 to 26; edits to other gated paths (`.claude/skills/`, `.claude/agents/`, source) still do not refresh the stored hash. Upstream `windyroad/agent-plugins#79` is OPEN (last updated 2026-05-15 per `gh issue view 79`); no labels applied. Un-park trigger: a new `wr-architect` plugin release whose `architect-refresh-hash.sh` refreshes the stored hash on every successful PostToolUse Edit/Write the gate allowed (not just on `docs/decisions/*` writes). AFK iter 4.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 12 | P022 | architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes, leaving cross-session drift on othe… | 12 (High) | Open | S | 2026-04-26 | internal |
 | 12 | P027 | work-problems Step 5 exit-code rule does not handle is_error:true transient API failures (529 Overloaded) | 12 (High) | Open | S | 2026-04-26 | internal |
 | 12 | P033 | report-upstream SKILL.md Step 5 example uses --label flag that fails when upstream repo hasn't pre-created th… | 12 (High) | Open | S | 2026-04-27 | internal |
 | 12 | P042 | jtbd-enforce-edit hook uses relative `docs/jtbd` path; fails when cwd is not project root | 12 (High) | Open | S | 2026-05-01 | internal |
@@ -106,6 +105,7 @@ Parked tickets are excluded from WSJF ranking. They surface here so the upstream
 | ID | Title | Reason | Parked since |
 |----|-------|--------|-------------|
 | P021 | architect-mark-reviewed.sh strict-verdict-string parsing under-counts affirmative ISSUES FOUND verdicts as FA… | upstream-blocked (windyroad/agent-plugins#78) | 2026-05-30 |
+| P022 | architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes, leaving cross-session drift on othe… | upstream-blocked (windyroad/agent-plugins#79) | 2026-05-30 |
 | P031 | manage-problem Step 0 reconcile-readme.sh hits exit 127 on marketplace consumers; script only on disk for ven… | upstream-blocked (windyroad/agent-plugins#85) | 2026-05-02 |
 
 ## Notes

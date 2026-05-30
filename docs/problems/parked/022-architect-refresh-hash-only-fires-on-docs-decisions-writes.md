@@ -1,11 +1,11 @@
 # Problem 022: architect-refresh-hash.sh only refreshes hash on docs/decisions/* writes, leaving cross-session drift on other gated paths
 
-**Status**: Open
+**Status**: Parked
 **Reported**: 2026-04-26
 **Origin**: internal
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: S
-**WSJF**: 12 = (12 x 1) / 1
+**WSJF**: 0 (parked, excluded from ranking)
 
 ## Description
 
@@ -60,3 +60,12 @@ find docs/decisions -name '*.md' -not -name 'README.md' -print0 | sort -z | xarg
 - **Template used**: problem-report.yml
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes
+
+## Parked
+
+- **Reason**: upstream-blocked. The genuine fix lives in `architect-refresh-hash.sh` inside the `windyroad/agent-plugins` `wr-architect` plugin (consumed via `~/.claude/plugins/cache/windyroad/wr-architect/<version>/hooks/architect-refresh-hash.sh`). A marketplace consumer cannot edit the cached hook without losing the change on next plugin update, so the only durable fix is upstream.
+- **Verified persistence**: latest cached plugin version `0.12.2` still ships the `docs/decisions/*`-only matcher at `hooks/architect-refresh-hash.sh` lines 20 to 26. Edits to other gated paths (`.claude/skills/`, `.claude/agents/`, source) still do not refresh the stored hash. Verified 2026-05-30 by reading the file in the cache.
+- **Upstream issue status**: `windyroad/agent-plugins#79` is OPEN as of 2026-05-30 (last updated 2026-05-15 per `gh issue view 79`). No labels applied; no resolution committed upstream yet.
+- **Un-park trigger**: a new `wr-architect` plugin release lands in `~/.claude/plugins/cache/windyroad/wr-architect/` whose `hooks/architect-refresh-hash.sh` either (a) refreshes the stored hash on every successful PostToolUse Edit/Write the gate allowed (not just on `docs/decisions/*` writes), or (b) ships an alternative mechanism that prevents cross-session drift on other gated paths. Verify by re-reading the hook in the new cache version. Close P022 once a session that previously hit the cross-session-drift block clears cleanly with the upgraded hook.
+- **Local impact while parked**: agent-side workaround (the existing `## Workaround` section) remains the operating contract. When the gate blocks on hash drift not attributable to in-session ADR writes, manually refresh `/tmp/architect-reviewed-<SID>.hash` using the documented `find ... | md5 -r` recipe. Sessions that drift from this discipline will still hit the Edit-blocked retry path until upstream lands.
+- **Date parked**: 2026-05-30
