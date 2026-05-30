@@ -1,6 +1,6 @@
 # Problem 063: Newsletter cover `hook_line_1` budget too loose for LinkedIn preview crop
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-15
 **Priority**: 3 (Medium). Impact: 2 x Likelihood: 4 (deferred, re-rate at next /wr-itil:review-problems)
 **Effort**: S (deferred, re-rate at next /wr-itil:review-problems)
