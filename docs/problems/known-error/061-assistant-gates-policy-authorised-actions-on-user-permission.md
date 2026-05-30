@@ -1,6 +1,6 @@
 # Problem 061: assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-14
 **Priority**: 4 (Medium). Impact: 2 x Likelihood: 4 (deferred, re-rate at next /wr-itil:review-problems)
 **Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
@@ -51,3 +51,19 @@ User corrects via short direction ("yo have the risk scorer. you don't need to a
 ## Related
 
 Captured via /wr-itil:capture-problem on 2026-05-14 following user correction at end of /wr-retrospective:run-retro session. Live evidence: 2026-05-14 retro summary "Push decision still deferred pending explicit user direction" + user response "yo have the risk scorer. you don't need to ask me to push" + clean push completion. Memory note `feedback_no_pitching_act_on_obvious_decisions.md` covers the general pattern; this ticket records the specific surface (policy-authorised post-clearance actions at session wrap-up).
+
+## Root Cause and Fix Strategy
+
+**Root cause**: The upstream `itil-assistant-output-review.sh` Stop hook scans for direct-pitch phrasings via PROSE_ASK_PATTERNS ("Want me to...", "Should I...", "Awaiting your direction"). The wrap-up regression manifests as **deferral-prose** instead ("Push decision deferred pending direction", "Awaiting clearance to push"), a grammatically-inverted form that accomplishes the same forced-round-trip outcome but evades the direct-pitch regex. The existing memory note `feedback_no_pitching_act_on_obvious_decisions.md` covers the general anti-pitch discipline but did not explicitly name the deferral-prose shape nor the post-risk-scorer-clearance wrap-up trigger condition.
+
+**Fix shipped (2026-05-30, AFK iter 10)**: Extended `feedback_no_pitching_act_on_obvious_decisions.md` (project-local user memory at `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/`) with a new "Wrap-up surface for policy-authorised post-clearance actions" section enumerating four canonical deferral-prose phrasings, the post-risk-scorer-clearance trigger condition, the equivalence rule (treat deferral-prose as a pitch), and the 2026-05-14 source incident as anti-pattern witness. Model-layer reinforcement; the upstream hook + Ask Hygiene metric extensions remain as separate upstream-blocked follow-ups.
+
+**Deferred follow-ups (upstream-blocked)**:
+- Extend `@windyroad/itil` `lib/detectors.sh` PROSE_ASK_PATTERNS to include deferral-prose shapes (`Push decision .* deferred`, `pending.* user direction`, `Holding off.* pending your`). Upstream surface, not editable from this project.
+- Extend `@windyroad/retrospective` `check-ask-hygiene.sh` to scan emitted output for both direct-pitch AND deferral-prose shapes alongside structured AskUserQuestion counts. Upstream surface.
+
+Both follow-ups are tracked as upstream proposals; they raise robustness but do not gate this ticket's transition to Known Error. The model-layer memory extension is the in-project lever.
+
+## Verification
+
+Verification trigger fires on the next AFK iter or interactive session wrap-up where: (a) risk-scorer has cleared every commit in the chain within RISK-POLICY.md appetite, AND (b) the assistant performs the push (or release-watch) directly without emitting any of the four canonical deferral-prose phrasings or naming the user as the gate. Status transitions Known Error to Verification Pending on next release containing this ticket's commit.
