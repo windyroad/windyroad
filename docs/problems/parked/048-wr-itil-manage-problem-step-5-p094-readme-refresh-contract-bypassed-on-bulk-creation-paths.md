@@ -1,11 +1,11 @@
 # Problem 048: /wr-itil:manage-problem Step 5 P094 README refresh contract bypassed on bulk-creation paths
 
-**Status**: Open
+**Status**: Parked
 **Reported**: 2026-05-02
 **Origin**: internal
 **Priority**: 12 (High). Impact: Significant (4) x Likelihood: Possible (3)
 **Effort**: M
-**WSJF**: 6 = (12 x 1) / 2
+**WSJF**: 0 (parked; multiplier 0 per ADR-022)
 
 ## Description
 
@@ -81,3 +81,13 @@ Option A is cheaper (SKILL prose change) but relies on agent compliance. Option 
 - `~/.claude/plugins/cache/windyroad/wr-itil/0.23.1/skills/manage-problem/SKILL.md` Step 5 P094 block (the fix site for Option A).
 - `~/.claude/plugins/cache/windyroad/wr-itil/0.23.1/hooks/lib/create-gate.sh` (the marker semantics for Option B).
 - Live example: commit 62f58aa (2026-04-27) created 11 tickets without README refresh; iter 2 preflight (commit 8352016, 2026-05-02) caught and repaired the 5-day drift.
+
+## Parked
+
+- **Reason**: upstream-blocked. The genuine fix lives in the `wr-itil` plugin at `~/.claude/plugins/cache/windyroad/wr-itil/<version>/` across two surfaces: (a) `skills/manage-problem/SKILL.md` Step 5 P094 block plus Step 4b multi-concern split contract (Option A end-of-flow batch refresh), and (b) `hooks/lib/create-gate.sh` per-session marker semantics (Option B per-ticket marker). The local repo has no `packages/wr-itil/` directory; this project is a downstream marketplace consumer of `@windyroad/wr-itil`. A consumer cannot edit cached SKILL.md prose or hook scripts without losing the change on next plugin update, so the only durable fix is upstream. Both Option A and Option B name surfaces wholly inside the upstream plugin. No local-codifiable surface exists.
+- **Verified persistence**: latest cached plugin version `0.38.0` still ships the gap. `hooks/lib/create-gate.sh` lines 21 to 26 carry an explicit comment ("Per-session scope is intentional per architect direction A: a single `/wr-itil:manage-problem` invocation may write multiple tickets [Step 4b multi-concern split writes 2 to N consecutive `.open.md` files]; per-grep scope would block split-create after the first Write"). The architect has rejected Option B by design. `skills/manage-problem/SKILL.md` Step 5 P094 block (lines 513 to 529) implements Option A only for the SKILL-mediated `Step 4b` multi-concern split path ("the refresh fires **once** after all split tickets are written, not per-split, a single render captures the full new set in one pass"). Bulk-Write paths OUTSIDE the SKILL flow (retro sessions, post-mortem ticket capture, AFK orchestrator iterations creating multiple sibling tickets) still bypass P094 because the per-session marker covers all subsequent Writes without per-ticket P094 enforcement. Step 0 reconcile preflight (P118, lines 232 to 275) catches drift on the NEXT manage-problem call. Detect-on-next-invocation, not prevent-on-create. The preventive contract gap the ticket names remains. Verified 2026-05-31 by reading the cached files.
+- **Upstream issue status**: not yet filed. Same shape as P042 / P049 / P060 / P073 (parked with upstream issue deferred to next interactive session). File via `/wr-itil:report-upstream` next time Tom is at the keyboard; classify as problem-report per ADR-033 primary classifier.
+- **Un-park trigger**: a new `wr-itil` plugin release lands in `~/.claude/plugins/cache/windyroad/wr-itil/` whose `skills/manage-problem/SKILL.md` Step 5 P094 block extends end-of-flow refresh coverage to bulk-Write paths outside the SKILL flow (e.g. by registering a SKILL-level "end-of-flow trigger" the agent calls when wrapping a multi-ticket session), OR whose `hooks/lib/create-gate.sh` consumes the marker per ticket while preserving the Step 4b split-create path (e.g. via a counter-based marker that tracks a SKILL-known split-batch size). Verify by re-reading the cached files in the new version. Close P048 once a session producing 2 or more ticket creations outside the SKILL flow no longer accumulates README drift between creation and next manage-problem invocation.
+- **Local impact while parked**: existing Workaround (run `/wr-itil:review-problems` periodically to refresh the README from on-disk state; rely on manage-problem Step 0 P118 preflight to catch drift on the next invocation) remains the operating contract. The risk is detect-not-prevent: drift accumulates silently between bulk-Write sessions and the next manage-problem call, then the Step 0 preflight catches it. Live evidence in the ticket body: commit 62f58aa (2026-04-27) created 11 tickets without README refresh; iter 2 preflight (commit 8352016, 2026-05-02) caught and repaired the 5-day drift. The 5-day drift window is the steady-state exposure; the Step 0 preflight ensures eventual consistency.
+- **Composes with**: P031 (`manage-problem` Step 0 reconcile-readme.sh exit 127 on marketplace consumers, parked 2026-05-02, upstream `windyroad/agent-plugins#85`) and P049 (`reconcile-readme.sh` section-order assumption false-positive STALE, parked 2026-05-30) as third `wr-itil` plugin surface this AFK loop has touched; same marketplace-consumer-cannot-edit-cached-plugin shape as iters 3 to 15 parks. P031 plus P049 cover the reactive reconcile-readme detect-and-repair surface; P048 covers the preventive P094 create-path contract: the two surfaces compose into the full create-and-detect drift discipline.
+- **Date parked**: 2026-05-31
