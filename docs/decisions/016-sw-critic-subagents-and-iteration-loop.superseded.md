@@ -1,6 +1,7 @@
 ---
-status: "proposed"
+status: "superseded"
 date: 2026-04-17
+superseded-by: 033-domain-specific-critic-agents-supersede-parameterised-sw-critic
 human-oversight: rejected-pending-supersede
 oversight-date: 2026-05-30
 supersede-ticket: P071

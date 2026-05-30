@@ -1,7 +1,8 @@
 ---
-status: "proposed"
+status: "superseded"
 first-released:
 date: 2026-04-26
+superseded-by: 034-push-watch-fail-fast-plus-separate-deps-fix-flow-supersedes-cron-pr
 human-oversight: rejected-pending-supersede
 oversight-date: 2026-05-30
 supersede-ticket: P072
