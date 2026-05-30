@@ -188,3 +188,32 @@ Notes:
 - Step 2b pipeline-instability scan: this iter co-staged all touched paths (ticket rename + ticket edit + README refresh) BEFORE the principal commit and landed the park in a single commit (`ec81581`). The P057 staging-trap mitigation pattern from iter 8 holds for iter 9; combined-stage discipline now verified across two consecutive iters.
 - Step 2b README inventory-currency advisory failed open (`packages/` directory absent in this consumer project) per ADR-013 Rule 6 fail-soft contract; recorded as expected behaviour, not a regression.
 - Three deferrals to next interactive session via `outstanding_questions` in the ITERATION_SUMMARY block per ADR-044 cat-1 direction-question classification (ADR codification of 7-ticket pattern; upstream-report batching; whether to expand the recurring marketplace-consumer-park pattern's WSJF re-rank logic to recognise the now-7-ticket cohort).
+
+---
+
+# Ask Hygiene 2026-05-30 (AFK work-problems iter 10, P068)
+
+This iteration ran inside the AFK `/wr-itil:work-problems` loop. The loop's standing constraints forbid `AskUserQuestion` mid-iter, so the agent could not have fired any asks regardless of classification.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (no AskUserQuestion calls this iter) | n/a | AFK loop constraint: "never AskUserQuestion mid-loop" |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes:
+
+- P068 (Newsletter URL discovery via Google News RSS strips canonical to outlet root; misses real article URL) Open to Parked, architect-design (NOT upstream-blocked). The category distinction matters: iters 3-9 parked seven tickets whose fix sites were marketplace plugin cache scripts (`packages/itil/` or similar paths that this consumer project cannot edit durably). P068's fix site is in-project: `.claude/skills/wr-newsletter/SKILL.md` (line-confirmed editable from this project), `scripts/resolve-gnews-urls.mjs` (existing 53-line one-off ready to generalise), and `scripts/playwright-fetch.mjs` (existing 35-line helper). Block is internal-interactive (needs ADR-031 authored + 7 unratified JTBDs/personas ratified), not external-unmovable. Recording the distinction guards against a future un-park pass routing through `/wr-itil:report-upstream` (wrong skill for this category) instead of `/wr-architect:create-adr` + `/wr-jtbd:confirm-jobs-and-personas`.
+- Iter 4 (2026-05-30 earlier this session) recorded the full architect+JTBD findings on the ticket body. Iter 10 verified by re-reading the ticket file: ADR-031 still does not exist in `docs/decisions/`; the seven JTBD/persona artefacts are all still `.proposed.md` lacking `human-oversight: confirmed`. Iter 10 added a brief re-affirmation section to the ticket above `## Dependencies` rather than duplicating the iter 4 findings.
+- ADR-074 substance-confirm-before-build guard applied: ADR-031 is referenced in the ticket's Fix Strategy and the prerequisite ADR has never been authored (predicate would exit 2 = not found). The guard's AFK contract is "queue substance to outstanding_questions; do not guess; skip build." Substance queued: the chosen option ADR-031 will need to record at creation time (Playwright resolution as a pipeline primitive, with relationships to ADR-024 + ADR-029, the URL_UNRESOLVED marker semantics, performance budget impact, and shared-primitives extraction vs separate-script justification).
+- Architect review (this iter): PASS on substance for the park-only decision (no ADR conflicts on this hygiene-only ticket rename + README refresh + body annotation; no decision violations; no runtime-path triggers). The architect-design block on P068 itself remains unresolved (it predates this iter and only the interactive cycle can resolve it).
+- JTBD review (this iter): PASS, no edits blocked on the park-only commit. Pure operator backlog hygiene; no documented commercial-reader job is touched. The change does not modify any homepage, `/ai-quality`, `/founders`, `/vibe-code-audit`, `/blog`, or newsletter surface. No `// @jtbd` annotations apply (markdown ticket + README files are not in the annotation surface). The JTBD-ratification block on P068 itself remains unresolved (predates this iter; only `/wr-jtbd:confirm-jobs-and-personas` can resolve it).
+- Step 4a verification-close drain: README Verification Queue's `Likely verified?` cells remain `no (not observed)` or `no (observed regression)` across the row range; no `yes - observed:` rows surface for the P282 prior-session evidence drain on this bookkeeping-only iter.
+- Step 2b pipeline-instability scan: this iter pre-staged the renamed-ticket path + README refresh together before invoking the principal commit. P057 staging-trap fired once anyway (the renamed file's post-rename body edits were not captured by the `git add` of the old path; second-stage `git add` of the new path was needed to land the body edits). Mitigation worked as designed (block + clear remediation message). Combined-stage discipline pattern from iters 8 + 9 now extended to iter 10 with the additional caveat that post-rename body edits require an explicit `git add` of the new path even when the rename was via `git mv`.
+- Step 2b README inventory-currency advisory failed open (`packages/` directory absent in this consumer project) per ADR-013 Rule 6 fail-soft contract; recorded as expected behaviour, not a regression.
+- Two deferrals queued via `outstanding_questions` in the ITERATION_SUMMARY block per ADR-044 cat-1 direction-question classification (ADR-031 substance for authoring; seven JTBD/persona ratifications).
