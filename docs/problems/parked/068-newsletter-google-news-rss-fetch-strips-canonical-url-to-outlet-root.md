@@ -1,11 +1,11 @@
 # Problem 068: Newsletter URL discovery via Google News RSS strips canonical to outlet root; misses real article URL
 
-**Status**: Open
+**Status**: Parked
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 12 (High). Impact: Moderate (3) x Likelihood: Likely (4)
 **Effort**: S
-**WSJF**: 12 = (12 x 1) / 1
+**WSJF**: 0 (parked, excluded from ranking; pre-park value was 12 = (12 x 1) / 1)
 **Type**: technical
 
 ## Description
@@ -115,6 +115,14 @@ Ratify via `/wr-jtbd:confirm-jobs-and-personas` in the next interactive cycle. J
 6. Amend SKILL.md at lines 151 (rung 3), 154, 178, 225 to pipe Google News redirect URLs (and detected outlet-root URLs) through the script and replace item URLs with FINAL_URL; mark `URL_UNRESOLVED` when script returns same news.google.com URL.
 7. Commit single bundle.
 8. Transition P068 Open to Verifying.
+
+### AFK iter 10 (2026-05-30): re-affirmed architect-design + JTBD blocks, Open to Parked
+
+`/wr-itil:work-problems` AFK loop iter 10 re-selected P068 as top WSJF=12 actionable Open ticket. Both pre-edit gates from iter 4 remain in force. (a) ADR-031 "Google News redirect resolution as a pipeline primitive" still unauthored. The predicate `wr-architect-is-decision-unconfirmed ADR-031` exits 2 (not found); new-ADR creation is itself the substance-confirm-before-build trigger per ADR-074. (b) The seven unratified JTBDs/personas (`engineering-leader/persona.md`, `JTBD-001/002/003.proposed.md`, `developer/persona.md`, `JTBD-203/205.proposed.md`) still lack `human-oversight: confirmed`. Both blocks require interactive cycle (`/wr-architect:create-adr`, `/wr-jtbd:confirm-jobs-and-personas`); per P135 AFK hygiene the loop cannot fire `AskUserQuestion`.
+
+Distinction from iters 3-9 parks: those were upstream-blocked (fix site in marketplace plugin cache, unmovable from this project). P068's fix site IS in this project (`.claude/skills/wr-newsletter/SKILL.md`, `scripts/resolve-gnews-urls.mjs`, `scripts/playwright-fetch.mjs`). Block is architect-design, internal, interactively resolvable. Park reason category therefore differs: `architect-design (ADR-031 unauthored + 7 unratified JTBDs/personas)`, not `upstream-blocked`. Parking is hygiene-only. Without it, every future AFK loop re-selects P068 first and burns an iter slot on the same re-confirmation.
+
+**Un-park trigger**: ratify the seven JTBDs/personas via `/wr-jtbd:confirm-jobs-and-personas` AND author ADR-031 via `/wr-architect:create-adr`. After both, transition Parked to Open (Status edit + `git mv` to `docs/problems/open/`) and restore WSJF=12. The seven-step next-cycle workflow from iter 4 (ratify, ADR-031, shared-primitives decision, generalise `resolve-gnews-urls.mjs`, vitest, SKILL.md amendment at lines 151/154/178/225, single-bundle commit, Open to Verifying) remains the build plan.
 
 ## Dependencies
 
