@@ -66,3 +66,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-05-25
 
 > Last reviewed: 2026-05-16 P028 (risk-scorer 30-min TTL expired during long-running orchestrator turns) Known Error to Verification Pending per ADR-022. Fix released in upstream `@windyroad/risk-scorer` v0.9.0 (CHANGELOG `43e9cc0`); three-band TTL policy (Band A passes silently when age<TTL/2; Band B slides marker forward on invariant state-hash bounded by 2*TTL hard cap; Band C halts as before) plus `slide-marker-on-subprocess-return` mechanism shipped and installed locally for this project. Awaiting user verification on the next long AFK orchestrator turn where the staged-tree state-hash is invariant across the TTL window; expected behaviour: Band B slide admits the commit without an extra `wr-risk-scorer:pipeline` invocation.
+
+## 2026-05-30
+
+> Last reviewed: 2026-05-25 P070 opened (newsletter draft-template does not codify the three-deep-items-plus-notes editorial discipline). Captured by /wr-retrospective:run-retro after The Shift Issue 06 finalise. Priority 3 (Low), Effort S; exact WSJF deferred to the next /wr-itil:review-problems.

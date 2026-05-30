@@ -1,8 +1,9 @@
 # Problem 010: Tier-1 and tier-2 source fetches blocked by bot protection (OpenAI) and tool-layer refusal (Reddit)
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-04-17
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; OpenAI workaround applied; Reddit gap tracked in P014)
+**Transitioned to Verification Pending**: 2026-05-30 (P014 Playwright helper shipped 2026-05-13 across 4 commits; fix path exercised end-to-end in the 2026-05-25 published edition)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
 **Effort**: L (transitive via P014, see Dependencies; marginal M for the Reddit cutover work in this ticket once the helper exists) <!-- transitive: L via P014 -->
 **WSJF**: (9 x 2.0) / 4 = 4.5
@@ -71,6 +72,24 @@ OpenAI has a workable bypass (Google News RSS scoped `site:openai.com`). Reddit 
 - [ ] Update SKILL.md step 2 to invoke the helper once written (deferred to P014)
 - [ ] Test whether the helper works reliably across sessions (headless Chromium + Cloudflare interactions) (deferred to P014)
 - [x] Consider other blocked sources surfaced during the first run (US FTC returned 403, OECD returned 404) and apply the same fix pattern (documented in SKILL.md step 2 footer 2026-04-25 with the bot-protection-vs-tool-layer-refusal pattern; concrete URL swaps deferred until those failures recur on a non-tier-3 source or someone has bandwidth to apply the FTC/OECD-specific Google News queries)
+
+## Fix Released
+
+Released 2026-05-13 via P014 (the documented prerequisite per the P010 / P014 cross-reference). Both halves of P010's symptom set are now addressed end-to-end:
+
+- **OpenAI (tier-1)**: Google News RSS workaround shipped 2026-04-25 remains in place AND is now superseded as the first rung by `.claude/skills/wr-newsletter/SKILL.md` step 2 rung 1 (Playwright cache at `.cache/newsletters/openai-news/<YYYY-MM-DD>.json`, fresh within 48h) plus rung 2 auto-invoke (`Bash npm run fetch:newsroom -- --source=openai`). RSS fallback drops to rung 3.
+- **Reddit (tier-2, r/LocalLLaMA + r/MachineLearning)**: shipped via the same Playwright helper with HTML scrape of `https://www.reddit.com/r/<sub>/top/?t=week` (Akamai-class protection on the JSON API; HTML reachable anonymously). SKILL.md step 2 entries rewritten as three-rung precedence lists (cache fresh, then auto-invoke, then `source_failures`).
+- **Implementation evidence**: `scripts/fetchers/playwright-newsroom.mjs` Playwright Node script plus colocated vitest unit tests (33 cases passing). Cache layout, freshness default, and fallback precedence codified in ADR-029. P014 shipped across 4 commits 2026-05-13: P014a walking skeleton (`530171f`), P014b Reddit (`c2aa2db`), P014c auto-invoke plus P014d schema-validation plus retry.
+
+**Exercise evidence (2026-05-25 published edition)**:
+
+- Tier-1 OpenAI surfaced via the canonical `openai.com/index/advancing-content-provenance/` URL in `src/newsletters/published/leader/2026-05-25.capture.md`. The canonical `/index/...` URL pattern is exactly what P014a's cache produces (vs Google News landers). Zero "Google News RSS surfaced it" annotations remain in the 2026-05-25 capture (the 2026-05-08 edition still carried that annotation; the next edition does not).
+- Tier-2 Reddit surfaced via the canonical `reddit.com/r/MachineLearning/comments/1tfv0vh/slop_is_making_me_feel_disconnected_from_ai/` permalink in `src/newsletters/published/leader/2026-05-25.md` line 51. Exact shape P014b's `shreddit-post` scrape produces.
+- Cache directory state: `.cache/newsletters/openai-news/` has 2026-05-13, 2026-05-14, 2026-05-23, 2026-05-24 cache files; both Reddit subdirs have 2026-05-13 and 2026-05-23 cache files. The pipeline has run the fetcher successfully on multiple recent dates.
+
+Awaiting user verification on next interactive session. Expected verification signal: confirm that both OpenAI and Reddit signals carrying canonical URLs (not Google News landers, not `source_failures` entries) in the 2026-05-25 published edition is the wanted shape, and that the 2026-05-13 fix path holds across subsequent prep+finalise runs.
+
+Composes-with P014 (same root cause, transitive verification): P014 itself is `.verifying.md` since 2026-05-13. When P014 closes on user confirmation, P010 closes alongside since both share the same verification trigger.
 
 ## Dependencies
 
