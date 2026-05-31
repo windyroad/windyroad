@@ -44,7 +44,7 @@ Should use `${CLAUDE_PROJECT_DIR}/docs/jtbd` or resolve to absolute via `git rev
 
 - 2026-05-01 retro turn (hook regression observed mid-retro)
 - packages/jtbd/hooks/jtbd-enforce-edit.sh (upstream `@windyroad/jtbd` plugin; the relative `docs/jtbd` check)
-- **Upstream report pending** — external dependency identified; the `windyroad/agent-plugins` issue has not been filed yet. Invoke `/wr-itil:report-upstream` against `windyroad/agent-plugins` (package `packages/jtbd`) when next at a keyboard. Composes with the upstream issues already filed for sibling tickets P021/P022/P027/P031/P033.
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/183 (2026-05-31)
 
 ## Parked
 
@@ -55,3 +55,11 @@ Should use `${CLAUDE_PROJECT_DIR}/docs/jtbd` or resolve to absolute via `git rev
 - **Local impact while parked**: agent-side discipline (the existing Workaround section) remains the operating contract. When the JTBD gate blocks with "no JTBD documentation exists" despite `docs/jtbd/` being on disk, either: (a) ensure `cd <project-root>` before retrying Edit/Write, or (b) apply the change via `Bash sed -i` / `awk` (the em-dash hook and other PostToolUse:Bash gates still apply). AFK orchestrators that hit this misfire should recognise it as a cwd-resolution false-positive and not treat it as a genuine "JTBD review not done" signal.
 - **Composes with**: P021 (parked 2026-05-30, upstream `windyroad/agent-plugins` `wr-architect` plugin hook, also upstream-blocked); P022 (parked 2026-05-30, upstream `wr-architect` plugin hook); P027 (parked 2026-05-30, upstream `wr-itil` plugin SKILL.md); P031 (parked 2026-05-02, upstream `wr-itil` plugin SKILL.md); P033 (parked 2026-05-30, upstream `wr-itil` plugin SKILL.md). All five share the marketplace-consumer-cannot-edit-cached-plugin pattern; P042 extends the pattern from `wr-architect` + `wr-itil` to `wr-jtbd`.
 - **Date parked**: 2026-05-30
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/183
+- **Reported**: 2026-05-31
+- **Template used**: structured default (problem-shaped per ADR-033)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes (body's `## Cross-reference` section names this local ticket)
