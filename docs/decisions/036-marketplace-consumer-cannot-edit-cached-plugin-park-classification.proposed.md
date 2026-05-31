@@ -2,7 +2,8 @@
 status: "proposed"
 date: 2026-05-31
 first-released:
-human-oversight: pending
+human-oversight: confirmed
+oversight-date: 2026-05-31
 decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []

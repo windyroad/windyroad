@@ -66,3 +66,23 @@ Hook surface asymmetry: the Bash-tool em-dash hook gained a `WHITELIST_LINE` che
 - 2026-05-13 loop wrap-up: P014 IT-1 update + P056 capture each hit the Edit/Write hook denial.
 
 (captured via inline-Write during 2026-05-12 AFK work-problems loop wrap-up; user-directed via AskUserQuestion batch-1 "Port whitelist to Edit-tool hook"; expand at next investigation)
+
+## Additional Evidence
+
+### Staging-trap recurrence pattern observed in 2026-05-30 to 2026-05-31 AFK loop
+
+The fix released 2026-05-30 (whitelist port from `no-em-dash-bash.sh` to `no-em-dash.sh`) closes the em-dash-hook denial surface that this ticket originally captured. A separate but related recurrence pattern in the SAME AFK loop surfaced the staging-trap-recovery shape as the load-bearing operational defect, and user direction 2026-05-31 amended the fix-recovery semantics. Recording the recurrence evidence here per architect direction (append to P057 rather than open a sibling ticket).
+
+**Pattern**: when the em-dash hook denied a co-staged file (Edit / Write blocked mid-multi-file change), the operating recovery contract was "re-stage only the trapped file, then retry commit". In practice this dropped the co-staged sibling files (README refresh, ticket body, sibling test) from the recovery commit, forcing iters to land 2 or 3 commits per logical change instead of one per ADR-014.
+
+**Recurrence count**: 3 consecutive iters split into 2-3 commits (iter 5 P027 park; iter 6 P033 park; iter 7 P042 park, which split into 3 commits: 5a7d8a4 park + 9b0c488 README refresh + 9160530 retro). Iter 8 P047 park proactively mitigated by pre-staging ALL prior-touched paths together before commit; landed as one commit (0a1242b).
+
+**User direction 2026-05-31**: amend the recovery semantics to re-stage ALL prior-touched paths on trap exit (pre-stage-all-mitigation made standard contract). Deviation-approval queued through `outstanding_questions` queue and resolved at orchestrator main turn. The amendment fix-site lives in the upstream `wr-itil` plugin staging-trap recovery hook / contract, NOT in this project. Per ADR-036 (marketplace-consumer-cannot-edit-cached-plugin park classification, proposed 2026-05-31), this ticket's recurrence-class amend is itself a marketplace-consumer park: the operational mitigation (pre-stage-all) is the in-project workaround until the upstream fix lands.
+
+**Implementation status**: pre-stage-all mitigation verified working empirically (iter 8 onward in the 2026-05-30 to 2026-05-31 loop landed all parks as one commit, including iter 14 P029 park as 1 commit, iter 15 P046 park as 2 commits with retro separately by retro discipline, iter 16 P048 park as 2 commits, iter 17 P052 park as 2 commits). The mitigation works; the upstream contract amend is the strategic fix.
+
+**Cross-references**:
+
+- ADR-036 (marketplace-consumer-cannot-edit-cached-plugin park classification). Recurrence-amend fix-site is upstream; in-project workaround documented per the ADR's classification predicate.
+- `/wr-itil:work-problems` SKILL.md (upstream). The iter dispatch template carries the pre-stage-all mitigation as a constraint comment ("P057 staging-trap mitigation: pre-stage ALL prior-touched paths together before commit"); future iter prompts inherit the constraint.
+- User direction recorded 2026-05-31 during `/wr-itil:work-problems` orchestrator main turn queue resolution: deviation-approval (amend recovery semantics); upstream-blocked routing for the SKILL-level amend.
