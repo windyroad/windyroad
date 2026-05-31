@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-31 P074 deferred-re-rate executed: newly-captured external-comms marker-hook gap from today's P042 upstream-filing flow now scored Priority 6 (Medium), WSJF 3, M effort; Impact 3 (Moderate) x Likelihood 2 (Unlikely) reflects that the gate over-blocks rather than fails-open. P001 priority dropped to Very Low (WSJF 1) per the 2026-05-30 investigation note that the session-specific stuck-process hypothesis is unreproducible on Next 16; re-verify locally during normal working hours and transition to Verifying if it completes. No auto-transitions fired this pass: P064 + P071 are substance-confirm-pending on ADR-016 amendment per ADR-074; remaining Open tickets lack documented workarounds plus ready fix paths. 15 dev-work tickets ranked; 29 verifying; 15 parked.
+> Last reviewed: 2026-05-31 **README reconciled**: (1) drift entry corrected: P075 (newsletter drafter headings fail clarity test) added to WSJF Rankings as a deferred-WSJF placeholder (3, Severity 3, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -17,6 +17,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Low) | Open | S | 2026-05-13 | internal |
 | 3 | P070 | Newsletter draft-template does not codify the three-deep-items-plus-notes editorial discipline | 3 (Low) | Open | S | 2026-05-25 | internal |
 | 3 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create… | 6 (Medium) | Open | M | 2026-05-31 | internal |
+| 3 | P075 | Newsletter drafter headings fail clarity test, gates do not catch | 3 (Medium) | Open | M | 2026-05-31 | internal |
 | 2.5 | P067 | Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection | 5 (Medium) | Open | M | 2026-05-15 | internal |
 | 2 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned pus… | 3 (Low) | Open | M | 2026-05-12 | internal |
