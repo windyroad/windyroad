@@ -52,7 +52,15 @@ Pre-substitute U+2014 to commas / colons / parentheses when authoring the second
 
 Captured via /wr-itil:capture-problem during /wr-retrospective:run-retro on 2026-05-14 after P014/P053/P059 work-problem session. Live evidence: 2026-05-13 ADR-029 first-write block plus second-write rewrite cycle. Upstream candidate: windyroad/agent-plugins `wr-architect` plugin.
 
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/185 (2026-05-31)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/185
+- **Reported**: 2026-05-31
+- **Template used**: structured default (problem-shaped per ADR-033)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
 
 ## Parked
 
