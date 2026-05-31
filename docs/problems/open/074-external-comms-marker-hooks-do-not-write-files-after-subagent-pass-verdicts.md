@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-31
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-05-31 review-problems pass: gate over-blocks rather than fails-open, so visitor-facing voice/content damage path is several steps removed via bypass-becoming-routine spiral; the immediate visible failure is workflow friction)
 **Origin**: internal
-**Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
+**Effort**: M (re-rated 2026-05-31 review-problems pass: investigation requires reading 2 hook scripts in the cached plugin location plus diffing marker write logic vs check logic plus possibly reproducing in a controlled context; not a single-line carve-out, not a multi-day rework)
+**WSJF**: 3 = (6 x 1) / 2
 **Type**: technical
 
 ## Description

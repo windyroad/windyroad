@@ -3,9 +3,9 @@
 **Status**: Open
 **Reported**: 2026-04-14
 **Origin**: internal
-**Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3)
+**Priority**: 2 (Very Low). Impact: Minor (2) x Likelihood: Rare (1) (re-rated 2026-05-31 review-problems pass: 2026-05-30 investigation note found the session-specific stuck-process hypothesis is unreproducible on Next 16 with no current `next build` processes; Likelihood drops from Possible to Rare pending interactive re-verify)
 **Effort**: M (root-cause investigation; possibly resolved by fresh shell or system restart)
-**WSJF**: 3 = (6 x 1) / 2
+**WSJF**: 1 = (2 x 1) / 2
 
 ## Description
 
