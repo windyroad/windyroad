@@ -57,7 +57,15 @@ Manual: at retro time, list all verifying tickets and, before close, scan keywor
 
 Captured via `/wr-itil:capture-problem` on 2026-05-10 from the 2026-05-08 retro Step 4b Stage 1. Tom's marquee retro finding was the trigger. Live cluster evidence: P010 + P014 + P034 + P051 (source-fetch); P037 + P044 + P011 (cover-image); P036 + P016 (editorial-meta + filter-corroboration). Expand investigation at next `/wr-itil:review-problems` pass.
 
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/187 (2026-05-31)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/187
+- **Reported**: 2026-05-31
+- **Template used**: structured default (problem-shaped per ADR-033)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
 
 ## Parked
 
