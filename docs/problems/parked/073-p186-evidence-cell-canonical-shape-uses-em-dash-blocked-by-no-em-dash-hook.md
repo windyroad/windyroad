@@ -57,7 +57,15 @@ The upstream `/wr-itil:review-problems` SKILL.md authored the P186 evidence-firs
 - P186 (upstream `/wr-itil:review-problems` SKILL.md, evidence-first cell canonical wire format)
 - captured via `/wr-itil:capture-problem` during 2026-05-30 review-problems retro; expand at next investigation
 
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/186 (2026-05-31)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/186
+- **Reported**: 2026-05-31
+- **Template used**: structured default (problem-shaped per ADR-033)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
 
 ## Parked
 
