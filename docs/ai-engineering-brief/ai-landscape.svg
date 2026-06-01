@@ -14,7 +14,7 @@
   .evolve-label { font-size: 11px; fill: #c44; }
 </style>
 <rect width="1200" height="800" fill="white"/>
-<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-05-25)</text>
+<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-05-31)</text>
 <line x1="80" y1="60" x2="80" y2="720" stroke="#333" stroke-width="1.5"/>
 <line x1="80" y1="720" x2="1140" y2="720" stroke="#333" stroke-width="1.5"/>
 <polygon points="1140,720 1132,716 1132,724" fill="#333"/>
@@ -32,16 +32,16 @@
 <line x1="557" y1="139.2" x2="663" y2="258" stroke="#aaa" stroke-width="1.5"/>
 <line x1="419.2" y1="178.8" x2="716" y2="310.8" stroke="#aaa" stroke-width="1.5"/>
 <line x1="663" y1="258" x2="716" y2="310.8" stroke="#aaa" stroke-width="1.5"/>
-<line x1="663" y1="258" x2="270.79999999999995" y2="469.2" stroke="#aaa" stroke-width="1.5"/>
+<line x1="663" y1="258" x2="292" y2="469.2" stroke="#aaa" stroke-width="1.5"/>
 <line x1="716" y1="310.8" x2="758.4" y2="508.79999999999995" stroke="#aaa" stroke-width="1.5"/>
 <line x1="716" y1="310.8" x2="822" y2="574.8000000000001" stroke="#aaa" stroke-width="1.5"/>
 <line x1="716" y1="310.8" x2="398" y2="423.00000000000006" stroke="#aaa" stroke-width="1.5"/>
 <line x1="525.2" y1="356.99999999999994" x2="758.4" y2="508.79999999999995" stroke="#aaa" stroke-width="1.5"/>
 <line x1="525.2" y1="356.99999999999994" x2="822" y2="574.8000000000001" stroke="#aaa" stroke-width="1.5"/>
 <line x1="525.2" y1="356.99999999999994" x2="398" y2="423.00000000000006" stroke="#aaa" stroke-width="1.5"/>
-<line x1="525.2" y1="356.99999999999994" x2="376.8" y2="442.80000000000007" stroke="#aaa" stroke-width="1.5"/>
-<line x1="270.79999999999995" y1="469.2" x2="716" y2="310.8" stroke="#aaa" stroke-width="1.5"/>
-<line x1="270.79999999999995" y1="469.2" x2="525.2" y2="356.99999999999994" stroke="#aaa" stroke-width="1.5"/>
+<line x1="525.2" y1="356.99999999999994" x2="398" y2="442.80000000000007" stroke="#aaa" stroke-width="1.5"/>
+<line x1="292" y1="469.2" x2="716" y2="310.8" stroke="#aaa" stroke-width="1.5"/>
+<line x1="292" y1="469.2" x2="525.2" y2="356.99999999999994" stroke="#aaa" stroke-width="1.5"/>
 <line x1="419.2" y1="324" x2="419.2" y2="178.8" stroke="#aaa" stroke-width="1.5"/>
 <line x1="419.2" y1="178.8" x2="239" y2="205.2" stroke="#aaa" stroke-width="1.5"/>
 <line x1="758.4" y1="508.79999999999995" x2="949.1999999999999" y2="654" stroke="#aaa" stroke-width="1.5"/>
@@ -52,10 +52,10 @@
 <circle cx="737.2" cy="356.99999999999994" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="766.4" y1="508.79999999999995" x2="989.6" y2="508.79999999999995" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="991.6" cy="508.79999999999995" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
-<line x1="384.8" y1="442.80000000000007" x2="565.6" y2="442.80000000000007" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
-<circle cx="567.6" cy="442.80000000000007" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
-<line x1="278.79999999999995" y1="469.2" x2="438.40000000000003" y2="469.2" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
-<circle cx="440.40000000000003" cy="469.2" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
+<line x1="406" y1="442.80000000000007" x2="586.8" y2="442.80000000000007" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
+<circle cx="588.8" cy="442.80000000000007" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
+<line x1="300" y1="469.2" x2="459.59999999999997" y2="469.2" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
+<circle cx="461.59999999999997" cy="469.2" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="406" y1="423.00000000000006" x2="586.8" y2="423.00000000000006" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="588.8" cy="423.00000000000006" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="427.2" y1="324" x2="608" y2="324" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
@@ -77,10 +77,10 @@
 <text x="249" y="195.2" class="comp-label">Agentic Engineering Practices</text>
 <circle cx="398" cy="423.00000000000006" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="408" y="413.00000000000006" class="comp-label">Prompt and Context Management</text>
-<circle cx="376.8" cy="442.80000000000007" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="386.8" y="432.80000000000007" class="comp-label">Model Evaluation Frameworks</text>
-<circle cx="270.79999999999995" cy="469.2" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="280.79999999999995" y="459.2" class="comp-label">AI Security Tooling</text>
+<circle cx="398" cy="442.80000000000007" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="408" y="432.80000000000007" class="comp-label">Model Evaluation Frameworks</text>
+<circle cx="292" cy="469.2" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="302" y="459.2" class="comp-label">AI Security Tooling</text>
 <circle cx="758.4" cy="508.79999999999995" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="768.4" y="498.79999999999995" class="comp-label">Foundation Models</text>
 <circle cx="822" cy="574.8000000000001" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
