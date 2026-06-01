@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-01 **README reconciled**: (3) drift entries corrected: P076 (newsletter pipeline drafts body before heading, HIGH priority per Tom direction; WSJF 12 matching P064 / P071 tier), P077 (voice and tone gate misses Tom-specific idioms not codified in the guide; WSJF 4.5), P078 (src/newsletters/published/leader/ folder is crowded; needs dated sub-directories; WSJF 8) added to WSJF Rankings. Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
+> Last reviewed: 2026-06-01 **README reconciled** (post-publish Issue-07 batch): (3) drift entries corrected: P079 (LinkedIn-post drafter generates auto-share-incompatible extras; WSJF 4, S effort), P080 (newsletter pipeline has no cross-edition thesis-contradiction check between consecutive editions; HIGH priority; WSJF 10, M effort), P081 (newsletter pipeline missing external-editorial-reviewer subagent; WSJF 5, M effort) added to WSJF Rankings. All three deferred-WSJF placeholders; re-rate at next /wr-itil:review-problems. Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -12,11 +12,14 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 12 | P064 | Newsletter critic uses a 38-check structured rubric that was never approved; simplify back to S/W + context | 16 (High) | Open | M | 2026-05-15 | internal |
 | 12 | P071 | ADR-016 parameterised sw-critic pattern has poor discoverability + UX; supersede with domain-specific critic … | 16 (High) | Open | M | 2026-05-30 | internal |
 | 12 | P076 | Newsletter pipeline drafts body before heading, forcing rework on every H1 revision | 16 (High) | Open | M | 2026-06-01 | internal |
+| 10 | P080 | Newsletter pipeline has no cross-edition thesis-contradiction check between consecutive editions | 12 (High) | Open | M | 2026-06-01 | internal |
 | 8 | P078 | src/newsletters/published/leader/ folder is crowded; needs dated sub-directories | 8 (Medium) | Open | S | 2026-06-01 | internal |
 | 5 | P065 | Newsletter cog-a11y persistently scores Grade 11+ vs Grade 10 target on leader register | 10 (High) | Open | M | 2026-05-15 | internal |
+| 5 | P081 | Newsletter pipeline missing external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review | 12 (High) | Open | M | 2026-06-01 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
 | 4 | P072 | ADR-022 scheduled-cron deps refresh PR is wrong shape; push-fail-fast + separate fix flow is the desired patt… | 8 (Medium) | Open | M | 2026-05-30 | internal |
+| 4 | P079 | /wr-newsletter step 15.5 LinkedIn post drafter generates auto-share-incompatible extras (Image section, Read-full-issue link line) | 10 (Medium) | Open | S | 2026-06-01 | internal |
 | 3 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Low) | Open | S | 2026-05-13 | internal |
 | 3 | P070 | Newsletter draft-template does not codify the three-deep-items-plus-notes editorial discipline | 3 (Low) | Open | S | 2026-05-25 | internal |
 | 3 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create… | 6 (Medium) | Open | M | 2026-05-31 | internal |

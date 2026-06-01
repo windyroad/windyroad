@@ -117,3 +117,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-06-01
 
 > Last reviewed: 2026-05-31 **README reconciled**: (1) drift entry corrected: P075 (newsletter drafter headings fail clarity test) added to WSJF Rankings as a deferred-WSJF placeholder (3, Severity 3, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
+
+> Last reviewed: 2026-06-01 **README reconciled**: (3) drift entries corrected: P076 (newsletter pipeline drafts body before heading, HIGH priority per Tom direction; WSJF 12 matching P064 / P071 tier), P077 (voice and tone gate misses Tom-specific idioms not codified in the guide; WSJF 4.5), P078 (src/newsletters/published/leader/ folder is crowded; needs dated sub-directories; WSJF 8) added to WSJF Rankings. Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
