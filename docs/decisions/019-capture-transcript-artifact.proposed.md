@@ -8,9 +8,14 @@ consulted: []
 informed: []
 related: [011-ai-brief-orchestration-via-claude-code, 012-ai-generated-content-review-gates, 015-reader-respect-and-gate-rejection-policy, 016-sw-critic-subagents-and-iteration-loop, 017-ai-brief-prep-and-finalise-phases, 018-content-risk-subagent]
 reassessment-date: 2026-07-25
+amended-by: [039-per-date-subdir-layout-for-published-newsletter-editions]
 ---
 
 # Capture-transcript artifact for AI-brief drafter fidelity
+
+## Amendment Note (2026-06-02, ADR-039)
+
+ADR-039 (per-date sub-directory layout for published newsletter editions) refreshes the path encoding of the published-folder move workflow described in this ADR. The substance of the move workflow is unchanged (Tom moves the capture transcript alongside the brief and other siblings when he publishes); the target location now resolves to `<published-folder>/<persona>/<publication-date>/<publication-date>.capture.md` (per-date sub-directory) rather than `<published-folder>/<persona>/<publication-date>.capture.md` (flat). Affected prose in this ADR: line 37 (chosen-option text), line 84 (Lifecycle), lines 116, 118, 131, 141, 167 (Consequences, Confirmation, Pros/Cons, Reassessment). The historical line-numbered prose below is left as written for audit-trail continuity; consumers should read this note as the load-bearing path-encoding statement.
 
 ## Context and Problem Statement
 

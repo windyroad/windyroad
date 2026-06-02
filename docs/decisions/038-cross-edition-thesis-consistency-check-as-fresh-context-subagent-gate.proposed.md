@@ -9,6 +9,7 @@ informed: []
 reassessment-date: 2026-09-02
 composes-with: [033-domain-specific-critic-agents-supersede-parameterised-sw-critic, 035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 037-compose-newsletter-theme-anchor-before-body, 024-url-verification-gate-in-wr-newsletter]
 related: [016-sw-critic-subagents-and-iteration-loop, 011-ai-brief-orchestration-via-claude-code, 015-reader-respect-and-gate-rejection-policy, 025-pass-with-author-overrides-verdict-for-sw-critic, 032-newsletter-editorial-discipline-policy]
+amended-by: [039-per-date-subdir-layout-for-published-newsletter-editions]
 ---
 
 # Cross-edition thesis-consistency check as a fresh-context subagent gate before publish
@@ -87,7 +88,7 @@ A fresh-context subagent `wr-newsletter-cross-edition-consistency` runs at a new
 The subagent:
 
 1. Reads the current edition's draft from `<draft-folder>/<publication-date>.md` (or `.prep.md` during `phase=prep`).
-2. Reads the prior N editions from `<published-folder>` (resolved per the persona config at step 0), filtered to `YYYY-MM-DD.md` matching the canonical brief shape, sorted by edition number descending, take top N.
+2. Reads the prior N editions by globbing `<published-folder>/*/<YYYY-MM-DD>.md` (per ADR-039 per-date sub-directory layout: the wildcard sub-directory is the publication-date directory; the basename matches the canonical brief shape `YYYY-MM-DD.md`). Sort by edition number descending and take top N.
 3. Compares the current draft's load-bearing theses (H1, opener, Item Why-it-matters lines, From-Tom opener) against each prior edition's equivalent surfaces.
 4. Returns one of: SUPPORTED (current draft is compatible with or builds on prior theses), CONTRADICTS (a specific passage in the current draft contradicts a specific passage in one or more prior editions; both passages quoted in the verdict), or NEUTRAL (no overlap; current draft addresses topics the prior editions did not engage).
 

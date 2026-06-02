@@ -1,11 +1,18 @@
 # Problem 078: src/newsletters/published/leader/ folder is crowded; needs dated sub-directories
 
-**Status**: Open
+**Status**: Verifying
 **Reported**: 2026-06-01
 **Priority**: 3 (Medium). Impact: 2 x Likelihood: 4 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
 **Effort**: S (deferred. Re-rate at next /wr-itil:review-problems)
 **Type**: technical
+**Released**: 2026-06-02
+
+## Fix Summary
+
+ADR-039 (per-date sub-directory layout for published newsletter editions) shipped alongside the 6-edition `git mv` migration (2026-04-17, 2026-04-24, 2026-05-01, 2026-05-15, 2026-05-25, 2026-06-01 per-date sub-dirs created; all sibling artefacts moved in). SKILL.md step 0 published-folder binding annotated; step 11 edition-counting glob refreshed to `<published-folder>/*/<YYYY-MM-DD>.md`; step 17 Tom-summary publish reminder names the per-date sub-directory target. Persona configs (leader.md + developer.md) `## Edition counting` section updated with the new glob shape. READMEs (drafts/leader, published, published/leader) carry the new move workflow. ADR-019, ADR-026, ADR-038 each carry an `## Amendment Note (2026-06-02, ADR-039)` block at the top documenting the path-encoding refresh. ADR-038 step 2 of the subagent contract (line 90) inline-edited to the per-date-subdir glob. Drafts layout intentionally deferred per the Out-of-scope clause of this ticket; a separate decision takes that up.
+
+Verification trigger: next `/wr-newsletter` run (live drafter exercise) resolves the next edition number against the per-date-subdir glob without contract drift, AND next manual `mv` of a finalised edition into `<published-folder>/<persona>/<publication-date>/` lands the bundle cohesively.
 
 ## Description
 

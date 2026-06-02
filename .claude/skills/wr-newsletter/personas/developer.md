@@ -71,6 +71,11 @@ For edition >= 2, drop or freshly reframe; do not repeat verbatim.
 
 Determine the next edition number by reading the frontmatter `edition:` value from the highest-numbered prior edition across BOTH `src/newsletters/published/developer/` and `src/newsletters/drafts/developer/`, then incrementing by 1.
 
-Scan only files whose filename matches the canonical brief shape `YYYY-MM-DD.md` (eight digits and dashes, then `.md`). This excludes ADR-026 sibling files (`.linkedin.md`, `.reviews.md`, `.capture.md`) and folder index files (`README.md`) by construction.
+Glob shape (per ADR-039 per-date sub-directory layout for published, flat layout for drafts):
+
+- Published: `src/newsletters/published/developer/*/<YYYY-MM-DD>.md` (the wildcard sub-directory is the publication-date directory; the basename matches the canonical brief shape).
+- Drafts: `src/newsletters/drafts/developer/<YYYY-MM-DD>.md` (flat; drafts layout unchanged).
+
+Scan only files whose basename matches the canonical brief shape `YYYY-MM-DD.md` (eight digits and dashes, then `.md`). This excludes ADR-026 sibling files (`.linkedin.md`, `.reviews.md`, `.capture.md`) and folder index files (`README.md`) by construction.
 
 If no prior edition file exists in either folder, the next edition is 1.

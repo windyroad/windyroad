@@ -7,9 +7,14 @@ oversight-date: 2026-05-30
 decision-makers: [Tom Howard, Claude]
 consulted: [wr-architect agent]
 informed: []
+amended-by: [039-per-date-subdir-layout-for-published-newsletter-editions]
 ---
 
 # Newsletter reviews and meta content live in sibling files, not inline in the brief
+
+## Amendment Note (2026-06-02, ADR-039)
+
+ADR-039 (per-date sub-directory layout for published newsletter editions) refreshes the example paths used in this ADR. The sibling-file pattern itself (reviews and meta content live as siblings of the brief, not inline) is unchanged. Affected examples in this ADR: line 26 (Context), line 86 (Consequences, Good), line 111 (More Information, Aligns with). Where the prose cites `src/newsletters/published/leader/2026-04-24.linkedin.md` (flat), the post-ADR-039 layout resolves the same example to `src/newsletters/published/leader/2026-04-24/2026-04-24.linkedin.md` (per-date sub-directory). The example paths in the prose below are left as written for historical-record continuity; the sibling-file pattern they document still holds under the new layout.
 
 ## Context and Problem Statement
 
