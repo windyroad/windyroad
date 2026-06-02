@@ -1,6 +1,6 @@
 # Problem 064: Newsletter critic uses a 38-check structured rubric that was never approved; simplify back to strengths/weaknesses + context
 
-**Status**: Open
+**Status**: Known Error (root cause confirmed via ADR-035; implementation landed 2026-06-02; awaiting one full prep+finalise newsletter cycle to verify per ADR-035 Confirmation criterion 5)
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-05-31; the structured rubric is actively producing wrong-shaped REJECTED verdicts on briefs the reader-facing critic should pass; affects every edition)
@@ -64,11 +64,13 @@ This composes with P071 (supersede ADR-016 parameterised sw-critic pattern with 
 
 - [x] Compare the 5 most recent editions' critic round-3 PARTIAL flags to see which checks are the consistent offenders. (Done 2026-05-31 iter 18 audit; check_16 + check_34 confirmed recurring across 2026-05-15 and 2026-05-25 editions.)
 - [x] Confirm critic shape with user. (Done 2026-05-31: simplify to S/W + optional context.)
-- [ ] Draft ADR-016 amendment scoping sw-critic agent to S/W + context output; reject structured-rubric input pattern.
-- [ ] Simplify .claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md to the brief instruction shape above.
-- [ ] Update .claude/skills/wr-newsletter/SKILL.md step 15 invocation prose to drop accepted_overrides mechanism.
-- [ ] Run the simplified critic against a prior edition (2026-05-25.md) as smoke test; confirm STRENGTHS + WEAKNESSES + CONTEXT shape outputs.
-- [ ] Coordinate with P071 (parameterised sw-critic supersession) for cross-ticket implementation order.
+- [x] Draft ADR-016 amendment scoping sw-critic agent to S/W + context output; reject structured-rubric input pattern. (Landed as ADR-035, status proposed with human-oversight confirmed 2026-05-31; amends ADR-016 + ADR-025, composes with ADR-033.)
+- [x] Simplify .claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md to the brief instruction shape above. (Done 2026-06-02; 38-check structured rubric replaced with brief editorial prompt asking for STRENGTHS + WEAKNESSES + optional RELEVANT CONTEXT, with explicit coverage-partitioning notes for sibling gates.)
+- [x] Simplify .claude/skills/wr-newsletter/assets/wardley-critic-rubric.md similarly. (Done 2026-06-02; 18-check structured rubric replaced with brief editorial prompt scoped to wardley analytical quality.)
+- [x] Update .claude/skills/wr-newsletter/SKILL.md step 15 invocation prose to drop accepted_overrides mechanism. (Done 2026-06-02; accepted_overrides parameter removed from steps 9 and 15 invocations; rationale prose around check_6/19/23/26 removed; PASS_WITH_AUTHOR_OVERRIDES verdict semantics preserved per ADR-035 as editorial-judgement override of named weaknesses.)
+- [x] Update SKILL.md and draft-template.md references to specific check_N IDs (check_9, check_14, check_25, check_32) to describe the editorial-quality concern without naming the now-removed structured-check ID. (Done 2026-06-02.)
+- [ ] Run the simplified critic against one full prep + finalise newsletter cycle as the ADR-035 Confirmation criterion 5 smoke test; confirm STRENGTHS + WEAKNESSES + CONTEXT shape outputs and that round-3 exhaustion frequency drops relative to the structured-rubric baseline. Defer to next finalise cycle per architect review 2026-06-02 (non-deterministic critic output adds commit-risk to the otherwise-mechanical implementation iter).
+- [ ] Coordinate with P071 (parameterised sw-critic supersession via ADR-033) for cross-ticket implementation order. P071's ADR-033 Phase 2 SKILL.md call-site migration will inherit the simplified rubric shape established here; no blocking dependency.
 
 ## Dependencies
 

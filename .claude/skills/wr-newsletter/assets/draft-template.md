@@ -21,7 +21,7 @@ Use this structure when drafting a brief. Fill every placeholder in square brack
 
 ## Structure
 
-The draft frontmatter should include `edition: N` (integer, 1 for the first issue, incrementing weekly) so the critic's check_25 (reader-orientation) can decide whether a welcome line is required.
+The draft frontmatter should include `edition: N` (integer, 1 for the first issue, incrementing weekly). The first edition (N=1) requires a welcome line above the voice opener orienting new subscribers; subsequent editions may carry fresh framing or omit the welcome line. The simplified critic (ADR 035) will flag a missing welcome line on edition 1 as a weakness.
 
 ```markdown
 ---

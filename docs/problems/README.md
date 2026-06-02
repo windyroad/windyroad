@@ -9,7 +9,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 12 | P064 | Newsletter critic uses a 38-check structured rubric that was never approved; simplify back to S/W + context | 16 (High) | Open | M | 2026-05-15 | internal |
+| 12 | P064 | Newsletter critic uses a 38-check structured rubric that was never approved; simplify back to S/W + context | 16 (High) | Known Error | M | 2026-05-15 | internal |
 | 12 | P071 | ADR-016 parameterised sw-critic pattern has poor discoverability + UX; supersede with domain-specific critic … | 16 (High) | Open | M | 2026-05-30 | internal |
 | 12 | P076 | Newsletter pipeline drafts body before heading, forcing rework on every H1 revision | 16 (High) | Open | M | 2026-06-01 | internal |
 | 10 | P080 | Newsletter pipeline has no cross-edition thesis-contradiction check between consecutive editions | 12 (High) | Open | M | 2026-06-01 | internal |

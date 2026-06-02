@@ -293,12 +293,12 @@ If the render fails, revert the `.owm` edit and note the failure in the summary.
 Read the current `docs/ai-engineering-brief/ai-landscape.md` and update:
 - The Differentiation / Evolution / Risk / Decisions sections to reflect the new map state.
 - Add a short "This week" note near the top of the Analysis section summarising what moved and why.
-- Check that every `evolve` arrow in the `.owm` has a corresponding Evolution-section explanation (rubric check_14).
-- Check that every component in Genesis or Custom-Built phase appears in Differentiation (rubric check_9).
+- Check that every `evolve` arrow in the `.owm` has a corresponding Evolution-section explanation. The simplified Wardley critic (ADR 035) will flag missing explanations as a weakness; landing this consistency at draft time avoids round-2 rework.
+- Check that every component in Genesis or Custom-Built phase appears in Differentiation. Silent omissions of custom components surface as critic weaknesses.
 
-### 9. Critic loop on the Wardley artifacts (ADR 016, ADR 025)
+### 9. Critic loop on the Wardley artifacts (ADR 016, ADR 025, ADR 035)
 
-Run the critic agent against the updated map + analysis. The Wardley critic has no documented author overrides; pass an empty `accepted_overrides` list at rounds 2 and 3. Wardley rubric checks are factual structure checks (every Genesis component appears in Differentiation; every `evolve` arrow has an Evolution-section explanation); these are not editorial-judgement overrides. If a Wardley rubric check is being routinely overridden, the rubric or the map shape is wrong, not the override list.
+Run the critic agent against the updated map and analysis. Per ADR 035, the rubric is a brief editorial prompt (STRENGTHS, WEAKNESSES, optional RELEVANT CONTEXT); no structured numbered-check list, no `accepted_overrides` allowlist. The critic is an editorial reader of the analytical quality of the artifact.
 
 ```
 Agent subagent_type: wr-sw-critic
@@ -307,14 +307,13 @@ prompt: "Review the Wardley artifact.
 artifact_path: /Users/tomhoward/Projects/windyroad/docs/ai-engineering-brief/ai-landscape.md
 rubric_path: /Users/tomhoward/Projects/windyroad/.claude/skills/wr-newsletter/assets/wardley-critic-rubric.md
 round_number: 1
-prior_weaknesses: n/a
-accepted_overrides: []"
+prior_weaknesses: n/a"
 ```
 
 Parse the returned `CRITIC_REVIEW` block:
 - If `VERDICT: PASS`: proceed to step 9.5.
-- If `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in `ai-landscape.md` (or `.owm` if the weakness is structural). Re-invoke the critic with `round_number: 2`, `prior_weaknesses: <round-1 weaknesses verbatim>`, and `accepted_overrides: []`.
-- Repeat for up to round 3. On `VERDICT: PASS_WITH_AUTHOR_OVERRIDES`: in practice unreachable for the Wardley critic because the override list is empty (any remaining UNMET or PARTIAL has no override-list entry to absorb it). If it ever fires (the override list was widened in a future edition), proceed to step 9.5 because the variant is publish-ready.
+- If `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in `ai-landscape.md` (or `.owm` if the weakness is structural). Re-invoke the critic with `round_number: 2` and `prior_weaknesses: <round-1 weaknesses verbatim>`.
+- Repeat for up to round 3. On `VERDICT: PASS_WITH_AUTHOR_OVERRIDES`: the drafter has accepted a critic-flagged weakness as an editorial choice (named verbatim in the saved review block per ADR 035). Proceed to step 9.5 because the variant is publish-ready.
 - On `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`, save the review block with the artifacts and note the unresolved weaknesses in the summary, but still proceed to step 9.5. The map is the best we have this week; a weak map still beats no map.
 
 Capture the final critic block for inclusion in the saved draft.
@@ -383,7 +382,7 @@ phase-last-appended: <prep|finalise|full>
 - **Ask for help question** (if outcome is Ask for help): <Tom's question>
 ```
 
-For `phase=full` and `phase=prep`, write the file once after capture completes. Today's consumer is the drafter at step 11; future consumers (deferred `check_32` per P015 Part 3, possible voice / content-risk extensions) are scoped per ADR 019. The voice gate (step 13), content-risk gate (step 14), and SW-critic (step 15) do not read this file in the current pipeline.
+For `phase=full` and `phase=prep`, write the file once after capture completes. Today's consumer is the drafter at step 11; future consumers (possible voice / content-risk extensions) are scoped per ADR 019. The voice gate (step 13), content-risk gate (step 14), and SW-critic (step 15) do not read this file in the current pipeline.
 
 **Phase variant `10-prime` (phase=finalise only):** run per-item capture only on:
 
@@ -405,7 +404,7 @@ Default branch when Tom is unavailable: `Continue without capture transcript`. T
 
 ### 11. Draft the brief
 
-Before drafting, determine the edition number per the persona config's `## Edition counting` rule: scan files matching the canonical brief shape `YYYY-MM-DD.md` (eight digits and dashes, then `.md`) across BOTH `<published-folder>` and `<draft-folder>` (resolved at step 0), read each match's frontmatter `edition:` value, take the maximum, and add one for the current draft. The `YYYY-MM-DD.md` filter excludes ADR-026 sibling files (`.linkedin.md`, `.reviews.md`, `.capture.md`) and folder index files (`README.md`) by construction; do NOT use a plain `*.md` glob (P062). If no prior edition file exists in either folder, the next edition is 1. Assert that the computed edition number is exactly one greater than the highest prior `edition:` value before writing the draft frontmatter; if not, surface to Tom and abort rather than publishing with a wrong issue number. Write the edition number into the draft frontmatter (`edition: N`) so the critic's check_25 can reason about first-edition vs ongoing framing. For edition 1, include the persona's `<welcome-line>` above the voice opener; for edition >=2, drop or freshly reframe the welcome line rather than repeating the first-edition text.
+Before drafting, determine the edition number per the persona config's `## Edition counting` rule: scan files matching the canonical brief shape `YYYY-MM-DD.md` (eight digits and dashes, then `.md`) across BOTH `<published-folder>` and `<draft-folder>` (resolved at step 0), read each match's frontmatter `edition:` value, take the maximum, and add one for the current draft. The `YYYY-MM-DD.md` filter excludes ADR-026 sibling files (`.linkedin.md`, `.reviews.md`, `.capture.md`) and folder index files (`README.md`) by construction; do NOT use a plain `*.md` glob (P062). If no prior edition file exists in either folder, the next edition is 1. Assert that the computed edition number is exactly one greater than the highest prior `edition:` value before writing the draft frontmatter; if not, surface to Tom and abort rather than publishing with a wrong issue number. Write the edition number into the draft frontmatter (`edition: N`) so the critic (ADR 035) can reason about first-edition vs ongoing framing when deciding whether to flag a missing welcome line as a weakness. For edition 1, include the persona's `<welcome-line>` above the voice opener; for edition >=2, drop or freshly reframe the welcome line rather than repeating the first-edition text.
 
 Read `docs/VOICE-AND-TONE.md` (base) and the `<voice-addendum>` from the persona config, plus `.claude/skills/wr-newsletter/assets/draft-template.md` and `docs/ai-engineering-brief/ai-landscape.md`.
 
@@ -596,7 +595,9 @@ If `VERDICT: PASS`: proceed to step 15. Any `medium` flags listed in the Notes s
 
 **Phase variant `14-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same rubric path. A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the risk surface, so the agent runs again with the finalise-time draft.
 
-### 15. Critic loop on the newsletter draft (ADR 016, ADR 025)
+### 15. Critic loop on the newsletter draft (ADR 016, ADR 025, ADR 035)
+
+Per ADR 035, the critic rubric is a brief editorial prompt (STRENGTHS, WEAKNESSES, optional RELEVANT CONTEXT); no structured numbered-check list, no `accepted_overrides` allowlist. The critic owns analytical quality (does the argument hold; is specificity preserved; is the "so what?" answered; is the piece pablum). Sibling gates own voice (step 13), content-risk (step 14), cog-a11y (step 15.4), and editor (step 15.25).
 
 ```
 Agent subagent_type: wr-sw-critic
@@ -605,24 +606,16 @@ prompt: "Review the newsletter draft.
 artifact_path: <path to the in-progress draft>
 rubric_path: /Users/tomhoward/Projects/windyroad/.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md
 round_number: 1
-prior_weaknesses: n/a
-accepted_overrides: [check_6, check_19, check_23, check_26]"
+prior_weaknesses: n/a"
 ```
 
-The `accepted_overrides` list (ADR 025) names the documented author overrides for the newsletter critic. Pass it on every round; the agent only acts on it at round 3. Each ID maps to a deliberate editorial choice the rubric does not yet model:
-
-- `check_6` ("Every item cites a source (inline-linked)"): the rubric prefers a `Source:` block; the brief uses inline-linked source words in the body to keep the LinkedIn-newsletter render readable. Editorial override.
-- `check_19` ("CTA has description and invitation"): the rubric expects a multi-sentence CTA; the brief uses a single subscribing-loop line per ADR 023's commercial-funnel pause. Editorial override.
-- `check_23` ("Item-count proportionality"): the rubric prefers four-or-five items; the brief includes every story that clears the Wardley precondition and three-lens criterion (P017 minimum-three-no-cap rule). Editorial override.
-- `check_26` ("Quantification of capability claims"): some weeks' stories are about qualitative shifts (a vendor changes posture, a regulatory body issues guidance) where numeric capability claims do not apply. The rubric treats absence as PARTIAL; the editorial position is N/A on those items. Editorial override.
-
 Parse the `CRITIC_REVIEW` block:
-- `VERDICT: PASS`: proceed to step 16. The `OVERRIDDEN:` line should read `n/a`.
-- `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in the draft. Re-invoke with `round_number: 2`, `prior_weaknesses: <round-1 verbatim>`, and the same `accepted_overrides` list.
-- `VERDICT: PASS_WITH_AUTHOR_OVERRIDES`: publish-ready. The `OVERRIDDEN:` line names which override IDs were satisfied this round. Proceed to step 16.
-- Up to round 3. On round-3 exhaustion (any remaining UNMET or PARTIAL **not** in `accepted_overrides`), the agent emits `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`. Save the draft with the block and surface the unresolved weaknesses in the Tom-summary.
+- `VERDICT: PASS`: proceed to step 16.
+- `VERDICT: WEAKNESSES_FOUND`: fix each listed weakness in the draft. Re-invoke with `round_number: 2` and `prior_weaknesses: <round-1 verbatim>`.
+- `VERDICT: PASS_WITH_AUTHOR_OVERRIDES`: publish-ready. Per ADR 035, the verdict variant covers editorial-judgement overrides of named weaknesses (the drafter accepts a critic call as an intentional editorial choice). The override is named verbatim in the saved review block. Proceed to step 16.
+- Up to round 3. On round-3 exhaustion (any remaining weakness that is not an editorial-judgement override), the agent emits `VERDICT: REJECTED` with `REJECTED_REASON: critic-loop-exhausted`. Save the draft with the block and surface the unresolved weaknesses in the Tom-summary.
 
-If a new override candidate appears across consecutive editions (the round-3 REJECTED weakness is the same check ID twice in a row, and Tom's retrospective notes the rubric does not yet model the editorial position), file an ADR amendment or a problem ticket; do not silently extend the list inline. ADR 025's reassessment criterion is: if the override list grows past six checks across consecutive editions, the rubric needs amendment, not the override mechanism.
+If the round-3 REJECTED pattern recurs across consecutive editions on the same class of weakness, file a problem ticket or revisit the editorial prompt in `newsletter-critic-rubric.md`. Per ADR 035, the rubric is a brief editorial prompt; substantive shape changes go through an ADR-035-reassessment cycle, not silent inline accretion.
 
 Capture the final critic block for the saved draft.
 
