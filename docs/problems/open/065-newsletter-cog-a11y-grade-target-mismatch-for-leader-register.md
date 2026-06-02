@@ -56,10 +56,22 @@ c. **Keep the target, accept the recurring NEEDS_REVISION_OPTIONAL verdict**: su
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Survey 3-5 published Engineering Leader newsletters (Stratechery, Benedict Evans, AI Daily Brief leader segment) for their Flesch-Kincaid scores to benchmark.
-- [ ] Decide on fix shape (raise target vs add exemption list vs accept).
+- [ ] Survey 3-5 published Engineering Leader newsletters (Stratechery, Benedict Evans, AI Daily Brief leader segment) for their Flesch-Kincaid scores to benchmark. (Open; not undertaken in 2026-06-02 iter to preserve token budget; survey would inform but not change the direction-class routing.)
+- [x] Decide on fix shape (raise target vs add exemption list vs accept). (Routed to Tom 2026-06-02 per ADR-074 substance-confirm-before-build; see Iter Notes.)
 - [ ] If option (a), update `/wr-newsletter` SKILL.md Step 15.4 cog-a11y invocation prompt for leader persona.
 - [ ] Document the chosen rationale in the cog-a11y agent file or the persona config.
+
+### Iter Notes 2026-06-02 (AFK work-problems iter 6)
+
+**Architect ruling**: OPEN QUESTION, direction-class. No ADR pins the Grade 10 target; it lives only inline in `.claude/skills/wr-newsletter/SKILL.md` Step 15.4 line 690. The persona file `.claude/skills/wr-newsletter/personas/leader.md` does NOT yet carry a `target_reading_level` frontmatter field. Precedent of ADR-032 (newsletter editorial-discipline policy) and ADR-038 (cross-edition thesis-consistency gate) places this decision in ADR scope. Single-source-of-truth shape: the target should land in the persona frontmatter, not inline in SKILL.md.
+
+**Architect advisory lean**: Option A with persona-frontmatter override. Grade 11 leader, Grade 10 developer. Reasoning: witnessed 11.58 with 4-of-8 findings genuinely conflicting with leader-register precision suggests structural mismatch, not a vocab-list problem. Persona is documented as advanced-degree, AI-trade-press readers. Option A is the cheapest reversible move; if it under-corrects, Grade 12 (Option B in architect's framing) is one ADR-supersession away. Option C (domain-vocabulary exemption list, P065 option b) is maintenance-heavy for an unverified scorer-bias claim. Option D (status quo, P065 option c) leaves the gate noisy every edition.
+
+**JTBD ruling**: PASS. No documented job in `docs/jtbd/engineering-leader/` rules an option in or out. The "credential-sensitive, demonstrated proof over theory" J1/J2/J3 framing weakly favours vocabulary precision, leaning against a wide-exemption-only Option (b). Gap to surface (not blocking): no documented job covers "newsletter reading-level register"; if Option (a) lands, consider a one-line register note in the leader persona's Context Constraints so the calibration has a JTBD anchor.
+
+**Routing**: queued to ITERATION_SUMMARY.outstanding_questions with `category: direction`, ticket_id `P065`. Per ADR-074, the substantive question (what reading-level target should the cog-a11y gate apply to the leader register?) needs Tom direction before any code edit lands. Architect-recommended four-option shape carried into the queue entry.
+
+**Side observation from architect (separate from P065)**: `docs/decisions/README.md` is stale; it lists 8 entries (1-8 + 023) while 38 ADR files exist on disk. Logged for /wr-retrospective:run-retro triage at iter-end. Recovery: `wr-architect-generate-decisions-compendium && git add docs/decisions/README.md`.
 
 ## Dependencies
 
