@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-02 (P078 worked under AFK iter 5): ADR-039 (per-date sub-directory layout for published newsletter editions) landed alongside the 6-edition `git mv` migration + SKILL.md / persona-config / READMEs / ADR-019 + ADR-026 + ADR-038 amendments in one related-cluster commit per ADR-014. P078 transitions Open -> Verifying. Drafts layout deferred (P078 Out-of-scope clause; separate decision). Triggers on next `/wr-newsletter` run resolving edition number against `<published-folder>/*/<YYYY-MM-DD>.md` glob AND next manual `mv` of a finalised edition into the new per-date sub-directory shape.
+> Last reviewed: 2026-06-02 **README reconciled** (P081 work-problems iter 7): 1 drift entry corrected, namely P083 (ADR compendium docs/decisions/README.md is stale; lists 8 entries while ~40 ADR files exist on disk) added to WSJF Rankings as deferred-WSJF placeholder (1.5 = 3/2, Severity 3 Low, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -30,6 +30,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P056 | manage-problem SKILL.md misattributes ADR-014 to "single-commit governance" in 6+ blocks | 3 (Low) | Open | M | 2026-05-13 | internal |
 | 1.5 | P069 | work-problems orchestrator WSJF ranking does not factor placement-authority | 3 (Low) | Open | M | 2026-05-16 | internal |
 | 1.5 | P082 | Subagent outputs include fabricated references to artefacts not on disk | 3 (Low) | Open | M | 2026-06-02 | internal |
+| 1.5 | P083 | ADR compendium docs/decisions/README.md is stale; lists 8 entries while ~40 ADR files exist on disk | 3 (Low) | Open | M | 2026-06-02 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
