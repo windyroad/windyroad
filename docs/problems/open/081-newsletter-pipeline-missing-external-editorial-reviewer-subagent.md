@@ -45,14 +45,36 @@ Reassessment trigger: if the external-editor consistently catches what the other
 
 ## Root Cause Analysis
 
+### Architecture Review (2026-06-02 work-problems iter 7)
+
+Architect (`/wr-architect:agent`) reviewed the placement question on 2026-06-02 during AFK orchestrator iter 7. Verdict: **NEEDS DIRECTION** (direction-class per ADR-044; cannot pin mechanically; routed to outstanding_questions per ADR-074 substance-confirm-before-build guard).
+
+Architect advisory lean: **Option B (supersede)** with `/wr-architect:create-adr` producing `NEW_ADR_SUPERSEDES_020`. Rationale (citing existing ADR clauses):
+
+1. **ADR-020 has zero live evidence.** Criterion 12 ("first live-run validation") is still pending after ~5 weeks. The "carry both forward and defer supersession to 4-edition evidence" path P081's original Description proposes is asymmetric: it demands 4 editions of evidence for `wr-external-editor` while requiring zero for `wr-newsletter-editor` to stay in. Per `feedback_tier1_rule_and_predating_artifacts.md`, legacy artifacts predating new gates must pass the gates before re-use; by that principle, the unexercised ADR-020 should be re-justified, not auto-preserved.
+2. **ADR-035 amends the critic-rubric corpus to S/W+context.** The S/W+passage-citation shape P081 proposes for `wr-external-editor` matches ADR-035 exactly; the EDITOR_REVIEW fixed-block + three-axis verdict in ADR-020 does NOT. ADR-020's own boundary clause (line 94) names this absorption trigger: "If retrospective shows the editor and sw-critic are flagging the same axes... one of the two should absorb the other." The 2026-06-01 finalise evidence in P081 Description shows the external editor surfaced passage-cited weaknesses the structured editor missed; that is the absorption trigger firing.
+3. **ADR-020 reassessment-criterion-6 (15-invocations/issue budget) fires under Option A.** Per-phase tally under add-alongside is ~9-11; per-issue ~18-22. That crosses the line ADR-020 itself drew. Option A requires the new ADR to re-assert the budget; Option B holds the line at the existing precedent.
+4. **The "4 consecutive editions before supersede" gate in this ticket's Description is evidence-discipline applied asymmetrically.** It treats supersession as the higher-evidence bar. Given ADR-020 is unexercised, the symmetric framing is: ratify ONE editor for the next 4 editions and pick based on evidence. Option B does exactly that with less infrastructure carried forward.
+5. **ADR-033 domain-specific naming reads either way (residual ambiguity).** `wr-newsletter-editor` and `wr-external-editor` CAN coexist as two domain agents, but ADR-033's driver is "self-documenting reader-discoverability"; two editor agents named `editor` and `external-editor` are weakly self-documenting compared to one canonical editor. This is the residual ambiguity that makes the choice substantive, not mechanical, and routes to Tom-direction.
+
+JTBD (`/wr-jtbd:agent`) reviewed the proposed editorial-craft scope on 2026-06-02: PASS / JTBD_ALIGNED. The craft axes (opener earning the thesis, fold compression, audience-pointer specificity, sentence rhythm, ATWN thesis-fit) compose cleanly with `JTBD-001` / `JTBD-002` / `JTBD-003` (leader) and `JTBD-200` / `JTBD-201` / `JTBD-203` / `JTBD-204` (developer). No missing JTBD pushes the placement decision; both Options A and B serve the same reader jobs identically. Add-alongside vs supersede is a pipeline-architecture call, not a JTBD-driven call.
+
+Direction-class questions routed to outstanding_questions in iter 7 ITERATION_SUMMARY (per ADR-044 + ADR-074):
+
+- **Q1 (substance, primary)**: Add-alongside (Option A) or supersede (Option B)? Architect lean: B.
+- **Q2 (only if A)**: Re-assert the ADR-020 15-invocations/issue cost ceiling, or trim a gate to stay under?
+- **Q3 (only if B)**: Confirm ADR-020 retires as `.superseded.md` with `human-oversight: rejected-pending-supersede` + `supersede-ticket: P081` markers (per ADR-066 pattern used for ADR-016).
+
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Specify the wr-external-editor subagent prompt and output format (mirror ADR 016 / 020 shape)
-- [ ] Decide on placement: add alongside step 15.25 or supersede current editor
-- [ ] Update skip-on-upstream-REJECTED rule for external-editor specifically (proposal: runs regardless of SW-critic verdict)
-- [ ] Test on next edition: count how many of Tom's manual editorial findings the new subagent surfaces vs the existing gates
-- [ ] Reassessment trigger: 4 consecutive editions of consistent over-performance vs current editor, supersede
+- [x] Decide on placement: add alongside step 15.25 or supersede current editor. (Captured 2026-06-02 work-problems iter 7: architect review surfaced Option A vs Option B with lean toward B; direction-class question routed to outstanding_questions per ADR-074; substantive supersede vs add-alongside call awaits Tom-direction before agent authoring proceeds.)
+- [ ] Specify the wr-external-editor subagent prompt and output format (mirror ADR 035 S/W + passage citation + suggested fix shape). Blocked on placement direction (above).
+- [ ] Draft ADR per architect direction. If Option A: lightweight `/wr-architect:capture-adr` composing-with ADR-020. If Option B: full canonical `/wr-architect:create-adr` superseding ADR-020. Blocked on placement direction.
+- [ ] Update skip-on-upstream-REJECTED rule for external-editor specifically (proposal: runs regardless of SW-critic verdict). Blocked on agent authoring (above).
+- [ ] Update SKILL.md step 15.25 invocation per agent placement (add-alongside as 15.27 OR replace 15.25). Blocked on agent authoring.
+- [ ] Test on next edition: count how many of Tom's manual editorial findings the new subagent surfaces vs the existing gates.
+- [ ] Reassessment trigger: 4 consecutive editions of consistent over-performance vs current editor. (Moot if Option B chosen; current editor retires immediately.)
 
 ## Dependencies
 
