@@ -29,6 +29,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 (Low) | Open | M | 2026-05-12 | internal |
 | 1.5 | P056 | manage-problem SKILL.md misattributes ADR-014 to "single-commit governance" in 6+ blocks | 3 (Low) | Open | M | 2026-05-13 | internal |
 | 1.5 | P069 | work-problems orchestrator WSJF ranking does not factor placement-authority | 3 (Low) | Open | M | 2026-05-16 | internal |
+| 1.5 | P082 | Subagent outputs include fabricated references to artefacts not on disk | 3 (Low) | Open | M | 2026-06-02 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
