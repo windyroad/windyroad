@@ -63,10 +63,13 @@ Composes with P064 (newsletter critic complexity) and P070 (draft-template gap) 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems (manual HIGH rating at capture; confirm)
 - [ ] Investigate: is the colon-flourish pattern in the drafter prompt at step 11, or is it an emergent default in the absence of explicit guidance?
 - [x] Draft an ADR amendment to ADR 011 (or a new ADR) codifying the H1-first composition order (landed as ADR-037 `compose-newsletter-theme-anchor-before-body.proposed.md`, 2026-06-02, AFK iter 3; born `human-oversight: confirmed` per ticket's substantive Tom-direction capture)
-- [ ] Implement the step 11a / 11b split in /wr-newsletter SKILL.md (DEFERRED: blocked on two sub-decisions per ADR-037 § Deferred sub-decisions: cover-render placement (3 options, lean B), phase=finalise variant 11a-prime (2 options, lean A); both queued to /wr-architect:review-decisions direction-set)
-- [ ] Add a Tom-approval gate via AskUserQuestion in 11a (rides with the SKILL.md split above)
-- [ ] Cover-skill 12 amendment to support invocation from 11a (not just 12) (substance lives in ADR-037 § Deferred sub-decision 1 cover-render placement)
-- [ ] Test on the next edition by composing the H1 first and watching for body-rework reduction (gated on SKILL.md split landing; confirmation criterion d in ADR-037: H1-rejection-rework rate drops below 1-in-3 editions across the next three)
+- [ ] Implement the step 11a / 11b split in /wr-newsletter SKILL.md per ADR-037 pinned shape (UNBLOCKED 2026-06-03 via /wr-architect:review-decisions follow-up):
+  - 11a: compose H1 (with `Issue NN:` prefix), cover hook line 1 + 2, one-paragraph theme statement. Output text only; no cover render at 11a per Tom-pinned sub-decision 1 / Option C.
+  - 11a Tom-approval gate via AskUserQuestion (Accept / Refine / Reject).
+  - 11b: drafts opener, bridge if needed, items, ATWN, CTA using approved H1 as anchor frame.
+  - Step 12 cover render stays unchanged at current placement (status quo per Option C; no cover-skill 12 amendment needed).
+- [ ] Implement `11a-prime` finalise variant per Tom-pinned sub-decision 2 / Option B: always re-runs as "confirm theme anchor is still right" gate with default Accept (1 prep gate plus 1 finalise re-confirm gate per edition).
+- [ ] Test on the next edition by composing the H1 first and watching for body-rework reduction (confirmation criterion d in ADR-037: H1-rejection-rework rate drops below 1-in-3 editions across the next three).
 
 ### Progress log
 

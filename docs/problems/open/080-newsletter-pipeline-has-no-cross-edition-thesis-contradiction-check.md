@@ -55,9 +55,12 @@ Alternative lighter-weight fix:
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
 - [x] Decide between fresh-context subagent (new pipeline step) vs gate-prompt-extension (lighter-weight) (landed as ADR-038 `cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`, 2026-06-02, AFK iter 4; Option A pinned by ADR-035 coverage-partitioning driver; Option B has direct ADR-035 conflict)
-- [ ] If subagent: scope its prompt shape (full prior-edition body? extracted theses only?), N-prior-editions window default, save-gate semantics for CONTRADICTS verdict (DEFERRED: blocked on three sub-decisions per ADR-038 § Deferred sub-decisions: N window 1/4/8 lean B, save-gate block/warn/publish-only lean A, input-shape full/extracted/hybrid lean C; all queued to /wr-architect:review-decisions direction-set)
+- [x] Subagent prompt shape pinned (UNBLOCKED 2026-06-03 via /wr-architect:review-decisions follow-up): N=8 (rolling two-month window, Option C, Tom rejected architect lean of B); CONTRADICTS save-gate Option A (block save until Tom resolves via AskUserQuestion Rewrite/Override/Accept-as-evolution); subagent input shape Option A (full prior-edition bodies for all N editions, Tom rejected architect lean of C/hybrid). Combined N=8 with full bodies drives a higher subagent token budget, accepted as load-bearing cost for JTBD-003 protection.
 - [ ] If gate-extension: identify which existing gate(s) carry the cross-edition check (SW-critic plus voice both plausible) (N/A: gate-extension rejected per ADR-038 Option 2; ADR-035 coverage-partitioning conflict)
-- [ ] Test on next edition by injecting a contrived contradiction and confirming the check catches it (gated on SKILL.md split landing; confirmation criterion e in ADR-038)
+- [ ] Author `.claude/agents/wr-newsletter-cross-edition-consistency.md` per ADR-038 pinned shape: tool allowlist Read only; verdict shape SUPPORTED/CONTRADICTS/NEUTRAL; input shape per pinned Option A above.
+- [ ] Implement SKILL.md gate invocation at the chosen step number (between 11b and 11.5 URL verification) with the AskUserQuestion surface on CONTRADICTS per pinned Option A save-gate.
+- [ ] Add `## Cross-Edition Consistency` block append to `.reviews.md` writes.
+- [ ] Test on next edition by injecting a contrived contradiction and confirming the check catches it (confirmation criterion e in ADR-038).
 - [ ] Reassessment trigger: zero CONTRADICTS verdicts across 8 editions plus zero retro-flagged misses, downgrade to quarterly check (codified in ADR-038 Reassessment Criteria § Quarterly downgrade trigger)
 
 ### Progress log
