@@ -62,11 +62,15 @@ Composes with P064 (newsletter critic complexity) and P070 (draft-template gap) 
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems (manual HIGH rating at capture; confirm)
 - [ ] Investigate: is the colon-flourish pattern in the drafter prompt at step 11, or is it an emergent default in the absence of explicit guidance?
-- [ ] Draft an ADR amendment to ADR 011 (or a new ADR) codifying the H1-first composition order
-- [ ] Implement the step 11a / 11b split in /wr-newsletter SKILL.md
-- [ ] Add a Tom-approval gate via AskUserQuestion in 11a
-- [ ] Cover-skill 12 amendment to support invocation from 11a (not just 12)
-- [ ] Test on the next edition by composing the H1 first and watching for body-rework reduction
+- [x] Draft an ADR amendment to ADR 011 (or a new ADR) codifying the H1-first composition order (landed as ADR-037 `compose-newsletter-theme-anchor-before-body.proposed.md`, 2026-06-02, AFK iter 3; born `human-oversight: confirmed` per ticket's substantive Tom-direction capture)
+- [ ] Implement the step 11a / 11b split in /wr-newsletter SKILL.md (DEFERRED: blocked on two sub-decisions per ADR-037 § Deferred sub-decisions: cover-render placement (3 options, lean B), phase=finalise variant 11a-prime (2 options, lean A); both queued to /wr-architect:review-decisions direction-set)
+- [ ] Add a Tom-approval gate via AskUserQuestion in 11a (rides with the SKILL.md split above)
+- [ ] Cover-skill 12 amendment to support invocation from 11a (not just 12) (substance lives in ADR-037 § Deferred sub-decision 1 cover-render placement)
+- [ ] Test on the next edition by composing the H1 first and watching for body-rework reduction (gated on SKILL.md split landing; confirmation criterion d in ADR-037: H1-rejection-rework rate drops below 1-in-3 editions across the next three)
+
+### Progress log
+
+- **2026-06-02 (AFK iter 3)**: ADR-037 landed. ADR substance is Tom-pinned (H1-first composition + approval gate). Two sub-decisions deferred (cover-render placement, finalise-variant) per architect verdict; SKILL.md split blocked on Tom direction via `/wr-architect:review-decisions` drain. Architect verdict: PASS on revised draft (issues 1-6 from prior round all resolved). JTBD verdict: PASS (serves JTBD-001 + JTBD-002 for engineering-leader persona; Tom-as-editor jobs are implicit not documented; no JTBD regression risk).
 
 ## Dependencies
 
