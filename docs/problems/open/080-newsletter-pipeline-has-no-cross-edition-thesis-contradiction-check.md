@@ -54,11 +54,15 @@ Alternative lighter-weight fix:
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Decide between fresh-context subagent (new pipeline step) vs gate-prompt-extension (lighter-weight)
-- [ ] If subagent: scope its prompt shape (full prior-edition body? extracted theses only?), N-prior-editions window default, save-gate semantics for CONTRADICTS verdict
-- [ ] If gate-extension: identify which existing gate(s) carry the cross-edition check (SW-critic plus voice both plausible)
-- [ ] Test on next edition by injecting a contrived contradiction and confirming the check catches it
-- [ ] Reassessment trigger: zero CONTRADICTS verdicts across 8 editions plus zero retro-flagged misses, downgrade to quarterly check
+- [x] Decide between fresh-context subagent (new pipeline step) vs gate-prompt-extension (lighter-weight) (landed as ADR-038 `cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`, 2026-06-02, AFK iter 4; Option A pinned by ADR-035 coverage-partitioning driver; Option B has direct ADR-035 conflict)
+- [ ] If subagent: scope its prompt shape (full prior-edition body? extracted theses only?), N-prior-editions window default, save-gate semantics for CONTRADICTS verdict (DEFERRED: blocked on three sub-decisions per ADR-038 § Deferred sub-decisions: N window 1/4/8 lean B, save-gate block/warn/publish-only lean A, input-shape full/extracted/hybrid lean C; all queued to /wr-architect:review-decisions direction-set)
+- [ ] If gate-extension: identify which existing gate(s) carry the cross-edition check (SW-critic plus voice both plausible) (N/A: gate-extension rejected per ADR-038 Option 2; ADR-035 coverage-partitioning conflict)
+- [ ] Test on next edition by injecting a contrived contradiction and confirming the check catches it (gated on SKILL.md split landing; confirmation criterion e in ADR-038)
+- [ ] Reassessment trigger: zero CONTRADICTS verdicts across 8 editions plus zero retro-flagged misses, downgrade to quarterly check (codified in ADR-038 Reassessment Criteria § Quarterly downgrade trigger)
+
+### Progress log
+
+- **2026-06-02 (AFK iter 4)**: ADR-038 landed. Architect verdict: PASS, recommended action slot (ii) per ADR-074 substance-confirm-before-build (option pinned, sub-decisions deferred). Option A pinned by ADR-035 Decision Drivers § Coverage partitioning (the architect cited verbatim "Each review gate owns its axis"). Option B has direct ADR-035 conflict by loading cross-edition consistency onto agents whose primary directive is voice / structure / argument-quality; P080's own prose flagged the same dilution risk independently. Options 3 (status-quo manual workaround) and 4 (inline drafter check) also rejected (Option 3: cost compounds; Option 4: ADR-016 fresh-context conflict). JTBD verdict: PASS, aligned to JTBD-001 (Awareness), JTBD-002 (Engagement), JTBD-003 (Evaluation); regression risk LOW; Tom-as-editor persona is implicit not documented (already covered by existing memory feedback_new_jtbd_and_persona_need_human_confirmation; not auto-ticketed). SKILL.md split deferred per ADR-038 § Deferred sub-decisions; three sub-decisions (N window, save-gate semantics, input shape) queued to /wr-architect:review-decisions direction-set.
 
 ## Dependencies
 
@@ -70,6 +74,7 @@ Alternative lighter-weight fix:
 
 - **P064** (`docs/problems/open/064-newsletter-critic-round-3-budget-exhausted-on-fixable-micro-issues.md`). Sibling: SW-critic complexity work would interact with adding cross-edition checks if the check rides the existing critic.
 - **P076** (`docs/problems/open/076-newsletter-pipeline-drafts-body-before-heading.md`). Sibling: H1-first composition discipline.
-- **ADR-016** (`docs/decisions/016-sw-critic-subagents-and-iteration-loop.proposed.md`). The fresh-context subagent pattern this ticket extends.
+- **ADR-016** (`docs/decisions/016-sw-critic-subagents-and-iteration-loop.superseded.md`). The fresh-context subagent pattern this ticket extends.
+- **ADR-038** (`docs/decisions/038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`). The decision that codifies this ticket's fix substance.
 
 (captured manually following the /wr-itil:capture-problem template after Tom-direction; bundled with P079 + P081 in one batch commit per ADR-014 related-cluster carve-out)
