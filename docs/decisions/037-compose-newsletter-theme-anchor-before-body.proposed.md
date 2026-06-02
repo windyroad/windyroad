@@ -108,22 +108,22 @@ The composition order is:
 - `.claude/skills/wr-newsletter/SKILL.md` Step 12 (cover image): cover render fires at the point where the hook lines are settled (see Deferred sub-decisions).
 - `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`: may gain a check (future) for theme-anchor / body-frame coherence; not required by this ADR.
 
-### Deferred sub-decisions
+### Sub-decisions (Tom-pinned 2026-06-03 via `/wr-architect:review-decisions`)
 
-Two sub-decisions are deferred pending Tom direction. The substance Tom pinned via P076 is the order plus approval-gate placement; the sub-decisions below are direction-setting questions the ticket prose did not pin. Per the substance-confirm-before-build guard, the SKILL.md split implementing this ADR is **deferred** until both sub-decisions are confirmed.
+Both sub-decisions are now pinned by Tom direction-set. The substance-confirm-before-build guard is satisfied for SKILL.md implementation; the split is unblocked.
 
-1. **Cover-render placement.** Three viable options:
+1. **Cover-render placement.** Three viable options were considered:
    - **(A)** Render once in 11a, no re-render check in step 12.
-   - **(B)** Render in 11a, with explicit re-render check in step 12 when 11a's hook lines change in 11b.
-   - **(C)** Defer cover to step 12 (status quo); 11a outputs hook-line text only.
+   - **(B)** Render in 11a, with explicit re-render check in step 12 when 11a's hook lines change in 11b. (Architect lean.)
+   - **(C) PINNED.** Defer cover to step 12 (status quo); 11a outputs hook-line text only.
 
-   Advisory lean: **(B)**. Tom seeing the cover at the approval gate is a strong signal-density argument; the re-render path covers the rare hook-line refinement in 11b. Queued to `/wr-architect:review-decisions` direction-set.
+   Tom-pinned to **(C)** on 2026-06-03 (rejecting the architect lean of B). Rationale: keep 11a output text-only; cover rendering stays at step 12 unchanged. Lower 11a complexity; preserves existing cover-render pipeline. Trade-off accepted: Tom does not see the cover at the approval gate; the cover catches up at step 12 as today.
 
-2. **Phase=finalise variant `11a-prime`.** ADR-017 lines 49 to 52 plus 87 establish a restructure-branch for late-breaking-story handling in finalise (via `AskUserQuestion` when a major restructure of draft plus map re-mutation is needed). Two viable behaviours for the 11a-prime composition:
-   - **(A)** Fires ONLY on the restructure-branch of ADR-017's late-breaking-story handling (matching SKILL.md lines 461 to 462's existing Restructure rule). Otherwise the prep-time approved theme anchor carries over unchanged.
-   - **(B)** Always runs as a "confirm the theme anchor is still right" gate with default Accept. Lower fatigue surface; surfaces the rare Restructure case.
+2. **Phase=finalise variant `11a-prime`.** ADR-017 lines 49 to 52 plus 87 establish a restructure-branch for late-breaking-story handling in finalise. Two viable behaviours were considered:
+   - **(A)** Fires ONLY on the restructure-branch of ADR-017's late-breaking-story handling (matching SKILL.md lines 461 to 462's existing Restructure rule). Otherwise the prep-time approved theme anchor carries over unchanged. (Architect lean.)
+   - **(B) PINNED.** Always runs as a "confirm the theme anchor is still right" gate with default Accept. Catches Fri/Sat/Sun theme-drift even without ADR-017's Restructure rule firing.
 
-   Advisory lean: **(A)**. Lower approval-gate fatigue; the existing `11-prime` Restructure rule is the established trigger for re-approving headline-level edits. Queued to `/wr-architect:review-decisions` direction-set.
+   Tom-pinned to **(B)** on 2026-06-03 (rejecting the architect lean of A). Rationale: 2 approval gates per edition (1 prep + 1 finalise re-confirm) is accepted cost; structural defense against theme-read drift between prep and finalise outweighs the per-edition fatigue cost.
 
 ## Consequences
 

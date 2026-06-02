@@ -77,7 +77,7 @@ The leader `README.md` stays at `src/newsletters/published/leader/` (one-up from
 
 **Migration.** Existing six editions migrate via `git mv` per file. History is preserved per-file. The migration ships in one commit alongside the SKILL.md / persona-config / README / downstream-ADR amendments per ADR-014 related-cluster carve-out (the file moves and the path-encoding amendments are one logical change).
 
-**Drafts layout deferred.** The same per-date-subdir pattern is plausible for `src/newsletters/drafts/<persona>/` but draft folders have one to three editions in flight at any time and do not have the same cognitive-load problem. Whether to extend the pattern is a separate decision; P078's Out-of-scope clause is preserved. Tom decides separately.
+**Drafts layout: Tom-pinned 2026-06-03 to extend.** Tom direction-set via `/wr-architect:review-decisions` follow-up: extend the per-date-subdir pattern to `src/newsletters/drafts/<persona>/` (Option A). Rationale: layout consistency between drafts/ and published/ outweighs the lower cognitive-load surface for drafts (drafts hold 1-3 editions in flight). Implementation work tracked as a follow-up ticket; the implementation needs a sibling ADR for the drafts extension plus a drafter-side migration of any in-flight drafts plus SKILL.md write-path updates at step 11 (drafter write paths). The drafts extension does NOT amend this ADR's published-side scope; the sibling ADR carries the drafts scope.
 
 **Downstream ADR amendments.** Three ADRs encode the flat layout and are amended in the same commit as this ADR and the migration:
 

@@ -108,30 +108,30 @@ Audit trail: each edition's `.reviews.md` (per ADR-026 sibling-file pattern) gai
 - `.claude/skills/wr-newsletter/SKILL.md` step 11b.X (or step 11.4 if ADR-037 implementation leaves room): adds the gate invocation, the AskUserQuestion surface on CONTRADICTS, and the `.reviews.md` block append on every verdict.
 - `.claude/skills/wr-newsletter/SKILL.md` § Review surfaces (after step 11.5 URL Verification block): adds `## Cross-Edition Consistency` to the `.reviews.md` heading inventory.
 
-### Deferred sub-decisions
+### Sub-decisions (Tom-pinned 2026-06-03 via `/wr-architect:review-decisions`)
 
-Three sub-decisions are deferred pending Tom direction-set. The substance Tom pinned via P080 is the gate placement plus the fresh-context-subagent shape; the sub-decisions below are direction-setting questions the ticket prose did not pin. Per the substance-confirm-before-build guard, the SKILL.md split implementing this ADR is **deferred** until all three sub-decisions are confirmed via `/wr-architect:review-decisions`.
+All three sub-decisions are now pinned by Tom direction-set. The substance-confirm-before-build guard is satisfied; the SKILL.md split + agent authoring are unblocked.
 
-1. **Prior-edition window N.** Three viable options:
+1. **Prior-edition window N.** Three viable options were considered:
    - **(A)** N=1 (only the immediately prior edition).
-   - **(B)** N=4 (rolling four-week window).
-   - **(C)** N=8 (rolling two-month window).
+   - **(B)** N=4 (rolling four-week window). (Architect lean per ticket framing.)
+   - **(C) PINNED.** N=8 (rolling two-month window).
 
-   Advisory lean: **(B)**. Matches the ticket's framing; captures most live theses without inflating subagent token budget. Queued to `/wr-architect:review-decisions` direction-set.
+   Tom-pinned to **(C)** on 2026-06-03 (rejecting the architect lean of B). Rationale: broadest catch worth the higher subagent token cost; cross-edition contradictions can span multiple weeks and the broader window protects against multi-edition thesis drift the narrower window would miss.
 
-2. **CONTRADICTS save-gate semantics.** Three viable options:
-   - **(A)** Block save until Tom resolves via `AskUserQuestion` (Rewrite / Override / Accept-as-evolution).
+2. **CONTRADICTS save-gate semantics.** Three viable options were considered:
+   - **(A) PINNED.** Block save until Tom resolves via `AskUserQuestion` (Rewrite / Override / Accept-as-evolution). (Architect lean.)
    - **(B)** Warn and allow save; CONTRADICTS is logged but does not block.
    - **(C)** Block only on PUBLISH (phase=finalise save), not on prep-phase save.
 
-   Advisory lean: **(A)**. Matches ADR-015's REJECTED save-but-do-not-publish vocabulary the project already uses. The override option preserves Tom-as-editor autonomy; the block surface preserves structural defence. Queued to `/wr-architect:review-decisions` direction-set.
+   Tom-pinned to **(A)** on 2026-06-03 (matching the architect lean). Rationale: matches ADR-015's REJECTED save-but-do-not-publish vocabulary; preserves Tom-as-editor autonomy via Override; provides structural defense against shipping contradictions to readers.
 
-3. **Subagent input shape.** Three viable options:
-   - **(A)** Full prior-edition bodies for all N editions.
+3. **Subagent input shape.** Three viable options were considered:
+   - **(A) PINNED.** Full prior-edition bodies for all N editions.
    - **(B)** Extracted theses only (H1 + opener + Item 1 thesis) for all N editions.
-   - **(C)** Hybrid: full body for the *current* edition; extracted thesis-snippets (H1 + opener + Item 1) for prior N editions.
+   - **(C)** Hybrid: full body for the *current* edition; extracted thesis-snippets (H1 + opener + Item 1) for prior N editions. (Architect lean.)
 
-   Advisory lean: **(C)**. Token-economical; preserves the rich semantic surface where contradiction is most likely to appear (current draft body) while bounding prior-edition cost to load-bearing theses. Queued to `/wr-architect:review-decisions` direction-set.
+   Tom-pinned to **(A)** on 2026-06-03 (rejecting the architect lean of C). Rationale: most thorough catch surface; contradictions can hide outside H1/opener (e.g. an Item 3 contradicting a prior Item 4), and extracted-thesis-only shapes would miss them. Combined with the N=8 window above, this drives a higher subagent token budget; accepted as a load-bearing cost for the JTBD-003 protection driver.
 
 ## Consequences
 
