@@ -34,10 +34,15 @@ User direction (2026-05-30, ADR-016 rejection in architect oversight drain): sup
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Evaluate the supersede shape: ADR-016 Option 2 (two domain-specific critics: wr-wardley-critic, wr-newsletter-critic) was originally rejected on "duplicates the critic logic" grounds; re-evaluate that trade-off in light of the discoverability+UX cost.
-- [ ] Determine whether ADR-018's content-risk-scorer (which followed ADR-016's pattern) should also be superseded or kept as parameterised (different cost-benefit because content-risk axes are more stable than critic rubrics).
-- [ ] Author the superseding ADR via /wr-architect:create-adr (will be ADR-031 or later, depending on which other ADRs land first).
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems. (Re-rated 2026-05-31 WSJF 4 to 12.)
+- [x] Evaluate the supersede shape: ADR-016 Option 2 (two domain-specific critics: wr-wardley-critic, wr-newsletter-critic) was originally rejected on "duplicates the critic logic" grounds; re-evaluate that trade-off in light of the discoverability+UX cost. (Resolved via ADR-033: domain-specific split chosen; the "duplicates critic logic" risk is addressed by deferred library extraction tied to ADR-033's 8-edition reassessment criterion.)
+- [x] Determine whether ADR-018's content-risk-scorer (which followed ADR-016's pattern) should also be superseded or kept as parameterised (different cost-benefit because content-risk axes are more stable than critic rubrics). (Resolved: ADR-033 Decision Outcome explicitly scopes ADR-018 OUT of the supersede. Content-risk axes are more stable; revisit if a second caller emerges.)
+- [x] Author the superseding ADR via /wr-architect:create-adr. (Landed as ADR-033 on 2026-05-30 with `human-oversight: confirmed`. ADR-035 followed on 2026-05-31 amending the rubric content shape.)
+- [x] Phase 1 (author wr-newsletter-critic.md and wr-wardley-critic.md per ADR-033). (Landed 2026-06-02 iter 2 of work-problems AFK loop.)
+- [x] Phase 2 (migrate SKILL.md call-sites at steps 9 + 15 from wr-sw-critic to domain-specific agents; drop accepted_overrides list per ADR-035). (Landed 2026-06-02 iter 2; SKILL.md steps 9 + 15 invocations now call wr-wardley-critic + wr-newsletter-critic; step 15.25 + 15.4 + 17 prose updated.)
+- [ ] Phase 3 (retire wr-sw-critic.md to .deprecated.md or remove). Deferred until ADR-033 Confirmation criterion (d) closes: one full prep + finalise newsletter cycle exercises the new agents end-to-end. Earliest opportunity: next /wr-newsletter run.
+- [ ] ADR-033 status flip from `.proposed` to `.accepted` once criterion (d) closes.
+- [ ] ADR-035 status flip from `.proposed` to `.accepted` once criterion 5 closes (same cycle as ADR-033 criterion d).
 
 ## Dependencies
 

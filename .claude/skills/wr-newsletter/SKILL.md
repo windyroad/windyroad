@@ -11,13 +11,13 @@ Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=d
 ## Reference
 
 - Plan: `docs/ai-engineering-brief/PLAN.md`, `docs/ai-engineering-brief/developer-newsletter-concept.md`
-- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.proposed.md`, `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`, `025-pass-with-author-overrides-verdict-for-sw-critic.proposed.md`, `026-reviews-and-meta-content-to-sibling-files.proposed.md`
+- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.superseded.md` (superseded by ADR 033), `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`, `025-pass-with-author-overrides-verdict-for-sw-critic.proposed.md` (amended by ADR 035), `026-reviews-and-meta-content-to-sibling-files.proposed.md`, `033-domain-specific-critic-agents-supersede-parameterised-sw-critic.proposed.md`, `035-critic-rubric-shape-is-strengths-weaknesses-plus-context.proposed.md`
 - Voice: `docs/VOICE-AND-TONE.md` (base) plus persona addendum from `personas/<persona>.md`
 - Personas: `docs/JOBS_TO_BE_DONE.md` (J1-J4 leader, J5 founder, J6-J11 developer)
 - Persona configs: `.claude/skills/wr-newsletter/personas/leader.md`, `.claude/skills/wr-newsletter/personas/developer.md`
 - Landscape map: `docs/ai-engineering-brief/ai-landscape.owm`, `docs/ai-engineering-brief/ai-landscape.md`
 - Rubrics: `.claude/skills/wr-newsletter/assets/wardley-critic-rubric.md`, `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`
-- Critic agent: `.claude/agents/wr-sw-critic.md`
+- Critic agents (ADR 033): `.claude/agents/wr-newsletter-critic.md` (newsletter draft), `.claude/agents/wr-wardley-critic.md` (Wardley artifact). `.claude/agents/wr-sw-critic.md` is the legacy parameterised critic retained during Phase 2 -> Phase 3 transition; no live call sites in this skill.
 - Filter: `.claude/skills/wr-newsletter/assets/three-lens-filter.md`
 - Template: `.claude/skills/wr-newsletter/assets/draft-template.md`
 
@@ -237,7 +237,7 @@ For each qualifying candidate:
 
 **Placement rationale** (P016 investigation task resolution): corroboration runs AFTER three-lens scoring so weak-three-lens candidates are cheap-dropped before burning a Google News query, and BEFORE the map-mutation gate (step 5) so `CORROBORATED_PRIMARY` candidates can legitimately anchor to map movement in step 6. Tier-1-sourced candidates bypass this step entirely; the expected fan-out is 0-2 Google News queries per edition in a typical week.
 
-**Precedent**: the Google News RSS mechanism is already established in the pipeline for OpenAI tier-1 source-fetch fallback (see `docs/ai-engineering-brief/ai-landscape.md` Source-coverage notes and P010). This sub-step reuses the same mechanism for a second use case; a follow-up ADR amendment codifying Google News RSS as a first-class pipeline primitive for both tier-1 fallback and aggregator corroboration is advisable (see `docs/decisions/016-sw-critic-subagents-and-iteration-loop.proposed.md`).
+**Precedent**: the Google News RSS mechanism is already established in the pipeline for OpenAI tier-1 source-fetch fallback (see `docs/ai-engineering-brief/ai-landscape.md` Source-coverage notes and P010). This sub-step reuses the same mechanism for a second use case; a follow-up ADR amendment codifying Google News RSS as a first-class pipeline primitive for both tier-1 fallback and aggregator corroboration is advisable (see `docs/decisions/031-google-news-redirect-resolution-as-pipeline-primitive.proposed.md`).
 
 **Phase variant `4b-prime` (phase=finalise only):** corroborate only new (post-prep) candidates that landed in `NO_PRIMARY_SOURCE`. Prep-time corroboration outcomes are carried forward in `<prep-shortlist-snapshot>`.
 
@@ -301,7 +301,7 @@ Read the current `docs/ai-engineering-brief/ai-landscape.md` and update:
 Run the critic agent against the updated map and analysis. Per ADR 035, the rubric is a brief editorial prompt (STRENGTHS, WEAKNESSES, optional RELEVANT CONTEXT); no structured numbered-check list, no `accepted_overrides` allowlist. The critic is an editorial reader of the analytical quality of the artifact.
 
 ```
-Agent subagent_type: wr-sw-critic
+Agent subagent_type: wr-wardley-critic
 prompt: "Review the Wardley artifact.
 
 artifact_path: /Users/tomhoward/Projects/windyroad/docs/ai-engineering-brief/ai-landscape.md
@@ -600,7 +600,7 @@ If `VERDICT: PASS`: proceed to step 15. Any `medium` flags listed in the Notes s
 Per ADR 035, the critic rubric is a brief editorial prompt (STRENGTHS, WEAKNESSES, optional RELEVANT CONTEXT); no structured numbered-check list, no `accepted_overrides` allowlist. The critic owns analytical quality (does the argument hold; is specificity preserved; is the "so what?" answered; is the piece pablum). Sibling gates own voice (step 13), content-risk (step 14), cog-a11y (step 15.4), and editor (step 15.25).
 
 ```
-Agent subagent_type: wr-sw-critic
+Agent subagent_type: wr-newsletter-critic
 prompt: "Review the newsletter draft.
 
 artifact_path: <path to the in-progress draft>
@@ -625,7 +625,7 @@ Capture the final critic block for the saved draft.
 
 Invoke the `wr-newsletter-editor` subagent (ADR 020). The subagent runs in fresh context, plays the role of an experienced LinkedIn newsletter editor, reads the persona's JTBD context, reads the in-progress draft body, and returns the `EDITOR_REVIEW` block in the format pinned by ADR 020 confirmation criterion 1. The three reader-experience axes (would-open, would-read-through, would-forward) and their persona constraints are documented inside the agent file, not in this skill.
 
-**Skip-on-upstream-REJECTED.** If the sw-critic loop at step 15 returned `VERDICT: REJECTED` (round-3 exhausted), skip step 15.25 entirely. The editor is not invoked on an analytically-rejected draft; reviewing reader-experience on a draft that already failed argument-quality is not useful. The skipped step is recorded in the saved file (step 16 save-block) as `<editor block> = "N/A: sw-critic returned REJECTED"`. A `VERDICT: PASS_WITH_AUTHOR_OVERRIDES` from step 15 does **not** skip step 15.25; the variant is publish-ready (ADR 025) and the editor runs against it as it would against a `PASS`.
+**Skip-on-upstream-REJECTED.** If the critic loop at step 15 (newsletter-critic per ADR 033) returned `VERDICT: REJECTED` (round-3 exhausted), skip step 15.25 entirely. The editor is not invoked on an analytically-rejected draft; reviewing reader-experience on a draft that already failed argument-quality is not useful. The skipped step is recorded in the saved file (step 16 save-block) as `<editor block> = "N/A: newsletter-critic returned REJECTED"`. A `VERDICT: PASS_WITH_AUTHOR_OVERRIDES` from step 15 does **not** skip step 15.25; the variant is publish-ready (ADR 025) and the editor runs against it as it would against a `PASS`.
 
 ```
 Agent subagent_type: wr-newsletter-editor
@@ -678,7 +678,7 @@ Invoke the `cognitive-accessibility` subagent on the in-progress brief body. The
 
 **One-round pass with optional remediation** (per the P053 default proposal confirmed 2026-05-13). No iteration loop: the agent fires once, returns findings, and the brief either gets remediated by Tom (or by a subsequent edit pass) or proceeds with the findings surfaced to the Tom-summary.
 
-**Skip-on-upstream-REJECTED.** If step 15 sw-critic returned `VERDICT: REJECTED`, skip step 15.4 entirely. Reviewing reading-level on an analytically-rejected draft is not useful. Recorded in the saved file as `<cog-a11y block> = "N/A: sw-critic returned REJECTED"`. A `PASS_WITH_AUTHOR_OVERRIDES` from step 15 does NOT skip 15.4 (variant is publish-ready per ADR 025).
+**Skip-on-upstream-REJECTED.** If step 15 newsletter-critic returned `VERDICT: REJECTED`, skip step 15.4 entirely. Reviewing reading-level on an analytically-rejected draft is not useful. Recorded in the saved file as `<cog-a11y block> = "N/A: newsletter-critic returned REJECTED"`. A `PASS_WITH_AUTHOR_OVERRIDES` from step 15 does NOT skip 15.4 (variant is publish-ready per ADR 025).
 
 ```
 Agent subagent_type: cognitive-accessibility
@@ -788,11 +788,11 @@ phase: prep
 
 ## Editor Review
 
-<editor block from step 15.25, or "N/A: sw-critic returned REJECTED" if step 15.25 was skipped>
+<editor block from step 15.25, or "N/A: newsletter-critic returned REJECTED" if step 15.25 was skipped>
 
 ## Cognitive Accessibility Review
 
-<cog-a11y block from step 15.4, or "N/A: sw-critic returned REJECTED" if step 15.4 was skipped>
+<cog-a11y block from step 15.4, or "N/A: newsletter-critic returned REJECTED" if step 15.4 was skipped>
 
 ## Critic Review: Wardley Artifacts
 
@@ -876,7 +876,7 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    ## Editor Review (finalise)
 
-   <editor block from step 15.25-prime, or "N/A: sw-critic returned REJECTED" if step 15.25-prime was skipped, or "N/A: carried from prep (no material change)" if 15.25-prime was a no-op>
+   <editor block from step 15.25-prime, or "N/A: newsletter-critic returned REJECTED" if step 15.25-prime was skipped, or "N/A: carried from prep (no material change)" if 15.25-prime was a no-op>
 
    ## Editor Review (prep)
 
@@ -884,7 +884,7 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    ## Cognitive Accessibility Review (finalise)
 
-   <cog-a11y block from step 15.4-prime, or "N/A: sw-critic returned REJECTED" if step 15.4-prime was skipped, or "N/A: carried from prep (no material change)" if 15.4-prime was a no-op>
+   <cog-a11y block from step 15.4-prime, or "N/A: newsletter-critic returned REJECTED" if step 15.4-prime was skipped, or "N/A: carried from prep (no material change)" if 15.4-prime was a no-op>
 
    ## Cognitive Accessibility Review (prep)
 
@@ -979,7 +979,7 @@ Report back in chat:
   - `PASS_WITH_AUTHOR_OVERRIDES`: report as "Newsletter critic: publish-ready with N documented overrides (round 3)". Quote the `OVERRIDDEN:` list verbatim so the audit trail is visible in chat. Do **not** lead with rejection language; the variant is publish-ready (ADR 025).
   - `REJECTED`: lead the summary with "VERDICT: REJECTED. Do not publish as-is. Rewrite and re-run." and quote the residual weaknesses.
   - The variant is read from the saved structured verdict, not inferred from the weakness list. If the saved verdict and the inferred verdict disagree (e.g. the agent emitted REJECTED but every remaining weakness is in the override list), treat as a skill-logic bug and surface the inconsistency rather than re-classifying the verdict.
-- Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, lead the summary with the failing reader-experience axes (would-open / would-read-through / would-forward) and the Suggested fixes from the EDITORIAL_FINDINGS list. If skipped (sw-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
+- Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, lead the summary with the failing reader-experience axes (would-open / would-read-through / would-forward) and the Suggested fixes from the EDITORIAL_FINDINGS list. If skipped (newsletter-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
 - Wardley critic verdict and round count.
 - Map delta (one sentence; for finalise, include any re-mutation delta).
 - URL verification (step 11.5 / 11.5-prime): per-URL verdict summary as a one-line headline (e.g. "URL verification: 9 SUPPORTED, 1 INDIRECT_CONFIRMED, 0 REFUTED, 0 NOT MENTIONED across 10 URLs"). Surface any save-gate interventions inline: REFUTED fixes (with old URL and replacement URL), 404 replacements, NOT MENTIONED escalations to Tom (with the eventual disposition: dropped, swapped, or author-approved). Full per-URL table lives in `<publication-date>.reviews.md` under `## URL Verification`. Per ADR-024 confirmation criterion 4.
@@ -1015,7 +1015,7 @@ Report back in chat:
 - ~~A purpose-built `wr-content-risk-scorer` skill (follow-up to ADR 012).~~ Landed as the `wr-content-risk-scorer` agent per ADR 018; see step 14.
 - Scheduling, cron, GitHub Actions automation (layer 6 in PLAN.md).
 - An archive page on windyroad.com.au (layer 7 in PLAN.md).
-- Promoting `wr-sw-critic` to a marketplace plugin (ADR 016 reassessment criterion).
+- Promoting the domain-specific critic agents (`wr-newsletter-critic`, `wr-wardley-critic`) to a marketplace plugin (ADR 016 reassessment criterion, inherited by ADR 033 as the superseding decision).
 - Extracting the map-maintenance workflow to a standalone skill (ADR 014 reassessment criterion).
 
 $ARGUMENTS

@@ -127,6 +127,17 @@ This ADR's substance is confirmed once:
 5. One full prep + finalise newsletter cycle exercises the simplified critic shape end-to-end and produces a publish-decision verdict matching editorial judgement.
 6. P064 and P071 fix strategies are updated to reference this ADR.
 
+Confirmation tracking (updated 2026-06-02):
+
+1. DONE: `human-oversight: confirmed` on the frontmatter since 2026-05-31.
+2. DONE: `newsletter-critic-rubric.md` simplified per ADR 035 in 2026-06-01 (work-problems iter 1 of P064).
+3. DONE: `wardley-critic-rubric.md` simplified per ADR 035 in 2026-06-01 (same iter as criterion 2).
+4. DONE: `.claude/skills/wr-newsletter/SKILL.md` step 15 dropped `accepted_overrides` list in 2026-06-02 (work-problems iter 2 of P071). The migration to `wr-newsletter-critic` invocation per ADR 033 retired the `accepted_overrides:` list-arg from the step-15 prompt; the new agent contract does not accept the list. Critic-invocation prose at steps 9 and 15 updated to call domain-specific agents.
+5. PENDING: one full prep + finalise newsletter cycle. Same cycle that closes ADR 033 criterion (d).
+6. PARTIAL: P071 fix strategy updated 2026-06-02 (Investigation Tasks ticked through Phase 2). P064 fix strategy update is in scope for a separate iter (still tracked under P064).
+
+Status will flip to `.accepted` after criteria 5 + 6 close.
+
 ## Reassessment Criteria
 
 - After 4 editions running the simplified critic, review: did round-3 exhaustion frequency drop? Are the critic's STRENGTHS / WEAKNESSES outputs more directly actionable for the drafter? Did Tom's editorial judgement align with the verdicts more frequently than under the structured rubric?

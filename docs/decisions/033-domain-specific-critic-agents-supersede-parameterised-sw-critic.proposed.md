@@ -73,6 +73,16 @@ ADR 018 (`wr-content-risk-scorer`) is OUT OF SCOPE for this supersede. Content-r
 
 The supersede is confirmed once: (a) this ADR lands, (b) `wr-newsletter-critic.md` and `wr-wardley-critic.md` exist with their rubrics, (c) `/wr-newsletter` SKILL.md call-sites are migrated, (d) one full prep + finalise cycle exercises the new agents end-to-end with the expected verdict shapes, and (e) ADR 016 status flips to "superseded".
 
+Confirmation tracking (updated 2026-06-02):
+
+- (a) DONE: this ADR landed `.proposed` with `human-oversight: confirmed` on 2026-05-30.
+- (b) DONE: `.claude/agents/wr-newsletter-critic.md` and `.claude/agents/wr-wardley-critic.md` landed 2026-06-02 (work-problems iter 2 of P071). Rubrics at `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md` and `wardley-critic-rubric.md` were simplified per ADR 035 in 2026-06-01 (iter 1 of P064).
+- (c) DONE: `.claude/skills/wr-newsletter/SKILL.md` step 9 and step 15 invocations migrated 2026-06-02 from `wr-sw-critic` to `wr-wardley-critic` and `wr-newsletter-critic` respectively. Step 15.25 and 15.4 "Skip-on-upstream-REJECTED" prose updated; step 17 Tom-summary prose updated; Reference block updated to list both new agents.
+- (d) PENDING: one full prep + finalise newsletter cycle. Earliest opportunity is the next /wr-newsletter prep run (likely 2026-06-06 or 2026-06-07 ahead of the 2026-06-08 publish).
+- (e) RATIFIED by this iter's SKILL.md migration. ADR-016 was renamed to `.superseded.md` with `human-oversight: rejected-pending-supersede` + `supersede-ticket: P071` markers as preconditions when P071 was captured; this iter's Phase 2 SKILL.md migration is what substantively closes criterion (e). The ADR-016 file already carries the `.superseded.md` filename, and there are no live `wr-sw-critic` call sites in the newsletter pipeline as of this commit.
+
+Status will flip to `.accepted` after criterion (d) closes (next /wr-newsletter cycle).
+
 ## Reassessment
 
 Reassess after eight editions: if the library extraction has not absorbed any genuinely-shared logic (i.e., each agent reimplements its own loop), the abstraction is premature and should retire to per-agent ownership.
