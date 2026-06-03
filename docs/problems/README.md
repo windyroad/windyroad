@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-02 **README reconciled** (P081 work-problems iter 7): 1 drift entry corrected, namely P083 (ADR compendium docs/decisions/README.md is stale; lists 8 entries while ~40 ADR files exist on disk) added to WSJF Rankings as deferred-WSJF placeholder (1.5 = 3/2, Severity 3 Low, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
+> Last reviewed: 2026-06-03 **README reconciled** (P084 capture-problem follow-up to review-decisions drain): 1 drift entry corrected, namely P084 (Extend per-date sub-directory layout to src/newsletters/drafts/<persona>/) added to WSJF Rankings as deferred-WSJF placeholder (1.5 = 3/2, Severity 3 Medium, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -31,6 +31,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P069 | work-problems orchestrator WSJF ranking does not factor placement-authority | 3 (Low) | Open | M | 2026-05-16 | internal |
 | 1.5 | P082 | Subagent outputs include fabricated references to artefacts not on disk | 3 (Low) | Open | M | 2026-06-02 | internal |
 | 1.5 | P083 | ADR compendium docs/decisions/README.md is stale; lists 8 entries while ~40 ADR files exist on disk | 3 (Low) | Open | M | 2026-06-02 | internal |
+| 1.5 | P084 | Extend per-date sub-directory layout to src/newsletters/drafts/<persona>/ | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
