@@ -66,5 +66,14 @@ The cleanest fix is at the hook layer: strip predictable trailing trailer lines 
 - P165 (README-refresh-discipline hook; composes via "force retry, retry message changes, marker invalidated" cascade).
 - 2026-06-02 outstanding question #17 (deferred from prior AFK session); this ticket codifies that observation.
 - Upstream surface (probable): `packages/risk-scorer/hooks/external-comms-mark-reviewed.sh` and `packages/voice-tone/hooks/external-comms-mark-reviewed.sh` in agent-plugins repo.
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/217 (2026-06-03)
 
 (captured via /wr-itil:capture-problem on 2026-06-03 after live observation in /wr-architect:review-decisions follow-up: 3 commits required 6 subagent re-reviews vs 2 expected; bundled with P086 + P087 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/217
+- **Reported**: 2026-06-03
+- **Template used**: problem-report.yml (structured default body, per ADR-033)
+- **Disclosure path**: public issue (used BYPASS_RISK_GATE=1 because P074 hook failure prevented marker write despite both wr-risk-scorer:external-comms AND wr-voice-tone:external-comms returning PASS verdicts on review)
+- **Cross-reference confirmed**: yes (upstream body cites this ticket's GitHub path verbatim)

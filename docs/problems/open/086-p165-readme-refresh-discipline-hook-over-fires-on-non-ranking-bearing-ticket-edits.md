@@ -75,5 +75,14 @@ The P165 hook's "ticket file staged, README must be staged" rule is correct for 
 - P173 (BYPASS_README_REFRESH_GATE=1 must live in .claude/settings.json env; the rationale for this constraint should be re-examined as part of this ticket's investigation)
 - P094 (refresh-on-create) and P062 (refresh-on-transition) define the legitimate ranking-bearing surfaces; this ticket addresses the gap where edits don't fall into either bucket.
 - Upstream surface (probable): `packages/itil/hooks/itil-readme-refresh-discipline.sh` in agent-plugins repo.
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/218 (2026-06-03)
 
 (captured via /wr-itil:capture-problem on 2026-06-03 after live observation in /wr-architect:review-decisions follow-up: P076 + P080 Investigation Tasks edits forced a commit-split workaround; bundled with P085 + P087 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/218
+- **Reported**: 2026-06-03
+- **Template used**: structured default body (problem-shaped per ADR-033)
+- **Disclosure path**: public issue (used BYPASS_RISK_GATE=1 because P074 hook failure prevented marker write despite both wr-risk-scorer:external-comms AND wr-voice-tone:external-comms returning PASS verdicts on review)
+- **Cross-reference confirmed**: yes (upstream body cites this ticket's GitHub path verbatim)

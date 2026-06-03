@@ -68,5 +68,14 @@ Option 1 is the cleanest: ASCII separators have zero downside, even em-dash-tole
 - ADR-077 (`docs/decisions/077-decisions-compendium-as-routine-architect-load-surface.proposed.md`). The contract this ticket protects: compendium-as-routine-load-surface only works if regen is cheap.
 - 2026-06-02 outstanding question #16 (deferred from prior AFK session); this ticket codifies that observation.
 - Upstream surface: `packages/architect/scripts/generate-decisions-compendium.sh` in agent-plugins repo.
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/219 (2026-06-03)
 
 (captured via /wr-itil:capture-problem on 2026-06-03 after live observation in /wr-architect:review-decisions Step 4.5: regenerated compendium blocked by no-em-dash hook; 43 em-dash characters manually scrubbed before commit. Bundled with P085 + P086 in one batch commit per ADR-014 related-cluster carve-out.)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/219
+- **Reported**: 2026-06-03
+- **Template used**: structured default body (problem-shaped per ADR-033)
+- **Disclosure path**: public issue (used BYPASS_RISK_GATE=1 because P074 hook failure prevented marker write despite both wr-risk-scorer:external-comms AND wr-voice-tone:external-comms returning PASS verdicts on review)
+- **Cross-reference confirmed**: yes (upstream body cites this ticket's GitHub path verbatim)
