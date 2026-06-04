@@ -1,6 +1,6 @@
 # Problem 076: Newsletter pipeline drafts body before heading, forcing rework on every H1 revision
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-01
 **Priority**: 2 (High). Impact: 4 x Likelihood: 4 (manual rating at capture: HIGH per Tom direction. Confirm at next /wr-itil:review-problems.)
 **Origin**: internal
@@ -63,17 +63,24 @@ Composes with P064 (newsletter critic complexity) and P070 (draft-template gap) 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems (manual HIGH rating at capture; confirm)
 - [ ] Investigate: is the colon-flourish pattern in the drafter prompt at step 11, or is it an emergent default in the absence of explicit guidance?
 - [x] Draft an ADR amendment to ADR 011 (or a new ADR) codifying the H1-first composition order (landed as ADR-037 `compose-newsletter-theme-anchor-before-body.proposed.md`, 2026-06-02, AFK iter 3; born `human-oversight: confirmed` per ticket's substantive Tom-direction capture)
-- [ ] Implement the step 11a / 11b split in /wr-newsletter SKILL.md per ADR-037 pinned shape (UNBLOCKED 2026-06-03 via /wr-architect:review-decisions follow-up):
-  - 11a: compose H1 (with `Issue NN:` prefix), cover hook line 1 + 2, one-paragraph theme statement. Output text only; no cover render at 11a per Tom-pinned sub-decision 1 / Option C.
+- [x] Implement the step 11a / 11b split in /wr-newsletter SKILL.md per ADR-037 pinned shape. DONE 2026-06-04:
+  - 11a: composes H1, cover hook line 1 + 2, one-paragraph theme statement; output text only (no cover render at 11a per Option C).
   - 11a Tom-approval gate via AskUserQuestion (Accept / Refine / Reject).
   - 11b: drafts opener, bridge if needed, items, ATWN, CTA using approved H1 as anchor frame.
-  - Step 12 cover render stays unchanged at current placement (status quo per Option C; no cover-skill 12 amendment needed).
-- [ ] Implement `11a-prime` finalise variant per Tom-pinned sub-decision 2 / Option B: always re-runs as "confirm theme anchor is still right" gate with default Accept (1 prep gate plus 1 finalise re-confirm gate per edition).
+  - Step 12 cover render stays unchanged at current placement (status quo per Option C; no cover-skill 12 amendment needed; step 12 prose updated to reference 11a hook-line source).
+- [x] Implement `11a-prime` finalise variant per Tom-pinned sub-decision 2 / Option B. DONE 2026-06-04: always re-runs as "confirm theme anchor is still right" gate with default Accept; 11b-prime re-runs only on Refine or Restructure.
+- [x] All downstream phase variants (12-prime, 13-prime, 14-prime, 15-prime, 15.25-prime, 15.4-prime, 11.5-prime) updated to reference 11a-prime / 11b-prime per ADR-037 split. DONE 2026-06-04.
 - [ ] Test on the next edition by composing the H1 first and watching for body-rework reduction (confirmation criterion d in ADR-037: H1-rejection-rework rate drops below 1-in-3 editions across the next three).
 
 ### Progress log
 
 - **2026-06-02 (AFK iter 3)**: ADR-037 landed. ADR substance is Tom-pinned (H1-first composition + approval gate). Two sub-decisions deferred (cover-render placement, finalise-variant) per architect verdict; SKILL.md split blocked on Tom direction via `/wr-architect:review-decisions` drain. Architect verdict: PASS on revised draft (issues 1-6 from prior round all resolved). JTBD verdict: PASS (serves JTBD-001 + JTBD-002 for engineering-leader persona; Tom-as-editor jobs are implicit not documented; no JTBD regression risk).
+- **2026-06-03 (review-decisions follow-up)**: Tom pinned both sub-decisions: cover-render placement Option C (cover stays at step 12; 11a outputs hook-line text only); 11a-prime finalise variant Option B (always re-runs as confirm-theme-anchor gate with default Accept).
+- **2026-06-04 (P076 implementation)**: SKILL.md split landed. Step 11 split into 11a (theme anchor) + 11a Tom-approval gate + 11b (body draft) per ADR-037. 11a-prime always-runs finalise variant added per Option B. All downstream phase variants (12-prime, 13-prime, 14-prime, 15-prime, 15.25-prime, 15.4-prime, 11.5-prime) updated to reference 11a-prime / 11b-prime. Cover step 12 reference updated. Transition Open to Verification Pending; fix verifies on next /wr-newsletter cycle.
+
+## Fix Released
+
+ADR-037 H1-first composition order implementation. `.claude/skills/wr-newsletter/SKILL.md` step 11 split into 11a (theme anchor with Tom-approval gate) + 11b (body draft using approved anchor) per ADR-037 with Tom-pinned sub-decisions: cover stays at step 12 (Option C), 11a-prime always-runs as confirm-theme-anchor gate with default Accept (Option B). Phase variants 11.5-prime, 12-prime, 13-prime, 14-prime, 15-prime, 15.25-prime, 15.4-prime all updated to reference the 11a/11b split. Released in this commit. Triggers on next `/wr-newsletter` prep + finalise cycle producing a brief where the H1 is approved at 11a before body work begins; verify via H1-rejection-rework rate dropping below 1-in-3 editions across the next three (confirmation criterion d in ADR-037).
 
 ## Dependencies
 

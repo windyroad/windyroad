@@ -28,7 +28,7 @@ The pipeline runs in one of three phases, selected by the `phase` argument at st
 | phase     | When to run                          | Steps executed                              | Saves                              |
 |-----------|--------------------------------------|---------------------------------------------|------------------------------------|
 | `prep`    | Days before `<publish-day>` (e.g. Sat-Sun for The Shift's Monday publish per ADR 030) | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
-| `finalise`| `<publish-day>` morning (Monday morning AEST for The Shift)                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11-prime (re-draft only changed sections), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `finalise`| `<publish-day>` morning (Monday morning AEST for The Shift)                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11a-prime (theme-anchor re-confirm gate per ADR-037), 11b-prime (re-draft only changed sections), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 | `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 
 Default behaviour when no `phase` argument is present: `phase=full` (preserves the original single-shot run for backward compatibility per ADR 017 line 51).
@@ -62,7 +62,7 @@ Read the resolved persona config: `.claude/skills/wr-newsletter/personas/<person
 - `<target-reader>`: e.g. "Engineering Leader (J1-J4)". Used in Tom-summary.
 - `<source-weighting>`: tier ordering specific to the persona. Used at step 4 to break ties when shortlisting.
 - `<three-lens-weighting>`: e.g. "human > operational > technical" or the inverse. Used at step 4 (lens scoring) and step 9.5 (persona-weighted ranking, once the map has been updated).
-- `<voice-addendum>`: persona-specific voice notes (vocabulary preferences, evidence-stance language). Combined with the base `docs/VOICE-AND-TONE.md` rules at step 11 (drafting).
+- `<voice-addendum>`: persona-specific voice notes (vocabulary preferences, evidence-stance language). Combined with the base `docs/VOICE-AND-TONE.md` rules at steps 11a (theme anchor) + 11b (body draft) per ADR-037.
 - `<cta-description>` and `<cta-invitation>`: variants from the persona config; pick one each per edition, rotating week-to-week to avoid repetition.
 - `<welcome-line>`: persona-specific first-edition welcome text.
 - `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant. The `YYYY-MM-DD` in "week ending" is `<week-ending>` (the Sunday), not `<publication-date>` (the publish day).
@@ -230,7 +230,7 @@ For each qualifying candidate:
 3. Count distinct primary outlets (see the primary-outlet allowlist in `three-lens-filter.md`). The same outlet domain counts once regardless of how many Google News entries it has; aggregator re-posts do not count.
 
 4. Apply the threshold:
-   - **3+ distinct primary outlets**: tag the candidate `CORROBORATED_PRIMARY`. Attach the 3 strongest outlet/URL pairs to the candidate's metadata (this becomes the Source line's attribution in step 11). Move the candidate into the main shortlist as if it were tier-1-sourced.
+   - **3+ distinct primary outlets**: tag the candidate `CORROBORATED_PRIMARY`. Attach the 3 strongest outlet/URL pairs to the candidate's metadata (this becomes the Source line's attribution in step 11b). Move the candidate into the main shortlist as if it were tier-1-sourced.
    - **0 to 2 distinct primary outlets**: tag the candidate `WEAK_ATTRIBUTION`. Do NOT drop. Carry on a separate weak-attribution list that step 10 surfaces to Tom for explicit keep/drop/ask-for-help resolution.
 
 5. Record per-candidate corroboration outcome in internal metadata (count of distinct primary outlets, query used, top 3 outlets). The Tom-summary at step 17 reports on the corroboration pass.
@@ -261,7 +261,7 @@ Branch:
 - **At least one new map-moving story**: surface to Tom via `AskUserQuestion`:
   - **question**: `"Late-breaking item lands as map-moving: <story summary>. Treat as Also-worth-noting (no map mutation), or Restructure (re-mutate map, re-run Wardley critic)?"`
   - **options**:
-    - `Also-worth-noting`: keep the item but do not mutate the map. Add as Also-worth-noting in step 11-prime. Continue to step 9.5-prime.
+    - `Also-worth-noting`: keep the item but do not mutate the map. Add as Also-worth-noting in step 11b-prime. Continue to step 9.5-prime.
     - `Restructure`: re-run steps 6, 7, 8, 9 against the prep-time map plus the new map-moving items. The Wardley critic gets a fresh per-artifact-pass budget per ADR 017 lines 39-41. Continue to step 9.5-prime once the critic passes.
   - **multiSelect**: false
 
@@ -341,7 +341,7 @@ For each shortlisted candidate, call the `AskUserQuestion` tool with:
 
 Because the map has already been updated (steps 5-8) and the Wardley critic has already passed (step 9), the "Our take" presented per item is informed by this week's actual landscape movements, not by last week's analysis applied to raw candidates. Tom's adjusts land against the richer substrate, so the "From Tom" opener and Why-it-matters lines have more to push off.
 
-Capture per-item responses. Adjusts feed the drafter (step 11): Why-it-matters and Human-angle lines incorporate Tom's phrasing where he gave any, otherwise use the original take. The "From Tom" opener (step 11) is assembled from the strongest POV across Tom's adjusts that week.
+Capture per-item responses. Adjusts feed the drafter (step 11b): Why-it-matters and Human-angle lines incorporate Tom's phrasing where he gave any, otherwise use the original take. The "From Tom" opener (step 11b) is assembled from the strongest POV across Tom's adjusts that week.
 
 If zero candidates get an Adjust with a strong POV, the opener defaults to a meta-observation about the week's theme (not a model-guess at Tom's voice). Note in the summary.
 
@@ -356,12 +356,12 @@ After the main shortlist per-item capture completes, run a second pass for any c
 
 Weak-attribution handling preserves the signal that the earlier filter would have silently dropped. A weak-attribution candidate that Tom keeps joins the main draft as an Also-worth-noting entry (short paragraph, not a full Item). Tom's Drop reasons feed future filter tuning.
 
-**Capture transcript artifact (ADR 019).** After both passes (main shortlist plus weak-attribution) complete, write the per-item capture decisions to `<draft-folder>/<publication-date>.capture.md`. This file is the persisted reference the drafter (step 11) reads against to preserve verbatim spans, and the comparison surface for human editorial review. Format per ADR 019:
+**Capture transcript artifact (ADR 019).** After both passes (main shortlist plus weak-attribution) complete, write the per-item capture decisions to `<draft-folder>/<publication-date>.capture.md`. This file is the persisted reference the drafter (step 11b) reads against to preserve verbatim spans, and the comparison surface for human editorial review. Format per ADR 019:
 
 ```
 ---
 persona: <leader|developer>
-edition: <N from step 11>
+edition: <N from step 11a>
 date: <YYYY-MM-DD>
 phase-written: <prep|finalise|full>
 phase-last-appended: <prep|finalise|full>
@@ -382,7 +382,7 @@ phase-last-appended: <prep|finalise|full>
 - **Ask for help question** (if outcome is Ask for help): <Tom's question>
 ```
 
-For `phase=full` and `phase=prep`, write the file once after capture completes. Today's consumer is the drafter at step 11; future consumers (possible voice / content-risk extensions) are scoped per ADR 019. The voice gate (step 13), content-risk gate (step 14), and SW-critic (step 15) do not read this file in the current pipeline.
+For `phase=full` and `phase=prep`, write the file once after capture completes. Today's consumer is the drafter at step 11b; future consumers (possible voice / content-risk extensions) are scoped per ADR 019. The voice gate (step 13), content-risk gate (step 14), and SW-critic (step 15) do not read this file in the current pipeline.
 
 **Phase variant `10-prime` (phase=finalise only):** run per-item capture only on:
 
@@ -402,17 +402,48 @@ Prep-time per-item responses (Agree, Adjust, Drop) are carried forward via `<pre
 
 Default branch when Tom is unavailable: `Continue without capture transcript`. The drafter loses the verbatim-preservation reference for prep-time items but does not block publication. Note the missing-file event in the Tom-summary at step 17.
 
-### 11. Draft the brief
+### 11a. Compose theme anchor (H1 + cover hook + theme statement) per ADR-037
 
 Before drafting, determine the edition number per the persona config's `## Edition counting` rule: scan files matching the canonical brief shape `YYYY-MM-DD.md` (eight digits and dashes, then `.md`) across BOTH `<published-folder>/*/<YYYY-MM-DD>.md` (per-date sub-directory shape per ADR-039) and `<draft-folder>/<YYYY-MM-DD>.md` (flat shape, drafts layout unchanged), read each match's frontmatter `edition:` value, take the maximum, and add one for the current draft. The `YYYY-MM-DD.md` basename filter excludes ADR-026 sibling files (`.linkedin.md`, `.reviews.md`, `.capture.md`) and folder index files (`README.md`) by construction; do NOT use a plain `*.md` glob (P062). If no prior edition file exists in either folder, the next edition is 1. Assert that the computed edition number is exactly one greater than the highest prior `edition:` value before writing the draft frontmatter; if not, surface to Tom and abort rather than publishing with a wrong issue number. Write the edition number into the draft frontmatter (`edition: N`) so the critic (ADR 035) can reason about first-edition vs ongoing framing when deciding whether to flag a missing welcome line as a weakness. For edition 1, include the persona's `<welcome-line>` above the voice opener; for edition >=2, drop or freshly reframe the welcome line rather than repeating the first-edition text.
 
 Read `docs/VOICE-AND-TONE.md` (base) and the `<voice-addendum>` from the persona config, plus `.claude/skills/wr-newsletter/assets/draft-template.md` and `docs/ai-engineering-brief/ai-landscape.md`.
 
-Produce a draft with:
-- Headline: a unique POV-carrying H1 (6-12 words), followed on the next non-blank line by the persona's `<headline-pattern>` subtitle (e.g. `*The Shift, AI engineering, week ending YYYY-MM-DD*` for leader, or `*Tokens Spent, AI engineering for developers, week ending YYYY-MM-DD*` for developer). The `YYYY-MM-DD` is `<week-ending>` (the Sunday), not `<publication-date>`.
-- One-sentence intro naming the theme and the main map movement of the week.
+Compose the theme anchor (text only at 11a; cover image render stays at step 12 unchanged per ADR-037 sub-decision 1 / Option C, Tom-pinned 2026-06-03):
+
+- **Headline (H1)**: a unique POV-carrying H1 (6-12 words). Follow on the next non-blank line with the persona's `<headline-pattern>` subtitle (e.g. `*The Shift, AI engineering, week ending YYYY-MM-DD*` for leader, or `*Tokens Spent, AI engineering for developers, week ending YYYY-MM-DD*` for developer). The `YYYY-MM-DD` is `<week-ending>` (the Sunday), not `<publication-date>`.
+- **Cover hook line 1** (white, around 28 chars max per P063 LinkedIn-crop budget) and **line 2** (accent orange, around 45 chars max). Text only at 11a; the cover image renders at step 12 (status quo).
+- **One-paragraph theme statement** that names the deep items by their shared constraint and previews the variation each item shows. This statement IS the "thesis-first intro" element 1 from ADR-032's three-deep-items shape; the body opener at 11b will elaborate it. Keep to one paragraph; specific (named constraint, named variation); honors the voice rules below.
+
+Voice rules at 11a (subset of step-13 voice gate, applied to the anchor only):
+
+- Team voice ("we"), not "I" (ADR 010). The H1 + theme statement carry the editorial position; the "From Tom" opener is at 11b.
+- Direct, specific, confident. Name the constraint, name the variation.
+- No em-dashes. Use commas, periods, colons, or parentheses.
+- No hype words.
+- Respect the reader's team (ADR 015).
+
+#### 11a Tom-approval gate (per ADR-037)
+
+After composing the theme anchor, fire an `AskUserQuestion` (per ADR-013 Rule 1):
+
+- `header`: "Theme anchor"
+- `question`: "Theme anchor for Issue <N>. H1: <H1 text>. Hook lines: <line 1> / <line 2>. Theme statement: <theme statement>. Approve?"
+- Options:
+  1. **Accept** (Recommended) - proceed to 11b with the approved anchor.
+  2. **Refine** - Tom edits the H1, hook lines, or theme statement via the "Other" free-text escape hatch; 11a re-runs the approval gate with the refined anchor.
+  3. **Reject** - back to step 9.5 (re-ranking) or step 10 (per-item capture) with a note on what failed.
+
+Do NOT proceed to 11b until the gate returns Accept. The approved anchor is the load-bearing frame the body work amortises against (per ADR-037 Decision Drivers: theme anchor first).
+
+### 11b. Draft body using approved theme anchor (per ADR-037)
+
+Using the approved H1, hook lines, and theme statement from 11a, produce the full draft body:
+
+- The approved headline + subtitle from 11a.
+- One-sentence intro that elaborates the 11a theme statement (the body opener leads with the approved theme; do not author a fresh intro that competes with the anchor).
 - For developer persona, label each item's evidence stance as **shipped**, **benchmarked**, **demo**, or **not yet** (J9 + J11 paired). For leader persona, the evidence label is optional; business-consequence framing carries primary weight.
 - One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened, Map movement, Why it matters to your team, The human angle, Source.
+- Item Why-it-matters lines reference the 11a theme where natural (per ADR-037: body threads the approved frame).
 - Closing CTA: pick one `<cta-description>` and one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`.
 
 Voice rules (enforced by step 13 voice gate):
@@ -453,15 +484,27 @@ If `<draft-folder>/<publication-date>.capture.md` is absent (e.g. `phase=finalis
 
 This rule is **interim defence-in-depth**. ADR-024 (URL verification gate) owns this responsibility structurally. Its fresh-context subagent compares article body against the brief's specific claim and returns SUPPORTED / REFUTED / NOT MENTIONED, which catches quantitative drift as a side-effect of body-content semantic comparison. Until ADR-024 confirmation criterion 1 is met (step 11.5 documented and exercised across one full prep-finalise cycle without user intervention on URLs), the drafter operates this rule as in-context discipline. Once met, this sub-section reduces to a one-line cross-reference to ADR-024.
 
-**Phase variant `11-prime` (phase=finalise only):** start from `<prep-draft-body>` rather than drafting from scratch. Apply changes only for:
+**Phase variant `11a-prime` + `11b-prime` (phase=finalise only) per ADR-037:**
+
+**`11a-prime`** always re-runs the theme-anchor approval gate (per ADR-037 sub-decision 2 / Option B, Tom-pinned 2026-06-03). Fire an `AskUserQuestion` carrying the prep-time approved anchor as the default:
+
+- `header`: "Theme anchor (finalise)"
+- `question`: "Prep-time theme anchor for Issue <N>: H1: <prep H1>. Hook lines: <prep line 1> / <prep line 2>. Theme statement: <prep theme statement>. Still right at finalise?"
+- Options:
+  1. **Accept** (Recommended) - prep-time anchor carries over unchanged; proceed to 11b-prime.
+  2. **Refine** - Tom edits via "Other" free-text; 11a-prime re-runs the gate. The refined anchor replaces the prep-time anchor for finalise.
+
+This catches Friday/Saturday/Sunday theme-drift between prep and finalise even when ADR-017's Restructure rule does not fire. Cost is one approval gate per finalise; the default-Accept path keeps the friction low.
+
+**`11b-prime`** starts from `<prep-draft-body>` rather than drafting from scratch. Apply changes only for:
 
 1. New Item blocks for kept new tier-1 items from step 10-prime.
 2. New Also-worth-noting blocks for `Also-worth-noting` items from step 5-prime, kept new `WEAK_ATTRIBUTION` items from step 10-prime, and any prep-time `Ask for help` items Tom resolved between phases.
 3. Re-ranked Item ordering if step 9.5-prime re-ranked.
-4. Updated headline / intro line if the late-story branch (step 5-prime) chose `Restructure` and the week's theme genuinely shifted.
+4. Updated headline / intro / theme statement if 11a-prime gate returned Refine OR if the late-story branch (step 5-prime) chose `Restructure` and the week's theme genuinely shifted.
 5. Updated Map movement lines on existing items if the map was re-mutated at step 6-prime.
 
-If no material changes apply, `11-prime` is a no-op and `<prep-draft-body>` is the finalise draft body unchanged.
+If no material changes apply AND 11a-prime gate returned Accept, `11b-prime` is a no-op and `<prep-draft-body>` is the finalise draft body unchanged.
 
 ### 11.5. URL verification gate (ADR-024)
 
@@ -517,7 +560,7 @@ Fresh-context isolation matters: the subagent must NOT see the rest of the brief
 | HTTP 404 (or 403/5xx)  | Replace the URL with a verified canonical URL (use DuckDuckGo HTML search to find the canonical), or drop the source link entirely. Re-run step 11.5 on the replacement URL.                          |
 | `NOT MENTIONED`        | Escalate to Tom via `AskUserQuestion` with the claim and the article-body excerpt. Default action: treat as REFUTED (fix the brief or swap the URL). Tom may explicitly approve an inferred-but-unstated framing, in which case the verdict is downgraded to `NOT MENTIONED (author-approved inference)` and recorded in the audit trail.   |
 
-**Phase variant `11.5-prime` (phase=finalise only).** Re-run step 11.5 only on URLs that are NEW or CHANGED in `11-prime`. URLs that were verified in prep and have not changed (URL string identical AND surrounding claim sentence identical) carry their prep-time verdict forward. If a claim sentence was rewritten in `11-prime` but the URL is unchanged, the URL must re-verify against the new claim (the URL is the same, the claim is not). Record any carry-forwards in the audit trail as `<verdict> (carried from prep)`.
+**Phase variant `11.5-prime` (phase=finalise only).** Re-run step 11.5 only on URLs that are NEW or CHANGED in `11b-prime`. URLs that were verified in prep and have not changed (URL string identical AND surrounding claim sentence identical) carry their prep-time verdict forward. If a claim sentence was rewritten in `11b-prime` but the URL is unchanged, the URL must re-verify against the new claim (the URL is the same, the claim is not). Record any carry-forwards in the audit trail as `<verdict> (carried from prep)`.
 
 **Audit trail.** Write per-URL verdicts to `<draft-folder>/<publication-date>.reviews.md` under a new `## URL Verification` block (per ADR-026 sibling-file convention). One row per URL:
 
@@ -533,7 +576,7 @@ Step 17 summarises this table for Tom (final-line headline only; full table live
 
 ### 12. Generate cover image
 
-The cover image is generated by the `/wr-newsletter-cover` skill (P044, landed 2026-05-11). The skill encapsulates the brand-asset read, template substitution, font conventions, and the P011 render-and-verify cycle that previously lived inline. Invoke it with the resolved persona, edition number, publication date, and the two-line hook derived from the H1 + intro composed at step 11:
+The cover image is generated by the `/wr-newsletter-cover` skill (P044, landed 2026-05-11). The skill encapsulates the brand-asset read, template substitution, font conventions, and the P011 render-and-verify cycle that previously lived inline. Invoke it with the resolved persona, edition number, publication date, and the two-line hook from the cover hook lines composed at step 11a (per ADR-037; cover render stays at step 12 unchanged per Tom-pinned sub-decision 1 / Option C, with 11a outputting hook-line text only):
 
 ```
 Skill: wr-newsletter-cover
@@ -553,7 +596,7 @@ If `/wr-newsletter-cover` reports a missing brand asset (fail-fast preflight), h
 
 If the image generation tooling fails or returns an unbranded result, do not block the pipeline: note the failure in the summary, fall back to a text-only edition, and continue.
 
-**Phase variant `12-prime` (phase=finalise only): re-render gate.** Compare the finalise-time headline (from step 11-prime) against the prep-time headline (from `<prep-draft-body>`). If the headline is unchanged AND the week's theme is unchanged, carry `<prep-image-path>` forward without re-rendering. If either changed materially, re-invoke `/wr-newsletter-cover` with the finalise-time hook lines (output paths are date-anchored, so the same `<publication-date>` will overwrite the prep artifact deterministically). The re-render check is a string compare on the H1 line plus a semantic check on the intro sentence (a single-word edit that does not change meaning is "unchanged"; a re-framed theme is "changed"). When in doubt, re-render: image work in finalise is the explicit ADR 017 safety valve for late-breaking news.
+**Phase variant `12-prime` (phase=finalise only): re-render gate.** Compare the finalise-time headline + hook lines (from step 11a-prime, which always re-runs the theme-anchor approval gate per ADR-037 sub-decision 2 / Option B) against the prep-time headline + hook lines (from `<prep-draft-body>`). If the headline + hook lines are unchanged AND the week's theme is unchanged, carry `<prep-image-path>` forward without re-rendering. If either changed materially (11a-prime gate returned Refine, or restructure shifted the theme), re-invoke `/wr-newsletter-cover` with the finalise-time hook lines (output paths are date-anchored, so the same `<publication-date>` will overwrite the prep artifact deterministically). The re-render check is a string compare on the H1 line plus a semantic check on the theme statement (a single-word edit that does not change meaning is "unchanged"; a re-framed theme is "changed"). When in doubt, re-render: image work in finalise is the explicit ADR 017 safety valve for late-breaking news.
 
 ### 13. Voice review gate (ADR 012)
 
@@ -566,7 +609,7 @@ prompt: "Review the following AI Engineering Brief draft against docs/VOICE-AND-
 
 If FAIL: fix the flagged passages in the draft, re-run voice review. Do not proceed until PASS. Capture the final voice review block for the saved draft.
 
-**Phase variant `13-prime` (phase=finalise only):** run the voice gate against the finalise-time draft body. The gate runs on the full draft (not a diff against `<prep-draft-body>`) so any voice regressions introduced by step 11-prime's edits are caught.
+**Phase variant `13-prime` (phase=finalise only):** run the voice gate against the finalise-time draft body. The gate runs on the full draft (not a diff against `<prep-draft-body>`) so any voice regressions introduced by step 11b-prime's edits (or by an 11a-prime Refine that propagated into 11b-prime) are caught.
 
 ### 14. Content-risk review gate (ADR 012 + ADR 015 + ADR 018)
 
@@ -593,7 +636,7 @@ If `VERDICT: REJECTED`: save the draft with the block, surface the rejection pro
 
 If `VERDICT: PASS`: proceed to step 15. Any `medium` flags listed in the Notes section are surfaced to Tom for optional touch-up but do not block the SW-critic.
 
-**Phase variant `14-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same rubric path. A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the risk surface, so the agent runs again with the finalise-time draft.
+**Phase variant `14-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same rubric path. A prep-time PASS does not exempt finalise; new items or restructured framing in 11b-prime (or theme-anchor changes from 11a-prime that propagated through) can change the risk surface, so the agent runs again with the finalise-time draft.
 
 ### 15. Critic loop on the newsletter draft (ADR 016, ADR 025, ADR 035)
 
@@ -619,7 +662,7 @@ If the round-3 REJECTED pattern recurs across consecutive editions on the same c
 
 Capture the final critic block for the saved draft.
 
-**Phase variant `15-prime` (phase=finalise only):** runs against the finalise-time draft with a fresh per-artifact-pass budget (up to 3 rounds) under ADR 017 lines 39-41. The prep-time critic block is preserved in the saved draft alongside the finalise-time block (see step 16-prime); both are part of the audit trail. If finalise has no material changes (11-prime was a no-op AND 12-prime carried the image forward AND 13-prime/14-prime passed without edits), the prep-time critic block can be carried forward and 15-prime is a no-op. Default behaviour when in doubt: re-run.
+**Phase variant `15-prime` (phase=finalise only):** runs against the finalise-time draft with a fresh per-artifact-pass budget (up to 3 rounds) under ADR 017 lines 39-41. The prep-time critic block is preserved in the saved draft alongside the finalise-time block (see step 16-prime); both are part of the audit trail. If finalise has no material changes (11a-prime gate returned Accept AND 11b-prime was a no-op AND 12-prime carried the image forward AND 13-prime/14-prime passed without edits), the prep-time critic block can be carried forward and 15-prime is a no-op. Default behaviour when in doubt: re-run.
 
 ### 15.25. Editor review gate (ADR 020)
 
@@ -633,7 +676,7 @@ prompt: "Review the newsletter draft as an experienced LinkedIn newsletter edito
 
 artifact_path: <absolute path to the in-progress draft>
 persona: <leader|developer>
-edition_number: <N from step 11>"
+edition_number: <N from step 11a>"
 ```
 
 Parse the returned block. The agent emits exactly:
@@ -670,7 +713,7 @@ If `EDITOR_VERDICT: PASS`: proceed to step 15.5. Any `tentative` axis flagged wi
 
 If the agent returns `EDITOR_ERROR: upstream gate returned REJECTED; editor will not run` despite the skip-on-REJECTED rule above, treat it as a skill-logic bug. Do not retry; surface the inconsistency in the Tom-summary so the gate orchestration can be fixed.
 
-**Phase variant `15.25-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same persona; the edition number is carried from prep frontmatter (it does not change between phases). A prep-time PASS does not exempt finalise; new items or restructured framing in 11-prime can change the reader-experience surface (longer read, weaker through-line, item-count overflow). If finalise has no material changes (11-prime was a no-op AND 15-prime carried the prep critic block forward), the prep-time editor block can be carried forward and 15.25-prime is a no-op. Default behaviour when in doubt: re-run.
+**Phase variant `15.25-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same persona; the edition number is carried from prep frontmatter (it does not change between phases). A prep-time PASS does not exempt finalise; new items or restructured framing in 11b-prime (or theme-anchor changes from 11a-prime that propagated through) can change the reader-experience surface (longer read, weaker through-line, item-count overflow). If finalise has no material changes (11a-prime returned Accept AND 11b-prime was a no-op AND 15-prime carried the prep critic block forward), the prep-time editor block can be carried forward and 15.25-prime is a no-op. Default behaviour when in doubt: re-run.
 
 ### 15.4. Cognitive accessibility gate (P053)
 
@@ -686,7 +729,7 @@ prompt: "Review the in-progress newsletter brief body for cognitive accessibilit
 
 artifact_path: <absolute path to the in-progress draft>
 persona: <leader|developer>
-edition_number: <N from step 11>
+edition_number: <N from step 11a>
 target_reading_level: Grade 10 (leader) or Grade 11 (developer)
 
 Return:
@@ -706,7 +749,7 @@ If `COGA_VERDICT: NEEDS_REVISION`: save the draft with the block, surface the ve
 
 If `COGA_VERDICT: NEEDS_REVISION_OPTIONAL` or `PASS`: proceed to step 15.5. Optional-revision findings still surface in the Tom-summary but do not block.
 
-**Phase variant `15.4-prime` (phase=finalise only):** re-run only if the finalise-time brief body changed since prep. If 11-prime was a no-op (no new candidates from step 2-prime), carry forward the prep-time cog-a11y block from `<prep-reviews-path>` without re-invocation. If 11-prime introduced new items or restructured framing, re-run the agent against the finalise body. Default behaviour when in doubt: re-run.
+**Phase variant `15.4-prime` (phase=finalise only):** re-run only if the finalise-time brief body changed since prep. If 11a-prime returned Accept AND 11b-prime was a no-op (no new candidates from step 2-prime), carry forward the prep-time cog-a11y block from `<prep-reviews-path>` without re-invocation. If 11a-prime returned Refine OR 11b-prime introduced new items or restructured framing, re-run the agent against the finalise body. Default behaviour when in doubt: re-run.
 
 ### 15.5. Draft the LinkedIn post
 
@@ -715,7 +758,7 @@ Skip this step when `phase=prep`. The LinkedIn post is the publication-day artif
 For `phase=finalise` and `phase=full`, draft a LinkedIn post that:
 
 - Opens with a hook line (one sentence) that names the week's theme and the main map movement.
-- Carries the headline H1 from step 11/11-prime.
+- Carries the headline H1 from step 11a / 11a-prime.
 - Includes 2-3 bullet items (the strongest items from the brief), each one sentence.
 - Closes with a call-to-read pointing to the published edition (link inserted at publish time).
 - Is no longer than the LinkedIn 3000-character limit.
@@ -755,7 +798,7 @@ prep-source-cutoff: <ISO timestamp recorded at end of step 2>
 source-failures:
   - <URL of any tier-1/2/3 source that failed>
 map-mutation-status: <"mutated" or "skipped: <reason>" per step 5>
-edition: <N from step 11>
+edition: <N from step 11a>
 persona: <leader|developer>
 cover-image: <path>
 companion-files:
@@ -763,7 +806,7 @@ companion-files:
   reviews: <publication-date>.reviews.md
 ---
 
-<draft body from step 11, after any step-15 fixes>
+<draft body from step 11b, after any step-15 fixes>
 ```
 
 Write `<draft-folder>/<publication-date>.reviews.md` with the following structure:
@@ -835,7 +878,7 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
      linkedin-post: <publication-date>.linkedin.md
    ---
 
-   <final draft body from step 11-prime>
+   <final draft body from step 11b-prime>
    ```
 
 2. Write reviews to `<draft-folder>/<publication-date>.reviews.md`, replacing the prep-time file. The finalise reviews file carries forward prep blocks alongside finalise blocks so the audit trail is intact:
@@ -943,7 +986,7 @@ Single-pass equivalent of the prep + finalise pair. Three operations:
    source-failures:
      - <URL of any tier-1/2/3 source that failed>
    map-mutation-status: <"mutated" or "skipped: <reason>" per step 5>
-   edition: <N from step 11>
+   edition: <N from step 11a>
    persona: <leader|developer>
    cover-image: <path>
    companion-files:
@@ -952,7 +995,7 @@ Single-pass equivalent of the prep + finalise pair. Three operations:
      linkedin-post: <publication-date>.linkedin.md
    ---
 
-   <draft body from step 11>
+   <draft body from step 11b>
    ```
 
 2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same seven-block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus an eighth block `## Voice Review (LinkedIn post)` that captures the step-15.5 LinkedIn-post voice gate verdict (P013). No prep / finalise distinction in the section headings (single-pass).

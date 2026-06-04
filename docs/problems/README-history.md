@@ -129,3 +129,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-06-03
 
 > Last reviewed: 2026-06-03 **README reconciled** (P084 capture-problem follow-up to review-decisions drain): 1 drift entry corrected, namely P084 (Extend per-date sub-directory layout to src/newsletters/drafts/<persona>/) added to WSJF Rankings as deferred-WSJF placeholder (1.5 = 3/2, Severity 3 Medium, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
+
+> Last reviewed: 2026-06-03 **README reconciled** (3-capture friction batch P085 + P086 + P087): 3 drift entries corrected, namely P085 (external-comms gate marker hash invalidation), P086 (P165 README-refresh-discipline hook over-fires), P087 (compendium emits em-dashes), all added to WSJF Rankings as deferred-WSJF placeholders (1.5 = 3/2 each, Severity 3 Medium, Effort M; re-rate at next /wr-itil:review-problems). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
