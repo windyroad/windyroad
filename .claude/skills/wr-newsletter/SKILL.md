@@ -506,6 +506,60 @@ This catches Friday/Saturday/Sunday theme-drift between prep and finalise even w
 
 If no material changes apply AND 11a-prime gate returned Accept, `11b-prime` is a no-op and `<prep-draft-body>` is the finalise draft body unchanged.
 
+### 11.4. Cross-edition thesis-consistency gate (ADR-038)
+
+After 11b body draft completes, invoke the `wr-newsletter-cross-edition-consistency` subagent to check the current draft's load-bearing theses against the prior N=8 published editions in the same persona series. Catches the failure mode where Issue N silently contradicts Issue N-K (witnessed in the 2026-06-01 Issue 07 prep run where Item 1 contradicted Issue 06's "capacity not smaller team" thesis; the 5 in-isolation gates shipped past it without flagging).
+
+**Prior-edition window** per Tom-pinned sub-decision 1 / Option C (ADR-038): N=8 (rolling two-month window at weekly cadence).
+
+**Subagent input shape** per Tom-pinned sub-decision 3 / Option A (ADR-038): full prior-edition bodies for all N editions.
+
+**Resolve prior-edition paths**:
+
+```bash
+# Glob via the per-date subdir shape per ADR-039:
+GLOB="<published-folder>/*/<YYYY-MM-DD>.md"
+# Filter to publication-date basename matching YYYY-MM-DD.md (8 digits and dashes, then .md).
+# Sort by basename descending (basename IS publication date so this sorts by edition order).
+# Take top 8.
+```
+
+If fewer than 8 prior editions exist in the persona's published folder (early in the series), pass what is available. The subagent surfaces the count in its verdict.
+
+**Invocation**:
+
+Delegate to `wr-newsletter-cross-edition-consistency` via the Skill tool (subagent_type matches the agent's `name:` frontmatter field). Pass:
+
+- `artifact_path`: absolute path to the current draft (`<draft-folder>/<publication-date>.md` for `phase=prep` writing `.prep.md`, OR the resolved `.prep.md` / `.md` for finalise).
+- `prior_edition_paths`: the up-to-8 absolute paths from the glob above, sorted by edition number descending.
+- `persona`: `leader` or `developer`.
+- `publication_date`: the resolved `<publication-date>` from step 0.
+
+The subagent returns a structured block beginning with `CROSS_EDITION_CONSISTENCY_VERDICT: <SUPPORTED|CONTRADICTS|NEUTRAL>` on its own line. Parse the verdict and route per the save-gate semantics below.
+
+**Save-gate semantics** per Tom-pinned sub-decision 2 / Option A (ADR-038): block save until Tom resolves on CONTRADICTS.
+
+| Verdict | Action |
+|---------|--------|
+| `SUPPORTED` | Gate passes silently. Append verdict block to `.reviews.md ## Cross-Edition Consistency` (see step 16). Proceed to step 11.5. |
+| `NEUTRAL` | Gate passes silently. Append verdict block to `.reviews.md ## Cross-Edition Consistency`. Proceed to step 11.5. |
+| `CONTRADICTS` | Block save. Fire `AskUserQuestion` (per ADR-013 Rule 1) with the contradictions surfaced. Three options: |
+
+**`AskUserQuestion` on CONTRADICTS**:
+
+- `header`: "Cross-edition contradiction"
+- `question`: name the count of contradictions and the prior-edition dates involved (for example, "1 contradiction found vs Issue 06 (2026-05-25). Resolve?"). Include the first contradiction's current-draft and prior-edition quoted passages inline for at-a-glance context.
+- Options:
+  1. **Rewrite** (Recommended on a contradiction Tom did not intend) - the drafter re-runs on the conflicting passages with the prior-edition quoted context attached; 11.4 gate re-runs after rewrite.
+  2. **Override with reason** - Tom records a one-line reason via "Other" free-text; gate passes with `PASS_WITH_AUTHOR_OVERRIDES`-equivalent verdict (per ADR-025); reason is logged to `.reviews.md ## Cross-Edition Consistency`.
+  3. **Accept as deliberate evolution** - Tom records a one-line reason naming the position-shift via "Other" free-text (for example, "Q2 evidence changes the capacity argument; intentional position update"); gate passes; reason is logged. The next-edition drafter should reference this evolution in the new edition's framing.
+
+When Rewrite is chosen, the drafter loop runs once more on the affected items only (not a full 11b re-draft); the gate re-fires after the rewrite. When Override or Accept-as-evolution is chosen, the gate passes immediately.
+
+**Audit trail**: append the verdict block (plus override / evolution reason where applicable) to `.reviews.md ## Cross-Edition Consistency` per ADR-026 sibling-file pattern. Every edition's `.reviews.md` carries this section; SUPPORTED and NEUTRAL verdicts contribute a one-line "no findings" entry, CONTRADICTS verdicts carry the full Findings block.
+
+**Phase variant `11.4-prime` (phase=finalise only)**: re-run only if 11a-prime gate returned Refine OR 11b-prime introduced new items or theme changes. If 11a-prime returned Accept AND 11b-prime was a no-op AND no new items landed, carry the prep-time verdict forward (append `(carried from prep)` to the `.reviews.md ## Cross-Edition Consistency` entry). Default when in doubt: re-run.
+
 ### 11.5. URL verification gate (ADR-024)
 
 For every URL that appears in the draft body, verify the URL resolves and the article body matches the brief's specific claim. Block save on REFUTED or 404. This step is non-skippable in `phase=prep`, `phase=finalise`, and `phase=full`; ADR-024 owns the decision shape and P034 documents the failure mode this gate prevents.
@@ -844,6 +898,10 @@ phase: prep
 ## Map Delta
 
 <one-sentence summary of what moved in ai-landscape.owm this run, or "MAP_UPDATE_SKIPPED: <reason>" if step 5 blocked the update>
+
+## Cross-Edition Consistency
+
+<verdict block from step 11.4: CROSS_EDITION_CONSISTENCY_VERDICT (SUPPORTED|CONTRADICTS|NEUTRAL), window (K editions read), editions reviewed (dates), Findings block on CONTRADICTS, optional Notes. Per ADR-038.>
 
 ## URL Verification
 

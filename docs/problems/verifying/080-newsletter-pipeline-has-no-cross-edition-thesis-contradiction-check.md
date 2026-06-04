@@ -1,6 +1,6 @@
 # Problem 080: Newsletter pipeline has no cross-edition thesis-contradiction check between consecutive editions
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-01
 **Priority**: 2 (High). Impact: 4 x Likelihood: 3 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -57,15 +57,22 @@ Alternative lighter-weight fix:
 - [x] Decide between fresh-context subagent (new pipeline step) vs gate-prompt-extension (lighter-weight) (landed as ADR-038 `cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`, 2026-06-02, AFK iter 4; Option A pinned by ADR-035 coverage-partitioning driver; Option B has direct ADR-035 conflict)
 - [x] Subagent prompt shape pinned (UNBLOCKED 2026-06-03 via /wr-architect:review-decisions follow-up): N=8 (rolling two-month window, Option C, Tom rejected architect lean of B); CONTRADICTS save-gate Option A (block save until Tom resolves via AskUserQuestion Rewrite/Override/Accept-as-evolution); subagent input shape Option A (full prior-edition bodies for all N editions, Tom rejected architect lean of C/hybrid). Combined N=8 with full bodies drives a higher subagent token budget, accepted as load-bearing cost for JTBD-003 protection.
 - [ ] If gate-extension: identify which existing gate(s) carry the cross-edition check (SW-critic plus voice both plausible) (N/A: gate-extension rejected per ADR-038 Option 2; ADR-035 coverage-partitioning conflict)
-- [ ] Author `.claude/agents/wr-newsletter-cross-edition-consistency.md` per ADR-038 pinned shape: tool allowlist Read only; verdict shape SUPPORTED/CONTRADICTS/NEUTRAL; input shape per pinned Option A above.
-- [ ] Implement SKILL.md gate invocation at the chosen step number (between 11b and 11.5 URL verification) with the AskUserQuestion surface on CONTRADICTS per pinned Option A save-gate.
-- [ ] Add `## Cross-Edition Consistency` block append to `.reviews.md` writes.
+- [x] Author `.claude/agents/wr-newsletter-cross-edition-consistency.md` per ADR-038 pinned shape: tool allowlist Read/Glob/Grep; verdict shape SUPPORTED/CONTRADICTS/NEUTRAL; input shape per pinned Option A above. DONE 2026-06-04.
+- [x] Implement SKILL.md gate invocation as step 11.4 (between 11b body draft and 11.5 URL verification) with the AskUserQuestion surface on CONTRADICTS per pinned Option A save-gate. DONE 2026-06-04.
+- [x] Add `## Cross-Edition Consistency` block append to `.reviews.md` writes. DONE 2026-06-04 (added to heading inventory at step 16; SUPPORTED/NEUTRAL one-line entry; full Findings block on CONTRADICTS).
+- [x] Phase variant 11.4-prime: re-run only if 11a-prime returned Refine OR 11b-prime introduced new items or theme changes; else carry prep-time verdict forward. DONE 2026-06-04.
 - [ ] Test on next edition by injecting a contrived contradiction and confirming the check catches it (confirmation criterion e in ADR-038).
 - [ ] Reassessment trigger: zero CONTRADICTS verdicts across 8 editions plus zero retro-flagged misses, downgrade to quarterly check (codified in ADR-038 Reassessment Criteria § Quarterly downgrade trigger)
 
 ### Progress log
 
 - **2026-06-02 (AFK iter 4)**: ADR-038 landed. Architect verdict: PASS, recommended action slot (ii) per ADR-074 substance-confirm-before-build (option pinned, sub-decisions deferred). Option A pinned by ADR-035 Decision Drivers § Coverage partitioning (the architect cited verbatim "Each review gate owns its axis"). Option B has direct ADR-035 conflict by loading cross-edition consistency onto agents whose primary directive is voice / structure / argument-quality; P080's own prose flagged the same dilution risk independently. Options 3 (status-quo manual workaround) and 4 (inline drafter check) also rejected (Option 3: cost compounds; Option 4: ADR-016 fresh-context conflict). JTBD verdict: PASS, aligned to JTBD-001 (Awareness), JTBD-002 (Engagement), JTBD-003 (Evaluation); regression risk LOW; Tom-as-editor persona is implicit not documented (already covered by existing memory feedback_new_jtbd_and_persona_need_human_confirmation; not auto-ticketed). SKILL.md split deferred per ADR-038 § Deferred sub-decisions; three sub-decisions (N window, save-gate semantics, input shape) queued to /wr-architect:review-decisions direction-set.
+- **2026-06-03 (review-decisions follow-up)**: Tom pinned all three sub-decisions: N=8 rolling two-month window (Option C), block-save-on-CONTRADICTS via AskUserQuestion Rewrite/Override/Accept-as-evolution (Option A), full prior-edition bodies (Option A).
+- **2026-06-04 (P080 implementation)**: Agent + gate landed. `.claude/agents/wr-newsletter-cross-edition-consistency.md` authored as fresh-context subagent (Read/Glob/Grep tool surface; verdict SUPPORTED/CONTRADICTS/NEUTRAL; N=8 window; full prior-edition body input). `.claude/skills/wr-newsletter/SKILL.md` step 11.4 added between 11b body draft and 11.5 URL verification: glob prior N=8 editions via `<published-folder>/*/<YYYY-MM-DD>.md` per ADR-039 subdir shape, delegate to subagent, route per save-gate semantics (SUPPORTED/NEUTRAL: silent pass; CONTRADICTS: AskUserQuestion with Rewrite/Override/Accept-as-evolution). `## Cross-Edition Consistency` heading added to `.reviews.md` template. Phase variant 11.4-prime re-runs only on Refine OR new items; else carry prep verdict forward. Transition Open to Verification Pending; verifies on next /wr-newsletter cycle.
+
+## Fix Released
+
+ADR-038 cross-edition thesis-consistency gate implementation. New agent `.claude/agents/wr-newsletter-cross-edition-consistency.md` (fresh-context subagent, Read-only tool surface). New SKILL.md step 11.4 in `.claude/skills/wr-newsletter/SKILL.md` between 11b body draft and 11.5 URL verification. Tom-pinned sub-decisions: N=8 prior-edition window (Option C), block-save-on-CONTRADICTS via AskUserQuestion with Rewrite/Override/Accept-as-evolution (Option A), full prior-edition bodies as subagent input (Option A). `.reviews.md` heading inventory extended with `## Cross-Edition Consistency`. Phase variant 11.4-prime carries prep verdict forward when no material body changes. Released in this commit. Triggers on next `/wr-newsletter` prep + finalise cycle: SUPPORTED or NEUTRAL on first 4 consecutive editions with zero false-negative caught by Tom in retro closes confirmation criterion g per ADR-038.
 
 ## Dependencies
 
