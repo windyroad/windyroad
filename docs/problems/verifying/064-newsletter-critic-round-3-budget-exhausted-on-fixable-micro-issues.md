@@ -1,6 +1,6 @@
 # Problem 064: Newsletter critic uses a 38-check structured rubric that was never approved; simplify back to strengths/weaknesses + context
 
-**Status**: Known Error (root cause confirmed via ADR-035; implementation landed 2026-06-02; awaiting one full prep+finalise newsletter cycle to verify per ADR-035 Confirmation criterion 5)
+**Status**: Verification Pending
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-05-31; the structured rubric is actively producing wrong-shaped REJECTED verdicts on briefs the reader-facing critic should pass; affects every edition)
@@ -71,6 +71,14 @@ This composes with P071 (supersede ADR-016 parameterised sw-critic pattern with 
 - [x] Update SKILL.md and draft-template.md references to specific check_N IDs (check_9, check_14, check_25, check_32) to describe the editorial-quality concern without naming the now-removed structured-check ID. (Done 2026-06-02.)
 - [ ] Run the simplified critic against one full prep + finalise newsletter cycle as the ADR-035 Confirmation criterion 5 smoke test; confirm STRENGTHS + WEAKNESSES + CONTEXT shape outputs and that round-3 exhaustion frequency drops relative to the structured-rubric baseline. Defer to next finalise cycle per architect review 2026-06-02 (non-deterministic critic output adds commit-risk to the otherwise-mechanical implementation iter).
 - [ ] Coordinate with P071 (parameterised sw-critic supersession via ADR-033) for cross-ticket implementation order. P071's ADR-033 Phase 2 SKILL.md call-site migration will inherit the simplified rubric shape established here; no blocking dependency.
+
+## Fix Released
+
+<!-- no-changeset-reference: local-skill changes under .claude/skills/wr-newsletter/; no npm release. Sibling pattern: P062, P063, P066. -->
+
+- **Released**: 2026-06-02 in commit `5f2a527` (`docs(problems): P064 simplify sw-critic rubric to S/W + context per ADR-035`); related: `2e0348e` (P071 Phase 2 land domain-specific critic agents + SKILL.md migration per ADR-033 + ADR-035).
+- **Fix summary**: 38-check structured rubric replaced with brief editorial prompt asking for STRENGTHS + WEAKNESSES + optional RELEVANT CONTEXT, with explicit coverage-partitioning notes for sibling gates (cog-a11y, voice-and-tone, content-risk). Wardley critic rubric similarly simplified to brief editorial prompt. accepted_overrides parameter removed from SKILL.md steps 9 and 15 invocations. SKILL.md + draft-template.md references to specific check_N IDs replaced with editorial-quality descriptions.
+- **Awaiting user verification**: one full prep+finalise newsletter cycle (per ADR-035 Confirmation criterion 5). Triggers on next `/wr-newsletter` run; verify via STRENGTHS + WEAKNESSES + CONTEXT shape outputs AND round-3 exhaustion frequency dropping relative to the structured-rubric baseline.
 
 ## Dependencies
 
