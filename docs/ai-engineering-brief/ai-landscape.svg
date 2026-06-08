@@ -14,7 +14,7 @@
   .evolve-label { font-size: 11px; fill: #c44; }
 </style>
 <rect width="1200" height="800" fill="white"/>
-<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-05-31)</text>
+<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-06-07)</text>
 <line x1="80" y1="60" x2="80" y2="720" stroke="#333" stroke-width="1.5"/>
 <line x1="80" y1="720" x2="1140" y2="720" stroke="#333" stroke-width="1.5"/>
 <polygon points="1140,720 1132,716 1132,724" fill="#333"/>
@@ -58,8 +58,8 @@
 <circle cx="461.59999999999997" cy="469.2" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="406" y1="423.00000000000006" x2="586.8" y2="423.00000000000006" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="588.8" cy="423.00000000000006" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
-<line x1="427.2" y1="324" x2="608" y2="324" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
-<circle cx="610" cy="324" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
+<line x1="427.2" y1="324" x2="650.4000000000001" y2="324" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
+<circle cx="652.4000000000001" cy="324" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="247" y1="205.2" x2="449" y2="205.2" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="451" cy="205.2" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <text x="620" y="83.00000000000003" class="anchor-label">Ship Software Under AI Disruption</text>

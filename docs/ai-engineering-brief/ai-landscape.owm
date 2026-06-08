@@ -1,4 +1,4 @@
-title AI Engineering Landscape (Week ending 2026-05-31)
+title AI Engineering Landscape (Week ending 2026-06-07)
 
 // context: the Engineering Leader persona is responsible for shipping software
 // while the AI tooling underneath them shifts weekly. This map shows the
@@ -47,5 +47,5 @@ evolve Foundation Models 0.86
 evolve Model Evaluation Frameworks 0.48
 evolve AI Security Tooling 0.36
 evolve Prompt and Context Management 0.48
-evolve AI Regulation and Compliance 0.50
+evolve AI Regulation and Compliance 0.54
 evolve Agentic Engineering Practices 0.35
