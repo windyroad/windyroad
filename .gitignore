@@ -69,6 +69,9 @@ out
 .claude/.accessibility-agents-version
 .claude/scheduled_tasks.lock
 
+# Vendored third-party Claude Code skills (em-dash policy incompatibility with upstream prose; revisit if hook gains a per-path exemption)
+.claude/skills/impeccable/
+
 # Old/archive directories
 old/
 profile/
