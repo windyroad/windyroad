@@ -2,7 +2,7 @@
 
 Risk assessment for pipeline actions (commit, push, release), aligned with ISO 31000.
 
-**Last reviewed:** 2026-05-25
+**Last reviewed:** 2026-06-09
 
 ## Business Context
 
