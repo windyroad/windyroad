@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-04 **P064 verification pending**: Newsletter critic 38-check rubric simplification (fix shipped commit `5f2a527` on 2026-06-02; sw-critic rubric replaced with brief STRENGTHS + WEAKNESSES + optional RELEVANT CONTEXT prompt per ADR-035; wardley critic rubric similarly simplified; accepted_overrides parameter removed from SKILL.md steps 9 + 15; check_N references replaced with editorial-quality descriptions). Local-skill change, no changeset (sibling pattern: P062 + P063 + P066). Removed from WSJF Rankings; added to Verification Queue at Released=2026-06-02. Triggers verification on next `/wr-newsletter` run; verify via STRENGTHS + WEAKNESSES + CONTEXT shape outputs AND round-3 exhaustion frequency dropping relative to structured-rubric baseline (ADR-035 Confirmation criterion 5).
+> Last reviewed: 2026-06-14 **P088 captured**: architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation (lightweight aside via /wr-itil:capture-problem during the P071 ADR-033/ADR-035 accept iter).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -32,6 +32,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 3 (Medium) | Open | M | 2026-06-03 | internal |
+| 1.5 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 3 (Medium) | Open | M | 2026-06-14 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
