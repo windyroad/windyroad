@@ -1,13 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "*",
       "Bash",
       "Edit",
       "Edit(.claude/**)",
-      "Write(.claude/**)",
-      "Edit:.claude/skills/**",
-      "Write:.claude/skills/**"
+      "Write(.claude/**)"
     ]
   },
   "hooks": {
