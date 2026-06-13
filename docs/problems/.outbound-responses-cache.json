@@ -1,0 +1,173 @@
+{
+  "last_checked": "2026-06-13T22:50:13Z",
+  "tickets": {
+    "P023": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/80",
+      "last_checked_at": "2026-06-13T22:48:55Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:48:29Z"
+    },
+    "P030": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/84",
+      "last_checked_at": "2026-06-13T22:48:58Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:41:15Z"
+    },
+    "P058": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/120",
+      "last_checked_at": "2026-06-13T22:49:03Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:36:56Z"
+    },
+    "P085": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/217",
+      "last_checked_at": "2026-06-13T22:49:09Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-06-03T02:43:37Z"
+    },
+    "P086": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/218",
+      "last_checked_at": "2026-06-13T22:49:13Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-06-03T02:45:35Z"
+    },
+    "P087": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/219",
+      "last_checked_at": "2026-06-13T22:49:16Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-06-03T02:46:45Z"
+    },
+    "P012": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/86",
+      "last_checked_at": "2026-06-13T22:49:22Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:41:11Z"
+    },
+    "P028": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/82",
+      "last_checked_at": "2026-06-13T22:49:26Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:44:59Z"
+    },
+    "P021": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/78",
+      "last_checked_at": "2026-06-13T22:49:33Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:48:33Z"
+    },
+    "P022": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/79",
+      "last_checked_at": "2026-06-13T22:49:37Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:48:31Z"
+    },
+    "P027": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/81",
+      "last_checked_at": "2026-06-13T22:49:40Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:45:02Z"
+    },
+    "P029": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/83",
+      "last_checked_at": "2026-06-13T22:49:43Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:44:57Z"
+    },
+    "P031": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/85",
+      "last_checked_at": "2026-06-13T22:49:46Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 2,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:41:13Z"
+    },
+    "P033": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/87",
+      "last_checked_at": "2026-06-13T22:49:50Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:41:08Z"
+    },
+    "P042": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/183",
+      "last_checked_at": "2026-06-13T22:49:53Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-31T00:26:30Z"
+    },
+    "P046": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/121",
+      "last_checked_at": "2026-06-13T22:49:56Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:31:56Z"
+    },
+    "P047": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/110",
+      "last_checked_at": "2026-06-13T22:49:59Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 1,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-15T05:37:01Z"
+    },
+    "P049": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/184",
+      "last_checked_at": "2026-06-13T22:50:02Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-31T03:06:08Z"
+    },
+    "P052": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/187",
+      "last_checked_at": "2026-06-13T22:50:05Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-31T03:12:45Z"
+    },
+    "P060": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/185",
+      "last_checked_at": "2026-06-13T22:50:07Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-31T03:08:09Z"
+    },
+    "P073": {
+      "upstream_url": "https://github.com/windyroad/agent-plugins/issues/186",
+      "last_checked_at": "2026-06-13T22:50:11Z",
+      "last_seen_state": "OPEN",
+      "last_seen_comment_count": 0,
+      "last_seen_labels": [],
+      "last_seen_updated_at": "2026-05-31T03:10:19Z"
+    }
+  }
+}
