@@ -1,5 +1,5 @@
 ---
-status: "proposed"
+status: "accepted"
 date: 2026-05-31
 human-oversight: confirmed
 oversight-date: 2026-05-31
@@ -133,10 +133,10 @@ Confirmation tracking (updated 2026-06-02):
 2. DONE: `newsletter-critic-rubric.md` simplified per ADR 035 in 2026-06-01 (work-problems iter 1 of P064).
 3. DONE: `wardley-critic-rubric.md` simplified per ADR 035 in 2026-06-01 (same iter as criterion 2).
 4. DONE: `.claude/skills/wr-newsletter/SKILL.md` step 15 dropped `accepted_overrides` list in 2026-06-02 (work-problems iter 2 of P071). The migration to `wr-newsletter-critic` invocation per ADR 033 retired the `accepted_overrides:` list-arg from the step-15 prompt; the new agent contract does not accept the list. Critic-invocation prose at steps 9 and 15 updated to call domain-specific agents.
-5. PENDING: one full prep + finalise newsletter cycle. Same cycle that closes ADR 033 criterion (d).
-6. PARTIAL: P071 fix strategy updated 2026-06-02 (Investigation Tasks ticked through Phase 2). P064 fix strategy update is in scope for a separate iter (still tracked under P064).
+5. DONE (2026-06-14): The Shift Issue 08 (published 2026-06-08) ran one full prep + finalise cycle exercising the simplified critic shape end-to-end and produced a publish-decision verdict matching editorial judgement. Same cycle that closed ADR 033 criterion (d). Audit trail at `src/newsletters/published/leader/2026-06-08/2026-06-08.reviews.md`: the newsletter critic emitted STRENGTHS + WEAKNESSES editorial-prose findings (no numbered checks, no accepted_overrides list), prep 3 rounds to PASS, finalise 2 rounds to PASS.
+6. DONE (2026-06-14): both fix strategies reference this ADR. P064 references it at lines 67/70/73/79/81; P071 references it at lines 40/42/45. The 2026-06-02 PARTIAL note is superseded: P064's references landed in subsequent iters (P064 is now in the verification queue).
 
-Status will flip to `.accepted` after criteria 5 + 6 close.
+Status flipped to `.accepted` on 2026-06-14 after criteria 5 + 6 closed.
 
 ## Reassessment Criteria
 

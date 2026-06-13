@@ -167,5 +167,5 @@ Reassess after four editions on the following triggers:
 - ADR-019 (`docs/decisions/019-capture-transcript-artifact.proposed.md`). Composes: 11b reads the capture transcript at the existing read site; the split preserves the read.
 - ADR-024 (`docs/decisions/024-url-verification-gate-in-wr-newsletter.proposed.md`). Composes: step 11.5 URL verification gate fires after 11b (full body draft), unchanged.
 - ADR-032 (`docs/decisions/032-newsletter-editorial-discipline-policy.proposed.md`). Amends: ADR-032 defined the shape (thesis-first intro plus three deep items); this ADR defines the composition order in which the shape's components are authored (thesis-first intro as element 1 is authored first, by name, in sub-step 11a).
-- ADR-035 (`docs/decisions/035-critic-rubric-shape-is-strengths-weaknesses-plus-context.proposed.md`). Composes: critic gates fire after step 11 on the combined 11a plus 11b output, unchanged.
+- ADR-035 (`docs/decisions/035-critic-rubric-shape-is-strengths-weaknesses-plus-context.accepted.md`). Composes: critic gates fire after step 11 on the combined 11a plus 11b output, unchanged.
 - Composes with P064 (newsletter critic complexity), P070 (draft-template gap), P075 (headline clarity gates) as the newsletter-pipeline editorial-discipline cluster.
