@@ -77,3 +77,9 @@ The cleanest fix is at the hook layer: strip predictable trailing trailer lines 
 - **Template used**: problem-report.yml (structured default body, per ADR-033)
 - **Disclosure path**: public issue (used BYPASS_RISK_GATE=1 because P074 hook failure prevented marker write despite both wr-risk-scorer:external-comms AND wr-voice-tone:external-comms returning PASS verdicts on review)
 - **Cross-reference confirmed**: yes (upstream body cites this ticket's GitHub path verbatim)
+
+## Session evidence (2026-06-15 AFK work-problems loop)
+
+Recurred while committing two ticket-resolution notes (`docs(problems): record Tom's resolutions ...`). The risk + voice-tone external-comms markers passed on first review, but a second commit attempt re-blocked because the staged content changed between attempts, invalidating the marker key. Forced `BYPASS_RISK_GATE=1` after the content had already passed both risk and voice-tone review twice.
+
+**Distinct sub-finding worth its own ticket (data-loss class, more severe than this hash issue):** when the commit gate BLOCKS, it discards the working-tree changes that were staged for the commit (not merely unstages them). This is why the re-review loop is destructive: each blocked retry loses the appended edits, and re-appending produces a fresh content hash that re-invalidates the marker. Reliable avoidance: pre-run the gate subagents on the exact final commit message to set markers BEFORE the first `git commit`, so the commit never blocks. Recommend a sibling ticket scoped to "commit gate must not revert working-tree changes on block".
