@@ -86,3 +86,7 @@ c. **Keep the target, accept the recurring NEEDS_REVISION_OPTIONAL verdict**: su
 - .claude/skills/wr-newsletter/personas/leader.md (where a target override would land)
 - 2026-05-15.reviews.md (cog-a11y review block recording the 11.58 score and 8 findings)
 - Captured via /wr-retrospective:run-retro on 2026-05-15 session.
+
+## Resolution (Tom, 2026-06-15)
+
+Reading-level target decided: **keep Grade 10 for the leader register (Option D)**. Accept the recurring NEEDS_REVISION_OPTIONAL advisory verdict from the cog-a11y gate; surface residual findings each retro. No frontmatter target change, no new ADR, no SKILL.md Step 15.4 change. Resolved-by-decision (accept current behaviour). Follow-on close-transition pending.
