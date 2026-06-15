@@ -63,7 +63,7 @@ Read the resolved persona config: `.claude/skills/wr-newsletter/personas/<person
 - `<source-weighting>`: tier ordering specific to the persona. Used at step 4 to break ties when shortlisting.
 - `<three-lens-weighting>`: e.g. "human > operational > technical" or the inverse. Used at step 4 (lens scoring) and step 9.5 (persona-weighted ranking, once the map has been updated).
 - `<voice-addendum>`: persona-specific voice notes (vocabulary preferences, evidence-stance language). Combined with the base `docs/VOICE-AND-TONE.md` rules at steps 11a (theme anchor) + 11b (body draft) per ADR-037.
-- `<cta-description>` and `<cta-invitation>`: variants from the persona config; pick one each per edition, rotating week-to-week to avoid repetition.
+- `<cta-invitation>`: invitation variants from the persona config; pick one per edition, rotating week-to-week to avoid repetition. There is no `<cta-description>` (services-pitch) variant: the CTA is invitation + closing line only (P090; ADR-023 funnel pause).
 - `<welcome-line>`: persona-specific first-edition welcome text.
 - `<headline-pattern>`: e.g. `"# <Title>\n\n*The Shift, AI engineering, week ending YYYY-MM-DD*"` or the Tokens Spent variant. The `YYYY-MM-DD` in "week ending" is `<week-ending>` (the Sunday), not `<publication-date>` (the publish day).
 - `<draft-folder>`: e.g. `src/newsletters/drafts/leader/` or `src/newsletters/drafts/developer/`.
@@ -444,7 +444,7 @@ Using the approved H1, hook lines, and theme statement from 11a, produce the ful
 - For developer persona, label each item's evidence stance as **shipped**, **benchmarked**, **demo**, or **not yet** (J9 + J11 paired). For leader persona, the evidence label is optional; business-consequence framing carries primary weight.
 - One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened (with the primary claim inline-linked), Why it matters to your team, The human angle. Do NOT append a separate `**Source:**` block when the What-happened text already carries inline links (structural invariant, P089).
 - Item Why-it-matters lines reference the 11a theme where natural (per ADR-037: body threads the approved frame).
-- Closing CTA: pick one `<cta-description>` and one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`.
+- Closing CTA: pick one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`. Do NOT emit a Windy Road services-description sentence (P090): the CTA is invitation + linked `windyroad.com.au` only. This is enforced at save by `check-newsletter-structure.sh` check (g).
 
 Voice rules (enforced by step 13 voice gate):
 - Team voice ("we"), not "I" (ADR 010). The "From Tom" opener is the only place where "I" is permitted.
@@ -463,7 +463,7 @@ Voice rules (enforced by step 13 voice gate):
 
   This is **interim discipline** rule (mirroring ADR-019's inline-discipline-rule pattern for capture-fidelity). **Reassessment trigger**: if Tom logs more than one editorial-meta correction per edition for the next 4 editions after this rule lands, escalate to a detector subagent (`wr-newsletter:editorial-meta-detector`, suggested by P036's original Fix Strategy). The reassessment count starts on the first edition that runs against this rule. Until escalation, the rule is enforced by the step 13 voice gate plus the next reviewer's manual reading of the brief body.
 
-**Structural invariants (P089).** The five LLM review gates check voice, content-risk, editorial quality, reader-experience, and cross-edition consistency; none checks deterministic structural format. Produce these six invariants by construction (a deterministic lint blocks the step 16 save when any is violated):
+**Structural invariants (P089, P090).** The five LLM review gates check voice, content-risk, editorial quality, reader-experience, and cross-edition consistency; none checks deterministic structural format. Produce these seven invariants by construction (a deterministic lint blocks the step 16 save when any is violated):
 
 1. **No trailing `**Source:**` block** in an item whose What-happened text already carries inline links. Inline-link the claim; do not also append a Source line.
 2. **Do not name two or more outlets on a line without linking them** ("corroborated by Reuters, FT, NYT, and WSJ" is banned). Link the outlet when you name it; a single back-reference to an already-linked article is fine.
@@ -471,6 +471,7 @@ Voice rules (enforced by step 13 voice gate):
 4. **H1 carries the `Issue NN:` prefix** matching published editions (`# Issue 09: <one-liner>`), set from the edition number at step 11a.
 5. **A `---` horizontal rule precedes the closing CTA block.**
 6. **Model names are consistent across the brief and the `.linkedin.md` sibling** (write "Gemma 4 12B" in both, not "Gemma 4 12B" in the brief and "Gemma 4" in the post).
+7. **No services-pitch sentence in the closing CTA (P090).** The CTA block (everything after the final `---` horizontal rule) carries at most one non-blank, non-link prose line: the rotating invitation. The `windyroad.com.au` closing line and blank lines do not count. A Windy Road / Tokens Spent services-description sentence is a disallowed second prose line.
 
 These are codified in `assets/draft-template.md` (the "Structural invariants" section) and enforced at save by `scripts/check-newsletter-structure.sh`.
 
@@ -583,7 +584,7 @@ For every URL that appears in the draft body, verify the URL resolves and the ar
 - The From-Tom opener (rare; some editions cite a personal artefact).
 - Frontmatter source links (if any).
 
-Do NOT verify outbound CTA URLs that are part of the persona's `<cta-description>` / `<cta-invitation>` rotation (windyroad.com.au and friends); those are owned by the persona config and verified there, not per-edition.
+Do NOT verify outbound CTA URLs that are part of the persona's `<cta-invitation>` rotation or the closing line (windyroad.com.au and friends); those are owned by the persona config and verified there, not per-edition.
 
 **Transport selection (per URL).** Choose the fetch transport based on publisher class:
 

@@ -44,18 +44,14 @@ Per-edition unique POV-carrying H1, plus subtitle:
 
 ## CTA
 
-Description variants (rotate weekly):
-
-- "Tokens Spent is the weekly signal cut for engineers who actually ship code with AI tools. We read the noise so you can spend your tokens on work that matters."
-- "Tokens Spent: a working engineer's filter on the week in AI tooling. Default verdict on any tool: skip. Items here earned their slot."
-- "Tokens Spent helps engineers tell shipped from demo and triage new tools in under thirty minutes. Weekly. Skeptical by default."
+The CTA is one rotating invitation plus the closing line only. Do NOT add a Tokens Spent / Windy Road services-description sentence (P090): this is the brand-and-community surface, not the funnel (ADR-023 funnel pause; persona is non-commercial by design).
 
 Invitation variants (rotate):
 
 - "Reply with a tool you want us to pressure-test next week."
 - "Forward this to an engineer who is drowning in AI announcements."
 - "Reply with a tool you tried and abandoned, and why."
-- "Tell us what you are actually shipping with this week."
+- "Tell us what you are shipping with this week."
 
 Closing line: `windyroad.com.au` (no consulting-booking link in body; this is the brand-and-community surface, not the funnel.)
 

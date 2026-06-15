@@ -141,4 +141,35 @@ describe('check-newsletter-structure.sh', () => {
     const r = run(fixture(VALID_BRIEF, undefined));
     expect(r.status, r.stderr).toBe(0);
   });
+
+  it('(g) flags a services-pitch sentence in the CTA block', () => {
+    const broken = VALID_BRIEF.replace(
+      'Tell us the conversation you are having with your CTO this week.',
+      'Windy Road runs Patch Fitness Assessments for engineering teams: one-week audits that leave you with a prioritised fix list.\n\nTell us the conversation you are having with your CTO this week.',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[g]');
+  });
+
+  it('(g) passes a CTA whose closing line is a bare domain (no markdown link)', () => {
+    const bareClosing = VALID_BRIEF.replace(
+      '[windyroad.com.au](https://windyroad.com.au)',
+      'windyroad.com.au',
+    );
+    const r = run(fixture(bareClosing, VALID_LINKEDIN));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('(g) flags a services pitch even when the closing line is a bare domain', () => {
+    const broken = VALID_BRIEF
+      .replace('[windyroad.com.au](https://windyroad.com.au)', 'windyroad.com.au')
+      .replace(
+        'Tell us the conversation you are having with your CTO this week.',
+        'Windy Road helps engineering leaders keep their pipelines patch fit.\n\nTell us the conversation you are having with your CTO this week.',
+      );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[g]');
+  });
 });

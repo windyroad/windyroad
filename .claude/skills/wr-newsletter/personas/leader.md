@@ -44,11 +44,7 @@ The `YYYY-MM-DD` in "week ending" is `<week-ending>` (the Sunday that ends the e
 
 ## CTA
 
-Description variants (rotate weekly):
-
-- "Windy Road runs Patch Fitness Assessments for engineering teams: one-week audits that leave you with a prioritised fix list and working guardrails."
-- "Windy Road helps engineering leaders keep their pipelines patch fit as the pace of change picks up: assessments, working guardrails, and hands-on remediation."
-- "Windy Road works with engineering teams that need to move faster without breaking things: audits, guardrails, shipped fixes."
+The CTA is one rotating invitation plus the closing line only. Do NOT add a Windy Road services-description sentence (P090): the brief is a brand-and-community surface, not a sales funnel (ADR-023 funnel pause).
 
 Invitation variants (rotate):
 

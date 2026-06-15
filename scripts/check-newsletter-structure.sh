@@ -24,6 +24,11 @@
 #   d  the H1 matches "^# Issue NN: " (the published-edition title prefix)
 #   e  a "---" horizontal rule appears after the last section, before the CTA
 #   f  model-name strings are consistent between the brief and the .linkedin.md
+#   g  no services-pitch sentence in the CTA block (P090): the block after the
+#      final "---" carries at most one non-blank prose line (the invitation);
+#      the windyroad.com.au closing line (bare or markdown-linked) and blanks do
+#      not count, so a "Windy Road runs ..." / "Tokens Spent helps ..." pitch is
+#      a disallowed second prose line
 #
 # Notes on determinism:
 #   Check (b) fires on a line that has no markdown link AND names two or more
@@ -150,6 +155,29 @@ if [ -f "$linkedin" ]; then
   done <<EOF
 $fams
 EOF
+fi
+
+# --- (g) no services-pitch sentence in the CTA block (P090) ------------------
+# The CTA block is everything after the final "---" horizontal rule. It carries
+# at most one non-blank prose line: the rotating invitation. The closing line
+# (bare "windyroad.com.au" or a "[windyroad.com.au](...)" markdown link) and
+# blank lines do not count. A services-description sentence ("Windy Road runs
+# ...", "Tokens Spent helps ...") is a disallowed second prose line. Citing the
+# second prose line keeps the message actionable.
+cta_hr_ln=$(printf '%s\n' "$body" | awk -F'\t' '$2 == "---" { ln = $1 } END { print ln + 0 }')
+if [ "$cta_hr_ln" -gt 0 ]; then
+  read -r cta_count cta_extra_ln < <(printf '%s\n' "$body" | awk -F'\t' -v h="$cta_hr_ln" '
+    $1 + 0 > h {
+      line = $2;
+      if (line ~ /^[[:space:]]*$/) next;       # skip blank lines
+      if (line ~ /\]\(/) next;                  # skip markdown-link lines
+      if (line ~ /windyroad\.com\.au/) next;    # skip the bare-domain closing line
+      c++; if (c == 2) second = $1;
+    }
+    END { print c + 0, second + 0 }')
+  if [ "${cta_count:-0}" -gt 1 ]; then
+    fail g "$brief:${cta_extra_ln}: services-description sentence in CTA block; the CTA must be one invitation line plus the windyroad.com.au closing line only (P090)"
+  fi
 fi
 
 # --- verdict ------------------------------------------------------------------
