@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-15 **P089-P092 captured** (retro after The Shift Issue 09 publish): P089 wr-newsletter drafter structural + sourcing defects the five gates do not catch; P090 wr-newsletter CTA persistently includes the services pitch despite repeated correction; P091 wr-newsletter should ask the user for unresolvable source URLs instead of dropping attribution; P092 push:watch pull-rebase collides with amend-chains and false-fails on transient network errors. All deferred-rated, re-rate at next /wr-itil:review-problems.
+> Last reviewed: 2026-06-15 (review-problems pass). Re-rated the 5 newest deferred captures: P089 to WSJF 8 (Sev 16, newsletter gate-weakness, recurring) now ranks #2; P090 + P091 to WSJF 6 (small-effort newsletter fixes); P092 to WSJF 4.5 (push:watch robustness); P088 to WSJF 3. Other 24 tickets carried forward at existing WSJF (not re-assessed this pass). Relevance-close pass surfaced 15 CLOSE-CANDIDATE-WITH-CAVEAT verdicts, ALL withheld as consumer-repo false-positives (file-no-longer-exists matched upstream packages/ paths absent here; ADR-shipped-confirmed matched context-mentions, not closure drivers); none auto-closed.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,16 +10,21 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 12 | P071 | ADR-016 parameterised sw-critic pattern has poor discoverability + UX; supersede with domain-specific critic … | 16 (High) | Open | M | 2026-05-30 | internal |
+| 8 | P089 | wr-newsletter drafter emits structural + sourcing defects the five gates do not catch | 16 (High) | Open | M | 2026-06-15 | internal |
+| 6 | P090 | wr-newsletter CTA persistently includes the Windy Road services pitch despite repeated correction | 6 (Medium) | Open | S | 2026-06-15 | internal |
+| 6 | P091 | wr-newsletter should ask the user for unresolvable source URLs instead of dropping/degrading attribution | 6 (Medium) | Open | S | 2026-06-15 | internal |
 | 5 | P065 | Newsletter cog-a11y persistently scores Grade 11+ vs Grade 10 target on leader register | 10 (High) | Open | M | 2026-05-15 | internal |
 | 5 | P081 | Newsletter pipeline missing external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review | 12 (High) | Open | M | 2026-06-01 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
+| 4.5 | P092 | push:watch pull-rebase collides with amend-chains and false-fails on transient network errors | 9 (Medium) | Open | M | 2026-06-15 | internal |
 | 4 | P072 | ADR-022 scheduled-cron deps refresh PR is wrong shape; push-fail-fast + separate fix flow is the desired patt… | 8 (Medium) | Open | M | 2026-05-30 | internal |
 | 4 | P079 | /wr-newsletter step 15.5 LinkedIn post drafter generates auto-share-incompatible extras (Image section, Read-full-issue link line) | 10 (Medium) | Open | S | 2026-06-01 | internal |
 | 3 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Low) | Open | S | 2026-05-13 | internal |
 | 3 | P070 | Newsletter draft-template does not codify the three-deep-items-plus-notes editorial discipline | 3 (Low) | Open | S | 2026-05-25 | internal |
 | 3 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create… | 6 (Medium) | Open | M | 2026-05-31 | internal |
 | 3 | P075 | Newsletter drafter headings fail clarity test, gates do not catch | 3 (Medium) | Open | M | 2026-05-31 | internal |
+| 3 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 (Medium) | Open | M | 2026-06-14 | internal |
 | 2.5 | P067 | Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection | 5 (Medium) | Open | M | 2026-05-15 | internal |
 | 2 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned pus… | 3 (Low) | Open | M | 2026-05-12 | internal |
@@ -32,11 +37,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 3 (Medium) | Open | M | 2026-06-03 | internal |
-| 1.5 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 3 (Medium) | Open | M | 2026-06-14 | internal |
-| 1.5 | P089 | wr-newsletter drafter emits structural + sourcing defects the five gates do not catch | 3 (Medium) | Open | M | 2026-06-15 | internal |
-| 1.5 | P090 | wr-newsletter CTA persistently includes the Windy Road services pitch despite repeated correction | 3 (Medium) | Open | S | 2026-06-15 | internal |
-| 1.5 | P091 | wr-newsletter should ask the user for unresolvable source URLs instead of dropping/degrading attribution | 3 (Medium) | Open | S | 2026-06-15 | internal |
-| 1.5 | P092 | push:watch pull-rebase collides with amend-chains and false-fails on transient network errors | 3 (Medium) | Open | M | 2026-06-15 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue

@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-06-14
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-06-15)
 **Origin**: internal
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: M
+**WSJF**: 3 = (6 x 1) / 2
 **JTBD**: JTBD-006
 **Persona**: plugin-developer
 
