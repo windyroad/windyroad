@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-14 **P088 captured**: architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation (lightweight aside via /wr-itil:capture-problem during the P071 ADR-033/ADR-035 accept iter).
+> Last reviewed: 2026-06-15 **P089-P092 captured** (retro after The Shift Issue 09 publish): P089 wr-newsletter drafter structural + sourcing defects the five gates do not catch; P090 wr-newsletter CTA persistently includes the services pitch despite repeated correction; P091 wr-newsletter should ask the user for unresolvable source URLs instead of dropping attribution; P092 push:watch pull-rebase collides with amend-chains and false-fails on transient network errors. All deferred-rated, re-rate at next /wr-itil:review-problems.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -33,6 +33,10 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 3 (Medium) | Open | M | 2026-06-14 | internal |
+| 1.5 | P089 | wr-newsletter drafter emits structural + sourcing defects the five gates do not catch | 3 (Medium) | Open | M | 2026-06-15 | internal |
+| 1.5 | P090 | wr-newsletter CTA persistently includes the Windy Road services pitch despite repeated correction | 3 (Medium) | Open | S | 2026-06-15 | internal |
+| 1.5 | P091 | wr-newsletter should ask the user for unresolvable source URLs instead of dropping/degrading attribution | 3 (Medium) | Open | S | 2026-06-15 | internal |
+| 1.5 | P092 | push:watch pull-rebase collides with amend-chains and false-fails on transient network errors | 3 (Medium) | Open | M | 2026-06-15 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
