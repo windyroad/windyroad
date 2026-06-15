@@ -1,6 +1,6 @@
 # Problem 091: wr-newsletter should ask the user for unresolvable source URLs instead of dropping or degrading attribution
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-15
 **Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-06-15)
 **Origin**: internal
@@ -43,3 +43,15 @@ The URL-verification gate (step 11.5, ADR-024) handles transport selection and s
 ## Related
 
 - Retro 2026-06-15. Composes with ADR-024 (URL verification gate), P089 (drafter-discipline cluster: name-without-link is the surface symptom this ticket's ask-step prevents). Reinforces the reader-respect + attribution-fidelity direction.
+
+## Fix Released
+
+Fixed in `.claude/skills/wr-newsletter/SKILL.md` (repo-local skill; no changeset):
+
+- **Step 11.5 (URL verification gate, ADR-024)**: amended the `HTTP 404 (or 403/5xx)` save-gate row to route an unresolvable URL to a new terminal fallback before any drop, and added the "Unresolvable-URL terminal fallback: ask the user before dropping (P091)" subsection. Ordered sequence: (1) automated transports first (existing Playwright / curl / DuckDuckGo ladder), (2) collect unresolved citations without dropping, (3) fire a SINGLE batched `AskUserQuestion` (per ADR-013 Rule 1) for the canonical URLs, (4) drop a citation ONLY after the user declines. AFK / non-interactive carve-out per ADR-013 Rule 6: record unresolved citations in the `## URL Verification` block of `.reviews.md` with verdict `UNRESOLVED (awaiting user URL)` and surface at finalise (step 17) rather than silently dropping.
+- **Step 11b (drafter discipline)**: added "Unresolvable source URLs: carry to the ask, do not degrade (P091)" after the structural-invariants list. When the drafter cannot resolve a canonical link, it must not satisfy invariant 2 by dropping the outlet name nor emit a name-without-link; it carries the citation to the step 11.5 fallback.
+- **Composition (not duplication) with P089**: cross-referenced `scripts/check-newsletter-structure.sh` check (b) (outlet-named-without-link). The lint catches the OUTPUT symptom at save; this ticket prevents PRODUCING the symptom by asking first. No lint logic duplicated.
+
+Architect gate: PASS (refinement within ADR-024's decision shape; no new ADR; AFK carve-out correctly applies ADR-013 Rule 6; no ADR-026 conflict). JTBD gate: PASS (serves JTBD-200 "excluded on purpose, not missed"; JTBD-203 / JTBD-205 attribution credibility; AFK record-and-surface serves JTBD-006).
+
+Awaiting verification on the next `/wr-newsletter` cycle that hits an unresolvable paywalled / bare-domain citation: the pipeline asks Tom for the URL (or records `UNRESOLVED (awaiting user URL)` on the AFK path) rather than dropping the outlet name.
