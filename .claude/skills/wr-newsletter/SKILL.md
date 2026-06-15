@@ -442,7 +442,7 @@ Using the approved H1, hook lines, and theme statement from 11a, produce the ful
 - The approved headline + subtitle from 11a.
 - One-sentence intro that elaborates the 11a theme statement (the body opener leads with the approved theme; do not author a fresh intro that competes with the anchor).
 - For developer persona, label each item's evidence stance as **shipped**, **benchmarked**, **demo**, or **not yet** (J9 + J11 paired). For leader persona, the evidence label is optional; business-consequence framing carries primary weight.
-- One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened, Map movement, Why it matters to your team, The human angle, Source.
+- One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened (with the primary claim inline-linked), Why it matters to your team, The human angle. Do NOT append a separate `**Source:**` block when the What-happened text already carries inline links (structural invariant, P089).
 - Item Why-it-matters lines reference the 11a theme where natural (per ADR-037: body threads the approved frame).
 - Closing CTA: pick one `<cta-description>` and one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`.
 
@@ -462,6 +462,17 @@ Voice rules (enforced by step 13 voice gate):
   - **Self-referential editorial commitment**: "I call that test theatre" (process artefact framing); rephrase as the claim the editorial position rests on, not as the editorial position itself.
 
   This is **interim discipline** rule (mirroring ADR-019's inline-discipline-rule pattern for capture-fidelity). **Reassessment trigger**: if Tom logs more than one editorial-meta correction per edition for the next 4 editions after this rule lands, escalate to a detector subagent (`wr-newsletter:editorial-meta-detector`, suggested by P036's original Fix Strategy). The reassessment count starts on the first edition that runs against this rule. Until escalation, the rule is enforced by the step 13 voice gate plus the next reviewer's manual reading of the brief body.
+
+**Structural invariants (P089).** The five LLM review gates check voice, content-risk, editorial quality, reader-experience, and cross-edition consistency; none checks deterministic structural format. Produce these six invariants by construction (a deterministic lint blocks the step 16 save when any is violated):
+
+1. **No trailing `**Source:**` block** in an item whose What-happened text already carries inline links. Inline-link the claim; do not also append a Source line.
+2. **Do not name two or more outlets on a line without linking them** ("corroborated by Reuters, FT, NYT, and WSJ" is banned). Link the outlet when you name it; a single back-reference to an already-linked article is fine.
+3. **Keep the `### Also worth noting` section** as a standalone closing coda; do not fold it into the items.
+4. **H1 carries the `Issue NN:` prefix** matching published editions (`# Issue 09: <one-liner>`), set from the edition number at step 11a.
+5. **A `---` horizontal rule precedes the closing CTA block.**
+6. **Model names are consistent across the brief and the `.linkedin.md` sibling** (write "Gemma 4 12B" in both, not "Gemma 4 12B" in the brief and "Gemma 4" in the post).
+
+These are codified in `assets/draft-template.md` (the "Structural invariants" section) and enforced at save by `scripts/check-newsletter-structure.sh`.
 
 **Capture fidelity (P015 + ADR 019).** When composing each Item block from a step-10 Adjust capture, preserve the load-bearing noun-phrases, first-person observations, and named artifacts from the Adjust text verbatim wherever the LinkedIn column can carry them. Specifically:
 
@@ -837,6 +848,14 @@ Step 16 writes the LinkedIn post body, image description, alt text, and posting 
 This step writes the brief and its sibling artefact files. Per ADR-026 (companion tickets P038 + P041), reviews and meta content live in sibling files, not inline in the brief: the brief contains only frontmatter + body + CTA. Per P040, all draft and companion-file paths use the `<publication-date>` binding (resolved at step 0 to the `<publish-day>` date in `<publish-timezone>`), not the prep-run date.
 
 Use the `Write` tool. If a file for `<publication-date>` already exists at the path being written, ask Tom whether to overwrite or append a suffix like `-2` to the filename.
+
+**Pre-save structural lint (P089).** After writing the brief `.md` (and, in `phase=finalise` / `phase=full`, its `.linkedin.md` sibling), run the deterministic structural lint and block the save on any violation:
+
+```bash
+scripts/check-newsletter-structure.sh "<draft-folder>/<publication-date>.md"
+```
+
+The lint auto-derives the `.linkedin.md` sibling from the brief path; pass it explicitly as a second argument only when it lives elsewhere. Exit 0 means the six structural invariants (step 11b) hold; proceed. Exit 1 prints one `FAIL [<id>] <file>:<line>: <message>` line per violation; fix the brief (or sibling) in place and re-run the lint until it exits 0 before continuing. Exit 2 is a usage / IO error (wrong path); correct the invocation. In `phase=prep` the LinkedIn sibling does not yet exist, so check (f) is skipped automatically; run the lint against the `.prep.md` brief path. The lint is deterministic and cheap; it does not replace the LLM gates (steps 13-15.5), it complements them by catching format defects those gates miss.
 
 Branch on phase:
 

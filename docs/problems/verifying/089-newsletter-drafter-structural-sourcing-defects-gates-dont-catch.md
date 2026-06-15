@@ -1,6 +1,6 @@
 # Problem 089: wr-newsletter drafter emits structural + sourcing defects the five gates do not catch
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-15
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-06-15)
 **Origin**: internal
@@ -47,6 +47,22 @@ The five gates are LLM-judgement reviewers tuned for voice, analytical quality, 
 - **Lint checks (deterministic)**: (a) no `**Source.**` line when the item body already has >=1 markdown link; (b) no bare outlet name (Reuters|FT|NYT|WSJ|Bloomberg|Axios|Politico) outside a markdown link; (c) `### Also worth noting` section present; (d) H1 matches `^# Issue [0-9]+: `; (e) a `---` HR present immediately before the CTA block; (f) model-name strings consistent across brief + `.linkedin.md`.
 - **Rationale**: deterministic checks are cheaper and more reliable than asking the LLM gates to enforce format; this is the same advisory-script + behavioural-bats + skill-edit triplet pattern used for briefing budgets (P099). Composes with P070 (draft-template discipline) and P081 (external-editorial-reviewer) rather than superseding them.
 - **Evidence**: The Shift Issue 09 (commit b837c89), 8 distinct defects across one edition; external editorial review flagged the dated-citation sparseness.
+
+## Resolution
+
+Implemented the advisory-script + behavioural-test + skill-edit triplet from the Fix Strategy:
+
+1. **Deterministic lint** `scripts/check-newsletter-structure.sh` (ASCII-only, no em-dashes) checks the six invariants (a)-(f). Exit 1 with per-violation `FAIL [<id>] <file>:<line>: <message>` lines; exit 0 clean; exit 2 on usage/IO error. Check (b) was tightened during implementation from "any outlet on a link-free line" to "two or more distinct outlets on a link-free line" so it passes the legitimate single-outlet back-reference ("the WSJ piece is worth reading", Issue 09 line 40) while still catching the "corroborated by Reuters, FT, NYT, and WSJ" unlinked-list defect.
+2. **Behavioural test** `scripts/check-newsletter-structure.test.mjs` (vitest, not bats: this repo's TDD runner is vitest, precedent `scripts/render-cover.test.mjs`; the Fix Strategy "bats" wording is the upstream itil-plugin convention). Covers each check positive + negative, plus a missing-sibling skip case, and asserts the just-published Issue 09 brief (`src/newsletters/published/leader/2026-06-15/2026-06-15.md`) is a clean PASS fixture. 10/10 green.
+3. **Skill + template edits**: `.claude/skills/wr-newsletter/SKILL.md` step 11b now lists the six structural invariants and step 16 runs the lint as a blocking pre-save check; `.claude/skills/wr-newsletter/assets/draft-template.md` drops the stale `**Source:**` URL block (it contradicted the existing inline-link rule), codifies the `Issue NN:` H1 prefix, the outlet-must-be-linked rule, the mandatory `### Also worth noting` coda, the pre-CTA `---` rule, and cross-file model-name consistency.
+
+Architect review: PASS (no new ADR required; within the ADR-032 / ADR-024 / ADR-026 umbrella; deterministic format checks are a different class from the editorial-judgement gate ADR-032 rejected). JTBD review: PASS (serves the ratified Engineering Leader newsletter jobs JTBD-001/002/003; no new JTBD/persona).
+
+Scope held to the six lint invariants. The CTA services-pitch (P090) and ask-for-URLs (P091) defects are out of scope by the ticket's own split.
+
+## Fix Released
+
+Committed to master (awaiting orchestrator push + user verification). Repo-local `.claude/skills/` skill + `scripts/` + vitest changes; no npm-shipped package code, so no `.changeset/` entry per the changeset-discipline carve-out (changesets apply only to `packages/*` plugin code; this repo has no `packages/`). Verification trigger: next `/wr-newsletter` prep+finalise cycle saves a brief that the step 16 lint passes first time, plus an intentional defect injected into a draft is caught by the lint before save.
 
 ## Related
 
