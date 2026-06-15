@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-15 (review-problems pass). Re-rated the 5 newest deferred captures: P089 to WSJF 8 (Sev 16, newsletter gate-weakness, recurring) now ranks #2; P090 + P091 to WSJF 6 (small-effort newsletter fixes); P092 to WSJF 4.5 (push:watch robustness); P088 to WSJF 3. Other 24 tickets carried forward at existing WSJF (not re-assessed this pass). Relevance-close pass surfaced 15 CLOSE-CANDIDATE-WITH-CAVEAT verdicts, ALL withheld as consumer-repo false-positives (file-no-longer-exists matched upstream packages/ paths absent here; ADR-shipped-confirmed matched context-mentions, not closure drivers); none auto-closed.
+> Last reviewed: 2026-06-15 **P071 closed** (decision-complete, Open to Closed bypassing Verifying per ADR-079): Tom's Resolution narrows Phase 3 to "no newsletter call-sites remain" (already true; Phase 2 migrated SKILL.md steps 9 + 15 to wr-newsletter-critic + wr-wardley-critic). wr-sw-critic deliberately retained as a wr-blog-only shared agent, not retired. ADR-033 + ADR-035 accepted; wr-blog domain-specific critics deferred to a separate ticket if/when wanted.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 12 | P071 | ADR-016 parameterised sw-critic pattern has poor discoverability + UX; supersede with domain-specific critic … | 16 (High) | Open | M | 2026-05-30 | internal |
 | 8 | P089 | wr-newsletter drafter emits structural + sourcing defects the five gates do not catch | 16 (High) | Open | M | 2026-06-15 | internal |
 | 6 | P090 | wr-newsletter CTA persistently includes the Windy Road services pitch despite repeated correction | 6 (Medium) | Open | S | 2026-06-15 | internal |
 | 6 | P091 | wr-newsletter should ask the user for unresolvable source URLs instead of dropping/degrading attribution | 6 (Medium) | Open | S | 2026-06-15 | internal |
@@ -104,6 +103,7 @@ Closed tickets are listed for audit but excluded from the active backlog:
 - P019 (Claude does not proactively act on ambient dirty state). Closed 2026-05-30 on review-problems batch. Memory note + retro discipline has fired correctly at wrap-up boundaries across multiple sessions.
 - P020 (No dependency update cadence). Closed 2026-05-30 on review-problems batch. Weekly cron `.github/workflows/deps-refresh.yml` has kept the stale-dep gate green since shipping.
 - P025 (no-em-dash.sh has zero coverage of Bash-path file writes). Closed 2026-05-30 on review-problems batch. PostToolUse:Bash hook has blocked em-dash writes and passed contractual marker whitelist across multiple AFK iters, including this session's review-problems run.
+- P071 (ADR-016 parameterised sw-critic pattern has poor discoverability + UX; supersede with domain-specific critics). Closed 2026-06-15 (decision-complete, Open to Closed bypassing Verifying per ADR-079; no fix released by this close). Tom's Resolution narrows Phase 3 to "no newsletter call-sites remain" (already true; Phase 2 migrated SKILL.md steps 9 + 15 to wr-newsletter-critic + wr-wardley-critic). wr-sw-critic is deliberately retained as a wr-blog-only shared agent, not retired. ADR-033 + ADR-035 accepted; the wr-blog domain-specific critics are a separate ticket if/when wanted.
 
 ## Parked
 
