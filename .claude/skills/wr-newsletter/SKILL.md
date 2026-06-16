@@ -841,10 +841,10 @@ For `phase=finalise` and `phase=full`, draft a LinkedIn post that:
 - Opens with a hook line (one sentence) that names the week's theme and the main map movement.
 - Carries the headline H1 from step 11a / 11a-prime.
 - Includes 2-3 bullet items (the strongest items from the brief), each one sentence.
-- Closes with a call-to-read pointing to the published edition (link inserted at publish time).
+- Closes with the rotating CTA invitation (a substance-tied question, e.g. "Reply with the conversation you are having with your CTO this week."), then the `windyroad.com.au` brand sign-off line. Do NOT add a manual "Read the full issue" / "Full edition link in the first comment" line: The Shift publishes via LinkedIn Newsletter auto-share, which auto-injects the article URL card on publish (docs/VOICE-AND-TONE.md auto-share carve-out; P079).
 - Is no longer than the LinkedIn 3000-character limit.
 
-The LinkedIn post carries the cover image from step 12/12-prime as its hero image; alt text from step 12 is reused.
+The published edition's cover image is auto-attached by LinkedIn Newsletter auto-share as the article hero; the LinkedIn post body does NOT carry a separate image attachment or alt-text block (P079).
 
 **Voice review gate on the LinkedIn post (P013).** Before step 16 writes the LinkedIn-post sibling file, run a voice review on the LinkedIn post text the same way step 13 runs on the brief body. The teaser is an external-facing surface; ADR 012 confirmation criterion 1 ("every AI-generated draft artifact has a Review results section showing voice and risk verdicts") applies to the LinkedIn post, not just the brief body. The 2026-04-17 first-edition session caught a reader-respect violation in the teaser via manual review; this gate makes the check automatic.
 
@@ -857,7 +857,7 @@ prompt: "Review the following LinkedIn post for The Shift / Tokens Spent against
 
 If FAIL: fix the flagged passages in the LinkedIn post text and re-run. Do not proceed to step 16 with a voice-failing post. Capture the final voice review block; per ADR-026 it is saved in `<draft-folder>/<publication-date>.reviews.md` under a `## Voice Review (LinkedIn post)` heading alongside the brief-body voice review block, NOT in `<publication-date>.linkedin.md`. The separation preserves fresh-context discipline so the next voice-gate run on the LinkedIn post does not see its own prior verdict.
 
-Step 16 writes the LinkedIn post body, image description, alt text, and posting notes to `<draft-folder>/<publication-date>.linkedin.md` (per ADR-026). Tom edits and posts manually per ADR 013.
+Step 16 writes the LinkedIn post (frontmatter + body only: no section headings, no image block, no posting-notes block, no manual link line) to `<draft-folder>/<publication-date>.linkedin.md` (per ADR-026, narrowed shape per P079). Tom edits and posts manually per ADR 013.
 
 ### 16. Save the draft
 
@@ -1043,7 +1043,7 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
    <URL Verification block carried from prep .reviews.md>
    ```
 
-3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md`. The LinkedIn-post voice review does NOT appear here; it lives in the reviews sibling above:
+3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md`. Per P079 the sibling is frontmatter + post body ONLY: no `## LinkedIn Post` heading wrapper, no `## Image` section, no `## Notes for posting` section, and no manual "Read the full issue" link line (LinkedIn Newsletter auto-share auto-attaches the cover image and auto-injects the article URL card). The LinkedIn-post voice review does NOT appear here; it lives in the reviews sibling above:
 
    ```
    ---
@@ -1051,17 +1051,7 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
    companion-to: <publication-date>.md
    ---
 
-   ## LinkedIn Post
-
-   <LinkedIn post body from step 15.5>
-
-   ## Image
-
-   <image description and alt text>
-
-   ## Notes for posting
-
-   <any posting notes, e.g. preferred publish window, hashtag suggestions>
+   <LinkedIn post body from step 15.5: bold hook line, body, 2-3 bullets, the rotating CTA invitation, and the `windyroad.com.au` brand sign-off line>
    ```
 
 4. Delete the `.prep.md` file. The audit trail lives in the carried-forward prep review blocks inside `<publication-date>.reviews.md` plus the git history of the `.prep.md`.
@@ -1093,7 +1083,7 @@ Single-pass equivalent of the prep + finalise pair. Three operations:
 
 2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same seven-block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus an eighth block `## Voice Review (LinkedIn post)` that captures the step-15.5 LinkedIn-post voice gate verdict (P013). No prep / finalise distinction in the section headings (single-pass).
 
-3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md` with the same shape as the finalise variant above (post body + image + notes; no voice review block).
+3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md` with the same shape as the finalise variant above (frontmatter + post body only; no heading wrapper, no image block, no posting-notes block, no manual link line; no voice review block) per P079.
 
 ### 17. Summarise for Tom
 
@@ -1123,7 +1113,7 @@ Report back in chat:
 - LinkedIn post: drafted (finalise/full) or skipped (prep).
 - File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/<publication-date>.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on `<publish-day>` to publish." For finalise, this is `<draft-folder>/<publication-date>.md` with the reminder: "When you have published to LinkedIn, create the per-date sub-directory `<published-folder>/<persona>/<publication-date>/` (per ADR-039) and move all four files (`<publication-date>.md`, `<publication-date>.reviews.md`, `<publication-date>.linkedin.md`, `<publication-date>.capture.md`) plus the cover-image siblings (`<publication-date>.cover.svg`, `<publication-date>.cover.png`) from `<draft-folder>` into that sub-directory, then run `/wr-retrospective:run-retro` to capture learnings for next week."
 - Capture transcript path: `<draft-folder>/<publication-date>.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
-- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all seven review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body, image description, alt text, and posting notes. Confirm both siblings were written.
+- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all seven review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body only (frontmatter + body; no image/alt-text or posting-notes blocks per P079). Confirm both siblings were written.
 
 ## Failure modes
 
