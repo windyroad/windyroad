@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-16 (work-problems loop end). Captured P093 (newsletter lint check (b) should flag single bare unlinked outlets, per Tom's P089-review directive) at WSJF 3, and P094 (extend the domain-specific critic supersede to wr-blog, retire wr-sw-critic, per Tom's P071 follow-on confirmation) at WSJF 1.5. This loop closed P071 and shipped P089 + P090 + P091 to Verification Pending (newsletter structural-lint, CTA-pitch removal, ask-for-URLs fallback).
+> Last reviewed: 2026-06-16 (work-problems loop-end retro). Captured P095 (dry-aged-deps deadlocks on exact-pinned deps that --update cannot bump, hit twice this session: playwright + react/react-dom) at WSJF 3. Appended cross-surface marker-hash evidence (gh-issue-create) to P085. Loop also closed P071, shipped P089 + P090 + P091 to Verification Pending, captured P093 + P094.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -22,6 +22,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3 | P075 | Newsletter drafter headings fail clarity test, gates do not catch | 3 (Medium) | Open | M | 2026-05-31 | internal |
 | 3 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 (Medium) | Open | M | 2026-06-14 | internal |
 | 3 | P093 | newsletter structural-lint check (b) should flag single bare unlinked outlets, not only 2+ | 6 (Medium) | Open | M | 2026-06-16 | internal |
+| 3 | P095 | dry-aged-deps gate deadlocks on exact-pinned deps that --update cannot bump | 6 (Medium) | Open | M | 2026-06-16 | internal |
 | 2.5 | P067 | Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection | 5 (Medium) | Open | M | 2026-05-15 | internal |
 | 2 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned pus… | 3 (Low) | Open | M | 2026-05-12 | internal |
