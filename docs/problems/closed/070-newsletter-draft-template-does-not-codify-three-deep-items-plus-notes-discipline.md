@@ -1,6 +1,6 @@
 # Problem 070: Newsletter draft-template does not codify the three-deep-items-plus-notes editorial discipline
 
-**Status**: Open
+**Status**: Closed
 **Reported**: 2026-05-25
 **Origin**: internal
 **Priority**: 3 (Low). Impact: Negligible (1) x Likelihood: Possible (3)
@@ -42,9 +42,9 @@ External editorial review at the prep/finalise boundary catches the dilution and
 
 ### Investigation Tasks
 
-- [ ] Investigate root cause (confirm the line-20 / line-72 / line-108 tension is the operative driver)
-- [ ] Create reproduction test (or a checklist assertion that the template encodes a one-thesis rule)
-- [ ] Create INVEST story for permanent fix
+- [x] Investigate root cause (confirmed 2026-06-16: the three contradictory count lines are the operative driver; verified on disk at draft-template lines 20, 82, 112. The ticket's original 20/72/108 line numbers had drifted but the content was unchanged.)
+- [x] Create reproduction test / checklist assertion: superseded by ADR-032. The "template encodes a one-thesis rule" assertion is now an ADR-032 confirmation criterion (a thesis-coherence critic-rubric check, criterion d), tracked in ADR-032. A structural test asserting template prose content is discouraged per the wr-tdd:review-test structural-vs-behavioural rule, so none was added.
+- [x] Create INVEST story for permanent fix: superseded by ADR-032. The editorial-shape rule was promoted to ADR-032 (the architect's blocker-4 recommendation from the 2026-05-30 review); the permanent fix is the template's reference to that confirmed ADR. The RFC/story tier (ADR-060) is unadopted in this consumer repo (no docs/rfcs/), so no INVEST story vehicle exists here.
 
 Preliminary hypothesis (not yet confirmed): the template encodes a count target and a "no maximum, include everything that clears the filter" rule, but no thesis-coherence rule, so the drafter has explicit permission to over-include and no explicit instruction to make every item serve one argument.
 
@@ -97,3 +97,40 @@ Attempted to apply the Fix Strategy (thesis-coherence cap plus Issue-06 shape in
 **Why this iter did not apply the fix:**
 
 Standard AFK constraints (no AskUserQuestion mid-loop, no capture-*, no push) make all four direction questions and the prerequisite JTBD ratification unactionable. Editing the template without resolving them would either reverse a pinned direction silently or leave SKILL.md and the template in contradiction. Both outcomes are worse than the current contradiction, which is at least caught by external editorial review at the prep/finalise boundary (the existing workaround).
+
+## Resolution 2026-06-16 (AFK loop, manage-problem on P070)
+
+All four 2026-05-30 blockers are now resolved, mainly because ADR-032 (newsletter editorial-discipline policy) was created after that review and is `human-oversight: confirmed` (Tom, 2026-05-30). Re-verified each blocker against disk this iteration:
+
+1. **Direction-reversal blocker dissolved.** The fix is reframed as a DEPTH discipline, not a content cap. Only roughly three items get deep treatment (the full What happened / Why it matters / Human angle frame); every other story that clears the filter still appears, demoted to "Also worth noting". Nothing significant is dropped. This is consistent with the pinned memory `feedback_brief_item_count` ("no content cap, minimum three, include every significant story"), whose "How to apply" guidance explicitly says the LinkedIn attention budget "belongs in a separate formatting step (excerpt / summary), not in a content cap". The depth-vs-notes split IS that formatting step.
+2. **Three-file-contradiction blocker dissolved.** SKILL.md already follows ADR-032 (line 415 binds the 11a theme statement to ADR-032's thesis-first intro; line 470 keeps "Also worth noting"; lines 445 and 1100 preserve "minimum 3, no maximum"). Under the depth-not-cap reframe, "no maximum" still holds for total coverage, so the template and SKILL.md no longer contradict. The ticket's old "SKILL.md lines 416 / 981" had drifted; the live lines were re-read.
+3. **Cross-persona-scope blocker dissolved by ADR-032.** ADR-032 makes the scoping decision explicitly: the leader persona (The Shift) is the immediate target; the developer persona (Tokens Spent) inherits the rule unless its persona config opts out (no opt-out currently documented). The shared template carries the default; any developer carve-out belongs in `personas/developer.md`, not the template (confirmed by the JTBD gate this iteration: forcing a carve-out into the shared template would duplicate the rule across surfaces, the anti-pattern ADR-032 rejects).
+4. **ADR-vs-inline blocker dissolved.** The editorial-shape rule was promoted to ADR-032 (exactly the architect's blocker-4 recommendation). The template now references ADR-032 rather than carrying the policy, per ADR-032 Option 1 (referenced enforcement, not inline re-spell).
+5. **JTBD-ratification blocker dissolved.** The developer persona is now `human-oversight: confirmed` (2026-06-16 check), and ADR-032 (confirmed) already made the persona-scope decision the prior review said the ratification was a precondition for.
+
+### What changed
+
+Five edits to `.claude/skills/wr-newsletter/assets/draft-template.md`, all referencing ADR-032 as the single source of truth:
+
+- Line 20 (formatting rules): "Prefer 4-5 items over 6+" replaced with the three-deep-items depth rule plus the soft-cap (four, justify in reviews.md) and external-review (five-plus) thresholds. This is the one template spot that carries the numeric thresholds (architect advisory: keep them in one place).
+- Line 57 (intro scaffold): strengthened to the ADR-032 element-1 thesis-first intro (name the deep items by their shared constraint, preview each variation).
+- New Disclosure line (ADR-032 element 4): optional isolated line before the closing rule.
+- Line 82 (structure note): "Aim for 4-5 full items" replaced with the three-deep-items target plus demote-not-drop; thresholds point to the formatting rule above.
+- Line 112 (what NOT to do): "no maximum" reframed to "no maximum on total stories covered" with deep-treatment routing to "Also worth noting".
+
+### Gate reviews (all pass)
+
+- Architect: ALIGNED. No new ADR needed (downstream enforcement of confirmed ADR-032); no contradiction with ADR 014 / 023 / 026. Advisory acted on (thresholds kept in one spot).
+- JTBD: PASS (serves leader JTBD-001/002/003; demote-not-drop preserves developer JTBD-200's "excluded on purpose, not missed" contract).
+- Style-guide: OUT OF SCOPE (markdown authoring guide, no CSS).
+- Voice-tone: PASS (no em-dashes, no banned patterns).
+
+### I13 RFC-trace gate note
+
+The `wr-itil-check-fix-rfc-trace` predicate flagged a missing RFC trace and directed auto-create via capture-rfc. That auto-create is not actionable in this consumer repo: the RFC tier (ADR-060) is unadopted here (`docs/rfcs/` does not exist), so honouring the directive would mean bootstrapping the whole RFC-tier infrastructure for an Effort-S template doc-edit, far outside scope. The fix-design trace is carried by confirmed ADR-032 instead (ADR-032 § Related: "Resolves the architect-design blocker on P070"; § Enforcement surfaces names this exact template edit).
+
+### Remaining ADR-032 enforcement surfaces (tracked by ADR-032, not P070)
+
+ADR-032 confirmation criterion (b) also names `personas/leader.md` + `personas/developer.md` referencing the ADR, and criterion (d) names a critic-rubric thesis-coherence check. Those are ADR-032's own rollout surfaces, not P070's gap (which was specifically the draft-template). P070 closes on the template codification; the remaining surfaces stay tracked by ADR-032's confirmation criteria.
+
+Outcome: closed. Codification is live on commit; this is a template doc-class edit with no npm/release vehicle, so "live on commit" closes the gap (per the AFK orchestrator's outcome guidance).

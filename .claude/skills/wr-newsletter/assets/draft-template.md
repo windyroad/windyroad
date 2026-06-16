@@ -17,7 +17,7 @@ Use this structure when drafting a brief. Fill every placeholder in square brack
 - **Section labels:** bold each section label (`**What happened:**`, `**Why it matters to your team:**`, `**The human angle:**`) so structure is visible before detail.
 - Test against LinkedIn's narrow column width before assuming it reads. The IDE markdown preview is wider than LinkedIn's rendering.
 - **Keep the preamble short.** Voice opener (2-3 sentences) + one short bridge sentence to the items is enough. Avoid a separate "three pressures" paragraph plus a "week's shift" paragraph plus the opener; that is too much distance between headline and first payoff.
-- **Prefer 4-5 items over 6+.** If the week has more stories than that, demote the borderline ones to an "Also worth noting" section at the end, each as a single bolded-hook paragraph with inline links.
+- **Three deep items, each a variation on one thesis (ADR 032).** Give deep treatment (the full What happened / Why it matters / Human angle frame) to roughly three items, each a variation on the single thesis named in the intro. This is a depth rule, not a content cap: every other story that clears the filter still appears, demoted to an "Also worth noting" section at the end, each as a single bolded-hook paragraph with inline links. Four deep items is a soft cap (justify in the edition's reviews.md); five or more deep items needs external review before publish. See ADR 032 for the full shape.
 
 ## Structural invariants (P089, P090, enforced by check-newsletter-structure.sh)
 
@@ -54,7 +54,7 @@ edition: 1
 - A piece of conventional wisdom in the AI-engineering category he wants to push back on.
 Do NOT lead with news. Lead with a perspective. The drafter should attempt this and mark it "[DRAFT VOICE: Tom to replace]" if uncertain; the attempt is the scaffold, the published version is Tom's.]
 
-[ONE-SENTENCE INTRO stating the theme of this week's items in plain industry language. The Wardley map is internal substrate (ADR 014); do NOT reference "the map", "position shifts", "evolution axis", or any map vocabulary. Example: "This week the agent-runtime layer fragments while coding assistants converge; three stories on what engineering teams are having to relearn."]
+[THESIS-FIRST INTRO (ADR 032 element 1): one or two sentences naming the deep items by their shared constraint and previewing the variation each one shows. State the theme in plain industry language. The Wardley map is internal substrate (ADR 014); do NOT reference "the map", "position shifts", "evolution axis", or any map vocabulary. Example: "This week the agent-runtime layer fragments while coding assistants converge; three stories on what engineering teams are having to relearn."]
 
 ### Item 1: [HEADLINE, 6 TO 10 WORDS]
 
@@ -79,13 +79,15 @@ Do NOT lead with news. Lead with a perspective. The drafter should attempt this 
 
 (same structure)
 
-[Aim for 4-5 full items. Candidates that pass the filter but would push the brief past 5 full items can be demoted to "Also worth noting" (below).]
+[Target three deep items, each a variation on the one thesis named in the intro (ADR 032). Every other candidate that clears the filter is demoted to "Also worth noting" (below), not dropped. The soft-cap and external-review thresholds live in the formatting rule above and in ADR 032.]
 
 ### Also worth noting
 
 **[ONE-LINE HEADLINE-AS-BOLD-LEAD].** [Two or three sentences naming the event(s), the inline-linked source(s), and the Monday-actionable takeaway. No sub-bullets here; this is a compressed format for signal that matters but does not need the full what/why/human-angle frame.]
 
 **[NEXT HEADLINE].** [Same format.]
+
+[DISCLOSURE (ADR 032 element 4): if any item involves a commercial relationship that warrants disclosure, state it here as a single isolated line before the closing rule. Omit this line entirely if there is nothing to disclose.]
 
 ---
 
@@ -109,7 +111,7 @@ The CTA is one rotating invitation plus the `windyroad.com.au` closing line only
 
 - Do not write speculative claims without attribution. If uncertain, omit the item.
 - Do not use hype words ("revolutionary", "game-changing", "unprecedented").
-- Do not pad. Three items is the minimum, and there is no maximum: include every candidate that clears the filter AND anchors to a map movement. Two is acceptable only if three candidates did not clear the filter; note the shortfall in the summary.
+- Do not pad, but do not drop signal either. Three deep items is the target and the minimum; there is no maximum on total stories covered. Include every candidate that clears the filter AND anchors to a map movement, but give deep treatment only to the roughly three that each vary the one thesis; route the rest to "Also worth noting" (ADR 032). Two deep items is acceptable only if three candidates did not clear the filter; note the shortfall in the summary.
 - Do not link-dump. Every source link should have a one-sentence "What happened" anchoring it.
 - Do not pack multiple events into one sentence. Sub-bullet instead.
 - Do not comma-separate source URLs. One URL per line.
