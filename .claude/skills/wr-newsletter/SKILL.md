@@ -410,7 +410,7 @@ Read `docs/VOICE-AND-TONE.md` (base) and the `<voice-addendum>` from the persona
 
 Compose the theme anchor (text only at 11a; cover image render stays at step 12 unchanged per ADR-037 sub-decision 1 / Option C, Tom-pinned 2026-06-03):
 
-- **Headline (H1)**: a unique POV-carrying H1 (6-12 words). Follow on the next non-blank line with the persona's `<headline-pattern>` subtitle (e.g. `*The Shift, AI engineering, week ending YYYY-MM-DD*` for leader, or `*Tokens Spent, AI engineering for developers, week ending YYYY-MM-DD*` for developer). The `YYYY-MM-DD` is `<week-ending>` (the Sunday), not `<publication-date>`.
+- **Headline (H1)**: a unique POV-carrying H1 (6-12 words). The H1 must pass the `docs/VOICE-AND-TONE.md` "competent CTO from a non-AI-native company" standalone-readability test: do not stack two or more specialist terms without a gloss (Issue 07 shipped "substrate provider" undefined in the H1, P075). Follow on the next non-blank line with the persona's `<headline-pattern>` subtitle (e.g. `*The Shift, AI engineering, week ending YYYY-MM-DD*` for leader, or `*Tokens Spent, AI engineering for developers, week ending YYYY-MM-DD*` for developer). The `YYYY-MM-DD` is `<week-ending>` (the Sunday), not `<publication-date>`.
 - **Cover hook line 1** (white, around 28 chars max per P063 LinkedIn-crop budget) and **line 2** (accent orange, around 45 chars max). Text only at 11a; the cover image renders at step 12 (status quo).
 - **One-paragraph theme statement** that names the deep items by their shared constraint and previews the variation each item shows. This statement IS the "thesis-first intro" element 1 from ADR-032's three-deep-items shape; the body opener at 11b will elaborate it. Keep to one paragraph; specific (named constraint, named variation); honors the voice rules below.
 
@@ -445,6 +445,13 @@ Using the approved H1, hook lines, and theme statement from 11a, produce the ful
 - One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened (with the primary claim inline-linked), Why it matters to your team, The human angle. Do NOT append a separate `**Source:**` block when the What-happened text already carries inline links (structural invariant, P089).
 - Item Why-it-matters lines reference the 11a theme where natural (per ADR-037: body threads the approved frame).
 - Closing CTA: pick one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`. Do NOT emit a Windy Road services-description sentence (P090): the CTA is invitation + linked `windyroad.com.au` only. This is enforced at save by `check-newsletter-structure.sh` check (g).
+
+**Heading craft (P075).** The H1 and each `### Item N:` heading must each pass the `docs/VOICE-AND-TONE.md` "competent CTO from a non-AI-native company" standalone-readability test on its own, without the body. Two disciplines:
+
+- Do NOT default to the colon-flourish "X: Y" framing on Item headings. Vary the heading shape across the edition: no more than half the items in one edition may share a single framing pattern. (Issue 07 ran the colon-flourish on 5 of 7 items and Tom rejected the set.)
+- Apply gloss-on-first-use at HEADING granularity, not just body copy. A specialist term whose first appearance in the edition is in a heading is glossed in that heading or immediately in the body; do not stack two or more in-group specialist terms without a gloss in a single heading (Issue 07 examples: "substrate provider", bare "Starlette", "services-arm", stacked "tier-1" plus "eval-governance" plus "eval harness", "sandboxing patterns").
+
+The step-15 critic's "Headline craft" rubric section is the catch-it-in-review backstop; this drafter discipline prevents producing the failure in the first place.
 
 Voice rules (enforced by step 13 voice gate):
 - Team voice ("we"), not "I" (ADR 010). The "From Tom" opener is the only place where "I" is permitted.

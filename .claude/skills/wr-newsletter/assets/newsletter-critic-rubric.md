@@ -15,7 +15,17 @@ These axes are owned by sibling gates, NOT by the critic:
 - Content risk: factual, reputational, claims, attribution, reader-respect, owned by `wr-risk-scorer:external-comms` (ADR 012, ADR 015, ADR 018).
 - LinkedIn rendering, sentence length, structural mechanics, owned by `wr-newsletter-editor` (ADR 020).
 
-The critic owns analytical quality: does the argument hold; is specificity preserved; is the "so what?" answered; is the piece pablum dressed in correct voice; do items reflect genuine industry shifts with concrete evidence; does the brief carry a thesis the items support.
+The critic owns analytical quality: does the argument hold; is specificity preserved; is the "so what?" answered; is the piece pablum dressed in correct voice; do items reflect genuine industry shifts with concrete evidence; does the brief carry a thesis the items support. The critic also owns heading craft (see "Headline craft" below): the sibling voice and cognitive-accessibility gates audit body copy, not headings, so heading-level clarity and jargon density are deliberately the critic's to flag (P075).
+
+## Headline craft
+
+Headlines (the H1 and every `### Item N:` heading) are the most load-bearing editorial surface and the place Issue 07 failed (P075). The sibling voice and cognitive-accessibility gates operate at body-copy granularity and structurally do not audit headings, so heading craft is the critic's to own as editorial quality. Read every heading separately and surface a weakness when any of these hold:
+
+- **Headline clarity.** Run the `docs/VOICE-AND-TONE.md` "competent CTO from a non-AI-native company" standalone-readability test on the H1 and on each Item heading separately. Flag any heading the test reader cannot parse without first reading the body. (Issue 07: the H1 leaned on "substrate provider" with no gloss.)
+- **Headline jargon density.** Flag any single heading whose specialist-noun density defeats the standalone-readability test: two or more in-group specialist terms carried without a gloss. (Issue 07 headings: bare "Starlette" with no category gloss, "services-arm", a stacked "tier-1" plus "eval-governance" plus "eval harness", "sandboxing patterns".)
+- **Sameness across headings.** Flag an editorial-framing pattern repeated on more than half the items in one edition, for example the colon-flourish "X: Y" shape. (Issue 07 ran the colon-flourish on 5 of 7 items.)
+
+These are editorial-craft judgements, not a port of the voice agent's word-list mechanics. Return them as weaknesses with the offending heading quoted, the same as any other weakness; do not introduce numbered checks or a scoring table (ADR 035).
 
 ## What to return
 

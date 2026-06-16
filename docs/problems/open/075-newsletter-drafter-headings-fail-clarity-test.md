@@ -46,11 +46,33 @@ Suggested fixes worth investigating:
 
 ## Root Cause Analysis
 
+### Investigation findings (2026-06-16)
+
+Confirmed by reading the files on disk:
+
+- The critic rubric (`.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`) no longer carries a numbered `check_36`. It was rewritten to the ADR-035 check-free editorial-reader format (STRENGTHS / WEAKNESSES / optional RELEVANT CONTEXT, no numbered checks). The ticket's `check_36` reference predates that rewrite. The real gap is that no rubric concern, numbered or prose, audited headings as a separate surface: clarity, jargon density, and cross-heading sameness were uncovered.
+- The voice agent gloss-on-first-use enforcement runs at body-copy granularity. Heading-level jargon stacking and colon-flourish sameness fell between the editorial critic (no heading concern) and the voice agent (body only). This is the catch-it-in-gates gap.
+- The colon-flourish habit lives in the drafter step 11a/11b instructions, which named no anti-default for the "X: Y" framing and required gloss-on-first-use only implicitly via the body voice rules.
+
+Root cause: heading craft had no owner in any gate. The fix homes the heading-craft concern explicitly in the critic rubric (review backstop) and in the drafter step 11a/11b instructions (prevent-at-draft).
+
+### Fix Strategy (repo-local checks landed 2026-06-16)
+
+- `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`: added a "Headline craft" section with three editorial-reader concerns (headline clarity via the VOICE-AND-TONE "competent CTO from a non-AI-native company" standalone-readability test on the H1 plus each Item heading; headline jargon density flagging two-or-more unglossed specialist terms in one heading; sameness-across-headings flagging an editorial-framing pattern on more than half the items). Noted in Coverage partitioning that heading craft is deliberately critic-owned because the sibling voice and cognitive-accessibility gates audit body copy, not headings. Kept the ADR-035 no-numbered-checks prose format.
+- `.claude/skills/wr-newsletter/SKILL.md`: step 11a H1 bullet now requires the H1 to pass the standalone-readability test and bans unglossed specialist-term stacking; step 11b gained a "Heading craft" discipline discouraging the colon-flourish default (no more than half the items may share one framing pattern) and requiring gloss-on-first-use at HEADING granularity.
+
+All new checks are grounded in the documented Issue 07 evidence (substrate-provider H1, bare Starlette, services-arm, stacked tier-1 plus eval-governance plus eval harness, sandboxing patterns, 5-of-7 colon-flourish headings). No invented examples (P082).
+
+### Outstanding (upstream-bound)
+
+- The suggested-fix "cross-reference the voice agent prompt to apply the gloss-on-first-use audit to H1 and Item headings as a separate pass from body copy" targets the upstream `wr-voice-tone` plugin agent prompt (installed plugin cache, not editable from this consumer repo). It must be raised against the upstream plugin. The repo-local critic plus drafter checks above already close the catch-it-in-gates intent for the `/wr-newsletter` pipeline; the voice-agent cross-reference is defence-in-depth, not a blocker.
+
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Investigate root cause: is the colon-flourish habit in the drafter prompt, in the critic rubric's check_36 wording, or both?
-- [ ] Create reproduction test: feed a prior edition's headings through the existing rubric and confirm check_36 PASSES the jargon-stacked variants.
+- [x] Investigate root cause: is the colon-flourish habit in the drafter prompt, in the critic rubric's check_36 wording, or both? (Both surfaces; `check_36` no longer exists post-ADR-035; the gap was heading-granularity coverage absent from both critic and drafter. See Investigation findings.)
+- [x] Create reproduction test: superseded. `check_36` no longer exists; the rubric is now check-free editorial-reader prose (ADR-035), so the "feed headings through check_36" reproduction is obsolete. The behavioural check is now the critic's "Headline craft" prose concern, exercised on the next `/wr-newsletter` run.
+- [ ] Upstream: raise the voice-agent heading-granularity gloss pass against the `wr-voice-tone` plugin (not editable from this consumer repo).
 
 ## Dependencies
 
