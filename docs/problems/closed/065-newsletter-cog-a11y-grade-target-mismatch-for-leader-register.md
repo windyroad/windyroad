@@ -1,6 +1,6 @@
 # Problem 065: Newsletter cog-a11y persistently scores Grade 11+ vs Grade 10 target on leader register
 
-**Status**: Open
+**Status**: Closed
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 10 (High). Impact: Minor (2) x Likelihood: Almost certain (5)
@@ -55,11 +55,11 @@ c. **Keep the target, accept the recurring NEEDS_REVISION_OPTIONAL verdict**: su
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Survey 3-5 published Engineering Leader newsletters (Stratechery, Benedict Evans, AI Daily Brief leader segment) for their Flesch-Kincaid scores to benchmark. (Open; not undertaken in 2026-06-02 iter to preserve token budget; survey would inform but not change the direction-class routing.)
-- [x] Decide on fix shape (raise target vs add exemption list vs accept). (Routed to Tom 2026-06-02 per ADR-074 substance-confirm-before-build; see Iter Notes.)
-- [ ] If option (a), update `/wr-newsletter` SKILL.md Step 15.4 cog-a11y invocation prompt for leader persona.
-- [ ] Document the chosen rationale in the cog-a11y agent file or the persona config.
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems. (Moot at close: ticket resolved-by-decision; no further re-rate needed.)
+- [x] Survey 3-5 published Engineering Leader newsletters (Stratechery, Benedict Evans, AI Daily Brief leader segment) for their Flesch-Kincaid scores to benchmark. (Moot: Tom decided Option D without the survey; the survey would have informed but not changed the direction-class routing.)
+- [x] Decide on fix shape (raise target vs add exemption list vs accept). (Routed to Tom 2026-06-02 per ADR-074 substance-confirm-before-build; Tom chose Option D / option c, accept current behaviour, on 2026-06-15. See Iter Notes + Resolution.)
+- [x] If option (a), update `/wr-newsletter` SKILL.md Step 15.4 cog-a11y invocation prompt for leader persona. (Moot: Option (a) not chosen; no SKILL.md change.)
+- [x] Document the chosen rationale in the cog-a11y agent file or the persona config. (Done in-ticket: the rationale lives in the Resolution section below. No persona/agent-config edit per Tom Option D.)
 
 ### Iter Notes 2026-06-02 (AFK work-problems iter 6)
 
@@ -90,3 +90,7 @@ c. **Keep the target, accept the recurring NEEDS_REVISION_OPTIONAL verdict**: su
 ## Resolution (Tom, 2026-06-15)
 
 Reading-level target decided: **keep Grade 10 for the leader register (Option D)**. Accept the recurring NEEDS_REVISION_OPTIONAL advisory verdict from the cog-a11y gate; surface residual findings each retro. No frontmatter target change, no new ADR, no SKILL.md Step 15.4 change. Resolved-by-decision (accept current behaviour). Follow-on close-transition pending.
+
+### Close (AFK work-problems iter, 2026-06-16)
+
+Closed Open -> Closed as **resolved-by-decision**. No fix released (Option D is the status quo: Grade 10 stays inline at `/wr-newsletter` SKILL.md Step 15.4; the leader persona carries no `target_reading_level` override), so the close bypasses Verification Pending - there is no fix to verify. This is the docs/problems/ resolved-by-decision close convention (precedented by prior closures such as P026 and P032), not an ADR lifecycle rule. Architect + JTBD gates both returned PASS on the close: Tom's explicit human direction supersedes the architect's prior Option-A advisory lean (ADR-066 / ADR-074), no in-force decision mandates a Grade-target ADR (ADR-032 / ADR-038 establish eligibility, not obligation), and no documented job or persona constraint requires a reading-level change. The conditional JTBD gap note from 2026-06-02 ("if Option (a) lands, add a register note to the leader persona") does not trigger because Option (a) was not chosen.

@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-16 (work-problems loop-end retro). Captured P095 (dry-aged-deps deadlocks on exact-pinned deps that --update cannot bump, hit twice this session: playwright + react/react-dom) at WSJF 3. Appended cross-surface marker-hash evidence (gh-issue-create) to P085. Loop also closed P071, shipped P089 + P090 + P091 to Verification Pending, captured P093 + P094.
+> Last reviewed: 2026-06-16 **P065 closed (resolved-by-decision)** - Tom decided Option D (2026-06-15): keep Grade 10 for the leader-register cog-a11y gate, accept the recurring NEEDS_REVISION_OPTIONAL advisory verdict, no code/persona/ADR change. Open to Closed bypassing Verifying (chosen option is the status quo, no fix to verify). Architect + JTBD gates PASS; human direction supersedes the prior Option-A advisory lean per ADR-066 / ADR-074.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 5 | P065 | Newsletter cog-a11y persistently scores Grade 11+ vs Grade 10 target on leader register | 10 (High) | Open | M | 2026-05-15 | internal |
 | 5 | P081 | Newsletter pipeline missing external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review | 12 (High) | Open | M | 2026-06-01 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
@@ -107,6 +106,7 @@ Closed tickets are listed for audit but excluded from the active backlog:
 - P020 (No dependency update cadence). Closed 2026-05-30 on review-problems batch. Weekly cron `.github/workflows/deps-refresh.yml` has kept the stale-dep gate green since shipping.
 - P025 (no-em-dash.sh has zero coverage of Bash-path file writes). Closed 2026-05-30 on review-problems batch. PostToolUse:Bash hook has blocked em-dash writes and passed contractual marker whitelist across multiple AFK iters, including this session's review-problems run.
 - P071 (ADR-016 parameterised sw-critic pattern has poor discoverability + UX; supersede with domain-specific critics). Closed 2026-06-15 (decision-complete, Open to Closed bypassing Verifying per ADR-079; no fix released by this close). Tom's Resolution narrows Phase 3 to "no newsletter call-sites remain" (already true; Phase 2 migrated SKILL.md steps 9 + 15 to wr-newsletter-critic + wr-wardley-critic). wr-sw-critic is deliberately retained as a wr-blog-only shared agent, not retired. ADR-033 + ADR-035 accepted; the wr-blog domain-specific critics are a separate ticket if/when wanted.
+- P065 (Newsletter cog-a11y persistently scores Grade 11+ vs Grade 10 target on leader register). Closed 2026-06-16 resolved-by-decision (Open to Closed bypassing Verifying; no fix released). Tom decided Option D on 2026-06-15: keep Grade 10 for the leader register, accept the recurring NEEDS_REVISION_OPTIONAL advisory verdict, surface residual findings each retro. No persona-frontmatter target change, no new ADR, no SKILL.md Step 15.4 change - the chosen option is the status quo. Architect + JTBD gates PASS: human direction supersedes the prior Option-A advisory lean (ADR-066 / ADR-074); no in-force decision mandates a Grade-target ADR.
 
 ## Parked
 
