@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-16 **P065 closed (resolved-by-decision)** - Tom decided Option D (2026-06-15): keep Grade 10 for the leader-register cog-a11y gate, accept the recurring NEEDS_REVISION_OPTIONAL advisory verdict, no code/persona/ADR change. Open to Closed bypassing Verifying (chosen option is the status quo, no fix to verify). Architect + JTBD gates PASS; human direction supersedes the prior Option-A advisory lean per ADR-066 / ADR-074.
+> Last reviewed: 2026-06-16 **P092 to Known Error** - root cause confirmed and fix implemented in `scripts/push-watch.sh` (B sibling-amend rebase guard; C transient-error retry around `gh run watch`, now including the HTTP 401 "Bad credentials" blip per fresh evidence on run 27609565746). Known Error multiplier applied: WSJF 4.5 to 9.0, top of the dev-work queue. Committed, awaiting orchestrator-owned push to release (then moves to Verification Pending per ADR-022). Prior: **P065 closed (resolved-by-decision)** - Tom decided Option D (2026-06-15): keep Grade 10 for the leader-register cog-a11y gate, accept the recurring NEEDS_REVISION_OPTIONAL advisory verdict, no code/persona/ADR change. Open to Closed bypassing Verifying (chosen option is the status quo, no fix to verify). Architect + JTBD gates PASS; human direction supersedes the prior Option-A advisory lean per ADR-066 / ADR-074.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,10 +9,10 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
+| 9 | P092 | push:watch pull-rebase collides with amend-chains and false-fails on transient network errors | 9 (Medium) | Known Error | M | 2026-06-15 | internal |
 | 5 | P081 | Newsletter pipeline missing external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review | 12 (High) | Open | M | 2026-06-01 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
-| 4.5 | P092 | push:watch pull-rebase collides with amend-chains and false-fails on transient network errors | 9 (Medium) | Open | M | 2026-06-15 | internal |
 | 4 | P072 | ADR-022 scheduled-cron deps refresh PR is wrong shape; push-fail-fast + separate fix flow is the desired patt… | 8 (Medium) | Open | M | 2026-05-30 | internal |
 | 4 | P079 | /wr-newsletter step 15.5 LinkedIn post drafter generates auto-share-incompatible extras (Image section, Read-full-issue link line) | 10 (Medium) | Open | S | 2026-06-01 | internal |
 | 3 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Low) | Open | S | 2026-05-13 | internal |

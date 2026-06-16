@@ -26,13 +26,106 @@ show_failure_guidance() {
   echo "have caught the failure in $run_url ?'"
 }
 
+# Helper: classify a gh/network error string as transient (retryable).
+# Returns 0 (transient) for connection resets, timeouts, 5xx/429, "could not
+# resolve host", and HTTP 401 "Bad credentials" blips, else 1. The 401 case was
+# observed polling run 27609565746 on 2026-06-16: a transient HTTP 401 "Bad
+# credentials" during watch on a run that genuinely concluded success (P092 C).
+# Scope note (architect): 401-as-transient is only consumed by the watch-recheck
+# loop below. A persistent 401 on the push itself is a genuine auth failure and
+# is NOT routed through here.
+is_transient_gh_error() {
+  local err="$1"
+  printf '%s' "$err" | grep -qiE \
+    'connection reset|connection refused|broken pipe|i/o timeout|net/http|Client\.Timeout|timed out|timeout|temporary failure|could not resolve host|TLS handshake|EOF|HTTP 5[0-9][0-9]|HTTP 429|HTTP 401|bad credentials|server error|service unavailable'
+}
+
+# Helper: watch a run, distinguishing genuine CI failure from transient blips.
+# "gh run watch --exit-status" can exit non-zero on a transient API/network
+# error even when the run later concludes success (P092 case C). On a non-zero
+# watch, re-check the real run state via "gh run view" with bounded transient-
+# error retry (exponential backoff, capped). Declare failure ONLY on a genuinely
+# completed conclusion that is not success. Returns 0 success, 1 failure.
+watch_run_resilient() {
+  local run_id="$1"
+  local attempt max_attempts=8 delay=5
+  local view_out view_rc status conclusion
+
+  for attempt in $(seq 1 "$max_attempts"); do
+    if gh run watch "$run_id" --exit-status; then
+      return 0
+    fi
+    # Watch exited non-zero. Do NOT trust it as a failure verdict, so re-check
+    # the real run state before declaring the pipeline failed.
+    view_out=$(gh run view "$run_id" --json status,conclusion 2>&1)
+    view_rc=$?
+    if [ "$view_rc" -ne 0 ]; then
+      if is_transient_gh_error "$view_out"; then
+        echo "  (transient API error polling run $run_id; retry $attempt/$max_attempts in ${delay}s)" >&2
+        sleep "$delay"
+        delay=$((delay * 2)); [ "$delay" -gt 60 ] && delay=60
+        continue
+      fi
+      echo "  (non-transient error viewing run $run_id: $view_out)" >&2
+      return 1
+    fi
+    status=$(printf '%s' "$view_out" | jq -r '.status // empty')
+    conclusion=$(printf '%s' "$view_out" | jq -r '.conclusion // empty')
+    if [ "$status" != "completed" ]; then
+      # Run still in progress; the watch dropped on a transient blip. Re-watch.
+      echo "  (watch dropped while run $run_id still in_progress; re-watching, attempt $attempt/$max_attempts)" >&2
+      sleep "$delay"
+      continue
+    fi
+    # Run completed: trust the real conclusion, not the watch exit code.
+    case "$conclusion" in
+      success) return 0 ;;
+      *) return 1 ;;
+    esac
+  done
+  echo "  (exhausted $max_attempts attempts confirming run $run_id; treating as failure)" >&2
+  return 1
+}
+
+# Helper: detect a sibling-amend / same-parent non-fast-forward vs upstream.
+# After amending a just-pushed commit, local HEAD and the upstream tip diverge
+# but share the same parent (P092 case B). An auto "git pull --rebase" would
+# replay the amend onto the original and inject conflict markers into working
+# files. Returns 0 when this sibling-amend divergence is detected (caller skips
+# the rebase and suggests --force-with-lease); 1 otherwise (fast-forward or
+# in-sync states are safe to rebase as before).
+is_sibling_amend() {
+  local upstream head_sha upstream_sha head_parent upstream_parent
+  upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null) || return 1
+  head_sha=$(git rev-parse HEAD 2>/dev/null) || return 1
+  upstream_sha=$(git rev-parse "$upstream" 2>/dev/null) || return 1
+  [ "$head_sha" = "$upstream_sha" ] && return 1                                   # in sync
+  git merge-base --is-ancestor "$upstream_sha" "$head_sha" 2>/dev/null && return 1  # ahead (ff)
+  git merge-base --is-ancestor "$head_sha" "$upstream_sha" 2>/dev/null && return 1  # behind (ff)
+  # Diverged. Sibling-amend signal: local tip and upstream tip share a parent.
+  head_parent=$(git rev-parse 'HEAD^' 2>/dev/null) || return 1
+  upstream_parent=$(git rev-parse "${upstream}^" 2>/dev/null) || return 1
+  [ "$head_parent" = "$upstream_parent" ]
+}
+
+# Test seam (P092): allow the behavioural test (scripts/push-watch.test.mjs) to
+# source the helper functions above without executing the push/watch flow. The
+# "&&" short-circuit is exempt from "set -e" when the condition is false.
+[ "${PUSH_WATCH_LIB_ONLY:-0}" = "1" ] && return 0
+
 # ── 1. Pull + Push ───────────────────────────────────────────────────────────
 STASHED=0
 if ! git diff --quiet || ! git diff --cached --quiet; then
   git stash
   STASHED=1
 fi
-git pull --rebase
+if is_sibling_amend; then
+  echo "Detected a sibling-amend: local HEAD shares a parent with the upstream tip but differs."
+  echo "Skipping auto pull --rebase to avoid replaying the amend and injecting conflict markers (P092)."
+  echo "If this amend is intentional, re-push with: git push --force-with-lease"
+else
+  git pull --rebase
+fi
 [ "$STASHED" = "1" ] && git stash pop
 
 # Pre-emptively resolve auto-resolvable stale dependencies before the push.
@@ -201,7 +294,7 @@ echo "Pipeline: $RUN_URL"
 echo ""
 
 # ── 3. Watch main pipeline ────────────────────────────────────────────────────
-if ! gh run watch "$RUN_ID" --exit-status; then
+if ! watch_run_resilient "$RUN_ID"; then
   echo ""
   echo "✗ Pipeline failed — $RUN_URL"
   show_failure_guidance "$RUN_ID" "$RUN_URL"
@@ -272,7 +365,7 @@ PREVIEW_RUN_URL="https://github.com/$REPO/actions/runs/$PREVIEW_RUN_ID"
 echo "Preview pipeline: $PREVIEW_RUN_URL"
 echo ""
 
-if ! gh run watch "$PREVIEW_RUN_ID" --exit-status; then
+if ! watch_run_resilient "$PREVIEW_RUN_ID"; then
   echo ""
   echo "✗ Preview pipeline failed — $PREVIEW_RUN_URL"
   show_failure_guidance "$PREVIEW_RUN_ID" "$PREVIEW_RUN_URL"
