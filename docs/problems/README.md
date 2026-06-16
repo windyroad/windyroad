@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-15 **P091 fix committed -> Verification Pending**: added a human-in-the-loop terminal fallback to the wr-newsletter URL verification gate. `SKILL.md` step 11.5 (ADR-024) now routes an unresolvable URL (Google News bare domain, curl 403, Playwright fail, DuckDuckGo fail) through a batched `AskUserQuestion` for the canonical URLs before any drop; a citation is dropped only after the user declines. AFK carve-out (ADR-013 Rule 6) records unresolved citations in `.reviews.md` as `UNRESOLVED (awaiting user URL)` and surfaces at finalise rather than silent-drop. Step 11b drafter discipline gained a matching note; cross-references (does not duplicate) the P089 lint check (b). Architect + JTBD PASS; no new ADR; repo-local skill, no changeset. Awaiting next `/wr-newsletter` cycle to verify. (Prior: P090 fix committed -> Verification Pending; P089 fix committed -> Verification Pending; P071 closed decision-complete per ADR-079.)
+> Last reviewed: 2026-06-16 (work-problems loop end). Captured P093 (newsletter lint check (b) should flag single bare unlinked outlets, per Tom's P089-review directive) at WSJF 3, and P094 (extend the domain-specific critic supersede to wr-blog, retire wr-sw-critic, per Tom's P071 follow-on confirmation) at WSJF 1.5. This loop closed P071 and shipped P089 + P090 + P091 to Verification Pending (newsletter structural-lint, CTA-pitch removal, ask-for-URLs fallback).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -21,6 +21,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create… | 6 (Medium) | Open | M | 2026-05-31 | internal |
 | 3 | P075 | Newsletter drafter headings fail clarity test, gates do not catch | 3 (Medium) | Open | M | 2026-05-31 | internal |
 | 3 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 (Medium) | Open | M | 2026-06-14 | internal |
+| 3 | P093 | newsletter structural-lint check (b) should flag single bare unlinked outlets, not only 2+ | 6 (Medium) | Open | M | 2026-06-16 | internal |
 | 2.5 | P067 | Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection | 5 (Medium) | Open | M | 2026-05-15 | internal |
 | 2 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned pus… | 3 (Low) | Open | M | 2026-05-12 | internal |
@@ -33,6 +34,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 3 (Medium) | Open | M | 2026-06-03 | internal |
+| 1.5 | P094 | extend the domain-specific critic supersede to wr-blog (retire wr-sw-critic entirely) | 6 (Medium) | Open | L | 2026-06-16 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
