@@ -60,15 +60,34 @@ Suggested fix:
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Corpus-extract Tom's vocabulary from src/newsletters/published/ as a seed list
-- [ ] Draft the "Tom's voice reference" section for docs/VOICE-AND-TONE.md with Tom-curated entries
-- [ ] Update wr-voice-tone:agent prompt to consult the new section
+- [x] Corpus-extract Tom's vocabulary from src/newsletters/published/ as a seed list (done 2026-06-16; see Findings below)
+- [x] Draft the "Tom's voice reference" section for docs/VOICE-AND-TONE.md (done 2026-06-16 as a corpus-seeded draft; final keep/drop curation still pending Tom, see Outstanding below)
+- [ ] Tom curates the corpus-seeded draft: keep / drop / reword each seed entry; drop the "pending curation" qualifier from the section header once curated (direction/taste; queued as outstanding question)
+- [ ] Update wr-voice-tone:agent prompt to consult the new section (UPSTREAM-BLOCKED, see Dependencies)
 - [ ] Test on the next /wr-newsletter prep run by counting Tom-rejection rate before vs after
+
+### Findings (2026-06-16, AFK iteration)
+
+Corpus-extracted Tom's published vocabulary from all nine published leader editions of The Shift (`src/newsletters/published/leader/2026-04-17` through `2026-06-15`). Every recorded entry is a verbatim, grep-verified usage with the source edition cited; no invented or paraphrased entries (P082 no-fabrication).
+
+Drafted the "Tom's voice reference (corpus-seeded draft, pending curation)" section into `docs/VOICE-AND-TONE.md` (appended before "## Technical constraints"). It captures:
+
+- **Verbs Tom reaches for** (ration, land, ship, hold the line, bank, clear, walk back, push on, pull a lever) with verbatim quotes.
+- **How Tom addresses the reader** (your team, your patch cycle, your CTO, on your desk, your security team, the bottleneck in your team's work).
+- **How Tom talks about himself / Windy Road** ("we" for the team, "I" for hedged conviction and predictions).
+- **Banned-idiom list** sourced from this ticket's documented Tom-rejections (finance/legal idioms, journalism cliches, abstract-noun stacks).
+
+The section is explicitly marked as a draft pending Tom's curation; it does not assert the seed list as final.
+
+Governance gates run before the edit (per /wr-itil:manage-problem): wr-architect:agent PASS (VOICE-AND-TONE.md is the chosen voice-rule surface per ADR-015; no new ADR needed; deferring the upstream agent-prompt half as upstream-blocked is consistent with ADR-036), wr-jtbd:agent PASS (serves the newsletter-production jobs; pending-human-curation is the correct posture for a taste artifact), wr-voice-tone:agent PASS (section prose obeys the guide; two accuracy fixes applied before append: the services-arm curation note was corrected after verifying the hyphenated form also shipped 2026-05-15, and the "your team" header was confirmed present in all nine editions). The style-guide gate is not applicable (no CSS / visual-design change).
+
+A correction caught during the voice-tone gate: an early draft of the services-arm curation note claimed only the unhyphenated "services arm" shipped in the 2026-05-15 edition. Grep verification showed the hyphenated "services-arm" also shipped that edition (Item 2 heading + a note), so the note was reworded to state the accurate tension before append.
 
 ## Dependencies
 
 - **Blocks**: (none)
 - **Blocked by**: (none)
+- **Upstream-blocked (sub-task only)**: the "Update wr-voice-tone:agent prompt to consult the new section" Investigation Task cannot be done from this consumer repo. The `wr-voice-tone:agent` lives in the installed plugin cache (`~/.claude/plugins/cache/windyroad/wr-voice-tone/...`); this repo has no `packages/wr-voice-tone/` source tree to edit. This is the exact predicate of ADR-036 (marketplace-consumer-cannot-edit-cached-plugin): the fix site is inside the plugin-cache root. The in-repo half (the docs/VOICE-AND-TONE.md reference section) lands here; the upstream prompt-update half is deferred to the wr-voice-tone source repo. The ticket stays Open (not Parked) because the in-repo half progressed and the curation sub-task is still actionable by Tom.
 - **Composes with**: P075 (newsletter drafter headings fail clarity test, gates do not catch). Both tickets address the same class of voice-gate blind spot from different angles: P075 on heading-level structure, P077 on word-level idioms.
 
 ## Related

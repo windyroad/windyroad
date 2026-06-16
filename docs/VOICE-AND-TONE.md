@@ -4,7 +4,7 @@ This guide defines how Windy Road Technology sounds across the website, landing 
 
 Windy Road is a consulting team. The voice is first-person plural ("we") for service delivery. Tom Howard is the named founder and public face, introduced by name in credentials sections. Service copy uses "we help", "our team", "we've built". Personal track record claims use "I" ("I've built pipeline controls at Greater Bank") because they describe Tom's individual history. Blog articles may use "I" when the author is sharing personal experience. The audience is engineering leaders who need to get their teams patch fit, and (secondarily) technical founders with broken vibe-coded apps.
 
-**Last reviewed:** 2026-04-28 (link-text rule added)
+**Last reviewed:** 2026-06-16 (Tom's voice reference corpus-seeded draft added, P077)
 
 ---
 
@@ -476,6 +476,68 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | synergy | No |
 | deep dive | Overused. Say "audit" or "review" |
 | reach out | Say "call," "email," or "book" |
+
+---
+
+## Tom's voice reference (corpus-seeded draft, pending curation)
+
+> **Status: corpus-seeded draft, not yet curated.** Every entry below is a verbatim usage pulled from a published edition of The Shift (`src/newsletters/published/leader/`), with the source file cited. The banned-idiom list at the end is drawn from documented Tom-rejections recorded in problem ticket P077, not from the corpus. This section is a seed for Tom to curate: keep, drop, or reword each entry. Until Tom curates it, treat it as advisory evidence of Tom's published voice, not a settled rule set.
+
+This section exists because the abstract voice principles above pass phrasings that match the rules but do not match Tom's personal voice. It gives the voice-tone gate a concrete oracle for "what Tom says" drawn from what Tom has actually published.
+
+### Verbs Tom reaches for
+
+Concrete, physical verbs. Things land, ship, ration, hold, bank, clear, move.
+
+| Verb | Verbatim usage | Source |
+|------|----------------|--------|
+| ration / rationing | "Corporate buyers started rationing the spend openly" | 2026-06-01 |
+| land / lands / landed | "three things landed in the same five days"; "The Shift now lands on Monday mornings" | 2026-06-01; 2026-05-25 |
+| ship / shipped | "GPT-5.5 shipped this week"; "the first vendor-published frameworks for evaluating AI models shipped" | 2026-04-24; 2026-06-01 |
+| hold the line | "keep review running until the machinery holds the line on its own" | 2026-05-25 |
+| bank (a saving) | "you bank a small saving while the loan ceiling stays exactly where it was"; "Book the saving only when that throughput shows up" | 2026-05-25 |
+| clear (work) | "the same team clears more applications" | 2026-05-25 |
+| walk back | "AI's loudest voices walked back their own jobs forecasts" | 2026-06-01 |
+| push on | "The five items below are what I would push on first" | 2026-06-08 |
+| pull (a lever) | "The review window is the lever to pull this quarter" | 2026-05-15 |
+
+### How Tom addresses the reader
+
+Second person, concrete possessions. The reader owns a team, a patch cycle, a desk, a CTO conversation.
+
+| Phrasing | Verbatim usage | Source |
+|----------|----------------|--------|
+| your team | "Why it matters to your team" (recurring per-item section header) | every edition |
+| your patch cycle | "your patch cycle stays where it was"; "measure your patch cycle for critical dependency vulnerabilities in days" | 2026-05-25 |
+| your CTO | "the discipline conversation you are having with your CTO this quarter" | 2026-06-01 |
+| on your desk | "Which of the six is on your desk this week?" | 2026-05-01 |
+| your security team | "this lands on your security team as a backlog" | 2026-05-25 |
+| the bottleneck in your team's work | "The bottleneck in your team's work has moved off the model" | 2026-06-08 |
+
+### How Tom talks about himself and Windy Road
+
+"We" for the team and its work; "I" for personal conviction and predictions. Predictions are hedged, not asserted.
+
+| Phrasing | Verbatim usage | Source |
+|----------|----------------|--------|
+| I keep coming back to | "I keep coming back to one idea"; "I keep coming back to who owns your data and who owns the choice" | 2026-06-15; 2026-04-24 |
+| I call that ... | "I call that test theatre" | 2026-05-01 |
+| what I would push on first / the candidate I would start with | "The five items below are what I would push on first"; "the candidate I would start with" | 2026-06-08; 2026-06-15 |
+| we are ready to be wrong about | "A call we're ready to be wrong about" | 2026-04-17 |
+| we build / we maintain | "we build our own counter-pressure as open-source plugins of skills, agents, and hooks"; "the harnesses we maintain in our own work" | 2026-05-25; 2026-05-15 |
+| we wrote / we will quote | "We wrote about that earlier this week"; "We will quote the sharpest takes in next week's edition" | 2026-05-01 |
+
+### Idioms Tom does not use (banned)
+
+Source: documented Tom-rejections recorded in P077, not the published corpus. These are phrasings the voice gate passed but Tom rejected on review.
+
+| Class | Phrases to avoid | Note |
+|-------|-----------------|------|
+| Finance / legal idioms | "came due", "on the table", "in the red" | Tom on "came due": "I don't talk like that". |
+| Journalism cliches | "narrative tide turns", "this beat", "the story is", "what to watch" | "narrative tide turns" rejected in a heading iteration; "this beat" flagged in a From-Tom opener. |
+| Abstract-noun stacks | "substrate provider", "eval-governance reference structures", "containment patterns", "sandboxing patterns" (as a heading phrase) | Each matched the gloss-on-first-use rule mechanically but failed the CTO-from-a-non-AI-native-company clarity test (see Reading level and jargon load above). |
+
+Curation note: both forms shipped in the 2026-05-15 edition ("which vendor's services arm" in body prose, "services-arm" in the Item 2 heading and a note), yet "services-arm" was listed as a Tom-rejection in the 2026-06-01 prep run that opened P077. Whether the hyphenated stacked form is acceptable is Tom's to settle; this is exactly the kind of entry the curation pass exists to resolve.
 
 ---
 
