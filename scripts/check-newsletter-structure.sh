@@ -18,8 +18,8 @@
 # Checks (each violation prints "FAIL [<id>] <brief>:<line>: <message>"):
 #   a  no "**Source.**" / "**Source:**" line in an item that already carries an
 #      inline markdown link (the redundant trailing-source defect)
-#   b  no link-free line naming two or more distinct news outlets (the
-#      "corroborated by Reuters, FT, NYT, and WSJ" unlinked-list defect)
+#   b  no link-free line naming a news outlet that is not linked elsewhere in the
+#      same item (the name-without-link defect; one bare outlet is enough)
 #   c  a "### Also worth noting" section is present (the closing coda)
 #   d  the H1 matches "^# Issue NN: " (the published-edition title prefix)
 #   e  a "---" horizontal rule appears after the last section, before the CTA
@@ -31,16 +31,21 @@
 #      a disallowed second prose line
 #
 # Notes on determinism:
-#   Check (b) fires on a line that has no markdown link AND names two or more
-#   distinct outlets. This catches the "corroborated by Reuters, FT, NYT, and
-#   WSJ" unlinked-list defect while passing both the legitimate single-outlet
-#   back-reference ("the WSJ piece is worth reading") and the linked-attribution
-#   pattern ("The Wall Street Journal reported [headline](url)"). A single bare
-#   outlet name, or an outlet name appended to a link-bearing line, is not
-#   flagged; that is an accepted trade-off for zero false positives on the
-#   known-good published format. A full name and its abbreviation (Wall Street
-#   Journal / WSJ) count as two; a single line carrying both is improbable in
-#   the unlinked-list defect and is the documented edge.
+#   Check (b) fires on a link-free line that names a news outlet which is not
+#   linked anywhere in the same item (an item is "### "-heading delimited). This
+#   catches both the "corroborated by Reuters, FT, NYT, and WSJ" unlinked-list
+#   defect AND a single bare outlet ("Bloomberg reported the loss" with no link),
+#   per Tom's pipeline rule: do not name a news site without linking it (P093).
+#   The legitimate back-reference is carved out per item: "the WSJ piece is worth
+#   reading" passes when WSJ is linked elsewhere in the same item. "Linked" is
+#   detected from the item's link-bearing lines by (1) the outlet name on a link
+#   line, and (2) the outlet's canonical domain (wsj.com, bloomberg.com, ...) or
+#   a syndication domain (finance.yahoo.com -> Bloomberg, yahoo.com/news -> Axios)
+#   appearing in a markdown-link URL. A bare outlet that is linked nowhere in its
+#   item is flagged; the resolution is to add the link (or whitelist upstream),
+#   not to suppress the check. The linked-attribution pattern ("The Wall Street
+#   Journal reported [headline](url)") is unaffected: the name sits on a
+#   link-bearing line, which marks the outlet linked and is never itself flagged.
 
 set -uo pipefail
 
@@ -77,37 +82,85 @@ body_text() { printf '%s\n' "$body" | cut -f2-; }
 
 # --- (a) redundant Source line + (b) outlet named without a link --------------
 # One awk pass over the body. Emits "<id>\t<line>\t<message>" rows on stdout.
+#
+# Check (a) is line-level streaming. Check (b) is per-item (P093): it buffers
+# every link-free line of an item, builds the item's set of linked outlets from
+# its link-bearing lines (by outlet name on a link line, and by canonical /
+# syndication URL domain), then flushes at each "### " boundary and at EOF,
+# flagging any link-free line that names an outlet NOT linked in that item.
 while IFS=$'\t' read -r code ln msg; do
   [ -n "${code:-}" ] || continue
   fail "$code" "$brief:$ln: $msg"
 done < <(printf '%s\n' "$body" | awk -F'\t' -v full="$OUTLETS_FULL" '
+  BEGIN {
+    nfull = split(full, fulls, "|");
+    fullcanon["reuters"] = "reuters"; fullcanon["financial times"] = "ft";
+    fullcanon["new york times"] = "nyt"; fullcanon["wall street journal"] = "wsj";
+    fullcanon["bloomberg"] = "bloomberg"; fullcanon["axios"] = "axios";
+    fullcanon["politico"] = "politico";
+    nabbr = split("FT|NYT|WSJ", abbrs, "|");
+    abbrcanon["FT"] = "ft"; abbrcanon["NYT"] = "nyt"; abbrcanon["WSJ"] = "wsj";
+    # Canonical outlet domains (regex; dots escaped). Index-aligned with domcanon.
+    ndom = split("reuters\\.com|ft\\.com|nytimes\\.com|wsj\\.com|bloomberg\\.com|axios\\.com|politico\\.com", doms, "|");
+    domcanon[1] = "reuters"; domcanon[2] = "ft"; domcanon[3] = "nyt";
+    domcanon[4] = "wsj"; domcanon[5] = "bloomberg"; domcanon[6] = "axios";
+    domcanon[7] = "politico";
+    nbuf = 0;
+  }
+
+  # Mark every outlet linked by a link-bearing line: by name on the line, and by
+  # canonical or syndication URL domain. Adds canonical keys to the linked[] set.
+  function add_linked(line,    low, i) {
+    low = tolower(line);
+    for (i = 1; i <= nfull; i++)
+      if (low ~ ("(^|[^a-z])" fulls[i] "([^a-z]|$)")) linked[fullcanon[fulls[i]]] = 1;
+    for (i = 1; i <= nabbr; i++)
+      if (line ~ ("(^|[^A-Za-z])" abbrs[i] "([^A-Za-z]|$)")) linked[abbrcanon[abbrs[i]]] = 1;
+    # Syndication domains (host + path) checked before bare canonical domains.
+    if (low ~ /finance\.yahoo\.com/) linked["bloomberg"] = 1;
+    if (low ~ /yahoo\.com\/news/) linked["axios"] = 1;
+    for (i = 1; i <= ndom; i++)
+      if (low ~ doms[i]) linked[domcanon[i]] = 1;
+  }
+
+  # Flush the buffered link-free lines of the item just completed: flag any line
+  # naming an outlet that is not in the item linked[] set.
+  function flush_item(    k, low, i, hits) {
+    for (k = 1; k <= nbuf; k++) {
+      low = tolower(buf_line[k]);
+      hits = 0;
+      for (i = 1; i <= nfull; i++)
+        if (low ~ ("(^|[^a-z])" fulls[i] "([^a-z]|$)") && !(fullcanon[fulls[i]] in linked)) hits++;
+      for (i = 1; i <= nabbr; i++)
+        if (buf_line[k] ~ ("(^|[^A-Za-z])" abbrs[i] "([^A-Za-z]|$)") && !(abbrcanon[abbrs[i]] in linked)) hits++;
+      if (hits >= 1)
+        printf "b\t%d\tnews outlet named without a link on this line and not linked elsewhere in the item\n", buf_ln[k];
+    }
+    nbuf = 0;
+    split("", linked);
+  }
+
   {
     ln = $1; line = $2;
-    if (line ~ /^### /) item_has_link = 0;
-    if (line ~ /\]\(/) item_has_link = 1;
+    if (line ~ /^### /) { flush_item(); item_has_link = 0; }
+    has_link = (line ~ /\]\(/);
+    if (has_link) item_has_link = 1;
 
     # (a) a Source attribution line inside an item that already links inline
     if (line ~ /^\*\*Sources?[.:]/ && item_has_link == 1) {
       printf "a\t%d\tredundant **Source** line; item already carries inline link(s)\n", ln;
     }
 
-    # (b) two or more distinct outlets named on a line that carries no link
-    if (line !~ /\]\(/) {
-      low = tolower(line);
-      n = split(full, fulls, "|");
-      hits = 0;
-      for (i = 1; i <= n; i++) {
-        if (low ~ ("(^|[^a-z])" fulls[i] "([^a-z]|$)")) hits++;
-      }
-      m = split("FT|NYT|WSJ", abbrs, "|");
-      for (i = 1; i <= m; i++) {
-        if (line ~ ("(^|[^A-Za-z])" abbrs[i] "([^A-Za-z]|$)")) hits++;
-      }
-      if (hits >= 2) {
-        printf "b\t%d\ttwo or more news outlets named without a link on this line\n", ln;
-      }
+    # (b) accumulate: link-bearing lines feed the linked[] set; link-free lines
+    # are buffered for the flush at the next item boundary / EOF.
+    if (has_link) {
+      add_linked(line);
+    } else {
+      nbuf++; buf_line[nbuf] = line; buf_ln[nbuf] = ln;
     }
   }
+
+  END { flush_item(); }
 ')
 
 # --- (c) "### Also worth noting" section present ------------------------------

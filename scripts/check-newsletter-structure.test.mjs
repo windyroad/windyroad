@@ -105,6 +105,48 @@ describe('check-newsletter-structure.sh', () => {
     expect(r.stderr).toContain('[b]');
   });
 
+  // P093: check (b) now also flags a SINGLE bare unlinked outlet, not only 2+.
+  // Tom's pipeline rule (2026-06-15 P089 review): do not name a news site
+  // without linking it. The carve-out is per-item: a bare outlet passes only
+  // when it is linked elsewhere in the same `### ` item (legitimate
+  // back-reference), matched by URL domain including syndication domains.
+  it('(b) flags a SINGLE bare outlet named on a link-free line, unlinked in its item', () => {
+    // Reuters appears only on this link-free line; the item links anthropic.com
+    // and wsj.com but never Reuters, so Reuters is an unlinked bare name.
+    const broken = VALID_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      '**Why it matters to your team.** Reuters said the same thing.',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[b]');
+  });
+
+  it('(b) passes a single bare outlet that is linked elsewhere in the same item (back-reference)', () => {
+    // WSJ is linked in Item 1 via the wsj.com URL on the "What happened" line;
+    // a later link-free line naming "the WSJ piece" is a legitimate
+    // back-reference and must NOT be flagged.
+    const backref = VALID_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      '**Why it matters to your team.** The WSJ piece is worth reading in full.',
+    );
+    const r = run(fixture(backref, VALID_LINKEDIN));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('(b) passes a bare outlet linked only via a syndication domain (finance.yahoo.com -> Bloomberg)', () => {
+    // The item links a Bloomberg piece via a finance.yahoo.com syndication URL
+    // where the anchor/prose on the link line does NOT name Bloomberg; a later
+    // link-free line names "Bloomberg" bare. The syndication-domain map must
+    // recognise Bloomberg as linked so the back-reference passes.
+    const syndicated = VALID_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      '**What shifted.** Markets reacted to [the inverse anxiety](https://finance.yahoo.com/news/ai-coders-105500495.html) (Jun 14).\n\n**Why it matters to your team.** Bloomberg framed it as a warning.',
+    );
+    const r = run(fixture(syndicated, VALID_LINKEDIN));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
   it('(c) flags a missing "### Also worth noting" section', () => {
     const broken = VALID_BRIEF.replace('### Also worth noting', '### One more thing');
     const r = run(fixture(broken, VALID_LINKEDIN));
