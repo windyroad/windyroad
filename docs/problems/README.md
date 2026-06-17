@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-16 **P093 closed** - extended newsletter structural-lint check (b) in `scripts/check-newsletter-structure.sh` to flag a single bare unlinked outlet (not only 2+), per Tom's P089-review directive (do not name a news site without linking it). Restructured to a per-item linked-outlet accumulator with a same-item back-reference carve-out (by outlet name, canonical domain, and the finance.yahoo.com->Bloomberg / yahoo.com/news->Axios syndication map). 3 new behavioural vitest cases + unchanged Issue-09 fixture, 16/16 green. Architect + JTBD PASS, no new ADR (routine refinement of the ungoverned P089 gate). Open to Closed bypassing Verifying (deterministic repo-local script, live on commit, test-verified).
+> Last reviewed: 2026-06-17 **P096 captured** - work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -31,6 +31,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 3 (Medium) | Open | M | 2026-06-03 | internal |
+| 1.5 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P094 | extend the domain-specific critic supersede to wr-blog (retire wr-sw-critic entirely) | 6 (Medium) | Open | L | 2026-06-16 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
