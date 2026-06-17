@@ -15,6 +15,21 @@ Session: P077 Tom-directed curation of docs/VOICE-AND-TONE.md "Tom's voice refer
 
 ---
 
+Session: AFK work-problems iteration, P081 (extend wr-newsletter-editor with passage-cited editorial-craft pass; amend ADR-020 in place; wire SKILL.md step 15.25) per Tom's resolved direction.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (none) | (none) | No AskUserQuestion calls fired this iteration. Tom's direction was already resolved and recorded on the ticket; the task explicitly forbade AskUserQuestion. ADR-074 substance-confirm guard satisfied (ADR-020 human-oversight: confirmed). |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+---
+
 Session: AFK work-problems iteration, P092 (push:watch pull-rebase + transient-error robustness) Known Error to Verification Pending transition per ADR-022.
 
 | Call # | Header | Classification | Citation |
