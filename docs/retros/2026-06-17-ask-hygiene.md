@@ -42,3 +42,18 @@ Session: AFK work-problems iteration, P092 (push:watch pull-rebase + transient-e
 **Silent-framework count: 0**
 **Taste count: 0**
 **Correction-followup count: 0**
+
+---
+
+Session: AFK work-problems iteration, P072 (ADR-034 Phase 1: repo-local deps-fix flow scripts/fix-deps.sh + push-watch fail-fast HALT wiring) per Tom's resolved direction (Option B, repo-local, modelled on ../bbstats).
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (none) | (none) | No AskUserQuestion calls fired this iteration. Tom's direction was resolved and recorded on the ticket; ADR-034 carries human-oversight: confirmed (ADR-074 substance-confirm guard satisfied); the task explicitly forbade AskUserQuestion. The I13 RFC-trace gate did NOT fire an ask (framework not adopted in windyroad; took legacy direct-implementation path per SKILL). |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
