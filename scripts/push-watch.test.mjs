@@ -91,6 +91,28 @@ describe('push-watch.sh: is_transient_gh_error (P092 case C)', () => {
   });
 });
 
+describe('push-watch.sh: deps_gate_route (P072 / ADR-034 Phase 1 fail-fast)', () => {
+  // After the ADR-021 inline auto-resolve, push:watch re-checks dry-aged-deps.
+  // A zero exit means deps are clean and the push proceeds; a non-zero exit
+  // means stale deps remain that auto-resolve could not clear, so push:watch
+  // HALTs and routes the operator to the separate fix flow (npm run fix:deps).
+  it('routes a clean dep-check (exit 0) to proceed', () => {
+    expect(probe('deps_gate_route 0')).toBe('proceed');
+  });
+
+  it('routes a stale dep-check (exit 1) to halt', () => {
+    expect(probe('deps_gate_route 1')).toBe('halt');
+  });
+
+  it('treats any non-zero exit code as halt', () => {
+    expect(probe('deps_gate_route 2')).toBe('halt');
+  });
+
+  it('defaults a missing exit code to proceed (no stale signal)', () => {
+    expect(probe('deps_gate_route')).toBe('proceed');
+  });
+});
+
 describe('push-watch.sh: is_sibling_amend (P092 case B)', () => {
   it('detects a sibling-amend (amended just-pushed commit shares a parent with the upstream tip)', () => {
     const out = probeInRepo(

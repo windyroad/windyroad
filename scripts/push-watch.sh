@@ -108,6 +108,18 @@ is_sibling_amend() {
   [ "$head_parent" = "$upstream_parent" ]
 }
 
+# Helper: route the push gate from the post-auto-resolve dep-check exit code
+# (P072 / ADR-034 Phase 1). After ADR-021's inline `dry-aged-deps --update --yes`
+# has applied what it can, re-check freshness. Exit 0 -> deps clean, "proceed"
+# with the push. Non-zero -> stale deps remain that auto-resolve could not clear
+# (major-version bumps, peer-dep conflicts, breaking-change patterns); the caller
+# HALTs and routes the operator to the separate fix flow (npm run fix:deps)
+# rather than swallowing the signal or deferring it to the ADR-022 cron. A missing
+# argument defaults to "proceed" (no stale signal observed).
+deps_gate_route() {
+  if [ "${1:-0}" -eq 0 ]; then echo proceed; else echo halt; fi
+}
+
 # Test seam (P092): allow the behavioural test (scripts/push-watch.test.mjs) to
 # source the helper functions above without executing the push/watch flow. The
 # "&&" short-circuit is exempt from "set -e" when the condition is false.
@@ -141,6 +153,26 @@ if ! git diff --quiet -- package.json package-lock.json; then
   echo "Auto-deps refresh changed root manifests; committing as chore(deps)."
   git add package.json package-lock.json
   git commit -m "chore(deps): refresh stale dependencies (P026)"
+fi
+
+# Fail fast on stale deps the inline auto-resolve could not clear (ADR-034
+# Phase 1, P072). ADR-021's `--update --yes` above handles the auto-resolvable
+# subset; anything left (major-version bumps, peer-dep conflicts, breaking-change
+# patterns) is a manual-intervention class. Re-check now and HALT before spending
+# a push + CI round-trip, routing the operator to the separate fix flow. This
+# supersedes ADR-022's cron-PR deferral: the fix flow validates (test) before it
+# commits, so the operator does not review untested dep bumps. push:watch stays
+# focused on push + watch and does NOT run the fix flow inline.
+deps_check_rc=0
+npx --no-install dry-aged-deps --check >/dev/null 2>&1 || deps_check_rc=$?
+if [ "$(deps_gate_route "$deps_check_rc")" = "halt" ]; then
+  echo ""
+  echo "✗ Stale dependencies remain that auto-resolve could not clear." >&2
+  echo "  Run the separate fix flow, then re-run push:watch:" >&2
+  echo "" >&2
+  echo "    npm run fix:deps   # apply updates, run tests, commit on green" >&2
+  echo "    npm run push:watch" >&2
+  exit 1
 fi
 
 # Defence-in-depth: block on red CI on the branch we're about to push to.

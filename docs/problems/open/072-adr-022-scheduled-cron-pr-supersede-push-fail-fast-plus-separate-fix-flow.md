@@ -1,6 +1,6 @@
 # Problem 072: ADR-022 scheduled-cron deps refresh PR is wrong shape; push-fail-fast + separate fix flow is the desired pattern
 
-**Status**: Open (direction resolved 2026-06-17; actionable)
+**Status**: Open (Phase 1 implemented 2026-06-17; Phase 2 cron-retire + end-to-end validation remain)
 **Reported**: 2026-05-30
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
@@ -51,12 +51,30 @@ Resolution: **Option B (repo-local)**. Build the deps-fix flow IN THIS REPO, e.g
 - **Architect (2026-06-17): PASS.** Repo-local placement is inside ADR-034's decision envelope ("or equivalent flow") and contradicts no ADR; it also keeps the work under this project's own authority rather than proposing it to an external repo (per project memory on upstream-placement, P045). ADR-034 carries `human-oversight: confirmed`, so building against it is ratified.
 - This resolves the Investigation Task "Design the fix flow invocation surface" toward a repo-local script (not a new upstream skill).
 
+### Phase 1 Implemented (2026-06-17, work-problems loop)
+
+ADR-034 Phase 1 shipped repo-local in windyroad (per Tom's resolved direction, Option B):
+
+- **`scripts/fix-deps.sh` (new)**: the separate deps-fix flow ADR-034 requires ("or equivalent flow"). Flow is detect (`dry-aged-deps --check`), apply (`dry-aged-deps --update`), test (`npm test`), then commit-on-green or restore-known-good-manifests-and-HALT-on-red. Modelled on the sibling repo `../bbstats`'s auto-deps flow (detect, apply, test, then commit-on-green or revert-and-escalate-on-red), adapted to windyroad's local, non-CI, single-package, `private: true` shape (no changeset, no prod-deploy surface). Invoked via `npm run fix:deps`. Carries a `FIX_DEPS_LIB_ONLY` sourcing seam for behavioural unit tests.
+- **`scripts/push-watch.sh` (edited)**: after the ADR-021 inline `dry-aged-deps --update --yes` auto-resolve plus `chore(deps)` commit, re-checks `dry-aged-deps --check` and HALTs (exit non-zero) routing the operator to `npm run fix:deps` when stale deps remain that auto-resolve could not clear, BEFORE the push plus CI round-trip. New pure `deps_gate_route` helper (exit-code to proceed or halt) makes the routing decision unit-testable. push:watch stays focused on push plus watch; it does NOT run the fix flow inline (ADR-034 separation-of-concerns).
+- **`package.json` (edited)**: added `"fix:deps": "bash scripts/fix-deps.sh"`.
+- **Tests**: `scripts/fix-deps.test.mjs` (new, covers `fix_deps_commit_body`) plus `deps_gate_route` cases added to `scripts/push-watch.test.mjs`. TDD red then green; all 16 vitest cases pass.
+
+**Gate reviews (pre-edit)**: architect PASS (inside ADR-034's confirmed "or equivalent flow" envelope; no new ADR needed), jtbd PASS (internal tooling, no user-facing surface), risk-scorer PASS (residual 4/25 Low, within appetite).
+
+**Deviation note (no RFC trace)**: windyroad has NOT adopted the wr-itil Problem-RFC-Story framework (no `docs/rfcs/`, no `docs/stories/`, no ADR adopting ADR-060). The wr-itil `manage-problem` I13 RFC-trace gate's auto-create path would bootstrap an entire unadopted framework, a direction-setting scope expansion outside ADR-034 Phase 1. This fix took the SKILL's documented legacy direct-implementation path (the pre-RFC-framework flow) instead. Framework adoption, if ever desired, is a separate human-confirmed decision.
+
+### Remaining (Phase 2 plus validation)
+
+- ADR-034 confirmation criterion (d): the next real dep issue handled end-to-end via the new flow (future event; validates the design in practice).
+- ADR-034 Phase 2 (explicitly out of scope this iteration): retire `.github/workflows/deps-refresh.yml` (ADR-022's cron) and flip ADR-022 to `superseded`. ADR-034 sequencing forbids retiring the cron before Phase 1 ships; Phase 1 has now shipped, so Phase 2 is unblocked as a future slice.
+
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Author the superseding ADR via /wr-architect:create-adr documenting: (1) push:watch auto-update inline behaviour (preserved from ADR-021), (2) push:watch fail-fast on dry-aged-deps non-zero (new), (3) separate fix flow shape (auto-update plus test plus fix plus commit, outside push:watch).
-- [ ] Decide whether to retire ADR-022's cron workflow (.github/workflows/deps-refresh.yml) once the new flow ships, or keep it as a belt-and-braces cadence.
-- [x] Design the fix flow invocation surface: standalone script? new /wr-itil:fix-deps skill? hook on push gate failure? (RESOLVED 2026-06-17: repo-local flow, e.g. `scripts/fix-deps.sh`, modelled on ../bbstats; NOT upstream in wr-itil. See Direction Resolved above.)
+- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems (Phase 1 effort consumed; remaining is Phase 2 cron-retire, S).
+- [x] Author the superseding ADR via /wr-architect:create-adr documenting: (1) push:watch auto-update inline behaviour (preserved from ADR-021), (2) push:watch fail-fast on dry-aged-deps non-zero (new), (3) separate fix flow shape. (DONE: ADR-034 exists, `human-oversight: confirmed`.)
+- [ ] Phase 2: retire ADR-022's cron workflow (.github/workflows/deps-refresh.yml) now that Phase 1 has shipped, and flip ADR-022 to superseded. (Decided in ADR-034 Decision Outcome; sequenced as Phase 2.)
+- [x] Design the fix flow invocation surface: standalone script? new /wr-itil:fix-deps skill? hook on push gate failure? (RESOLVED 2026-06-17: repo-local flow `scripts/fix-deps.sh`, modelled on ../bbstats; NOT upstream in wr-itil. Implemented this iteration. See Phase 1 Implemented above.)
 
 ## Dependencies
 
