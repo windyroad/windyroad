@@ -157,3 +157,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-06-17
 
 > Last reviewed: 2026-06-16 **P093 closed** - extended newsletter structural-lint check (b) in `scripts/check-newsletter-structure.sh` to flag a single bare unlinked outlet (not only 2+), per Tom's P089-review directive (do not name a news site without linking it). Restructured to a per-item linked-outlet accumulator with a same-item back-reference carve-out (by outlet name, canonical domain, and the finance.yahoo.com->Bloomberg / yahoo.com/news->Axios syndication map). 3 new behavioural vitest cases + unchanged Issue-09 fixture, 16/16 green. Architect + JTBD PASS, no new ADR (routine refinement of the ungoverned P089 gate). Open to Closed bypassing Verifying (deterministic repo-local script, live on commit, test-verified).
+
+> Last reviewed: 2026-06-17 **P096 captured** - work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers (lightweight aside via /wr-itil:capture-problem).
