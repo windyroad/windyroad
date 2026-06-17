@@ -1,6 +1,6 @@
 # Problem 081: Newsletter pipeline missing an external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review
 
-**Status**: Open (direction resolved 2026-06-17; core fix implemented 2026-06-17, see Implementation below; remaining: skip-on-REJECTED decision + validate on next /wr-newsletter run)
+**Status**: Open (direction resolved 2026-06-17; core fix + skip-on-REJECTED wiring implemented 2026-06-17, see Implementation below; sole remaining task: validate on next /wr-newsletter run)
 **Reported**: 2026-06-01
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 4 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -85,10 +85,18 @@ Core direction implemented and committed (repo-local; this is the windyroad cons
 - **ADR-020 amended in place** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): added an "Amendment 2026-06-17 (P081)" section, revised confirmation criterion 1's pinned output contract and the Decision Outcome code block to carry the `EDITORIAL_CRAFT` block and the extended verdict. NOT a supersede, NOT a new ADR; ADR stays `proposed` with `human-oversight: confirmed`. The decisions compendium (`docs/decisions/README.md`) was regenerated to reflect the amended entry.
 - **`.claude/skills/wr-newsletter/SKILL.md` step 15.25 wired**: the parse block now expects the `EDITORIAL_CRAFT` block; the verdict prose and the step-17 Tom-summary line note that a craft weakness also yields NEEDS_EDITORIAL_REVISION.
 
+### Skip-on-upstream-REJECTED resolved (2026-06-17, follow-up work-problems iter)
+
+Tom resolved the deferred skip-on-upstream-REJECTED question with **skip-on-REJECTED** for the extended editor, NOT the recorded "editor still runs" proposal. When the step-15 newsletter-critic returns `VERDICT: REJECTED`, step 15.25 is skipped and the editor is not invoked; the draft is already going back for argument-quality rework, so spending the editor invocation (now including its editorial-craft pass) on it wastes the invocation on a draft that is being rewritten anyway. The reworked draft re-runs through the full gate sequence (step 15.25 included) on its next pass, so no publish-bound draft escapes editor review. The editor runs as normal on the two terminal publish-ready verdicts (`PASS` / `PASS_WITH_AUTHOR_OVERRIDES`).
+
+Implemented (repo-local; architect PASS, JTBD PASS, voice-tone PASS 2026-06-17):
+
+- **`.claude/skills/wr-newsletter/SKILL.md` step 15.25** skip-on-upstream-REJECTED guard tightened to make the verdict cases explicit (skip iff terminal step-15 verdict is REJECTED; run on PASS / PASS_WITH_AUTHOR_OVERRIDES; WEAKNESSES_FOUND never reaches the gate) and to carry Tom's rationale (editor cost wasted on an already-REJECTED draft) plus the resolution note that the "editor still runs" proposal was rejected.
+- **ADR-020 amendment** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): the "investigation task still open" sentence in the Amendment 2026-06-17 Reviews block was corrected to a "Skip-on-upstream-REJECTED resolved 2026-06-17 (P081)" paragraph recording skip-on-REJECTED retained, the run-on-REJECTED proposal rejected, and that this confirms (does not change) confirmation criterion 3. Compendium regenerated.
+
 Remaining work on this ticket:
 
-- **Skip-on-upstream-REJECTED decision deferred** to a follow-up. P081 proposes the extended editor should run even on a critic-REJECTED draft (craft findings help diagnose a structurally weak draft). This changes pipeline orchestration (the agent's Step 2 defence-in-depth check and the SKILL step 15.25 skip prose), not the output contract, so it is out of scope for this bounded extension and recorded as a follow-up in the ADR-020 amendment.
-- **Validate on next `/wr-newsletter` run**: count how many of Tom's manual editorial-craft findings the extended editor surfaces vs the prior three-axis editor (also satisfies ADR-020 confirmation criterion 12 first-live-run validation).
+- **Validate on next `/wr-newsletter` run**: count how many of Tom's manual editorial-craft findings the extended editor surfaces vs the prior three-axis editor (also satisfies ADR-020 confirmation criterion 12 first-live-run validation). This is the SOLE remaining task; it needs Tom plus a live `/wr-newsletter` run.
 
 ### Investigation Tasks
 
@@ -96,7 +104,7 @@ Remaining work on this ticket:
 - [x] Decide on placement: add alongside step 15.25 or supersede current editor. (Captured 2026-06-02 work-problems iter 7: architect review surfaced Option A vs Option B with lean toward B; direction-class question routed to outstanding_questions per ADR-074. RESOLVED 2026-06-17: Tom chose a third option, EXTEND the existing ADR-020 editor; see Direction Resolved above.)
 - [x] Extend `.claude/agents/wr-newsletter-editor.md` so its output adds passage-cited editorial-craft weaknesses (opener-earns-thesis, fold compression, audience-pointer specificity, sentence rhythm, ATWN thesis-fit) alongside the existing would-open / would-read-through / would-forward axes. Mirror the ADR-035 S/W + passage citation + suggested fix shape. (Done 2026-06-17, see Implementation above.)
 - [x] Amend ADR-020 via `/wr-architect` (scope extension): document the editorial-craft axes and revise confirmation criterion 1's pinned `EDITOR_REVIEW` output contract to carry the passage-cited weaknesses. No supersede, no new ADR. (Done 2026-06-17: in-place amendment, architect PASS; compendium regenerated.)
-- [ ] Decide the skip-on-upstream-REJECTED behaviour for the extended editor (proposal: the editor still runs when SW-critic returns REJECTED, since editorial-craft findings help diagnose a structurally weak draft). (Deferred to follow-up 2026-06-17: changes pipeline orchestration, not the output contract; recorded in the ADR-020 amendment.)
+- [x] Decide the skip-on-upstream-REJECTED behaviour for the extended editor. (RESOLVED 2026-06-17: Tom chose **skip-on-REJECTED** for the extended editor, NOT the recorded "editor still runs" proposal. The editor is not invoked at step 15.25 when the step-15 newsletter-critic returns REJECTED, because the draft is already going back for rework and running the editor incl. its editorial-craft pass wastes the invocation. Wired in SKILL.md step 15.25 and recorded in the ADR-020 amendment; see Implementation 2026-06-17 below.)
 - [x] Update SKILL.md step 15.25 invocation / prompt to reflect the extended editor output. (Done 2026-06-17.)
 - [ ] Test on next edition: count how many of Tom's manual editorial findings the extended editor surfaces vs the prior three-axis editor.
 
