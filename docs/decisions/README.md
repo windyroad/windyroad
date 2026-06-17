@@ -127,7 +127,7 @@ _36 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-026  -  Newsletter reviews and meta content live in sibling files, not inline in the brief
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **1. All reviews and meta content live in sibling files. Brief contains only frontmatter + body + CTA**.
+**Chosen:** Chosen option: **1. All reviews and meta content live in sibling files. Brief contains only frontmatter + body + CTA**. Amended 2026-06-17 (P079): the `.linkedin.md` sibling's internal shape narrows to YAML frontmatter (post-type + companion-to) plus post body only (no `## LinkedIn Post` / `## Image` / `## Notes for posting` headings, no manual link line); the separation invariant is unchanged.
 **Confirmation:** (1) /wr-newsletter step 16 (all three phases) writes three sibling files; brief contains only frontmatter + bo...; (2) Edition 4's published <date>.md brief contains no ## Voice Review, ## Content Risk Review, ## Critic Revie...; (3) Edition 4's <date>.reviews.md, <date>.linkedin.md, <date>.capture.md siblings exist with the correct conte...; (4) Spot-check on the next critic round (sw-critic re-running on the post-edit brief): the agent's transcript ...
 
 ### ADR-027  -  Encode newsletter primacy in the risk Impact rubric

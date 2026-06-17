@@ -16,6 +16,12 @@ amended-by: [039-per-date-subdir-layout-for-published-newsletter-editions]
 
 ADR-039 (per-date sub-directory layout for published newsletter editions) refreshes the example paths used in this ADR. The sibling-file pattern itself (reviews and meta content live as siblings of the brief, not inline) is unchanged. Affected examples in this ADR: line 26 (Context), line 86 (Consequences, Good), line 111 (More Information, Aligns with). Where the prose cites `src/newsletters/published/leader/2026-04-24.linkedin.md` (flat), the post-ADR-039 layout resolves the same example to `src/newsletters/published/leader/2026-04-24/2026-04-24.linkedin.md` (per-date sub-directory). The example paths in the prose below are left as written for historical-record continuity; the sibling-file pattern they document still holds under the new layout.
 
+## Amendment Note (2026-06-17, P079)
+
+P079 (LinkedIn-post drafter generated auto-share-incompatible extras) narrowed the **internal shape** of the LinkedIn sibling file. The `.linkedin.md` sibling now carries YAML frontmatter (`post-type: linkedin-share` plus `companion-to: <date>.md`) plus the post body ONLY. It no longer carries a `## LinkedIn Post` heading wrapper, a `## Image` section (image path plus alt text), a `## Notes for posting` section, or a manual "Read the full issue: [link]" line in the body. Rationale: The Shift (and Tokens Spent) publish via the LinkedIn Newsletter auto-share feature, which auto-attaches the article cover image as the hero and auto-injects the article URL as a card preview. The image block, posting-notes block, and manual link line were therefore dead or duplicate content the author deleted by hand every edition (confirmed recurring across Issues 07, 08, and 09). The `## LinkedIn Post` heading was redundant scaffolding: the sibling carries one post, and the brief-vs-sibling boundary is already encoded by the file boundary plus frontmatter.
+
+This amendment narrows ONLY the sibling's internal shape. ADR-026's load-bearing **separation invariant** (reviews and meta content live in sibling files, not inline in the brief) is UNCHANGED. The affected prose below is the LinkedIn sibling shape description (Decision Outcome) and confirmation criterion 2; both are updated in place to the minimal shape. See P079 (`docs/problems/verifying/079-...`) for the driver and the `/wr-newsletter` SKILL.md fix.
+
 ## Context and Problem Statement
 
 The `/wr-newsletter` skill step 16 mandates that two classes of artefact live INLINE in the saved brief draft, separated only by `---` rules from the body:
@@ -75,7 +81,7 @@ companion-files:
 
 The reviews sibling file (`<date>.reviews.md`) carries all review blocks: Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta. The audit trail is preserved; the brief is not contaminated.
 
-The LinkedIn sibling file (`<date>.linkedin.md`) carries the post body, image description, alt text, and posting notes. Frontmatter declares `post-type: linkedin-share` and `companion-to: <date>.md`.
+The LinkedIn sibling file (`<date>.linkedin.md`) carries the post body only (no `## LinkedIn Post` heading wrapper, no `## Image` section, no `## Notes for posting` section, no manual "Read the full issue" link line, per the 2026-06-17 P079 amendment note above). Frontmatter declares `post-type: linkedin-share` and `companion-to: <date>.md`.
 
 The capture-transcript sibling (`<date>.capture.md`) stays as ADR 019 already specifies.
 
@@ -102,7 +108,7 @@ The skill's step 16 (across prep / finalise / full phases) is amended to write t
 ## Confirmation
 
 - (1) `/wr-newsletter` step 16 (all three phases) writes three sibling files; brief contains only frontmatter + body + CTA.
-- (2) Edition 4's published `<date>.md` brief contains no `## Voice Review`, `## Content Risk Review`, `## Critic Review`, `## Editor Review`, `## Map Delta`, `## LinkedIn Post`, `## Image`, or `## Notes for posting` sections.
+- (2) Edition 4's published `<date>.md` brief contains no `## Voice Review`, `## Content Risk Review`, `## Critic Review`, `## Editor Review`, or `## Map Delta` sections, and none of the LinkedIn meta content (post body, image notes, posting notes). Per the 2026-06-17 P079 amendment note above, the `.linkedin.md` sibling itself no longer carries `## LinkedIn Post`, `## Image`, or `## Notes for posting` headings (it is frontmatter plus post body only); the original criterion-2 wording named those headings against the brief, and that brief-must-not-contain-them intent still holds.
 - (3) Edition 4's `<date>.reviews.md`, `<date>.linkedin.md`, `<date>.capture.md` siblings exist with the correct content.
 - (4) Spot-check on the next critic round (sw-critic re-running on the post-edit brief): the agent's transcript shows it does not see prior verdicts in the brief file.
 
