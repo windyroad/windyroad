@@ -45,6 +45,21 @@ Session: AFK work-problems iteration, P092 (push:watch pull-rebase + transient-e
 
 ---
 
+Session: AFK work-problems iteration, P079 two follow-ups (amend ADR-026 LinkedIn-sibling shape in place + record promptfoo eval as remaining open Investigation Task) per Tom's resolved direction.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| (none) | (none) | (none) | No AskUserQuestion calls fired this iteration. Tom's answers were recorded in the task prompt and the task explicitly forbade AskUserQuestion. ADR-074 substance-confirm guard satisfied (ADR-026 human-oversight: confirmed). Architect + JTBD gates ran as Agent-tool reviews, not user asks. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+---
+
 Session: AFK work-problems iteration, P072 (ADR-034 Phase 1: repo-local deps-fix flow scripts/fix-deps.sh + push-watch fail-fast HALT wiring) per Tom's resolved direction (Option B, repo-local, modelled on ../bbstats).
 
 | Call # | Header | Classification | Citation |
