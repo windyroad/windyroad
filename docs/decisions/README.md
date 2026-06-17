@@ -99,10 +99,11 @@ _36 ADRs. These are the current rules. The architect agent reads this section fi
 ### ADR-019  -  Capture-transcript artifact for AI-brief drafter fidelity
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Sibling markdown file at `<draft-folder>/YYYY-MM-DD.capture.md`, append-and-survive across phases."**
-
 ### ADR-020  -  Newsletter editor subagent simulates an experienced LinkedIn editor as a fourth review class
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **"Build a fresh-context `wr-newsletter-editor` project-local subagent that simulates an experienced LinkedIn newsletter editor."**
+**Decides:** Add a fresh-context `wr-newsletter-editor` project-local subagent as a fourth review class that simulates an experienced LinkedIn newsletter editor: scoring would-open / would-read-through / would-forward against the persona's JTBD and (per the 2026-06-17 P081 amendment) surfacing passage-cited editorial-craft weaknesses over the brief body (not the LinkedIn teaser). It closes the reader-experience and editorial-judgement gap that rubric expansion (P008/P015 recurrence) cannot; single-shot, persona-grounded, no auto-rewrite, runs only after sw-critic PASS.
+**Confirmation:** `EDITOR_REVIEW` block format pinned verbatim (extended 2026-06-17 per P081 to carry the `EDITORIAL_CRAFT` Strengths/Weaknesses block with craft-axis vocabulary) with mechanical `EDITOR_VERDICT`; agent contract documented (artifact_path + persona + edition_number, reads persona JTBD, fresh context, no rewrites); skip-on-upstream-REJECTED defence-in-depth; SKILL.md updates (step 9 "four gates" intro, step 14 ADR list, steps 15.25 / 15.25-prime, step 16 save-blocks for prep/finalise/full, step 17 Tom-summary); first-live-run verdict validation against Tom's reading.
+**Related:** ADR-011, ADR-012, ADR-015, ADR-016, ADR-017, ADR-018, ADR-033, ADR-035
 
 ### ADR-021  -  Auto-resolve stale dependencies in push:watch
 **Status:** proposed | **Oversight:** confirmed

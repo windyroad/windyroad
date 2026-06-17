@@ -1,6 +1,6 @@
 # Problem 081: Newsletter pipeline missing an external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review
 
-**Status**: Open (direction resolved 2026-06-17; actionable)
+**Status**: Open (direction resolved 2026-06-17; core fix implemented 2026-06-17, see Implementation below; remaining: skip-on-REJECTED decision + validate on next /wr-newsletter run)
 **Reported**: 2026-06-01
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 4 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -77,14 +77,27 @@ Resolution detail:
 - **Architect (2026-06-17): PASS.** The extend choice satisfies ADR-020's own absorption clause (line 94), dissolves the ADR-033 two-editor-names self-documentation concern that drove the prior supersede lean, and adds ZERO new invocations so it holds the ADR-020 15-invocations/issue cost ceiling. JTBD (2026-06-17): PASS; the craft axes compose with the leader (JTBD-001/002/003) and developer (JTBD-200..205) newsletter jobs.
 - **Q2 / Q3 moot.** Q2 (re-assert the 15-invocation ceiling under Option A) does not arise: extending adds no invocations. Q3 (retire ADR-020 as `.superseded.md`) does not arise: ADR-020 is amended, not superseded.
 
+### Implementation (2026-06-17, work-problems iter)
+
+Core direction implemented and committed (repo-local; this is the windyroad consumer repo, no packages/, no changeset). Architect re-reviewed the concrete implementation shape: PASS. JTBD re-reviewed: PASS / aligned.
+
+- **`.claude/agents/wr-newsletter-editor.md` extended.** Added Step 4.5 (editorial-craft pass) over the same brief-body scope, an `EDITORIAL_CRAFT` output block (`Strengths:` plus passage-cited `Weaknesses:` carrying axis + Passage + Issue + Suggested fix), the craft-axis vocabulary (opener-earns-thesis, fold-compression, audience-pointer-specificity, sentence-rhythm, atwn-thesis-fit, other), an extended mechanical verdict (any craft weakness yields NEEDS_EDITORIAL_REVISION; the three reader-experience axes unchanged), updated Hard rules and a Relationship-to-other-gates coverage-partition note (sentence-rhythm is editorial cadence not a word count, so it does not re-import the cog-a11y gate or the ADR-035-retired check_16; argument soundness stays with sw-critic; banned words stay with voice). Scope held brief-body-only; LinkedIn teaser stays out of scope per ADR-020.
+- **ADR-020 amended in place** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): added an "Amendment 2026-06-17 (P081)" section, revised confirmation criterion 1's pinned output contract and the Decision Outcome code block to carry the `EDITORIAL_CRAFT` block and the extended verdict. NOT a supersede, NOT a new ADR; ADR stays `proposed` with `human-oversight: confirmed`. The decisions compendium (`docs/decisions/README.md`) was regenerated to reflect the amended entry.
+- **`.claude/skills/wr-newsletter/SKILL.md` step 15.25 wired**: the parse block now expects the `EDITORIAL_CRAFT` block; the verdict prose and the step-17 Tom-summary line note that a craft weakness also yields NEEDS_EDITORIAL_REVISION.
+
+Remaining work on this ticket:
+
+- **Skip-on-upstream-REJECTED decision deferred** to a follow-up. P081 proposes the extended editor should run even on a critic-REJECTED draft (craft findings help diagnose a structurally weak draft). This changes pipeline orchestration (the agent's Step 2 defence-in-depth check and the SKILL step 15.25 skip prose), not the output contract, so it is out of scope for this bounded extension and recorded as a follow-up in the ADR-020 amendment.
+- **Validate on next `/wr-newsletter` run**: count how many of Tom's manual editorial-craft findings the extended editor surfaces vs the prior three-axis editor (also satisfies ADR-020 confirmation criterion 12 first-live-run validation).
+
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
 - [x] Decide on placement: add alongside step 15.25 or supersede current editor. (Captured 2026-06-02 work-problems iter 7: architect review surfaced Option A vs Option B with lean toward B; direction-class question routed to outstanding_questions per ADR-074. RESOLVED 2026-06-17: Tom chose a third option, EXTEND the existing ADR-020 editor; see Direction Resolved above.)
-- [ ] Extend `.claude/agents/wr-newsletter-editor.md` so its output adds passage-cited editorial-craft weaknesses (opener-earns-thesis, fold compression, audience-pointer specificity, sentence rhythm, ATWN thesis-fit) alongside the existing would-open / would-read-through / would-forward axes. Mirror the ADR-035 S/W + passage citation + suggested fix shape.
-- [ ] Amend ADR-020 via `/wr-architect` (scope extension): document the editorial-craft axes and revise confirmation criterion 1's pinned `EDITOR_REVIEW` output contract to carry the passage-cited weaknesses. No supersede, no new ADR.
-- [ ] Decide the skip-on-upstream-REJECTED behaviour for the extended editor (proposal: the editor still runs when SW-critic returns REJECTED, since editorial-craft findings help diagnose a structurally weak draft).
-- [ ] Update SKILL.md step 15.25 invocation / prompt to reflect the extended editor output.
+- [x] Extend `.claude/agents/wr-newsletter-editor.md` so its output adds passage-cited editorial-craft weaknesses (opener-earns-thesis, fold compression, audience-pointer specificity, sentence rhythm, ATWN thesis-fit) alongside the existing would-open / would-read-through / would-forward axes. Mirror the ADR-035 S/W + passage citation + suggested fix shape. (Done 2026-06-17, see Implementation above.)
+- [x] Amend ADR-020 via `/wr-architect` (scope extension): document the editorial-craft axes and revise confirmation criterion 1's pinned `EDITOR_REVIEW` output contract to carry the passage-cited weaknesses. No supersede, no new ADR. (Done 2026-06-17: in-place amendment, architect PASS; compendium regenerated.)
+- [ ] Decide the skip-on-upstream-REJECTED behaviour for the extended editor (proposal: the editor still runs when SW-critic returns REJECTED, since editorial-craft findings help diagnose a structurally weak draft). (Deferred to follow-up 2026-06-17: changes pipeline orchestration, not the output contract; recorded in the ADR-020 amendment.)
+- [x] Update SKILL.md step 15.25 invocation / prompt to reflect the extended editor output. (Done 2026-06-17.)
 - [ ] Test on next edition: count how many of Tom's manual editorial findings the extended editor surfaces vs the prior three-axis editor.
 
 ## Dependencies

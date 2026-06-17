@@ -754,7 +754,7 @@ Capture the final critic block for the saved draft.
 
 ### 15.25. Editor review gate (ADR 020)
 
-Invoke the `wr-newsletter-editor` subagent (ADR 020). The subagent runs in fresh context, plays the role of an experienced LinkedIn newsletter editor, reads the persona's JTBD context, reads the in-progress draft body, and returns the `EDITOR_REVIEW` block in the format pinned by ADR 020 confirmation criterion 1. The three reader-experience axes (would-open, would-read-through, would-forward) and their persona constraints are documented inside the agent file, not in this skill.
+Invoke the `wr-newsletter-editor` subagent (ADR 020, scope extended 2026-06-17 per P081). The subagent runs in fresh context, plays the role of an experienced LinkedIn newsletter editor, reads the persona's JTBD context, reads the in-progress draft body, and returns the `EDITOR_REVIEW` block in the format pinned by ADR 020 confirmation criterion 1. The subagent does two passes over the brief body: the three reader-experience axes (would-open, would-read-through, would-forward) AND a passage-cited editorial-craft pass (opener-earns-thesis, fold-compression, audience-pointer-specificity, sentence-rhythm, atwn-thesis-fit) reported as `EDITORIAL_CRAFT` strengths and weaknesses. Both passes and their persona constraints are documented inside the agent file, not in this skill. The craft pass is additive: a craft weakness also yields `EDITOR_VERDICT: NEEDS_EDITORIAL_REVISION`.
 
 **Skip-on-upstream-REJECTED.** If the critic loop at step 15 (newsletter-critic per ADR 033) returned `VERDICT: REJECTED` (round-3 exhausted), skip step 15.25 entirely. The editor is not invoked on an analytically-rejected draft; reviewing reader-experience on a draft that already failed argument-quality is not useful. The skipped step is recorded in the saved file (step 16 save-block) as `<editor block> = "N/A: newsletter-critic returned REJECTED"`. A `VERDICT: PASS_WITH_AUTHOR_OVERRIDES` from step 15 does **not** skip step 15.25; the variant is publish-ready (ADR 025) and the editor runs against it as it would against a `PASS`.
 
@@ -791,13 +791,23 @@ EDITORIAL_FINDINGS
   Suggested fix: <concrete direction, not a rewrite>
 - axis: ...
 
+EDITORIAL_CRAFT
+Strengths:
+- <one-line craft strength, or "none noted">
+Weaknesses:
+- axis: <opener-earns-thesis|fold-compression|audience-pointer-specificity|sentence-rhythm|atwn-thesis-fit|other>
+  Passage: "<quoted passage>"
+  Issue: <one sentence, editorial-craft terms>
+  Suggested fix: <concrete direction, not a rewrite>
+- axis: ...
+
 EDITOR_VERDICT: <PASS|NEEDS_EDITORIAL_REVISION>
 END_EDITOR_REVIEW
 ```
 
-If `EDITOR_VERDICT: NEEDS_EDITORIAL_REVISION`: save the draft with the block, surface the verdict prominently in the Tom-summary (lead with the failing axes and Suggested fixes), and proceed to step 15.5 (LinkedIn post still drafts so Tom has both surfaces in the saved file). The editor does not auto-rewrite; Tom decides whether to revise the brief or override the verdict (per ADR 020 Decision Outcome).
+If `EDITOR_VERDICT: NEEDS_EDITORIAL_REVISION`: save the draft with the block, surface the verdict prominently in the Tom-summary (lead with the failing reader-experience axes and any EDITORIAL_CRAFT weaknesses, with their Suggested fixes), and proceed to step 15.5 (LinkedIn post still drafts so Tom has both surfaces in the saved file). The editor does not auto-rewrite; Tom decides whether to revise the brief or override the verdict (per ADR 020 Decision Outcome).
 
-If `EDITOR_VERDICT: PASS`: proceed to step 15.5. Any `tentative` axis flagged with findings still emits `NEEDS_EDITORIAL_REVISION` per the agent's mechanical-verdict rule; a true PASS means three `yes` answers (or three answers with no findings).
+If `EDITOR_VERDICT: PASS`: proceed to step 15.5. Any `tentative` reader-experience axis flagged with findings, or any EDITORIAL_CRAFT weakness, still emits `NEEDS_EDITORIAL_REVISION` per the agent's mechanical-verdict rule; a true PASS means three `yes` reader-experience answers (or three with no findings) AND no craft weaknesses.
 
 If the agent returns `EDITOR_ERROR: upstream gate returned REJECTED; editor will not run` despite the skip-on-REJECTED rule above, treat it as a skill-logic bug. Do not retry; surface the inconsistency in the Tom-summary so the gate orchestration can be fixed.
 
@@ -1112,7 +1122,7 @@ Report back in chat:
   - `PASS_WITH_AUTHOR_OVERRIDES`: report as "Newsletter critic: publish-ready with N documented overrides (round 3)". Quote the `OVERRIDDEN:` list verbatim so the audit trail is visible in chat. Do **not** lead with rejection language; the variant is publish-ready (ADR 025).
   - `REJECTED`: lead the summary with "VERDICT: REJECTED. Do not publish as-is. Rewrite and re-run." and quote the residual weaknesses.
   - The variant is read from the saved structured verdict, not inferred from the weakness list. If the saved verdict and the inferred verdict disagree (e.g. the agent emitted REJECTED but every remaining weakness is in the override list), treat as a skill-logic bug and surface the inconsistency rather than re-classifying the verdict.
-- Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, lead the summary with the failing reader-experience axes (would-open / would-read-through / would-forward) and the Suggested fixes from the EDITORIAL_FINDINGS list. If skipped (newsletter-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
+- Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, lead the summary with the failing reader-experience axes (would-open / would-read-through / would-forward) and any EDITORIAL_CRAFT weaknesses (opener-earns-thesis / fold-compression / audience-pointer-specificity / sentence-rhythm / atwn-thesis-fit), with the Suggested fixes from both the EDITORIAL_FINDINGS and EDITORIAL_CRAFT lists. If skipped (newsletter-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
 - Wardley critic verdict and round count.
 - Map delta (one sentence; for finalise, include any re-mutation delta).
 - URL verification (step 11.5 / 11.5-prime): per-URL verdict summary as a one-line headline (e.g. "URL verification: 9 SUPPORTED, 1 INDIRECT_CONFIRMED, 0 REFUTED, 0 NOT MENTIONED across 10 URLs"). Surface any save-gate interventions inline: REFUTED fixes (with old URL and replacement URL), 404 replacements, NOT MENTIONED escalations to Tom (with the eventual disposition: dropped, swapped, or author-approved). Full per-URL table lives in `<publication-date>.reviews.md` under `## URL Verification`. Per ADR-024 confirmation criterion 4.

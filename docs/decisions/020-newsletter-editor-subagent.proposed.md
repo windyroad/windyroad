@@ -54,7 +54,7 @@ Chosen option: **"Build a fresh-context `wr-newsletter-editor` project-local sub
 
 **Scope: brief body only, not the LinkedIn post.** The editor agent reviews the brief body produced by step 11 / 11-prime, not the LinkedIn teaser drafted at step 15.5. Rationale: would-open / would-read / would-forward on the brief body is the primary subscriber-experience question; the LinkedIn teaser is a one-screen funnel into the brief and is already covered by the voice gate at step 15.5 plus the sw-critic check on the brief that the teaser is sourced from. If retrospective evidence shows would-read failures specific to the LinkedIn teaser (separate from voice failures), a follow-up ADR can either extend ADR 020 to a second invocation site or carve out a `wr-linkedin-teaser-editor` agent. ADR 020 names this scope decision explicitly so the absence of teaser coverage is a known trade-off, not an oversight.
 
-**Output contract.** Pinned by this ADR's confirmation criterion 1 below. The agent emits exactly:
+**Output contract.** Pinned by this ADR's confirmation criterion 1 below (extended 2026-06-17 per P081 to carry the EDITORIAL_CRAFT block; see Amendment 2026-06-17). The agent emits exactly:
 
 ```
 EDITOR_REVIEW
@@ -78,11 +78,21 @@ EDITORIAL_FINDINGS
   Suggested fix: <concrete direction for the drafter, not a rewrite>
 - axis: ...
 
+EDITORIAL_CRAFT
+Strengths:
+- <one-line craft strength naming the move that works, or "none noted">
+Weaknesses:
+- axis: <opener-earns-thesis|fold-compression|audience-pointer-specificity|sentence-rhythm|atwn-thesis-fit|other>
+  Passage: "<quoted passage>"
+  Issue: <what specifically reads as off, in editorial-craft terms>
+  Suggested fix: <concrete direction for the drafter, not a rewrite>
+- axis: ...
+
 EDITOR_VERDICT: <PASS|NEEDS_EDITORIAL_REVISION>
 END_EDITOR_REVIEW
 ```
 
-The verdict is mechanical: any `WOULD_OPEN`, `WOULD_READ_THROUGH`, or `WOULD_FORWARD` returning `no` yields `NEEDS_EDITORIAL_REVISION`. Any `tentative` flagged with at least one EDITORIAL_FINDINGS entry yields `NEEDS_EDITORIAL_REVISION`. Three `yes` with no findings is `PASS`. The skill consumes `EDITOR_VERDICT:` to decide whether to surface the editor block prominently in the Tom-summary; like content-risk, the editor does not auto-rewrite. Tom decides whether to revise or override.
+The verdict is mechanical: any `WOULD_OPEN`, `WOULD_READ_THROUGH`, or `WOULD_FORWARD` returning `no` yields `NEEDS_EDITORIAL_REVISION`. Any `tentative` flagged with at least one EDITORIAL_FINDINGS entry yields `NEEDS_EDITORIAL_REVISION`. Any EDITORIAL_CRAFT weakness entry yields `NEEDS_EDITORIAL_REVISION` (craft strengths never trigger the verdict). Three reader-experience `yes` with no triggering findings and no craft weaknesses is `PASS`. The skill consumes `EDITOR_VERDICT:` to decide whether to surface the editor block prominently in the Tom-summary; like content-risk, the editor does not auto-rewrite. Tom decides whether to revise or override.
 
 **Boundary preservation.** The agent file's "Relationship to other gates" section explicitly draws the line:
 
@@ -94,6 +104,28 @@ The verdict is mechanical: any `WOULD_OPEN`, `WOULD_READ_THROUGH`, or `WOULD_FOR
 Item-count proportionality is editor territory only because it is a presentation/reader-load axis, not an argument-quality axis. The boundary is sharp enough that a future rubric author cannot smuggle would-read judgements into the newsletter-critic-rubric or vice versa. If retrospective shows the editor and sw-critic are flagging the same axes, the boundary has collapsed and one of the two should absorb the other (see Reassessment Criteria).
 
 **Additive, not superseding.** ADR 012 still holds: voice and content-risk gates are mandatory. ADR 015 still holds: REJECTED is save-but-do-not-publish. ADR 016 still holds: sw-critic loops up to 3 rounds. ADR 018 still holds: content-risk runs as a fresh-context subagent. ADR 020 adds a fourth review class without changing the prior three.
+
+## Amendment 2026-06-17 (P081): editorial-craft pass added to the editor's scope
+
+Problem 081 (`docs/problems/open/081-newsletter-pipeline-missing-external-editorial-reviewer-subagent.md`) recorded that the five pipeline gates, the original three-axis editor among them, collectively produced fewer passage-cited, audience-aware findings than the external editorial reviewer Tom invoked repeatedly during the 2026-06-01 finalise of The Shift Issue 07. The external reviewer caught a cumbersome opener sentence, weak item human-angles, off-thesis ATWN bullets, and missing audience-pointers; none of those came from the internal gates.
+
+Tom resolved the placement question on 2026-06-17 with a third option (recorded on the ticket): neither add a separate `wr-external-editor` agent (Option A) nor supersede this ADR (Option B), but **EXTEND** the existing `wr-newsletter-editor` so it ALSO surfaces passage-cited editorial-craft weaknesses, in addition to its three reader-experience axes. One canonical editor surface, one name.
+
+**What this amendment changes:**
+
+- The editor now does a second pass over the SAME brief body (the agent file's Step 4.5): an editorial-craft pass reported as an `EDITORIAL_CRAFT` block with `Strengths:` (one line each) and `Weaknesses:` (each carrying a quoted Passage, named Issue, and Suggested fix). The craft-axis vocabulary is `opener-earns-thesis`, `fold-compression`, `audience-pointer-specificity`, `sentence-rhythm`, `atwn-thesis-fit`, and `other` (rare). This mirrors the strengths-and-weaknesses shape ADR 016 / ADR 035 established for the critic gates, oriented to editorial craft rather than analytical argument.
+- The pinned output contract (confirmation criterion 1 and the Decision Outcome code block above) is revised in place to carry the `EDITORIAL_CRAFT` block. Criterion 1 previously stated "format changes require superseding ADR 020"; this amendment revises that criterion itself in place under recorded Tom-direction, because the chosen option (the editor is the reader-experience review class) is preserved and broadened, which is an amendment, not a supersession.
+- The mechanical verdict folds in the craft pass additively: any EDITORIAL_CRAFT weakness yields `NEEDS_EDITORIAL_REVISION` (craft strengths never trigger it). The three reader-experience triggers are unchanged; a true `PASS` now requires three reader-experience `yes` answers with no triggering findings AND no craft weaknesses. ADR 015 save-but-do-not-publish semantics are preserved: the verdict surfaces for Tom, it does not hard-block publication.
+
+**What this amendment does NOT change:**
+
+- **Not a supersession.** ADR 020 stays `proposed` with `human-oversight: confirmed`. The chosen option, the agent name, the project-local placement, the single-shot no-rewrite contract, the fresh-context-per-invocation rule, and the three reader-experience axes are all preserved.
+- **Scope stays brief-body only.** The craft pass reviews the brief body, the same scope as the reader-experience pass. The LinkedIn teaser (drafted at SKILL step 15.5, after the editor runs at step 15.25) remains out of scope; the LinkedIn-teaser scope gap (Bad consequence 4) and its reassessment criterion are unchanged. Extending into teaser review would require re-sequencing the pipeline, which is a separate decision.
+- **No new invocation.** The craft pass runs inside the existing single editor invocation per phase, so the ADR 016 line 77 cost precedent and the reassessment-criterion-6 15-invocations-per-issue ceiling are held. This is why the prior architect supersede-lean (grounded in the budget and the ADR-033 two-editor-names self-documentation concern) dissolved under the extend option.
+
+**Absorption clause satisfied.** Decision Outcome's boundary clause (the paragraph ending "one of the two should absorb the other") named exactly this trigger: the editor absorbs the external-reviewer role rather than a new agent absorbing the editor. The craft axes respect the coverage partition: argument soundness stays with sw-critic, voice with the voice gate, factual and reputational risk with content-risk, sentence-length counts with cognitive-accessibility (the craft `sentence-rhythm` axis is editorial cadence, not a word count, matching ADR 035's retirement of the count-based check_16).
+
+**Reviews:** architect PASS (2026-06-17, on the direction and again on the concrete implementation); JTBD PASS / aligned (2026-06-17). Investigation task still open: settle skip-on-upstream-REJECTED behaviour for the extended editor (P081 proposes the editor should run even on a critic-REJECTED draft because craft findings help diagnose a structurally weak draft); deferred to a follow-up as it changes pipeline orchestration rather than the output contract.
 
 ## Consequences
 
@@ -119,7 +151,7 @@ Item-count proportionality is editor territory only because it is a presentation
 
 ## Confirmation
 
-1. **Output format pinned.** `.claude/agents/wr-newsletter-editor.md` documents the `EDITOR_REVIEW:` block format above verbatim. The block must include `WOULD_OPEN`, `WOULD_READ_THROUGH`, `WOULD_FORWARD` (each `yes|no|tentative`), an `EDITORIAL_FINDINGS` list, and `EDITOR_VERDICT: <PASS|NEEDS_EDITORIAL_REVISION>`. Format changes require superseding ADR 020. Downstream consumers (SKILL.md step 16 save logic) depend on byte-stable output.
+1. **Output format pinned (extended 2026-06-17 per P081; see Amendment 2026-06-17).** `.claude/agents/wr-newsletter-editor.md` documents the `EDITOR_REVIEW:` block format above verbatim. The block must include `WOULD_OPEN`, `WOULD_READ_THROUGH`, `WOULD_FORWARD` (each `yes|no|tentative`), an `EDITORIAL_FINDINGS` list, an `EDITORIAL_CRAFT` block (`Strengths:` list plus a `Weaknesses:` list whose entries carry the craft-axis vocabulary `opener-earns-thesis|fold-compression|audience-pointer-specificity|sentence-rhythm|atwn-thesis-fit|other` with Passage / Issue / Suggested fix), and `EDITOR_VERDICT: <PASS|NEEDS_EDITORIAL_REVISION>`. Format changes require amending or superseding ADR 020 (this criterion was itself amended in place under recorded Tom-direction; see Amendment 2026-06-17). Downstream consumers (SKILL.md step 16 save logic) depend on byte-stable output, so the agent file and SKILL.md step 15.25 parse block must move in lockstep.
 2. **Agent contract documented.** `.claude/agents/wr-newsletter-editor.md` exists and documents: takes `artifact_path` plus `persona` plus `edition_number`, reads `docs/jtbd/<persona>/persona.md` plus the must-have job files for that persona, runs in fresh context, no rewrites, mechanical verdict (any `no` or any `tentative` with findings yields `NEEDS_EDITORIAL_REVISION`).
 3. **Skip-on-upstream-REJECTED rule documented.** The agent file states that if the artifact already contains a sw-critic `VERDICT: REJECTED` block, the editor returns `EDITOR_ERROR: upstream gate returned REJECTED; editor will not run` and stops. The skill should not invoke the editor in that case; this is a defence-in-depth check.
 4. **SKILL.md step 9 (intro paragraph) updated.** The line "Three review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015), and SW-critic (ADR 016)" becomes "Four review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), and editor (ADR 020)."
