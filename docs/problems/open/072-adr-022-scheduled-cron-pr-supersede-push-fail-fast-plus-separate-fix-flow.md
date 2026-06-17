@@ -1,6 +1,6 @@
 # Problem 072: ADR-022 scheduled-cron deps refresh PR is wrong shape; push-fail-fast + separate fix flow is the desired pattern
 
-**Status**: Open
+**Status**: Open (direction resolved 2026-06-17; actionable)
 **Reported**: 2026-05-30
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
@@ -39,12 +39,24 @@ This supersedes ADR-022's scheduled-cron-PR shape because the cron PR opens a re
 
 ## Root Cause Analysis
 
+### Direction Resolved (2026-06-17, work-problems loop end)
+
+The open question was how windyroad should satisfy ADR-034 Phase 1's deps-fix flow: Option A (place it upstream-first in the wr-itil plugin), Option B (build it repo-local), or Option C (status quo). Tom's answer:
+
+> I don't think this should live in wr-itil. Build the solution here, but look at ../bbstats for how it does dependency patching.
+
+Resolution: **Option B (repo-local)**. Build the deps-fix flow IN THIS REPO, e.g. `scripts/fix-deps.sh` per ADR-034's "or equivalent flow" phrasing (ADR-034 lines 40, 53, 80 authorise a `/wr-itil:fix-deps` skill OR an equivalent flow; confirmation criterion (c) is satisfied by a repo-local invocable script). Do NOT place it in the upstream wr-itil plugin.
+
+- **Implementer cue: read `../bbstats` first.** The sibling repo at `/Users/tomhoward/Projects/bbstats` (verified present 2026-06-17) already does dependency patching; model the windyroad flow on how bbstats handles it. This is a hint, not a hard dependency.
+- **Architect (2026-06-17): PASS.** Repo-local placement is inside ADR-034's decision envelope ("or equivalent flow") and contradicts no ADR; it also keeps the work under this project's own authority rather than proposing it to an external repo (per project memory on upstream-placement, P045). ADR-034 carries `human-oversight: confirmed`, so building against it is ratified.
+- This resolves the Investigation Task "Design the fix flow invocation surface" toward a repo-local script (not a new upstream skill).
+
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
 - [ ] Author the superseding ADR via /wr-architect:create-adr documenting: (1) push:watch auto-update inline behaviour (preserved from ADR-021), (2) push:watch fail-fast on dry-aged-deps non-zero (new), (3) separate fix flow shape (auto-update plus test plus fix plus commit, outside push:watch).
 - [ ] Decide whether to retire ADR-022's cron workflow (.github/workflows/deps-refresh.yml) once the new flow ships, or keep it as a belt-and-braces cadence.
-- [ ] Design the fix flow invocation surface: standalone script? new /wr-itil:fix-deps skill? hook on push gate failure?
+- [x] Design the fix flow invocation surface: standalone script? new /wr-itil:fix-deps skill? hook on push gate failure? (RESOLVED 2026-06-17: repo-local flow, e.g. `scripts/fix-deps.sh`, modelled on ../bbstats; NOT upstream in wr-itil. See Direction Resolved above.)
 
 ## Dependencies
 

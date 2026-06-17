@@ -55,6 +55,19 @@ Both hypotheses confirmed and the fix implemented in `scripts/push-watch.sh`:
 - **Evidence**: Issue 09 publish session; rebase conflict on b837c89 onto ff6a204; false-fail on run 27516284951 (conclusion=success) after `read: connection reset by peer`; and the 2026-06-16 false-fail on run 27609565746 (conclusion=success) after `HTTP 401: Bad credentials`.
 - **Implemented**: `scripts/push-watch.sh` adds `is_sibling_amend()` (B), `is_transient_gh_error()` + `watch_run_resilient()` (C), and a `PUSH_WATCH_LIB_ONLY` test seam; the two `gh run watch` failure gates now route through `watch_run_resilient`. Behavioural test at `scripts/push-watch.test.mjs` (8 cases, vitest per repo TDD discipline). The HTTP 401 "Bad credentials" transient class was added to the retry set per the 2026-06-16 fresh evidence. Committed but NOT yet released: the orchestrator owns push/release cadence, so this ticket is Known Error (fix ready, awaiting release) until push:watch next ships, at which point it moves to Verification Pending per ADR-022.
 
+## Findings / Follow-up
+
+### Side-observation: internal release-path tooling has no documented JTBD/persona (direction confirmed 2026-06-17)
+
+While working P092 (a `scripts/push-watch.sh` robustness fix), the jtbd edit-gate had nothing to map the change to: internal release-path / maintainer tooling has no documented persona or JTBD. `docs/jtbd/` covers only external/audience personas (engineering-leader, technical-founder, developer); none describes the person who runs `npm run push:watch`, drives the release cadence, or operates the AFK work-problems loop.
+
+Tom confirmed 2026-06-17 that a NEW **internal-maintainer / AFK-orchestrator** persona + JTBD should be documented LOCALLY in this repo's `docs/jtbd/` (not upstream). Per ADR-044 and project memory (`feedback_new_jtbd_and_persona_need_human_confirmation.md`), a new persona + JTBD is direction-setting and needs explicit human confirmation; that confirmation is now given, so the future authoring can proceed without re-litigating direction.
+
+- **Authoring is follow-up work, deferred (not this iteration).** Create the persona + JTBD via `/wr-jtbd:update-guide`, then ratify via `/wr-jtbd:confirm-jobs-and-personas`. Likely wants its own JTBD ID band distinct from the existing audience ranges (001-099 leader, 100-199 founder, 200-299 developer).
+- **Recommendation (record-only): this deserves its OWN ticket, not a permanent home on P092.** JTBD review 2026-06-17 flagged that P092 is a code-fix Known Error about push-watch robustness; coupling a docs-authoring deliverable to its lifecycle would orphan the work when P092 closes on release. Per the record-only scope of this iteration, the new ticket is NOT created here; this note preserves the confirmed direction and the own-ticket recommendation for pickup. P072 (repo-local `scripts/fix-deps.sh`) is the same internal-maintainer-tooling class and would map to this persona once authored.
+
+This note does NOT change P092's Known Error fix status (the push-watch.sh fix remains implemented and awaiting release).
+
 ## Related
 
 - Retro 2026-06-15. Release-path instability category (P074 Step 2b). Sibling to closed P059 (push:watch SIGPIPE exit 141). Distinct from the newsletter drafter cluster (P089-P091).

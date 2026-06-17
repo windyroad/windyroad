@@ -1,6 +1,6 @@
 # Problem 081: Newsletter pipeline missing an external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review
 
-**Status**: Open
+**Status**: Open (direction resolved 2026-06-17; actionable)
 **Reported**: 2026-06-01
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 4 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -19,7 +19,7 @@ Observed across the 2026-06-01 finalise:
 
 The current `wr-newsletter-editor` subagent (ADR 020, step 15.25) checks three reader-experience axes (would-open, would-read-through, would-forward) and returns EDITOR_VERDICT. It is NOT a passage-cited weakness-finder; it answers a different question. The skip-on-upstream-REJECTED rule (which fired for Issue 07 because SW-critic returned REJECTED) ALSO skipped the editor gate, so this run did not even get the existing editor's reader-experience read.
 
-Suggested fix:
+Suggested fix (original capture 2026-06-01; SUPERSEDED by the Direction Resolved 2026-06-17 below, which extends the existing ADR-020 editor rather than adding a new `wr-external-editor` agent):
 
 - Add a `wr-external-editor` subagent that plays the role of an experienced LinkedIn / industry-newsletter editor (not a reader-experience predictor). Output format: STRENGTHS + WEAKNESSES with each weakness carrying a quoted passage, the issue named, and a suggested fix. Similar shape to ADR-016 sw-critic but oriented to editorial craft (sentence rhythm, fold compression, audience-pointer specificity, opener earning the thesis vs restating it, ATWN thesis-fit).
 - Place at step 15.25 alongside or replacing the current editor. If replacing: the reader-experience axes (would-open, would-read-through, would-forward) become weakness candidates in the external-editor's output rather than a separate verdict.
@@ -65,16 +65,27 @@ Direction-class questions routed to outstanding_questions in iter 7 ITERATION_SU
 - **Q2 (only if A)**: Re-assert the ADR-020 15-invocations/issue cost ceiling, or trim a gate to stay under?
 - **Q3 (only if B)**: Confirm ADR-020 retires as `.superseded.md` with `human-oversight: rejected-pending-supersede` + `supersede-ticket: P081` markers (per ADR-066 pattern used for ADR-016).
 
+### Direction Resolved (2026-06-17, work-problems loop end)
+
+Tom answered the Q1 placement question (add-alongside Option A vs supersede Option B) with a **third option: EXTEND the existing ADR-020 `wr-newsletter-editor` subagent** so it ALSO finds passage-cited editorial-craft weaknesses, IN ADDITION to its current would-open / would-read-through / would-forward reader-experience axes. NOT a new alongside agent; NOT a supersede.
+
+Resolution detail:
+
+- **Extend, do not add, do not supersede.** The editorial-craft axes (opener earning the thesis vs restating it, fold compression, audience-pointer specificity, sentence rhythm, ATWN thesis-fit) become additional findings the SAME editor surfaces alongside its three reader-experience axes. One canonical editor surface, one name.
+- **Fix is repo-local.** The editor agent lives in this repo at `.claude/agents/wr-newsletter-editor.md` (verified 2026-06-17; only copy). The extension work happens here.
+- **Codification home: amend ADR-020 (scope extension), NOT supersede, NOT a new ADR.** The chosen option of ADR-020 (the editor is the reader-experience review class) is preserved and broadened, which is an amendment, not a supersession. The amendment MUST also revise ADR-020 confirmation criterion 1's pinned `EDITOR_REVIEW` output contract, because the editor's output block changes shape to carry passage-cited weaknesses (criterion 1 currently states format changes require superseding ADR-020; the amendment updates the pinned contract in place). Author the amendment via `/wr-architect` when the extension is implemented.
+- **Architect (2026-06-17): PASS.** The extend choice satisfies ADR-020's own absorption clause (line 94), dissolves the ADR-033 two-editor-names self-documentation concern that drove the prior supersede lean, and adds ZERO new invocations so it holds the ADR-020 15-invocations/issue cost ceiling. JTBD (2026-06-17): PASS; the craft axes compose with the leader (JTBD-001/002/003) and developer (JTBD-200..205) newsletter jobs.
+- **Q2 / Q3 moot.** Q2 (re-assert the 15-invocation ceiling under Option A) does not arise: extending adds no invocations. Q3 (retire ADR-020 as `.superseded.md`) does not arise: ADR-020 is amended, not superseded.
+
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [x] Decide on placement: add alongside step 15.25 or supersede current editor. (Captured 2026-06-02 work-problems iter 7: architect review surfaced Option A vs Option B with lean toward B; direction-class question routed to outstanding_questions per ADR-074; substantive supersede vs add-alongside call awaits Tom-direction before agent authoring proceeds.)
-- [ ] Specify the wr-external-editor subagent prompt and output format (mirror ADR 035 S/W + passage citation + suggested fix shape). Blocked on placement direction (above).
-- [ ] Draft ADR per architect direction. If Option A: lightweight `/wr-architect:capture-adr` composing-with ADR-020. If Option B: full canonical `/wr-architect:create-adr` superseding ADR-020. Blocked on placement direction.
-- [ ] Update skip-on-upstream-REJECTED rule for external-editor specifically (proposal: runs regardless of SW-critic verdict). Blocked on agent authoring (above).
-- [ ] Update SKILL.md step 15.25 invocation per agent placement (add-alongside as 15.27 OR replace 15.25). Blocked on agent authoring.
-- [ ] Test on next edition: count how many of Tom's manual editorial findings the new subagent surfaces vs the existing gates.
-- [ ] Reassessment trigger: 4 consecutive editions of consistent over-performance vs current editor. (Moot if Option B chosen; current editor retires immediately.)
+- [x] Decide on placement: add alongside step 15.25 or supersede current editor. (Captured 2026-06-02 work-problems iter 7: architect review surfaced Option A vs Option B with lean toward B; direction-class question routed to outstanding_questions per ADR-074. RESOLVED 2026-06-17: Tom chose a third option, EXTEND the existing ADR-020 editor; see Direction Resolved above.)
+- [ ] Extend `.claude/agents/wr-newsletter-editor.md` so its output adds passage-cited editorial-craft weaknesses (opener-earns-thesis, fold compression, audience-pointer specificity, sentence rhythm, ATWN thesis-fit) alongside the existing would-open / would-read-through / would-forward axes. Mirror the ADR-035 S/W + passage citation + suggested fix shape.
+- [ ] Amend ADR-020 via `/wr-architect` (scope extension): document the editorial-craft axes and revise confirmation criterion 1's pinned `EDITOR_REVIEW` output contract to carry the passage-cited weaknesses. No supersede, no new ADR.
+- [ ] Decide the skip-on-upstream-REJECTED behaviour for the extended editor (proposal: the editor still runs when SW-critic returns REJECTED, since editorial-craft findings help diagnose a structurally weak draft).
+- [ ] Update SKILL.md step 15.25 invocation / prompt to reflect the extended editor output.
+- [ ] Test on next edition: count how many of Tom's manual editorial findings the extended editor surfaces vs the prior three-axis editor.
 
 ## Dependencies
 
