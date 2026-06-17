@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-17 **P092 to Verification Pending** - push:watch robustness fix released. `scripts/push-watch.sh` adds `is_sibling_amend()` (skips the auto pull-rebase on an amend-of-a-just-pushed-commit, no more conflict-marker injection, B) and `is_transient_gh_error()` + `watch_run_resilient()` (re-check real run state with bounded backoff so a transient gh-poll blip no longer false-fails the pipeline, C). Shipped in commit `adbdb72` (2026-06-16), live on origin/master; 8 vitest cases green, CI green. Repo-local script, no changeset (release == pushed-to-origin per ADR-022). Known Error to Verification Pending; awaiting Tom's production verification.
+> Last reviewed: 2026-06-17 **P098 captured** - work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consumer repo with no npm release (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -32,6 +32,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 3 (Medium) | Open | M | 2026-06-03 | internal |
 | 1.5 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading, tripping adop… | 3 (Low) | Open | M | 2026-06-17 | internal |
+| 1.5 | P098 | work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consu… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P094 | extend the domain-specific critic supersede to wr-blog (retire wr-sw-critic entirely) | 6 (Medium) | Open | L | 2026-06-16 | internal |
 | 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
 
