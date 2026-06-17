@@ -61,8 +61,8 @@ Suggested fix:
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
 - [x] Corpus-extract Tom's vocabulary from src/newsletters/published/ as a seed list (done 2026-06-16; see Findings below)
-- [x] Draft the "Tom's voice reference" section for docs/VOICE-AND-TONE.md (done 2026-06-16 as a corpus-seeded draft; final keep/drop curation still pending Tom, see Outstanding below)
-- [ ] Tom curates the corpus-seeded draft: keep / drop / reword each seed entry; drop the "pending curation" qualifier from the section header once curated (direction/taste; queued as outstanding question)
+- [x] Draft the "Tom's voice reference" section for docs/VOICE-AND-TONE.md (done 2026-06-16 as a corpus-seeded draft; Tom-curated 2026-06-17, see Resolution below)
+- [x] Tom curates the corpus-seeded draft: keep / drop / reword each seed entry; drop the "pending curation" qualifier from the section header (done 2026-06-17: banned list kept, three corpus-positive tables dropped, services-arm hyphenated stack banned, section reframed + retitled "Idioms Tom rejects"; see Resolution below)
 - [ ] Update wr-voice-tone:agent prompt to consult the new section (UPSTREAM-BLOCKED, see Dependencies)
 - [ ] Test on the next /wr-newsletter prep run by counting Tom-rejection rate before vs after
 
@@ -82,6 +82,19 @@ The section is explicitly marked as a draft pending Tom's curation; it does not 
 Governance gates run before the edit (per /wr-itil:manage-problem): wr-architect:agent PASS (VOICE-AND-TONE.md is the chosen voice-rule surface per ADR-015; no new ADR needed; deferring the upstream agent-prompt half as upstream-blocked is consistent with ADR-036), wr-jtbd:agent PASS (serves the newsletter-production jobs; pending-human-curation is the correct posture for a taste artifact), wr-voice-tone:agent PASS (section prose obeys the guide; two accuracy fixes applied before append: the services-arm curation note was corrected after verifying the hyphenated form also shipped 2026-05-15, and the "your team" header was confirmed present in all nine editions). The style-guide gate is not applicable (no CSS / visual-design change).
 
 A correction caught during the voice-tone gate: an early draft of the services-arm curation note claimed only the unhyphenated "services arm" shipped in the 2026-05-15 edition. Grep verification showed the hyphenated "services-arm" also shipped that edition (Item 2 heading + a note), so the note was reworded to state the accurate tension before append.
+
+### Resolution (2026-06-17, Tom-directed curation)
+
+Tom reviewed the corpus-seeded section and gave explicit confirmed direction. Two decisions:
+
+1. **Keep banned, drop positives.** The three corpus-extracted positive tables (Verbs Tom reaches for; How Tom addresses the reader; How Tom talks about himself and Windy Road) were removed. Tom's reasoning: those entries are mostly drafter-words he tolerated in AI-drafted-then-edited published editions, not good examples of his actual voice ("Most of these are actually your words. They aren't necessarily bad, but they are not necessarily good examples of how I speak/write"). The published-edition corpus is contaminated as a positive-voice source because the editions are AI-drafted; the surviving phrasing reflects what Tom let through, not what he would author. A future positive seed must come from Tom-authored material and is deferred until that material exists.
+2. **Ban the hyphenated stack.** "services-arm" (the hyphenated stacked heading form) was added to the Abstract-noun-stacks banned row. The open-prose form "services arm" (e.g. "the vendor's services arm") stays acceptable; only the hyphenated stacked form is banned. This settles the open Curation note, which was removed.
+
+The "Idioms Tom does not use (banned)" table was kept (it is drawn from Tom's real recorded rejections in this ticket, not the contaminated corpus). The section was reframed: the "corpus-seeded draft, pending curation" qualifier was dropped from the heading and the status blockquote, the section was retitled "Idioms Tom rejects", and the intro now states it is a settled rule set giving the voice-tone gate a concrete oracle for phrasings Tom rejects, with the deliberate non-seeding of positives explained. The "Last reviewed" provenance line in docs/VOICE-AND-TONE.md was updated to 2026-06-17.
+
+Governance gates re-run before this curation edit (per /wr-itil:manage-problem): wr-architect:agent PASS (no ADR conflict; ADR-015 voice-rule surface reinforced, ADR-036 N/A as VOICE-AND-TONE.md is an in-project file; no new ADR), wr-jtbd:agent PASS (serves the newsletter-production jobs JTBD-001/002/003; tightening the gate oracle serves the engineering-leader clarity constraint), wr-voice-tone:agent PASS (reframed prose obeys the guide, no banned patterns, no em-dashes). Style-guide gate N/A (no CSS / visual change).
+
+**Status decision: ticket stays Open.** The repo-local curation deliverable is complete, but the behavioural fix (the voice-tone gate actually consulting this oracle) is not delivered until the upstream wr-voice-tone:agent prompt update lands. That sub-task is the sole remaining open item and is upstream-blocked (the agent lives in the installed plugin cache; this consumer repo has no packages/wr-voice-tone/ source tree to edit, the ADR-036 predicate). Verification Pending was considered and rejected: ADR-022 reserves that status for "fix released, awaiting user verification", but the remaining work here is upstream DEV work, not user verification, so VP would mislabel the remaining-work type and overstate "fix released". Open with the documented `**Upstream-blocked (sub-task only)**` marker (see Dependencies) lets the work-problems upstream-blocked classifier skip the ticket without falsely signalling it is awaiting user confirmation.
 
 ## Dependencies
 
