@@ -1,6 +1,6 @@
 # Problem 092: push:watch pull-rebase collides with amend-chains and false-fails on transient network errors
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-06-15
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-06-15)
 **Origin**: internal
@@ -53,7 +53,9 @@ Both hypotheses confirmed and the fix implemented in `scripts/push-watch.sh`:
 - **Target file**: `scripts/push-watch.sh`.
 - **Edit summary**: (B) detect the sibling-amend / same-parent non-fast-forward case and skip auto-rebase (warn + suggest `--force-with-lease`) rather than starting an interactive rebase that can inject conflict markers; (C) wrap the `gh run view` poll in a transient-error retry (connection reset / timeout / 5xx -> backoff + retry, bounded) and only declare pipeline failure on a genuine CI conclusion=failure.
 - **Evidence**: Issue 09 publish session; rebase conflict on b837c89 onto ff6a204; false-fail on run 27516284951 (conclusion=success) after `read: connection reset by peer`; and the 2026-06-16 false-fail on run 27609565746 (conclusion=success) after `HTTP 401: Bad credentials`.
-- **Implemented**: `scripts/push-watch.sh` adds `is_sibling_amend()` (B), `is_transient_gh_error()` + `watch_run_resilient()` (C), and a `PUSH_WATCH_LIB_ONLY` test seam; the two `gh run watch` failure gates now route through `watch_run_resilient`. Behavioural test at `scripts/push-watch.test.mjs` (8 cases, vitest per repo TDD discipline). The HTTP 401 "Bad credentials" transient class was added to the retry set per the 2026-06-16 fresh evidence. Committed but NOT yet released: the orchestrator owns push/release cadence, so this ticket is Known Error (fix ready, awaiting release) until push:watch next ships, at which point it moves to Verification Pending per ADR-022.
+- **Implemented**: `scripts/push-watch.sh` adds `is_sibling_amend()` (B), `is_transient_gh_error()` + `watch_run_resilient()` (C), and a `PUSH_WATCH_LIB_ONLY` test seam; the two `gh run watch` failure gates now route through `watch_run_resilient`. Behavioural test at `scripts/push-watch.test.mjs` (8 cases, vitest per repo TDD discipline). The HTTP 401 "Bad credentials" transient class was added to the retry set per the 2026-06-16 fresh evidence.
+
+**Release vehicle**: repo-local script (`scripts/push-watch.sh`) run directly from the working tree. There is NO npm release vehicle for this change (no `packages/` membership, no `.changeset`, no publish step), so "released" == merged-to-`master` and pushed-to-origin. The fix shipped in commit `adbdb72` (`fix(push-watch): guard sibling-amend rebase and retry transient watch errors (P092)`, 2026-06-16) and is live on `origin/master`. <!-- no-changeset-reference: repo-local-script class, release == pushed-to-origin per ADR-022 -->
 
 ## Findings / Follow-up
 
@@ -67,6 +69,15 @@ Tom confirmed 2026-06-17 that a NEW **internal-maintainer / AFK-orchestrator** p
 - **Recommendation (record-only): this deserves its OWN ticket, not a permanent home on P092.** JTBD review 2026-06-17 flagged that P092 is a code-fix Known Error about push-watch robustness; coupling a docs-authoring deliverable to its lifecycle would orphan the work when P092 closes on release. Per the record-only scope of this iteration, the new ticket is NOT created here; this note preserves the confirmed direction and the own-ticket recommendation for pickup. P072 (repo-local `scripts/fix-deps.sh`) is the same internal-maintainer-tooling class and would map to this persona once authored.
 
 This note does NOT change P092's Known Error fix status (the push-watch.sh fix remains implemented and awaiting release).
+
+## Fix Released
+
+- **Release marker**: commit `adbdb72` (`fix(push-watch): guard sibling-amend rebase and retry transient watch errors (P092)`, 2026-06-16), live on `origin/master`.
+- **Release vehicle**: repo-local script. `scripts/push-watch.sh` is run directly from the working tree; there is no npm publish path for this change (no `packages/` membership, no `.changeset`), so "released" == merged-to-`master` and pushed-to-origin, which has happened. <!-- no-changeset-reference: repo-local-script class, release == pushed-to-origin per ADR-022 -->
+- **Fix summary**: `is_sibling_amend()` gates the auto pull-rebase so an amend-of-a-just-pushed-commit no longer injects conflict markers (B), and `is_transient_gh_error()` + `watch_run_resilient()` re-check real run state with bounded backoff so a transient gh-poll blip (connection reset, timeout, 5xx/429, HTTP 401 "Bad credentials") no longer produces a false "Pipeline failed" (C).
+- **Tests**: `scripts/push-watch.test.mjs` (8 vitest cases) green; CI green on adbdb72.
+- **Exercise evidence**: the fix has dogfooded clean on every `npm run push:watch` since adbdb72 landed (no recurrence of the sibling-amend rebase conflict or the transient false-fail).
+- Awaiting user verification: confirm in production that an amend-and-re-push no longer triggers a rebase conflict and that a transient gh-poll error no longer reports a false pipeline failure. Maintainer-only Verification Pending to Closed surface per ADR-022.
 
 ## Related
 
