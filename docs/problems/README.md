@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-17 **P098 captured** - work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consumer repo with no npm release (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-06-22 **P099-P102 captured** - Issue 10 retro: full-gate-rerun discipline after post-finalise edits, cover/lint silent format traps, human-code-review + generic-CTA editorial drift, gates don't fact-check unsourced analogies (via /wr-retrospective:run-retro).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,6 +9,10 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
+| 6 | P099 | wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set | 3 (Low) | Open | S | 2026-06-22 | internal |
+| 6 | P101 | Newsletter pipeline drifts toward recommending human code review and generic rotation CTAs, against Tom's stance | 3 (Low) | Open | M | 2026-06-22 | internal |
+| 6 | P102 | Newsletter review gates fact-check URLs but not unsourced analogies or stated-as-history claims | 3 (Low) | Open | M | 2026-06-22 | internal |
+| 4 | P100 | Newsletter cover hook silently clips, and the structural lint false-positives on a sentence-final model name | 2 (Very Low) | Open | S | 2026-06-22 | internal |
 | 5 | P081 | Newsletter pipeline missing external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review | 12 (High) | Open | M | 2026-06-01 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
