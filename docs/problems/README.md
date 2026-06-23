@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-22 **batch transition** - P089 close, P091 close, P092 close, P034 close (verified in-session during Issue 10 run + retro per run-retro Step 4a).
+> Last reviewed: 2026-06-24 **P103 captured** - Assistant asserts negative project-state claims from an incomplete search without verifying or asking (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,6 +9,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
+| 9 | P103 | Assistant asserts negative project-state claims from an incomplete search without verifying or asking | 9 (Medium) | Open | S | 2026-06-24 | internal |
 | 6 | P099 | wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set | 3 (Low) | Open | S | 2026-06-22 | internal |
 | 6 | P101 | Newsletter pipeline drifts toward recommending human code review and generic rotation CTAs, against Tom's stance | 3 (Low) | Open | M | 2026-06-22 | internal |
 | 6 | P102 | Newsletter review gates fact-check URLs but not unsourced analogies or stated-as-history claims | 3 (Low) | Open | M | 2026-06-22 | internal |

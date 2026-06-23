@@ -168,3 +168,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 
 > Last reviewed: 2026-06-17 **P098 captured** - work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consumer repo with no npm release (lightweight aside via /wr-itil:capture-problem).
 > Last reviewed: 2026-06-22 **P099-P102 captured** - Issue 10 retro: full-gate-rerun discipline after post-finalise edits, cover/lint silent format traps, human-code-review + generic-CTA editorial drift, gates don't fact-check unsourced analogies (via /wr-retrospective:run-retro).
+
+## 2026-06-24
+
+> Last reviewed: 2026-06-22 **batch transition** - P089 close, P091 close, P092 close, P034 close (verified in-session during Issue 10 run + retro per run-retro Step 4a).
