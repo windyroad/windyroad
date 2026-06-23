@@ -1,6 +1,6 @@
 # Problem 091: wr-newsletter should ask the user for unresolvable source URLs instead of dropping or degrading attribution
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-15
 **Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-06-15)
 **Origin**: internal

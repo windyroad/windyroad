@@ -1,6 +1,6 @@
 # Problem 089: wr-newsletter drafter emits structural + sourcing defects the five gates do not catch
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-15
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-06-15)
 **Origin**: internal

@@ -1,6 +1,6 @@
 # Problem 092: push:watch pull-rebase collides with amend-chains and false-fails on transient network errors
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-15
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-06-15)
 **Origin**: internal
