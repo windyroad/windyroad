@@ -1,0 +1,10 @@
+{
+  "channels": [
+    {
+      "type": "github-issues",
+      "repo": "windyroad/windyroad",
+      "label": null
+    }
+  ],
+  "ttl_seconds": 86400
+}

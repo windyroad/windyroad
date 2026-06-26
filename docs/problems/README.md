@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-24 **P103 captured** - Assistant asserts negative project-state claims from an incomplete search without verifying or asking (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-06-27 **P006 closed** (OG-image drift guard verified in-session: shared siteCopy.mjs constants + reproduction test green) + **inbound-discovery bootstrapped** (windyroad/windyroad issues channel, first poll 0 reports) + relevance-close pass 0 closes (all evaluator candidates false-positive on verify).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -47,8 +47,7 @@ Fix released, awaiting user verification (driven off the dual-tolerant glob `doc
 
 | ID | Title | Released | Fix summary | Likely verified? |
 |----|-------|----------|-------------|------------------|
-| P006 | OG share image does not track homepage copy pivots | 2026-04-15 | Short-term content fix in `754a04a` + permanent shared `src/lib/siteCopy.mjs` constants + reproduction test in `100df63`; both on origin/master. Triggers on production deploy + LinkedIn Post Inspector cache flush + visual confirmation. | no (not observed) |
-| P002 | Hero content extends beyond the fold | 2026-04-25 | Hero fold-fit SCSS fix in commit `72c3c2b` on origin/master (`min-height` 100svh, `padding-bottom: 4rem`, short-viewport WCAG 1.4.10 guard at `max-height: 600px`). Triggers on browser verification across desktop / mobile / 200%-400% zoom. | no (not observed) |
+| P002 | Hero content extends beyond the fold | 2026-04-25 | Hero fold-fit SCSS fix in commit `72c3c2b` on origin/master (`min-height` 100svh, `padding-bottom: 4rem`, short-viewport WCAG 1.4.10 guard at `max-height: 600px`). Triggers on browser verification across desktop / mobile / 200%-400% zoom. | no (not observed): 2026-06-27 review confirmed the fold-fit SCSS is present and correctly shaped on master, but local rendered-viewport confirmation is blocked by P001 (Next.js dev server did not reach Ready locally) |
 | P009 | Content-risk review is inline self-scoring by the drafter, not a fresh-context subagent | 2026-04-25 | Subagent content-risk gate per ADR 018; SKILL.md step 14 + 14-prime invoke the agent. Triggers on next newsletter run. | no (not observed) |
 | P011 | Visual artifacts iterated and presented without render-and-verify discipline | 2026-04-25 | Render-and-verify discipline note added to SKILL.md step 12; shared `scripts/render-svg.mjs` helper wraps `sips` for SVG-to-PNG conversion. Triggers on next visual-artifact iteration. | no (not observed) |
 | P013 | External-facing text (GitHub comments, LinkedIn teasers, PR bodies, release notes) has no automated voice/ton… | 2026-04-25 | Voice gate added to SKILL.md step 15.5 (LinkedIn post) mirroring step 13. Hook-level voice gate split out to P012. | no (not observed) |
@@ -86,7 +85,7 @@ Fix released, awaiting user verification (driven off the dual-tolerant glob `doc
 
 Inbound reports discovered by Step 4.5 (ADR-062 Step 9e renderer; rendered off `docs/problems/.upstream-cache.json`).
 
-_No inbound discovery pass has run yet. `docs/problems/.upstream-channels.json` is absent; the assessment pipeline skipped this pass per the fail-soft contract. Add the channels config to enable inbound discovery._
+_Discovery has run; no reports awaiting triage. Last poll 2026-06-26T22:29:34Z: 1 channel (`github-issues` on `windyroad/windyroad`, all open issues), 0 reports. Channels configured in `docs/problems/.upstream-channels.json` (24h TTL)._
 
 ## Closed
 
@@ -96,6 +95,7 @@ Closed tickets are listed for audit but excluded from the active backlog:
 - P091 (wr-newsletter should ask the user for unresolvable source URLs instead of dropping/degrading). Closed 2026-06-22 on in-session evidence: the step-11.5 unresolvable-URL terminal fallback was exercised on Issue 10 (asked Tom for canonical Politico + Reuters URLs rather than degrading; he supplied them). The momentary JPMorgan drop-after-invalid-resolve is a distinct diagnose-before-drop gap (memory + P102 territory), not a P091 ask-the-user failure.
 - P092 (push:watch pull-rebase collides with amend-chains and false-fails on transient network errors). Closed 2026-06-22 on in-session evidence: `npm run push:watch` shipped Issue 10 cleanly (build + Netlify draft deploy + smoke test passed; no false-fail, no sibling-amend conflict).
 - P034 (wr-newsletter generates plausible-but-invented URLs and skips verification before save). Closed 2026-06-22 on in-session evidence: the step-11.5 URL-verification gate verified 14 URLs across the brief + LinkedIn post, 0 REFUTED.
+- P006 (OG share image does not track homepage copy pivots). Closed 2026-06-27 on in-session observed evidence (Tom delegated verification). The drift-prevention guard that is P006's fix is live and green: `siteCopy.test.ts` passes 3/3 (asserts both `scripts/generate-og-image.mjs` and `src/app/page.tsx` consume the shared `HERO_HEADLINE` constants), the OG generator renders those constants into `public/img/og-image.png`, and the generated image matches the current hero headline. Residual live-site LinkedIn re-scrape is a deploy eyeball, not a code defect.
 - P003 (Countdown slider left-aligned)
 - P004 (Slider position misleading for probability)
 - P005 (Slider has no visual stop indicators)

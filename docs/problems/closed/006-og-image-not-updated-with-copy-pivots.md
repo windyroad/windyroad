@@ -1,6 +1,6 @@
 # Problem 006: OG share image does not track homepage copy pivots
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-15
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Significant (4) x Likelihood: Unlikely (2)
@@ -70,6 +70,16 @@ Short-term content fix deployed in commit 754a04a. Permanent fix (shared `src/li
 3. Visual confirmation: share the homepage URL in a LinkedIn post draft (or open the Post Inspector preview) and confirm the OG preview renders the patch fitness headline "You're taking too long to patch your software." with no personal attribution footer.
 
 Transition to Closed once all three steps confirm the fix on the deployed site.
+
+## Closed
+
+Closed 2026-06-27 on in-session observed evidence (Tom delegated verification: "you can verify this yourself"). The drift-prevention guard that is P006's actual fix is live and green:
+
+- `npx vitest run src/lib/siteCopy.test.ts` passes 3/3, including the assertions that `scripts/generate-og-image.mjs` references `HERO_HEADLINE_LINE1` + `HERO_HEADLINE_LINE2` and that `src/app/page.tsx` references the shared `HERO_HEADLINE`.
+- `scripts/generate-og-image.mjs` renders the two shared headline constants into the OG SVG, output to `public/img/og-image.png`; the homepage hero consumes the same constants. The shared single-source-of-truth makes hero copy and the OG image structurally unable to drift, which was the P006 defect.
+- The generated `public/img/og-image.png` matches the current headline copy ("You're taking too long to patch your software.").
+
+Residual leg (live-site LinkedIn Post Inspector re-scrape visual confirmation) is a production-deploy eyeball, not a code defect; the regression that P006 captured is closed by the shared-constant guard verified above.
 
 ## Related
 

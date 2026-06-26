@@ -172,3 +172,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-06-24
 
 > Last reviewed: 2026-06-22 **batch transition** - P089 close, P091 close, P092 close, P034 close (verified in-session during Issue 10 run + retro per run-retro Step 4a).
+
+## 2026-06-27
+
+> Last reviewed: 2026-06-24 **P103 captured** - Assistant asserts negative project-state claims from an incomplete search without verifying or asking (lightweight aside via /wr-itil:capture-problem).
