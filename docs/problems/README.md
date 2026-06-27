@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-27 **P067 transitioned Open to Verifying** (FTC tier-3 source unblocked the right way: found FTC's official RSS feed `https://www.ftc.gov/feeds/press-release.xml` returns 200 while only the HTML page is WAF-blocked, so repointed the wr-newsletter SKILL.md FTC source to the feed and deliberately rejected the stealth-scrape option per the no-scraping posture + blocking-is-a-signal; architect ALIGNED, ADR-031 anticipated this. Repo-local skill, no changeset).
+> Last reviewed: 2026-06-27 **P001 CLOSED** (the oldest ticket, open since April, root-caused + fixed + verified: `next build` hung forever because `./.env` was a stray FIFO/named-pipe and Next's startup env-load blocked in `open()` on it; found via a `sample` of the stuck 0%-CPU PID; removed the FIFO (gitignored, unneeded, `.env.local` holds the real env) and the build now completes in ~8s. Local-dev only, never reached CI).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -27,7 +27,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading, tripping adop… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P098 | work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consu… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P104 | I13 RFC-trace predicate and manage-problem I13 gate are not adopter-aware (fire no-rfc-trace in repos without an RFC tier) | 3 (Medium) | Open | M | 2026-06-27 | internal |
-| 3 | P001 | Next.js build hangs locally (reproduced 2026-06-27; telemetry ruled out; local-dev only, CI builds fine) | 6 (Medium) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
 
@@ -93,6 +92,7 @@ _Discovery has run; no reports awaiting triage. Last poll 2026-06-26T22:29:34Z: 
 
 Closed tickets are listed for audit but excluded from the active backlog:
 
+- P001 (Next.js build hangs locally). Closed 2026-06-27 on in-session observed evidence. Root cause found via `sample` of the stuck PID: `next build`'s startup env-load blocked forever in `open()` on `./.env`, which was a stray FIFO (named pipe), not a regular file. Removed the FIFO (`rm -f .env`; it was gitignored, never tracked, unneeded since `.env.local` holds the real env); a clean `npm run build` then completed in ~8s with full route output. Local-dev only (the FIFO never reached CI, which is why the site stayed live). Recurrence trigger documented in the ticket for instant future diagnosis.
 - P089 (newsletter drafter emits structural + sourcing defects the five gates do not catch). Closed 2026-06-22 on in-session evidence per run-retro Step 4a: `scripts/check-newsletter-structure.sh` ran ~10x during Issue 10 and caught real defects (the sentence-final "Gemma 4." model-name mismatch, twice).
 - P091 (wr-newsletter should ask the user for unresolvable source URLs instead of dropping/degrading). Closed 2026-06-22 on in-session evidence: the step-11.5 unresolvable-URL terminal fallback was exercised on Issue 10 (asked Tom for canonical Politico + Reuters URLs rather than degrading; he supplied them). The momentary JPMorgan drop-after-invalid-resolve is a distinct diagnose-before-drop gap (memory + P102 territory), not a P091 ask-the-user failure.
 - P092 (push:watch pull-rebase collides with amend-chains and false-fails on transient network errors). Closed 2026-06-22 on in-session evidence: `npm run push:watch` shipped Issue 10 cleanly (build + Netlify draft deploy + smoke test passed; no false-fail, no sibling-amend conflict).

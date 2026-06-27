@@ -1,6 +1,6 @@
 # Problem 001: Next.js build hangs locally
 
-**Status**: Open
+**Status**: Closed
 **Reported**: 2026-04-14
 **Origin**: internal
 **Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-06-27 work-problems: the 2026-05-30 "unreproducible" note is FALSIFIED. `next build` REPRODUCIBLY hangs at 0% CPU on Next 16.1.6, telemetry + interactivity ruled out. Likelihood Rare -> Possible. Impact stays Minor: local-dev only, CI builds fine and the site is live. See Investigation 2026-06-27.)
@@ -70,9 +70,27 @@ Narrowed cause: a deeper Next 16.1.6 build-init hang (0% CPU = blocked/waiting, 
 
 - [x] Verify build succeeds in CI (clean environment) -- CI builds succeed; the site is deployed and live.
 - [x] **Re-verify locally on Next 16**: run `npm run build` once and observe. (2026-06-27: REPRODUCED the hang; did NOT complete, so no transition to Verifying. See Investigation 2026-06-27 above.)
-- [ ] Bisect the Next 16.1.6 build-init hang (SWC/worker init, output:export, Node-x-Next native compat); sample/strace the 0%-CPU stuck PID.
-- [ ] Check if `next build` works after a full system restart (only if re-verification still hangs)
-- [ ] Investigate whether TDD hook test runner needs process cleanup on timeout (only if re-verification still hangs)
+- [x] Bisect the Next 16.1.6 build-init hang: DONE 2026-06-27 via `sample` of the stuck PID (see Root Cause below). The hang is a blocked `open()` syscall on a stray `.env` FIFO, NOT an SWC/worker/output:export/Node-compat issue.
+- [x] Check if `next build` works after removing the stray `.env` FIFO: YES, completes in ~8s (see Resolution).
+- [x] Process-accumulation hypothesis (original 2026-04-14 framing): FALSIFIED 2026-06-27. A clean build from a pristine process state (only 1 next process) still hung; the cause is the `.env` FIFO, not orphaned processes.
+
+## Root Cause (found 2026-06-27)
+
+A `sample` of the hung `node .bin/next build` main thread showed it blocked in a synchronous file read at startup:
+
+```
+v8 MicrotaskQueue ... -> node::fs::ReadFileUtf8 -> uv_fs_open -> uv__fs_work -> open (libsystem_kernel)
+```
+
+The blocking `open()` was on **`./.env`, which was a FIFO (named pipe)** (`prw-------`, 0 bytes), not a regular file. Next.js loads `.env` files at the very start of `next build` (and `next dev`); opening a FIFO read-only blocks indefinitely under POSIX semantics (it waits for a writer that never comes). Hence: 0% CPU (blocked in syscall), hang immediately after the prebuild step and before any `next build` output, and reproducible while the FIFO exists.
+
+Why it was local-dev-only (Impact stays Minor): `.env` is **gitignored and not in the repo**, so it never reaches CI. CI builds succeed and windyroad.com.au is live. The stray FIFO was a local-machine artefact (created 2026-03-27, predating this ticket); the real local env lives in `.env.local` (a regular file) and the build requires no custom env vars, so the FIFO was both unneeded and harmful. The 2026-05-30 "unreproducible" note checked process state rather than the `.env` file type, which is why it missed the cause.
+
+## Resolution (2026-06-27)
+
+Removed the stray FIFO: `rm -f .env`. No repo change is required or possible (the file is gitignored and was never tracked). Verified: a clean `npm run build` then completed in ~8 seconds with full route output (blog, tags, founders, vibe-code-audit, all prerendered) and created `.next/BUILD_ID`. The hang is gone.
+
+Recurrence note: if `next build` / `next dev` ever hangs at 0% CPU after the prebuild step again, check `ls -la .env` first: if it shows a `p` (FIFO) prefix, `rm -f .env` fixes it. An optional fail-fast guard (a prebuild check that errors with a clear message when `.env` is a FIFO, instead of hanging) is a possible follow-up but was deliberately not added here to keep the fix minimal; the recurrence trigger is documented above for instant diagnosis.
 
 ## Related
 
