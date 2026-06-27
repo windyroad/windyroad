@@ -178,3 +178,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-06-24 **P103 captured** - Assistant asserts negative project-state claims from an incomplete search without verifying or asking (lightweight aside via /wr-itil:capture-problem).
 
 > Last reviewed: 2026-06-27 **P006 closed** (OG-image drift guard verified in-session: shared siteCopy.mjs constants + reproduction test green) + **inbound-discovery bootstrapped** (windyroad/windyroad issues channel, first poll 0 reports) + relevance-close pass 0 closes (all evaluator candidates false-positive on verify).
+
+> Last reviewed: 2026-06-27 **P103 transitioned Open to Verifying** (negative/absence-claim verify-before-asserting discipline shipped: CLAUDE.md + memory `feedback_verify_project_state_before_writing.md` extended; I13 RFC-trace gate non-actionable per P070 precedent, RFC tier unadopted in this repo).
