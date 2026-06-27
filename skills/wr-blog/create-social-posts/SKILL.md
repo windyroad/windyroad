@@ -116,7 +116,7 @@ For LinkedIn and Reddit (the two long-form posts that name vendors and incidents
 
 ### 7. Per-platform critic (subagent, optional but recommended)
 
-For each long-form post (LinkedIn, Reddit), invoke `wr-sw-critic` against `assets/social-critic-rubric.md`. Up to 2 rounds. Apply findings. dev.to reuses the article's already-cleared SW-critic verdict because the body is the article verbatim. Short-form posts (Twitter, Bluesky, Hacker News, Lobsters) skip the critic loop because the surface area is too small to score meaningfully.
+For each long-form post (LinkedIn, Reddit), invoke the `wr-blog-social-critic` subagent (it reads its own rubric at `assets/social-critic-rubric.md`). Up to 2 rounds. Apply findings. dev.to reuses the article's already-cleared critic verdict because the body is the article verbatim. Short-form posts (Twitter, Bluesky, Hacker News, Lobsters) skip the critic loop because the surface area is too small to score meaningfully.
 
 ### 8. Cognitive accessibility gate (subagent)
 
@@ -171,4 +171,4 @@ Detail in `assets/social-platform-conventions.md`. That asset is loaded on every
 
 ## Reference: social critic rubric
 
-Detail in `assets/social-critic-rubric.md`. That asset is loaded for long-form posts at step 7.
+Detail in `assets/social-critic-rubric.md`. The `wr-blog-social-critic` subagent reads it for long-form posts at step 7.

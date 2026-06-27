@@ -100,7 +100,7 @@ A finished root-cause guide should pass:
 
 - **Voice gate** (`wr-voice-tone:agent`): clean against `docs/VOICE-AND-TONE.md` including em-dash, avoided-word, ambiguous-link, and reading-level rules.
 - **Content-risk gate** (`wr-content-risk-scorer:agent`): no confidential business metrics, no reader-team disparagement, no unfalsifiable claims, no unsourced industry generalisations, no dismissal of a tool the reader uses and likes.
-- **SW critic loop** (`wr-sw-critic` against `article-critic-rubric.md`): all 10 checks MET within 3 rounds.
+- **Article critic loop** (`wr-blog-article-critic`, which reads `article-critic-rubric.md`): analytical-quality axes pass within 3 rounds (PASS or PASS_WITH_AUTHOR_OVERRIDES).
 - **Cog-a11y gate** (`cognitive-accessibility`): no unglossed jargon stacks in opener and closing; gloss on first use for in-group terms and three-letter abbreviations; concrete over abstract.
 - **Render-and-verify** (`wr-blog:render-diagrams`): every diagram renders without overflow, arrow-target collision, or label-behind-box clipping.
 
