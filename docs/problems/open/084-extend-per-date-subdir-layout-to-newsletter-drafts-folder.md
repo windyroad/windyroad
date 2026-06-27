@@ -13,6 +13,8 @@ Tom-pinned 2026-06-03 via `/wr-architect:review-decisions` follow-up on ADR-039'
 
 ADR-039 (Per-date sub-directory layout for published newsletter editions) shipped 2026-06-02 covering the published-side migration. The sub-decision "extend per-date subdir layout to drafts/?" was deferred at ADR-039 landing time (P078 Out-of-scope clause). Tom pinned Option A (extend now) on 2026-06-03 via the review-decisions sub-decision drain.
 
+**UNBLOCKED 2026-06-27**: the standalone ADR the iter-10 architect review required has been authored and ratified. **ADR-040 (Per-date sub-directory layout for newsletter drafts)** was created via `/wr-architect:create-adr`, Tom-confirmed Option 1 (extend the same per-date layout to drafts) via the substance-confirm gate (`human-oversight: confirmed`), and committed in `1a4262e`. This ticket is no longer architect-design-blocked; the remaining work is the migration itself (Effort M): `git mv` existing drafts into `<persona>/<YYYY-MM-DD>/` sub-dirs and update the wr-newsletter SKILL.md draft-path encoding (steps 0/10/11/16/17), persona-config edition-count globs, the drafts README move-workflow notes, and the ADR-019 line 52 capture-path reference in lockstep, per ADR-040's Confirmation criteria.
+
 **Scope of follow-up work:**
 
 1. **Sibling ADR for drafts scope.** ADR-039 is explicitly scoped to `src/newsletters/published/<persona>/` only (its Out-of-scope clause names ADR-011 + ADR-012 drafts-folder example paths as NOT amended). A sibling ADR carries the drafts layout decision with its own Considered Options, Decision Drivers, Confirmation, and Reassessment. The sibling ADR cites ADR-039 as the published-side precedent and ADR-074 (substance-confirm-before-build) as the Tom-direction-pinning record.
