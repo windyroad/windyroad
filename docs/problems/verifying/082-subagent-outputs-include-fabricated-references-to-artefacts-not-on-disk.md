@@ -1,6 +1,6 @@
 # Problem 082: Subagent outputs include fabricated references to artefacts not on disk
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-02
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -58,14 +58,27 @@ Fix space (not pinned; capture only). Three viable directions documented; pick o
 
 ## Root Cause Analysis
 
+### Resolution (AFK work-problems iter, 2026-06-27)
+
+**Direction 3 chosen** (accept downstream verification as the rule). Lowest-cost; preserves the asymmetric trust model (consumer verifies, subagent need not self-verify); mirrors the established P032/P045/P103 windyroad-local lever pattern verbatim. Directions 1 (brief subagent agent files) and 2 (post-process verification gate) are upstream/structural hardening, documented in the Fix space above as future options should prompt-discipline prove insufficient; out of scope for this local lever.
+
+**Shipped (two-lever local discipline, mirroring P103):**
+
+1. Session memory note `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_verify_subagent_references_before_propagating.md` (plus `MEMORY.md` index pointer), cross-linked to the P032 and P045 memory notes.
+2. New paragraph in the `# Verify before asserting` section of `CLAUDE.md` naming governance-subagent verdict references as the third surface in the verify-before-X family, with the 2026-06-02 `ADR-077` / `wr-architect-generate-decisions-compendium` fabrication as cited evidence.
+
+Both governance gates passed pre-edit: architect PASS (no ADR conflict; no new ADR warranted, since the verify-before-X decision was settled when P032's paragraph landed and this applies it uniformly to a new surface); jtbd PASS (internal agent-governance prose, out of customer-facing JTBD scope, correctly a windyroad-local CLAUDE.md lever).
+
+**I13 RFC-trace note (P104 / P070 / P103):** the I13 propose-fix RFC-trace gate would fire `no-rfc-trace` here; per P104 (known false positive for discipline-note fixes) this iter took the legacy direct-implementation path and did NOT auto-create an RFC, consistent with how P032/P045/P103 shipped.
+
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Decide between fix direction 1 (subagent-prompt discipline), 2 (post-process verification gate), or 3 (accept downstream verification as the rule)
-- [ ] If direction 1: identify which subagent agent files (`.claude/agents/wr-*.md` and equivalents) need the verify-before-citing-references brief amendment
-- [ ] If direction 2: scope the post-process gate's input shape (full verdict text? structured reference list?), check granularity (file existence only? content match?), and where it lives (orchestrator-side wrapper? hook? a new subagent?)
-- [ ] If direction 3: amend CLAUDE.md "Verify before asserting" extension to explicitly name subagent verdict output as the third surface (alongside ticket-prose and Fix-Strategy)
-- [ ] Investigate frequency: scan recent iter retros for other subagent-verdict fabrication instances
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (effort confirmed S in practice: two doc edits; frontmatter left at M-origin, immaterial now the ticket is in Verification Pending and excluded from WSJF)
+- [x] Decide between fix direction 1, 2, or 3. Direction 3 chosen (see Resolution)
+- [ ] If direction 1: identify which subagent agent files need the verify-before-citing-references brief amendment (not pursued; upstream future option)
+- [ ] If direction 2: scope the post-process verification gate (not pursued; upstream future option)
+- [x] If direction 3: amend CLAUDE.md "Verify before asserting" extension to name subagent verdict output as the third surface. Done
+- [ ] Investigate frequency: scan recent iter retros for other subagent-verdict fabrication instances (one observed to date; recurrence-watch is now the verification criterion below)
 
 ## Dependencies
 
@@ -81,3 +94,12 @@ Fix space (not pinned; capture only). Three viable directions documented; pick o
 - `feedback_verify_upstream_placement_before_propagating.md` (P045 memory). Existing discipline for the sibling Fix-Strategy surface.
 
 (captured via /wr-itil:capture-problem after retro-surfaced recurring class-of-behaviour observation per P342 mechanical-stage carve-out; AFK iter 4 of work-problems 2026-06-02 working P080; hang-off-check verdict PROCEED_NEW per fresh-context subagent dispatch; expand at next investigation)
+
+## Fix Released
+
+Shipped 2026-06-27 (AFK `/wr-itil:work-problems` iter) as a windyroad-local discipline lever (direction 3), not a packaged release: the fix surface is `CLAUDE.md` plus a session memory file, neither under `packages/`, so no changeset / version bump applies (the discipline is active immediately on commit).
+
+- `CLAUDE.md`: fourth paragraph in `# Verify before asserting` naming governance-subagent verdict references as the third verify-before-X surface.
+- `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_verify_subagent_references_before_propagating.md` (plus `MEMORY.md` index pointer).
+
+**Verification criterion (recurrence-watch):** awaiting confirmation that future iters consuming governance-subagent verdicts ground cited references before propagating them, and that no fabricated-reference-propagation recurs. Same verification shape as the sibling P032 / P045 / P103 discipline-note fixes. Close on user confirmation or a clean recurrence-watch window.
