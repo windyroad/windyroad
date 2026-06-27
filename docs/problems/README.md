@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-27 **P099 transitioned Open to Verifying** (post-gate edit discipline shipped: wr-newsletter SKILL.md §15.6 + failure-modes ref; any post-gate brief/LinkedIn edit re-enters the FULL gate set, not voice+lint; I13 RFC-trace gate non-actionable per P104/P070 precedent).
+> Last reviewed: 2026-06-27 **P105 captured**: risk-score-commit-gate RISK-POLICY staleness threshold too tight (14 days) + no AFK-satisfiable refresh path; quarterly cadence re-attested into RISK-POLICY.md, gate-threshold change tracked as upstream wr-risk-scorer work (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -20,6 +20,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3 | P075 | Newsletter drafter headings fail clarity test, gates do not catch | 3 (Medium) | Open | M | 2026-05-31 | internal |
 | 3 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 (Medium) | Open | M | 2026-06-14 | internal |
 | 3 | P095 | dry-aged-deps gate deadlocks on exact-pinned deps that --update cannot bump | 6 (Medium) | Open | M | 2026-06-16 | internal |
+| 3 | P105 | risk-score-commit-gate RISK-POLICY staleness threshold too tight (14 days) + no AFK-satisfiable refresh path | 6 (Medium) | Open | S | 2026-06-27 | internal |
 | 2.5 | P067 | Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection | 5 (Medium) | Open | M | 2026-05-15 | internal |
 | 2 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned pus… | 3 (Low) | Open | M | 2026-05-12 | internal |
