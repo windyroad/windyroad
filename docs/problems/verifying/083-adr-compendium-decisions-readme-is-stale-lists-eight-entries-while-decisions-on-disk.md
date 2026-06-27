@@ -1,6 +1,6 @@
 # Problem 083: ADR compendium docs/decisions/README.md is stale; lists 8 entries while ~40 ADR files exist on disk
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-02
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -47,11 +47,33 @@ After landing or amending an ADR, manually run `wr-architect-generate-decisions-
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Verify whether the upstream `wr-architect` plugin defines an automatic compendium-regen contract (hook, PostToolUse, commit-gate) that is failing to fire in this project, OR whether regen is documented as a manual step that has not been integrated into this project's commit cycle.
-- [ ] If upstream defines an auto-regen contract: identify which hook should have fired and why it has not (probable causes: hook not registered in this project's settings; hook is registered but conditional on a precondition that does not match this project's state; hook fires but its output is discarded).
-- [ ] If upstream documents manual regen only: decide whether to (a) add a windyroad-local PostToolUse hook on Write of `docs/decisions/*.md` files that runs the regen, (b) wire regen into `scripts/push-watch.sh` or `scripts/release-watch.sh` as the wrapper-as-defence-in-depth pattern per the existing ADR-021 / ADR-028 precedent, or (c) accept the drift as a manual-discipline pattern and re-rate the priority down.
-- [ ] One-shot regen + commit to clear the current drift independent of the structural fix.
+- [x] One-shot regen + commit to clear the current drift independent of the structural fix. RESOLVED: the compendium was regenerated on 2026-06-03 (commit `85113e4`, the ADR-037/038/039 sub-decision drain) and has been kept current since (last touched 2026-06-17, commit `a66ad4a`, ADR-026 amendment). On-disk verification 2026-06-27 (see `## Fix Released`) confirms the drift no longer exists.
+- [x] Decide where the recurring-regeneration structural fix lives. The compendium emitting U+2014 em-dashes on regen (the generator-bug that the no-em-dash hook blocks) is the SEPARATE upstream ticket P087 (`wr-architect-generate-decisions-compendium emits em-dashes`). The structural auto-regen-on-ADR-landing concern is therefore out of scope for this windyroad-local ticket; this ticket covers the disk-verifiable one-shot drift only.
+- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems. (Now Verification Pending; excluded from WSJF ranking per ADR-022.)
+
+## Fix Released
+
+The one-shot compendium drift this ticket describes is **already resolved on disk**; the windyroad-local lever (regenerate `docs/decisions/README.md` directly so it enumerates every on-disk ADR) was satisfied as a side-effect of the 2026-06-03 ADR drain, the day after this ticket was filed.
+
+**On-disk verification (2026-06-27)**:
+
+- `ls docs/decisions/[0-9]*.md` returns 39 ADR bodies (001-039); no gaps.
+- `docs/decisions/README.md` enumerates all 39: 36 in-force (`In-force decisions` section) plus 3 historical (`Historical decisions`: 003, 016, 022). Header reads `**Total ADRs:** 39 (36 in-force, 3 historical)`.
+- Every README status badge matches the on-disk filename status (spot-confirmed across all 39: e.g. 006/033/035 `.accepted`, 003/016/022 `.superseded`, the rest `.proposed`).
+- The README is ASCII-only: `grep -c` for U+2014 (em-dash) and U+2013 (en-dash) both return 0. Separators are spaced ASCII hyphens.
+
+The original symptom (README listing 8 entries while ~40 ADRs exist) was a true snapshot on 2026-06-02 but a falsified hypothesis by 2026-06-27. Per the verify-before-asserting discipline (P032 / P103 / P082), this iteration grounded the claim against disk before acting rather than blindly regenerating; the file needed no edit.
+
+**Resolution provenance**:
+
+- `85113e4` (2026-06-03) "docs(architect): drain 6 sub-decisions from ADR-037, ADR-038, ADR-039" regenerated the compendium to its current complete shape.
+- `a66ad4a` (2026-06-17) "docs(decisions): amend ADR-026 LinkedIn-sibling shape" kept it current.
+
+**Out of scope (upstream P087)**: the recurring-regeneration structural fix is the buggy upstream generator `wr-architect-generate-decisions-compendium` emitting U+2014 em-dashes that adopter no-em-dash hooks block. That is tracked as P087 and was deliberately NOT run here; the current ASCII-clean README was produced by the 2026-06-03 drain, not the raw generator. The README header's `per ADR-077` reference points at an upstream `agent-plugins` ADR, not a local one (highest local ADR is 039) - consistent with the P082 caveat recorded below; it is not load-bearing for this ticket.
+
+**Verification trigger**: spot-check `docs/decisions/README.md` against `ls docs/decisions/[0-9]*.md` on the next ADR landing - the compendium should still enumerate every on-disk ADR with matching statuses and remain ASCII-only. Recurrence (a new ADR landing without a corresponding compendium refresh) reopens the structural concern, which routes to upstream P087.
+
+Transitioned 2026-06-27 (was misfiled as Open; drift self-resolved 2026-06-03 via the ADR-037/038/039 drain). No fix commit by this iteration - the deliverable was already on disk; this transition records that and moves the ticket to Verification Pending. Doc-class / problem-ticket edit, no changeset.
 
 ## Dependencies
 
