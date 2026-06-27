@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive  -  creating, evolving, ratifying, or contesting a decision  -  open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view  -  they live in the per-ADR body.
 
-**Total ADRs:** 39 (36 in-force, 3 historical)
+**Total ADRs:** 40 (37 in-force, 3 historical)
 
 ---
 
 ## In-force decisions
 
-_36 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_37 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001  -  Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -189,6 +189,11 @@ _36 ADRs. These are the current rules. The architect agent reads this section fi
 ### ADR-039  -  Per-date sub-directory layout for published newsletter editions
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Per-date sub-directories at `<published-folder>/<YYYY-MM-DD>/<publication-date>.<ext>`."**
+### ADR-040  -  Per-date sub-directory layout for newsletter drafts
+**Status:** proposed | **Oversight:** confirmed
+**Decides:** Extend ADR-039's per-date sub-directory layout for published editions to newsletter drafts (`src/newsletters/drafts/<persona>/<YYYY-MM-DD>/`), migrating existing drafts with `git mv` and updating the wr-newsletter SKILL.md path encoding, persona-config globs, the drafts README, and the ADR-019 line 52 capture-path reference in lockstep. Chosen to remove the published/drafts asymmetry, keep publishing a whole-directory move, and fix the same crowding at low cost and full reversibility.
+**Confirmation:** drafts persona folders hold per-date sub-dirs with no flat per-edition files left after migration; a `phase=prep` run writes the brief and companion siblings into the dated sub-dir and a later `phase=finalise` + publish resolves and moves them without a path error; `grep` finds no surviving flat `drafts/<persona>/<YYYY-MM-DD>.<ext>` references in SKILL.md, persona configs, the drafts README, or ADR-019 line 52.
+**Related:** ADR-039, ADR-019, ADR-026
 
 ---
 
