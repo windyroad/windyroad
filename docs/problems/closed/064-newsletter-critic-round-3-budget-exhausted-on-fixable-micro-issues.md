@@ -1,6 +1,6 @@
 # Problem 064: Newsletter critic uses a 38-check structured rubric that was never approved; simplify back to strengths/weaknesses + context
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-05-31; the structured rubric is actively producing wrong-shaped REJECTED verdicts on briefs the reader-facing critic should pass; affects every edition)
@@ -97,3 +97,9 @@ This composes with P071 (supersede ADR-016 parameterised sw-critic pattern with 
 - P039 (PASS_WITH_AUTHOR_OVERRIDES verdict obscures publish signal; may be auto-resolved by simplification)
 - P015, P017 (rubric expansion history)
 - Captured via /wr-retrospective:run-retro on 2026-05-15 session; reframed via /wr-itil:work-problems orchestrator main turn 2026-05-31 per user direction.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: critic rubric simplified to STRENGTHS/WEAKNESSES; 2026-06-22 reviews show round-3 exhaustion ceased
+- **Recovery**: reopen via /wr-itil:transition-problem 064 known-error if a regression surfaces

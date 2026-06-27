@@ -1,6 +1,6 @@
 # Problem 066: Voice guide LinkedIn-posts section needs amendment; rules conflict with editorial direction on three axes
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-15
 **Origin**: internal
 **Transitioned to Verification Pending**: 2026-05-30 (AFK iter 3; three carve-out paragraphs amended into `docs/VOICE-AND-TONE.md` LinkedIn-posts section; JTBD PASS, voice-tone PASS round 2 after `actually` word-list fix)
@@ -90,3 +90,9 @@ c. **Cadence anchor carve-out** on "No promotional framing": the rule should say
 - ADR-025 (author overrides)
 - 2026-05-15.reviews.md (3 documented LinkedIn-post overrides for Issue 05)
 - Captured via /wr-retrospective:run-retro on 2026-05-15 session.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: three LinkedIn voice carve-outs in VOICE-AND-TONE.md; 2026-06-22 LinkedIn post passed voice round 1
+- **Recovery**: reopen via /wr-itil:transition-problem 066 known-error if a regression surfaces

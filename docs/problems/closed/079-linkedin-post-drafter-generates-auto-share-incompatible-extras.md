@@ -1,6 +1,6 @@
 # Problem 079: /wr-newsletter step 15.5 LinkedIn post drafter generates auto-share-incompatible extras (Image section, Read-full-issue link line)
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-01
 **Priority**: 3 (Medium). Impact: 2 x Likelihood: 5 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -118,3 +118,9 @@ Shipped in `.claude/skills/wr-newsletter/SKILL.md` (repo-local skill; no npm veh
 - **ADR-026** (`docs/decisions/026-...`). Sibling-file convention; the `.linkedin.md` shape is governed there.
 
 (captured manually following the /wr-itil:capture-problem template after Tom-direction; bundled with P080 + P081 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: .linkedin.md reduced to frontmatter+body; 2026-06-22 sibling is minimal shape (no manual deletions)
+- **Recovery**: reopen via /wr-itil:transition-problem 079 known-error if a regression surfaces

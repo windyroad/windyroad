@@ -1,6 +1,6 @@
 # Problem 062: Newsletter persona-config edition-count rule globs sibling files and undercounts editions
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-15
 **Origin**: internal
 **Known Error confirmed**: 2026-05-30 (fix landed in commit de6c165; root cause = broken `<published>/*.md` glob predates ADR-026 sibling-file convention)
@@ -84,3 +84,9 @@ Exercise evidence from this session (AFK iter): static rule application to curre
 - .claude/skills/wr-newsletter/personas/leader.md (rule location)
 - ADR-026 (sibling-file convention)
 - Captured via /wr-retrospective:run-retro on 2026-05-15 session.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: edition-counting rule (frontmatter max+1) present; Issue 10 (2026-06-22) computed edition count correctly
+- **Recovery**: reopen via /wr-itil:transition-problem 062 known-error if a regression surfaces

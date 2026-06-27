@@ -1,6 +1,6 @@
 # Problem 063: Newsletter cover `hook_line_1` budget too loose for LinkedIn preview crop
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
@@ -62,3 +62,9 @@ Verification trigger: next live `/wr-newsletter` run that calls the cover skill 
 - P044 (cover image needs templated skill with render pipeline)
 - Commit eb0e8be (skill prose tightening landed 2026-05-15)
 - Captured via /wr-retrospective:run-retro on 2026-05-15 session.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: hook_line_1 budget tightened to 28 chars; 2026-06-22 cover rendered with no LinkedIn crop
+- **Recovery**: reopen via /wr-itil:transition-problem 063 known-error if a regression surfaces

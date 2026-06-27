@@ -1,6 +1,6 @@
 # Problem 024: .claude/** Edit/Write permission gate not satisfied by */Edit allow list in AFK subprocesses
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-26
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
@@ -116,3 +116,9 @@ Skills-subtree convention: colon-form `Edit:.claude/skills/**` works empirically
 
 - ~/.claude/settings.json
 - packages/itil/skills/work-problems/SKILL.md (AFK subprocess invocation)
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: .claude/settings.json Edit/Write(.claude/skills/**) matchers present; empirical PASS across 2026-05-11 AFK iters 3-6
+- **Recovery**: reopen via /wr-itil:transition-problem 024 known-error if a regression surfaces

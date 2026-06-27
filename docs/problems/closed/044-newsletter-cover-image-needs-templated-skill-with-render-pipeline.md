@@ -1,6 +1,6 @@
 # Problem 044: /wr-newsletter needs a dedicated cover-image skill (templated SVG + render script) for consistent weekly output
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: templated cover-image skill is pre-publish pipeline disruption at L3 Moderate)
@@ -93,3 +93,9 @@ P037 should remain in its current `.known-error.md` (or `.verifying.md` if relea
 Released 2026-05-12 to `origin/master` in commit `95cd9c6`: wr-newsletter-cover skill with templated SVG plus render script, vitest tests, and step 12 collapse from 5-stage inline prose to single skill invocation.
 
 Awaiting user verification. Verification trigger: next /wr-newsletter prep+finalise cycle that produces the cover in 1 invocation with no brand-mark, monogram, or font-weight reverts.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: .claude/skills/wr-newsletter-cover/ skill present (template + render script); covers generated weekly since 2026-05-15
+- **Recovery**: reopen via /wr-itil:transition-problem 044 known-error if a regression surfaces

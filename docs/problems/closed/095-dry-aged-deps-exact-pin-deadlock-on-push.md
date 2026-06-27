@@ -1,6 +1,6 @@
 # Problem 095: dry-aged-deps gate deadlocks on exact-pinned deps that --update cannot bump
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-16
 **Transitioned to Verification Pending**: 2026-06-27 (fix released: `scripts/fix-deps.sh` auto-bumps exact-pin deadlocked deps to their matured targets via `npm install --save-exact`, then test-gates before commit; both scripts clean up the stray `package.json.backup`. Open to Verifying directly via the legacy direct-implementation path: root cause was already documented in the description and confirmed by a live reproduction this session.)
 **Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3)
@@ -59,3 +59,9 @@ push:watch's dry-aged auto-update (`npx dry-aged-deps --update --yes`) treats th
 ## Related
 
 - P026 (dry-aged-deps gate is intentional hygiene). This ticket does not weaken P026; it makes the gate's auto-update path handle the exact-pin case so the discipline (run the upgrade) is automatic rather than a manual detour. Retro 2026-06-16.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: fix-deps.sh exact-pin-deadlock helper + 9/9 vitest green; playwright 1.59.1 to 1.60.0 deadlock fixed this session
+- **Recovery**: reopen via /wr-itil:transition-problem 095 known-error if a regression surfaces

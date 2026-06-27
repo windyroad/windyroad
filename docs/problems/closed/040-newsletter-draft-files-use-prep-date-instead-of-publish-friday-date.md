@@ -1,6 +1,6 @@
 # Problem 040: /wr-newsletter draft and companion files use prep run date instead of Friday publish date
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Released**: 2026-05-07
@@ -49,3 +49,9 @@ Step 16's "today's date" contract was written assuming finalise runs the same da
 
 - ADR 017 (prep/finalise phases)
 - This retrospective: 2026-05-01 edition retro
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: published editions use <publication-date> (Friday-pub) filenames on disk; binding present at SKILL.md step 0
+- **Recovery**: reopen via /wr-itil:transition-problem 040 known-error if a regression surfaces

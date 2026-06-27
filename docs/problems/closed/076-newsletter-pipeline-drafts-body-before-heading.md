@@ -1,6 +1,6 @@
 # Problem 076: Newsletter pipeline drafts body before heading, forcing rework on every H1 revision
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-01
 **Priority**: 2 (High). Impact: 4 x Likelihood: 4 (manual rating at capture: HIGH per Tom direction. Confirm at next /wr-itil:review-problems.)
 **Origin**: internal
@@ -95,3 +95,9 @@ ADR-037 H1-first composition order implementation. `.claude/skills/wr-newsletter
 - **P075** (`docs/problems/open/075-newsletter-drafter-headings-fail-clarity-test.md`). Sibling: the rubric blind spots around H1 clarity; this ticket addresses the workflow that surfaces the cost.
 
 (captured manually following the /wr-itil:capture-problem template after Tom-direction; HIGH priority per Tom; bundled with P077 + P078 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: SKILL step 11 split into 11a/11b (H1-first); 2026-06-22 composed H1-first with theme-anchor approval gate
+- **Recovery**: reopen via /wr-itil:transition-problem 076 known-error if a regression surfaces

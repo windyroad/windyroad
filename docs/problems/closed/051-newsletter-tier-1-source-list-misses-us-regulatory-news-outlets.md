@@ -1,6 +1,6 @@
 # Problem 051: Newsletter tier-1 source list misses US regulatory-news outlets
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-08
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: tier-1 source coverage gap is pre-publish pipeline disruption at L3 Moderate; recurs every edition with US regulatory news, Likely)
@@ -79,3 +79,9 @@ Architect Review: PASS (after first-pass ISSUES FOUND addressed); JTBD Review: P
 ## Related
 
 Captured via /wr-itil:capture-problem on 2026-05-08 from the finalise session, after Item 1 was expanded post-finalise to include the White House CAISI / pre-release-vetting story. Tier-1 corroboration set used in the recovery: NYT, Reuters, Politico, Axios, Washington Post (Cloudflare-blocked on Playwright; recoverable via search). Expand investigation at next /wr-itil:review-problems pass.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: expanded tier-1 source list (Politico/Axios/Reuters Google-News query) present in SKILL.md; live across 6 editions
+- **Recovery**: reopen via /wr-itil:transition-problem 051 known-error if a regression surfaces

@@ -1,6 +1,6 @@
 # Problem 072: ADR-022 scheduled-cron deps refresh PR is wrong shape; push-fail-fast + separate fix flow is the desired pattern
 
-**Status**: Verification Pending (Phase 1 + Phase 2 shipped; awaiting end-to-end validation on the next real dep issue per ADR-034 criterion (d))
+**Status**: Closed (Phase 1 + Phase 2 shipped; awaiting end-to-end validation on the next real dep issue per ADR-034 criterion (d))
 **Reported**: 2026-05-30
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
@@ -106,3 +106,9 @@ Released as a local commit per ADR-014 (windyroad is `private: true`, no npm pub
 - Captured via /wr-itil:capture-problem on 2026-05-30 during /wr-architect:review-decisions drain after user rejected ADR-022 with explicit design direction.
 - ADR-022 frontmatter carries `human-oversight: rejected-pending-supersede` plus `supersede-ticket: P072`.
 - User direction verbatim quoted in the Description above.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: ADR-034 push-watch fail-fast + fix-deps.sh present; deps-refresh.yml cron deleted; deps flow exercised via P095 this session
+- **Recovery**: reopen via /wr-itil:transition-problem 072 known-error if a regression surfaces

@@ -1,6 +1,6 @@
 # Problem 075: Newsletter drafter headings fail clarity test, gates do not catch
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-31
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -97,3 +97,9 @@ The remaining upstream voice-agent cross-reference is defence-in-depth (see Inve
 - **P070** (`docs/problems/open/070-newsletter-draft-template-does-not-codify-three-deep-items-plus-notes-discipline.md`). Adjacent. Draft template gap; this ticket is about headline craft inside whichever template structure is used.
 
 (captured via /wr-itil:capture-problem; expand at next investigation)
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: heading-craft section in critic rubric + SKILL step 11a/11b; 2026-06-22 headings passed critic heading-craft
+- **Recovery**: reopen via /wr-itil:transition-problem 075 known-error if a regression surfaces

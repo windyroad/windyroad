@@ -1,6 +1,6 @@
 # Problem 080: Newsletter pipeline has no cross-edition thesis-contradiction check between consecutive editions
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-01
 **Priority**: 2 (High). Impact: 4 x Likelihood: 3 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -88,3 +88,9 @@ ADR-038 cross-edition thesis-consistency gate implementation. New agent `.claude
 - **ADR-038** (`docs/decisions/038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`). The decision that codifies this ticket's fix substance.
 
 (captured manually following the /wr-itil:capture-problem template after Tom-direction; bundled with P079 + P081 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: cross-edition-consistency agent present; 2026-06-22.reviews.md carries ## Cross-Edition Consistency block
+- **Recovery**: reopen via /wr-itil:transition-problem 080 known-error if a regression surfaces

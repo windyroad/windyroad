@@ -1,6 +1,6 @@
 # Problem 039: sw-critic round-3 REJECTED-with-author-overrides verdict is technically correct but obscures publish-decision signal
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: sw-critic verdict obscuring publish signal is pre-publish pipeline disruption at L3 Moderate; previous Impact 2 understated)
@@ -65,3 +65,9 @@ Follow-up work for next session:
 Released 2026-05-12 to `origin/master` in commit `fcd87e4`: PASS_WITH_AUTHOR_OVERRIDES verdict variant added to wr-sw-critic agent and caller plumbing landed in wr-newsletter SKILL.md per ADR-025.
 
 Awaiting user verification. Verification trigger: next push:watch (already drained today) plus the next weekly newsletter edition that surfaces a publish-decision verdict with documented overrides instead of a misleading REJECTED.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: PASS_WITH_AUTHOR_OVERRIDES verdict variant present in SKILL.md + agent; exercised across editions since 2026-05-15
+- **Recovery**: reopen via /wr-itil:transition-problem 039 known-error if a regression surfaces

@@ -1,6 +1,6 @@
 # Problem 090: wr-newsletter CTA persistently includes the Windy Road services pitch despite repeated correction
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-15
 **Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-06-15)
 **Origin**: internal
@@ -54,3 +54,9 @@ Fixed in the repo-local `.claude/skills/wr-newsletter/` skill (no package releas
 - Added a 7th deterministic structural-lint check (g) to `scripts/check-newsletter-structure.sh` + vitest test: the CTA block (after the final `---`) carries at most one non-blank, non-link prose line (the invitation); a services-description sentence is a disallowed second prose line. The check passes the hand-fixed published Issue 09 brief.
 
 This is a behaviour change verified on the next `/wr-newsletter` run (the next drafted brief must close with invitation + linked `windyroad.com.au` only, and the lint must pass at save). Awaiting that verification before closing.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: services-pitch removed from persona configs + SKILL; 2026-06-22 closes with invitation + windyroad.com.au only; lint (g) added
+- **Recovery**: reopen via /wr-itil:transition-problem 090 known-error if a regression surfaces

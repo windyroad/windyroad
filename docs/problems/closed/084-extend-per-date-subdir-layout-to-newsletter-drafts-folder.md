@@ -1,6 +1,6 @@
 # Problem 084: Extend per-date sub-directory layout to src/newsletters/drafts/<persona>/
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-03
 **Priority**: 3 (Medium), Impact: 3 x Likelihood: 1
 **Origin**: internal
@@ -129,3 +129,9 @@ Deferred (out of P084 scope): docs/decisions/README.md compendium regen, blocked
 
 - P076 (`docs/problems/open/076-newsletter-pipeline-drafts-body-before-heading.md`): keyword overlap on "drafts"; different concern (H1-first composition order, not folder layout). NOT a duplicate.
 - P078 (`docs/problems/verifying/078-newsletters-published-folder-needs-dated-subdirs.md`): keyword overlap on "subdirs"; P084 is the deferred drafts-side sibling per ADR-039 Out-of-scope clause. Composes-with relationship, NOT a duplicate.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: drafts migrated to per-date subdirs; SKILL+persona globs updated; grep criterion 3 passed
+- **Recovery**: reopen via /wr-itil:transition-problem 084 known-error if a regression surfaces

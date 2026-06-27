@@ -1,6 +1,6 @@
 # Problem 100: Newsletter cover hook silently clips, and the structural lint false-positives on a sentence-final model name
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-22
 **Priority**: 4 (Medium). Impact: Minor (2) x Likelihood: Likely (2) (deferred, re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -64,3 +64,9 @@ Awaiting user verification that the lint no longer false-positives on a real edi
 ## Related
 
 Captured during the 2026-06-22 Issue 10 retrospective. The cover-overflow half is sibling to the P037 / P044 cover-image friction class; the lint half is a P089-family false-positive.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: lint sentence-final-model fix + cover hook-width warning; 26/26 vitest green
+- **Recovery**: reopen via /wr-itil:transition-problem 100 known-error if a regression surfaces

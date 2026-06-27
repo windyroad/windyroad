@@ -1,6 +1,6 @@
 # Problem 081: Newsletter pipeline missing an external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review
 
-**Status**: Verification Pending (fix released 2026-06-17, see Fix Released + Implementation below; sole remaining task: validate on next /wr-newsletter run)
+**Status**: Closed (fix released 2026-06-17, see Fix Released + Implementation below; sole remaining task: validate on next /wr-newsletter run)
 **Reported**: 2026-06-01
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 4 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -130,3 +130,9 @@ Awaiting user verification. Verification trigger: the SOLE remaining task is a l
 - **P064**, **P075**, **P077**. Sibling editorial-gate-blind-spot tickets.
 
 (captured manually following the /wr-itil:capture-problem template after Tom-direction; bundled with P079 + P080 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: editor agent extended with EDITORIAL_CRAFT pass; 2026-06-22 editor review includes the craft block
+- **Recovery**: reopen via /wr-itil:transition-problem 081 known-error if a regression surfaces

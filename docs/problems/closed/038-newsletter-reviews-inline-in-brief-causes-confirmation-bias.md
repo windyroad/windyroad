@@ -1,6 +1,6 @@
 # Problem 038: /wr-newsletter step 16 mandates inline review blocks in brief; creates confirmation-bias risk for next reviewer
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Released**: 2026-05-07
@@ -51,3 +51,9 @@ Step 16 was designed for audit-trail completeness: the brief file carries both t
 - ADR 016 (sw-critic), ADR 018 (content-risk), ADR 020 (editor), fresh-context discipline
 - ADR 019 (capture-transcript), sibling-file pattern precedent
 - This retrospective: 2026-05-01 edition retro
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: .reviews.md companion present in all published editions since 2026-05-15; brief is frontmatter+body+CTA only
+- **Recovery**: reopen via /wr-itil:transition-problem 038 known-error if a regression surfaces

@@ -1,6 +1,6 @@
 # Problem 083: ADR compendium docs/decisions/README.md is stale; lists 8 entries while ~40 ADR files exist on disk
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-02
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -92,3 +92,9 @@ Transitioned 2026-06-27 (was misfiled as Open; drift self-resolved 2026-06-03 vi
 ### Hang-off-check verdict (2026-06-02, /wr-itil:capture-problem Step 2b)
 
 PROCEED_NEW. Neither P065 (cog-a11y target calibration; domain structurally distinct) nor P082 (subagent fabrication pattern; fix locus is the subagent grounding contract, not the compendium itself) absorbs the new capture's actual problem (the disk-verifiable README.md vs disk count drift). Caveat per the subagent verdict: the architect's "ADR-077 requires regen" and "run `wr-architect-generate-decisions-compendium`" claims required verification per P082 discipline; the tool was verified on `$PATH`, the ADR-077 claim was not verified locally (does not exist in this project; presumably references upstream `agent-plugins` repo).
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: docs/decisions/README.md compendium enumerates 40 ADRs matching on-disk inventory (verified 2026-06-27)
+- **Recovery**: reopen via /wr-itil:transition-problem 083 known-error if a regression surfaces

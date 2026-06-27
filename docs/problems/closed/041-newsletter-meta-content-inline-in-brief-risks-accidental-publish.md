@@ -1,6 +1,6 @@
 # Problem 041: /wr-newsletter step 16 keeps LinkedIn post + image notes + alt text inline in brief; risks accidental publication of meta content
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Released**: 2026-05-07
@@ -51,3 +51,9 @@ Step 16 was designed for one-file-per-edition completeness: brief, LinkedIn post
 
 - P038 (companion: reviews-inline-in-brief)
 - This retrospective: 2026-05-01 edition retro
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: .linkedin.md companion present in published editions; inline LinkedIn block removed from brief
+- **Recovery**: reopen via /wr-itil:transition-problem 041 known-error if a regression surfaces

@@ -1,6 +1,6 @@
 # Problem 043: /wr-newsletter three-lens scoring lets non-leader-actionable items through; persona relevance is post-filter, not in scoring
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Priority**: 16 (Significant). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: three-lens leak past gate is newsletter content quality at gate, L4 Significant)
@@ -87,3 +87,9 @@ Transitioned Open to Known Error (verifies on next push:watch plus the following
 Released 2026-05-12 to `origin/master` in commit `219377b`: each T / O / H lens now requires a named_action for the target-reader this quarter from a persona-conditional action vocabulary (leader plus developer); third-tier prioritisation rewritten to use lens-level gating instead of leader-persona post-filter.
 
 Awaiting user verification. Verification trigger: next weekly newsletter edition that produces a brief whose candidate metadata records a named_action per yes-scored lens and whose third-tier prioritisation uses the lens-level gate.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: named_action requirement present in three-lens-filter.md; exercised in editions since 2026-05-15
+- **Recovery**: reopen via /wr-itil:transition-problem 043 known-error if a regression surfaces

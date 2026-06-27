@@ -1,6 +1,6 @@
 # Problem 101: Newsletter pipeline drifts toward recommending human code review and generic rotation CTAs, against Tom's stance
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-22
 **Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Likely (2) (deferred, re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -66,3 +66,9 @@ Committed to `master` 2026-06-27 (repo-local skill-config plus docs change; no s
 ## Related
 
 Captured during the 2026-06-22 Issue 10 retrospective. Memory: feedback_humans_ratify_decisions_not_review_code. Editorial humans-ratify-not-review stance also recorded in the Issue 10 reviews companion file. P104 (I13 false positive in RFC-less repos): this fix is its third recorded occurrence.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: editorial-stance section + edition-tied CTA present; 2026-06-22 CTA tied to thesis, no human-code-review framing
+- **Recovery**: reopen via /wr-itil:transition-problem 101 known-error if a regression surfaces

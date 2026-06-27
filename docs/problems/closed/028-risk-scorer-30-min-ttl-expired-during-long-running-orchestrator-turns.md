@@ -1,6 +1,6 @@
 # Problem 028: risk-scorer 30-min TTL expired during long-running orchestrator turns
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-26
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4)
@@ -94,3 +94,9 @@ This evidence does not change P028's WSJF ranking (Severity 12 x Effort S = 12.0
 - **Fix summary**: three-band TTL policy in `check_risk_gate` (Band A passes silently when age < TTL/2; Band B slides the marker forward on invariant state-hash bounded by a 2*TTL hard cap; Band C halts as before); companion `slide-marker-on-subprocess-return` ensures sub-Task subagent turns do not count against the parent turn's TTL. Default TTL also bumped 1800s to 3600s in an earlier release per upstream P107.
 - **Awaiting user verification**: the next long AFK orchestrator turn (>30 min between scoring and committing on an unchanged tree) should pass the commit gate without an extra `wr-risk-scorer:pipeline` invocation. Expected behaviour: when the gate fires after the TTL midpoint with the staged-tree state-hash unchanged since scoring, the gate slides the marker forward (Band B) and admits the commit. When the staged tree has drifted since scoring, the gate still halts (correct halt-on-drift semantics preserved).
 - **Exercise evidence (this iteration)**: this same iteration's two transition commits both relied on a single `wr-risk-scorer:pipeline` invocation up-front; the second commit gate (the Known Error to Verification Pending transition) is the live verification surface.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: @windyroad/risk-scorer v0.9.0 installed; three-band TTL exercised on transition-commit gates
+- **Recovery**: reopen via /wr-itil:transition-problem 028 known-error if a regression surfaces

@@ -1,6 +1,6 @@
 # Problem 102: Newsletter review gates fact-check URLs but not unsourced analogies or stated-as-history claims
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-22
 **Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-06-27 at fix time: concrete values confirmed, deferral cleared)
 **Origin**: internal
@@ -74,3 +74,9 @@ Gate trail: architect PASS (within-axis scope clarification, pinned CONTENT_RISK
 Calibration note (architect advisory): the new `high` clause is a deliberate widening of the factual axis's reject-set. Flag it for false-positive-rate audit at a future retrospective per the ADR-015 / ADR-018 reassessment pattern, in case illustrative-but-flagged analogies start tripping it.
 
 Process note (I13 / P104): the propose-fix RFC-trace gate fires `no-rfc-trace` in this repo because there is no `docs/rfcs/` tier; this is the known P104 false positive. Per P070 / P103 precedent the legacy direct-implementation path was used; no RFC was auto-created.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: content-risk check_1 extended for unsourced historical/analogy claims; 2026-06-22 opener uses plain-word reframe
+- **Recovery**: reopen via /wr-itil:transition-problem 102 known-error if a regression surfaces

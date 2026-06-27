@@ -100,3 +100,9 @@ Out of scope for this ticket: archival policy (moving very old editions to a sep
 - **P062** (`docs/problems/verifying/062-newsletter-persona-config-edition-count-rule-globs-sibling-files.md`). Adjacent: the same persona-config Glob this ticket would update.
 
 (captured manually following the /wr-itil:capture-problem template after Tom-direction; bundled with P076 + P077 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: all published leader editions in dated subdirs on disk (e.g. published/leader/2026-06-22/)
+- **Recovery**: reopen via /wr-itil:transition-problem 078 known-error if a regression surfaces

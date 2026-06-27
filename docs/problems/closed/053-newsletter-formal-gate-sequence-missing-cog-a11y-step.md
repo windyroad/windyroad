@@ -1,6 +1,6 @@
 # Problem 053: /wr-newsletter formal gate sequence missing a cog-a11y step
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-10
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: missing cog-a11y step risks Grade 12+ prose reaching readers without inline workaround; pre-publish pipeline disruption L3 Moderate, Likely without the formal step)
@@ -65,3 +65,9 @@ Awaiting user verification on next `/wr-newsletter` prep+finalise cycle. Expecte
 Captured via `/wr-itil:capture-problem`-equivalent direct-write on 2026-05-10 from the 2026-05-08 retro Step 4b Stage 1. Live evidence: cog-a11y inline addition during finalise, 20 findings, Grade 12+ to Grade 10 remediation.
 
 **Default proposal confirmed 2026-05-13** (user direction via AskUserQuestion batch-2 answer 2): apply the ticket's default shape (insert after editor at step 15.5 or step 16, 1-round pass with optional remediation, run on prep + re-run on finalise only if body changed) on the next AFK iter or interactive session that picks this ticket. The default is now AFK-progressable without further user input.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: cog-a11y gate (SKILL step 15.4) present; exercised in editions since 2026-06-01
+- **Recovery**: reopen via /wr-itil:transition-problem 053 known-error if a regression surfaces

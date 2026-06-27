@@ -1,6 +1,6 @@
 # Problem 067: Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 5 (Medium). Impact: Negligible (1) x Likelihood: Almost certain (5)
@@ -77,3 +77,9 @@ Verification trigger: the next `/wr-newsletter` prep run fetches the FTC feed cl
 - P014 (Playwright helper). Helper does not bypass FTC's deeper detection.
 - /wr-newsletter SKILL.md Step 2 tier-3 source list (FTC entry)
 - Captured via /wr-retrospective:run-retro on 2026-05-15 session.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: FTC source repointed to RSS feed; https://www.ftc.gov/feeds/press-release.xml verified HTTP 200 this session
+- **Recovery**: reopen via /wr-itil:transition-problem 067 known-error if a regression surfaces

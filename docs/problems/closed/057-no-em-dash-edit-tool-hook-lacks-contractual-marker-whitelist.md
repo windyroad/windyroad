@@ -87,3 +87,9 @@ The fix released 2026-05-30 (whitelist port from `no-em-dash-bash.sh` to `no-em-
 - `/wr-itil:work-problems` SKILL.md (upstream). The iter dispatch template carries the pre-stage-all mitigation as a constraint comment ("P057 staging-trap mitigation: pre-stage ALL prior-touched paths together before commit"); future iter prompts inherit the constraint.
 - User direction recorded 2026-05-31 during `/wr-itil:work-problems` orchestrator main turn queue resolution: deviation-approval (amend recovery semantics); upstream-blocked routing for the SKILL-level amend.
 - **Reported upstream (recurrence-class amend only)**: https://github.com/windyroad/agent-plugins/issues/188 (2026-05-31). Note: this upstream report covers the staging-trap recovery semantics amend (sibling concern surfaced via the Additional Evidence section above), NOT the original P057 scope. The original P057 local hook port shipped 2026-05-30 and is in this ticket's Verifying state.
+
+## Closed
+
+- **Closed**: 2026-06-28 (verification-queue drain; evidence-based per ADR-022)
+- **Evidence**: no-em-dash.sh whitelist ported (3 entries); 6 smoke tests + observed on marker appends
+- **Recovery**: reopen via /wr-itil:transition-problem 057 known-error if a regression surfaces
