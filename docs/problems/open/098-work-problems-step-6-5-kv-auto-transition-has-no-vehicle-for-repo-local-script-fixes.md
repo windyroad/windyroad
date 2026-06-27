@@ -20,6 +20,15 @@ Candidate fix (UPSTREAM, `wr-itil` work-problems Step 6.5 / the enumerate-postre
 
 Upstream-bound: the fix lives in `@windyroad/wr-itil`, not authorable in this consumer repo. Flag as a `/wr-itil:report-upstream` candidate.
 
+### Recurrence evidence (2026-06-27, Open tier)
+
+The original 2026-06-17 evidence was the Known-Error -> Verifying tier (P092). The same root also drifts tickets stuck at the **Open** tier: a prior session implements + commits a repo-local skill/doc fix but never walks the ticket through any lifecycle transition, so the ticket sits in `open/` while its fix is already live on master. Two instances surfaced during the 2026-06-27 work-problems loop:
+
+- **P075** (newsletter heading-craft checks): fix committed in `70a0503` on 2026-06-16 (repo-local `.claude/skills/wr-newsletter/*` edits); ticket left in `open/` until a 2026-06-27 iter manually transitioned it Open -> Verifying (commit `04bc7cb`).
+- **P081** (newsletter editor editorial-craft pass): fix shipped 2026-06-17 (`5879f4b` / `69f6afe`); ticket also "misfiled as Open" and manually transitioned 2026-06-27 (see its `## Fix Released` note).
+
+This broadens P098's scope from "K->V auto-transition vehicle gap" to "any-tier -> Verifying drift for repo-local consumer fixes": the absence of an npm release-vehicle signal means no automated lifecycle transition fires from any starting tier, so tickets drift out of sync with their already-shipped repo-local fixes and only resync when a human notices during a later loop. The upstream fix territory is the same (work-problems / manage-problem post-fix transition recognising a repo-local / pushed-to-origin release-vehicle class).
+
 ## Symptoms
 
 (deferred to investigation)
