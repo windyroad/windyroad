@@ -31,7 +31,7 @@ The caller (typically `/wr-newsletter` step 12) supplies:
 | `publication_date` | `YYYY-MM-DD` (the publish-day date per ADR-026, P040, ADR 030) | `2026-05-25` | Output filename anchor only. |
 | `week_ending` | `YYYY-MM-DD` (the Sunday ending the editorial week per ADR 030; publish-day date minus one day for a Monday publish) | `2026-05-24` | The "WEEK ENDING ..." stamp and the date inside the `<title>` / `<desc>` strings. Distinct from `publication_date` because the week does not end on the publish Monday. |
 | `hook_line_1` | string, around 28 chars max | `Six AI shifts this week.` | White hook line, rendered at 80px. LinkedIn preview crops slightly on the right edge, so 30+ chars risks shaving the final character (P-issue observed 2026-05-14 with "AI cyber capabilities shipped."). Stay at or below 28 chars to keep the trailing punctuation in the preview. |
-| `hook_line_2` | string, around 45 chars max | `All of them measurement problems.` | Accent-orange hook line, rendered at 60px. Smaller font has more horizontal headroom; 28-char hooks here have not clipped to date. |
+| `hook_line_2` | string, around 40 chars max | `All of them measurement problems.` | Accent-orange hook line, rendered at 60px. Smaller font than hook-1 but a 44-char line ("Governance, trust and new skills are the job") clipped on Issue 10, so stay at or below 40 chars. Reword to a complete phrase that reads whole rather than trimming to fit, which leaves a dangling fragment. |
 | `draft_folder` | path | `src/newsletters/drafts/leader/` | Output directory; outputs land at `<draft-folder>/<publication-date>.cover.{svg,png}`. |
 
 Hook lines should fit on one rendered line each. Re-render and visually inspect (step 4 below) if either line wraps or overlaps. Always preview against LinkedIn's share-card crop before publish; the safe-area lives ~2 character-widths inside each margin.
@@ -91,6 +91,8 @@ node scripts/render-cover.mjs \
 ```
 
 The script substitutes the placeholders, writes the SVG, then shells out to `scripts/render-svg.mjs` for the PNG (longest edge 1200px). XML special characters in the supplied strings are escaped automatically; do not pre-escape them.
+
+If a hook line is over its safe-area char budget (hook-1 > 28, hook-2 > 40), the script prints a non-fatal `render-cover: hook-N is M chars, over the ~K-char safe-area budget` warning to stderr and continues. The budget is a proportional-font proxy, so the warning is advisory, not a hard stop: it surfaces the previously silent clip so you reword to a shorter complete phrase before the render-and-verify Read (step 4), rather than discovering the truncation by eye or shipping it.
 
 If the script exits non-zero, halt step 12 and surface the error in the Tom-summary. Do not retry with a different render path silently. Diagnose the failure first.
 

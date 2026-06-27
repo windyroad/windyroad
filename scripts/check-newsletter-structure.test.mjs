@@ -184,6 +184,39 @@ describe('check-newsletter-structure.sh', () => {
     expect(r.status, r.stderr).toBe(0);
   });
 
+  // P100: a sentence-final model name carried a trailing period into the
+  // extracted token, so a mid-sentence "Gemma 4" in the brief mismatched a
+  // sentence-final "Gemma 4." in the linkedin sibling. Trailing sentence
+  // punctuation must be normalised before the family comparison.
+  it('(f) passes when the only difference is a sentence-final period (Gemma 4.)', () => {
+    const briefSameModel = VALID_BRIEF.replace(
+      'Google shipped [Gemma 4 12B](https://blog.google/x) (Jun 11).',
+      'Google shipped Gemma 4 12B mid-sentence so no period follows.',
+    );
+    const linkedinSentenceFinal = VALID_LINKEDIN.replace(
+      "Google's Gemma 4 12B, open and non-Chinese, is where I would start.",
+      'I would start with Gemma 4 12B.',
+    );
+    const r = run(fixture(briefSameModel, linkedinSentenceFinal));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  // Internal version dots must survive the trailing-punctuation strip, so a
+  // genuine "Sonnet 4.6" vs "Sonnet 4" mismatch still fires.
+  it('(f) still flags a genuine version mismatch after trailing-punctuation strip', () => {
+    const briefSonnet = VALID_BRIEF.replace(
+      'Google shipped [Gemma 4 12B](https://blog.google/x) (Jun 11).',
+      'Anthropic shipped Claude Sonnet 4.6 mid-sentence here.',
+    );
+    const linkedinSonnet = VALID_LINKEDIN.replace(
+      "Google's Gemma 4 12B, open and non-Chinese, is where I would start.",
+      'I would reach for Claude Sonnet 4 first.',
+    );
+    const r = run(fixture(briefSonnet, linkedinSonnet));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[f]');
+  });
+
   it('(g) flags a services-pitch sentence in the CTA block', () => {
     const broken = VALID_BRIEF.replace(
       'Tell us the conversation you are having with your CTO this week.',

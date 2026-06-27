@@ -1,6 +1,6 @@
 # Problem 100: Newsletter cover hook silently clips, and the structural lint false-positives on a sentence-final model name
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-22
 **Priority**: 4 (Medium). Impact: Minor (2) x Likelihood: Likely (2) (deferred, re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -38,9 +38,22 @@ Cover: reword hook line 2 to a complete phrase under ~40 chars and visually veri
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Cover skill: warn (or fail) when a hook line exceeds the safe-area width, and flag a hook line that ends in a dangling fragment (no terminal predicate).
-- [ ] check-newsletter-structure.sh: strip trailing punctuation from model-name tokens before the brief-vs-linkedin comparison so a sentence-final "Gemma 4." matches "Gemma 4".
-- [ ] Consider whether these two concerns warrant splitting into separate tickets (cover skill vs lint script are distinct fix paths).
+- [x] Cover skill: warn (or fail) when a hook line exceeds the safe-area width, and flag a hook line that ends in a dangling fragment (no terminal predicate). Done via a non-fatal `checkHookWidth` stderr warning in `scripts/render-cover.mjs` (hook-1 > 28, hook-2 > 40 chars, derived from the 1040px safe area). Chose warn over fail: char count is a proportional-font proxy, so a hard block would false-positive; the render-and-verify Read stays the backstop. The dangling-fragment half is addressed by removing the forcing function (the width warning stops the trim-to-fit that produced the fragment) rather than a deterministic NLP fragment-detector, which would be false-positive-prone for no extra coverage (Tom's Issue-10 fragment "Governance, trust and new skills" ends in a noun, so a function-word heuristic would miss it anyway).
+- [x] check-newsletter-structure.sh: strip trailing punctuation from model-name tokens before the brief-vs-linkedin comparison so a sentence-final "Gemma 4." matches "Gemma 4". Done: `extract_models()` sed widened from `s/[[:space:]]+$//` to `s/[[:space:].,;:!?]+$//`. Internal version dots (e.g. "Sonnet 4.6") are preserved (non-trailing).
+- [x] Consider whether these two concerns warrant splitting into separate tickets (cover skill vs lint script are distinct fix paths). Decided NOT to split: both fixes are S-effort and were delivered in one iteration, so splitting would add ticket ceremony with no ranking or sequencing benefit. The Step 4b auto-split path governs new-problem *creation*, not an existing ticket worked end-to-end in a single pass.
+
+## Fix Released
+
+Both concerns fixed 2026-06-27 in the working tree (repo-local; no package release, so no changeset per the fix-surface rule):
+
+- **(b) lint false-positive**: `scripts/check-newsletter-structure.sh` `extract_models()` now strips trailing sentence punctuation (`.,;:!?`) before the check (f) brief-vs-linkedin comparison. Behavioural coverage added to `scripts/check-newsletter-structure.test.mjs`: a sentence-final "Gemma 4." no longer trips (f), and a genuine "Sonnet 4.6" vs "Sonnet 4" version mismatch still fires (internal dots preserved).
+- **(a) cover silent clip**: `scripts/render-cover.mjs` exports `checkHookWidth()` and main() prints its non-fatal warnings to stderr when a hook line is over budget (hook-1 > 28, hook-2 > 40). Behavioural coverage added to `scripts/render-cover.test.mjs`. `.claude/skills/wr-newsletter-cover/SKILL.md` hook_line_2 guidance reconciled ("around 45 chars max" was self-contradictory; now ~40 with the Issue-10 clip cited) and the new warning documented in step 3.
+
+Gates: architect PASS (no new ADR; dropped a fabricated ADR-052 citation, reconciled the SKILL.md line-34 contradiction), jtbd PASS. Tests: 26/26 green across both suites.
+
+**I13 note (P104)**: the fix-time RFC-trace gate would fire `no-rfc-trace` here; this repo has no RFC tier, so per P070/P103 the legacy direct-implementation path was used and no RFC was auto-created (known false positive).
+
+Awaiting user verification that the lint no longer false-positives on a real edition and that the cover warning surfaces an over-long hook in the next newsletter run.
 
 ## Dependencies
 

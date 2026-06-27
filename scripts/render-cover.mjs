@@ -42,6 +42,33 @@ function escapeXml(value) {
     .replaceAll("'", '&apos;');
 }
 
+// P100: hook char-count budgets, a proportional-font proxy for the safe-area
+// width. The cover safe area is the 1040px span between the x=80 and x=1120
+// rules in cover-template.svg; hook-1 renders at 80px, hook-2 at 60px. Limits
+// are conservative (hook-1 observed clip at 30 chars, hook-2 at 44). The check
+// warns, never fails: char count cannot model proportional-font width exactly,
+// so the render-and-verify Read stays the backstop. The warning makes the
+// previously silent clip visible to the author.
+const HOOK_CHAR_BUDGET = [
+  { key: 'hookLine1', label: 'hook-1', budget: 28 },
+  { key: 'hookLine2', label: 'hook-2', budget: 40 },
+];
+
+export function checkHookWidth(params) {
+  const warnings = [];
+  for (const { key, label, budget } of HOOK_CHAR_BUDGET) {
+    const len = String(params[key] ?? '').length;
+    if (len > budget) {
+      warnings.push(
+        `render-cover: ${label} is ${len} chars, over the ~${budget}-char safe-area budget; ` +
+          'it may clip in the rendered cover. Shorten to a complete phrase that reads whole, ' +
+          'then confirm against the render-and-verify Read.',
+      );
+    }
+  }
+  return warnings;
+}
+
 export function substituteCoverTemplate(template, params) {
   for (const key of Object.keys(PLACEHOLDERS)) {
     if (params[key] === undefined || params[key] === null || params[key] === '') {
@@ -113,6 +140,10 @@ function main() {
       console.error(`render-cover: missing required --${key}`);
       process.exit(2);
     }
+  }
+
+  for (const warning of checkHookWidth(args)) {
+    console.error(warning);
   }
 
   const templatePath = resolve(args.template);

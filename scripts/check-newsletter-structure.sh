@@ -187,7 +187,7 @@ fi
 # for every family that appears in both.
 extract_models() {
   grep -oE 'GPT-[0-9][0-9A-Za-z.-]*|Claude (Fable|Mythos|Opus|Sonnet|Haiku)( [0-9][0-9A-Za-z.]*)*|(Gemma|Llama|Gemini|Mistral|Qwen|DeepSeek|Grok|Phi)( [0-9][0-9A-Za-z.]*)+( [0-9]+[Bb])?' \
-    | sed -E 's/[[:space:]]+$//' \
+    | sed -E 's/[[:space:].,;:!?]+$//' \
     | awk '{ full = $0; fam = full; sub(/[ -][0-9].*$/, "", fam); print fam "\t" full }' \
     | sort -u
 }
