@@ -878,6 +878,32 @@ If FAIL: fix the flagged passages in the LinkedIn post text and re-run. Do not p
 
 Step 16 writes the LinkedIn post (frontmatter + body only: no section headings, no image block, no posting-notes block, no manual link line) to `<draft-folder>/<publication-date>.linkedin.md` (per ADR-026, narrowed shape per P079). Tom edits and posts manually per ADR 013.
 
+### 15.6. Post-gate edit discipline: a body edit re-enters the FULL gate set (P099)
+
+Any edit to the brief body or the LinkedIn post body AFTER the gate sequence (steps 13 to 15.5) has passed marks that body **dirty** and re-enters the **full** gate set on it, NOT the cheap voice + structural-lint subset. This covers the common finalise case: author-directed corrections, fixes prompted by an external review, late copy tweaks. The heavy semantic gates each read the WHOLE body, so a one-line edit can introduce a new weakness anywhere in it.
+
+Witnessed Issue 10 (2026-06-22): after the gates first passed, the body changed across roughly six edit rounds (anecdote fix, an item reframe, a CTA swap, external-review continuity fixes). Each round re-ran only voice + lint; the heavy gates were dropped. Re-running the full set on the final text then surfaced real, new defects the post-edit body had introduced: a missing concrete metric, an inter-item urgency contradiction, an abstract-maxim heading, and a LinkedIn claim contradicting the brief. Each of those had shipped past voice + lint and would have published un-caught. Tom had to ask "have the cog-a11y and strengths/weaknesses checks been run?". They had not.
+
+**Rule:** do not declare the body done, and do not proceed to step 16 save / step 17 summary, until every gate below has been re-run against the current body since the last edit. The cheap deterministic gates (voice, structural lint) are necessary but NOT sufficient: they do not read for analytical quality, reader experience, reading level, content risk, or cross-edition thesis drift, which is exactly where late edits regress.
+
+This is the same "default when in doubt: re-run" discipline the finalise `*-prime` variants already encode (steps 13-prime, 14-prime, 15-prime, 15.25-prime, 15.4-prime), generalised from the prep-to-finalise phase boundary to *any* post-gate body edit. One coherent rule: any post-PASS body change re-enters the full gate set; the variants differ only in trigger.
+
+**Dirty-body re-run checklist** (run after ANY brief-body or LinkedIn-body edit; in `phase=finalise` re-run whichever `*-prime` variant is live for the phase, not the base step; each gate keeps its own existing change-scoped skip):
+
+| Gate | Step | Re-run trigger | Existing skip (unchanged) |
+|------|------|----------------|---------------------------|
+| Voice review | 13 / 13-prime | brief body changed | (none) |
+| Content-risk | 14 / 14-prime | brief body changed | (none) |
+| Newsletter critic | 15 / 15-prime | brief body changed | skip iff upstream content-risk returned REJECTED |
+| Editor | 15.25 / 15.25-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
+| Cognitive accessibility | 15.4 / 15.4-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
+| Cross-edition consistency | 11.4 | a thesis-bearing line in the brief changed | (none) |
+| URL verification | 11.5 / 11.5-prime | a URL or a URL-anchored claim changed | unchanged URLs carry their prior verdict |
+| LinkedIn voice gate | 15.5 | the LinkedIn post body changed | a brief-body-only edit does NOT trigger this unless the edit propagated into the post |
+| Structural lint | 16 pre-save | brief or LinkedIn body changed | (none) |
+
+The "dirty since last full-gate pass" judgement is carried in-context: the agent knows it just edited the body. No marker file or "dirty" flag is added (YAGNI); it would be machinery for a judgement the working agent already holds, mirroring the in-context `*-prime` re-run discipline above.
+
 ### 16. Save the draft
 
 This step writes the brief and its sibling artefact files. Per ADR-026 (companion tickets P038 + P041), reviews and meta content live in sibling files, not inline in the brief: the brief contains only frontmatter + body + CTA. Per P040, all draft and companion-file paths use the `<publication-date>` binding (resolved at step 0 to the `<publish-day>` date in `<publish-timezone>`), not the prep-run date.
@@ -1142,6 +1168,7 @@ Report back in chat:
 - **Render fails at step 7**: revert the `.owm` edit, treat as a map-update failure, note in summary, continue against previous map.
 - **Fewer than three candidates clear the filter**: produce a two-item brief (or one-item if only one clears) rather than padding. Note the shortfall.
 - **Google News RSS corroboration query fails at step 4b**: treat the failure like a source-fetch failure, note in `source_failures`, and default the affected candidate to `WEAK_ATTRIBUTION`. Do NOT drop on corroboration-fetch-failure alone; the corroboration path failing is a pipeline signal, not a story signal.
+- **Post-gate body edit re-runs only voice + lint**: a brief-body or LinkedIn-body edit made after the gate sequence (steps 13 to 15.5) passed re-enters the FULL gate set, not the cheap voice + structural-lint subset. See §15.6 for the dirty-body re-run checklist. Re-running only the cheap subset is the failure mode this rule closes (P099).
 - **Voice review returns FAIL**: fix and re-run. Do not save a voice-failing draft.
 - **Content-risk returns `VERDICT: REJECTED`**: save the draft with the block for Tom's inspection, surface the rejection in the summary, skip the newsletter critic step. Tom decides.
 - **Wardley critic returns `VERDICT: REJECTED` (round-3 exhausted)**: save the critic block with the artifacts; proceed to draft the brief anyway. A weak map is still better than no map for this week's brief. Note the residual weaknesses in the summary so Tom can decide whether to rewrite the analysis.
