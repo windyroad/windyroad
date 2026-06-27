@@ -585,6 +585,8 @@ When Rewrite is chosen, the drafter loop runs once more on the affected items on
 
 For every URL that appears in the draft body, verify the URL resolves and the article body matches the brief's specific claim. Block save on REFUTED or 404. This step is non-skippable in `phase=prep`, `phase=finalise`, and `phase=full`; ADR-024 owns the decision shape and P034 documents the failure mode this gate prevents.
 
+**Scope boundary (P102).** This gate only checks claims that carry a URL. A rhetorical "X once happened" historical claim or a vivid analogy stated as fact carries no URL and is therefore invisible here. Those claims are caught by the content-risk gate's factual axis (`content-risk-rubric.md` check_1), which requires a historical anecdote or load-bearing analogy to be sourced or flagged as illustrative.
+
 **URL scope.** Verify every URL that appears in any of the following surfaces in the step-11 draft:
 
 - Item Source lines.

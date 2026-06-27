@@ -28,7 +28,7 @@ Human > operational > technical. The brief leads with what it means for the team
 
 ## Voice addendum
 
-Team voice ("we") in body, "I" only in the "From Tom" opener. Direct, specific, governance-oriented. Frame items as conditions in the industry, not as judgements of the reader's team (ADR 015). Patch-fitness vocabulary is welcome ("dependency staleness", "patch cycle", "review pipeline"). Avoid pure dev-craft jargon (compile-time, monad, type variance) unless the item is unambiguously about that.
+Team voice ("we") in body, "I" only in the "From Tom" opener. Direct, specific, governance-oriented. Frame items as conditions in the industry, not as judgements of the reader's team (ADR 015). Patch-fitness vocabulary is welcome ("dependency staleness", "patch cycle", "review pipeline"). Avoid pure dev-craft jargon (compile-time, monad, type variance) unless the item is unambiguously about that. Prefer plain words over obscure ones in this register: "probably made up" over "apocryphal", "made up" over "fabricated".
 
 On the human-in-the-loop question, follow the codified editorial stance in `assets/three-lens-filter.md`: humans ratify architecture and product-direction decisions, automated gates and evals carry code-level quality, so do not frame human code review as the answer to AI-generated code.
 

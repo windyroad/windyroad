@@ -184,3 +184,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-06-27 **P103 transitioned Open to Verifying** (negative/absence-claim verify-before-asserting discipline shipped: CLAUDE.md + memory `feedback_verify_project_state_before_writing.md` extended; I13 RFC-trace gate non-actionable per P070 precedent, RFC tier unadopted in this repo).
 
 > Last reviewed: 2026-06-27 **P104 captured** - I13 RFC-trace predicate and manage-problem I13 gate are not adopter-aware (fire no-rfc-trace in repos without an RFC tier) (lightweight aside via /wr-itil:capture-problem).
+
+> Last reviewed: 2026-06-27 **P105 captured**: risk-score-commit-gate RISK-POLICY staleness threshold too tight (14 days) + no AFK-satisfiable refresh path; quarterly cadence re-attested into RISK-POLICY.md, gate-threshold change tracked as upstream wr-risk-scorer work (lightweight aside via /wr-itil:capture-problem).

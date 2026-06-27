@@ -17,11 +17,13 @@ Notes:
 
 ### check_1: factual
 
-How likely is any stated fact to be wrong? Named models, dates, capabilities, company actions, numbers, version strings, benchmark results.
+How likely is any stated fact to be wrong? Named models, dates, capabilities, company actions, numbers, version strings, benchmark results, plus historical anecdotes, "X once happened" claims, and load-bearing analogies stated as established fact.
 
-- **low**: every named fact is verifiable against a tier-1 primary source cited in the draft (Anthropic, OpenAI, DeepMind direct announcements; primary outlets per `three-lens-filter.md`). Specific dates, model names, version numbers, benchmark figures all match the cited source.
+- **low**: every named fact is verifiable against a tier-1 primary source cited in the draft (Anthropic, OpenAI, DeepMind direct announcements; primary outlets per `three-lens-filter.md`). Specific dates, model names, version numbers, benchmark figures all match the cited source. Any historical anecdote or analogy is either sourced or explicitly framed as illustrative ("a story, probably made up", "likely apocryphal").
 - **medium**: most facts are sourced; one or two unsourced background claims that are plausibly correct but not verified in this draft. Fact appears in a tier-2 or tier-3 source rather than tier-1 primary.
-- **high**: a stated fact is contradicted by the cited source, or a specific claim (model name, date, number) appears with no source at all. Naming a benchmark result without citing the benchmark.
+- **high**: a stated fact is contradicted by the cited source, or a specific claim (model name, date, number) appears with no source at all. Naming a benchmark result without citing the benchmark. A historical anecdote or load-bearing analogy stated as fact ("a school once worried paper would erode handwriting") with no primary source and no illustrative framing scores high. Source it or flag it as illustrative.
+
+This axis is the gate that catches no-URL claims. The URL-verification gate (ADR-024) only checks claims that carry a link; a rhetorical "X once happened" or a vivid analogy stated as fact carries no URL, so it is invisible to URL-verify and must be caught here (P102).
 
 Persona constraint: developer persona (Tokens Spent) is allergic to demo-vs-shipped conflation per JTBD-205. Calling something "shipped" when only a demo or benchmark exists is a `high` factual flag, not just a `medium`. The evidence label (shipped / benchmarked / demo / not yet) must match the underlying source's evidence stance.
 

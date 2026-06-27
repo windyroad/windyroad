@@ -442,6 +442,7 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | Feature claims in fit checks | Sells the service instead of describing the visitor | "You need someone who can implement guardrails" |
 | Unexplained internal references | Assumes readers know your specific rules or structure | "five banned patterns, a word list of terms to prefer and avoid" |
 | Ambiguous link text ("here", "click here", "read more", "this", "more info") | Out of context the link conveys nothing. Fails WCAG 2.4.4 (Link Purpose in Context) and reads as a flat list of "here, here, here" to screen-reader users navigating by link list. | "([here](/blog/pipeline-discipline))" → "[pipeline discipline](/blog/pipeline-discipline)" |
+| Naming the artifact instead of speaking as the team | Names the brief by its internal label instead of using the team's voice; breaks first-person-plural | "the brief has tracked" → "we have tracked" |
 
 ---
 
