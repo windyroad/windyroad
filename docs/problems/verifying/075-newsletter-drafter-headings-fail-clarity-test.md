@@ -1,6 +1,6 @@
 # Problem 075: Newsletter drafter headings fail clarity test, gates do not catch
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-31
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -72,7 +72,18 @@ All new checks are grounded in the documented Issue 07 evidence (substrate-provi
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
 - [x] Investigate root cause: is the colon-flourish habit in the drafter prompt, in the critic rubric's check_36 wording, or both? (Both surfaces; `check_36` no longer exists post-ADR-035; the gap was heading-granularity coverage absent from both critic and drafter. See Investigation findings.)
 - [x] Create reproduction test: superseded. `check_36` no longer exists; the rubric is now check-free editorial-reader prose (ADR-035), so the "feed headings through check_36" reproduction is obsolete. The behavioural check is now the critic's "Headline craft" prose concern, exercised on the next `/wr-newsletter` run.
-- [ ] Upstream: raise the voice-agent heading-granularity gloss pass against the `wr-voice-tone` plugin (not editable from this consumer repo).
+- [ ] Upstream: raise the voice-agent heading-granularity gloss pass against the `wr-voice-tone` plugin (not editable from this consumer repo). Defence-in-depth, not a blocker for verifying the repo-local fix. The critic plus drafter checks already close the catch-it-in-gates intent. Outward-facing filing deferred (see Fix Released).
+
+## Fix Released
+
+Repo-local heading-craft checks shipped in commit `70a0503` (`fix(newsletter): add heading-craft checks to critic rubric + drafter (P075)`). Confirmed live on `master` 2026-06-27.
+
+- `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md` carries the `## Headline craft` section: headline clarity via the VOICE-AND-TONE "competent CTO from a non-AI-native company" standalone-readability test on the H1 plus each Item heading; jargon-density flag for two-or-more unglossed specialist terms in one heading; sameness-across-headings flag for a framing pattern on more than half the items. The Coverage-partitioning note records that heading craft is deliberately critic-owned, because the voice and cognitive-accessibility gates audit body copy, not headings.
+- `.claude/skills/wr-newsletter/SKILL.md` step 11a H1 bullet (line ~413) requires the standalone-readability test and bans unglossed specialist-term stacking. Step 11b `Heading craft (P075)` discipline (line ~449) discourages the colon-flourish default (no more than half the items may share one framing pattern) and requires gloss-on-first-use at heading granularity.
+
+Skill files are live in-repo on merge, with no separate deploy step. **Verification trigger**: the next `/wr-newsletter` run (The Shift or Tokens Spent) where the critic surfaces a heading-craft weakness and the drafter avoids the colon-flourish and jargon-stack failure mode, OR a Tom review of the next edition's headings confirming the Issue 07 failure does not recur.
+
+The remaining upstream voice-agent cross-reference is defence-in-depth (see Investigation Tasks). It is an outward-facing upstream-plugin filing not actionable from this consumer repo, so it is deferred rather than a verification blocker.
 
 ## Dependencies
 
