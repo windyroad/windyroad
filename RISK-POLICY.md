@@ -2,7 +2,9 @@
 
 Risk assessment for pipeline actions (commit, push, release), aligned with ISO 31000.
 
-**Last reviewed:** 2026-06-09
+**Last reviewed:** 2026-06-27
+
+**Review cadence:** Quarterly (every 3 months). The policy is re-attested by the operator each quarter, or sooner if an incident or material business change warrants it (ISO 31000 review-after-incident). Note: the enforcing `risk-score-commit-gate` currently hardcodes a 14-day staleness threshold; aligning that gate threshold to this quarterly cadence is tracked as an upstream `@windyroad/risk-scorer` change.
 
 ## Business Context
 
