@@ -94,7 +94,7 @@ The leader `README.md` stays at `src/newsletters/published/leader/` (one-up from
 - **ADR-038 (cross-edition thesis-consistency check).** Amends scope: step 2 glob expression in the subagent contract.
   - Line 90 (Decision Outcome, step 2): "Reads the prior N editions from `<published-folder>` (resolved per the persona config at step 0), filtered to `YYYY-MM-DD.md` matching the canonical brief shape, sorted by edition number descending, take top N." becomes "Reads the prior N editions by globbing `<published-folder>/*/<YYYY-MM-DD>.md` (where the wildcard sub-directory is the publication-date directory established by ADR-039 and the basename is the canonical brief shape), sorted by edition number descending, take top N."
 
-**Out-of-scope amendments.** ADR-011 line 65 and ADR-012 line 59 cite drafts-folder example paths (`src/newsletters/drafts/YYYY-MM-DD.md`). Drafts layout is explicitly deferred per P078's Out-of-scope clause; these ADRs are NOT amended in this commit. If/when drafts adopt the same per-date-subdir pattern, a separate ADR with its own amendment scope takes them up.
+**Out-of-scope amendments (closed by ADR-040, 2026-06-27).** ADR-011 line 65 and ADR-012 line 59 cite drafts-folder example paths (`src/newsletters/drafts/YYYY-MM-DD.md`). Drafts layout was explicitly deferred per P078's Out-of-scope clause at this ADR's landing; these ADRs were NOT amended in this commit. That deferral has since been taken up: ADR-040 (per-date sub-directory layout for newsletter drafts) extended the same per-date-subdir pattern to drafts and amended ADR-011 line 65, ADR-012 line 59, and ADR-019's drafts-side capture paths in lockstep.
 
 ## Consequences
 

@@ -62,7 +62,7 @@ Chosen option: **"Claude Code interactive slash command"**, because it is the on
 
 ## Confirmation
 
-- A `/wr-newsletter:generate` slash command exists and runs end to end: fetch, filter, draft, review, save to `src/newsletters/drafts/YYYY-MM-DD.md`.
+- A `/wr-newsletter:generate` slash command exists and runs end to end: fetch, filter, draft, review, save to `src/newsletters/drafts/<persona>/YYYY-MM-DD/YYYY-MM-DD.md` (per-date sub-directory layout per ADR-040).
 - Fetching, filtering, and drafting happen inside the Claude Code session without invoking external paid APIs beyond what existing Claude Code features already use.
 - Voice review invokes `wr-voice-tone:agent`; risk review invokes `wr-risk-scorer:pipeline` (or equivalent content-risk scorer when built).
 - Script modules are structured so extraction to a standalone Node script (Option 2) requires moving files rather than rewriting logic.

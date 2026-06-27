@@ -1,10 +1,10 @@
 # Problem 084: Extend per-date sub-directory layout to src/newsletters/drafts/<persona>/
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-06-03
-**Priority**: 3 (Medium), Impact: 3 x Likelihood: 1 (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 3 (Medium), Impact: 3 x Likelihood: 1
 **Origin**: internal
-**Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
+**Effort**: S (actual; single git mv plus mechanical lockstep edits, smaller than the deferred M estimate)
 **Type**: technical
 
 ## Description
@@ -63,14 +63,14 @@ src/newsletters/drafts/leader/
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] BLOCKED (interactive): Draft sibling ADR-040 for drafts-folder per-date sub-directory layout via /wr-architect:create-adr (full intake; substance is Tom-pinned 2026-06-03, but Considered Options, Decision Drivers, Confirmation, and `human-oversight` need full authoring plus Tom's oversight marker, which cannot be produced AFK). See "Architect review findings" below.
-- [ ] Migrate the single in-flight draft via git mv (preserves history): `git mv src/newsletters/drafts/developer/2026-04-19.md src/newsletters/drafts/developer/2026-04-19/2026-04-19.md` (leader drafts is README-only, no leader file to migrate)
-- [ ] Update /wr-newsletter SKILL.md drafter write paths to the per-date subdir shape (specific spots enumerated below)
-- [ ] Update persona configs (leader.md, developer.md) drafts-side edition-counting Globs to the per-date subdir shape (lines 74-77 each)
-- [ ] Cross-ADR amendments to ADR-011 (line 65), ADR-012 (line 59), and ADR-019 (line 52, NEW, see findings) drafts-folder example paths, in the same commit as the new sibling ADR plus migration
-- [ ] Regenerate and stage docs/decisions/README.md compendium in the same commit (`wr-architect-generate-decisions-compendium`) per ADR-077
-- [ ] Confirm new layout via spot-check that drafter writes resolve correctly and the next /wr-newsletter run produces files in the right shape
+- [x] Re-rate Priority and Effort: actual Effort S (single git mv plus mechanical lockstep edits)
+- [x] DONE (2026-06-27): ADR-040 authored, Tom-confirmed (`human-oversight: confirmed`), committed `1a4262e`
+- [x] Migrate the single in-flight draft via git mv (preserves history): `git mv src/newsletters/drafts/developer/2026-04-19.md src/newsletters/drafts/developer/2026-04-19/2026-04-19.md` (leader drafts is README-only, no leader file to migrate)
+- [x] Update /wr-newsletter SKILL.md drafter write paths to the per-date subdir shape (binding note at the `<draft-folder>` definition mirroring the published-side line; prep glob; edition-count glob; step-17 publish move; description save path)
+- [x] Update persona configs (leader.md, developer.md) drafts-side edition-counting Globs to the per-date subdir shape
+- [x] Cross-ADR amendments to ADR-011 (line 65), ADR-012 (line 59), ADR-019 (full drafts-side sweep, not just line 52, per iter-12 architect finding), plus ADR-039 out-of-scope-note closure (per iter-12 architect finding)
+- [ ] DEFERRED to P087: Regenerate docs/decisions/README.md compendium. The auto-regen (a global PostToolUse hook ran `wr-architect-generate-decisions-compendium` on my ADR-body edits and staged the result) re-rendered the ADR-011/012/019/039 summary entries with em-dash characters in the generator's distilled prose, which the repo's own `no-em-dash-bash.sh` PostToolUse gate rejects. This is exactly the open ticket P087 (`wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies`). The auto-regen was restored to HEAD and excluded from this commit to avoid committing policy-non-compliant generated output AND to avoid hand-editing a `do NOT hand-edit` generated file (which would desync and re-em-dash on the next regen). Compendium refresh defers until P087 lands. ADR-077, the cited regen mandate, is also absent from disk (P082 / P083 record it as a phantom).
+- [ ] VERIFICATION TRIGGER: next live `/wr-newsletter phase=prep` run writes the brief + siblings into `drafts/<persona>/<YYYY-MM-DD>/` and a subsequent `phase=finalise` + publish resolves and moves them without a path error (ADR-040 Confirmation criterion 2). Grep-confirmation (criterion 3) already passed this iter.
 
 ### Architect review findings (2026-06-27, /wr-itil:work-problems iter)
 
@@ -92,6 +92,22 @@ Mechanical amendment map for the implementing pass (all in one commit):
 Advisory (no action): ADR-074 is not on disk locally (the "ADR-074 guard satisfied" claim resolves to ADR-039 line 80, which IS on disk and confirmed). ADR-014 on disk is "Wardley mapping", not the single-commit related-cluster carve-out, so that cross-ref in ADR-039 is pre-existing and out of scope here.
 
 I13 note: the propose-fix RFC-trace gate (I13) fired `no-rfc-trace` for P084, a known false positive per P104 (no RFC tier in this repo). No RFC auto-created; legacy direct-implementation path applies per P070/P103.
+
+## Fix Released
+
+Implemented 2026-06-27 (iter-12, this commit) as the mechanical application of ADR-040 Option 1. One coherent commit per ADR-014:
+
+- **Migration**: `git mv src/newsletters/drafts/developer/2026-04-19.md src/newsletters/drafts/developer/2026-04-19/2026-04-19.md` (the only flat draft on disk; leader holds only a README). History preserved.
+- **SKILL.md** (`.claude/skills/wr-newsletter/SKILL.md`): `<draft-folder>` binding gains a per-date sub-directory note mirroring the published-side line 70, so the ~20 inline `<draft-folder>/<publication-date>.X` references resolve to `<draft-folder>/<publication-date>/<publication-date>.X` (same encoding the published side uses); prep-locate glob `*/*.prep.md`; edition-count drafts glob `*/<YYYY-MM-DD>.md`; step-17 publish reframed as a whole-directory move; description save path.
+- **Persona configs** (leader.md, developer.md): drafts edition-count glob to `drafts/<persona>/*/<YYYY-MM-DD>.md`.
+- **READMEs**: `drafts/README.md` (Format + Workflow), `drafts/leader/README.md`, `drafts/developer/README.md` to the per-date sub-dir + whole-directory move shape.
+- **ADRs**: ADR-011 line 65 and ADR-012 line 59 path examples to the canonical `drafts/<persona>/YYYY-MM-DD/YYYY-MM-DD.md` shape; ADR-019 full drafts-side sweep (chosen-option text, lifecycle, confirmation, pros/cons) to the sub-dir shape plus an ADR-040 amendment note and `amended-by` entry; ADR-039 out-of-scope note updated to record ADR-040 closed the deferral.
+
+Gates: architect ISSUES FOUND then resolved (three lockstep-sweep expansions folded in: ADR-019 full sweep, ADR-039 note, developer README publish-target); JTBD PASS; risk-scorer:pipeline gate run before commit. Style-guide and voice-tone N/A (no CSS, no reader-facing copy). I13 RFC-trace gate fired `no-rfc-trace` (known false positive P104, no RFC tier; legacy direct path per P070/P103, no RFC auto-created).
+
+**Confirmation criterion 3 (grep) met**: no surviving literal flat `drafts/<persona>/<YYYY-MM-DD>.<ext>` references in SKILL.md, persona configs, the drafts READMEs, or ADR-019. Criterion 1 (drafts hold per-date sub-dirs, no flat per-edition files) met. **Criterion 2 (live run) is the verification trigger** awaiting the next `/wr-newsletter` run.
+
+Deferred (out of P084 scope): docs/decisions/README.md compendium regen, blocked by the generator-emits-em-dashes-vs-no-em-dash-gate conflict (see Investigation Tasks). Surfaced to retro.
 
 ## Dependencies
 

@@ -13,7 +13,7 @@ The flat `2026-04-17.md` at the root of this folder is The Shift edition 1, pred
 
 ## Format
 
-Filename: `<persona>/YYYY-MM-DD.md` (ISO date the skill ran).
+Filename: `<persona>/YYYY-MM-DD/YYYY-MM-DD.md` (ISO date the skill ran). Per ADR-040, each edition lives in a per-date sub-directory holding the brief plus its companion siblings, mirroring the ADR-039 published-side layout.
 
 File structure:
 
@@ -47,7 +47,7 @@ CONTENT_RISK: factual=low|medium|high reputational=... claims=... attribution=..
 
 ## Workflow
 
-1. Skill produces a draft under `src/newsletters/drafts/<persona>/YYYY-MM-DD.md`.
+1. Skill produces a draft under `src/newsletters/drafts/<persona>/YYYY-MM-DD/YYYY-MM-DD.md`.
 2. Tom reads, edits, publishes to LinkedIn (the persona's dedicated newsletter).
-3. Tom moves the file to `src/newsletters/published/<persona>/`.
+3. Tom moves the edition's whole per-date sub-directory to `src/newsletters/published/<persona>/YYYY-MM-DD/` (per ADR-040, a single whole-directory move).
 4. Tom runs `/wr-retrospective:run-retro` to capture learnings.

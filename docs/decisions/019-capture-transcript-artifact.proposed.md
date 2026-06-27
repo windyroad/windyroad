@@ -8,7 +8,7 @@ consulted: []
 informed: []
 related: [011-ai-brief-orchestration-via-claude-code, 012-ai-generated-content-review-gates, 015-reader-respect-and-gate-rejection-policy, 016-sw-critic-subagents-and-iteration-loop, 017-ai-brief-prep-and-finalise-phases, 018-content-risk-subagent]
 reassessment-date: 2026-07-25
-amended-by: [039-per-date-subdir-layout-for-published-newsletter-editions]
+amended-by: [039-per-date-subdir-layout-for-published-newsletter-editions, 040-per-date-subdir-layout-for-newsletter-drafts]
 ---
 
 # Capture-transcript artifact for AI-brief drafter fidelity
@@ -16,6 +16,10 @@ amended-by: [039-per-date-subdir-layout-for-published-newsletter-editions]
 ## Amendment Note (2026-06-02, ADR-039)
 
 ADR-039 (per-date sub-directory layout for published newsletter editions) refreshes the path encoding of the published-folder move workflow described in this ADR. The substance of the move workflow is unchanged (Tom moves the capture transcript alongside the brief and other siblings when he publishes); the target location now resolves to `<published-folder>/<persona>/<publication-date>/<publication-date>.capture.md` (per-date sub-directory) rather than `<published-folder>/<persona>/<publication-date>.capture.md` (flat). Affected prose in this ADR: line 37 (chosen-option text), line 84 (Lifecycle), lines 116, 118, 131, 141, 167 (Consequences, Confirmation, Pros/Cons, Reassessment). The historical line-numbered prose below is left as written for audit-trail continuity; consumers should read this note as the load-bearing path-encoding statement.
+
+## Amendment Note (2026-06-27, ADR-040)
+
+ADR-040 (per-date sub-directory layout for newsletter drafts) extends the ADR-039 published-side per-date sub-directory layout to the drafts folder. The substance of this ADR (the capture transcript is a sibling artefact co-located with the brief by shared date prefix) is unchanged; the draft-side capture path now resolves to `<draft-folder>/<publication-date>/<publication-date>.capture.md` (per-date sub-directory) rather than `<draft-folder>/<publication-date>.capture.md` (flat). The drafts-side path encodings in the prose below have been refreshed to the sub-directory shape in lockstep per ADR-040's Confirmation criterion (no surviving flat `drafts/<persona>/<YYYY-MM-DD>.<ext>` references). The published-side encoding remains governed by the ADR-039 amendment note above.
 
 ## Context and Problem Statement
 
@@ -39,17 +43,17 @@ This ADR is that record.
 
 ## Considered Options
 
-1. **Sibling markdown file at `<draft-folder>/YYYY-MM-DD.capture.md`, append-and-survive across phases** (chosen). Prep writes the file after step 10 completes. Finalise (step 10-prime) appends new-item entries and carries prep entries forward. The file moves to `<published-folder>` together with the published `.md` when Tom moves the published edition. The file is never deleted by the pipeline.
+1. **Sibling markdown file at `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.md`, append-and-survive across phases** (chosen). Prep writes the file after step 10 completes. Finalise (step 10-prime) appends new-item entries and carries prep entries forward. The file moves to `<published-folder>` together with the published `.md` when Tom moves the published edition. The file is never deleted by the pipeline.
 2. **Embed capture transcript inline in `.prep.md` and `.md` frontmatter or body.** Rejected: (a) crosses ADR 017's 8-field cap on `.prep.md` frontmatter for any week with three or more Adjusts; (b) bloats the published `.md` with internal substrate that has no reader value; (c) pulls capture content into the same file that voice / content-risk / critic blocks live in, conflating drafter-input with drafter-output review.
-3. **Sidecar JSON file at `<draft-folder>/YYYY-MM-DD.capture.json`.** Rejected: markdown is the project default for human-readable substrate (`feedback_map_is_internal_only.md` precedent); JSON would force a parser for what is fundamentally a small structured-prose record; the rubric and gate consumers already operate on markdown.
-4. **Separate state directory at `src/newsletters/captures/<persona>/`.** Rejected: introduces a third top-level directory under `src/newsletters/` for one artifact class. Co-locating the capture next to the draft it belongs to (same folder, same date prefix, different suffix) is the same pattern `<draft-folder>/YYYY-MM-DD.cover.<ext>` already establishes for the cover image.
+3. **Sidecar JSON file at `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.json`.** Rejected: markdown is the project default for human-readable substrate (`feedback_map_is_internal_only.md` precedent); JSON would force a parser for what is fundamentally a small structured-prose record; the rubric and gate consumers already operate on markdown.
+4. **Separate state directory at `src/newsletters/captures/<persona>/`.** Rejected: introduces a third top-level directory under `src/newsletters/` for one artifact class. Co-locating the capture next to the draft it belongs to (same folder, same date prefix, different suffix) is the same pattern `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.cover.<ext>` already establishes for the cover image.
 5. **Drafter-as-subagent with capture text passed via prompt parameter.** Rejected: the subagent loses the AskUserQuestion conversation history that the inline drafter has direct access to. P015's failure mode is discipline, not bias; the subagent promotion would solve the wrong problem and introduce a new one (every Adjust would have to be serialised into a prompt parameter, which is the same as writing a file plus an extra hop).
 
 ## Decision Outcome
 
-Chosen option: **"Sibling markdown file at `<draft-folder>/YYYY-MM-DD.capture.md`, append-and-survive across phases."**
+Chosen option: **"Sibling markdown file at `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.md`, append-and-survive across phases."**
 
-**File location.** `<draft-folder>/YYYY-MM-DD.capture.md` for both personas. Resolved at SKILL step 0 alongside `<draft-folder>` itself: `src/newsletters/drafts/leader/YYYY-MM-DD.capture.md` or `src/newsletters/drafts/developer/YYYY-MM-DD.capture.md`. Same date prefix as the corresponding `.prep.md` or `.md` so glob-by-date pulls the bundle together.
+**File location.** `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.md` for both personas. Resolved at SKILL step 0 alongside `<draft-folder>` itself: `src/newsletters/drafts/leader/YYYY-MM-DD/YYYY-MM-DD.capture.md` or `src/newsletters/drafts/developer/YYYY-MM-DD/YYYY-MM-DD.capture.md`. Same date prefix as the corresponding `.prep.md` or `.md` so glob-by-date pulls the bundle together.
 
 **File format.** Markdown with YAML frontmatter:
 
@@ -85,10 +89,10 @@ phase-last-appended: <prep|finalise|full>
 
 - `phase=full`: write the file once after step 10 completes.
 - `phase=prep`: write the file after step 10 completes. Frontmatter `phase-written: prep`, `phase-last-appended: prep`.
-- `phase=finalise` (step 10-prime): read the existing `<draft-folder>/YYYY-MM-DD.capture.md`. Append new-item sections for any items captured in step 10-prime (new tier-1 items, late-story Also-worth-noting items, new WEAK_ATTRIBUTION items). Update frontmatter `phase-last-appended: finalise`. Do not rewrite or delete prep-time entries.
-- The file is never deleted by the pipeline. When Tom moves the published `<draft-folder>/YYYY-MM-DD.md` to `<published-folder>/<persona>/YYYY-MM-DD.md`, he moves `YYYY-MM-DD.capture.md` to `<published-folder>/<persona>/YYYY-MM-DD.capture.md` alongside it. SKILL step 17 (Tom-summary) calls this out.
+- `phase=finalise` (step 10-prime): read the existing `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.md`. Append new-item sections for any items captured in step 10-prime (new tier-1 items, late-story Also-worth-noting items, new WEAK_ATTRIBUTION items). Update frontmatter `phase-last-appended: finalise`. Do not rewrite or delete prep-time entries.
+- The file is never deleted by the pipeline. When Tom moves the published `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.md` to `<published-folder>/<persona>/YYYY-MM-DD.md`, he moves `YYYY-MM-DD.capture.md` to `<published-folder>/<persona>/YYYY-MM-DD.capture.md` alongside it. SKILL step 17 (Tom-summary) calls this out.
 
-**Missing-file handling (phase=finalise).** If step 10-prime cannot find an existing `<draft-folder>/YYYY-MM-DD.capture.md` matching the prep date, surface to Tom via `AskUserQuestion`:
+**Missing-file handling (phase=finalise).** If step 10-prime cannot find an existing `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.md` matching the prep date, surface to Tom via `AskUserQuestion`:
 
 - **question**: `"phase=finalise expected a capture transcript at <expected-path>. Continue without capture transcript (drafter discipline rule has no input), Recreate transcript from prep-time shortlist (best-effort, Adjust text will be empty), or Abort?"`
 - **options**: `Continue without capture transcript`, `Recreate transcript from prep-time shortlist`, `Abort`.
@@ -130,7 +134,7 @@ Default branch when Tom is unavailable: `Continue without capture transcript`. T
 
 ## Confirmation
 
-1. `<draft-folder>/YYYY-MM-DD.capture.md` exists and matches the documented format on the next live `/wr-newsletter` run that captures at least one Adjust outcome.
+1. `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.md` exists and matches the documented format on the next live `/wr-newsletter` run that captures at least one Adjust outcome.
 2. `.claude/skills/wr-newsletter/SKILL.md` step 10 (full / prep) writes the file. Step 10-prime (finalise) appends new entries and carries prep entries forward.
 3. SKILL.md step 11 / 11-prime contains the capture-fidelity discipline rule alongside the existing voice rules, and explicitly cites this ADR.
 4. SKILL.md step 17 (Tom-summary) names the capture transcript path alongside the draft path, and the published-folder move reminder bundles both files.
@@ -142,7 +146,7 @@ Default branch when Tom is unavailable: `Continue without capture transcript`. T
 
 ### Sibling markdown file `YYYY-MM-DD.capture.md`, append-and-survive (chosen)
 
-- Good: matches `<draft-folder>/YYYY-MM-DD.cover.<ext>` co-location precedent; markdown is project default; lifecycle is decoupled from ADR 017's `.prep.md` rename; consumer list can grow without re-deriving the contract
+- Good: matches `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.cover.<ext>` co-location precedent; markdown is project default; lifecycle is decoupled from ADR 017's `.prep.md` rename; consumer list can grow without re-deriving the contract
 - Bad: one extra file in `<draft-folder>` and `<published-folder>`; append-step needs idempotency check; published-folder move bundles two files
 
 ### Embed in `.prep.md` and `.md` frontmatter or body
@@ -158,7 +162,7 @@ Default branch when Tom is unavailable: `Continue without capture transcript`. T
 ### Separate state directory `src/newsletters/captures/<persona>/`
 
 - Good: keeps `<draft-folder>` clean
-- Bad: introduces a third top-level directory for one artifact class; breaks the same-date co-location pattern that `<draft-folder>/YYYY-MM-DD.cover.<ext>` already establishes
+- Bad: introduces a third top-level directory for one artifact class; breaks the same-date co-location pattern that `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.cover.<ext>` already establishes
 
 ### Drafter-as-subagent with capture passed by prompt parameter
 

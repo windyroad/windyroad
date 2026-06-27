@@ -56,7 +56,7 @@ Chosen option: **"Mandatory voice + risk review gates on every AI-generated draf
 
 ## Confirmation
 
-- Every AI-generated draft artifact (e.g. `src/newsletters/drafts/YYYY-MM-DD.md`) has a "Review results" section appended showing voice and risk verdicts.
+- Every AI-generated draft artifact (e.g. `src/newsletters/drafts/<persona>/YYYY-MM-DD/YYYY-MM-DD.md`, per-date sub-directory layout per ADR-040) has a "Review results" section appended showing voice and risk verdicts.
 - Drafts that fail voice review have the violations listed inline with the relevant passage.
 - Drafts that fail risk review are flagged with severity (low, medium, high) and the specific claim or passage.
 - Tom publishes only after the review section shows PASS or after he has explicitly overridden a flag with a reason recorded in the retrospective.
