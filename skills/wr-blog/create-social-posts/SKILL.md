@@ -1,6 +1,6 @@
 ---
 name: wr-blog:create-social-posts
-description: Generate platform-specific social posts for a published windyroad blog article. Covers LinkedIn, Twitter, Bluesky, Hacker News, Lobsters, Reddit, and dev.to. Applies the windyroad voice gate, content-risk gate, SW-critic loop, and cognitive-accessibility gate per platform.
+description: Generate platform-specific social posts for a published windyroad blog article. Covers LinkedIn, Twitter, Bluesky, Hacker News, Lobsters, Reddit, and dev.to. Applies the windyroad voice gate, content-risk gate, wr-blog-social-critic loop, and cognitive-accessibility gate per platform.
 ---
 
 # wr-blog:create-social-posts
