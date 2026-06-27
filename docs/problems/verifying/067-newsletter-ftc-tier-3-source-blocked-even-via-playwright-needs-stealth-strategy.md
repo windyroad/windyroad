@@ -1,6 +1,6 @@
 # Problem 067: Newsletter FTC tier-3 source blocked even via Playwright; deeper-than-UA bot detection
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-05-15
 **Origin**: internal
 **Priority**: 5 (Medium). Impact: Negligible (1) x Likelihood: Almost certain (5)
@@ -52,10 +52,18 @@ The stealth-plugin pattern (puppeteer-extra-plugin-stealth) addresses these by p
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
-- [ ] Decide fix shape (stealth-plugin vs accept-fallback vs drop-FTC).
-- [ ] If stealth-plugin: research playwright-stealth-equivalent npm packages and prototype.
-- [ ] If accept-fallback: update the SKILL.md tier-3 entry for FTC to describe the Google News RSS path as canonical.
-- [ ] If drop-FTC: remove from the tier-3 list and document the decision.
+- [x] Decide fix shape (stealth-plugin vs accept-fallback vs drop-FTC). RESOLVED 2026-06-27: a fourth, better option was found. FTC publishes an OFFICIAL machine-readable RSS feed at `https://www.ftc.gov/feeds/press-release.xml` that returns HTTP 200 (verified by curl this session); only the HTML page is WAF-blocked. Use the official feed. The stealth-plugin option was deliberately rejected (evading a federal regulator's WAF is an arms race + the wrong approach per `feedback_blocking_tools_is_a_signal` + the no-scraping posture of ADR-013).
+- [x] ~~If stealth-plugin~~: rejected (see above).
+- [x] If accept-fallback / official-feed: update the SKILL.md tier-3 entry for FTC. Done 2026-06-27: repointed the FTC tier-3 source from the WAF-blocked HTML page to the official RSS feed `https://www.ftc.gov/feeds/press-release.xml`, with an inline note that the HTML page 403s and the feed returns 200, and that stealth must not be pursued. Updated the "currently-blocked sources" note (FTC resolved; OECD's separate issue retained).
+
+## Fix Released
+
+Released 2026-06-27 (repo-local skill change; release == committed per ADR-022, no changeset). Architect PASS (ALIGNED: ADR-031 anticipated P067 and the official-feed path is more conservative than the forecast stealth fetcher; matches the skill's established RSS-preference pattern; stealth-rejection consistent with ADR-013 no-scraping posture).
+
+- `.claude/skills/wr-newsletter/SKILL.md` line 186: FTC tier-3 source repointed `WebFetch https://www.ftc.gov/news-events/news/press-releases` (403, WAF-blocked beyond UA) -> `WebFetch https://www.ftc.gov/feeds/press-release.xml` (the official RSS feed, returns 200), with a prompt to extract the 5 most recent AI-related feed items + an inline do-not-repoint / do-not-stealth note.
+- `.claude/skills/wr-newsletter/SKILL.md` line 191: "currently-blocked sources" note updated to mark FTC resolved.
+
+Verification trigger: the next `/wr-newsletter` prep run fetches the FTC feed cleanly (HTTP 200, AI-relevant items extracted) with no 403 and no source_failures entry for FTC.
 
 ## Dependencies
 
