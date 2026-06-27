@@ -1,6 +1,6 @@
 # Problem 081: Newsletter pipeline missing an external-editorial-reviewer subagent; internal gates underperform vs human-editor-style review
 
-**Status**: Open (direction resolved 2026-06-17; core fix + skip-on-REJECTED wiring implemented 2026-06-17, see Implementation below; sole remaining task: validate on next /wr-newsletter run)
+**Status**: Verification Pending (fix released 2026-06-17, see Fix Released + Implementation below; sole remaining task: validate on next /wr-newsletter run)
 **Reported**: 2026-06-01
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 4 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -107,6 +107,15 @@ Remaining work on this ticket:
 - [x] Decide the skip-on-upstream-REJECTED behaviour for the extended editor. (RESOLVED 2026-06-17: Tom chose **skip-on-REJECTED** for the extended editor, NOT the recorded "editor still runs" proposal. The editor is not invoked at step 15.25 when the step-15 newsletter-critic returns REJECTED, because the draft is already going back for rework and running the editor incl. its editorial-craft pass wastes the invocation. Wired in SKILL.md step 15.25 and recorded in the ADR-020 amendment; see Implementation 2026-06-17 below.)
 - [x] Update SKILL.md step 15.25 invocation / prompt to reflect the extended editor output. (Done 2026-06-17.)
 - [ ] Test on next edition: count how many of Tom's manual editorial findings the extended editor surfaces vs the prior three-axis editor.
+
+## Fix Released
+
+Released 2026-06-17 (repo-local skill/agent change; release == committed per ADR-022, no changeset). Commits on origin/master:
+
+- `5879f4b` feat(newsletter): extend wr-newsletter-editor with editorial-craft pass (P081). `.claude/agents/wr-newsletter-editor.md` gains Step 4.5 editorial-craft pass, the `EDITORIAL_CRAFT` output block, the craft-axis vocabulary, and the extended NEEDS_EDITORIAL_REVISION verdict; ADR-020 amended in place (human-oversight: confirmed); SKILL.md step 15.25 parse block wired.
+- `69f6afe` fix(newsletter): skip extended editor on critic-REJECTED at step 15.25 (P081). Skip-on-REJECTED guard tightened per Tom's 2026-06-17 resolution (editor not invoked when step-15 critic returns REJECTED; runs on PASS / PASS_WITH_AUTHOR_OVERRIDES).
+
+Awaiting user verification. Verification trigger: the SOLE remaining task is a live `/wr-newsletter` run where Tom counts how many of his manual editorial-craft findings the extended editor surfaces vs the prior three-axis editor (ADR-020 confirmation criterion 12). This needs Tom plus a live finalise pass; it cannot be exercised AFK.
 
 ## Dependencies
 

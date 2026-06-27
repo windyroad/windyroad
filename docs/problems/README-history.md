@@ -175,6 +175,8 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 
 ## 2026-06-27
 
+> Last reviewed: 2026-06-27 **P102 transitioned Open to Verifying** (content-risk gate now fact-checks unsourced analogies and stated-as-history claims: `check_1: factual` axis extended to flag historical anecdotes / "X once happened" claims / load-bearing analogies stated as fact unless framed illustrative; this axis catches the no-URL claims invisible to the ADR-024 URL-verify gate; companion VOICE-AND-TONE banned-row + leader plain-word clause; pinned CONTENT_RISK block untouched, no ADR supersession; I13 RFC-trace non-actionable per P104 / P070 precedent).
+
 > Last reviewed: 2026-06-27 **P099 transitioned Open to Verifying** (post-gate edit discipline shipped: wr-newsletter SKILL.md §15.6 + failure-modes ref; any post-gate brief/LinkedIn edit re-enters the FULL gate set, not voice+lint; I13 RFC-trace gate non-actionable per P104/P070 precedent).
 
 > Last reviewed: 2026-06-24 **P103 captured** - Assistant asserts negative project-state claims from an incomplete search without verifying or asking (lightweight aside via /wr-itil:capture-problem).
