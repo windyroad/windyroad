@@ -30,6 +30,8 @@ Technical > operational > human. The brief leads with what changed under the hoo
 
 Team voice ("we") in body, "I" only in the "From Tom" opener. Direct, evidence-led, skeptical-by-default. Developer-craft vocabulary is welcome where precise (compile, ship, branch, review, runtime, latency, tokens, context window, eval). Avoid leader-coded vocabulary (governance, posture, pipeline-as-strategy, board-level) unless the item is explicitly about org-level dynamics affecting developers.
 
+On the human-in-the-loop question, follow the codified editorial stance in `assets/three-lens-filter.md`: humans ratify architecture and product-direction decisions, automated gates and evals carry code-level quality, so do not frame human code review as the answer to AI-generated code.
+
 Evidence stance is paired (J9 + J11): every item labels its source as **shipped**, **benchmarked**, **demo**, or **not yet**. Where production adopters exist, name them. Where they do not, say so honestly. ADR 015 reader-respect applies: criticise tool choices via evidence, never via implied incompetence of the reader or their team.
 
 ## Headline pattern
@@ -44,9 +46,11 @@ Per-edition unique POV-carrying H1, plus subtitle:
 
 ## CTA
 
-The CTA is one rotating invitation plus the closing line only. Do NOT add a Tokens Spent / Windy Road services-description sentence (P090): this is the brand-and-community surface, not the funnel (ADR-023 funnel pause; persona is non-commercial by design).
+The CTA is one invitation plus the closing line only. Do NOT add a Tokens Spent / Windy Road services-description sentence (P090): this is the brand-and-community surface, not the funnel (ADR-023 funnel pause; persona is non-commercial by design).
 
-Invitation variants (rotate):
+Write the invitation tied to this edition's thesis and built to foster conversation: a specific question only a reader who engaged with the week's items can answer. This mirrors the VOICE-AND-TONE LinkedIn carve-out for substantive content-tied questions. Do NOT default to a generic prompt that could top any edition.
+
+The variants below are a fallback well for when no edition-tied question presents itself, not the default:
 
 - "Reply with a tool you want us to pressure-test next week."
 - "Forward this to an engineer who is drowning in AI announcements."

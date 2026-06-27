@@ -30,6 +30,8 @@ Human > operational > technical. The brief leads with what it means for the team
 
 Team voice ("we") in body, "I" only in the "From Tom" opener. Direct, specific, governance-oriented. Frame items as conditions in the industry, not as judgements of the reader's team (ADR 015). Patch-fitness vocabulary is welcome ("dependency staleness", "patch cycle", "review pipeline"). Avoid pure dev-craft jargon (compile-time, monad, type variance) unless the item is unambiguously about that.
 
+On the human-in-the-loop question, follow the codified editorial stance in `assets/three-lens-filter.md`: humans ratify architecture and product-direction decisions, automated gates and evals carry code-level quality, so do not frame human code review as the answer to AI-generated code.
+
 ## Headline pattern
 
 Per-edition unique POV-carrying H1, plus subtitle:
@@ -44,9 +46,11 @@ The `YYYY-MM-DD` in "week ending" is `<week-ending>` (the Sunday that ends the e
 
 ## CTA
 
-The CTA is one rotating invitation plus the closing line only. Do NOT add a Windy Road services-description sentence (P090): the brief is a brand-and-community surface, not a sales funnel (ADR-023 funnel pause).
+The CTA is one invitation plus the closing line only. Do NOT add a Windy Road services-description sentence (P090): the brief is a brand-and-community surface, not a sales funnel (ADR-023 funnel pause).
 
-Invitation variants (rotate):
+Write the invitation tied to this edition's thesis and built to foster conversation: a specific question only a reader who engaged with the week's items can answer. For an edition arguing the model is now the easy part, Tom chose "If the model is the easy part now, what is the hard part for your team this quarter?". This mirrors the VOICE-AND-TONE LinkedIn carve-out for substantive content-tied questions. Do NOT default to a generic prompt that could top any edition.
+
+The variants below are a fallback well for when no edition-tied question presents itself, not the default:
 
 - "Reply with what is breaking on your stack this quarter."
 - "Forward this to a colleague who runs an engineering team."

@@ -14,8 +14,9 @@ Hit twice in this consumer repo (the windyroad website, which has `docs/problems
 
 - **P070** (closed 2026-06-16): closure note records "I13 RFC-trace gate noted as non-actionable (RFC tier unadopted in this consumer repo; fix-design trace carried by ADR-032)."
 - **P103** (verifying 2026-06-27): the predicate fired `no-rfc-trace: P103` while working the fix; the agent verified the premise (`docs/rfcs/` absent, zero RFC history), recognised the false positive, and fell back to the legacy direct-implementation path per the P070 precedent rather than bootstrapping the tier.
+- **P101** (verifying 2026-06-27): the predicate fired `no-rfc-trace: P101` during the AFK work-problems iteration; the agent verified the premise (`docs/rfcs/` absent, zero RFC history in `origin/master`), recognised the false positive, and used the legacy direct-implementation path per the P070 / P103 precedent. This is the third occurrence.
 
-Each occurrence forces the working agent to recognise the false positive out-of-band and apply the P070 precedent manually. A third occurrence will repeat the same recognition cost.
+Each occurrence forces the working agent to recognise the false positive out-of-band and apply the P070 precedent manually. The recognition cost has now been paid three times (P070, P103, P101); this is the consolidation signal for /wr-itil:review-problems to prioritise the upstream adopter-aware fix.
 
 ## Symptoms
 

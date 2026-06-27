@@ -15,6 +15,12 @@ The `named_action` recorded for a yes-scored lens must come from the persona's a
 
 Vocabularies are non-exhaustive but illustrative. New actions are admissible if they match the persona's documented decision authority OR documented influence channel (`docs/jtbd/engineering-leader/persona.md` for leader, `docs/jtbd/developer/persona.md` for developer) and fall inside a quarter-scope horizon.
 
+## Editorial stance: the human-in-the-loop question (P101)
+
+A standing editorial conviction governs how every edition frames the human role around AI-generated code. The human contribution is ratification of architecture and product-direction decisions, kept off the delivery critical path, where it keeps software aligned with the business and heads off costly, hard-to-reverse mistakes. Code-level quality is carried at AI pace by automated gates and evals, not by gating delivery behind human code review. Human code review as the answer to AI-generated code pushes delivery back to human pace; the brief's own Issue 06 ("more review will not fix AI slop") already argued this position, and later editions drifted off it.
+
+Apply this when scoring the `named_action` for any story about AI-generated code, team capability, or oversight: do NOT record "measure review throughput", "add a human review gate", or any "more human code review" framing as the response. Prefer the ratification-and-gates framing: an architecture or product-direction ratification decision, an automated-gate or eval investment, or a measurement update tied to shipped outcomes rather than review volume. The persona action vocabularies above already encode this (procurement question, risk audit, policy update for the leader; adopt, pilot, watch, skip and evidence-stance re-evaluation for the developer); none of them is "do the review by hand".
+
 ## Wardley map anchoring (preference, not precondition)
 
 The Wardley landscape map (`docs/ai-engineering-brief/ai-landscape.owm`) is the primary qualification path. A candidate anchors to a map movement when it triggers one of:
