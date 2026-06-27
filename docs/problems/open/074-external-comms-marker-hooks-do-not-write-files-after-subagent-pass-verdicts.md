@@ -21,6 +21,7 @@ Observed 2026-05-31 during the P042 upstream-filing flow inside the `/wr-itil:wo
 - Same pattern repeats for the voice-tone evaluator: `wr-voice-tone:external-comms` subagent emits `EXTERNAL_COMMS_VOICE_TONE_VERDICT: PASS`, the BLOCKED error keeps firing.
 - `ls /tmp/claude-risk-*` and `find /tmp -name 'wr-risk-*' -newer /tmp/wr-iter-18-output.json` return empty. The marker files that the BLOCK message says the PostToolUse:Agent hook should write are never created.
 - `voice-tone-announced-*` markers exist in /tmp (from prior sessions); `external-comms` / `risk-*` markers do not.
+- **Recurrence 2026-06-28 (filing P048 upstream as windyroad/agent-plugins#296):** still live. Sequence: `gh issue create` blocked on risk gate -> `wr-risk-scorer:external-comms` returned PASS -> `gh issue create` blocked on voice-tone gate -> `wr-voice-tone:external-comms` returned PASS -> `gh issue create` blocked AGAIN on the risk gate (the risk marker did not co-persist with the voice-tone marker; the two composed evaluators never satisfy the gate simultaneously). Resolved with `BYPASS_RISK_GATE=1`. Confirms the two-evaluator compose case is the operative failure for operator-at-keyboard `/wr-itil:report-upstream`, not only AFK.
 
 ## Workaround
 
