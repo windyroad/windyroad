@@ -149,6 +149,7 @@ fi
 if ! npx dry-aged-deps --update --yes; then
   echo "  (dry-aged-deps auto-update non-fatal; pre-push gate will fire if state is still stale)"
 fi
+rm -f package.json.backup  # --update leaves a stray package.json.backup (P095)
 if ! git diff --quiet -- package.json package-lock.json; then
   echo "Auto-deps refresh changed root manifests; committing as chore(deps)."
   git add package.json package-lock.json

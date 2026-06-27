@@ -56,6 +56,29 @@ fix_deps_commit_body() {
   fi
 }
 
+# ── Pure helper: emit the exact-pin deadlock set from --check --format=json ────
+# `dry-aged-deps --update` writes each dep's `wanted` version to package.json.
+# An EXACT pin (e.g. "sass": "1.99.0") caps wanted == current, so --update
+# no-ops, yet --check still flags the dep because `recommended` (the matured-
+# safe target) is newer. Such deps deadlock: --check keeps failing, --update
+# changes nothing. This helper lists them so the flow can bump the exact pin
+# directly with `npm install --save-exact`. Emits one "name@recommended type"
+# line per flagged-but-unbumpable dep (filtered != true, recommended != current).
+# Tolerates the flat array, {packages:[...]}, and {rows:[...]} shapes. (P095)
+exact_pin_deadlock_targets() {
+  local json_file="${1:?usage: exact_pin_deadlock_targets <check.json>}"
+  jq -r '
+    (if type == "object" and has("packages") then .packages
+     elif type == "object" and has("rows") then .rows
+     else . end)
+    | (if type == "array" then . else [.] end)
+    | map(select(
+        (.filtered != true) and .recommended != null and .current != null
+        and .recommended != .current))
+    | .[] | "\(.name)@\(.recommended) \(.type // "prod")"
+  ' "$json_file" 2>/dev/null || true
+}
+
 # Test seam (mirrors push-watch.sh): sourcing with FIX_DEPS_LIB_ONLY=1 defines
 # the helpers above and returns before the detect/apply/test/commit flow runs.
 # The "&&" short-circuit is exempt from "set -e" when the condition is false.
@@ -76,18 +99,45 @@ BASE_REF=$(git rev-parse HEAD)
 # ── 2. Apply ──────────────────────────────────────────────────────────────────
 # Capture the update set as JSON for the commit body, then apply.
 UPDATES_JSON="$(mktemp)"
-trap 'rm -f "$UPDATES_JSON"' EXIT
+CHECK_JSON="$(mktemp)"
+trap 'rm -f "$UPDATES_JSON" "$CHECK_JSON" package.json.backup' EXIT
 npx --no-install dry-aged-deps --check --format=json > "$UPDATES_JSON" 2>/dev/null || true
 
 if ! npx --no-install dry-aged-deps --update; then
+  rm -f package.json.backup
   echo "✗ dry-aged-deps --update failed. Manifests left untouched; investigate the registry/network error above." >&2
   exit 1
 fi
+rm -f package.json.backup  # --update leaves a stray package.json.backup (P095)
 
 if git diff --quiet -- package.json package-lock.json; then
-  echo "  No manifest changes resulted from --update (remaining updates are still maturing or not auto-applicable)."
-  echo "  Nothing to commit. If the pre-push gate still fails, the stale deps need a manual major-version review."
-  exit 0
+  # --update changed nothing. If --check still flags deps, they are the exact-pin
+  # deadlock (P095): an exact pin caps `wanted` == current so --update can't bump
+  # them, but `recommended` is a matured target. Bump the exact pin directly to
+  # the matured target (the P026 "run the upgrade" discipline) and let the test
+  # gate below validate it before commit.
+  npx --no-install dry-aged-deps --check --format=json > "$CHECK_JSON" 2>/dev/null || true
+  DEADLOCK="$(exact_pin_deadlock_targets "$CHECK_JSON")"
+  if [ -n "$DEADLOCK" ]; then
+    echo "  --update no-op'd but --check still flags deps: exact-pin deadlock (P095)."
+    echo "  Bumping pinned deps to their matured targets:"
+    while read -r spec type; do
+      [ -z "$spec" ] && continue
+      echo "    $spec ($type)"
+      if [ "$type" = "dev" ]; then
+        npm install --save-dev --save-exact "$spec"
+      else
+        npm install --save-exact "$spec"
+      fi
+    done <<< "$DEADLOCK"
+    rm -f package.json.backup
+  fi
+
+  if git diff --quiet -- package.json package-lock.json; then
+    echo "  No manifest changes resulted from --update (remaining updates are still maturing or not auto-applicable)."
+    echo "  Nothing to commit. If the pre-push gate still fails, the stale deps need a manual major-version review."
+    exit 0
+  fi
 fi
 
 # ── 3. Test ───────────────────────────────────────────────────────────────────
