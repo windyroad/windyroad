@@ -29,7 +29,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading, tripping adop… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P098 | work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consu… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P104 | I13 RFC-trace predicate and manage-problem I13 gate are not adopter-aware (fire no-rfc-trace in repos without an RFC tier) | 3 (Medium) | Open | M | 2026-06-27 | internal |
-| 1 | P001 | Next.js build hangs locally | 2 (Very Low) | Open | M | 2026-04-14 | internal |
+| 3 | P001 | Next.js build hangs locally (reproduced 2026-06-27; telemetry ruled out; local-dev only, CI builds fine) | 6 (Medium) | Open | M | 2026-04-14 | internal |
 
 ## Verification Queue
 

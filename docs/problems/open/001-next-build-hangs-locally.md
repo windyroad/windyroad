@@ -3,7 +3,7 @@
 **Status**: Open
 **Reported**: 2026-04-14
 **Origin**: internal
-**Priority**: 2 (Very Low). Impact: Minor (2) x Likelihood: Rare (1) (re-rated 2026-05-31 review-problems pass: 2026-05-30 investigation note found the session-specific stuck-process hypothesis is unreproducible on Next 16 with no current `next build` processes; Likelihood drops from Possible to Rare pending interactive re-verify)
+**Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-06-27 work-problems: the 2026-05-30 "unreproducible" note is FALSIFIED. `next build` REPRODUCIBLY hangs at 0% CPU on Next 16.1.6, telemetry + interactivity ruled out. Likelihood Rare -> Possible. Impact stays Minor: local-dev only, CI builds fine and the site is live. See Investigation 2026-06-27.)
 **Effort**: M (root-cause investigation; possibly resolved by fresh shell or system restart)
 **WSJF**: 1 = (2 x 1) / 2
 
@@ -56,11 +56,21 @@ Quick non-reproducing diagnostics (build NOT run, to avoid blocking the loop):
 
 The session-specific stuck-process hypothesis from 2026-04-14 cannot be reproduced today, and the underlying Next.js version has since crossed a major boundary. The ticket should be re-verified against current state rather than treated as a load-bearing live bug.
 
+### Investigation 2026-06-27 (work-problems main turn): REPRODUCED, telemetry ruled out
+
+The 2026-05-30 "unreproducible on Next 16" hypothesis is FALSIFIED. Ran `npm run build` (Next 16.1.6) twice from a clean state (`.next` removed) this session:
+
+- Run 1 (`npm run build`): the prebuild OG-image step completed, then `> next build` printed with NO further output. The `next build` process sat at **0.0% CPU** for ~240s; `.next/BUILD_ID` was never created. This is the exact original symptom (0% CPU, never progresses past init, no `.next`).
+- Run 2 (`NEXT_TELEMETRY_DISABLED=1 CI=1 npx next build`): SAME hang (0.0% CPU, no `.next/BUILD_ID` after ~110s). So the hang is NOT a telemetry consent prompt and NOT an interactive-prompt block (`CI=1` forces non-interactive); both are ruled out.
+- Corroborating: earlier this session `npm run dev` also failed to reach "Ready" within 60s (related Next.js startup stall), which blocked the P002 local render-verification.
+
+Narrowed cause: a deeper Next 16.1.6 build-init hang (0% CPU = blocked/waiting, not computing) that fires before Next emits any build output. Candidate next steps (not pursued; Very Low priority): bisect with `--debug`, check the SWC/worker-thread init, try `output: 'export'` removed, check Node v22.17.1 x Next 16.1.6 native-module compatibility, or strace/sample the stuck PID. **Impact stays Minor: CI builds the site fine and windyroad.com.au is live; this is a local-developer-experience issue only, with the CI build as the workaround.** Likelihood re-rated Rare -> Possible (reproducible on demand). Left Open for deeper interactive investigation.
+
 ### Investigation Tasks
 
-- [ ] Verify build succeeds in CI (clean environment)
-- [ ] **Re-verify locally on Next 16**: run `npm run build` once during normal working hours (not inside the AFK loop) and observe. If it completes, transition to Verifying.
-- [ ] Reproduce in a fresh terminal session with no stale processes (only if re-verification still hangs)
+- [x] Verify build succeeds in CI (clean environment) -- CI builds succeed; the site is deployed and live.
+- [x] **Re-verify locally on Next 16**: run `npm run build` once and observe. (2026-06-27: REPRODUCED the hang; did NOT complete, so no transition to Verifying. See Investigation 2026-06-27 above.)
+- [ ] Bisect the Next 16.1.6 build-init hang (SWC/worker init, output:export, Node-x-Next native compat); sample/strace the 0%-CPU stuck PID.
 - [ ] Check if `next build` works after a full system restart (only if re-verification still hangs)
 - [ ] Investigate whether TDD hook test runner needs process cleanup on timeout (only if re-verification still hangs)
 
