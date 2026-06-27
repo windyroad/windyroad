@@ -16,3 +16,22 @@ Caveat (not an AskUserQuestion-metric event, recorded for honesty): one **prose-
 **Silent-framework count: 0**
 **Taste count: 0**
 **Correction-followup count: 0**
+
+---
+
+## Second retro (same day): RFC tier + verification-queue drain
+
+This foreground window (establish `docs/rfcs/` RFC tier; drain the verification queue 47 -> 17 by closing 30 evidence-verified tickets) made **one `AskUserQuestion` tool call**.
+
+| Call # | Header | Classification | Citation |
+|--------|--------|----------------|----------|
+| 1 | Next focus | silent-framework | Gap: user asked "What next?" with several genuinely-distinct valid directions (weekly newsletter / problem backlog / drain verification queue / wrap up); no ADR/policy/WSJF resolves which work the user wants to spend the session on. ADR-013 Rule 1 four-option structured choice, not a prose-ask. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 1**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes: the architect gate was consulted before creating `docs/rfcs/` (governance-structure addition), per the mandatory architecture gate; that is an Agent-tool dispatch, not an AskUserQuestion. The 30-ticket close was framework-mechanical (evidence-based per ADR-022), surfaced via parallel read-only Explore agents, no per-ticket ask.

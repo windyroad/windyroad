@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-27 **P001 CLOSED** (the oldest ticket, open since April, root-caused + fixed + verified: `next build` hung forever because `./.env` was a stray FIFO/named-pipe and Next's startup env-load blocked in `open()` on it; found via a `sample` of the stuck 0%-CPU PID; removed the FIFO (gitignored, unneeded, `.env.local` holds the real env) and the build now completes in ~8s. Local-dev only, never reached CI).
+> Last reviewed: 2026-06-28 **P106 captured** -- Verification Queue evidence cells are never populated with `yes - observed:` from subsequent-session exercises, so the run-retro Step 4a prior-session drain never auto-fires and the queue accumulated to 47 before a manual evidence-triage drain on 2026-06-28 (47 to 17). Fix is upstream (wr-itil / wr-retrospective; marketplace-consumer, P031/P036/ADR-036), same report shape as P048. Lightweight aside via /wr-itil:capture-problem.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -27,6 +27,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading, tripping adop… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P098 | work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consu… | 3 (Low) | Open | M | 2026-06-17 | internal |
 | 1.5 | P104 | I13 RFC-trace predicate and manage-problem I13 gate are not adopter-aware (fire no-rfc-trace in repos without an RFC tier) | 3 (Medium) | Open | M | 2026-06-27 | internal |
+| 1.5 | P106 | Verification Queue evidence cells never populated from subsequent-session exercises, so the auto-drain never fires and the queue accumulates | 3 (Medium) | Open | M | 2026-06-28 | internal |
 
 ## Verification Queue
 
