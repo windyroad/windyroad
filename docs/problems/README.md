@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-28 **P107 captured** -- Assistant routes free-text input collection (URLs, tokens, IDs) through AskUserQuestion instead of presenting per-item single-click copyable blocks; observed in the Issue 11 /wr-newsletter prep run where Tom asked three times for copyable per-URL blocks. Lightweight aside via /wr-itil:capture-problem.
+> Last reviewed: 2026-07-03 **P108 captured** -- wr-newsletter SKILL.md step 7 hard-codes the wr-wardley owm-to-svg converter at plugin version 0.1.0, breaking the map re-render when the cached plugin updates (found 0.1.7 during the Issue 11 run). Lightweight aside via /wr-itil:capture-problem.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -15,6 +15,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create… | 6 (Medium) | Open | M | 2026-05-31 | internal |
 | 3 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 (Medium) | Open | M | 2026-06-14 | internal |
 | 3 | P105 | risk-score-commit-gate RISK-POLICY staleness threshold too tight (14 days) + no AFK-satisfiable refresh path | 6 (Medium) | Open | S | 2026-06-27 | internal |
+| 3 | P108 | wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version, breaking the map render on plugin update | 3 (Medium) | Open | S | 2026-07-03 | internal |
 | 2 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned pus… | 3 (Low) | Open | M | 2026-05-12 | internal |
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 (Low) | Open | M | 2026-05-12 | internal |
