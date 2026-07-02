@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-03 **P108 captured** -- wr-newsletter SKILL.md step 7 hard-codes the wr-wardley owm-to-svg converter at plugin version 0.1.0, breaking the map re-render when the cached plugin updates (found 0.1.7 during the Issue 11 run). Lightweight aside via /wr-itil:capture-problem.
+> Last reviewed: 2026-07-03 **P109 captured** -- External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact (unpushed local commits + stale IDE buffer); recurred 3+ times relaying the Issue 11 brief for review. Lightweight aside via /wr-itil:capture-problem.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -30,6 +30,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P104 | I13 RFC-trace predicate and manage-problem I13 gate are not adopter-aware (fire no-rfc-trace in repos without an RFC tier) | 3 (Medium) | Open | M | 2026-06-27 | internal |
 | 1.5 | P106 | Verification Queue evidence cells never populated from subsequent-session exercises, so the auto-drain never fires and the queue accumulates | 3 (Medium) | Open | M | 2026-06-28 | internal |
 | 1.5 | P107 | Assistant routes free-text input collection through AskUserQuestion instead of presenting per-item copyable blocks | 3 (Medium) | Open | M | 2026-06-28 | internal |
+| 1.5 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy (unpushed local commits + stale IDE buffer) | 3 (Medium) | Open | M | 2026-07-03 | internal |
 
 ## Verification Queue
 
