@@ -44,5 +44,15 @@ Dispatch long subprocesses via the harness-level background primitive (Bash tool
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/327 (2026-07-03)
+
 - **Upstream-blocked (fix site)**: the fix belongs in the upstream `wr-itil` `work-problems` SKILL.md (agent-plugins repo). This consumer content repo has no `packages/itil/` source tree to edit (ADR-036 predicate); it records the observation only.
 - Captured via /wr-itil:capture-problem during a zero-iter `/wr-itil:work-problems` session retro (2026-07-03). Expand at next investigation.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/327
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
