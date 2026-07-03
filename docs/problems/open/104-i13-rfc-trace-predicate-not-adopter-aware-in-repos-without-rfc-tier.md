@@ -53,7 +53,17 @@ Make the I13 detection adopter-aware so it no-ops in Phase-1 adopter repos. Cand
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/321 (2026-07-03)
+
 Captured via /wr-itil:capture-problem (run from /wr-retrospective:run-retro Step 4b Stage 1 during the AFK iteration that worked P103; expand at next investigation).
 
 - Step 2b hang-off-check (fresh-context subagent) verdict: **PROCEED_NEW**. Rationale: the root cause is a tooling defect in the predicate/gate; both candidates merely cite having hit and worked around the false positive, neither IS the fix for the predicate, so they are sibling surfaces of this common parent. P103's own Fix Strategy explicitly queues "make the I13 predicate adopter-aware" as out-of-its-scope follow-up; P072's `docs/rfcs` mention is an incidental keyword (deps-refresh domain), not a shared root cause. The "hit twice (P070, P103)" recurrence is the consolidation signal for /wr-itil:review-problems.
 - Title-only duplicate grep matched P087 (compendium em-dashes / adopter policies) on the "adopter" keyword only - unrelated; no merge.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/321
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

@@ -51,5 +51,15 @@ The version pin means the map re-render (step 7 and its finalise variant 7-prime
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/325 (2026-07-03)
+
 - Fix strategy: skill-improvement to `.claude/skills/wr-newsletter/SKILL.md` step 7 / 7-prime (Kind: improve, Shape: skill). Version-agnostic converter resolution.
 - Captured via /wr-itil:capture-problem during the 2026-06-29 Issue 11 retrospective; expand at next investigation.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/325
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

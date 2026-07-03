@@ -61,4 +61,14 @@ The staleness threshold is hardcoded at 14 days in `packages/risk-scorer/hooks/r
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/322 (2026-07-03)
+
 Captured via /wr-itil:capture-problem during /wr-itil:work-problems orchestrator-salvage handling of iter 3 (P101) commit-gate block, 2026-06-27. Surfaces iter 3's OQ-2 (RISK-POLICY staleness gate has no AFK-satisfiable refresh path) plus Tom's quarterly-cadence direction. Upstream `@windyroad/risk-scorer` change per P045 placement discipline.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/322
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

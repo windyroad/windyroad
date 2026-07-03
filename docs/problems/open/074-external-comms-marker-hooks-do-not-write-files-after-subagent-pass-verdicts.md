@@ -63,8 +63,18 @@ Three candidate root causes:
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/307#issuecomment-4874091818 (2026-07-03)
+
 (captured via /wr-itil:capture-problem during 2026-05-31 /wr-itil:work-problems orchestrator main turn queue resolution; surfaced after the P042 upstream-filing flow required BYPASS_RISK_GATE=1 even though both wr-risk-scorer:external-comms and wr-voice-tone:external-comms subagents emitted PASS. Expand at next investigation.)
 
 - ADR-028 (voice-tone gate on external communications), the gate that re-fires
 - packages/risk-scorer/hooks/ (upstream cached), likely fix-site for the marker-write logic
 - P042 (parked, reported upstream agent-plugins#183), the upstream-filing flow that surfaced this
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/307#issuecomment-4874091818
+- **Reported**: 2026-07-03
+- **Template used**: n/a (comment on existing issue)
+- **Disclosure path**: commented-on-existing-issue (Step 5c, P070)
+- **Cross-reference confirmed**: yes

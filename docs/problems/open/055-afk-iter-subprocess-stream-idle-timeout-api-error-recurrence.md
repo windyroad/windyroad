@@ -60,6 +60,8 @@ Concrete evidence:
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/313 (2026-07-03)
+
 (captured via /wr-itil:capture-problem; expand at next investigation)
 
 - `packages/itil/skills/work-problems/SKILL.md` Step 5 (Exit-code semantics, SIGTERM exit-flush, P147 stuck-before-emit subclass)
@@ -68,3 +70,11 @@ Concrete evidence:
 - `.afk-run-state/resolved/iter-1-2026-05-12.json`
 - `.afk-run-state/resolved/iter-2-retry-2026-05-12.json`
 - 2026-05-12 retro session evidence at `docs/retros/2026-05-12-ask-hygiene.md`
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/313
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

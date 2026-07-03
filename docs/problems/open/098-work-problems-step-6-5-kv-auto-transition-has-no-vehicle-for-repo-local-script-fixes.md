@@ -61,8 +61,18 @@ Manually dispatch a transition iter (`/wr-itil:transition-problem`) to move the 
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/320 (2026-07-03)
+
 (captured via /wr-itil:capture-problem; expand at next investigation)
 
 - **P092** (`docs/problems/verifying/092-push-watch-pull-rebase-and-transient-error-robustness.md`): the Known-Error ticket whose repo-local `push-watch.sh` fix triggered this observation; manually transitioned to Verification Pending in commit 732b12a because Step 6.5 could not.
 - **P054** (`docs/problems/open/054-work-problems-skip-just-worked-known-error-pending-push.md`): adjacent work-problems Known-Error / pending-push handling; shares the work-problems post-fix-transition surface.
 - Hang-off-check note: the sub-step 2b mechanical pre-filter surfaced more than 5 candidates on the broad `work-problems` / `push-watch` signal, so the fresh-context subagent dispatch was skipped per the candidate-cap latency short-circuit. PROCEED_NEW: no existing ticket scopes the work-problems Step 6.5 release-vehicle-class gap; P092 and P054 are adjacent surfaces, not parents. Defer cluster re-evaluation to /wr-itil:review-problems.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/320
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

@@ -51,8 +51,18 @@ This is upstream-bound: the fix lives in `@windyroad/wr-itil` work-problems SKIL
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/318 (2026-07-03)
+
 - Captured via /wr-itil:capture-problem (lightweight aside).
 - Anti-circular-work sibling family (hang-off-check verdict PROCEED_NEW, 2026-06-17): shares the "Step 3 selection re-picks a not-actually-actionable ticket every loop" family root with P069 and P054, but the trigger here (an open queued cat-1 direction question) is named by neither candidate, and neither is a multi-phase master. Defer family consolidation to next /wr-itil:review-problems cluster pass.
   - P069 (`docs/problems/open/069-work-problems-orchestrator-wsjf-ranking-does-not-factor-placement-authority.md`): distinct trigger, upstream-blocked tickets keyed on `## Reported Upstream` markers.
   - P054 (`docs/problems/open/054-work-problems-skip-just-worked-known-error-pending-push.md`): distinct trigger, just-worked Known Error awaiting push.
 - Upstream-bound: candidate for /wr-itil:report-upstream against `@windyroad/wr-itil`.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/318
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

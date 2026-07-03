@@ -47,9 +47,19 @@ This is upstream-bound: the fix lives in `@windyroad/wr-itil` `check-upstream-re
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/319 (2026-07-03)
+
 - Captured via /wr-itil:capture-problem (lightweight aside).
 - no-em-dash sibling family (hang-off-check verdict PROCEED_NEW, 2026-06-17): shares the "upstream emitters should respect adopter no-em-dash policies" family root with P087, but P087 is a different plugin (wr-architect), script (generate-decisions-compendium), and surface (docs/decisions/README.md). Neither candidate is a master that absorbs this scope. Cluster P087 with this ticket at the next /wr-itil:review-problems pass.
   - P087 (`docs/problems/open/087-wr-architect-generate-decisions-compendium-emits-em-dashes-violating-adopter-no-em-dash-policies.md`): same phenomenon class, distinct upstream tool and fix locus.
   - P030 (`docs/problems/open/030-work-problems-skill-md-marker-wording-uses-em-dash.md`): em-dash there is a contractual whitelisted marker, not an incidental separator.
   - P057 (`docs/problems/verifying/057-no-em-dash-edit-tool-hook-lacks-contractual-marker-whitelist.md`): local hook-side asymmetry, not an upstream emitter defect.
 - Upstream-bound: candidate for /wr-itil:report-upstream against `@windyroad/wr-itil`.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/319
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

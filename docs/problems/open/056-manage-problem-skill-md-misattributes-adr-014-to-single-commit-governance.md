@@ -63,6 +63,8 @@ Cross-skill: manage-problem lives in the upstream agent-plugins repo at `~/.clau
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/314 (2026-07-03)
+
 - P032 verify-before-asserting discipline.
 - P045 upstream-placement framing.
 - `docs/retros/2026-05-12-afk-iter-5-p051-ask-hygiene.md` (iter 5 silent-framework observation 2, first surface).
@@ -70,3 +72,11 @@ Cross-skill: manage-problem lives in the upstream agent-plugins repo at `~/.clau
 - `docs/decisions/014-wardley-mapping-as-strategic-lens.proposed.md` (the ADR that ADR-014 actually IS on disk).
 
 (captured via /wr-itil:capture-problem during 2026-05-12 AFK work-problems loop wrap-up; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/314
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

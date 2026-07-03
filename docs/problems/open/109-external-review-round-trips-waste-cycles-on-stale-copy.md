@@ -51,5 +51,15 @@ Send the user the freshly-committed file (SendUserFile) with its md5, and confir
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/326 (2026-07-03)
+
 - Fix strategy: memory-layer assistant-interaction discipline (Kind: improve, Shape: memory), sibling to the P050 / P061 / P107 pattern.
 - Captured during the 2026-06-29 Issue 11 retrospective; expand at next investigation.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/326
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

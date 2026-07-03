@@ -51,8 +51,18 @@ The windyroad-site backlog is dominated by upstream-plugin tickets (wr-itil, wr-
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/315 (2026-07-03)
+
 (captured via /wr-itil:capture-problem; expand at next investigation)
 
 - P054. sibling anti-circular-work ticket on the just-worked-Known-Error surface
 - P045. placement-claim verify-before-propagating discipline (precedent for placement-authority as a first-class concern)
 - 2026-05-16 AFK session evidence: iter logs at `.afk-run-state/iter[1-6]-*.json`; retro trails at `docs/retros/2026-05-16-work-problem-p{021,028,033,042,022,027}-ask-hygiene.md`
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/315
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

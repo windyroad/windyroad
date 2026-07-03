@@ -50,9 +50,19 @@ Orchestrator main turn manually identifies the just-worked KE at the top of WSJF
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/312 (2026-07-03)
+
 (captured via /wr-itil:capture-problem; expand at next investigation)
 
 - docs/retros/2026-05-12-orchestrator-ask-hygiene.md (session evidence)
 - /wr-itil:work-problems SKILL.md Step 4 classification table
 - ADR-022 (Problem Verification Pending lifecycle)
 - ADR-044 (Decision-Delegation Contract, framework-resolution boundary)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/312
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

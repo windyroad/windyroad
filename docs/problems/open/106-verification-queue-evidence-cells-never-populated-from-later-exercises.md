@@ -57,6 +57,16 @@ Upstream (`@windyroad/itil` / `@windyroad/retrospective`); this project is a mar
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/323 (2026-07-03)
+
 - Captured via /wr-itil:capture-problem during the 2026-06-28 second retro, immediately after the manual verification-queue drain (47 -> 17) that surfaced the gap.
 - Composes with P282 (run-retro Step 4a prior-session evidence drain -- the consumer half) and the verify-before-asserting family (P032 / P045 / P082 / P103): the manual drain applies that discipline by hand.
 - Fix is upstream (marketplace-consumer-cannot-edit-cached-plugin, P031 / P036 / ADR-036); same upstream-report shape as P048 (windyroad/agent-plugins#296).
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/323
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

@@ -46,7 +46,17 @@ Desired behaviour: when collecting free-text the user must supply (URLs, tokens,
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/324 (2026-07-03)
+
 - P091 (closed) -- newsletter should ask user for unresolvable source URLs. P091 establishes WHEN to ask (the fallback); P107 is about HOW to present that ask (copyable blocks vs AskUserQuestion Other). P091's fallback currently mandates a batched AskUserQuestion, which is the surface this ticket flags.
 - P034 (closed), P068 (parked) -- adjacent URL-resolution / canonical-URL tickets; distinct from this presentation-format concern.
 - P050, P061 -- prior assistant-interaction discipline fixes shipped as memory-layer levers; likely the same fix class.
 - captured via /wr-itil:capture-problem; expand at next investigation.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/324
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes

@@ -105,7 +105,17 @@ Governance gates re-run before this curation edit (per /wr-itil:manage-problem):
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/316 (2026-07-03)
+
 - **P075** (`docs/problems/open/075-newsletter-drafter-headings-fail-clarity-test.md`). Sibling.
 - **P076** (`docs/problems/open/076-newsletter-pipeline-drafts-body-before-heading.md`). Adjacent; would compose with the Tom-voice gate to catch idiom failures earlier in the pipeline.
 
 (captured manually following the /wr-itil:capture-problem template after Tom-direction; bundled with P076 + P078 in one batch commit per ADR-014 related-cluster carve-out)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/316
+- **Reported**: 2026-07-03
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes
