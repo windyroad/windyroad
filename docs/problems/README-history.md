@@ -202,3 +202,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-06-27 **P104 captured** - I13 RFC-trace predicate and manage-problem I13 gate are not adopter-aware (fire no-rfc-trace in repos without an RFC tier) (lightweight aside via /wr-itil:capture-problem).
 
 > Last reviewed: 2026-06-27 **P105 captured**: risk-score-commit-gate RISK-POLICY staleness threshold too tight (14 days) + no AFK-satisfiable refresh path; quarterly cadence re-attested into RISK-POLICY.md, gate-threshold change tracked as upstream wr-risk-scorer work (lightweight aside via /wr-itil:capture-problem).
+
+## 2026-07-03
+
+> Last reviewed: 2026-07-03 **P109 captured** -- External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact (unpushed local commits + stale IDE buffer); recurred 3+ times relaying the Issue 11 brief for review. Lightweight aside via /wr-itil:capture-problem.
