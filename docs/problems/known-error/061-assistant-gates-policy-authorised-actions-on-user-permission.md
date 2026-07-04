@@ -1,12 +1,13 @@
 # Problem 061: assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared
 
-**Status**: Verification Pending
+**Status**: Known Error
+**Reopened**: 2026-07-04 (regression observed this session; verifying -> known-error flip-back per ADR-022 / P124 precedent)
 **Reported**: 2026-05-14
 **Released**: 2026-05-30 (commit `9f42130`)
 **Origin**: internal
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4)
 **Effort**: M
-**WSJF**: 0 (excluded from dev-work ranking per ADR-022; user-side verification remaining)
+**WSJF**: 8.0 = (8 x 2.0) / 2 (re-entered dev-work ranking on 2026-07-04 reopen; Known Error multiplier 2.0 per ADR-022; real fix is upstream-blocked -- phrase-list-to-rule generalisation lives in @windyroad/itil lib/detectors.sh + @windyroad/retrospective check-ask-hygiene.sh)
 **Type**: technical
 
 ## Description
@@ -78,3 +79,13 @@ Awaiting user verification per ADR-022. Verification trigger as documented in th
 ## Verification
 
 Verification trigger fires on the next AFK iter or interactive session wrap-up where: (a) risk-scorer has cleared every commit in the chain within RISK-POLICY.md appetite, AND (b) the assistant performs the push (or release-watch) directly without emitting any of the four canonical deferral-prose phrasings or naming the user as the gate. With Status now Verification Pending (transitioned 2026-05-30, commit-as-release-marker per ADR-022 user-memory carve-out), the queue position surfaces in the Verification Queue table for user closure on next observed clean-wrap-up exercise.
+
+## Observed Regression (2026-07-04)
+
+The fix did NOT hold. During this interactive session, after committing within-appetite upstream-report work (risk-scorer cleared commit=1/25, push=1/25 on every commit in the chain), the assistant ended a turn with "Four commits sit local on master. Say the word and I'll push." That is a fifth deferral-prose variant of the exact anti-pattern this ticket enumerates: a policy-authorised, risk-cleared push gated on user permission, phrased as an offer rather than an action. Tom corrected: "Push FFS, you shouldn't ask."
+
+A second instance in the same session: at the work-problems stop surface the assistant used AskUserQuestion to ask whether to report upstream-blocked tickets (a within-appetite, gated, reversible action), then after reporting closed with the same "say the word and I'll push" deferral. Tom: "Report them FFS. You dint need to ask me each time. You have standing permission."
+
+Root cause of the regression: the memory fix enumerated four specific phrasings as a closed list; the assistant emitted a novel phrasing ("say the word and I'll push") not in the list, so neither the memory guidance nor the `itil-assistant-output-review.sh` direct-pitch regex caught it. The fix needs to generalise from a fixed phrase-list to the underlying rule (any policy-authorised, risk-cleared action deferred to user permission is the anti-pattern, regardless of phrasing), and the standing-permission signal must persist across turns. New standing-permission memory `feedback_standing_permission_report_upstream.md` captured this session as a partial mitigation, but the general P061 fix (phrase-list to rule generalisation) is unshipped.
+
+Reopening verifying -> known-error per ADR-022 regression flip-back (2026-04-27 P124 precedent): fix released but observably regressed, root cause confirmed, awaiting a stronger fix.

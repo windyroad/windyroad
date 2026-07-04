@@ -206,3 +206,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-07-03
 
 > Last reviewed: 2026-07-03 **P109 captured** -- External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact (unpushed local commits + stale IDE buffer); recurred 3+ times relaying the Issue 11 brief for review. Lightweight aside via /wr-itil:capture-problem.
+
+## 2026-07-04
+
+> Last reviewed: 2026-07-03 **P110 captured** -- work-problems Step 5 iter/pre-flight dispatch exceeds the interactive-harness 10min foreground Bash ceiling, SIGTERM-killing long iters at ~10min; fix belongs upstream in the wr-itil work-problems SKILL. Lightweight aside via /wr-itil:capture-problem.
