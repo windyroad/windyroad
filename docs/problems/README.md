@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-04 **P061 reopened** -- verifying to known-error regression flip-back; assistant deferred a risk-cleared push on user permission ("say the word and I'll push"), the exact P061 anti-pattern, corrected by Tom this session. Real fix (phrase-list to rule generalisation) is upstream-blocked.
+> Last reviewed: 2026-07-06 **P111 captured**: publish-day push blocked by a deps-hygiene tooling chain (auto-deps lock desync, local-vs-CI freshness-gate divergence; vitest-misglob sub-issue fixed in commit 7fe5046). Lightweight aside via /wr-itil:capture-problem during The Shift Issue 12 publish.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
