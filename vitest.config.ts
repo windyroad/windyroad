@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
@@ -10,6 +10,9 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
+    // tests/*.spec.mjs are standalone Playwright e2e scripts, run via
+    // `node tests/<name>.spec.mjs` against a live server, not vitest suites.
+    exclude: [...configDefaults.exclude, 'tests/**/*.spec.mjs'],
   },
   resolve: {
     alias: {
