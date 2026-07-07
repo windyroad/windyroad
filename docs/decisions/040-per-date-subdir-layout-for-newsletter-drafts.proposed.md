@@ -1,5 +1,6 @@
 ---
 status: "proposed"
+first-released: 2026-07-07
 date: 2026-06-27
 decision-makers: [Tom Howard]
 consulted: []
