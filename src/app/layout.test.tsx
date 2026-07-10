@@ -11,19 +11,13 @@ describe('RootLayout', () => {
     expect(typeof RootLayout).toBe('function');
   });
 
-  it('returns a tree containing the FullyBookedStatusProvider', () => {
-    const tree = RootLayout({ children: null }) as {
-      props: { children: { props: { children: unknown } } };
-    };
-    // RootLayout renders <html><body>...</body></html>; the body's children
-    // should contain at least one element whose displayName / name resolves
-    // to the FullyBookedStatusProvider wrapper. We do a stringified search
-    // since the component identity is hidden behind 'use client' boundaries.
+  it('renders the main landmark and no retired FullyBookedStatus wrapper', () => {
+    const tree = RootLayout({ children: null });
     const json = JSON.stringify(tree, (_key, value) => {
       if (typeof value === 'function') return value.name || 'Anonymous';
       return value;
     });
-    expect(json).toContain('FullyBookedStatusProvider');
-    expect(json).toContain('FullyBookedStatus');
+    expect(json).toContain('main-content');
+    expect(json).not.toContain('FullyBookedStatus');
   });
 });

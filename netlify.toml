@@ -25,3 +25,20 @@
   from = "/blog/your-ai-agent-doesn't-know-when-to-stop-committing"
   to = "/blog/your-ai-agent-doesnt-know-when-to-stop-committing"
   status = 301
+
+# Consulting funnel retired 2026-07-10 (ADR-041). Temporary (302) because the
+# business direction could change; preserves inbound links instead of a 404.
+[[redirects]]
+  from = "/ai-quality"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/founders"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/vibe-code-audit"
+  to = "/"
+  status = 302

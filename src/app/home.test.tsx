@@ -1,46 +1,55 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
+
+vi.mock('@/src/lib/markdown', () => ({
+  getAllPosts: () => [
+    {
+      slug: 'sample-post',
+      frontmatter: {
+        title: 'Sample Post',
+        date: '2026-06-01',
+        author: 'Tom Howard',
+      },
+      excerpt: 'An excerpt.',
+    },
+  ],
+}));
+
 import Home from './page';
 
 describe('Homepage', () => {
-  it('has patch fitness headline', () => {
+  it('leads with The Shift newsletter headline', () => {
     const { container } = render(<Home />);
     const h1 = container.querySelector('h1');
-    expect(h1?.textContent).toMatch(/patch/i);
+    expect(h1?.textContent).toMatch(/frontier/i);
   });
 
-  it('has heading hierarchy with no skipped levels', () => {
+  it('has heading hierarchy with a single h1 and no skipped levels', () => {
     const { container } = render(<Home />);
-    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    expect(headings.length).toBeGreaterThan(0);
-
-    const h1s = container.querySelectorAll('h1');
-    expect(h1s.length).toBe(1);
-
-    const h2s = container.querySelectorAll('h2');
-    expect(h2s.length).toBeGreaterThan(0);
+    expect(container.querySelectorAll('h1').length).toBe(1);
+    expect(container.querySelectorAll('h2').length).toBeGreaterThan(0);
   });
 
-  it('uses "we" for service copy, not "I help/partner/audit"', () => {
+  it('uses "we" for framing copy, not "I help/partner/audit"', () => {
     const { container } = render(<Home />);
     const text = container.textContent || '';
     expect(text).not.toMatch(/\bI help\b/);
     expect(text).not.toMatch(/\bI partner\b/);
     expect(text).not.toMatch(/\bI audit\b/);
     expect(text).not.toMatch(/\bI embed\b/);
-    expect(text).not.toMatch(/\bI spend\b/);
   });
 
-  it('includes Patch Fitness Assessment pricing', () => {
+  it('offers a subscribe path to The Shift newsletter', () => {
     const { container } = render(<Home />);
-    const text = container.textContent || '';
-    expect(text).toMatch(/Patch Fitness Assessment/);
-    expect(text).toMatch(/\$9,000/);
-  });
-
-  it('links to /ai-quality as secondary path', () => {
-    const { container } = render(<Home />);
-    const link = container.querySelector('a[href="/ai-quality"]');
+    const link = container.querySelector(
+      'a[href*="linkedin.com/newsletters/the-shift"]',
+    );
     expect(link).not.toBeNull();
+  });
+
+  it('surfaces recent writing linking to the blog', () => {
+    const { container } = render(<Home />);
+    const blogLink = container.querySelector('a[href="/blog/sample-post"]');
+    expect(blogLink).not.toBeNull();
   });
 });

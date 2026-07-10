@@ -1,7 +1,8 @@
 ---
-status: "proposed"
+status: "superseded"
 first-released:
 date: 2026-04-29
+superseded-by: 041-retire-consulting-funnel-repurpose-as-the-shift-hub
 human-oversight: confirmed
 oversight-date: 2026-05-30
 decision-makers: [Tom Howard, Claude]
@@ -10,6 +11,8 @@ informed: []
 ---
 
 # Pause the commercial funnel via a "Fully Booked" CTA pattern
+
+> **Superseded by [ADR-041](041-retire-consulting-funnel-repurpose-as-the-shift-hub.proposed.md)** (2026-07-10). This ADR paused the funnel as a reversible measure expecting capacity to return. That expectation did not hold, so ADR-041 formally retires the funnel and repurposes the site as a hub for The Shift. Its Reassessment Criteria (Tom's full-time role, cold demand signal) were met.
 
 ## Context and Problem Statement
 

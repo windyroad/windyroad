@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import FullyBookedCTA from '@/src/components-next/FullyBookedCTA';
 import styles from './Header.module.scss';
 
 export default function Header() {
@@ -97,13 +96,18 @@ export default function Header() {
         aria-label="Main"
         className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}
       >
-        <Link href="/ai-quality" className={styles.navLink} onClick={closeMenu}>
-          AI Quality
-        </Link>
         <Link href="/blog" className={styles.navLink} onClick={closeMenu}>
           Blog
         </Link>
-        <FullyBookedCTA source="header" />
+        <a
+          href="https://www.linkedin.com/newsletters/the-shift-7450748696826134528/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.navLink}
+          onClick={closeMenu}
+        >
+          The Shift<span className="sr-only"> (opens in new tab)</span>
+        </a>
       </nav>
     </header>
   );

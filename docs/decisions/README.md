@@ -109,12 +109,6 @@ _37 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **1. Pre-emptive `--update --yes` inside push-watch.sh, with auto-commit when the lockfile changes**.
 **Confirmation:** scripts/push-watch.sh runs npx dry-aged-deps --update --yes before git push.; The command is wrapped non-fatally; a dry-aged-deps failure does not abort push-watch.sh.; A chore(deps): refresh stale dependencies (P026) commit is produced when and only when the lockfile or package...; Interactive npm run push:watch continues to fire the pre-push gate when no auto-resolvable updates exist.; AFK /wr-itil:work-problems drain step no longer halts on P026's symptom (react/react-dom-style staleness).
-
-### ADR-023  -  Pause the commercial funnel via a "Fully Booked" CTA pattern
-**Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **1. Replace each "Book a Call" CTA with a non-navigating
-**Confirmation:** src/components-next/FullyBookedCTA/index.tsx exists with; src/components-next/Clarity/track.ts exists, exports trackEvent(name, tags?),; src/components-next/FullyBookedStatus/index.tsx exists, mounts an; <FullyBookedStatus> is mounted once in src/app/layout.tsx.; Every cal.com Book a Call anchor across Header, CTASection, Hero,
-
 ### ADR-024  -  URL verification gate in /wr-newsletter
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **1. Add a URL-verification gate as step 11.5 in /wr-newsletter, between draft (step 11) and cover image (step 12)**.
@@ -194,6 +188,11 @@ _37 ADRs. These are the current rules. The architect agent reads this section fi
 **Decides:** Extend ADR-039's per-date sub-directory layout for published editions to newsletter drafts (`src/newsletters/drafts/<persona>/<YYYY-MM-DD>/`), migrating existing drafts with `git mv` and updating the wr-newsletter SKILL.md path encoding, persona-config globs, the drafts README, and the ADR-019 line 52 capture-path reference in lockstep. Chosen to remove the published/drafts asymmetry, keep publishing a whole-directory move, and fix the same crowding at low cost and full reversibility.
 **Confirmation:** drafts persona folders hold per-date sub-dirs with no flat per-edition files left after migration; a `phase=prep` run writes the brief and companion siblings into the dated sub-dir and a later `phase=finalise` + publish resolves and moves them without a path error; `grep` finds no surviving flat `drafts/<persona>/<YYYY-MM-DD>.<ext>` references in SKILL.md, persona configs, the drafts README, or ADR-019 line 52.
 **Related:** ADR-039, ADR-019, ADR-026
+### ADR-041 — Retire the consulting funnel; repurpose windyroad.com.au as The Shift newsletter hub
+**Status:** proposed | **Oversight:** pending | **Supersedes:** ADR-023 (funnel pause), ADR-010 (consulting-positioning premise only)
+**Decides:** Converts ADR-023's reversible "Fully Booked" pause into a formal retirement of the consulting funnel — deletes `/founders`, `/vibe-code-audit`, `/ai-quality` plus their now-dead components, 302-redirects them to `/`, and rewrites the homepage as a hub that drives subscribing to and reading The Shift — because Tom has no consulting capacity and the site must sell what is actually produced. Retains ADR-010's we/I voice split, repointed from consulting delivery to the newsletter.
+**Confirmation:** homepage has no consulting sections/`<Countdown>` and carries a "Subscribe on LinkedIn" CTA with hub metadata/OG; the three funnel routes deleted and 302-redirected to `/` in `netlify.toml` (static-export host surface, not `next.config.mjs`); `Hero`/`CTASection`/`FullyBookedCTA`/`FullyBookedStatus`/`Countdown` and their tests removed, `layout.tsx`/`Header` de-wired; `npm test` and `npm run build` pass with no dead-symbol references; `docs/jtbd/README.md` reflects the retired jobs plus the new reader job with the Technical Founder persona/JTBD-100 marked retired; ADR-023 renamed `.superseded.md` and this ADR listed in the compendium.
+**Related:** ADR-006, ADR-010, ADR-023
 
 ---
 
@@ -214,3 +213,9 @@ _3 ADRs. These were tried and superseded, rejected, or deprecated. Read them as 
 **Status:** superseded | **Oversight:** rejected-pending-supersede (P072)
 **Chosen:** Chosen option: **1. GitHub Actions cron workflow that opens a PR when manifests change**.
 **Confirmation:** .github/workflows/deps-refresh.yml exists and runs weekly on a cron schedule.; The workflow uses actions/checkout@v6, actions/setup-node@v6 with node-version-file: '.nvmrc', cache: 'npm', m...; The workflow runs npm ci then npx dry-aged-deps --update --yes.; A PR is created via peter-evans/create-pull-request (pinned major version) only when package.json or package-l...; The PR title is chore(deps): scheduled refresh of stale dependencies, branch is chore/deps-refresh, body cites...
+
+### ADR-023 — Pause the commercial funnel via a "Fully Booked" CTA pattern
+**Status:** superseded (by ADR-041) | **Oversight:** confirmed
+**Decides:** Replace every cal.com "Book a Call" CTA with a non-navigating `FullyBookedCTA` sibling component that visibly marks the offering as paused — keeping funnel pages intact as social proof and reversing by swapping the component back — while firing Microsoft Clarity click/hover events (via a single typed `trackEvent` wrapper) to capture demand signal, announcing status through one polite `aria-live` region, and deleting the blog conditional CTA block this pass.
+**Confirmation:** `FullyBookedCTA/index.tsx` renders `aria-disabled`, the fixed `aria-label`, CSS-strikethrough on an `aria-hidden` span, and `trackEvent` handlers; `Clarity/track.ts` is the sole `@microsoft/clarity` importer and exports `trackEvent(name, tags?)`; `FullyBookedStatus` mounts an always-present `aria-live="polite"` region with a clear-then-set `setStatus` via context, wired once in `layout.tsx`; every "Book a Call" anchor across Header, CTASection, Hero, homepage, vibe-code-audit and ai-quality is replaced; the blog `{showCTA}` block and `CTA_TAGS` are removed; four `--color-disabled-*` tokens added at `:root`; the `FullyBookedCTA` test passes; README lists this ADR.
+**Related:** ADR-010, ADR-041
