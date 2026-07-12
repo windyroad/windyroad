@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-12 **README reconciled**: 1 drift entry corrected: P111 missing WSJF Rankings row re-added. Reconciliation contract per P118 + ADR-014.
+> Last reviewed: 2026-07-12 **P112 captured**: accessibility-lead review passes markup but misses colour-contrast, caught only by the CI axe gate (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -17,6 +17,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 (Medium) | Open | M | 2026-06-14 | internal |
 | 3 | P105 | risk-score-commit-gate RISK-POLICY staleness threshold too tight (14 days) + no AFK-satisfiable refresh path | 6 (Medium) | Open | S | 2026-06-27 | internal |
 | 3 | P108 | wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version, breaking the map render on plugin update | 3 (Medium) | Open | S | 2026-07-03 | internal |
+| 3 | P112 | accessibility-lead review passes markup but misses colour-contrast, caught only by the CI axe gate | 6 (Medium) | Open | M | 2026-07-12 | internal |
 | 2 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 (Low) | Open | M | 2026-04-26 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned pus… | 3 (Low) | Open | M | 2026-05-12 | internal |
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 (Low) | Open | M | 2026-05-12 | internal |

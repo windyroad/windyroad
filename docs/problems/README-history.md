@@ -218,3 +218,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-07-12
 
 > Last reviewed: 2026-07-06 **P111 captured**: publish-day push blocked by a deps-hygiene tooling chain (auto-deps lock desync, local-vs-CI freshness-gate divergence; vitest-misglob sub-issue fixed in commit 7fe5046). Lightweight aside via /wr-itil:capture-problem during The Shift Issue 12 publish.
+
+> Last reviewed: 2026-07-12 **README reconciled**: 1 drift entry corrected: P111 missing WSJF Rankings row re-added. Reconciliation contract per P118 + ADR-014.
