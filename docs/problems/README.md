@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-06 **P111 captured**: publish-day push blocked by a deps-hygiene tooling chain (auto-deps lock desync, local-vs-CI freshness-gate divergence; vitest-misglob sub-issue fixed in commit 7fe5046). Lightweight aside via /wr-itil:capture-problem during The Shift Issue 12 publish.
+> Last reviewed: 2026-07-12 **README reconciled**: 1 drift entry corrected: P111 missing WSJF Rankings row re-added. Reconciliation contract per P118 + ADR-014.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -33,6 +33,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5 | P107 | Assistant routes free-text input collection through AskUserQuestion instead of presenting per-item copyable blocks | 3 (Medium) | Open | M | 2026-06-28 | internal |
 | 1.5 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy (unpushed local commits + stale IDE buffer) | 3 (Medium) | Open | M | 2026-07-03 | internal |
 | 1.5 | P110 | work-problems Step 5 iter/pre-flight dispatch exceeds the interactive-harness foreground Bash ceiling | 3 (Medium) | Open | M | 2026-07-03 | internal |
+| 1.5 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 3 (Medium) | Open | M | 2026-07-06 | internal |
 
 ## Verification Queue
 
