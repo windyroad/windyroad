@@ -1,7 +1,9 @@
 ---
-status: proposed
+status: retired
 human-oversight: confirmed
-oversight-date: 2026-05-30
+oversight-date: 2026-07-12
+retired-by: ADR-041
+retired-date: 2026-07-10
 job-id: ongoing-ownership
 persona: engineering-leader
 date-created: 2026-04-20

@@ -2,19 +2,19 @@
 
 Risk assessment for pipeline actions (commit, push, release), aligned with ISO 31000.
 
-**Last reviewed:** 2026-06-27
+**Last reviewed:** 2026-07-12
 
-**Review cadence:** Quarterly (every 3 months). The policy is re-attested by the operator each quarter, or sooner if an incident or material business change warrants it (ISO 31000 review-after-incident). Note: the enforcing `risk-score-commit-gate` currently hardcodes a 14-day staleness threshold; aligning that gate threshold to this quarterly cadence is tracked as an upstream `@windyroad/risk-scorer` change.
+**Review cadence:** Quarterly (every 3 months). The policy is re-attested by the operator each quarter, or sooner if an incident or material business change warrants it (ISO 31000 review-after-incident). Note: the enforcing `risk-score-commit-gate` currently hardcodes a 14-day staleness threshold, tighter than this quarterly cadence; aligning that gate threshold to the quarterly cadence is tracked as an upstream `@windyroad/risk-scorer` change.
 
 ## Business Context
 
-Windy Road is a public GitHub repository containing the static marketing site at windyroad.com.au (Next.js, deployed to Netlify) and the LinkedIn newsletter pipeline (The Shift for engineering leaders, Tokens Spent for developers). Visitor-facing surfaces include the home page, blog, founders page, AI Quality page, Vibe Code Audit page, and the published newsletters distributed via LinkedIn.
+Windy Road is a public GitHub repository containing the static site at windyroad.com.au (Next.js, deployed to Netlify) and the LinkedIn newsletter pipeline (The Shift for engineering leaders, Tokens Spent for developers). As of ADR-041 the site is a hub for The Shift: the consulting funnel (the founders, AI Quality, and Vibe Code Audit pages) has been retired and deleted, and the visitor-facing surfaces are the home page, the blog, and the newsletters distributed via LinkedIn.
 
 Material constraints that shape risk assessment:
 
 - **Solo operator, no QA team.** Automated controls (hooks, tests, CI gates, agent reviews) are the only safety net between a change and visitors. This justifies a tight risk appetite.
 - **No paying users, no SLA, no PII storage.** There are no contractual uptime obligations and no regulated data. Severe impact is bounded by reputation and trust, not contract or compliance penalties.
-- **Newsletter is the primary lead-generation channel.** Failures in the newsletter pipeline (bad drafts reaching LinkedIn, voice or content-risk gate bypass, publication failures) directly affect acquisition.
+- **The newsletter is the primary audience channel.** Failures in the newsletter pipeline (bad drafts reaching LinkedIn, voice or content-risk gate bypass, publication failures) directly affect reputation and audience growth.
 - **Public repository.** Source code, commits, and changesets are world-readable. Confidential business information must not appear in any committed file.
 
 ## Confidential Information
@@ -23,7 +23,7 @@ This repository is public. The following categories of information are confident
 
 - Revenue figures, contract values, deal sizes
 - Subscriber counts, user counts, traffic volumes (page views, sessions, unique visitors)
-- Pricing details for engagements not otherwise published on the site
+- Pricing or commercial terms for any private engagement or arrangement not published on the site
 - Conversion rates, funnel metrics, marketing performance data
 - Client names not otherwise public, including in case studies that have not been approved for publication
 
@@ -41,7 +41,7 @@ The tight appetite reflects the solo-operator context. With no second pair of ey
 |-------|-------|-------------|
 | 1 | Negligible | No visitor or reader impact. Site behaviour, content, newsletter pipeline, and availability unchanged. |
 | 2 | Minor | No visitor or reader impact. Dev tooling, hooks, or local build affected, but the published site and newsletter pipeline are unaffected. |
-| 3 | Moderate | Static-site visitor degradation, OR newsletter pipeline disruption that does not reach readers. Blog content, founders page, AI Quality page, or Vibe Code Audit page degraded or inaccessible (the static site is reference material for the LinkedIn-led funnel; commercial CTAs are paused per ADR 023). Netlify build broken or delayed. Newsletter pipeline broken before draft generation (caught before publish, rescheduling possible). Confidential business metrics (revenue, subscriber counts, pricing, traffic volumes) committed to the public repository (information disclosure requiring immediate remediation but not yet affecting visitor-facing service). |
+| 3 | Moderate | Static-site visitor degradation, OR newsletter pipeline disruption that does not reach readers. Blog or home page degraded or inaccessible (the static site is the hub for the LinkedIn-distributed newsletter and Tom's writing; the consulting funnel and its CTAs are retired per ADR-041). Netlify build broken or delayed. Newsletter pipeline broken before draft generation (caught before publish, rescheduling possible). Confidential business metrics (revenue, subscriber counts, pricing, traffic volumes) committed to the public repository (information disclosure requiring immediate remediation but not yet affecting visitor-facing service). |
 | 4 | Significant | Newsletter content quality failure caught at a gate, OR site fully offline. Newsletter draft pipeline ships poor-quality content past one of the voice, content-risk, SW-critic, or editor gates (caught at finalise but indicates gate weakness). Published newsletter on LinkedIn renders incorrectly or contains broken links. Site fully offline (LinkedIn-newsletter article links break; credibility hit at the destination of the funnel). |
 | 5 | Severe | Newsletter content failure reaching LinkedIn readers (the primary channel), OR catastrophic content / trust / security failure on visitor surface. Newsletter content factually wrong or misrepresenting sources reaches LinkedIn readers. Voice-violating outbound copy that frames readers' teams as behind. Misleading or factually wrong content reaching site visitors. Broken accessibility (WCAG AA violation reaching readers or visitors). Exposed secrets or credentials. |
 

@@ -1,8 +1,11 @@
 ---
 name: technical-founder
 description: Non-technical to semi-technical founders with AI-generated apps in production that break unpredictably
+status: retired
 human-oversight: confirmed
-oversight-date: 2026-05-30
+oversight-date: 2026-07-12
+retired-by: ADR-041
+retired-date: 2026-07-10
 ---
 
 # Technical Founder (Secondary)
