@@ -153,7 +153,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <Button href="/blog" variant="ghost">
+          <Button href="/blog" variant="outline">
             All articles <span aria-hidden="true">&rarr;</span>
           </Button>
         </div>
