@@ -14,7 +14,7 @@
   .evolve-label { font-size: 11px; fill: #c44; }
 </style>
 <rect width="1200" height="800" fill="white"/>
-<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-07-05)</text>
+<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-07-12)</text>
 <line x1="80" y1="60" x2="80" y2="720" stroke="#333" stroke-width="1.5"/>
 <line x1="80" y1="720" x2="1140" y2="720" stroke="#333" stroke-width="1.5"/>
 <polygon points="1140,720 1132,716 1132,724" fill="#333"/>
