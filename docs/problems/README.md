@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-12 **P112 captured**: accessibility-lead review passes markup but misses colour-contrast, caught only by the CI axe gate (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-07-13 **P113-P114 captured**: wr-newsletter review-gate loop friction (editor one-nit-per-pass) plus LinkedIn sign-off skill/guide drift (lightweight asides via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -12,6 +12,8 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 8.0 | P061 | assistant gates policy-authorised push/release on user permission after risk-scorer cleared (reopened: regression 2026-07-04) | 8 (Medium) | Known Error | M | 2026-05-14 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
+| 4.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and section 15.6 re-runs all gates per edit | 8 (Medium) | Open | M | 2026-07-13 | internal |
+| 4.0 | P114 | wr-newsletter step 15.5 tells the LinkedIn post to close with a windyroad.com.au sign-off, but VOICE-AND-TONE.md's auto-share carve-out forbids any manual URL | 4 (Low) | Open | S | 2026-07-13 | internal |
 | 3 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Low) | Open | S | 2026-05-13 | internal |
 | 3 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create… | 6 (Medium) | Open | M | 2026-05-31 | internal |
 | 3 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 (Medium) | Open | M | 2026-06-14 | internal |
