@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-14 **P115 captured**: site changes without a changeset silently never release to production (surfaced releasing the ADR-041 funnel retirement; lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-07-14 **P116 captured**: newsletter gates lack an adversarial ceiling gate, so external review still finds substance issues every edition (recurrence of P008/P017; lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -14,6 +14,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
 | 4.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and section 15.6 re-runs all gates per edit | 8 (Medium) | Open | M | 2026-07-13 | internal |
+| 4.0 | P116 | Newsletter gates are all floor gates; no adversarial ceiling gate, so external review still finds substance issues every edition | 16 (High) | Open | L | 2026-07-14 | internal |
 | 4.0 | P114 | wr-newsletter step 15.5 tells the LinkedIn post to close with a windyroad.com.au sign-off, but VOICE-AND-TONE.md's auto-share carve-out forbids any manual URL | 4 (Low) | Open | S | 2026-07-13 | internal |
 | 3 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Low) | Open | S | 2026-05-13 | internal |
 | 3 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create… | 6 (Medium) | Open | M | 2026-05-31 | internal |

@@ -228,3 +228,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-07-14
 
 > Last reviewed: 2026-07-13 **P113-P114 captured**: wr-newsletter review-gate loop friction (editor one-nit-per-pass) plus LinkedIn sign-off skill/guide drift (lightweight asides via /wr-itil:capture-problem).
+
+> Last reviewed: 2026-07-14 **P115 captured**: site changes without a changeset silently never release to production (surfaced releasing the ADR-041 funnel retirement; lightweight aside via /wr-itil:capture-problem).
