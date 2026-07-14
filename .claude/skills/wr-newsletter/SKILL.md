@@ -6,7 +6,7 @@ allowed-tools: Read, Bash, WebFetch, Glob, Grep, Write, Edit, Skill, Agent, AskU
 
 # Windy Road newsletter generator
 
-Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Five review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), editor (ADR 020), and cognitive accessibility (P053; one-round-with-optional-remediation pass against WCAG 2.2 cognitive SC + reading-grade-level target). Phase boundaries (ADR 017, refined by ADR 030) split the pipeline so the time-expensive work runs in the days before the persona's publish-day (prep) and publish-day morning is reserved for a tier-1 refresh plus publish (finalise).
+Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Six review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), editor (ADR 020), adversarial skeptic (ADR 042; claim-evidence calibration read adversarially, the gate that owns the most common external-review catch), and cognitive accessibility (P053; one-round-with-optional-remediation pass against WCAG 2.2 cognitive SC + reading-grade-level target). Phase boundaries (ADR 017, refined by ADR 030) split the pipeline so the time-expensive work runs in the days before the persona's publish-day (prep) and publish-day morning is reserved for a tier-1 refresh plus publish (finalise).
 
 ## Reference
 
@@ -121,7 +121,7 @@ Bind the prior-prep state for downstream steps:
 - `<prep-image-path>`: the path to the cover image generated in step 12 of the prep run, if any.
 - `<prep-source-failures>`: the list of source URLs that failed in prep.
 - `<prep-map-mutation-status>`: whether the map was mutated in prep.
-- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) for the carry-forward sections in the finalise reviews file at step 16.
+- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) for the carry-forward sections in the finalise reviews file at step 16.
 
 Continue to step 1-prime.
 
@@ -817,6 +817,31 @@ If the agent returns `EDITOR_ERROR: upstream gate returned REJECTED; editor will
 
 **Phase variant `15.25-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. Same persona; the edition number is carried from prep frontmatter (it does not change between phases). A prep-time PASS does not exempt finalise; new items or restructured framing in 11b-prime (or theme-anchor changes from 11a-prime that propagated through) can change the reader-experience surface (longer read, weaker through-line, item-count overflow). If finalise has no material changes (11a-prime returned Accept AND 11b-prime was a no-op AND 15-prime carried the prep critic block forward), the prep-time editor block can be carried forward and 15.25-prime is a no-op. Default behaviour when in doubt: re-run.
 
+### 15.35. Adversarial skeptic gate (ADR-042)
+
+Invoke the `wr-newsletter-skeptic` subagent on the in-progress brief body. The subagent runs in fresh context as an adversarial reader trying to REFUTE the edition, not score it. Its primary axis is claim-evidence calibration (is every claim earned, does the evidence match the assertion, is certainty calibrated to the source, is the direction right), with facets for whole-edition thesis-truth and causation-honesty, plus promise-payoff and human-angle. It emits a `SKEPTIC_REVIEW` block with a mechanical `SKEPTIC_VERDICT` (`PASS` | `WEAKNESSES_FOUND`). This is the gate that owns the single most common external-review catch (claim-evidence over-claim); the axes and boundaries are documented in the agent file, not here.
+
+**Skip-on-upstream-REJECTED.** Skip step 15.35 entirely (do not invoke the skeptic) if and only if the terminal verdict from the critic loop at step 15 is `VERDICT: REJECTED`. Same defence-in-depth rule as the editor (step 15.25): a draft going back for argument rework is re-run through the full sequence on its next pass. `PASS` and `PASS_WITH_AUTHOR_OVERRIDES` both run the skeptic. Recorded in the saved file (step 16 save-block) as `<skeptic block> = "N/A: newsletter-critic returned REJECTED"` when skipped.
+
+```
+Agent subagent_type: wr-newsletter-skeptic
+prompt: "Adversarially review the newsletter brief. Try to refute it.
+
+artifact_path: <absolute path to the in-progress draft>
+artifact_kind: brief
+persona: <leader|developer>
+edition_number: <N from step 11a>"
+```
+
+Parse the returned `SKEPTIC_REVIEW` block. The verdict is non-blocking save-but-revise (ADR-015, same semantics as the editor gate):
+
+- `SKEPTIC_VERDICT: WEAKNESSES_FOUND`: save the draft with the block; surface the weaknesses prominently in the Tom-summary (lead with the claim-evidence / thesis-truth / direction-inversion findings and their Suggested fixes). The skeptic does not auto-rewrite; Tom decides whether to revise the brief or override. Any revision re-enters the FULL gate set per section 15.6.
+- `SKEPTIC_VERDICT: PASS`: proceed to step 15.4.
+
+If the agent returns `SKEPTIC_ERROR: upstream gate returned REJECTED; skeptic will not run` despite the skip rule above, treat it as a skill-logic bug: do not retry, surface the inconsistency in the Tom-summary.
+
+**Phase variant `15.35-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. A prep-time PASS does not exempt finalise: new or restructured items in 11b-prime can introduce new claims whose evidence does not match. If finalise has no material changes (11a-prime returned Accept AND 11b-prime was a no-op AND 15-prime carried the prep critic block forward), the prep-time skeptic block can be carried forward and 15.35-prime is a no-op. Default behaviour when in doubt: re-run.
+
 ### 15.4. Cognitive accessibility gate (P053)
 
 Invoke the `cognitive-accessibility` subagent on the in-progress brief body. The agent reviews reading-level (target Grade 10 or lower for the Engineering Leader audience; tier-2 stories of technical depth may exceed Grade 10 without failing), plain-language clarity, unusual-words density, abbreviation/acronym handling, sentence length, and the WCAG 2.2 cognitive success criteria (3.1.5 Reading Level, 3.1.3 Unusual Words, 3.1.4 Abbreviations, 3.1.4 Abbreviations, 3.2.4 Consistent Identification).
@@ -880,6 +905,22 @@ If FAIL: fix the flagged passages in the LinkedIn post text and re-run. Do not p
 
 Step 16 writes the LinkedIn post (frontmatter + body only: no section headings, no image block, no posting-notes block, no manual link line) to `<draft-folder>/<publication-date>.linkedin.md` (per ADR-026, narrowed shape per P079). Tom edits and posts manually per ADR 013.
 
+### 15.55. Adversarial skeptic gate on the LinkedIn post (ADR-042)
+
+Skip when `phase=prep` (no LinkedIn post is drafted in prep). For `phase=finalise` and `phase=full`, after the LinkedIn post is drafted at step 15.5, write it to `<draft-folder>/<publication-date>/<publication-date>.linkedin.md` (the same path step 16 saves it to; writing it here is idempotent) and invoke the `wr-newsletter-skeptic` subagent on it. This closes the LinkedIn-teaser scope gap the editor gate leaves open (the editor is brief-body only): two of the recurring external-review catches (a promise/payoff gap and a causation overstatement) have landed on the LinkedIn post specifically.
+
+```
+Agent subagent_type: wr-newsletter-skeptic
+prompt: "Adversarially review the LinkedIn post. Try to refute it.
+
+artifact_path: <absolute path to <publication-date>.linkedin.md>
+artifact_kind: linkedin-post
+persona: <leader|developer>
+edition_number: <N from step 11a>"
+```
+
+Parse the `SKEPTIC_REVIEW` block. Same non-blocking save-but-revise semantics as step 15.35: on `WEAKNESSES_FOUND`, surface the findings (lead with any promise/payoff gap where the post names stories it does not resolve, and any causal overstatement) with their Suggested fixes; Tom decides whether to revise the post. A post-body edit re-enters the gate set per section 15.6. On `PASS`, proceed.
+
 ### 15.6. Post-gate edit discipline: a body edit re-enters the FULL gate set (P099)
 
 Any edit to the brief body or the LinkedIn post body AFTER the gate sequence (steps 13 to 15.5) has passed marks that body **dirty** and re-enters the **full** gate set on it, NOT the cheap voice + structural-lint subset. This covers the common finalise case: author-directed corrections, fixes prompted by an external review, late copy tweaks. The heavy semantic gates each read the WHOLE body, so a one-line edit can introduce a new weakness anywhere in it.
@@ -898,6 +939,7 @@ This is the same "default when in doubt: re-run" discipline the finalise `*-prim
 | Content-risk | 14 / 14-prime | brief body changed | (none) |
 | Newsletter critic | 15 / 15-prime | brief body changed | skip iff upstream content-risk returned REJECTED |
 | Editor | 15.25 / 15.25-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
+| Adversarial skeptic | 15.35 / 15.35-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
 | Cognitive accessibility | 15.4 / 15.4-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
 | Cross-edition consistency | 11.4 | a thesis-bearing line in the brief changed | (none) |
 | URL verification | 11.5 / 11.5-prime | a URL or a URL-anchored claim changed | unchanged URLs carry their prior verdict |
@@ -968,6 +1010,10 @@ phase: prep
 ## Editor Review
 
 <editor block from step 15.25, or "N/A: newsletter-critic returned REJECTED" if step 15.25 was skipped>
+
+## Skeptic Review
+
+<skeptic block from step 15.35, or "N/A: newsletter-critic returned REJECTED" if step 15.35 was skipped>
 
 ## Cognitive Accessibility Review
 
@@ -1065,6 +1111,18 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    <editor block carried from prep .reviews.md>
 
+   ## Skeptic Review (finalise)
+
+   <skeptic block from step 15.35-prime, or "N/A: newsletter-critic returned REJECTED" if skipped, or "N/A: carried from prep (no material change)" if 15.35-prime was a no-op>
+
+   ## Skeptic Review (prep)
+
+   <skeptic block carried from prep .reviews.md>
+
+   ## Skeptic Review (LinkedIn post)
+
+   <skeptic block from step 15.55 on the LinkedIn post>
+
    ## Cognitive Accessibility Review (finalise)
 
    <cog-a11y block from step 15.4-prime, or "N/A: newsletter-critic returned REJECTED" if step 15.4-prime was skipped, or "N/A: carried from prep (no material change)" if 15.4-prime was a no-op>
@@ -1128,7 +1186,7 @@ Single-pass equivalent of the prep + finalise pair. Three operations:
    <draft body from step 11b>
    ```
 
-2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same seven-block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus an eighth block `## Voice Review (LinkedIn post)` that captures the step-15.5 LinkedIn-post voice gate verdict (P013). No prep / finalise distinction in the section headings (single-pass).
+2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus a `## Voice Review (LinkedIn post)` block that captures the step-15.5 LinkedIn-post voice gate verdict (P013) and a `## Skeptic Review (LinkedIn post)` block that captures the step-15.55 LinkedIn-post skeptic verdict (ADR-042). No prep / finalise distinction in the section headings (single-pass).
 
 3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md` with the same shape as the finalise variant above (frontmatter + post body only; no heading wrapper, no image block, no posting-notes block, no manual link line; no voice review block) per P079.
 
@@ -1160,7 +1218,7 @@ Report back in chat:
 - LinkedIn post: drafted (finalise/full) or skipped (prep).
 - File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/<publication-date>.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on `<publish-day>` to publish." For finalise, this is `<draft-folder>/<publication-date>/<publication-date>.md` with the reminder: "When you have published to LinkedIn, move the whole draft sub-directory into the published tree: `git mv <draft-folder>/<publication-date>/ <published-folder>/<publication-date>/` (per ADR-040, drafts already live in a per-date sub-directory mirroring the ADR-039 published shape, so publishing is a single whole-directory move carrying the brief plus all sibling artefacts: `<publication-date>.reviews.md`, `<publication-date>.linkedin.md`, `<publication-date>.capture.md`, `<publication-date>.cover.svg`, `<publication-date>.cover.png`), then run `/wr-retrospective:run-retro` to capture learnings for next week."
 - Capture transcript path: `<draft-folder>/<publication-date>.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
-- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all seven review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body only (frontmatter + body; no image/alt-text or posting-notes blocks per P079). Confirm both siblings were written.
+- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review and the LinkedIn-post skeptic review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body only (frontmatter + body; no image/alt-text or posting-notes blocks per P079). Confirm both siblings were written.
 
 ## Failure modes
 
