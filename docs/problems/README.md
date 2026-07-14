@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-13 **P113-P114 captured**: wr-newsletter review-gate loop friction (editor one-nit-per-pass) plus LinkedIn sign-off skill/guide drift (lightweight asides via /wr-itil:capture-problem).
+> Last reviewed: 2026-07-14 **P115 captured**: site changes without a changeset silently never release to production (surfaced releasing the ADR-041 funnel retirement; lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,6 +10,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 8.0 | P061 | assistant gates policy-authorised push/release on user permission after risk-scorer cleared (reopened: regression 2026-07-04) | 8 (Medium) | Known Error | M | 2026-05-14 | internal |
+| 6.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 (Significant) | Open | M | 2026-07-14 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
 | 4.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and section 15.6 re-runs all gates per edit | 8 (Medium) | Open | M | 2026-07-13 | internal |
