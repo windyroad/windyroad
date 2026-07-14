@@ -1,6 +1,6 @@
 # Problem 116: Newsletter gates are all floor gates; no adversarial ceiling gate, so external review still finds substance issues every edition
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-07-14
 **Priority**: 16 (High), Impact: 4 x Likelihood: 4, derived at capture from the description
 **Origin**: internal
@@ -61,10 +61,24 @@ Build an adversarial "skeptic reader" critic agent (working name) that runs as a
 
 ### Investigation Tasks
 
-- [ ] Draft the ADR proposing the adversarial ceiling gate (position in the gate sequence, verdict shape, relationship to the existing editor gate).
-- [ ] Build the skeptic-reader agent + its attack prompt/rubric.
-- [ ] Wire it into `.claude/skills/wr-newsletter/SKILL.md` gate sequence (prep + finalise + full).
-- [ ] Retro-validate against Issue 13: would the skeptic gate have caught the four external-review findings.
+- [x] Draft the ADR proposing the adversarial ceiling gate (ADR-042, ratified 2026-07-14).
+- [x] Build the skeptic-reader agent + its attack prompt (`.claude/agents/wr-newsletter-skeptic.md`).
+- [x] Wire it into `.claude/skills/wr-newsletter/SKILL.md` gate sequence (steps 15.35 brief + 15.55 LinkedIn, finalise variant, save-blocks).
+- [x] Retro-validate against Issue 13: the skeptic caught all four external-review findings plus the dominant claim-evidence over-claims on a faithful pre-fix fixture (2026-07-14).
+
+## Resolution
+
+A corpus analysis of external-review findings across all 11 editions with a reviews file (7 carried findings, 34 total) re-scoped the fix before build. The original four Issue-13 axes (thesis-truth, promise-payoff, causation-honesty, human-angle) each appeared only once, all in Issue 13; the dominant recurring substantive class is **claim-evidence over-claim** (9 findings across 6 editions: is the claim earned, does the evidence match, is certainty calibrated, is the direction right). The scariest instance was 2026-05-08, where all five gates passed a brief that inverted the source's threat model. So the skeptic gate centres on claim-evidence calibration, with thesis-truth and causation-honesty as its facets. Structural/format hygiene (highest-volume bucket) was already covered by the P089 lint and is out of scope; through-line, cross-edition dropped-threads, and so-what actionability are lower-frequency and split to a follow-up ticket (see Related).
+
+Delivered: `ADR-042` (adversarial skeptic gate, human-oversight confirmed) + `.claude/agents/wr-newsletter-skeptic.md` + SKILL wiring, committed `4d6a622`; ratified `7c8d763`. Validation: the skeptic, run on a reconstruction of Issue 13's pre-fix draft, independently caught the "half were theatre" thesis overstatement, the exam/laptops causation, the promise/payoff gap, the flat human angle, and the unsourced 744B claim. Remaining before close: live verification on the next real edition (Issue 14) that the gate fires in-pipeline and its block lands in the edition's reviews file.
+
+## Fix Released
+
+Delivered to master 2026-07-14 in commit `4d6a622` (ADR-042 + `wr-newsletter-skeptic` agent + SKILL wiring at steps 15.35 / 15.55); ADR ratified in `7c8d763`. The agent registry reloaded in-session, so the gate is live as a callable pipeline gate.
+
+In-session validation passed: the skeptic, run against a faithful reconstruction of Issue 13's pre-fix draft, independently caught the thesis overstatement, the exam/laptops causation, the promise/payoff gap, the flat human angle, and the unsourced 744B claim.
+
+**Awaiting verification**: the next real edition (Issue 14) runs `/wr-newsletter` and the skeptic fires in-pipeline at step 15.35 (brief) and 15.55 (LinkedIn), with a `## Skeptic Review` block landing in that edition's `.reviews.md`. Close on that observed evidence. The lower-frequency prompt-tightening classes are tracked separately on P117 and are not part of this verification.
 
 ## Dependencies
 
@@ -81,4 +95,5 @@ Captured via /wr-itil:capture-problem after the duplicate check surfaced P008 an
 - P015. Anchored alongside P008 in the ADR-020 editor-gate design; part of the same critic-misses-substance cluster.
 - P113 (`docs/problems/open/113-newsletter-review-gate-loop-editor-one-nit-per-pass.md`). Adjacent but distinct: P113 is the editor gate's one-nit-per-pass efficiency treadmill; this ticket is the missing adversarial-substance capability.
 - Memory `feedback_rubric_pass_does_not_mean_newsletter_is_good.md`. The documented rubric-pass-vs-substance gap this ticket is the third recurrence of.
-- ADR-016 / ADR-020 / ADR-033 / ADR-035. The governed critic/editor pipeline the new gate extends.
+- ADR-016 / ADR-020 / ADR-033 / ADR-035 / ADR-042. The governed critic/editor pipeline the new gate extends; ADR-042 is this ticket's delivered fix.
+- P117 (`docs/problems/open/117-tighten-newsletter-gate-prompts-for-lower-frequency-external-review-classes.md`). The lower-frequency prompt-tightening classes (through-line, cross-edition dropped-threads, so-what actionability) split out so this ticket verifies and closes on the adversarial skeptic gate alone.
