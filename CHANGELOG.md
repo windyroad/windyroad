@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.13.2
+
+### Patch Changes
+
+- 8effe2f: Retire the consulting funnel and repurpose windyroad.com.au as The Shift hub (ADR-041): hub homepage, deleted funnel routes/components, updated metadata, and Footer availability copy removed. Also ships The Shift Issue 13.
+
 ## 2.13.1
 
 ### Patch Changes
