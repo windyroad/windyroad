@@ -188,11 +188,11 @@ _37 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Option 1, extend the same per-date layout to drafts"**, because it is a direct application of the already-ratified ADR-039 pattern to the same artefact at an earlier lifecycle stage. It removes the published/drafts asymmet...
 **Confirmation:** src/newsletters/drafts/<persona>/ contains per-date sub-directories (<YYYY-MM-DD>/) holding each edition's bri...; A /wr-newsletter phase=prep run writes the brief and its companion siblings into drafts/<persona>/<YYYY-MM-DD>...; grep finds no surviving flat drafts/<persona>/<YYYY-MM-DD>.<ext> path references in the wr-newsletter SKILL.md...
-
-### ADR-041 - Retire the consulting funnel; repurpose windyroad.com.au as The Shift newsletter hub
-**Status:** proposed | **Oversight:** confirmed | **Supersedes:** [023-pause-commercial-funnel-via-fully-booked-cta]
-**Chosen:** Chosen option: **1. Retire the funnel and repurpose the homepage as a The
-**Confirmation:** src/app/page.tsx has no consulting sections (pricing, engagements,; src/app/ai-quality/, src/app/founders/, src/app/vibe-code-audit/ are; Hero, CTASection, FullyBookedCTA, FullyBookedStatus, Countdown; npm test and npm run build pass with no references to the deleted; docs/jtbd/README.md reflects the retired jobs plus the new reader job; the
+### ADR-041 — Retire the consulting funnel; repurpose windyroad.com.au as The Shift newsletter hub
+**Status:** proposed | **Oversight:** confirmed | **Supersedes:** 023-pause-commercial-funnel-via-fully-booked-cta
+**Decides:** Converts ADR-023's reversible "Fully Booked" pause into a formal retirement of the consulting funnel: deletes `/ai-quality`, `/founders`, `/vibe-code-audit`, rewrites the homepage as a hub for The Shift newsletter (Subscribe-on-LinkedIn CTA plus a recent-writing section) while keeping the bio/credibility content, and retires the associated JTBD jobs — because Tom is now full-time at Endava and the site must sell what is actually produced (the writing), not consulting it cannot honour.
+**Confirmation:** `page.tsx` has no consulting sections and a Subscribe-on-LinkedIn CTA with hub metadata/OG; the three funnel routes deleted with `netlify.toml` 302 redirects to `/`; `Hero`/`CTASection`/`FullyBookedCTA`/`FullyBookedStatus`/`Countdown` and their tests removed, `layout.tsx` and `Header` de-wired; `npm test` and `npm run build` pass with no dangling references; `docs/jtbd/README.md` updated for retired jobs plus the new reader job; ADR-023 renamed `.superseded.md` and this ADR listed in the README.
+**Related:** ADR-023, ADR-010, ADR-006
 
 ---
 

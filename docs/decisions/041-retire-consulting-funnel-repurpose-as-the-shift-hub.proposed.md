@@ -137,9 +137,12 @@ and the persona retirement require human ratification via
   not a one-line swap.
 - **Bad**: Reversal is no longer cheap. This is retirement, not pause.
   Accepted: the re-open ADR-023 was hedging for is not expected.
-- **Bad**: The OG share image (`/img/og-image.png`) still carries the old
-  patch-fitness headline and must be regenerated to match the new metadata;
-  tracked as a follow-up.
+- **Neutral**: The OG share image (`/img/og-image.png`) is regenerated at
+  build time by the `prebuild` step (`scripts/generate-og-image.mjs`) from the
+  shared `src/lib/siteCopy.mjs` hero copy, so it tracked the hub headline
+  automatically when the homepage was rewritten (verified live 2026-07-14: the
+  production image reads "The AI frontier moves every week. / Keeping up
+  shouldn't be your job."). No separate follow-up is needed.
 
 ## Confirmation
 
