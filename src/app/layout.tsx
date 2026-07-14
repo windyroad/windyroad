@@ -13,11 +13,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Windy Road Technology | Patch Fitness for Engineering Teams',
+  title: 'Windy Road Technology',
   description:
-    'AI-powered vulnerability discovery is measured in hours. Your patch cycle isn\u2019t. We help engineering teams get patch fit.',
+    'The Shift is our weekly read on AI engineering for engineering leaders, plus a blog on building software under AI disruption, from Windy Road Technology.',
   keywords:
-    'patch fitness, dependency management, vulnerability patching, continuous patching, CI/CD, software supply chain',
+    'AI engineering, The Shift, newsletter, engineering leadership, blog, Tom Howard, Windy Road Technology',
 };
 
 export default function RootLayout({

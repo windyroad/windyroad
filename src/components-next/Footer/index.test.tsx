@@ -8,7 +8,8 @@ const source = readFileSync(
 );
 
 describe('Footer source', () => {
-  it('shows the "Fully booked" status caption', () => {
-    expect(source).toMatch(/Fully booked\. Not taking new engagements right now\./);
+  it('does not pitch consulting availability (funnel retired per ADR-041)', () => {
+    expect(source).not.toMatch(/Fully booked/i);
+    expect(source).not.toMatch(/engagements/i);
   });
 });

@@ -13,10 +13,6 @@ export default function Footer() {
             height={36}
           />
 
-          <p className={styles.statusCaption}>
-            Fully booked. Not taking new engagements right now.
-          </p>
-
           <div className={styles.contact}>
             <a href="tel:+61402756685" className={styles.contactLink}>
               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
