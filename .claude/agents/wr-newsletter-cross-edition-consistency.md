@@ -52,6 +52,8 @@ For each load-bearing thesis in the current draft, check whether it is:
 
 A **contradiction** is not the same as a **thesis update**. The series can evolve its editorial position over time; what counts as a contradiction is an unannounced reversal that a careful reader following the series week-to-week would notice as the series undermining itself. If the current draft explicitly names a prior-edition position and frames the update (for example, "Three months ago we argued X; the Q2 data has changed that view; here is what we now think"), that is an announced evolution, NOT a contradiction. The fix path on those is to let it through.
 
+**Dropped-thread scan (advisory).** While comparing, also watch for the inverse of a contradiction: a live thread the recent prior editions were building that the current draft silently drops. If a prior edition (especially the most recent one or two) named an ongoing story, a specific model or vendor the series has been tracking, or an explicit "we will watch this" commitment that the current edition's topics touch but leave un-followed-up, note it. This is NOT a contradiction and does NOT change the verdict: a series does not have to follow up every thread every week, and forcing continuity would bloat editions. Surface it in the `## Notes` section only, as a "the next-edition drafter may want to close this loop" observation, so the drafter decides. External review has flagged a dropped continuity thread after the internal gates passed (2026-06-22: named models and a competitor-lobbying thread carried from a prior edition were dropped), which is why it is worth a cold-read flag even though it is advisory.
+
 ### Step 4: Verdict
 
 Return one of three verdicts:
@@ -89,7 +91,7 @@ EDITIONS_REVIEWED: <comma-separated YYYY-MM-DD dates of prior editions read>
 
 ## Notes
 
-(optional, surfaces tend-toward observations that are not contradictions but the next-edition drafter should be aware of, for example, a thesis the series has hammered three weeks running that may benefit from a fresh angle next week. Always include on SUPPORTED if you observed any; optional on CONTRADICTS or NEUTRAL.)
+(optional, surfaces tend-toward observations that are not contradictions but the next-edition drafter should be aware of, for example, a thesis the series has hammered three weeks running that may benefit from a fresh angle next week, OR a dropped-thread observation per the advisory scan in Step 3 (a live thread from a recent prior edition the current draft leaves un-followed-up). Always include on SUPPORTED if you observed any; optional on CONTRADICTS or NEUTRAL.)
 ```
 
 The first line MUST be `CROSS_EDITION_CONSISTENCY_VERDICT: <value>` on its own line for the SKILL.md call-site to parse reliably. The `WINDOW:` and `EDITIONS_REVIEWED:` lines are required on every verdict for the audit trail.

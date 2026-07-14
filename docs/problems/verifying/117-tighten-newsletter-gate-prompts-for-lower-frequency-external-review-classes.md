@@ -1,6 +1,6 @@
 # Problem 117: Tighten existing newsletter gate prompts for the lower-frequency external-review classes
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-07-14
 **Priority**: 6 (Medium), Impact: 2 x Likelihood: 3, derived at capture from the description
 **Origin**: internal
@@ -35,10 +35,26 @@ Tom's external editorial review catches them; the same manual ceiling gate P116 
 
 ### Investigation Tasks
 
-- [ ] Tighten the editor prompt for through-line / atwn-thesis-fit (confirm the axes exist, sharpen the guidance).
-- [ ] Extend the cross-edition-consistency prompt to flag dropped threads, not only contradictions.
-- [ ] Tighten the critic prompt for so-what operational actionability.
-- [ ] Retro-validate each against the corpus editions that surfaced the class.
+- [x] Tighten the editor prompt for through-line / atwn-thesis-fit: sharpened the `atwn-thesis-fit` craft axis into a deliberate per-bullet sweep of every "Also worth noting" bullet.
+- [x] Extend the cross-edition-consistency prompt to flag dropped threads: added an advisory dropped-thread scan surfaced in the existing `## Notes` section (verdict-neutral, stays within ADR-038's charter).
+- [x] Tighten the critic prompt for so-what operational actionability: added an "Operational actionability of the so-what" section requiring a concrete quarter-scoped move, not abstract implication.
+- [ ] Verify each on the next live edition (Issue 14): the sharpened gates fire in-pipeline and catch (or cleanly clear) their class.
+
+## Resolution
+
+Three within-charter prompt tightenings, one per gate, no ADR amendment needed (architect PASS 2026-07-15: each sharpens an existing axis or uses an already-sanctioned advisory surface; JTBD PASS: all serve JTBD-005):
+
+- `newsletter-critic-rubric.md`: operational-actionability facet on the so-what axis.
+- `wr-newsletter-editor.md`: per-bullet `atwn-thesis-fit` sweep.
+- `wr-newsletter-cross-edition-consistency.md`: advisory dropped-thread Notes observation.
+
+Follow-up flagged by the JTBD review (not in this ticket's scope): the editor agent still grounds its `leader` simulation in the retired JTBD-001/002/003 (ADR-041 retired those; the live leader job is JTBD-005). Worth re-pointing in a separate edit; captured here so it is not lost.
+
+## Fix Released
+
+Delivered to master 2026-07-15: three prompt/rubric edits to `.claude/skills/wr-newsletter/assets/newsletter-critic-rubric.md`, `.claude/agents/wr-newsletter-editor.md`, and `.claude/agents/wr-newsletter-cross-edition-consistency.md`. Architect + JTBD gates PASS (within-charter, serves JTBD-005). Live on commit (repo-local agent/skill prose, no changeset).
+
+**Awaiting verification**: the next real edition (Issue 14) exercises the sharpened gates in-pipeline. Verify the editor does the per-bullet ATWN sweep, the critic flags abstract so-whats, and the cross-edition gate surfaces any dropped thread in its Notes.
 
 ## Dependencies
 

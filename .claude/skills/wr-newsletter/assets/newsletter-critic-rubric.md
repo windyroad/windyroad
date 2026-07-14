@@ -27,6 +27,12 @@ Headlines (the H1 and every `### Item N:` heading) are the most load-bearing edi
 
 These are editorial-craft judgements, not a port of the voice agent's word-list mechanics. Return them as weaknesses with the offending heading quoted, the same as any other weakness; do not introduce numbered checks or a scoring table (ADR 035).
 
+## Operational actionability of the so-what
+
+The "so what?" axis is not satisfied by an abstract implication. For a leader reader the so-what must resolve to something the reader can DO or DECIDE this quarter: a concrete action, a decision to make, a thing to check, watch, pilot, or prioritise. An item whose "why it matters" restates the news in consequence-shaped words ("this raises the stakes", "teams will need to adapt", "the landscape is shifting") without giving the reader an operational move is a weakness on this axis. External review has repeatedly added the missing operational move after the internal gates passed (2026-05-15: an operational measured-read sentence added to Item 3; 2026-06-29: an unauditable provenance action replaced with an operationalisable contractual ask, plus a checklist-prioritisation line naming the one to do this quarter).
+
+Flag as a weakness when: an item's so-what / why-it-matters is abstract with no operational move; OR the item names an action the reader cannot actually take or audit (an aspiration, not a step). The fix direction is to name the concrete move (the contractual clause to add, the metric to watch, the pilot to run, the one thing to do this quarter), not to add more consequence-framing. This is analytical quality, not reader-experience mechanics: the editor gate asks whether the reader would forward the item; this axis asks whether the item gives the reader something real to act on.
+
 ## What to return
 
 Read the artifact. Return:

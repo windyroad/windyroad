@@ -232,3 +232,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-07-14 **P115 captured**: site changes without a changeset silently never release to production (surfaced releasing the ADR-041 funnel retirement; lightweight aside via /wr-itil:capture-problem).
 
 > Last reviewed: 2026-07-14 **P116 captured**: newsletter gates lack an adversarial ceiling gate, so external review still finds substance issues every edition (recurrence of P008/P017; lightweight aside via /wr-itil:capture-problem).
+
+> Last reviewed: 2026-07-14 **P116 verification pending + P117 opened**: adversarial skeptic gate (ADR-042) delivered for the dominant claim-evidence class, awaiting Issue-14 live verification; lower-frequency prompt-tightening split to P117.
