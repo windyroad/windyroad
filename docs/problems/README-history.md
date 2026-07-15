@@ -236,3 +236,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-07-14 **P116 verification pending + P117 opened**: adversarial skeptic gate (ADR-042) delivered for the dominant claim-evidence class, awaiting Issue-14 live verification; lower-frequency prompt-tightening split to P117.
 
 > Last reviewed: 2026-07-15 **P117 verification pending**: three newsletter gate-prompt tightenings (critic so-what actionability, editor per-bullet ATWN sweep, cross-edition advisory dropped-thread scan) delivered within-charter; awaiting Issue-14 live verification.
+
+## 2026-07-15
+
+> Last reviewed: 2026-07-15 **full review pass**: re-rated 19 deferred/placeholder tickets; auto-transitioned 15 Open -> Known Error (root cause + workaround documented: P085-P087, P098, P104-P106, P108-P115); flipped P016 + P036 Verifying -> Known Error on their 2026-05-08 observed-regression cells (P186 Bucket 3); inbound poll fresh (0 reports); 16 relevance close-candidates carry caveats, queued for interactive confirmation (see Notes).

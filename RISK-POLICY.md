@@ -4,7 +4,9 @@ Risk assessment for pipeline actions (commit, push, release), aligned with ISO 3
 
 **Last reviewed:** 2026-07-12
 
-**Review cadence:** Quarterly (every 3 months). The policy is re-attested by the operator each quarter, or sooner if an incident or material business change warrants it (ISO 31000 review-after-incident). Note: the enforcing `risk-score-commit-gate` currently hardcodes a 14-day staleness threshold, tighter than this quarterly cadence; aligning that gate threshold to the quarterly cadence is tracked as an upstream `@windyroad/risk-scorer` change.
+> Reviewed quarterly. This blockquote line is machine-read by the wr-risk-scorer commit gate's staleness check (line-anchored, capital R, lowercase cadence word); keep the shape intact so the gate resolves the 90-day quarterly threshold instead of its 14-day fallback.
+
+**Review cadence:** Quarterly (every 3 months). The policy is re-attested by the operator each quarter, or sooner if an incident or material business change warrants it (ISO 31000 review-after-incident). Note: since wr-risk-scorer 0.16.5 the enforcing `risk-score-commit-gate` reads this policy's stated cadence from the machine-readable "Reviewed quarterly" blockquote line above (90 days), falling back to 14 days only if that line is removed or its cadence word is unrecognised; the earlier hardcoded 14-day threshold was fixed upstream (windyroad/agent-plugins#322, closed 2026-07-06).
 
 ## Business Context
 

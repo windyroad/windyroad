@@ -1,6 +1,6 @@
 # Problem 105: risk-score-commit-gate RISK-POLICY staleness threshold is too tight (14 days) and has no AFK-satisfiable refresh path
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-06-27
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-07-15 review: deterministic loop-fatal commit deny every 14 days; policy re-attested 2026-07-12 so next fire ~2026-07-26; doc cadence and gate threshold still disagree)
 **Origin**: internal
@@ -41,9 +41,9 @@ The staleness threshold is hardcoded at 14 days in `packages/risk-scorer/hooks/r
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Report upstream to `@windyroad/risk-scorer` via /wr-itil:report-upstream
-- [ ] Decide between threshold-raise vs configurable vs AFK-reattest (or combination)
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (re-rated 2026-07-15 review pass)
+- [x] Report upstream to `@windyroad/risk-scorer` via /wr-itil:report-upstream (filed 2026-07-03 as agent-plugins#322)
+- [x] Decide between threshold-raise vs configurable vs AFK-reattest (or combination): resolved as hypothesis (b), configurable-from-policy. Upstream shipped it (agent-plugins#322 closed 2026-07-06, their P408): since wr-risk-scorer 0.16.5 the gate machine-reads the policy's stated cadence via the line-anchored regex `(?m)^>?\s*Reviewed\s+([A-Za-z]+)` (lowercase cadence word, `quarterly` = 90 days), falling back to 14 days only when the line is absent or unrecognised. The remaining local half: our RISK-POLICY.md's `**Review cadence:** Quarterly...` prose did not match that regex, so the installed gate still resolved the 14-day fallback. Fixed 2026-07-15 by adding the machine-readable `> Reviewed quarterly` blockquote line and correcting the stale trailing note (RFC-001).
 
 ## Fix Strategy
 
@@ -64,6 +64,13 @@ The staleness threshold is hardcoded at 14 days in `packages/risk-scorer/hooks/r
 - **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/322 (2026-07-03)
 
 Captured via /wr-itil:capture-problem during /wr-itil:work-problems orchestrator-salvage handling of iter 3 (P101) commit-gate block, 2026-06-27. Surfaces iter 3's OQ-2 (RISK-POLICY staleness gate has no AFK-satisfiable refresh path) plus Tom's quarterly-cadence direction. Upstream `@windyroad/risk-scorer` change per P045 placement discipline.
+
+## Fix Released
+
+- **Release marker**: local doc-only fix, commit of 2026-07-15 (this repo; no npm release vehicle and no changeset, since the change is RISK-POLICY.md plus governance docs, effective immediately for local hooks). Upstream half shipped earlier in wr-risk-scorer 0.16.5 (agent-plugins#322, closed 2026-07-06).
+- **Fix summary**: added the machine-readable `> Reviewed quarterly` blockquote line to RISK-POLICY.md (and corrected the stale 14-day-hardcode note) so the installed staleness gate resolves the operator-attested quarterly cadence (90 days) instead of its 14-day fallback. Traced as RFC-001.
+- **Exercise evidence (2026-07-15)**: ran the installed gate's exact cadence-parse logic against the edited policy: `cadence='quarterly' threshold=90`; simulated +20 days elapsed (where the old fallback denied) = pass; +91 days = correct quarterly deny. The AFK-refresh-path half is resolved by the same mechanism: with the gate honouring the quarterly cadence, re-attestation is needed only at the operator's quarterly review, which is an interactive-session activity by design.
+- Awaiting user verification. Real-world confirmation signal: commits continue passing the gate after ~2026-07-26 (day 14 past the 2026-07-12 attestation) without a staleness deny.
 
 ## Reported Upstream
 
