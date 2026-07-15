@@ -56,7 +56,7 @@ All figures compare 31 December 2022 with 15 July 2026.
 
 This comparison does not prove that AI caused the gap. Interest rates, growth, profits and company execution all matter.
 
-But the contrast is still useful. The specialist group did not share in the wider software and AI boom, and investors now pay less than half as much for each dollar of its sales.
+But the contrast is still useful. The specialist group did not share in the wider software and AI boom. In 2022, the market valued these companies at a median of $5.10 for every $1 of annual sales. By 15 July 2026, that median had fallen to $2.20.
 
 ![Bar chart visualising the median market-value-per-sales decline listed above.](/img/social/low-code-sales-valuation.svg)
 
