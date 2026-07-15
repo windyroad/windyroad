@@ -56,6 +56,7 @@ This is upstream-bound: the fix lives in `@windyroad/wr-itil` `check-upstream-re
   - P030 (`docs/problems/open/030-work-problems-skill-md-marker-wording-uses-em-dash.md`): em-dash there is a contractual whitelisted marker, not an incidental separator.
   - P057 (`docs/problems/verifying/057-no-em-dash-edit-tool-hook-lacks-contractual-marker-whitelist.md`): local hook-side asymmetry, not an upstream emitter defect.
 - Upstream-bound: candidate for /wr-itil:report-upstream against `@windyroad/wr-itil`.
+- Recurrence 2026-07-15: the wr-itil 0.59.0 pass reintroduced the U+2014 em-dash in the audit-log heading; normalized to the colon form before the ADR-014 commit. Upstream issue 319 still OPEN with no maintainer response as of the 2026-07-15 outbound-responses poll. A /wr-itil:capture-problem aside on the same observation halted as a duplicate of this ticket.
 
 ## Reported Upstream
 
