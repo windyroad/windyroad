@@ -72,3 +72,9 @@ Captured via /wr-itil:capture-problem during /wr-itil:work-problems orchestrator
 - **Template used**: structured default (problem-shaped)
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes
+
+## RFCs
+
+| RFC | Status | Title |
+|-----|--------|-------|
+| RFC-001 | proposed | Align RISK-POLICY.md machine-readable review cadence with the shipped upstream staleness gate |
