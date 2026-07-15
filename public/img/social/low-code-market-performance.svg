@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="market-performance-title" aria-describedby="market-performance-desc">
   <title id="market-performance-title">Low-code specialists missed the wider software boom</title>
-  <desc id="market-performance-desc">From 31 December 2022 to 15 July 2026, the seven public low-code companies declined between 12 and 19 percent. A nine-company view including Smartsheet and Alteryx was roughly flat to down 6 percent. The IGV software fund rose 88 percent and the QQQ Nasdaq-100 fund rose 182 percent. Source: CompaniesMarketCap and exchange-reported share counts. Fund figures show share-price changes and exclude dividends.</desc>
+  <desc id="market-performance-desc">From the end of 2022 to the latest completed US close on 14 July 2026, the seven public low-code companies declined between 15 and 18 percent. A nine-company view including Smartsheet and Alteryx declined between 3 and 6 percent. The IGV software fund rose 88 percent and the QQQ Nasdaq-100 fund rose 182 percent. Market-value data was collected on 15 July 2026. Sources: CompaniesMarketCap and exchange-reported share counts. Benchmark figures compound the annual share-price performance shown in the linked histories.</desc>
 
   <rect width="1200" height="630" fill="#0F172A"/>
 
   <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
     <text x="64" y="66" fill="#F8FAFC" font-size="40" font-weight="700">Low-code specialists missed the wider software boom</text>
-    <text x="64" y="106" fill="#CBD5E1" font-size="21">Change from 31 Dec 2022 to 15 Jul 2026</text>
+    <text x="64" y="106" fill="#CBD5E1" font-size="21">End 2022 to latest completed US close, 14 Jul 2026</text>
     <text x="1136" y="106" fill="#94A3B8" font-size="17" text-anchor="end">Two measures, shown as percentage change</text>
 
     <text x="478" y="151" fill="#FDA4AF" font-size="14" font-weight="700" text-anchor="middle">DECLINE</text>
@@ -27,15 +27,15 @@
     <text x="64" y="236" fill="#F8FAFC" font-size="22" font-weight="600">7 public companies</text>
     <text x="64" y="310" fill="#F8FAFC" font-size="22" font-weight="600">9 companies incl. exits</text>
 
-    <line x1="458.5" y1="228" x2="480.2" y2="228" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
-    <rect x="452.5" y="222" width="12" height="12" fill="#FBBF24"/>
-    <rect x="474.2" y="222" width="12" height="12" fill="#FBBF24"/>
-    <text x="536" y="236" fill="#FDE68A" font-size="22" font-weight="700">-19% to -12%</text>
+    <line x1="461.6" y1="228" x2="470.8" y2="228" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
+    <rect x="455.6" y="222" width="12" height="12" fill="#FBBF24"/>
+    <rect x="464.8" y="222" width="12" height="12" fill="#FBBF24"/>
+    <text x="536" y="236" fill="#FDE68A" font-size="22" font-weight="700">-18% to -15%</text>
 
-    <line x1="498.5" y1="302" x2="517" y2="302" stroke="#FB7185" stroke-width="8" stroke-linecap="round"/>
+    <line x1="498.5" y1="302" x2="507.8" y2="302" stroke="#FB7185" stroke-width="8" stroke-linecap="round"/>
     <rect x="492.5" y="296" width="12" height="12" fill="#FB7185"/>
-    <rect x="511" y="296" width="12" height="12" fill="#FB7185"/>
-    <text x="536" y="310" fill="#FDA4AF" font-size="22" font-weight="700">-6% to 0%</text>
+    <rect x="501.8" y="296" width="12" height="12" fill="#FB7185"/>
+    <text x="536" y="310" fill="#FDA4AF" font-size="22" font-weight="700">-6% to -3%</text>
 
     <text x="64" y="375" fill="#94A3B8" font-size="15" font-weight="700">BENCHMARK FUND SHARE PRICE</text>
     <text x="64" y="428" fill="#F8FAFC" font-size="22" font-weight="600">IGV software fund</text>
@@ -58,6 +58,7 @@
       <text x="1135" y="550">+200%</text>
     </g>
 
-    <text x="64" y="597" fill="#94A3B8" font-size="15">Source: CompaniesMarketCap and exchange-reported share counts. Fund figures show share-price changes; dividends excluded.</text>
+    <text x="64" y="586" fill="#94A3B8" font-size="14">Source: CompaniesMarketCap and exchange-reported share counts; benchmarks compound linked annual share-price returns.</text>
+    <text x="64" y="607" fill="#94A3B8" font-size="14">Data collected 15 Jul 2026; market values use the latest completed US close on 14 Jul.</text>
   </g>
 </svg>

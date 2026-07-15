@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="sales-valuation-title" aria-describedby="sales-valuation-desc">
-  <title id="sales-valuation-title">Investors pay less than half as much for each dollar of sales</title>
-  <desc id="sales-valuation-desc">The median market value paid for each dollar of annual sales across the seven public low-code companies fell from 5 dollars and 10 cents at the end of 2022 to 2 dollars and 20 cents on 15 July 2026, a decline of about 57 percent. Source: CompaniesMarketCap price-to-sales histories; calculation as at 15 July 2026.</desc>
+  <title id="sales-valuation-title">Investors pay about half as much for each dollar of sales</title>
+  <desc id="sales-valuation-desc">The median market value paid for each dollar of annual sales across the seven public low-code companies fell from 5 dollars and 5 cents at the end of 2022 to 2 dollars and 54 cents in July 2026, a decline of about 50 percent. Source: CompaniesMarketCap price-to-sales histories, using end-2022 tables and July 2026 trailing-12-month values.</desc>
 
   <rect width="1200" height="630" fill="#0F172A"/>
 
   <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-    <text x="64" y="62" fill="#F8FAFC" font-size="39" font-weight="700">Investors pay less than half as much</text>
+    <text x="64" y="62" fill="#F8FAFC" font-size="39" font-weight="700">Investors pay about half as much</text>
     <text x="64" y="106" fill="#F8FAFC" font-size="39" font-weight="700">for each $1 of annual sales</text>
     <text x="64" y="145" fill="#CBD5E1" font-size="21">Median across the seven public companies</text>
 
@@ -31,24 +31,24 @@
       <text x="140" y="499">$0</text>
     </g>
 
-    <rect x="246" y="249.2" width="190" height="244.8" fill="#38BDF8"/>
-    <rect x="526" y="388.4" width="190" height="105.6" fill="#FBBF24"/>
+    <rect x="246" y="251.6" width="190" height="242.4" fill="#38BDF8"/>
+    <rect x="526" y="372.1" width="190" height="121.9" fill="#FBBF24"/>
 
-    <text x="341" y="228" fill="#7DD3FC" font-size="34" font-weight="800" text-anchor="middle">$5.10</text>
-    <text x="621" y="367" fill="#FDE68A" font-size="34" font-weight="800" text-anchor="middle">$2.20</text>
+    <text x="341" y="230" fill="#7DD3FC" font-size="34" font-weight="800" text-anchor="middle">$5.05</text>
+    <text x="621" y="351" fill="#FDE68A" font-size="34" font-weight="800" text-anchor="middle">$2.54</text>
 
     <g fill="#E2E8F0" font-size="19" text-anchor="middle">
       <text x="341" y="529" font-weight="700">End 2022</text>
-      <text x="621" y="529" font-weight="700">15 Jul 2026</text>
+      <text x="621" y="529" font-weight="700">Jul 2026</text>
     </g>
 
     <line x1="847" y1="252" x2="847" y2="388" stroke="#FB7185" stroke-width="7"/>
     <path d="M 829 370 L 847 392 L 865 370" fill="none" stroke="#FB7185" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="900" y="279" fill="#FDA4AF" font-size="24" font-weight="700">DOWN</text>
-    <text x="900" y="347" fill="#F8FAFC" font-size="64" font-weight="800">57%</text>
+    <text x="900" y="347" fill="#F8FAFC" font-size="64" font-weight="800">50%</text>
     <text x="900" y="380" fill="#CBD5E1" font-size="18">market value per</text>
     <text x="900" y="405" fill="#CBD5E1" font-size="18">$1 of annual sales</text>
 
-    <text x="64" y="593" fill="#94A3B8" font-size="15">Source: CompaniesMarketCap price-to-sales histories; calculation as at 15 Jul 2026.</text>
+    <text x="64" y="593" fill="#94A3B8" font-size="15">Source: CompaniesMarketCap price-to-sales histories; end-2022 and July 2026 trailing-12-month values.</text>
   </g>
 </svg>
