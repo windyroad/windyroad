@@ -1,10 +1,11 @@
 # Problem 085: External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-03
-**Priority**: 3 (Medium), Impact: 3 x Likelihood: 4 (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 8 (Medium), Impact: Minor (2) x Likelihood: Likely (4) (re-rated 2026-07-15 review: deterministic marker invalidation on any body change between review and commit; dev-tooling friction only)
 **Origin**: internal
-**Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
+**Effort**: M
+**WSJF**: 8.0 = (8 x 2.0) / 2
 **Type**: technical
 
 ## Description

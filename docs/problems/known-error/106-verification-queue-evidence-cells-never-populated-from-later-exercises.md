@@ -1,10 +1,11 @@
 # Problem 106: Verification Queue evidence cells are never populated from subsequent-session exercises, so the auto-drain never fires and the queue accumulates
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-28
-**Priority**: 3 (Medium) -- Impact: 3 x Likelihood: 1 (deferred -- re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) -- Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: queue accumulated to 47 before the manual 2026-06-28 drain; producer half of the P186/P282 pair still unbuilt)
 **Origin**: internal
-**Effort**: M (deferred -- re-rate at next /wr-itil:review-problems)
+**Effort**: M (upstream producer mechanism)
+**WSJF**: 6.0 = (6 x 2.0) / 2
 
 ## Description
 

@@ -1,10 +1,11 @@
 # Problem 111: Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence)
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-06
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 9 (Medium) - Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-07-15 review: publish-day pipeline block observed on Issue 12; vitest mis-glob sub-issue fixed in 7fe5046, lock-desync + CI freshness divergence remain)
 **Origin**: internal
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: M (dry-aged-deps lock sync + local/CI freshness reconciliation)
+**WSJF**: 9.0 = (9 x 2.0) / 2
 
 ## Description
 

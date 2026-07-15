@@ -1,10 +1,11 @@
 # Problem 113: wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and section 15.6 re-runs all gates per edit
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-13
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description
 **Origin**: internal
 **Effort**: M, derived at capture
+**WSJF**: 8.0 = (8 x 2.0) / 2
 
 ## Description
 

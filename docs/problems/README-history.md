@@ -234,3 +234,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-07-14 **P116 captured**: newsletter gates lack an adversarial ceiling gate, so external review still finds substance issues every edition (recurrence of P008/P017; lightweight aside via /wr-itil:capture-problem).
 
 > Last reviewed: 2026-07-14 **P116 verification pending + P117 opened**: adversarial skeptic gate (ADR-042) delivered for the dominant claim-evidence class, awaiting Issue-14 live verification; lower-frequency prompt-tightening split to P117.
+
+> Last reviewed: 2026-07-15 **P117 verification pending**: three newsletter gate-prompt tightenings (critic so-what actionability, editor per-bullet ATWN sweep, cross-edition advisory dropped-thread scan) delivered within-charter; awaiting Issue-14 live verification.

@@ -1,10 +1,11 @@
 # Problem 109: External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-03
-**Priority**: 3 (Medium) -- Impact: 3 x Likelihood: 1 (deferred -- re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) -- Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: recurs whenever an external reviewer relays repo artifacts; multiple stale rounds in Issue 11)
 **Origin**: internal
-**Effort**: M (deferred -- re-rate at next /wr-itil:review-problems)
+**Effort**: S (assistant-discipline memory lever per ticket investigation tasks)
+**WSJF**: 12.0 = (6 x 2.0) / 1
 
 ## Description
 

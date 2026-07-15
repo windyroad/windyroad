@@ -1,10 +1,11 @@
 # Problem 110: work-problems Step 5 iter/pre-flight dispatch exceeds the interactive harness foreground Bash ceiling
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-03
-**Priority**: 3 (Medium) -- Impact: 3 x Likelihood: 1 (deferred -- re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) -- Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: caps any foreground-dispatched iter at 10min; AFK loop cannot progress on long iters)
 **Origin**: internal
-**Effort**: M (deferred -- re-rate at next /wr-itil:review-problems)
+**Effort**: M (upstream Step 5 dispatch rework to the background primitive)
+**WSJF**: 6.0 = (6 x 2.0) / 2
 
 ## Description
 

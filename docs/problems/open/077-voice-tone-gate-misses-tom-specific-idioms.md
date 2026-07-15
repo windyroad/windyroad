@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-06-01
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 3 (deferred. Re-rate at next /wr-itil:review-problems)
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-07-15 review: recurs each edition until Tom-voice corpus is codified; manual editorial pass is the only net)
 **Origin**: internal
-**Effort**: M (deferred. Re-rate at next /wr-itil:review-problems)
+**Effort**: M (corpus extraction from recorded rejections + guide amendment)
+**WSJF**: 4.5 = (9 x 1.0) / 2
 **Type**: technical
 
 ## Description

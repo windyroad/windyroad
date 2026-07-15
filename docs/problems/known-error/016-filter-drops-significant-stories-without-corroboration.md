@@ -1,12 +1,12 @@
 # Problem 016: wr-newsletter filter step drops significant stories that lack a primary source without attempting corroboration
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-04-24
 **Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed by 2026-04-24 edition; workaround = manual flag in chat + Google News corroboration)
-**Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4)
+**Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-07-15 flip-back: corroboration machinery shipped; one observed recurrence 2026-05-08 on an aggregator-only candidate)
 **Effort**: M (SKILL.md step 4 filter logic change plus optional cross-source corroboration helper)
-**WSJF**: (16 x 2.0) / 2 = 16.0
+**WSJF**: 6.0 = (6 x 2.0) / 2
 **Re-rated 2026-04-25**: Status auto-transitioned to Known Error; WSJF 8.0 to 16.0 reflects Known Error multiplier.
 
 ## Description
@@ -111,3 +111,7 @@ The `/wr-newsletter` skill Tom-summary (step 17) now reports corroboration outco
 - `src/newsletters/drafts/leader/2026-04-24.md` (the edition where the Apple CEO transition was first dropped, then added after Tom flagged it; transcript of the exchange is the symptom record)
 - `docs/ai-engineering-brief/ai-landscape.md` Known Limitations section (existing precedent for Google News RSS as a tier-1 workaround)
 - ADR 012 (content review gates). The "drop on attribution risk" instinct comes from this gate. This ticket does not weaken the gate; it adds an upstream corroboration step that resolves attribution one way or the other before the gate fires.
+
+## Flip-back to Known Error (2026-07-15)
+
+Flipped back from Verification Pending per the P186 Bucket 3 rule: an observed-regression cell must not sit in the Verification Queue as a closure candidate. Recurrence citation: the 2026-05-08 retro flagged recurrence on an aggregator-only candidate after the step-4b corroboration fix shipped. The fix needs reinforcement before re-release. Recovery: /wr-itil:transition-problem 016 verifying once the reinforced fix ships.

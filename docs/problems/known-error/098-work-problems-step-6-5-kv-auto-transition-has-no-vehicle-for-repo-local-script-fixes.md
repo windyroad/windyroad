@@ -1,10 +1,11 @@
 # Problem 098: work-problems Step 6.5 post-release K->V auto-transition has no vehicle for repo-local-script fixes in a consumer repo (no npm release)
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-17
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred: re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: recurring class, three observed instances P092/P075/P081)
 **Origin**: internal
-**Effort**: M (deferred: re-rate at next /wr-itil:review-problems)
+**Effort**: M (upstream Step 6.5 release-vehicle class change)
+**WSJF**: 6.0 = (6 x 2.0) / 2
 **JTBD**: JTBD-006
 **Persona**: plugin-developer
 

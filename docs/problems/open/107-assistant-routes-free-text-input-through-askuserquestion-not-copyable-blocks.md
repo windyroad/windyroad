@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-06-28
-**Priority**: 3 (Medium) -- Impact: 3 x Likelihood: 1 (deferred -- re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) -- Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: sits on the hot path of the P091 unresolvable-URL ask; three corrections observed in one session)
 **Origin**: internal
-**Effort**: M (deferred -- re-rate at next /wr-itil:review-problems)
+**Effort**: S (assistant-discipline memory note + skill prose line)
+**WSJF**: 6.0 = (6 x 1.0) / 1
 
 ## Description
 

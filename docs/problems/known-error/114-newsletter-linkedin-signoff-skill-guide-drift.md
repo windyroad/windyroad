@@ -1,10 +1,11 @@
 # Problem 114: wr-newsletter step 15.5 tells the LinkedIn post to close with a windyroad.com.au sign-off, but VOICE-AND-TONE.md's auto-share carve-out forbids any manual URL in the post body
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-13
 **Priority**: 4 (Low), Impact: 1 x Likelihood: 4, derived at capture from the description
 **Origin**: internal
 **Effort**: S, derived at capture
+**WSJF**: 8.0 = (4 x 2.0) / 1
 
 ## Description
 

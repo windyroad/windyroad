@@ -1,10 +1,11 @@
 # Problem 108: wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version, breaking the map render on plugin update
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-03
-**Priority**: 3 (Medium) -- Impact: 3 x Likelihood: 1 (deferred -- re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) -- Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-07-15 review: breaks the mid-run map render on every wr-wardley version bump; occasional but deterministic when it fires)
 **Origin**: internal
-**Effort**: S (deferred -- re-rate at next /wr-itil:review-problems)
+**Effort**: S (version-agnostic path resolution in SKILL step 7 + 7-prime)
+**WSJF**: 12.0 = (6 x 2.0) / 1
 
 ## Description
 

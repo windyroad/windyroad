@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-06-17
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred: re-rate at next /wr-itil:review-problems)
+**Priority**: 4 (Low). Impact: Minor (2) x Likelihood: Unlikely (2) (re-rated 2026-07-15 review: fires only on check-upstream-responses passes; manual strip is cheap)
 **Origin**: internal
-**Effort**: M (deferred: re-rate at next /wr-itil:review-problems)
+**Effort**: S (file upstream report; local manual strip meanwhile)
+**WSJF**: 4.0 = (4 x 1.0) / 1
 **JTBD**: JTBD-007
 **Persona**: plugin-developer
 

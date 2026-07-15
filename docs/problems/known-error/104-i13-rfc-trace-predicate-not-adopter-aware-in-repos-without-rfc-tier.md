@@ -1,10 +1,11 @@
 # Problem 104: I13 RFC-trace predicate and manage-problem I13 gate are not adopter-aware (fire no-rfc-trace in repos without an RFC tier)
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-27
-**Priority**: 3 (Medium) - Impact: 3 x Likelihood: 1 (deferred - re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) - Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: three occurrences P070/P103/P101, each paying the manual false-positive recognition cost)
 **Origin**: internal
-**Effort**: M (deferred - re-rate at next /wr-itil:review-problems)
+**Effort**: M (upstream adopter-aware predicate change)
+**WSJF**: 6.0 = (6 x 2.0) / 2
 
 ## Description
 

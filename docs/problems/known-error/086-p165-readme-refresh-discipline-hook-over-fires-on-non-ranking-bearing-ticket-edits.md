@@ -1,10 +1,11 @@
 # Problem 086: P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-03
-**Priority**: 3 (Medium), Impact: 3 x Likelihood: 4 (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium), Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: over-fire recurs on non-ranking-bearing ticket edits; workable bypasses exist)
 **Origin**: internal
-**Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
+**Effort**: M
+**WSJF**: 6.0 = (6 x 2.0) / 2
 **Type**: technical
 
 ## Description

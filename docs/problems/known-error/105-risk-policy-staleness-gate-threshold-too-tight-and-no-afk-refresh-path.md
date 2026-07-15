@@ -1,11 +1,11 @@
 # Problem 105: risk-score-commit-gate RISK-POLICY staleness threshold is too tight (14 days) and has no AFK-satisfiable refresh path
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-27
-**Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-07-15 review: deterministic loop-fatal commit deny every 14 days; policy re-attested 2026-07-12 so next fire ~2026-07-26; doc cadence and gate threshold still disagree)
 **Origin**: internal
-**Effort**: S (deferred, re-rate at next /wr-itil:review-problems)
-**WSJF**: deferred, re-rate at next /wr-itil:review-problems
+**Effort**: S (upstream threshold/config read + reattest mode; report filed from here)
+**WSJF**: 18.0 = (9 x 2.0) / 1
 
 ## Description
 

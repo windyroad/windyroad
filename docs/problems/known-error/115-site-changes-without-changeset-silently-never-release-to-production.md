@@ -1,10 +1,11 @@
 # Problem 115: Site changes land on master without a changeset and silently never release to production
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-14
 **Priority**: 12 (Significant), Impact: 3 x Likelihood: 4, derived at capture from the description
 **Origin**: internal
 **Effort**: M, derived at capture
+**WSJF**: 12.0 = (12 x 2.0) / 2
 
 ## Description
 

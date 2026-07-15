@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-06-17
-**Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred: re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-07-15 review: recurs each AFK session holding direction-blocked tickets; iter waste observed 2026-06-16/17 plus the P084 interactive-only variant)
 **Origin**: internal
-**Effort**: M (deferred: re-rate at next /wr-itil:review-problems)
+**Effort**: M (upstream work-problems Step 3 selection change)
+**WSJF**: 3.0 = (6 x 1.0) / 2
 **JTBD**: JTBD-006
 **Persona**: plugin-developer
 

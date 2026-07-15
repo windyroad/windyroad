@@ -1,10 +1,11 @@
 # Problem 112: accessibility-lead review passes markup but misses colour-contrast, caught only by the CI axe gate
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-12
 **Priority**: 6 (Medium) Impact: 3 x Likelihood: 2 (derived at capture: a slipped contrast failure is caught by CI before visitors, so visitor-impact likelihood is low; the recurring cost is a failed-deploy + re-push cycle, and CI is the sole net so defence-in-depth is thin)
 **Origin**: internal
 **Effort**: M (derived at capture: local option is a pre-push design-system contrast check on Button-variant-vs-section-background; the deeper fix is an upstream accessibility-agents agent change)
+**WSJF**: 6.0 = (6 x 2.0) / 2
 
 ## Description
 

@@ -1,12 +1,12 @@
 # Problem 036: /wr-newsletter drafter leaks editorial-process meta-commentary into reader-facing body
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-05-01
 **Origin**: internal
 **Released**: 2026-05-07
-**Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Almost certain (4)
-**Effort**: S
-**WSJF**: (12 x 2.0) / 1 = 24.0 (weight 2.0: newsletter is primary repo activity per 2026-05-02 direction)
+**Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-07-15 flip-back: interim banned-pattern rule shipped; one observed recurrence 2026-05-08)
+**Effort**: M (fix strategy proposes a dedicated editorial-meta-detector agent)
+**WSJF**: 6.0 = (6 x 2.0) / 2
 
 ## Fix released (2026-05-07)
 
@@ -64,3 +64,7 @@ The drafter blends fact + provenance + editorial-process into single sentences b
 
 - ADR 015 (reader-respect)
 - This retrospective: 2026-05-01 edition retro
+
+## Flip-back to Known Error (2026-07-15)
+
+Flipped back from Verification Pending per the P186 Bucket 3 rule: an observed-regression cell must not sit in the Verification Queue as a closure candidate. Recurrence citation: the 2026-05-08 retro flagged editorial-meta leakage recurring in the interim period after the banned-pattern rule shipped. The fix needs reinforcement (the proposed editorial-meta-detector agent was never built). Recovery: /wr-itil:transition-problem 036 verifying once the reinforced fix ships.

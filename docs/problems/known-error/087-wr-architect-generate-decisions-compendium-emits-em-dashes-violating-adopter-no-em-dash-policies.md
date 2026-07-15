@@ -1,10 +1,11 @@
 # Problem 087: wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-03
-**Priority**: 3 (Medium), Impact: 3 x Likelihood: 4 (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 8 (Medium), Impact: Minor (2) x Likelihood: Likely (4) (re-rated 2026-07-15 review: recurred ~5x on 2026-07-15 alone; fires on every compendium touch via both the regen script and the ADR-078 per-edit hook)
 **Origin**: internal
-**Effort**: M (deferred, re-rate at next /wr-itil:review-problems)
+**Effort**: M (upstream fix on two generator surfaces + report)
+**WSJF**: 8.0 = (8 x 2.0) / 2
 **Type**: technical
 
 ## Description
