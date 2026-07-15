@@ -22,6 +22,7 @@ Forcing the agent to manually replace every em-dash before the commit can procee
 - After invoking `wr-architect-generate-decisions-compendium` (e.g. during `/wr-architect:review-decisions` Step 4.5 or `/wr-architect:create-adr` Step 5), the immediate `git add docs/decisions/README.md` (or subsequent Bash command) trips the no-em-dash hook.
 - The compendium cannot be regenerated without a manual U+2014 to ASCII-separator replacement pass.
 - The 2026-06-02 AFK iter 6 retro noted: "Compendium is currently stale (architect-verdict-recommended regen could not land because of em-dash incompatibility)." Compendium-staleness ticket P083 cites this exact friction as the reason regen was deferred during AFK iters.
+- 2026-07-15 session (ADR-041 release + ADR-042 skeptic-gate build): the friction recurred roughly five times. The ADR-078 per-edit compendium hook re-emitted a U+2014 as the `### ADR-NNN` header separator plus mid-sentence dashes in the auto-generated `Decides:` line on every ADR-042 entry touch, each requiring a manual Edit pass. Separately, running the deprecated `wr-architect-generate-decisions-compendium` backstop (per review-decisions Step 4.5) rewrote the WHOLE `docs/decisions/README.md` with a U+2014 separator on every ADR header, forcing a `git checkout` revert plus a manual per-entry fix. Both the deprecated full-regen script AND the ADR-078 per-edit hook emit the character, so the fix must strip U+2014 at generation time on both surfaces.
 
 ## Workaround
 
