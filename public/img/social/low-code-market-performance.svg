@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="market-performance-title" aria-describedby="market-performance-desc">
+  <title id="market-performance-title">Low-code specialists missed the wider software boom</title>
+  <desc id="market-performance-desc">From 31 December 2022 to 15 July 2026, the seven public low-code companies declined between 12 and 19 percent. A nine-company view including Smartsheet and Alteryx was roughly flat to down 6 percent. The IGV software fund rose 88 percent and the QQQ Nasdaq-100 fund rose 182 percent. Source: CompaniesMarketCap and exchange-reported share counts. Fund figures show share-price changes and exclude dividends.</desc>
+
+  <rect width="1200" height="630" fill="#0F172A"/>
+
+  <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="64" y="66" fill="#F8FAFC" font-size="40" font-weight="700">Low-code specialists missed the wider software boom</text>
+    <text x="64" y="106" fill="#CBD5E1" font-size="21">Change from 31 Dec 2022 to 15 Jul 2026</text>
+    <text x="1136" y="106" fill="#94A3B8" font-size="17" text-anchor="end">Two measures, shown as percentage change</text>
+
+    <text x="478" y="151" fill="#FDA4AF" font-size="14" font-weight="700" text-anchor="middle">DECLINE</text>
+    <text x="826" y="151" fill="#A7F3D0" font-size="14" font-weight="700" text-anchor="middle">GAIN</text>
+
+    <rect x="440" y="166" width="77" height="356" fill="#FB7185" opacity="0.08"/>
+
+    <g stroke="#64748B" stroke-width="1">
+      <line x1="440" y1="166" x2="440" y2="522"/>
+      <line x1="517" y1="166" x2="517" y2="522" stroke="#E2E8F0" stroke-width="2"/>
+      <line x1="672" y1="166" x2="672" y2="522"/>
+      <line x1="826" y1="166" x2="826" y2="522"/>
+      <line x1="981" y1="166" x2="981" y2="522"/>
+      <line x1="1135" y1="166" x2="1135" y2="522"/>
+    </g>
+
+    <text x="64" y="183" fill="#94A3B8" font-size="15" font-weight="700">BASKET MARKET VALUE</text>
+    <text x="64" y="236" fill="#F8FAFC" font-size="22" font-weight="600">7 public companies</text>
+    <text x="64" y="310" fill="#F8FAFC" font-size="22" font-weight="600">9 companies incl. exits</text>
+
+    <line x1="458.5" y1="228" x2="480.2" y2="228" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
+    <rect x="452.5" y="222" width="12" height="12" fill="#FBBF24"/>
+    <rect x="474.2" y="222" width="12" height="12" fill="#FBBF24"/>
+    <text x="536" y="236" fill="#FDE68A" font-size="22" font-weight="700">-19% to -12%</text>
+
+    <line x1="498.5" y1="302" x2="517" y2="302" stroke="#FB7185" stroke-width="8" stroke-linecap="round"/>
+    <rect x="492.5" y="296" width="12" height="12" fill="#FB7185"/>
+    <rect x="511" y="296" width="12" height="12" fill="#FB7185"/>
+    <text x="536" y="310" fill="#FDA4AF" font-size="22" font-weight="700">-6% to 0%</text>
+
+    <text x="64" y="375" fill="#94A3B8" font-size="15" font-weight="700">BENCHMARK FUND SHARE PRICE</text>
+    <text x="64" y="428" fill="#F8FAFC" font-size="22" font-weight="600">IGV software fund</text>
+    <text x="64" y="502" fill="#F8FAFC" font-size="22" font-weight="600">QQQ Nasdaq-100</text>
+
+    <line x1="517" y1="420" x2="789" y2="420" stroke="#38BDF8" stroke-width="7"/>
+    <circle cx="789" cy="420" r="12" fill="#0F172A" stroke="#38BDF8" stroke-width="6"/>
+    <text x="813" y="428" fill="#7DD3FC" font-size="22" font-weight="700">+88%</text>
+
+    <line x1="517" y1="494" x2="1079" y2="494" stroke="#A7F3D0" stroke-width="7"/>
+    <circle cx="1079" cy="494" r="12" fill="#0F172A" stroke="#A7F3D0" stroke-width="6"/>
+    <text x="1060" y="470" fill="#A7F3D0" font-size="22" font-weight="700" text-anchor="end">+182%</text>
+
+    <g fill="#CBD5E1" font-size="16" text-anchor="middle">
+      <text x="440" y="550">-25%</text>
+      <text x="517" y="550">0%</text>
+      <text x="672" y="550">+50%</text>
+      <text x="826" y="550">+100%</text>
+      <text x="981" y="550">+150%</text>
+      <text x="1135" y="550">+200%</text>
+    </g>
+
+    <text x="64" y="597" fill="#94A3B8" font-size="15">Source: CompaniesMarketCap and exchange-reported share counts. Fund figures show share-price changes; dividends excluded.</text>
+  </g>
+</svg>
