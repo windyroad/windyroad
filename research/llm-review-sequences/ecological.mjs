@@ -17,12 +17,12 @@ export function generateEcologicalBenchmark(controlledRoot, outputRoot) {
   if (readdirSync(outputRoot).length) throw new Error(`Output directory is not empty: ${outputRoot}`);
 
   const source = JSON.parse(readFileSync(join(controlledRoot, "cards.json"), "utf8"));
-  const cases = source.cases.filter(({ template_index }) =>
-    ECOLOGICAL_TEMPLATE_INDEXES.includes(template_index)
+  const cases = source.cases.filter(({ template_index, instance }) =>
+    ECOLOGICAL_TEMPLATE_INDEXES.includes(template_index) && instance === 1
   );
   const scenarioIds = new Set(cases.map(({ scenario_id }) => scenario_id));
   const templateIds = new Set(cases.map(({ template_id }) => template_id));
-  if (cases.length !== scenarioIds.size * 2 || templateIds.size * 4 !== cases.length) {
+  if (cases.length !== scenarioIds.size * 2 || templateIds.size * 2 !== cases.length) {
     throw new Error("Ecological subset is not paired and balanced");
   }
 
@@ -59,7 +59,7 @@ function renderPrompts(cases) {
     for (const decomposition of ["atomic", "split"]) {
       const submissions = entry[decomposition].submissions;
       for (const workflow of ["pr", "trunk"]) {
-        for (const context of ["local", "cumulative"]) {
+        for (const context of ["local"]) {
           for (let submissionIndex = 1; submissionIndex <= submissions.length; submissionIndex += 1) {
             const request = renderReviewRequest(
               renderEcologicalEvidence(submissions, workflow, context, submissionIndex),
@@ -141,8 +141,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     if (process.argv[4]) {
       const study = JSON.parse(readFileSync(join(dirname(process.argv[1]), "study.json"), "utf8"));
       output.collection = generateCollection(process.argv[3], process.argv[4], {
-        models: study.models.map(({ id }) => id),
+        models: study.active_subscription_design.review_systems.map(({ id }) => id),
         trialsPerCell: 1,
+        contexts: ["local"],
         seed: 20260718,
       }).summary;
     }

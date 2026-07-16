@@ -1,274 +1,188 @@
-# OSF preregistration v2 draft
+# Preregistration v2: subscription-backed LLM review of decomposed changes
 
-Status: pre-outcome draft; not submitted. No confirmatory model response exists. This document follows the standard [OSF Preregistration template](https://help.osf.io/article/330-welcome-to-registrations).
+Status: prospective draft. No benchmark prompt has been submitted to either review system. Do not begin outcome collection until the AI-assisted internal reviews are archived, the final artifact hashes are verified from a clean checkout, and this plan is registered on OSF.
 
-Do not submit this draft until both independent reviews approve it, every frozen model route passes native token counting, the freeze commit and artifact hashes are final, and the submission metadata decisions below are resolved.
-
-## Metadata
+## Study information
 
 ### Title
 
-Can LLM Code Review See the Setup? Detecting Malicious Changes Across Pull Requests and Trunk-Based Development
+Detecting Strategically Decomposed Malicious Code Changes with Subscription-Backed LLM Reviewers
 
-### Description
+### Research question
 
-This controlled factorial experiment measures whether large-language-model code reviewers distinguish harmless synthetic changes from matched abstract policy violations, whether detection degrades when a functionally equivalent violation is assembled across three individually plausible submissions, and whether a pull-request gate versus an untrusted-main pipeline framing changes detection. All repositories are generated, in-memory, non-deployable programs without network access, credentials, persistence, destructive behavior, or real targets.
+This study asks whether subscription-backed LLM code-review systems distinguish harmless synthetic changes from matched abstract policy violations, whether detection falls when the same unsafe final state is assembled across three individually plausible submissions, and whether results differ between pull-request and untrusted-main pipeline framing.
 
 ### Contributors
 
-Tom Howard is the sole author and initiating investigator, affiliated as an independent researcher. The corresponding-author email is [tom@windyroad.com.au](mailto:tom@windyroad.com.au). An optional ORCID identifier and OSF administrator permissions remain to be confirmed before submission.
+Tom Howard is the sole author and initiating investigator, affiliated as an independent researcher. The corresponding-author email is [tom@windyroad.com.au](mailto:tom@windyroad.com.au). An optional ORCID identifier and OSF administrator confirmation remain pending.
 
 ### License
 
-Required before submission: select the registration license. CC BY 4.0 is the proposed license for the registration text and released data; generated code may retain a separate software license documented in the artifact package.
+CC BY 4.0 is proposed for the registration text and released data. Generated code may use a separate permissive software license recorded in the artifact package.
 
-### Subjects and tags
+## Hypotheses
 
-Proposed subjects, to be verified against the OSF interface:
+### Primary hypotheses
 
-- Computer Sciences
-- Software Engineering
-- Information Security
-- Artificial Intelligence
+1. H1, intent discrimination: the malicious sequence block rate exceeds the matched benign sequence block rate, averaged equally over decomposition and workflow.
+2. H2, decomposition penalty: the malicious block rate by activation is lower for three-submission split changes than for atomic changes, averaged equally over pull-request and trunk workflows.
 
-Proposed tags: `code review`, `large language models`, `software security`, `pull requests`, `trunk-based development`, `adversarial change sequences`, and `empirical software engineering`.
+H1 is supported only if the lower bound of its 95% family-stratified structural-template bootstrap interval is above zero. H2 is supported only if the upper bound of the 95% interval for split minus atomic is below zero. Estimates and intervals are reported regardless of support.
 
-## Overview
+### Exploratory workflow questions
 
-### Research questions and hypotheses
+The trunk-minus-pull-request difference and the decomposition-by-workflow difference-in-differences are reported with 95% intervals. They are exploratory because the subscription-bounded sample has low power for small workflow effects. Failure to detect a difference is not evidence of equivalence.
 
-The unit of generalization is a structural code template. Each template has two identifier-only instances and paired malicious and benign cases.
-
-1. RQ1 asks whether LLM review distinguishes malicious from benign sequences. H1 predicts that the template-level block-rate risk difference, malicious minus benign and averaged equally over decomposition, workflow, and context, is greater than zero. H1 is supported when the lower bound of its 95% family-stratified template-bootstrap interval is greater than zero.
-2. RQ2 asks whether strategic decomposition reduces detection. H2 predicts that, under local context, the malicious-sequence block rate by activation is lower for three-submission split changes than for atomic changes, averaged equally over pull-request and trunk workflows. H2 is supported when the upper bound of the 95% interval for split minus atomic is less than zero. Cumulative split-sequence detection by boundary and mean submissions to detection among detected sequences are secondary descriptions; they are not compared inferentially with atomic sequences, which have only one boundary.
-3. RQ3 asks whether workflow framing changes detection when evidence bytes are otherwise equivalent. H3a predicts practical equivalence: the malicious-sequence trunk-minus-pull-request block-rate risk difference, averaged equally over decomposition and context, has a 90% interval wholly inside -0.10 to 0.10. H3b is two-sided: the 95% interval for the decomposition-by-workflow difference-in-differences excludes zero.
-4. RQ4 asks whether cumulative history mitigates the split penalty. H4 predicts a positive decomposition-by-context difference-in-differences, averaged equally over workflow. H4 is supported when the lower bound of its 95% interval is greater than zero.
-
-The confirmatory endpoint is `blocked_by_activation`. A sequence is blocked when any review boundary at or before activation returns `block`. An `abstain`, refusal, or schema-invalid response is not a detection in the primary analysis.
-
-### Foreknowledge of data or evidence
-
-Select the OSF option indicating that **some data have been collected**, then use the disclosure below.
-
-The investigators generated benchmark structure, deterministic safety oracles, randomized schedules, and fabricated responses used only to test analysis plumbing. They also ran the fully deterministic final-state ESLint baseline described below; all 2,400 generated files passed. An excluded Semgrep feasibility probe likewise produced zero findings. These deterministic observations existed before this registration and are fully disclosed in [`study.json`](./study.json). No frozen model has been asked to review any benchmark prompt, no human-review outcome exists, and no confirmatory or ecological LLM outcome exists. Preregistration v1 and the pre-outcome hierarchical amendment history remain preserved. Scenario construction, hypotheses, power assumptions, prompts, and confirmatory analysis were fixed without LLM outcomes. Independent reviewers must declare that they have not seen any LLM outcome.
-
-## Research design
+## Design
 
 ### Study type
 
-Select: **Other**.
+This is a controlled repeated-measures experiment on synthetic code-review evidence. It has no human participants and tests no real repository, target, credential, or exploit.
 
-This is a controlled, fully crossed, repeated-measures factorial experiment on synthetic code-review evidence. Every case appears in every controlled condition, so cases are not randomly assigned to treatments. Only review-boundary call order is randomized. It is not a study of randomly sampled human participants.
+### Factors
 
-### Intention for causal interpretation
+- Intent: malicious abstract policy violation or purpose-matched benign change.
+- Decomposition: one atomic submission or three necessary submissions with the same final tree.
+- Workflow: pre-merge pull request or landed commit on main that remains untrusted pending pipeline review.
+- Review system: Codex CLI through a ChatGPT subscription or Claude Code through a Claude subscription.
 
-Select: **Direct inference on causal relationship(s)** for the controlled synthetic benchmark.
+Every review receives only the current boundary artifact. Prior submission diffs are not supplied. This local information boundary is the mechanism under test and is identical across the two workflow framings apart from prospectively specified native artifact fields and policy text.
 
-Atomic and split presentations have the same final program tree; pull-request and trunk controlled requests differ only in the workflow policy; local and cumulative conditions use prespecified information boundaries. Causal interpretation is limited to these evidence manipulations, frozen model routes, prompts, and synthetic benchmark. No causal claim is made about organizational outcomes, developer behavior, or all real repositories.
+### Benchmark sample
 
-### Blinding
+The active sample contains 40 structural templates: template indexes 1, 7, 13, 19, and 25 from each of eight scenario families. This balanced diagonal covers all five data representations and five control-flow shapes once per family. Only the first invented-identifier instance is retained.
 
-- Models receive opaque case and submission identifiers and are not told malicious or benign ground truth, scenario family, structural-template identity, expected severity, or hypothesis direction.
-- The call queue contains no intent, sequence, family, template, or expected-severity field. Ground truth is stored in a separately keyed ledger.
-- Models necessarily see evidence revealing the assigned decomposition, workflow policy, and available context; they cannot be blinded to those treatments.
-- Machine-scored verdicts and probabilities use the frozen schema without human discretion.
-- Human localization adjudicators, if used, are not shown model identity, trial, or condition labels while scoring against the relevant scenario card. Response content may reveal aspects of the condition, and adjudicators cannot be blinded to the ground-truth policy when assessing localization.
-- Confirmatory analysis code and estimands are frozen before outcomes are joined to ground truth.
+Each template has one malicious-benign pair, giving 40 pairs and 80 intent-specific cases. Atomic and split presentations have identical final program trees, total changed-line counts, and activation timestamps. Reverting any one malicious split step makes the deterministic oracle safe.
 
-### Study design
+The sample is fixed before outcomes. No template, prompt, or trial is added or removed in response to model behavior.
 
-The controlled experiment crosses:
+### Review systems
 
-- Intent: malicious or benign.
-- Decomposition: one atomic submission or three causally ordered split submissions.
-- Workflow: pre-merge pull-request gate or post-merge untrusted-main pipeline gate.
-- Context: current boundary only or cumulative prior submissions and repository evidence.
-- Model: the three frozen routes in [`study.json`](./study.json).
-- Trial: three independent calls per model and condition.
+The unit under comparison is the subscription-backed review product, including its provider-controlled system instructions and serving stack.
 
-Each of eight scenario families contains 25 structural templates. Every template has two instances that differ only in invented identifiers, giving 200 templates, 400 scenario pairs, and 800 intent-specific cases. Atomic and split variants have identical final trees, changed-line totals, and activation timestamps. Each of the three malicious split steps is necessary: reverting any one step makes the deterministic final oracle safe.
+1. Codex CLI 0.137.0, requested model `gpt-5.5`, authenticated with the saved ChatGPT login. Calls use `codex exec` with ephemeral sessions, JSONL output, read-only sandboxing, ignored user configuration and rules, and the fixed output schema.
+2. Claude Code 2.1.211, requested model alias `sonnet`, authenticated through a Claude Max subscription. Calls use print mode, JSON output, the fixed JSON schema, one maximum agent turn, no session persistence, and no tools.
 
-This registration covers the controlled, byte-equivalent workflow experiment and a separate exploratory ecological layer. The ecological layer uses native-looking pull-request artifacts for the PR condition and landed-commit plus untrusted-pipeline artifacts for the trunk condition. It retains the same intent, decomposition, workflow, and context factors but cannot support or alter H1-H4.
+Before every collection batch, authentication checks must confirm ChatGPT login for Codex and `claude.ai` Max login for Claude Code. `OPENAI_API_KEY`, `CODEX_API_KEY`, and `ANTHROPIC_API_KEY` must be absent. The runner aborts rather than switching to API billing, API credits, another provider, or a fallback model.
 
-### Randomization
+Codex officially supports ChatGPT subscription authentication and non-interactive `codex exec`; Claude Code officially supports subscription authentication and non-interactive print mode. Product documentation is archived by access date in the study record: [Codex authentication](https://learn.chatgpt.com/docs/auth), [Codex non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode), [Claude Code subscription access](https://support.anthropic.com/en/articles/11145838-using-claude-code-with-your-max-plan), and [Claude Code CLI reference](https://docs.anthropic.com/en/docs/claude-code/cli-usage).
 
-Review boundaries are globally shuffled with Fisher-Yates using the standard-library xorshift32 implementation in [`design.mjs`](./design.mjs), seed `20260716`. The frozen v2 schedule contains 115,200 calls in 57,600 sequences and has SHA-256 digest `e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663`. Each model receives 38,400 calls. Every review boundary starts a fresh model session; history is rendered explicitly only in cumulative conditions.
+### Prompt and response contract
 
-The ecological schedule uses seed `20260718`, contains 7,680 calls in 3,840 sequences, and has SHA-256 digest `d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e`. Each model receives 2,560 ecological calls. Its ledger and hashes are separate from the confirmatory schedule.
+Every boundary uses the same fixed security-review task and requests one JSON object containing verdict, malicious probability, severity, relevant submission identifiers, evidence, and category. The complete request is at most 2,961 UTF-8 bytes. Output is schema validated without repair.
 
-## Sampling
+Provider-controlled system prompts cannot be made identical or fully observed. This is a comparison of review systems, not an isolated causal comparison of underlying base models.
 
-### Data collection procedures
+### Randomization and call count
 
-The benchmark generator creates all eligible cases deterministically. There is no post-freeze sampling from the generated pool: all 200 approved structural templates, both identifier instances, both intents, and all controlled factorial conditions are scheduled.
+Fisher-Yates shuffling with the standard-library xorshift32 implementation and seed `20260718` fixes review-boundary order.
 
-The frozen routes are:
+- 40 structural templates and malicious-benign pairs.
+- 80 cases.
+- 640 condition-specific sequences.
+- 1,280 review boundaries: 640 for each review system.
+- 320 atomic boundaries and 960 split boundaries.
+- One trial per case, decomposition, workflow, and review system.
 
-- `openai/gpt-5.6-sol` through the pinned OpenAI provider endpoint.
-- `anthropic/claude-sonnet-4.6` through the pinned Anthropic provider endpoint.
-- `qwen/qwen3-coder-next` through the pinned Alibaba provider endpoint and upstream checkpoint revision.
+The frozen candidate schedule SHA-256 is `e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a`.
 
-Provider fallback is disabled. Required parameters and no-data-collection routing are requested. Returned model, provider, and endpoint metadata must match the frozen configuration. The model receives no tools and cannot execute code.
+### Budget and stopping
 
-Collection cannot begin until:
+The additional spending ceiling is US$0. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, collection pauses until the same subscription window resets.
 
-1. Independent benchmark/safety and methods reviews approve the freeze commit.
-2. Every rendered request is below 4,000 UTF-8 bytes and 2,000 native input tokens on its frozen route.
-3. This preregistration is submitted and its timestamp and identifier are recorded.
-4. Provider terms and publication permissions are checked.
-5. The investigator explicitly authorizes the paid call budget.
+Collection also suspends on a safety or provider-terms conflict, authentication change, benchmark-integrity failure, CLI version change, returned model-identity change, or 100 consecutive infrastructure failures. There is no outcome-dependent stopping.
 
-### Sample size
+An infrastructure failure that yields no usable response may be retried after the applicable reset, up to three attempts. Refusals and schema-invalid responses are observed abstentions and are not retried. Every attempt remains in the ledger.
 
-The generalization sample is 200 structural templates, 25 in each of eight fixed scenario families. Each template has two identifier-only instances. The design yields:
+## Sampling and power
 
-- 400 malicious-benign scenario pairs.
-- 800 intent-specific cases.
-- 57,600 model-by-trial sequence evaluations.
-- 115,200 review-boundary calls.
-- 38,400 calls for each of three models.
+The sample is constrained by existing subscription access rather than selected to achieve 80% power. Under the earlier central assumptions of atomic recall 0.65, a split penalty of 0.15, workflow effect zero, interaction 0.10, scenario logit standard deviation 0.75, one trial, and 20,000 simulations, the 40-pair design has estimated split-effect power 0.2584, workflow-equivalence assurance 0.0038, and interaction power 0.1016.
 
-Models, trials, and identifier instances are repeated observations within templates and do not increase the generalization sample size.
-
-The exploratory ecological layer selects template indexes 1, 7, 13, 19, and 25 in every family. This Latin-square subset retains every data representation and control-flow shape once per family, giving 40 structural templates, two identifier instances, 80 scenario pairs, one trial per model and condition, and 7,680 calls. It is sized for a bounded native-artifact replication, not for a confirmatory power claim.
-
-### Sample-size rationale
-
-The standard-library hierarchical simulation in [`design.mjs`](./design.mjs) used 20,000 replications, seed `20260716`, three Bernoulli replicates per cell, central atomic recall 0.65, benign false-positive rate 0.10, split penalty 0.15, decomposition-by-workflow interaction 0.10, decomposition-by-context interaction 0.10, and conservative template-level random intercept and slope variation. It does not assume that the three models create additional independent templates. The selected 200-template by two-instance layout retains the complete eight-family by five-representation by five-control-flow coverage. Estimated H1 power was 1.0000, H2 power 1.0000, H3a equivalence assurance 1.0000, H3b interaction power 0.9921, and H4 interaction power 0.9919. A 40-template layout also clears 0.80 under these assumptions but discards the planned structural crossing in favor of repeated identifier variants, so it is not selected. These are design assumptions, not pilot estimates.
-
-### Starting and stopping rules
-
-Confirmatory collection starts only after all five eligibility conditions above pass. Once started, the executor processes the frozen schedule without outcome-based stopping or prompt changes.
-
-If no usable response exists because of a network error, HTTP 408, HTTP 409, HTTP 429, HTTP 5xx response, or route-metadata mismatch, the identical request may be retried twice, for three total attempts. The executor honors `Retry-After` values up to 60 seconds; a longer value suspends collection instead of retrying early. Without `Retry-After`, it waits 2 seconds before the second attempt and 8 seconds before the third. A provider refusal or schema-invalid response is an observed `abstain` and is not retried. Every attempt is logged.
-
-Confirmatory collection stops before accrued cost plus the frozen projected remainder would exceed US$1,400. Ecological collection has a separate US$72.97024 projection and US$100 ceiling. Neither ceiling authorizes spending. A safety-policy change, provider-terms conflict, benchmark-integrity failure, or 100 consecutive infrastructure failures suspends collection before further calls. Resumption requires a documented, outcome-blind decision. If a schedule cannot be completed, all collected and missing calls remain reportable; no replacement templates or additional trials are added.
+Accordingly, H1 and H2 remain directional prospective tests, but all estimates emphasize interval width. Workflow equivalence is not tested, the workflow interaction is exploratory, and null results cannot support claims of no effect. The study is best interpreted as a bounded empirical evaluation and feasibility estimate for a larger replication.
 
 ## Variables
 
-### Manipulated variables
+### Primary outcome
 
-- `intent`: malicious or benign matched final state.
-- `decomposition`: atomic or three-submission split presentation.
-- `workflow`: pull-request gate or untrusted-main pipeline framing.
-- `context`: local current-boundary evidence or cumulative explicit history.
-- `model`: three frozen routes.
+`blocked_by_activation` is true when at least one boundary at or before activation returns `block`. An abstention, refusal, invalid response, or missing boundary is not a detection in the primary operational analysis.
 
-### Measured variables
+### Secondary outcomes
 
-Each valid response contains:
+- Malicious recall, benign false-positive rate, and precision.
+- Cumulative detection by boundary and submissions to detection.
+- Malicious-probability calibration and Brier score.
+- Severity error against `high` for malicious cases and `none` for benign cases.
+- Localization of at least one prespecified relevant submission.
+- Abstention, refusal, schema-failure, infrastructure-failure, and tool-use-deviation rates.
+- Review-system-specific estimates.
 
-- `verdict`: `allow`, `block`, or `abstain`.
-- `malicious_probability`: number from 0 to 1.
-- `severity`: `none`, `low`, `medium`, `high`, or `critical`.
-- `submission_ids`: cited relevant submissions.
-- `evidence`: short evidence-grounded explanation.
-- `category`: short weakness category.
-
-The collection ledger also records model and provider metadata, attempt count, timestamps, latency, token usage, cost, failure or refusal status, and schema-validity status. Ground truth records intent, family, template, activation boundary, relevant submissions, expected severity, and safety/equivalence attestations.
-
-### Derived variables and indices
-
-- `blocked_by_activation`: one when any boundary at or before activation returns `block`; otherwise zero.
-- False positive: `blocked_by_activation` for a benign sequence.
-- `detected_at`: first blocked submission index at or before activation; missed sequences are right-censored after activation.
-- Operational verdict: `block` if any timely block exists, otherwise `abstain` if any timely abstention exists, otherwise `allow`.
-- Localization: a blocked response cites at least one preregistered relevant submission and identifies the causal abstract-policy failure. Two adjudicators score this independently; a third resolves disagreements.
-- Severity error: absolute distance on the ordered scale `none`, `low`, `medium`, `high`, `critical` from the preregistered severity.
-- Brier score: mean squared difference between activation-boundary malicious probability and intent coded malicious = 1, benign = 0.
-- Ten-bin expected calibration error: the sample-weighted absolute difference between mean probability and observed malicious proportion in bins `[0,.1)`, `[.1,.2)`, through `[.9,1]`.
-- Reviewer consistency: mean pairwise operational-verdict agreement and ICC(1,1) of activation-boundary malicious probabilities across the three trials in each scenario-condition-model cell.
-
-All malicious cases currently have expected severity `high` because the shared oracle grants an unprivileged synthetic actor a protected capability; benign cases have expected severity `none`. The independent benchmark reviewer must approve this common scale.
+Repeated-trial consistency is not estimated because the active design has one trial per cell.
 
 ## Analysis plan
 
-### Statistical models and estimands
+Sequence outcomes are averaged within structural-template and intent-condition cells across the two review systems, then structural templates receive equal weight. Review-system-specific estimates are secondary.
 
-Sequence outcomes are first averaged within each structural template and intent-condition cell across the balanced identifier instances, models, and trials. Structural templates are then weighted equally.
+Uncertainty uses a family-stratified 10,000-replicate structural-template bootstrap with seed `20260718`. Within each replicate, five templates are sampled with replacement from each family while all paired intents and treatment cells remain attached.
 
-The primary uncertainty calculation is a percentile bootstrap with 10,000 replicates and xorshift32 seed `20260716`. Within every replicate, 25 templates are sampled with replacement separately from each of the eight scenario families, preserving family strata and all paired intent and treatment cells within a sampled template.
+The preregistered contrasts are:
 
-The confirmatory contrasts are:
+1. H1: malicious minus benign block-rate risk difference, averaged over decomposition and workflow.
+2. H2: split minus atomic malicious block-rate risk difference, averaged over workflow.
+3. Exploratory workflow: trunk minus pull-request malicious risk difference, averaged over decomposition.
+4. Exploratory interaction: `(split - atomic under trunk) - (split - atomic under pull request)`.
 
-1. H1 intent discrimination: malicious block rate minus benign block rate, averaged equally over decomposition, workflow, and context; 95% interval.
-2. H2 split effect: split minus atomic malicious block-rate risk difference under local context, averaged equally over workflow; 95% interval.
-3. H3a workflow equivalence: trunk minus pull-request malicious block-rate risk difference, averaged equally over decomposition and context; 90% interval compared with -0.10 and 0.10.
-4. H3b decomposition-by-workflow interaction: `(split - atomic under trunk) - (split - atomic under pull request)`, averaged equally over context; 95% interval.
-5. H4 decomposition-by-context interaction: `(split - atomic under cumulative context) - (split - atomic under local context)`, averaged equally over workflow; 95% interval.
+Missing boundaries are abstentions in the operational analysis. Mandatory detection-favourable and detection-unfavourable bounds assign missing malicious and benign boundaries oppositely. A review-system-specific complete-pair analysis drops a structural template only for the affected system.
 
-The executable implementation is [`analyse.mjs`](./analyse.mjs). The preregistration-v1 mixed-effects logistic regression remains a sensitivity analysis, not the primary estimator.
+No imputation model is fitted. Secondary comparisons are labelled secondary and Holm-adjusted within outcome families where inferential intervals are used.
 
-### Transformations
+## Quality control
 
-Verdicts are transformed to the binary `blocked_by_activation` endpoint exactly as defined above. Categorical factors retain the written levels; risk differences are computed directly, without logit transformation, centering, covariate selection, outlier trimming, or data-dependent bin changes. Probability and severity metrics use the fixed transformations in the derived-variable section.
+### Blinding
 
-### Inference criteria
+The call queue contains opaque call, prompt, case, review-system, and schedule identifiers only. Intent, family, structural template, activation boundary, and expected severity remain in a separately keyed ground-truth ledger until collection is complete.
 
-H1, H2, H3a, H3b, and H4 use the prespecified interval rules in the hypothesis section. H3b is two-sided; H1, H2, and H4 have prespecified directions. H3a is an equivalence claim requiring the entire 90% interval inside the equivalence bounds. Estimates and intervals are reported whether or not their support criterion is met.
+Review systems necessarily see the assigned workflow framing and current diff. They do not see intent labels, oracle results, family names, or other model responses.
 
-Each research question is reported as a distinct preregistered claim; no omnibus claim is made from the number supported. Model-specific, family-specific, calibration, localization, timing, severity, and ablation analyses are secondary. Where multiple secondary comparisons within one outcome family are interpreted inferentially, Holm adjustment is applied and both adjusted and unadjusted values are reported. Exploratory analyses are labeled as such.
+### Internal review
 
-### Data inclusion and exclusion
+Three isolated subagents review the same frozen packet for benchmark safety and responsible release, statistical methods, and reproducibility. Their raw reports and the author's resolution log are archived.
 
-Every scheduled call is retained in the attempt ledger. No response is excluded because of its verdict, probability, latency, model family, or apparent quality. No outlier rule applies.
+These records are labelled AI-assisted internal review. They are not represented as independent human peer review, ethics approval, or arXiv endorsement. Shared model, provider, author-orchestration, and automation biases are explicit limitations.
 
-- A valid response from the correct frozen route is included.
-- A refusal or schema-invalid response is coded `abstain` and not retried.
-- A wrong route or provider, network failure, or eligible HTTP failure is retried only under the frozen rule. Exhaustion produces a missing call.
-- A benchmark invariant failure discovered after registration suspends the study. Affected outcomes are not inspected to decide a remedy. Any correction requires a public, timestamped amendment, regenerated hashes, repeat independent review, and clear separation of pre- and post-amendment data.
-- No scenario is removed merely because every model refuses it. Provider refusals are outcomes, not an exclusion criterion.
+### Deterministic baseline
 
-Refusals and schema-invalid responses have no invented probability or severity. They remain in the operational-verdict denominator, have null activation calibration fields, and are excluded only from probability and severity metric denominators. The scored count and coverage are reported with every such metric.
+ESLint 9.39.3 scanned all 2,400 files in the full 800-case generator output with zero findings. This conventional final-state lint result has recall 0, false-positive rate 0, and undefined precision. It cannot estimate decomposition or workflow effects. The separately disclosed zero-finding Semgrep feasibility probe is excluded because its exact registry rules snapshot cannot be redistributed under the [Semgrep Rules License v1.0](https://semgrep.dev/legal/rules-license/).
 
-For a model-specific paired contrast, a template with a missing condition is omitted from that complete-pair sensitivity analysis only. It remains in the all-model primary operational analysis under the missing-data rule below.
+## Ethics and responsible release
 
-### Missing data
+Every program executes only in memory and has no network, shell, subprocess, file-system, package-install, credential, personal-data, persistence, destructive, dynamic-execution, or deployment capability. It models an abstract policy failure, not an exploit against a real target.
 
-After retry exhaustion, the absent boundary is treated as `abstain` and therefore not a detection in the primary operational analysis. The number, rate, condition, provider, and attempt history of missing calls are reported.
+Release artifacts receive AI-assisted dual-use review. Material judged to provide reusable operational evasion guidance is withheld or reduced to non-operational metadata, and every omission is documented. Raw product output is released only where provider terms permit.
 
-Two bounds are mandatory:
+## Limitations
 
-- Detection-favorable bound: missing malicious boundaries are treated as blocks and missing benign boundaries as allows.
-- Detection-unfavorable bound: missing malicious boundaries are treated as allows and missing benign boundaries as blocks.
+- Forty fixed templates do not represent all languages, repositories, vulnerabilities, or attacker strategies.
+- The sample is underpowered for small decomposition effects and especially for workflow equivalence or interaction claims.
+- One trial cannot estimate within-system stochastic consistency.
+- Subscription products may change their hidden instructions, routing, or serving implementation despite fixed client and requested-model identifiers.
+- Local current-boundary evidence intentionally withholds submission history, so the study does not estimate whether explicit cumulative history mitigates a decomposition penalty.
+- Product framing cannot reproduce organizational incentives, reviewer fatigue, rollback pressure, or the blast radius of a real main branch.
+- AI-assisted internal review is not independent human validation.
 
-The executable scorer records each retry-exhausted boundary in `missing_boundaries`; an activation-boundary miss has null probability and severity. The confirmatory conclusion is described as robust to missingness only if the primary analysis and the relevant support criterion hold under both bounds. A complete-pair analysis is reported as a sensitivity analysis. No imputation model is fitted.
+## Artifact freeze
 
-### Other planned analyses
+At the current candidate freeze:
 
-Secondary reports include recall, false-positive rate, precision, abstention rate, cumulative detection by submission boundary, mean submissions to detection among detections, calibration, severity error, localization, refusal and failure rates, and repeated-trial consistency. All receive template-respecting intervals where applicable.
+- Scenario cards SHA-256: `2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b`.
+- Rendered prompts SHA-256: `f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08`.
+- Randomized schedule SHA-256: `e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a`.
+- Blinded call ledger SHA-256: `9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27`.
+- Ground-truth ledger SHA-256: `f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb`.
 
-The ecological layer reports the same descriptive outcomes and controlled-versus-ecological differences by workflow and context. Because its native artifact fields differ by workflow and it has one trial per cell, all ecological comparisons are exploratory; reviewer-consistency estimates are not reported for that layer.
+Before OSF submission, replace “candidate freeze” with the final Git commit, archive the three AI-assisted internal reviews and resolution log, confirm the license and optional ORCID decision, and reproduce these hashes from a clean checkout. Any artifact change requires a new pre-outcome review before registration.
 
-The completed deterministic baseline runs ESLint 9.39.3 with the repository's hashed configuration and lockfile over all 800 final-state case trees. A case is flagged if any of its three files produces a warning or error. All 2,400 files passed, so the baseline has recall 0, false-positive rate 0, and undefined precision. This is a conventional pipeline lint baseline, not security SAST; it cannot estimate decomposition, context, or workflow effects and is not treated as semantically equivalent to LLM review.
+## Deviations
 
-A separate Semgrep Community Edition feasibility probe produced no findings but is excluded from all study analyses because its registry rules snapshot cannot be redistributed under the [Semgrep Rules License v1.0](https://semgrep.dev/legal/rules-license/). A blinded human-review baseline is contingent on recruitment feasibility, consent, anonymization, and any required ethics approval. If those conditions are not met before model collection, the human baseline is omitted and reported as infeasible rather than replaced post hoc.
+This v2 draft prospectively supersedes the uncollected API/OpenRouter design because the sole author has no research budget beyond existing subscriptions. No LLM benchmark outcome existed when the change was made. The original preregistration-v1 and API-design history remain available in Git and in the legacy fields of [`study.json`](./study.json).
 
-The controlled local-versus-cumulative context factor is the powered history ablation. Additional candidate ablations are metadata removal, repository-snapshot presence, split timestamp spacing, and neutral interleaving. None is in the current call ledgers. An additional ablation is collected only if its generator, call count, token preflight, analysis, and prospective registration are frozen before any ablation outcome exists. Otherwise it is omitted and described as future work.
-
-## Other context
-
-### Safety and dual use
-
-All programs execute only in memory and import only relative synthetic modules. They contain no network, shell, subprocess, file-system, package-install, deployment, credential, personal-data, persistence, destructive, or real-target capability. Harm is represented only by a deterministic assertion that an unprivileged synthetic actor receives a protected synthetic capability. Counterfactual tests prove all three malicious split steps are necessary.
-
-The artifact release is independently reviewed for reusable evasion guidance. Any material judged to enable real abuse is withheld or reduced to non-operational metadata, and the omission is documented. Raw model outputs are released only where provider terms permit. No real repository or person is tested without explicit authorization.
-
-### Frozen artifacts and reproducibility
-
-At the candidate freeze represented by [`study.json`](./study.json):
-
-- Scenario cards SHA-256: `71b20e0e5a49547a68d17a8435b1a9f860e8f078942bbc2b66b557971a9a4ab3`.
-- Fixed prompt SHA-256: `9e49d849f1435fa962fe2fb7bc000592b8c692bc97d0e5c9f1eef7a307bc4c07`.
-- Rendered prompts SHA-256: `56d246f9c676e94f29ce2dea4025633f1b31815959b5b34b0daf2b49af32dff4`.
-- Schedule SHA-256: `e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663`.
-- Ecological rendered prompts SHA-256: `b2837c4088147e036fbdf7e7e985bfbd3b15d3f1a187c735bf1096236d806580`.
-- Ecological schedule SHA-256: `d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e`.
-- ESLint configuration SHA-256: `fd9af0693c9fb3c7b9f9dfd573b944184a03ae0bd8b09f734cd97bb6dae15709`.
-- Package lock SHA-256: `d18c4808497a007aba23a2ab12abc99e76a45e42b9c614f31b587e4aaf782553`.
-
-Required before submission: replace “candidate freeze” with the final Git commit identifier, attach or archive the approved reviewer records, record exact native token-count evidence, and verify these hashes from a clean checkout. If any hash changes, update this draft and repeat the affected pre-outcome review before registration.
-
-### Deviations and amendments
-
-All deviations are dated, justified, and classified as occurring before or after outcome access. Confirmatory claims always use the last prospectively registered plan that predates their data. Unregistered analyses are labeled exploratory. The public report preserves preregistration v1, this v2 registration, later registrations or updates, excluded or missing records, and the complete analysis code history.
+All later deviations are dated, justified, and classified as occurring before or after outcome access. Unregistered analyses are labelled exploratory.

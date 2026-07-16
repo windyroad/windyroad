@@ -23,18 +23,20 @@ describe("ecological workflow layer", () => {
       generateBenchmark(controlledRoot);
       const ecological = generateEcologicalBenchmark(controlledRoot, ecologicalRoot);
       const collection = generateCollection(ecologicalRoot, collectionRoot, {
-        models: study.models.map(({ id }) => id),
+        models: study.active_subscription_design.review_systems.map(({ id }) => id),
         trialsPerCell: 1,
+        contexts: ["local"],
         seed: 20260718,
       });
 
-      expect(ecological.cases).toHaveLength(160);
-      expect(new Set(ecological.cases.map(({ scenario_id }) => scenario_id)).size).toBe(80);
+      expect(ecological.cases).toHaveLength(80);
+      expect(new Set(ecological.cases.map(({ scenario_id }) => scenario_id)).size).toBe(40);
       expect(new Set(ecological.cases.map(({ template_id }) => template_id)).size).toBe(40);
       expect(new Set(ecological.cases.map(({ family }) => family)).size).toBe(8);
-      expect(ecological.prompts).toHaveLength(2_560);
+      expect(new Set(ecological.cases.map(({ instance }) => instance))).toEqual(new Set([1]));
+      expect(ecological.prompts).toHaveLength(640);
       expect(ecological.maximum_request_bytes).toBeLessThanOrEqual(4_000);
-      expect(collection.calls).toHaveLength(7_680);
+      expect(collection.calls).toHaveLength(1_280);
       expect({
         cards_sha256: ecological.cards_sha256,
         prompts_sha256: ecological.prompts_sha256,
@@ -62,12 +64,12 @@ describe("ecological workflow layer", () => {
       const trunk = evidence(ecological.prompts.find((prompt) =>
         prompt.decomposition === "split"
         && prompt.workflow === "trunk"
-        && prompt.context === "cumulative"
+        && prompt.context === "local"
         && prompt.submission_index === 3
       ));
       expect(trunk.current_artifact.kind).toBe("main_commit");
       expect(trunk.current_artifact.pipeline.trust).toBe("untrusted");
-      expect(trunk.prior_artifacts).toHaveLength(2);
+      expect(trunk.prior_artifacts).toEqual([]);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

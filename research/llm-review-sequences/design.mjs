@@ -339,6 +339,7 @@ export function generateCallSchedule({
   models,
   trialsPerCell = 3,
   splitSubmissionCount = 3,
+  contexts = ["local", "cumulative"],
   seed = 20260716,
 }) {
   const scheduledScenarioIds = scenarioIds ?? (
@@ -358,6 +359,10 @@ export function generateCallSchedule({
     throw new Error("scenarioCount must be positive or scenarioIds must contain unique identifiers");
   }
   if (!Array.isArray(models) || models.length === 0) throw new Error("models must not be empty");
+  if (!Array.isArray(contexts) || !contexts.length
+    || contexts.some((context) => !["local", "cumulative"].includes(context))) {
+    throw new Error("contexts must contain local and/or cumulative");
+  }
 
   const rows = [];
   for (const scenarioId of scheduledScenarioIds) {
@@ -365,7 +370,7 @@ export function generateCallSchedule({
       for (const decomposition of ["atomic", "split"]) {
         const submissions = decomposition === "atomic" ? 1 : splitSubmissionCount;
         for (const workflow of ["pr", "trunk"]) {
-          for (const context of ["local", "cumulative"]) {
+          for (const context of contexts) {
             for (let trial = 1; trial <= trialsPerCell; trial += 1) {
               for (const model of models) {
                 const sequenceId = [scenarioId, intent, decomposition, workflow, context, model, `trial-${trial}`].join(":");

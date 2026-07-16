@@ -131,6 +131,18 @@ describe("preregistered study design", () => {
     expect(schedule.rows).toHaveLength(64);
   });
 
+  it("can schedule the subscription study without the cumulative-context ablation", () => {
+    const schedule = generateCallSchedule({
+      scenarioCount: 40,
+      models: ["codex-cli", "claude-code"],
+      trialsPerCell: 1,
+      contexts: ["local"],
+    });
+
+    expect(schedule.rows).toHaveLength(1_280);
+    expect(new Set(schedule.rows.map(({ context }) => context))).toEqual(new Set(["local"]));
+  });
+
   it("estimates the maximum inference cost from frozen token ceilings", () => {
     expect(estimateCost({
       callsByModel: { "model-a": 10, "model-b": 20 },

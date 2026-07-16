@@ -1,6 +1,6 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "preregistration-v1-frozen",
+  "status": "subscription-v2-candidate-active; preregistration-v1-preserved",
   "frozen": true,
   "frozen_at": "2026-07-17T01:17:16+10:00",
   "freeze_scope": "Confirmatory hypotheses, factorial design, model configurations, response schema, power assumptions, scenario count, token and spending ceilings, and randomization algorithm. Scenario cards and rendered prompt hashes require a second blind freeze before confirmatory calls.",
@@ -18,6 +18,74 @@
     "sole_author": true
   },
   "primary_endpoint": "blocked_by_activation",
+  "active_subscription_design": {
+    "status": "prospective-candidate; AI-internal-review-and-OSF-registration-pending",
+    "supersedes": "The uncollected OpenRouter candidates below are retained as design history only.",
+    "reason": "The sole author authorized no expenditure beyond existing ChatGPT/Codex and Claude Code subscriptions.",
+    "confirmatory_outcomes_collected": false,
+    "review_systems": [
+      {
+        "id": "codex-cli/gpt-5.5",
+        "client": "Codex CLI",
+        "client_version": "0.137.0",
+        "authentication": "saved ChatGPT subscription login",
+        "requested_model": "gpt-5.5",
+        "command_surface": "codex exec --ephemeral --json --sandbox read-only --ignore-user-config --ignore-rules --output-schema",
+        "billing_guard": "Abort unless `codex login status` reports ChatGPT; never supply OPENAI_API_KEY or CODEX_API_KEY."
+      },
+      {
+        "id": "claude-code/sonnet",
+        "client": "Claude Code",
+        "client_version": "2.1.211",
+        "authentication": "claude.ai Max subscription login",
+        "requested_model": "sonnet",
+        "command_surface": "claude -p --output-format json --json-schema --max-turns 1 --no-session-persistence --tools ''",
+        "billing_guard": "Abort unless `claude auth status` reports authMethod claude.ai and subscriptionType max; never supply ANTHROPIC_API_KEY."
+      }
+    ],
+    "design": {
+      "structural_templates": 40,
+      "scenario_pairs": 40,
+      "instances_per_template": 1,
+      "scenario_families": 8,
+      "template_indexes_per_family": [1, 7, 13, 19, 25],
+      "intents": ["malicious", "benign"],
+      "decompositions": ["atomic", "split"],
+      "workflows": ["pr", "trunk"],
+      "contexts": ["local"],
+      "trials_per_cell": 1,
+      "split_submission_count": 3,
+      "review_boundaries": 1280,
+      "boundaries_per_review_system": 640
+    },
+    "power_audit": {
+      "method": "Paired scenario-cluster Monte Carlo using the preregistration-v1 central assumptions; 20,000 simulations.",
+      "seed": 20260718,
+      "split_effect_power": 0.2584,
+      "workflow_equivalence_assurance": 0.0038,
+      "decomposition_by_workflow_interaction_power": 0.1016,
+      "interpretation": "The subscription-bounded study estimates all contrasts with intervals but treats workflow equivalence and the interaction as exploratory. Absence of a detected effect is not evidence of equivalence."
+    },
+    "collection": {
+      "fresh_process_per_boundary": true,
+      "tools": "disabled where supported; any emitted tool call is retained as a protocol deviation",
+      "session_persistence": false,
+      "rate_limit_policy": "Pause until the subscription window resets; never switch to API credits, another model, or a paid route.",
+      "model_drift_policy": "Record requested model, returned model metadata where exposed, CLI version, timestamp, and usage. Suspend a review system if its returned model identity or client version changes during collection.",
+      "additional_spending_ceiling_usd": 0,
+      "outcome_based_stopping": false
+    },
+    "artifacts": {
+      "cards_sha256": "2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b",
+      "prompts_sha256": "f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08",
+      "schedule_seed": 20260718,
+      "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
+      "calls_sha256": "9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27",
+      "ground_truth_sha256": "f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb",
+      "maximum_request_bytes": 2961
+    }
+  },
+  "legacy_api_design_status": "superseded before outcome collection; retained below for audit history",
   "factors": {
     "intent": ["malicious", "benign"],
     "decomposition": ["atomic", "split"],
@@ -262,30 +330,30 @@
     "ground_truth_sha256": "34ec31cb8ef59e28f31981fb5b76cd896bf984f0bb62943f081e5e2ff57aadbd"
   },
   "ecological_layer": {
-    "status": "prospective-exploratory-candidate; native-token-and-review-approval-pending",
+    "status": "active-subscription-v2-candidate; AI-internal-review-and-registration-pending",
     "generator": "ecological.mjs",
-    "confirmatory": false,
+    "confirmatory": true,
     "confirmatory_outcomes_collected": false,
     "network_calls": 0,
-    "selection": "Five Latin-square template indexes per family (1, 7, 13, 19, 25), retaining every data representation and control-flow shape once per family, with two identifier instances per template.",
+    "selection": "Five Latin-square template indexes per family (1, 7, 13, 19, 25), retaining every data representation and control-flow shape once per family and the first identifier instance only.",
     "structural_templates": 40,
-    "scenario_pairs": 80,
-    "cases": 160,
+    "scenario_pairs": 40,
+    "cases": 80,
     "trials_per_cell": 1,
-    "models": 3,
-    "unique_boundary_prompts": 2560,
-    "calls": 7680,
-    "maximum_request_bytes": 3992,
-    "cards_sha256": "e8bfc101aa943fbfbaf76d2f1b35ed90b7c21c14dddb4a9c7c3a3600b93b6632",
-    "prompts_sha256": "b2837c4088147e036fbdf7e7e985bfbd3b15d3f1a187c735bf1096236d806580",
+    "models": 2,
+    "unique_boundary_prompts": 640,
+    "calls": 1280,
+    "maximum_request_bytes": 2961,
+    "cards_sha256": "2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b",
+    "prompts_sha256": "f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08",
     "schedule_seed": 20260718,
-    "schedule_sha256": "d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e",
-    "calls_sha256": "b478cb8208ab92c2f292358277d0c41eb902fb864be00fe58af33f876310cff3",
-    "ground_truth_sha256": "ec7bc834e7b6f223ee3b1bbd05b7c00ff5e736a052bdfe3e5ab158370fc2aaa5",
-    "projected_cost_usd": 72.97024,
-    "spending_ceiling_usd": 100,
-    "paid_calls_authorized": false,
-    "inference": "Exploratory descriptions and controlled-versus-ecological comparisons only; this layer cannot support or alter H1-H4."
+    "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
+    "calls_sha256": "9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27",
+    "ground_truth_sha256": "f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb",
+    "projected_additional_cost_usd": 0,
+    "spending_ceiling_usd": 0,
+    "subscription_calls_authorized": true,
+    "inference": "Intent discrimination and the split effect are primary estimates. Workflow and decomposition-by-workflow contrasts are exploratory because the subscription-bounded sample has low power for small effects."
   },
   "deterministic_baseline": {
     "status": "completed-pre-registration",
@@ -324,14 +392,14 @@
     "reason": "The Semgrep Rules License v1.0 prohibits redistribution, so the exact rules snapshot cannot be included in the public reproducibility package. The observed zero-finding feasibility result is disclosed but excluded from study analyses."
   },
   "preregistration_v2_draft": {
-    "status": "field-complete-draft; metadata-and-approvals-pending",
+    "status": "subscription-v2-draft; AI-internal-review-and-registration-pending",
     "template": "OSF Preregistration",
     "file": "preregistration-v2.md",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
       "confirm optional ORCID identifier, OSF administrator permissions, and license",
-      "obtain independent benchmark/safety and methods approvals",
-      "complete native token counts for every frozen route",
+      "archive AI-assisted safety, methods, and reproducibility review records",
+      "verify subscription-only authentication and zero paid API credentials",
       "replace candidate freeze with final commit and reverify artifact hashes"
     ],
     "external_identifier": null,

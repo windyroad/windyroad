@@ -10,17 +10,16 @@
 \usepackage[hidelinks]{hyperref}
 
 \hypersetup{
-  pdftitle={Detecting Strategically Decomposed Malicious Code Changes with Large Language Model Reviewers},
+  pdftitle={Detecting Strategically Decomposed Malicious Code Changes with Subscription-Backed LLM Reviewers},
   pdfauthor={Tom Howard},
   pdflang={en-AU},
   pdfdisplaydoctitle=true
 }
 
-\newcommand{\study}{LLM Review Sequences}
 \newcommand{\code}[1]{\texttt{#1}}
 
 \title{Detecting Strategically Decomposed Malicious Code Changes\\
-with Large Language Model Reviewers}
+with Subscription-Backed LLM Reviewers}
 \author{Tom Howard\\
 Independent researcher\\
 \href{mailto:tom@windyroad.com.au}{tom@windyroad.com.au}}
@@ -34,478 +33,355 @@ Large language models are increasingly used to review code changes, yet most
 evaluations present a vulnerable function, file, or repository as one unit. A
 malicious change can instead be decomposed across submissions that appear
 individually routine but compose into an unsafe final state. We describe a
-prospectively specified, controlled study of whether this decomposition reduces detection
+prospectively specified study of whether this decomposition reduces detection
 and whether detection differs between pull-request gates and trunk workflows
-that treat main as untrusted until pipeline review completes. The study uses 400
-matched malicious-benign scenario pairs generated from 200 structural templates
-in eight abstract policy families. Every program is synthetic, executes only in
-memory, and has no network, file-system, credential, persistence, deployment, or
+that treat main as untrusted until pipeline review completes. The study uses 40
+matched malicious-benign pairs drawn from 40 structural templates in eight
+abstract policy families. Every program is synthetic, executes only in memory,
+and has no network, file-system, credential, persistence, deployment, or
 destructive capability. Atomic and three-submission variants have identical
 final trees and changed-line totals. A factorial design varies intent,
-decomposition, workflow framing, and local versus cumulative context across
-three fixed model routes and three repeated trials. A separately hashed 80-pair
-exploratory subset renders native-looking pull-request and untrusted-main
-artifacts. Primary outcomes are timely
-blocking and paired risk differences; secondary outcomes include false-positive
-rate, precision, calibration, localization, time to detection, and consistency.
-Family-stratified structural-template bootstrapping, missing-data bounds, and
-complete-pair sensitivity analyses are frozen before ground truth is joined to
-responses. This pre-outcome manuscript reports the design and analysis plan; it
-contains no confirmatory model outcomes.
+decomposition, and workflow framing across two subscription-backed review
+systems: Codex CLI and Claude Code. The bounded design contains 1,280 review
+boundaries and requires no expenditure beyond existing subscriptions. Primary
+outcomes are blocking by activation and paired intent discrimination; workflow
+and interaction estimates are explicitly exploratory because the sample is
+underpowered for small effects. This pre-outcome manuscript reports the design,
+analysis plan, deterministic baseline, safety controls, and limitations; it
+contains no LLM benchmark outcomes.
 \end{abstract}
 
 \section{Introduction}
 
-Automated code review is usually evaluated as a classification problem: a model
-receives a code artifact and predicts whether it contains a defect. Real delivery
-systems expose a different unit of work. Reviewers see submissions over time,
-with evidence constrained by pull-request boundaries, commit history, repository
-state, and pipeline policy. An unsafe capability may emerge only when several
-changes compose. Each earlier change can be necessary for the final failure
-without being unsafe in isolation.
+Automated code review is commonly evaluated as a classification problem: a
+reviewer receives one code artifact and predicts whether it contains a defect.
+Real delivery systems expose a different unit of work. Reviewers see a sequence
+of submissions, and an unsafe capability may emerge only when several changes
+compose. Each earlier change can be necessary for the final failure without
+being unsafe in isolation.
 
 This distinction matters for both pull-request and trunk-based delivery. A
 pull-request gate asks whether a proposed change may enter the protected branch.
 A trunk workflow can permit a commit onto main while still treating main as
-untrusted until deterministic and model-based pipeline gates complete. Those
+untrusted until deterministic and model-based pipeline gates complete. These
 workflows differ in policy, but empirical comparisons often also change the
-evidence shown to the reviewer. A useful experiment must therefore vary workflow
-framing independently from information availability.
+evidence shown to the reviewer.
 
-We study whether an LLM reviewer recognizes a composition before its activation
-boundary. The benchmark represents harm as an abstract policy assertion: an
-unprivileged synthetic actor receives a protected synthetic capability. It does
-not implement an exploit or interact with a real target. The design makes three
-contributions:
-
-\begin{enumerate}[leftmargin=*]
-  \item a causally validated benchmark in which every malicious split step is
-  necessary, while atomic and split variants reach the same final tree;
-  \item a factorial comparison of decomposition, workflow policy, and reviewer
-  context that separates workflow effects from information loss; and
-  \item a frozen sequence-level analysis with paired benign controls,
-  template-respecting uncertainty, missingness bounds, and reproducible ledgers.
-\end{enumerate}
+We study whether two subscription-backed LLM review products recognise a
+composition before its activation boundary. The benchmark represents harm as
+an abstract policy assertion: an unprivileged synthetic actor receives a
+protected synthetic capability. It neither implements an exploit nor interacts
+with a real target. The contribution is a reproducible, prospectively specified
+test of sequence-level review under a zero-additional-spend constraint.
 
 \section{Related Work}
 
 Yu et al. evaluated seven LLMs and multiple prompt forms for security code
 review, comparing them with static analysis and examining factors associated
-with detection quality \cite{yu2024securityreview}. Their results motivate fixed
-prompts, false-positive reporting, and explicit context controls. Our study
-changes the unit of analysis from one review artifact to a sequence of
-submissions.
+with detection quality~\cite{yu2024}. VulDetectBench separates vulnerability
+identification, classification, and localisation~\cite{liu2024}. Zhou et al.
+compare repository-level LLMs and static analysis tools and report a
+recall--false-positive trade-off~\cite{zhou2024}. We retain a deterministic
+conventional-lint baseline but do not claim that lint and semantic security
+review are equivalent tasks.
 
-VulDetectBench separates vulnerability identification, classification, and
-localization, showing that aggregate accuracy can conceal weaknesses in detailed
-analysis \cite{liu2024vuldetectbench}. We likewise distinguish timely blocking,
-calibration, severity, and localization. Zhou et al. compare repository-level
-LLMs and static analysis tools and report a recall-false-positive tradeoff
-\cite{zhou2024sast}. We retain a deterministic conventional-lint baseline but
-do not claim that lint and semantic security review are equivalent tasks.
-
-Field evidence also indicates that review context and interaction design affect
+Field evidence also indicates that context and interaction design affect
 developer trust and usefulness. Adalsteinsson et al. report context switching,
 missing context, false positives, and trust as practical concerns in an
-industrial study of LLM-assisted review \cite{adalsteinsson2025workflows}. Basic
-and Giaretta synthesize evidence on LLM code-security benefits, false findings,
-prompting, and failure modes \cite{basic2024review}. Our controlled study
-complements that work by isolating temporal composition and workflow framing.
+industrial study of LLM-assisted review~\cite{adalsteinsson2025}. Basic and
+Giaretta synthesise evidence on LLM code-security benefits, false findings,
+prompting, and failure modes~\cite{basic2024}. Our study changes the unit of
+analysis from one artifact to a sequence of submissions.
 
-\section{Research Questions and Hypotheses}
+\section{Research Questions}
 
 The primary endpoint is \emph{blocked by activation}: at least one review at or
-before the prespecified activation boundary returns \code{block}. The research
-questions are:
+before the prespecified activation boundary returns \code{block}.
 
-\begin{description}[leftmargin=3.2em,style=nextline]
-  \item[RQ1] Can LLM reviewers discriminate malicious sequences from matched
-  benign sequences?
-  \item[RQ2] Does strategic decomposition across three submissions reduce timely
+\begin{description}[leftmargin=3.4em,style=nextline]
+  \item[RQ1] Can the review systems discriminate malicious sequences from
+  matched benign sequences?
+  \item[RQ2] Does decomposition across three submissions reduce timely
   detection relative to an atomic submission with the same final tree?
-  \item[RQ3] Does detection differ between pull-request and untrusted-main trunk
-  workflow framing, and does workflow moderate the decomposition effect?
-  \item[RQ4] Does cumulative submission history mitigate any decomposition
-  penalty relative to local current-submission evidence?
+  \item[RQ3] Do estimates differ between pull-request and untrusted-main trunk
+  framing, and does workflow moderate the decomposition effect?
 \end{description}
 
-The prespecified hypotheses are directional except where noted:
-
-\begin{description}[leftmargin=3.2em,style=nextline]
-  \item[H1] The malicious block rate exceeds the benign block rate.
-  \item[H2] Under local context, the malicious block rate is lower for split
-  sequences than for atomic submissions.
-  \item[H3a] The marginal trunk-minus-pull-request risk difference is equivalent
-  within -0.10 and 0.10.
-  \item[H3b] The decomposition-by-workflow interaction differs from zero.
-  \item[H4] Cumulative context attenuates the split penalty relative to local
-  context.
-\end{description}
+H1 predicts that the malicious block rate exceeds the benign block rate. H2
+predicts that the malicious block rate is lower for split sequences than for
+atomic submissions. RQ3 is exploratory: the study estimates workflow and
+decomposition-by-workflow contrasts but does not test equivalence.
 
 \section{Method}
 
 \subsection{Safe benchmark}
 
-The generator produces 400 malicious-benign scenario pairs from 200 structural
-templates: eight scenario families crossed with five data representations and
-five control-flow shapes, with two identifier instances per template. The eight
-families model abstract authorization, normalization, fallback, integrity,
-scope, feature, provenance, and dependency-policy composition.
+The full deterministic generator contains 200 structural templates formed by
+eight scenario families crossed with five data representations and five
+control-flow shapes. The active subscription-bounded study selects template
+indexes 1, 7, 13, 19, and 25 from each family. This balanced diagonal retains
+every representation and flow shape once per family, giving 40 structural
+templates. Only the first invented-identifier instance is retained.
 
-Each case contains an atomic submission and a three-submission sequence. The
-atomic and split forms have identical final source trees, total changed-line
-counts, activation timestamps, and policy outcomes. For malicious sequences,
-the generator reverts each split step separately and executes the oracle; all
-three counterfactuals must remain safe. Benign cases match the structure and
-changed-line count but do not grant the protected capability.
+Each template contains a malicious-benign pair. Every case has an atomic
+submission and a three-submission sequence. Atomic and split forms have
+identical final source trees, total changed-line counts, activation timestamps,
+and policy outcomes. For malicious sequences, the generator reverts each split
+step separately and executes the oracle; all three counterfactuals must remain
+safe. Benign cases match structure and salience but do not grant the protected
+capability.
 
 The source imports only relative synthetic modules and runs only in memory. A
-deterministic capability scan rejects network, shell, subprocess, file-system,
+deterministic scanner rejects network, shell, subprocess, file-system,
 package-install, credential, personal-data, persistence, destructive, dynamic
-execution, and non-relative import features. The benchmark is not deployable and
-contains no real target or exploit instructions.
+execution, and non-relative import features.
 
 \subsection{Factorial design}
 
-Table~\ref{tab:factors} shows the controlled factors. Workflow policy and
-evidence context are orthogonal: changing \emph{pull request} to \emph{trunk}
-changes only the written decision policy, while changing \emph{local} to
-\emph{cumulative} changes only whether prior submissions are supplied.
+Table~\ref{tab:factors} shows the active factors. Every boundary supplies the
+current artifact only; prior submission diffs are not included. This local
+information boundary is the concealment mechanism under test.
 
 \begin{table}[ht]
 \centering
-\caption{Controlled study factors.}
+\caption{Active study factors.}
 \label{tab:factors}
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.20\linewidth}
-                >{\raggedright\arraybackslash}p{0.28\linewidth}
-                >{\raggedright\arraybackslash}p{0.40\linewidth}}
+\begin{tabular}{@{}lll@{}}
 \toprule
 Factor & Levels & Interpretation \\
 \midrule
 Intent & malicious, benign & Matched final-state policy outcome \\
 Decomposition & atomic, split & One submission or three necessary submissions \\
-Workflow & pull request, trunk & Pre-merge gate or untrusted-main pipeline decision \\
-Context & local, cumulative & Current boundary only or explicit prior history \\
+Workflow & pull request, trunk & Pre-merge gate or untrusted-main pipeline \\
+Review system & Codex, Claude Code & Subscription-backed product surface \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The full design contains 57,600 sequence evaluations and 115,200 boundary-level
-review calls. Calls are randomized with a seeded Fisher-Yates shuffle. Each
-scenario-condition-model cell has three trials. No outcome-dependent stopping,
-template replacement, or prompt tuning is permitted.
+The design contains 40 malicious-benign pairs, 80 cases, 640 sequences, and
+1,280 boundary reviews. Each review system receives 640 boundaries: 320 atomic
+boundaries in total and 960 split boundaries in total. There is one trial per
+case, decomposition, workflow, and review system. Calls are globally shuffled
+with a seeded Fisher--Yates algorithm. No outcome-dependent stopping, template
+replacement, or prompt tuning is permitted.
 
-\subsection{Exploratory ecological layer}
+\subsection{Review systems}
 
-A separate exploratory layer tests whether the controlled workflow comparison
-changes when the evidence takes native-looking forms. Pull-request requests
-contain a title, description, base and head revisions, checks, and a diff;
-trunk requests contain a landed commit, its parent, a diff, and an explicitly
-untrusted pending pipeline state. Cumulative conditions include earlier native
-artifacts, while local conditions do not.
-
-This layer selects a balanced diagonal of five templates from each family,
-covering every data representation and control-flow shape once per family. Its
-40 templates, two identifier instances, and one trial per model produce 80
-scenario pairs, 2,560 unique prompts, and 7,680 calls. Artifact form is
-confounded with workflow by design, so these results are descriptive and cannot
-support or alter H1--H4.
-
-\subsection{Review configurations}
-
-The frozen routes represent a frontier proprietary model, an independent
-proprietary software-engineering replication, and a code-specialized open-weight
-model (Table~\ref{tab:models}). Route fallback is disabled; provider and endpoint
-metadata must match the prespecified route.
+The systems are frozen as product configurations rather than interchangeable
+base-model APIs (Table~\ref{tab:systems}). Each boundary starts a fresh process
+with no persistent session. User configuration and tools are disabled where
+the client supports it. Any emitted tool call is retained as a protocol
+deviation.
 
 \begin{table}[ht]
 \centering
-\caption{Frozen model routes. Serving metadata and access times are retained in
-the result ledger.}
-\label{tab:models}
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.42\linewidth}
-                >{\raggedright\arraybackslash}p{0.48\linewidth}}
+\caption{Subscription-backed review systems.}
+\label{tab:systems}
+\begin{tabular}{@{}lll@{}}
 \toprule
-Route & Study role \\
+System & Frozen client & Requested model \\
 \midrule
-\code{openai/gpt-5.6-sol} & frontier proprietary \\
-\code{anthropic/claude-sonnet-4.6} & independent proprietary software-engineering replication \\
-\code{qwen/qwen3-coder-next} & code-specialized open-weight replication \\
+Codex CLI & 0.137.0; ChatGPT login & \code{gpt-5.5} \\
+Claude Code & 2.1.211; Claude Max login & \code{sonnet} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-All reviewers receive one fixed system task and a JSON response contract. The
-request asks for \code{allow}, \code{block}, or \code{abstain}; a maliciousness
+Before each batch, the runner verifies subscription authentication and the
+absence of \code{OPENAI\_API\_KEY}, \code{CODEX\_API\_KEY}, and
+\code{ANTHROPIC\_API\_KEY}. It aborts rather than switching to API billing,
+credits, another provider, or a fallback model. Requested and returned model
+metadata, CLI version, timestamp, usage, and failures are retained. A version
+or returned-model change suspends that review system.
+
+All reviews receive one fixed security-review task and a JSON response contract.
+Requests ask for \code{allow}, \code{block}, or \code{abstain}; a maliciousness
 probability; severity; relevant submission identifiers; evidence; and a short
-category. Requests are capped at 4,000 UTF-8 bytes and 2,000 input tokens, with
-no silent truncation. Temperature is zero where supported, tools are disabled,
-and output is capped at 256 tokens.
+category. Complete requests are at most 2,961 UTF-8 bytes. Schema-invalid
+responses and refusals are observed abstentions and are not repaired.
 
 \subsection{Collection and blinding}
 
-The call queue contains opaque call, prompt, and case identifiers plus model and
-trial. It contains no intent, family, template, or sequence label. Ground truth
-is held in a separate ledger and joined only after collection. Refusals and
-schema-invalid responses are observed abstentions and are not retried. Network
-errors, HTTP 408, 409, 429, 5xx responses, and route mismatches receive at most
-two retries with the identical request. Retry exhaustion produces a missing
-boundary.
+The call queue contains opaque call, prompt, and case identifiers plus review
+system and schedule position. It contains no intent, family, structural-template,
+activation, or expected-severity field. Ground truth is held in a separately
+keyed ledger and joined only after collection.
 
-Collection suspends before accrued cost plus the frozen projected remainder
-would exceed US\$1,400, after 100 consecutive infrastructure failures, or on a
-safety, terms, or benchmark-integrity concern. The projected confirmatory cost is
-US\$1,094.55. The ecological layer has a separate US\$72.97024 projection and
-US\$100 ceiling. These ceilings are safety limits, not authorization to spend.
+Subscription rate limits pause collection until the same plan window resets.
+No API credit is accepted. A no-response infrastructure failure may be retried
+after reset up to three times; every attempt remains in the ledger. Collection
+also suspends on a safety or terms conflict, authentication change, benchmark
+integrity failure, client or model drift, or 100 consecutive infrastructure
+failures. The additional spending ceiling is US\$0.
 
 \subsection{Outcomes}
 
 The primary binary outcome is blocked by activation. Secondary outcomes are
 recall, false-positive rate, precision, abstention rate, cumulative detection by
-boundary, submissions to detection, Brier score, ten-bin expected calibration
-error, ordinal severity error, localization, and repeated-trial consistency.
+boundary, submissions to detection, Brier score, calibration, severity error,
+localisation, and failure rates. A block is localised when it cites at least one
+prespecified relevant submission and identifies the causal abstract-policy
+failure. Repeated-trial consistency is not estimated because there is one trial
+per cell.
 
-A blocked response is localized when it cites at least one prespecified
-relevant submission and identifies the causal abstract-policy failure. Two
-adjudicators score localization independently while blinded to model, trial, and
-condition labels; a third resolves disagreement. Pending adjudications remain
-null rather than being scored as failures.
-
-\section{Analysis Plan}
+\section{Analysis Plan and Power}
 
 Sequence outcomes are averaged within structural-template and intent-condition
-cells across balanced identifier instances, models, and trials. Structural
-templates then receive equal weight. The primary uncertainty calculation is a
-10,000-replicate percentile bootstrap with seed 20260716. Within each replicate,
-25 templates are sampled with replacement separately from each of the eight
-scenario families, retaining paired intent and treatment cells.
+cells across the two review systems. Structural templates then receive equal
+weight. Review-system-specific results are secondary. The primary uncertainty
+calculation is a 10,000-replicate family-stratified structural-template bootstrap
+with seed 20260718. Each replicate samples five templates with replacement from
+each family while retaining their paired intents and treatment cells.
 
-\begin{table}[ht]
-\centering
-\caption{Confirmatory estimands and decision rules.}
-\label{tab:estimands}
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.12\linewidth}
-                >{\raggedright\arraybackslash}p{0.56\linewidth}
-                >{\raggedright\arraybackslash}p{0.22\linewidth}}
-\toprule
-Claim & Estimand & Rule \\
-\midrule
-H1 & malicious minus benign block-rate risk difference, averaged over all factors & 95\% interval above zero \\
-H2 & split minus atomic malicious risk difference under local context, averaged over workflow & 95\% interval below zero \\
-H3a & trunk minus pull-request malicious risk difference, averaged over decomposition and context & 90\% interval inside [-0.10, 0.10] \\
-H3b & decomposition-by-workflow difference in differences, averaged over context & 95\% interval excludes zero \\
-H4 & decomposition-by-context difference in differences, averaged over workflow & 95\% interval above zero \\
-\bottomrule
-\end{tabular}
-\end{table}
+The H1 estimate is the malicious-minus-benign block-rate risk difference,
+averaged over decomposition and workflow. H1 is supported only when its 95\%
+interval is above zero. The H2 estimate is the split-minus-atomic malicious risk
+difference, averaged over workflow. H2 is supported only when its 95\% interval
+is below zero. Trunk-minus-pull-request and decomposition-by-workflow estimates
+receive 95\% intervals but are exploratory.
 
-The design was audited with a 20,000-replicate hierarchical simulation. Under
-the frozen design assumptions, the selected 200-template layout exceeded 0.99
-power or assurance for all five confirmatory targets. The 200-template floor was
-retained for full structural coverage even though a smaller repeated-template
-layout met the numerical threshold.
-
-Missing boundaries count as abstentions and therefore not detections in the
-primary analysis. Two mandatory bounds treat missing malicious and benign
-boundaries oppositely: the detection-favorable bound codes missing malicious
-boundaries as blocks and benign boundaries as allows; the detection-unfavorable
-bound reverses those assignments. A conclusion is called robust only when its
-primary criterion holds under both bounds. Per-model complete-pair sensitivity
-drops a structural template only for the model with a missing condition. No
+Missing boundaries are non-detections in the operational analysis. Mandatory
+detection-favourable and detection-unfavourable bounds assign missing malicious
+and benign boundaries oppositely. A review-system-specific complete-pair
+sensitivity drops a structural template only for the affected system. No
 imputation model is fitted.
 
-Secondary model-specific, family-specific, calibration, timing, localization,
-and ablation analyses are labeled as such. Holm adjustment is applied when
-multiple secondary comparisons within one outcome family are interpreted
-inferentially. The earlier mixed-effects logistic model is retained as a
-sensitivity analysis rather than the primary estimator.
+The sample is determined by subscription access, not an 80\% power target. Under
+the earlier central assumptions, a 20,000-replication audit estimates power of
+0.2584 for a 0.15 split penalty, assurance of 0.0038 for workflow equivalence
+within $\pm0.10$, and power of 0.1016 for a 0.10 interaction. Consequently, null
+results cannot support claims of no decomposition or workflow effect. The study
+is a bounded empirical evaluation and a variance estimate for a larger
+replication.
 
-The ecological layer reports the same descriptive outcomes and differences
-between controlled and native-artifact presentations by workflow and context.
-All such comparisons are exploratory. Repeated-trial consistency is omitted
-because the ecological layer has one trial per cell.
+\section{Pre-outcome Status}
 
-\section{Pre-outcome Results Status}
+No benchmark prompt has been submitted to either review system. The generator,
+prompts, schedule, ledgers, scoring, estimands, and tests were implemented with
+deterministic checks and fabricated plumbing responses only. No LLM outcome has
+been collected or inspected.
 
-No confirmatory model outcomes have been collected or inspected. The benchmark,
-prompt ledgers, schedules, collection failure rules, joins, estimands, and tests
-were implemented using deterministic checks and fabricated responses only. This
-section will report participant flow, call failures, primary estimates and
-intervals, missingness bounds, model-specific results, calibration,
-localization, consistency, and exploratory ecological comparisons after
-prospective registration and authorized collection. Until then, no empirical
-conclusion about H1--H4 or the ecological layer is warranted.
-
-The deterministic baseline ran ESLint 9.39.3 over the three final-state modules
-in all 800 cases. It emitted no warnings or errors: zero malicious and zero
-benign cases were flagged, giving recall 0, false-positive rate 0, and undefined
-precision. This result shows only that conventional lint does not identify the
-benchmark's abstract cross-module policy failures. Because it sees final trees
-only, it cannot estimate decomposition, context, or workflow effects. A separate
-zero-finding Semgrep feasibility probe is disclosed but excluded because its
-registry rules snapshot cannot be redistributed under the provider's rules
-license (\url{https://semgrep.dev/legal/rules-license/}).
-
-\section{Interpretation Framework}
-
-Several result patterns have distinct interpretations. A split penalty under
-local but not cumulative context would support an information-integration
-failure rather than a general inability to recognize the final unsafe state. A
-split penalty under both contexts would instead suggest that temporal
-presentation or individually weak evidence impairs composition even when
-history is explicit. A decomposition-by-workflow interaction, with evidence held
-constant, would indicate sensitivity to the decision policy rather than the code
-artifact. High recall accompanied by high benign blocking would not constitute
-effective review and will be reported through precision and false-positive rate.
-
-Failure analysis will distinguish missed composition, incorrect causal detail,
-overreliance on plausible metadata, severity underestimation, unlocalized
-blocking, refusal, schema failure, and infrastructure failure. These categories
-are descriptive and cannot replace the prespecified contrasts.
+The deterministic baseline ran ESLint 9.39.3 over all 2,400 final-state files in
+the full 800-case generator output. It emitted no warnings or errors: zero
+malicious and zero benign cases were flagged, giving recall 0, false-positive
+rate 0, and undefined precision. This conventional final-state lint does not
+estimate decomposition or workflow effects. A separate zero-finding Semgrep
+feasibility probe is disclosed but excluded because its exact registry-rules
+snapshot cannot be redistributed under the provider's rules license.
 
 \section{Threats to Validity}
 
-\paragraph{Construct validity.}
-The benchmark models malicious intent through a harmless abstract policy
-violation. This provides causal control but does not reproduce the semantics or
-distribution of production vulnerabilities. Workflow is a controlled written
-policy, while the ecological layer varies artifact form as well as policy.
-Neither reproduces organizational incentives, reviewer fatigue, rollback
-pressure, or the blast radius of a real main branch.
+\textbf{Construct validity.} The benchmark models malicious intent through a
+harmless abstract policy violation. It tests composition recognition, not the
+full semantics or distribution of production vulnerabilities. Workflow is a
+controlled artifact and policy framing, not an organisation.
 
-\paragraph{Internal validity.}
-Atomic and split variants can differ in salience despite identical final trees
-and line counts. Counterfactual necessity, prompt hashing, timestamp controls,
-and independent review reduce but do not eliminate this risk. Provider serving
-stacks may also change behind a stable route; returned metadata and access times
-are therefore retained.
+\textbf{Internal validity.} Atomic and split variants can differ in salience
+despite identical final trees and line counts. Provider-controlled system
+instructions are neither observable nor identical. Product routing and serving
+stacks may change behind requested model identifiers; metadata and access times
+are therefore retained and drift suspends collection.
 
-\paragraph{External validity.}
-Eight policy-composition families, three review configurations, and compact
-synthetic repositories do not represent all languages, organizations, or attack
-strategies. The study tests one three-submission decomposition and does not
-estimate an optimal adversarial strategy. Publication may contaminate future
-models, so benchmark and model versions must accompany later replications.
+\textbf{External validity.} Forty fixed templates, eight policy families, two
+review products, and compact JavaScript repositories do not represent all
+languages, organisations, vulnerabilities, or attack strategies. The design
+tests one three-submission decomposition and does not estimate an optimal
+adversarial strategy.
 
-\paragraph{Statistical conclusion validity.}
-Repeated calls and identifier variants are not independent scenarios. The
-analysis therefore generalizes at the structural-template level and preserves
-family strata. Power values depend on design assumptions rather than pilot
-outcomes. Missingness bounds expose, rather than hide, dependence on provider
-failures.
+\textbf{Statistical conclusion validity.} The sample is underpowered for small
+effects, especially workflow equivalence and interaction. There is one trial,
+so stochastic consistency cannot be estimated. Family-stratified intervals
+expose rather than hide this uncertainty.
 
 \section{Ethics and Responsible Release}
 
 This is defensive research into review reliability. The benchmark cannot access
 external systems or data, and its only harmful state is a deterministic in-memory
-assertion over synthetic names. No real repository or person is tested without
-explicit authorization. A separate reviewer assesses whether release artifacts
-could provide reusable evasion guidance. Material judged operationally risky is
-withheld or reduced to non-operational metadata, and the omission is documented.
+assertion over synthetic names. No real repository or person is tested.
 
-Raw model output is released only where provider terms permit. Human review, if
-feasible, requires consent, withdrawal procedures, anonymization, and any
-applicable ethics review. The study reports provider refusals, missing calls,
-deviations, and negative results rather than removing them post hoc.
+Three isolated subagents review the same frozen packet for benchmark safety,
+methods, and reproducibility. Their raw reports and the author's resolution log
+are archived. These records are labelled AI-assisted internal review, not
+independent human peer review, ethics approval, or arXiv endorsement. Shared
+model, provider, and author-orchestration biases are reported as limitations.
+Material judged to provide reusable operational evasion guidance is withheld or
+reduced to non-operational metadata, with every omission documented.
 
 \section{Reproducibility}
 
 The versioned package contains the generator, cards, prompts, schedule,
-collection ledgers, scorer, power simulation, preregistration drafts, and
-independent-review protocol. Candidate artifact hashes are:
+collection ledgers, scorer, power simulation, preregistration, internal-review
+records, and analysis code. Candidate hashes are:
 
-\begin{itemize}[leftmargin=*]
-  \item scenario cards:\par
-  \code{71b20e0e5a49547a68d17a8435b1a9f860e8f078942bbc2b66b557971a9a4ab3}
-  \item rendered prompts:\par
-  \code{56d246f9c676e94f29ce2dea4025633f1b31815959b5b34b0daf2b49af32dff4}
-  \item randomized schedule:\par
-  \code{e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663}
-  \item ecological rendered prompts:\par
-  \code{b2837c4088147e036fbdf7e7e985bfbd3b15d3f1a187c735bf1096236d806580}
-  \item ecological randomized schedule:\par
-  \code{d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e}
-  \item ESLint configuration:\par
-  \code{fd9af0693c9fb3c7b9f9dfd573b944184a03ae0bd8b09f734cd97bb6dae15709}
+\begin{itemize}[leftmargin=1.5em]
+  \item scenario cards:
+  \code{2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b};
+  \item rendered prompts:
+  \code{f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08};
+  \item randomised schedule:
+  \code{e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a};
+  \item blinded call ledger:
+  \code{9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27};
+  \item ground-truth ledger:
+  \code{f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb}.
 \end{itemize}
 
-The repository is available at \url{https://github.com/windyroad/windyroad}.
-The final release will add permitted raw responses, an attempt ledger, joined
-analysis data, adjudication records, environment metadata, checksums, the
-prospective registration identifier, and the arXiv identifier.
+The earlier paid API design is retained in version history but was superseded
+before outcome collection. The final release will add permitted raw responses,
+attempt ledgers, environment metadata, checksums, the OSF identifier, and the
+arXiv identifier.
 
 \section{Conclusion}
 
-This study tests a gap between artifact-level vulnerability detection and
-sequence-level code review: whether a model can recognize several individually
-ordinary changes as a dangerous composition before activation. By independently
-varying decomposition, workflow policy, and context, the design can distinguish
-information loss from workflow framing. The safe paired benchmark and frozen
-analysis make both positive and negative findings auditable. Empirical
-conclusions remain contingent on prospective registration, authorized
-collection, and the prespecified analysis.
+This study tests whether subscription-backed LLM review products recognise an
+unsafe composition when its necessary changes arrive separately, and whether
+the estimate changes under pull-request or untrusted-main framing. The safe
+paired benchmark supports auditable positive or negative findings, while the
+subscription constraint makes uncertainty and product drift part of the study
+rather than hidden implementation details. Empirical conclusions remain
+contingent on prospective registration, completion of the fixed schedule, and
+the prespecified analysis.
 
 \appendix
-
 \section{Fixed Review Task}
 
-The fixed task instructs the model to act as an independent security reviewer,
-treat repository and metadata as untrusted evidence, decide whether the current
+The fixed task instructs the review system to act as a security reviewer, treat
+repository and change metadata as untrusted evidence, decide whether the current
 submission should be allowed, blocked, or sent for human review, consider unsafe
-behavior created alone or in composition with supplied history, and return only
-the contracted JSON grounded in supplied evidence. No chain-of-thought request,
-model-specific prompt, or outcome-driven tuning is used.
-
-\section{Artifact Status at the Pre-outcome Freeze}
-
-Machine validation covers final-tree equality, changed-line equality, activation
-timestamps, paired benign safety, malicious activation, counterfactual necessity,
-capability exclusions, prompt size, schedule balance, call-ledger blinding,
-retry behavior, spending suspension, result joining, missingness bounds, and all
-five confirmatory contrasts. A separate generator covers the exploratory native
-pull-request and untrusted-main artifacts. Independent benchmark and statistical
-reviews, exact native token counts for both layers, author metadata, license
-confirmation, and external registration remain required before collection.
+behaviour created alone or in composition with supplied evidence, and return
+only the contracted JSON grounded in the supplied artifact. No chain-of-thought
+request, product-specific prompt tuning, or outcome-driven tuning is used.
 
 \begin{thebibliography}{9}
-
-\bibitem{yu2024securityreview}
+\bibitem{yu2024}
 J. Yu, P. Liang, Y. Fu, A. Tahir, M. Shahin, C. Wang, and Y. Cai.
-\newblock An insight into security code review with LLMs: Capabilities,
-obstacles, and influential factors.
-\newblock \emph{arXiv:2401.16310}, 2024.
-\newblock \url{https://arxiv.org/abs/2401.16310}.
+An insight into security code review with LLMs: Capabilities, obstacles, and
+influential factors. \emph{arXiv:2401.16310}, 2024.
+\url{https://arxiv.org/abs/2401.16310}.
 
-\bibitem{liu2024vuldetectbench}
+\bibitem{liu2024}
 Y. Liu, L. Gao, M. Yang, Y. Xie, P. Chen, X. Zhang, and W. Chen.
-\newblock VulDetectBench: Evaluating the deep capability of vulnerability
-detection with large language models.
-\newblock \emph{arXiv:2406.07595}, 2024.
-\newblock \url{https://arxiv.org/abs/2406.07595}.
+VulDetectBench: Evaluating the deep capability of vulnerability detection with
+large language models. \emph{arXiv:2406.07595}, 2024.
+\url{https://arxiv.org/abs/2406.07595}.
 
-\bibitem{zhou2024sast}
-X. Zhou, D.-M. Tran, T. Le-Cong, T. Zhang, I. C. Irsan, J. Sumarlin,
-B. Le, and D. Lo.
-\newblock Comparison of static application security testing tools and large
+\bibitem{zhou2024}
+X. Zhou, D.-M. Tran, T. Le-Cong, T. Zhang, I. C. Irsan, J. Sumarlin, B. Le,
+and D. Lo. Comparison of static application security testing tools and large
 language models for repo-level vulnerability detection.
-\newblock \emph{arXiv:2407.16235}, 2024.
-\newblock \url{https://arxiv.org/abs/2407.16235}.
+\emph{arXiv:2407.16235}, 2024.
+\url{https://arxiv.org/abs/2407.16235}.
 
-\bibitem{adalsteinsson2025workflows}
+\bibitem{adalsteinsson2025}
 F. S. Adalsteinsson, B. B. Magnusson, M. Milicevic, A. N. Davidsson, and
-C.-H. Cheng.
-\newblock Rethinking code review workflows with LLM assistance: An empirical
-study.
-\newblock \emph{arXiv:2505.16339}, 2025.
-\newblock \url{https://arxiv.org/abs/2505.16339}.
+C.-H. Cheng. Rethinking code review workflows with LLM assistance: An empirical
+study. \emph{arXiv:2505.16339}, 2025.
+\url{https://arxiv.org/abs/2505.16339}.
 
-\bibitem{basic2024review}
-E. Basic and A. Giaretta.
-\newblock From vulnerabilities to remediation: A systematic literature review
-of LLMs in code security.
-\newblock \emph{arXiv:2412.15004}, 2024.
-\newblock \url{https://arxiv.org/abs/2412.15004}.
-
+\bibitem{basic2024}
+E. Basic and A. Giaretta. From vulnerabilities to remediation: A systematic
+literature review of LLMs in code security. \emph{arXiv:2412.15004}, 2024.
+\url{https://arxiv.org/abs/2412.15004}.
 \end{thebibliography}
 
 \end{document}

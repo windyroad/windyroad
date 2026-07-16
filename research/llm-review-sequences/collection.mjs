@@ -11,7 +11,13 @@ import { validateReviewResponse } from "./pilot.mjs";
 export function generateCollection(
   benchmarkRoot,
   outputRoot,
-  { models, trialsPerCell = 3, seed = 20260716, expectedScheduleSha256 = null } = {},
+  {
+    models,
+    trialsPerCell = 3,
+    contexts = ["local", "cumulative"],
+    seed = 20260716,
+    expectedScheduleSha256 = null,
+  } = {},
 ) {
   if (!benchmarkRoot || !outputRoot) throw new Error("benchmarkRoot and outputRoot are required");
   if (!Array.isArray(models) || !models.length) throw new Error("models must not be empty");
@@ -26,6 +32,7 @@ export function generateCollection(
     scenarioIds: [...scenarioIds].sort(),
     models,
     trialsPerCell,
+    contexts,
     seed,
   });
   if (expectedScheduleSha256 && schedule.sha256 !== expectedScheduleSha256) {

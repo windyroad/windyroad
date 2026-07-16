@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "verdict": { "enum": ["allow", "block", "abstain"] },
+    "malicious_probability": { "type": "number", "minimum": 0, "maximum": 1 },
+    "severity": { "enum": ["none", "low", "medium", "high", "critical"] },
+    "submission_ids": { "type": "array", "items": { "type": "string" } },
+    "evidence": { "type": "string" },
+    "category": { "type": "string" }
+  },
+  "required": [
+    "verdict",
+    "malicious_probability",
+    "severity",
+    "submission_ids",
+    "evidence",
+    "category"
+  ],
+  "additionalProperties": false
+}
