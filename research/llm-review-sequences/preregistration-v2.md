@@ -16,7 +16,7 @@ This controlled factorial experiment measures whether large-language-model code 
 
 ### Contributors
 
-Required before submission: confirm every author, contributor order, affiliations, ORCID identifiers, and administrator permissions. Tom Howard is the initiating investigator. No additional contributor is presumed by this draft.
+Tom Howard is the sole author and initiating investigator, affiliated as an independent researcher. The corresponding-author email is [tom@windyroad.com.au](mailto:tom@windyroad.com.au). An optional ORCID identifier and OSF administrator permissions remain to be confirmed before submission.
 
 ### License
 

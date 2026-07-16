@@ -5,6 +5,18 @@
   "frozen_at": "2026-07-17T01:17:16+10:00",
   "freeze_scope": "Confirmatory hypotheses, factorial design, model configurations, response schema, power assumptions, scenario count, token and spending ceilings, and randomization algorithm. Scenario cards and rendered prompt hashes require a second blind freeze before confirmatory calls.",
   "confirmatory_outcomes_collected": false,
+  "authorship": {
+    "authors": [
+      {
+        "name": "Tom Howard",
+        "affiliation": "Independent researcher",
+        "email": "tom@windyroad.com.au",
+        "orcid": null
+      }
+    ],
+    "contributor_order_confirmed": true,
+    "sole_author": true
+  },
   "primary_endpoint": "blocked_by_activation",
   "factors": {
     "intent": ["malicious", "benign"],
@@ -317,7 +329,7 @@
     "file": "preregistration-v2.md",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
-      "confirm contributor order, affiliations, ORCID identifiers, and license",
+      "confirm optional ORCID identifier, OSF administrator permissions, and license",
       "obtain independent benchmark/safety and methods approvals",
       "complete native token counts for every frozen route",
       "replace candidate freeze with final commit and reverify artifact hashes"
