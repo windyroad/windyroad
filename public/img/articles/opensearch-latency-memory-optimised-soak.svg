@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
+  <title id="title">Latency improved after OpenSearch 2.19 moved to memory-optimised hardware</title>
+  <desc id="description">Two line charts show three hourly CloudWatch SearchLatency readings. OpenSearch 1.3 remains on t3.small hardware while OpenSearch 2.19 runs on m6g.large hardware. OpenSearch 2.19 p90 falls from 1,916 to 45 milliseconds and p99 falls from 6,958 to 115 milliseconds as its cache warms.</desc>
+
+  <rect width="1200" height="800" fill="#15191a"/>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="60" y="58" fill="#f6f8f8" font-size="34" font-weight="700">After the resize, latency fell as the cache warmed</text>
+    <text x="60" y="94" fill="#c5ced0" font-size="20">OpenSearch 1.3 stayed on t3.small (2 GB); OpenSearch 2.19 moved to m6g.large (8 GB).</text>
+
+    <g font-size="19">
+      <line x1="60" y1="132" x2="105" y2="132" stroke="#f2a65a" stroke-width="5" stroke-dasharray="12 8"/>
+      <circle cx="82" cy="132" r="7" fill="#15191a" stroke="#f2a65a" stroke-width="4"/>
+      <text x="120" y="139" fill="#f6f8f8">OpenSearch 1.3 on t3.small</text>
+      <line x1="460" y1="132" x2="505" y2="132" stroke="#4fd1c5" stroke-width="5"/>
+      <rect x="477" y="125" width="14" height="14" fill="#4fd1c5"/>
+      <text x="520" y="139" fill="#f6f8f8">OpenSearch 2.19 on m6g.large</text>
+    </g>
+
+    <text x="60" y="188" fill="#f6f8f8" font-size="26" font-weight="700">p90 latency</text>
+    <g stroke="#687276" stroke-width="1.5">
+      <line x1="170" y1="210" x2="1080" y2="210"/>
+      <line x1="170" y1="248" x2="1080" y2="248"/>
+      <line x1="170" y1="285" x2="1080" y2="285"/>
+      <line x1="170" y1="323" x2="1080" y2="323"/>
+      <line x1="170" y1="360" x2="1080" y2="360"/>
+    </g>
+    <g fill="#c5ced0" font-size="17" text-anchor="end">
+      <text x="155" y="216">2,000 ms</text>
+      <text x="155" y="254">1,500</text>
+      <text x="155" y="291">1,000</text>
+      <text x="155" y="329">500</text>
+      <text x="155" y="366">0</text>
+    </g>
+    <g fill="#c5ced0" font-size="18" text-anchor="middle">
+      <text x="250" y="393">Hour 1</text>
+      <text x="650" y="393">Hour 2</text>
+      <text x="1050" y="393">Hour 3</text>
+    </g>
+    <path d="M250 344 L650 349 L1050 355" fill="none" stroke="#f2a65a" stroke-width="5" stroke-dasharray="12 8"/>
+    <path d="M250 216 L650 315 L1050 357" fill="none" stroke="#4fd1c5" stroke-width="5"/>
+    <g fill="#15191a" stroke="#f2a65a" stroke-width="4">
+      <circle cx="250" cy="344" r="7"/><circle cx="650" cy="349" r="7"/><circle cx="1050" cy="355" r="7"/>
+    </g>
+    <g fill="#4fd1c5">
+      <rect x="243" y="209" width="14" height="14"/><rect x="643" y="308" width="14" height="14"/><rect x="1043" y="350" width="14" height="14"/>
+    </g>
+    <g fill="#f6f8f8" font-size="19" font-weight="700">
+      <text x="270" y="206">1,916 ms</text>
+      <text x="1035" y="335" text-anchor="end">1.3: 64 ms</text>
+      <text x="1035" y="382" text-anchor="end">2.19: 45 ms</text>
+    </g>
+
+    <text x="60" y="455" fill="#f6f8f8" font-size="26" font-weight="700">p99 latency</text>
+    <g stroke="#687276" stroke-width="1.5">
+      <line x1="170" y1="480" x2="1080" y2="480"/>
+      <line x1="170" y1="523" x2="1080" y2="523"/>
+      <line x1="170" y1="566" x2="1080" y2="566"/>
+      <line x1="170" y1="609" x2="1080" y2="609"/>
+      <line x1="170" y1="630" x2="1080" y2="630"/>
+    </g>
+    <g fill="#c5ced0" font-size="17" text-anchor="end">
+      <text x="155" y="486">7,000 ms</text>
+      <text x="155" y="529">5,000</text>
+      <text x="155" y="572">3,000</text>
+      <text x="155" y="615">1,000</text>
+      <text x="155" y="636">0</text>
+    </g>
+    <g fill="#c5ced0" font-size="18" text-anchor="middle">
+      <text x="250" y="673">Hour 1</text>
+      <text x="650" y="673">Hour 2</text>
+      <text x="1050" y="673">Hour 3</text>
+    </g>
+    <path d="M250 622 L650 624 L1050 626" fill="none" stroke="#f2a65a" stroke-width="5" stroke-dasharray="12 8"/>
+    <path d="M250 481 L650 509 L1050 628" fill="none" stroke="#4fd1c5" stroke-width="5"/>
+    <g fill="#15191a" stroke="#f2a65a" stroke-width="4">
+      <circle cx="250" cy="622" r="7"/><circle cx="650" cy="624" r="7"/><circle cx="1050" cy="626" r="7"/>
+    </g>
+    <g fill="#4fd1c5">
+      <rect x="243" y="474" width="14" height="14"/><rect x="643" y="502" width="14" height="14"/><rect x="1043" y="621" width="14" height="14"/>
+    </g>
+    <g fill="#f6f8f8" font-size="19" font-weight="700">
+      <text x="270" y="475">6,958 ms</text>
+      <text x="1035" y="605" text-anchor="end">1.3: 187 ms</text>
+      <text x="1035" y="653" text-anchor="end">2.19: 115 ms</text>
+    </g>
+
+    <text x="60" y="740" fill="#c5ced0" font-size="17">Hourly CloudWatch domain-side SearchLatency percentiles</text>
+    <text x="1140" y="740" fill="#c5ced0" font-size="17" text-anchor="end">Lower is better</text>
+  </g>
+</svg>

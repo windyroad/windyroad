@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title description">
+  <title id="title">The OpenSearch 3.5 concurrency gate passed</title>
+  <desc id="description">The gate required OpenSearch 3.5 to act as the sole primary at 20 virtual users, with more than 90 percent of k6 checks passing and application-level search p95 below 16,000 milliseconds. All checks passed across 4,311 requests, there were no failed requests, and search p95 was 368 milliseconds. The bars also show median latency of 66 milliseconds and p90 of 227 milliseconds.</desc>
+
+  <rect width="1200" height="560" fill="#15191a"/>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="60" y="62" fill="#f6f8f8" font-size="34" font-weight="700">The missing concurrency gate passed</text>
+    <text x="60" y="100" fill="#c5ced0" font-size="20">Gate: sole primary at 20 VUs; checks above 90%; search p95 below 16,000 ms</text>
+    <text x="60" y="142" fill="#f6f8f8" font-size="19" font-weight="700">Result: 100% checks</text>
+    <text x="285" y="142" fill="#f6f8f8" font-size="19" font-weight="700">4,311 requests</text>
+    <text x="460" y="142" fill="#f6f8f8" font-size="19" font-weight="700">0 failed requests</text>
+    <text x="670" y="142" fill="#f6f8f8" font-size="19" font-weight="700">p95 368 ms</text>
+
+    <g stroke="#687276" stroke-width="1.5">
+      <line x1="360" y1="175" x2="360" y2="435"/>
+      <line x1="540" y1="175" x2="540" y2="435"/>
+      <line x1="720" y1="175" x2="720" y2="435"/>
+      <line x1="900" y1="175" x2="900" y2="435"/>
+      <line x1="1080" y1="175" x2="1080" y2="435"/>
+    </g>
+    <g fill="#c5ced0" font-size="17" text-anchor="middle">
+      <text x="360" y="466">0</text>
+      <text x="540" y="466">100</text>
+      <text x="720" y="466">200</text>
+      <text x="900" y="466">300</text>
+      <text x="1080" y="466">400 ms</text>
+    </g>
+
+    <text x="60" y="232" fill="#f6f8f8" font-size="21" font-weight="700">Median (p50)</text>
+    <rect x="360" y="195" width="119" height="54" fill="#8fa3a8"/>
+    <text x="497" y="230" fill="#f6f8f8" font-size="22" font-weight="700">66 ms</text>
+
+    <text x="60" y="322" fill="#f6f8f8" font-size="21" font-weight="700">p90</text>
+    <rect x="360" y="285" width="409" height="54" fill="#f2a65a"/>
+    <text x="787" y="320" fill="#f6f8f8" font-size="22" font-weight="700">227 ms</text>
+
+    <text x="60" y="412" fill="#f6f8f8" font-size="21" font-weight="700">p95</text>
+    <rect x="360" y="375" width="662" height="54" fill="#4fd1c5"/>
+    <text x="1040" y="410" fill="#f6f8f8" font-size="22" font-weight="700">368 ms</text>
+
+    <text x="60" y="518" fill="#c5ced0" font-size="17">Observed application-level search latency</text>
+    <text x="1140" y="518" fill="#c5ced0" font-size="17" text-anchor="end">Gate tested concurrency, not production latency</text>
+  </g>
+</svg>

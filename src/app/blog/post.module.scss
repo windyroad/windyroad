@@ -143,6 +143,38 @@
     margin: 1.25rem 0;
   }
 
+  figure {
+    margin: 2rem 0;
+
+    img {
+      width: 100%;
+      height: auto;
+      margin: 0;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent-on-dark);
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 600px) {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+
+      img {
+        width: 50rem;
+        max-width: none;
+      }
+    }
+  }
+
+  figcaption {
+    margin-top: 0.75rem;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;

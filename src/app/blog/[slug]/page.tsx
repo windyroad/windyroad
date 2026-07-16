@@ -3,6 +3,7 @@ import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
 import styles from '../post.module.scss';
+import ArticleContent from './ArticleContent';
 import 'highlight.js/styles/github-dark.css';
 
 
@@ -89,7 +90,7 @@ export default async function BlogPost({
             </div>
           </header>
           <section className={styles.content}>
-            <div dangerouslySetInnerHTML={{ __html: html }} />
+            <ArticleContent html={html} />
             {moreLink}
           </section>
         </article>

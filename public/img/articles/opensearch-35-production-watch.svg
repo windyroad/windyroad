@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" role="img" aria-labelledby="title" aria-describedby="description">
+  <title id="title">OpenSearch 3.5 production watch and pre-cutover warm-parity gate</title>
+  <desc id="description">During the first three production hours, 37 five-minute CloudWatch domain-side, per-shard p95 SearchLatency readings ranged from 18 to 82 milliseconds and ended at 61 milliseconds; p50 ended at 29 milliseconds. On a separately scaled pre-cutover direct-search gate, the warmed p95 improved from a 213 millisecond OpenSearch 2.19 baseline to 187 milliseconds on 3.5, below the 320 millisecond ceiling. The CloudWatch SearchableDocuments alarm stayed OK; it would alarm below 15 million documents for two consecutive five-minute periods. The cluster remained green with zero server errors and zero search rejections.</desc>
+
+  <rect width="1200" height="780" fill="#15191a"/>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="60" y="62" fill="#f6f8f8" font-size="34" font-weight="700">The first three production hours stayed clean</text>
+    <text x="60" y="100" fill="#c5ced0" font-size="20">Five-minute CloudWatch points, domain-side per-shard SearchLatency</text>
+
+    <line x1="60" y1="140" x2="105" y2="140" stroke="#4fd1c5" stroke-width="5"/>
+    <circle cx="82" cy="140" r="6" fill="#4fd1c5"/>
+    <text x="120" y="147" fill="#f6f8f8" font-size="19" font-weight="700">p95</text>
+    <line x1="205" y1="140" x2="250" y2="140" stroke="#f2a65a" stroke-width="5" stroke-dasharray="10 8"/>
+    <rect x="221" y="134" width="12" height="12" fill="#f2a65a"/>
+    <text x="265" y="147" fill="#f6f8f8" font-size="19" font-weight="700">p50</text>
+
+    <text x="160" y="170" fill="#c5ced0" font-size="17">Latency (milliseconds)</text>
+
+    <g stroke="#687276" stroke-width="1.5">
+      <line x1="160" y1="180" x2="1060" y2="180"/>
+      <line x1="160" y1="245" x2="1060" y2="245"/>
+      <line x1="160" y1="310" x2="1060" y2="310"/>
+      <line x1="160" y1="375" x2="1060" y2="375"/>
+      <line x1="160" y1="440" x2="1060" y2="440"/>
+      <line x1="160" y1="180" x2="160" y2="440"/>
+      <line x1="460" y1="180" x2="460" y2="440"/>
+      <line x1="760" y1="180" x2="760" y2="440"/>
+      <line x1="1060" y1="180" x2="1060" y2="440"/>
+    </g>
+
+    <g fill="#c5ced0" font-size="17" text-anchor="end">
+      <text x="140" y="446">0</text>
+      <text x="140" y="381">25</text>
+      <text x="140" y="316">50</text>
+      <text x="140" y="251">75</text>
+      <text x="140" y="186">100</text>
+    </g>
+    <g fill="#c5ced0" font-size="17" text-anchor="middle">
+      <text x="160" y="476">Start</text>
+      <text x="460" y="476">1 hour</text>
+      <text x="760" y="476">2 hours</text>
+      <text x="1060" y="476">3 hours</text>
+    </g>
+
+    <polyline points="160,374.3 185,379.6 210,309.7 235,322.9 260,349.3 285,362.1 310,394.2 335,344.7 360,379.6 385,369.5 410,334.2 435,301.7 460,234.0 485,239.0 510,359.3 535,312.5 560,367.0 585,333.8 610,337.0 635,344.2 660,384.9 685,376.0 710,296.6 735,342.4 760,383.7 785,251.0 810,386.5 835,309.6 860,322.8 885,315.5 910,354.1 935,323.9 960,351.2 985,325.9 1010,374.8 1035,368.0 1060,288.3" fill="none" stroke="#4fd1c5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="160,440.0 185,440.0 210,440.0 235,440.0 260,440.0 285,392.0 310,400.3 335,440.0 360,440.0 385,403.9 410,428.5 435,423.2 460,355.0 485,440.0 510,403.9 535,373.0 560,440.0 585,362.7 610,392.0 635,394.2 660,415.4 685,398.4 710,410.2 735,408.8 760,400.3 785,392.0 810,407.2 835,412.9 860,403.9 885,395.0 910,440.0 935,373.0 960,396.4 985,376.1 1010,423.2 1035,403.9 1060,366.3" fill="none" stroke="#f2a65a" stroke-width="5" stroke-dasharray="10 8" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <g fill="#4fd1c5">
+      <circle cx="160" cy="374.3" r="6"/>
+      <circle cx="460" cy="234.0" r="6"/>
+      <circle cx="760" cy="383.7" r="6"/>
+      <circle cx="1060" cy="288.3" r="6"/>
+    </g>
+    <g fill="#f2a65a">
+      <rect x="154" y="434" width="12" height="12"/>
+      <rect x="454" y="349" width="12" height="12"/>
+      <rect x="754" y="394.3" width="12" height="12"/>
+      <rect x="1054" y="360.3" width="12" height="12"/>
+    </g>
+
+    <text x="478" y="220" fill="#f6f8f8" font-size="19" font-weight="700">Peak 82 ms</text>
+    <text x="1078" y="294" fill="#f6f8f8" font-size="20" font-weight="700">p95 61 ms</text>
+    <text x="1078" y="372" fill="#f6f8f8" font-size="20" font-weight="700">p50 29 ms</text>
+
+    <line x1="60" y1="500" x2="1140" y2="500" stroke="#687276" stroke-width="1.5"/>
+
+    <text x="60" y="530" fill="#f6f8f8" font-size="20" font-weight="700">Warm-parity gate before cutover</text>
+    <text x="60" y="555" fill="#c5ced0" font-size="17">Direct signed searches, separately scaled</text>
+
+    <g stroke="#687276" stroke-width="1.5">
+      <line x1="360" y1="565" x2="360" y2="640"/>
+      <line x1="560" y1="565" x2="560" y2="640"/>
+      <line x1="760" y1="565" x2="760" y2="640"/>
+      <line x1="960" y1="565" x2="960" y2="640"/>
+      <line x1="1060" y1="565" x2="1060" y2="640"/>
+      <line x1="360" y1="640" x2="1060" y2="640"/>
+    </g>
+
+    <text x="60" y="590" fill="#f6f8f8" font-size="18" font-weight="700">OpenSearch 2.19 baseline</text>
+    <rect x="360" y="571" width="426" height="24" fill="#9fb2b6"/>
+    <text x="798" y="590" fill="#f6f8f8" font-size="18" font-weight="700">213 ms</text>
+
+    <text x="60" y="628" fill="#f6f8f8" font-size="18" font-weight="700">OpenSearch 3.5 result</text>
+    <rect x="360" y="609" width="374" height="24" fill="#4fd1c5"/>
+    <text x="746" y="628" fill="#f6f8f8" font-size="18" font-weight="700">187 ms</text>
+
+    <line x1="1000" y1="558" x2="1000" y2="640" stroke="#f6f8f8" stroke-width="3" stroke-dasharray="8 7"/>
+    <text x="1000" y="550" fill="#f6f8f8" font-size="17" font-weight="700" text-anchor="middle">320 ms ceiling (1.5x)</text>
+
+    <g fill="#c5ced0" font-size="17" text-anchor="middle">
+      <text x="360" y="664">0</text>
+      <text x="560" y="664">100</text>
+      <text x="760" y="664">200</text>
+      <text x="960" y="664">300</text>
+      <text x="1060" y="664">350 ms</text>
+    </g>
+
+    <text x="60" y="708" fill="#f6f8f8" font-size="19" font-weight="700">Cluster green</text>
+    <text x="245" y="708" fill="#f6f8f8" font-size="19" font-weight="700">0 server errors</text>
+    <text x="445" y="708" fill="#f6f8f8" font-size="19" font-weight="700">0 search rejections</text>
+    <text x="700" y="708" fill="#f6f8f8" font-size="19" font-weight="700">SearchableDocuments alarm OK</text>
+    <text x="60" y="738" fill="#c5ced0" font-size="17">Alarm trigger: fewer than 15 million searchable documents for two consecutive 5-minute periods</text>
+    <text x="1140" y="762" fill="#c5ced0" font-size="17" text-anchor="end">Source: CloudWatch statistics and pre-cutover direct-search comparison</text>
+  </g>
+</svg>
