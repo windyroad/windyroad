@@ -3,6 +3,8 @@ date: '2026-07-16'
 title: 'At 2am UTC, ten million addresses disappeared'
 author: 'Tom Howard'
 tags: ['ai coding', 'claude code', 'opensearch', 'software delivery', 'risk management', 'zero outage']
+image: '/img/social/opensearch-upgrade-failed-cluster.jpg'
+imageAlt: 'Two parallel server clusters at night: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.'
 ---
 
 At 2am UTC, the new OpenSearch cluster held about ten million Australian addresses. At the next CloudWatch reading, it held seven.
@@ -12,6 +14,8 @@ At 03:00:59 UTC, the failed logins began. By the time the import was stopped, th
 Claude Code had been supervising the migration for more than a day. The new cluster was supposed to replace an old one running OpenSearch 1.3.20. It was not yet serving customers, so the production API continued answering searches as if nothing had happened.
 
 That was the first thing the migration got right.
+
+![Two parallel server clusters at night: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.](/img/social/opensearch-upgrade-failed-cluster.jpg)
 
 ## A cluster too old to leave alone
 
@@ -63,41 +67,51 @@ Direct probes returned 401. The same credentials still matched in 1Password, Git
 
 CloudWatch supplied the missing half of the picture. The searchable-document count had climbed normally to about ten million. At 02:00 UTC it fell to seven. An hour later the authentication failures started.
 
-Two failures had arrived together: the index had disappeared, and the fine-grained-access-control credentials had been clobbered. Changing the credentials again might restart the load. It would not remove the thing that kept changing them.
+That established where the authentication fault lived: the fine-grained access control user store inside the managed domain no longer matched any credential plane under the project's control. It did not establish what had changed it. The audit log contained the failed logins, but no initiating event. The index deletion had left no delete event either.
+
+Claude Code initially treated the timing as causation and joined the symptoms into one failure. The evidence supported only two simultaneous failures with two causes still unknown.
 
 ## Remove the thing that can break
 
-Claude Code stopped the doomed workflow and surfaced the architectural choice. The operator approved removing OpenSearch's internal username-and-password store from this deployment and replacing it with AWS identity.
+Changing the password might restore access. It could not make the internal user store a safe dependency. Claude Code stopped the doomed workflow and surfaced the architectural choice. The operator approved removing OpenSearch's username-and-password store from this deployment and replacing it with AWS identity.
 
-The decision became an architecture record before the code changed. The OpenSearch client gained an optional SigV4 mode. Existing users still received the same basic-authentication path unless they explicitly enabled it. The AWS domain policy named only the application role and the loader identity. There was no shared cluster password left to drift.
+The decision became an architecture record before the code changed. The OpenSearch client gained an optional AWS Signature Version 4, or SigV4, mode. Existing users still received the same basic-authentication path unless they explicitly enabled it. The AWS domain policy named only the application role and the loader identity. There was no shared cluster password left to drift.
+
+This was a structural remedy, not a diagnosis. It removed the mutable credential store even though the event that had changed it remained unknown.
 
 The broken parallel domain was deleted and recreated. An unsigned request received 403. The same request signed by an approved AWS identity received 200, and the cluster reported green. The real loader connected through the new path and began indexing.
 
+The next monitor reading showed 274,000 documents and 97 percent progress. Claude Code concluded that the loader was processing only one state. Before changing the configuration, it checked the file list and the log. The percentage reset for every state: the loader was already 53 percent through New South Wales' 5.2 million rows, and all nine state and territory files were present. Searchable-document count, not the loader's percentage, became the progress signal.
+
 The long-running local process was killed when its original agent task ended, so Claude Code relaunched it detached from the task and resumed monitoring. The document count started climbing again.
 
-Then, near fourteen million records, the index disappeared a second time.
+Then, near fourteen million records, one of the two nodes dropped out. The cluster went yellow, the loader fell into escalating backoffs and indexing stopped. When the second node returned, the cluster was green again, but the index had disappeared.
 
-There was no fine-grained access control on this cluster. The credential failure was gone. The disappearing index was a separate problem.
+There was no fine-grained access control on this cluster. Its loader log contained no index close or delete. CloudWatch placed the loss minutes after the node drop: 14.17 million searchable documents fell to zero. The credential failure was gone. The disappearing index was a separate problem.
 
 ## The weight of the new index
 
-The old 1.3 cluster held the full dataset on two small instances with 12 GB disks. It was reasonable to expect the same shape to hold the same addresses on 2.19.
+The old 1.3 cluster held the full dataset on two small instances with 12 GB disks. It had also been loaded from scratch. It was reasonable to expect the same shape to hold the same addresses on 2.19.
 
-The metrics said otherwise. At fourteen million documents, the 2.19 index was consuming roughly 1.7 times as much disk per document as the old index. With a replica, the full dataset would not fit safely in 12 GB. The nodes came under storage and indexing pressure before the load reached the end.
+The metrics said otherwise. The complete 1.3 index occupied about 56 percent of its disks. At only fourteen million documents, the 2.19 domain had reached about 80 percent. It was consuming roughly 1.7 times as much disk per document, and its full dataset with a replica would not fit safely in 12 GB.
 
-The next domain received 20 GB disks. An index template held replicas at zero during the bulk load, halving write and storage pressure. Once all 16,905,824 documents were present, the replica was added and the cluster returned to green. A document-count alarm remained armed in case the index vanished again.
+The second loss supplied the causal chain that the first had not: sustained 2.19 indexing pressure, a node drop, loader backoff and then a vanished index, with no delete in the loader log. The first deletion's exact initiating event remained unrecorded, but the failure could now be reproduced independently of authentication.
+
+The domain received 20 GB disks. An index template held replicas at zero during the bulk load, halving write and storage pressure. It crossed both previous failure points with both nodes green. Once all 16,905,824 documents were present, the replica was added and the cluster returned to green. The controlled rerun supported the diagnosis: the 2.19 load had exceeded the small domain's resource envelope. A document-count alarm remained armed in case the index vanished again.
+
+![An illustrated stream of address records entering two search nodes with expanded storage, with a second replica path shown beside the primary load.](/img/social/opensearch-upgrade-recovery.jpg)
 
 The data was finally complete. It was still not ready for production.
 
-Read-shadowing exposed a new problem. On the small instances, OpenSearch 2.19 was much slower than 1.3 even though its CPU and JVM figures were lower. More warming did not help. Its search tail grew into seconds while the old cluster remained steady.
+Read-shadowing exposed a new problem. On the small instances, OpenSearch 2.19 was much slower than 1.3 even though its CPU and JVM figures were lower. Its search tail grew into seconds while the old cluster remained steady.
 
-The low CPU was the clue. The larger 2.19 index did not fit the smaller instances' memory, so searches kept missing the page cache and waiting on disk. Claude Code resized the quiet domain to memory-optimised instances and measured again. The new cluster's warmed p90 fell to 45 milliseconds against the old cluster's 64; p99 fell to 115 milliseconds against 187.
+The low CPU was the clue. The larger 2.19 index did not fit the smaller instances' memory, so searches kept missing the page cache and waiting on disk. Claude Code resized the quiet domain to memory-optimised instances and measured both domains during the same warmed hour of mirrored production searches. At the 90th percentile, the new cluster recorded 45 milliseconds against the old cluster's 64. At the 99th, it recorded 115 milliseconds against 187.
 
-To test whether time alone could save the cheaper option, the domain was returned to the smaller instances for a longer soak. Performance worsened. The p90 passed 2.7 seconds while the old cluster held near 200 milliseconds. The larger instances were no longer a guess. They were the measured requirement.
+To test whether time alone could save the cheaper option, the domain was returned to the smaller instances under the same mirrored query stream. Over four hours, its 90th-percentile latency climbed from 1.16 to 2.75 seconds while the old cluster held near 200 milliseconds. The larger instances were no longer a guess. They were the measured requirement.
 
 ## The last unsafe green light
 
-The formal gates now passed. The search-quality baseline returned 14 correct results out of 14. The Cucumber suites passed against the managed 2.19 domain. A load test completed with no failures and a search p95 of 219 milliseconds.
+The formal gates now passed. The search-quality baseline returned 14 correct results out of 14. The Cucumber suites passed against the managed 2.19 domain. A matching 38-minute load-test profile in k6, ramping from five to 20 virtual users, had measured the old cluster at a 95th-percentile search latency of 962 milliseconds and set the acceptance limit at 1,443. Against 2.19, the same profile completed 38,459 requests with no failures and a 95th percentile of 219 milliseconds.
 
 One green light was still lying.
 
@@ -119,11 +133,11 @@ The second upgrade began with something the first had never possessed: a working
 
 CI replaced the retired 1.3 leg with OpenSearch 3.5 while retaining 2.19 as a compatibility target. The same Terraform module provisioned another quiet parallel domain. The same identity model secured it. The loader ran a small canary, then rebuilt all 16.9 million addresses. The same quality tests, document alarm, latency dashboard and read-shadow path checked the result.
 
-The machinery did not make the cutover automatic. Its risk score was 8 out of 25 because one important condition had not been exercised: the 3.5 domain had never carried full primary concurrency.
+The machinery did not make the cutover automatic. The project's release gate scored residual impact multiplied by likelihood on a scale from one to 25 and blocked scores above five. This cutover scored eight because one important condition had not been exercised. Read-shadowing had replayed the normal production query stream, but the 3.5 domain had never acted as the sole primary under the load test's maximum concurrency.
 
-Claude Code ran the missing test instead of bypassing the gate. A local application pointed directly at 3.5 sustained 20 virtual users for 4,311 requests. Every check passed, there were no failed requests, and search p95 was 368 milliseconds. With the untested condition removed, residual risk fell to 4 out of 25.
+Claude Code ran the missing test instead of bypassing the gate. A shortened run of the same application-level k6 harness ramped to 20 virtual users, then held them against a local application pointed directly at 3.5 over SigV4. In four and a half minutes it completed 4,311 requests. Every check passed, there were no failed requests, and 95th-percentile search latency was 368 milliseconds. The test was not a comparison with production latency; it exercised the missing concurrency condition. With that likelihood reduced by evidence, residual risk fell to four out of 25.
 
-Production cut over on 14 July. Three hours later, the 3.5 domain was green with the full dataset, no server errors, no search rejections and a measured p95 of 24 milliseconds. After the operator accepted the loss of the warm rollback domain, the 2.19 infrastructure was removed. Its CI leg remained, preserving code compatibility until 2.19 reaches end of life.
+Production cut over on 14 July. Three hours later, the 3.5 domain was green with the full dataset, no server errors and no search rejections. CloudWatch's domain-side search metric reported a 95th percentile of 24 milliseconds. After the operator accepted the loss of the warm rollback domain, the 2.19 infrastructure was removed. Its CI leg remained, preserving code compatibility until 2.19 reaches end of life.
 
 By 14 July, OpenSearch 3.5 was the only search domain left running.
 
@@ -135,10 +149,8 @@ The upgrade succeeded because the project gave reasoning somewhere concrete to l
 
 The human still made the consequential choices: change the migration sequence, replace the authentication model, accept the larger instances, authorise each cutover and decide when to remove the rollback domain. Claude Code carried those decisions through the delivery system and returned with evidence for the next one.
 
-It also made mistakes. It initially treated the data loss and credential clobber as one failure. It misread a per-state loader percentage as total progress. It began with a domain that was too small. Each mistake met a deterministic signal before production traffic moved.
+It also made mistakes. It initially treated coincidence as causation, misread a per-state loader percentage as total progress and began with a domain that was too small. Each mistake met a deterministic signal before production traffic moved.
 
 <span data-pull>Claude Code did not need to be right the first time. It needed to discover when it was wrong before customers did.</span>
 
 The path from OpenSearch 1.3.20 to 3.5 contained a rolled-back attempt, two vanished indexes, an authentication redesign, repeated full-data loads, a sizing reversal and two production cutovers. Customers saw no outage.
-
-That was not the result of an infallible agent. It was the result of an agent working inside a system where failure was observable, reversible and kept away from the serving path until the evidence said otherwise.
