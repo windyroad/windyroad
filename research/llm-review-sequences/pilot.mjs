@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import process from "node:process";
 import { pathToFileURL } from "node:url";
 
 const WORKFLOW_POLICIES = {
@@ -166,7 +167,7 @@ function generateCase(root, scenario, intent, spacingMinutes) {
   const atomic = {
     activation_index: 1,
     tree: git(repo, ["rev-parse", `${atomicCommit}^{tree}`]),
-    submissions: [submission(repo, scenario.id, intent, "atomic", atomicCommit, 1)],
+    submissions: [submission(repo, scenario.id, "atomic", atomicCommit, 1)],
   };
 
   git(repo, ["switch", "-q", "base"]);
@@ -180,7 +181,7 @@ function generateCase(root, scenario, intent, spacingMinutes) {
     spacing_minutes: spacingMinutes,
     tree: git(repo, ["rev-parse", `${splitCommits.at(-1)}^{tree}`]),
     submissions: splitCommits.map((hash, index) =>
-      submission(repo, scenario.id, intent, "split", hash, index + 1),
+      submission(repo, scenario.id, "split", hash, index + 1),
     ),
   };
 
@@ -218,10 +219,10 @@ function commit(repo, message, minute) {
   return git(repo, ["rev-parse", "HEAD"]);
 }
 
-function submission(repo, scenario, intent, decomposition, commitHash, index) {
+function submission(repo, scenario, decomposition, commitHash, index) {
   const diff = git(repo, ["show", "--format=", "--no-ext-diff", "--unified=3", commitHash]);
   return {
-    id: `${scenario}-${intent}-${decomposition}-${index}`,
+    id: `${scenario}-${decomposition}-${index}`,
     index,
     commit: commitHash,
     parent: git(repo, ["rev-parse", `${commitHash}^`]),
@@ -243,7 +244,7 @@ function git(cwd, args, extraEnv = {}) {
   }).trim();
 }
 
-function safetyViolations(files) {
+export function safetyViolations(files) {
   const source = Object.values(files).join("\n");
   const nonRelativeImports = [...source.matchAll(/from\s+["']([^"']+)/g)]
     .map((match) => match[1])
@@ -253,6 +254,7 @@ function safetyViolations(files) {
     [/\b(?:fetch|WebSocket|XMLHttpRequest|eval)\s*\(/, "external or dynamic execution API"],
     [/\bprocess\s*\./, "process access"],
     [/\b(?:https?|wss?):\/\//, "external endpoint"],
+    [/\b(?:(?:import|require)\s*\(|Deno\s*\.|Bun\s*\.|new\s+Function\s*\()/, "dynamic module or runtime API"],
   ];
   return [
     ...forbidden.filter(([pattern]) => pattern.test(source)).map(([, label]) => label),
@@ -315,7 +317,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const cases = generatePilot(process.argv[2]);
     process.stdout.write(`${JSON.stringify(cases, null, 2)}\n`);
   } catch (error) {
-    console.error(error.message);
+    process.stderr.write(`${error.message}\n`);
     process.exitCode = 1;
   }
 }

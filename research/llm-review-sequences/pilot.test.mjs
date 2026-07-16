@@ -4,7 +4,12 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { metrics, sequenceOutcomes } from "./analyse.mjs";
-import { generatePilot, renderEvidence, validateReviewResponse } from "./pilot.mjs";
+import {
+  generatePilot,
+  renderEvidence,
+  safetyViolations,
+  validateReviewResponse,
+} from "./pilot.mjs";
 
 describe("safe sequence pilot", () => {
   it("proves equivalence, context controls, policy behavior, and response validation", () => {
@@ -15,6 +20,7 @@ describe("safe sequence pilot", () => {
       expect(cases).toHaveLength(4);
 
       for (const entry of cases) {
+        expect(JSON.stringify([entry.atomic.submissions, entry.split.submissions])).not.toContain(entry.intent);
         expect(entry.atomic.tree).toBe(entry.split.tree);
         expect(entry.atomic.submissions).toHaveLength(1);
         expect(entry.split.submissions).toHaveLength(3);
@@ -87,4 +93,23 @@ describe("safe sequence pilot", () => {
       rmSync(root, { recursive: true, force: true });
     }
   }, 60_000);
+
+  it("rejects external and dynamic capabilities in generated source", () => {
+    const violations = safetyViolations({
+      "bad.mjs": [
+        'import fs from "node:fs";',
+        'fetch("https://example.invalid");',
+        'await import("./dynamic.mjs");',
+        "Deno.writeTextFile('x', 'y');",
+        "new Function('return true')();",
+      ].join("\n"),
+    });
+
+    expect(violations).toEqual(expect.arrayContaining([
+      "Node built-in import",
+      "external or dynamic execution API",
+      "external endpoint",
+      "dynamic module or runtime API",
+    ]));
+  });
 });

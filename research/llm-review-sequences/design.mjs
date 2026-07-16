@@ -48,6 +48,138 @@ export function runPowerSimulation(options = {}) {
   };
 }
 
+export function runHierarchicalPowerSimulation(options = {}) {
+  const config = {
+    ...DEFAULTS,
+    layouts: [
+      { structuralTemplates: 8, instancesPerTemplate: 40 },
+      { structuralTemplates: 40, instancesPerTemplate: 8 },
+      { structuralTemplates: 64, instancesPerTemplate: 5 },
+      { structuralTemplates: 80, instancesPerTemplate: 4 },
+      { structuralTemplates: 160, instancesPerTemplate: 2 },
+      { structuralTemplates: 200, instancesPerTemplate: 2 },
+      { structuralTemplates: 320, instancesPerTemplate: 1 },
+    ],
+    templateRandomInterceptLogitSd: 0.5,
+    templateSplitSlopeLogitSd: 0.35,
+    templateInteractionSlopeLogitSd: 0.35,
+    ...options,
+  };
+  const candidates = config.layouts.map((layout) => simulateHierarchicalCandidate(layout, config));
+  const selected = candidates.find(
+    ({ primary_power, workflow_equivalence_assurance, interaction_power }) =>
+      primary_power >= config.targetPower
+      && workflow_equivalence_assurance >= config.targetPower
+      && interaction_power >= config.targetPower,
+  ) ?? null;
+
+  return {
+    method: "paired Monte Carlo aggregated at the structural-template level; scenario families are fixed blocks",
+    assumptions: {
+      simulations: config.simulations,
+      trials_per_cell: config.trialsPerCell,
+      seed: config.seed,
+      central_atomic_recall: config.baselineRecall,
+      central_split_penalty: config.splitPenalty,
+      central_atomic_workflow_effect: config.workflowEffect,
+      central_decomposition_by_workflow_interaction: config.interactionEffect,
+      scenario_random_intercept_logit_sd: config.scenarioLogitSd,
+      template_random_intercept_logit_sd: config.templateRandomInterceptLogitSd,
+      template_split_slope_logit_sd: config.templateSplitSlopeLogitSd,
+      template_interaction_slope_logit_sd: config.templateInteractionSlopeLogitSd,
+      workflow_equivalence_margin: config.equivalenceMargin,
+      target_power_or_assurance: config.targetPower,
+    },
+    selected_layout: selected
+      ? {
+          structural_templates: selected.structural_templates,
+          instances_per_template: selected.instances_per_template,
+          scenario_pairs: selected.scenario_pairs,
+        }
+      : null,
+    candidates,
+  };
+}
+
+function simulateHierarchicalCandidate(layout, config) {
+  const { structuralTemplates, instancesPerTemplate } = layout;
+  if (!Number.isInteger(structuralTemplates) || structuralTemplates < 2) {
+    throw new Error("structuralTemplates must be an integer greater than one");
+  }
+  if (!Number.isInteger(instancesPerTemplate) || instancesPerTemplate < 1) {
+    throw new Error("instancesPerTemplate must be positive");
+  }
+  const rng = createRng(
+    config.seed
+    ^ Math.imul(structuralTemplates, 0x9e3779b1)
+    ^ Math.imul(instancesPerTemplate, 0x85ebca6b),
+  );
+  const intercepts = {
+    prAtomic: logit(config.baselineRecall),
+    prSplit: logit(config.baselineRecall - config.splitPenalty),
+    trunkAtomic: logit(config.baselineRecall + config.workflowEffect),
+    trunkSplit: logit(
+      config.baselineRecall
+      + config.workflowEffect
+      - config.splitPenalty
+      + config.interactionEffect,
+    ),
+  };
+  let primaryDetections = 0;
+  let workflowEquivalences = 0;
+  let interactionDetections = 0;
+
+  for (let simulation = 0; simulation < config.simulations; simulation += 1) {
+    const primary = [];
+    const workflow = [];
+    const interaction = [];
+    for (let template = 0; template < structuralTemplates; template += 1) {
+      const templateIntercept = normal(rng) * config.templateRandomInterceptLogitSd;
+      const splitSlope = normal(rng) * config.templateSplitSlopeLogitSd;
+      const interactionSlope = normal(rng) * config.templateInteractionSlopeLogitSd;
+      let primaryTotal = 0;
+      let workflowTotal = 0;
+      let interactionTotal = 0;
+
+      for (let instance = 0; instance < instancesPerTemplate; instance += 1) {
+        const common = templateIntercept + (normal(rng) * config.scenarioLogitSd);
+        const prAtomic = trialMean(rng, logistic(intercepts.prAtomic + common), config.trialsPerCell);
+        const prSplit = trialMean(
+          rng,
+          logistic(intercepts.prSplit + common + splitSlope),
+          config.trialsPerCell,
+        );
+        const trunkAtomic = trialMean(rng, logistic(intercepts.trunkAtomic + common), config.trialsPerCell);
+        const trunkSplit = trialMean(
+          rng,
+          logistic(intercepts.trunkSplit + common + splitSlope + interactionSlope),
+          config.trialsPerCell,
+        );
+        primaryTotal += prSplit - prAtomic;
+        workflowTotal += ((trunkAtomic + trunkSplit) - (prAtomic + prSplit)) / 2;
+        interactionTotal += (trunkSplit - trunkAtomic) - (prSplit - prAtomic);
+      }
+
+      primary.push(primaryTotal / instancesPerTemplate);
+      workflow.push(workflowTotal / instancesPerTemplate);
+      interaction.push(interactionTotal / instancesPerTemplate);
+    }
+
+    if (effectDetected(primary, 1.96)) primaryDetections += 1;
+    if (equivalent(workflow, config.equivalenceMargin, 1.645)) workflowEquivalences += 1;
+    if (effectDetected(interaction, 1.96)) interactionDetections += 1;
+  }
+
+  return {
+    structural_templates: structuralTemplates,
+    instances_per_template: instancesPerTemplate,
+    scenario_pairs: structuralTemplates * instancesPerTemplate,
+    primary_power: proportion(primaryDetections, config.simulations),
+    workflow_equivalence_assurance: proportion(workflowEquivalences, config.simulations),
+    interaction_power: proportion(interactionDetections, config.simulations),
+  };
+}
+
 function simulateCandidate(scenarioPairs, config) {
   const rng = createRng(config.seed ^ Math.imul(scenarioPairs, 0x9e3779b1));
   let primaryDetections = 0;
@@ -193,9 +325,12 @@ export function estimateCost({
   };
 }
 
-export function buildScheduleRecord(study) {
+export function buildScheduleRecord(
+  study,
+  { scenarioCount = study.power_analysis.scenario_pairs } = {},
+) {
   const schedule = generateCallSchedule({
-    scenarioCount: study.power_analysis.scenario_pairs,
+    scenarioCount,
     models: study.randomization.model_order_before_shuffle,
     trialsPerCell: study.trials_per_cell,
     splitSubmissionCount: study.split_submission_count,
@@ -297,5 +432,25 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     targetPower: study.power_analysis.target_power_or_assurance,
   });
   const schedule = buildScheduleRecord(study);
-  process.stdout.write(`${JSON.stringify({ power, schedule }, null, 2)}\n`);
+  const audit = study.hierarchical_power_audit;
+  const hierarchicalAudit = runHierarchicalPowerSimulation({
+    layouts: audit.candidate_layouts.map(({ structural_templates, instances_per_template }) => ({
+      structuralTemplates: structural_templates,
+      instancesPerTemplate: instances_per_template,
+    })),
+    simulations: audit.simulations,
+    trialsPerCell: study.power_analysis.trials_per_cell,
+    seed: study.power_analysis.seed,
+    baselineRecall: study.power_analysis.central_atomic_recall,
+    splitPenalty: study.power_analysis.central_split_penalty,
+    workflowEffect: study.power_analysis.central_atomic_workflow_effect,
+    interactionEffect: study.power_analysis.central_decomposition_by_workflow_interaction,
+    scenarioLogitSd: study.power_analysis.scenario_random_intercept_logit_sd,
+    templateRandomInterceptLogitSd: audit.template_random_intercept_logit_sd,
+    templateSplitSlopeLogitSd: audit.template_split_slope_logit_sd,
+    templateInteractionSlopeLogitSd: audit.template_interaction_slope_logit_sd,
+    equivalenceMargin: study.power_analysis.workflow_equivalence_margin,
+    targetPower: study.power_analysis.target_power_or_assurance,
+  });
+  process.stdout.write(`${JSON.stringify({ power, hierarchical_audit: hierarchicalAudit, schedule }, null, 2)}\n`);
 }

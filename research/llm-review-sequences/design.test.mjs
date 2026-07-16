@@ -5,6 +5,7 @@ import {
   buildScheduleRecord,
   estimateCost,
   generateCallSchedule,
+  runHierarchicalPowerSimulation,
   runPowerSimulation,
   summarizeSchedule,
 } from "./design.mjs";
@@ -43,6 +44,31 @@ describe("preregistered study design", () => {
 
     expect(result.candidates[0].interaction_power).toBeLessThan(0.8);
     expect(result.selected_scenario_pairs).toBe(320);
+  });
+
+  it("audits power at the structural-template level deterministically", () => {
+    const options = {
+      layouts: [
+        { structuralTemplates: 8, instancesPerTemplate: 2 },
+        { structuralTemplates: 16, instancesPerTemplate: 1 },
+      ],
+      simulations: 200,
+      trialsPerCell: 3,
+      seed: 20260717,
+    };
+
+    const first = runHierarchicalPowerSimulation(options);
+    const second = runHierarchicalPowerSimulation(options);
+
+    expect(first).toEqual(second);
+    expect(first.candidates.map(({ scenario_pairs }) => scenario_pairs)).toEqual([16, 16]);
+    expect(first.candidates.map(({ structural_templates }) => structural_templates)).toEqual([8, 16]);
+    for (const candidate of first.candidates) {
+      expect(candidate.primary_power).toBeGreaterThanOrEqual(0);
+      expect(candidate.primary_power).toBeLessThanOrEqual(1);
+      expect(candidate.interaction_power).toBeGreaterThanOrEqual(0);
+      expect(candidate.interaction_power).toBeLessThanOrEqual(1);
+    }
   });
 
   it("generates a deterministic, balanced boundary-level call schedule", () => {
@@ -95,5 +121,16 @@ describe("preregistered study design", () => {
     expect(record.calls).toBe(study.randomization.call_count);
     expect(record.sequences).toBe(study.randomization.sequence_count);
     expect(record.cost.total_usd).toBe(study.inference_budget.estimated_total_usd);
+  });
+
+  it("reproduces the preregistration v2 candidate schedule and cost", () => {
+    const study = JSON.parse(readFileSync("research/llm-review-sequences/study.json", "utf8"));
+    const candidate = study.preregistration_v2_candidate;
+    const record = buildScheduleRecord(study, { scenarioCount: candidate.scenario_pairs });
+
+    expect(record.sha256).toBe(candidate.schedule_sha256);
+    expect(record.calls).toBe(candidate.call_count);
+    expect(record.sequences).toBe(candidate.sequence_count);
+    expect(record.cost.total_usd).toBe(candidate.estimated_total_usd);
   });
 });

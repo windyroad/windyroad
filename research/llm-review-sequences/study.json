@@ -93,6 +93,59 @@
       "interaction_power": 0.8432
     }
   },
+  "hierarchical_power_audit": {
+    "status": "pre-outcome-amendment-required",
+    "run_at": "2026-07-17T01:42:22+10:00",
+    "confirmatory_outcomes_collected": false,
+    "method": "Paired Monte Carlo aggregated at the structural-template level, with scenario families treated as fixed blocks.",
+    "simulations": 20000,
+    "seed": 20260716,
+    "template_random_intercept_logit_sd": 0.5,
+    "template_split_slope_logit_sd": 0.35,
+    "template_interaction_slope_logit_sd": 0.35,
+    "candidate_layouts": [
+      { "structural_templates": 8, "instances_per_template": 40, "scenario_pairs": 320, "primary_power": 0.9642, "workflow_equivalence_assurance": 0.9076, "interaction_power": 0.5966 },
+      { "structural_templates": 40, "instances_per_template": 8, "scenario_pairs": 320, "primary_power": 0.9998, "workflow_equivalence_assurance": 0.984, "interaction_power": 0.751 },
+      { "structural_templates": 64, "instances_per_template": 5, "scenario_pairs": 320, "primary_power": 0.9998, "workflow_equivalence_assurance": 0.9871, "interaction_power": 0.7684 },
+      { "structural_templates": 80, "instances_per_template": 4, "scenario_pairs": 320, "primary_power": 1, "workflow_equivalence_assurance": 0.9867, "interaction_power": 0.7808 },
+      { "structural_templates": 160, "instances_per_template": 2, "scenario_pairs": 320, "primary_power": 1, "workflow_equivalence_assurance": 0.9894, "interaction_power": 0.7984 },
+      { "structural_templates": 200, "instances_per_template": 2, "scenario_pairs": 400, "primary_power": 1, "workflow_equivalence_assurance": 0.9975, "interaction_power": 0.8753 },
+      { "structural_templates": 320, "instances_per_template": 1, "scenario_pairs": 320, "primary_power": 1, "workflow_equivalence_assurance": 0.9915, "interaction_power": 0.7995 }
+    ],
+    "selected_amendment_candidate": {
+      "structural_templates": 200,
+      "instances_per_template": 2,
+      "scenario_pairs": 400
+    },
+    "rule": "Do not collect confirmatory outcomes until the benchmark reaches the selected structural-template layout, the simulation is independently reviewed, and preregistration v2 records the hierarchy."
+  },
+  "preregistration_v2_candidate": {
+    "status": "not-frozen",
+    "reason": "Pre-outcome hierarchical power audit corrected the independence assumption in preregistration v1.",
+    "scenario_pairs": 400,
+    "structural_templates": 200,
+    "instances_per_template": 2,
+    "trials_per_cell": 3,
+    "sequence_count": 57600,
+    "call_count": 115200,
+    "calls_per_model": 38400,
+    "schedule_seed": 20260716,
+    "schedule_sha256": "e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663",
+    "estimated_usd_by_model": {
+      "anthropic/claude-sonnet-4.6": 377.856,
+      "openai/gpt-5.6-sol": 678.912,
+      "qwen/qwen3-coder-next": 37.7856
+    },
+    "estimated_total_usd": 1094.5536,
+    "candidate_hard_spending_ceiling_usd": 1400,
+    "freeze_requirements": [
+      "200 independently reviewable structural templates generated and machine-validated",
+      "independent review of the hierarchical simulation and analysis model",
+      "exact tokenizer preflight below the input ceiling",
+      "external preregistration v2 timestamp",
+      "explicit paid-call authorization"
+    ]
+  },
   "randomization": {
     "algorithm": "Fisher-Yates using the xorshift32 generator implemented in design.mjs",
     "seed": 20260716,
@@ -120,6 +173,35 @@
     "estimated_total_usd": 875.64288,
     "hard_spending_ceiling_usd": 1100,
     "rule": "Do not begin paid calls without explicit authorization. During collection, stop before accrued cost plus the frozen projected remainder would exceed the hard ceiling. No cache discount is assumed."
+  },
+  "benchmark_prototype": {
+    "status": "machine-validated-not-confirmatory",
+    "generated_at": "2026-07-17T01:46:43+10:00",
+    "generator": "benchmark.mjs",
+    "scenario_pairs": 320,
+    "cases": 640,
+    "families": 8,
+    "structural_templates": 8,
+    "parameter_variants_per_template": 40,
+    "generated_source_files": 1920,
+    "machine_checks": {
+      "malicious_oracles_activated": 320,
+      "benign_oracles_safe": 320,
+      "safety_violations": 0,
+      "atomic_split_tree_equivalence": "passed",
+      "atomic_split_changed_line_equivalence": "passed",
+      "malicious_benign_changed_line_matching": "passed",
+      "activation_timestamp_matching": "passed"
+    },
+    "blind_submission_identifiers": "passed",
+    "intent_free_prompt_ledger": "passed; ground truth is joined later through opaque case_id",
+    "cards_sha256": "3792a64e4894858dd741866956079b9154ca2f134ecaf2bd50fcf2534e40952d",
+    "fixed_prompt_sha256": "9e49d849f1435fa962fe2fb7bc000592b8c692bc97d0e5c9f1eef7a307bc4c07",
+    "unique_boundary_prompts": 10240,
+    "prompts_sha256": "18353233218259a2e4cfde9f6c90c90091eef32f853d794142a2d18a7df0580a",
+    "maximum_request_bytes": 3256,
+    "confirmatory_eligible": false,
+    "eligibility_blocker": "The 20,000-replication hierarchical audit estimates only 59.66% interaction power for eight templates with 40 variants. The pre-outcome amendment candidate requires 200 independently reviewable structural templates with two instances each, followed by independent design review and preregistration v2. No model outcomes may be collected from this prototype."
   },
   "scenario_families": [
     "authorization-policy composition",
