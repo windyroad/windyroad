@@ -49,3 +49,23 @@ Changed files include `subscription.mjs`, `subscription-runner.mjs`, their tests
 - No-prompt subscription preflight using explicit absolute client paths.
 - Pinned two-pass manuscript build and six-page visual inspection.
 - One correction commit supplied unchanged to all three repeat reviewers.
+
+## Resolution of correction addenda for `d3e1a0c`
+
+The first correction addenda also returned `do not approve`. Their additional findings were accepted as follows before a final correction review:
+
+- Safety `B-01-R1`: accepted. All 24 discarded plausible `refactor:` strings were removed from public source and replaced with neutral synthetic labels.
+- Safety `M-03-R1`: accepted. The remaining manifest wording was explicitly labelled as a superseded legacy API requirement.
+- Safety `M-04` and reproducibility `Cm01`: accepted. Artifacts now distinguish isolated initial reviews from non-isolated correction addenda that inspect the cross-role resolution log.
+- Safety `m-02-R1` and reproducibility `CM01`: accepted. `.nvmrc` and the README now pin Node `20.19.0`.
+- Methods `METH-CB01`: accepted. The exploratory interaction output no longer contains a `detected` decision.
+- Methods `METH-CB02`: accepted. The directional 20,000-replication H2 power value is `0.2577` everywhere and has an exact regression test.
+- Methods `METH-CM01`: accepted. The executable analysis now emits review-system-specific complete-pair sensitivity.
+- Methods `METH-Cm01`: accepted. Descriptive bootstrap intervals now default to seed `20260718`.
+- Reproducibility `CB01`: accepted. Rate-limit suspensions no longer consume the three-infrastructure-failure ceiling or become missing outcomes.
+- Reproducibility `CB02`: accepted. The runner persists the first returned identity for each review system and suspends on any later identity change; a fabricated two-call test covers drift within an alias.
+- Reproducibility `CB03`: accepted. The default runner refuses unless the manifest is frozen, subscription calls are authorized, an OSF identifier exists, and all five generated artifact hashes match.
+- Reproducibility `CM02`: accepted by removing the unused 100-consecutive-failure claim from the active protocol and manuscript.
+- Reproducibility `Cm02`: accepted. The deterministic manuscript instructions now include the release copy and checksum commands.
+
+These corrections remain pre-outcome and require another affected-role review before OSF registration.

@@ -323,12 +323,12 @@ function authorizationScenario(layout, intent) {
     ),
   }, [
     change(
-      "refactor: centralize capability extras",
+      "change: update synthetic input",
       "bundle.mjs",
       listSource("extraCapabilities", [effect], representation),
     ),
     change(
-      "refactor: reuse capability expansion",
+      "change: update synthetic transform",
       "expand.mjs",
       functionSource(
         [expandImport],
@@ -339,7 +339,7 @@ function authorizationScenario(layout, intent) {
       ),
     ),
     change(
-      "refactor: apply expansion consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource(
         policyPrefix,
@@ -373,17 +373,17 @@ function normalizationScenario(layout, intent) {
     ),
   }, [
     change(
-      "refactor: centralize zone aliases",
+      "change: update synthetic input",
       "aliases.mjs",
       mappingSource("zoneAlias", { [effect]: `gallery${suffix}` }, representation),
     ),
     change(
-      "refactor: reuse zone normalization",
+      "change: update synthetic transform",
       "normalise.mjs",
       functionSource([normaliseImport], "normalise", "value", "zoneAlias(value) ?? value", flow),
     ),
     change(
-      "refactor: apply normalization consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource(
         policyPrefix,
@@ -422,17 +422,17 @@ function fallbackScenario(layout, intent) {
     ),
   }, [
     change(
-      "refactor: centralize the unknown-role default",
+      "change: update synthetic input",
       "defaults.mjs",
       scalarSource("readFallback", fallback, representation),
     ),
     change(
-      "refactor: reuse decision fallback",
+      "change: update synthetic transform",
       "resolve.mjs",
       functionSource(resolvePrefix, "decision", "role", "decisions[role] ?? readFallback()", flow),
     ),
     change(
-      "refactor: apply decisions consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource(
         ['import { decision } from "./resolve.mjs";'],
@@ -457,17 +457,17 @@ function integrityScenario(layout, intent) {
     "policy.mjs": functionSource([policyImport], "accept", "item", "item.intact", flow),
   }, [
     change(
-      "refactor: centralize verification exemptions",
+      "change: update synthetic input",
       "exceptions.mjs",
       collectionSource("isExempt", [effect], representation),
     ),
     change(
-      "refactor: reuse exemption checks",
+      "change: update synthetic transform",
       "verify.mjs",
       functionSource([verifyImport], "verify", "item", "item.intact || isExempt(item.label)", flow),
     ),
     change(
-      "refactor: apply verification consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource([policyImport], "accept", "item", "verify(item)", flow),
     ),
@@ -502,12 +502,12 @@ function scopeScenario(layout, intent) {
     ),
   }, [
     change(
-      "refactor: centralize scope prefixes",
+      "change: update synthetic input",
       "prefixes.mjs",
       listSource("scopePrefixes", [effect], representation),
     ),
     change(
-      "refactor: reuse prefix matching",
+      "change: update synthetic transform",
       "covers.mjs",
       functionSource(
         [coversImport],
@@ -518,7 +518,7 @@ function scopeScenario(layout, intent) {
       ),
     ),
     change(
-      "refactor: apply scope matching consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource(
         policyPrefix,
@@ -555,12 +555,12 @@ function featureScenario(layout, intent) {
     ),
   }, [
     change(
-      "refactor: centralize feature defaults",
+      "change: update synthetic input",
       "defaults.mjs",
       mappingSource("defaultFor", { [effect]: true }, representation),
     ),
     change(
-      "refactor: reuse default lookup",
+      "change: update synthetic transform",
       "lookup.mjs",
       functionSource(
         [lookupImport],
@@ -571,7 +571,7 @@ function featureScenario(layout, intent) {
       ),
     ),
     change(
-      "refactor: apply feature lookup consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource([policyImport], "visitorCanUse", "name, flags", "enabled(name, flags)", flow),
     ),
@@ -597,12 +597,12 @@ function provenanceScenario(layout, intent) {
     ),
   }, [
     change(
-      "refactor: centralize trusted source kinds",
+      "change: update synthetic input",
       "rules.mjs",
       collectionSource("isTrusted", ["internal", effect], representation),
     ),
     change(
-      "refactor: normalize missing source metadata",
+      "change: update synthetic transform",
       "normalise.mjs",
       functionSource(
         [],
@@ -613,7 +613,7 @@ function provenanceScenario(layout, intent) {
       ),
     ),
     change(
-      "refactor: apply source rules consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource(policyPrefix, "accept", "source", "isTrusted(normalise(source).kind)", flow),
     ),
@@ -642,17 +642,17 @@ function dependencyScenario(layout, intent) {
     ),
   }, [
     change(
-      "refactor: centralize package aliases",
+      "change: update synthetic input",
       "aliases.mjs",
       mappingSource("packageAlias", { [alias]: approved }, representation),
     ),
     change(
-      "refactor: reuse package selection",
+      "change: update synthetic transform",
       "select.mjs",
       functionSource([selectImport], "select", "name", "packageAlias(name) ?? name", flow),
     ),
     change(
-      "refactor: apply package selection consistently",
+      "change: update synthetic policy",
       "policy.mjs",
       functionSource(policyPrefix, "mayLoad", "name", "approved.includes(select(name))", flow),
     ),

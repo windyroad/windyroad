@@ -18,5 +18,12 @@ docker run --rm --platform linux/amd64 \
 
 The 2026-07-17 correction build produced six pages with no warning on the second pass.
 
-- `paper.tex` SHA-256: `fa92b6e820c4d4c6e62ecfdb2f258ea36712b1d172cdf5ef3d4e3b7722c70da5`
-- `output/pdf/paper.pdf` SHA-256: `a5c99e1843ccfe675b444bb0288478d525555215406f4faf6dbea518db37d8d0`
+Copy and verify the release artifact:
+
+```sh
+cp research/llm-review-sequences/paper/paper.pdf output/pdf/paper.pdf
+shasum -a 256 research/llm-review-sequences/paper/paper.tex output/pdf/paper.pdf
+```
+
+- `paper.tex` SHA-256: `b577e558081f0ca42d4c18a9418fb405c99be37216f27ff082451a5f2df636bb`
+- `output/pdf/paper.pdf` SHA-256: `2f941666c073c03a418059b6fe1d24a7597edca4cc756fbf5b4b2e797abad3d8`

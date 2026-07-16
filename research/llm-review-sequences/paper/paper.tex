@@ -213,8 +213,8 @@ same fixed queue resumes after the plan window resets. No API credit is accepted
 A no-response failure may be retried at the same position up to three recorded
 attempts. Start, completion, suspension, and result records are fsynced. Collection
 also suspends on a safety or terms conflict, authentication change, benchmark
-integrity failure, client or model drift, or 100 consecutive infrastructure
-failures. The additional spending ceiling is US\$0.
+integrity failure, or client or model drift. The additional spending ceiling is
+US\$0.
 
 \subsection{Outcomes}
 
@@ -246,13 +246,14 @@ Missing boundaries are non-detections in the operational analysis. Mandatory
 estimand-specific bounds assign malicious and benign cells oppositely for H1 and
 atomic and split malicious cells oppositely for H2. A review-system-specific
 complete-pair sensitivity drops a structural template only for the affected
-system. No imputation model is fitted. Exploratory workflow intervals carry no
-inferential decision and receive no multiplicity adjustment.
+system. No imputation model is fitted. H1 and H2 are separate registered claims,
+which does not provide familywise error control across them. Exploratory workflow
+intervals carry no inferential decision and receive no multiplicity adjustment.
 
 The products and sample are a convenience selection determined by subscriptions
 already held by the author, not an 80\% power target. Under
 the earlier central assumptions, a 20,000-replication audit estimates power of
-0.2584 for a 0.15 split penalty, assurance of 0.0038 for workflow equivalence
+0.2577 for a 0.15 split penalty, assurance of 0.0038 for workflow equivalence
 within $\pm0.10$, and power of 0.1016 for a 0.10 interaction. No H1 power
 calculation was performed. Consequently, null
 results cannot support claims of no decomposition or workflow effect. The study
@@ -285,14 +286,18 @@ controlled artifact and policy framing, not an organisation.
 despite identical final trees and line counts. Provider-controlled system
 instructions are neither observable nor identical. Product routing and serving
 stacks may change behind requested model identifiers; metadata and access times
-are therefore retained and drift suspends collection.
+are therefore retained and drift suspends collection. Collection may span
+subscription reset windows, creating calendar-time and platform-drift risk
+despite the fixed randomised queue.
 
 \textbf{External validity.} Forty purposively selected templates, eight policy families, two
 review products, and compact JavaScript repositories do not represent all
 languages, organisations, vulnerabilities, or attack strategies. The design
 tests one three-submission decomposition and does not estimate an optimal
 adversarial strategy. Inference is conditional on these templates; one lexical
-instance per template does not estimate identifier-instance variability.
+instance per template does not estimate identifier-instance variability. Zero
+additional spend relies on the author's existing paid entitlements and is not
+cost-free for an independent reproducer without equivalent subscriptions.
 
 \textbf{Statistical conclusion validity.} The sample is underpowered for small
 effects, especially workflow equivalence and interaction. There is one trial,
@@ -305,9 +310,10 @@ This is defensive research into review reliability. The benchmark cannot access
 external systems or data, and its only harmful state is a deterministic in-memory
 assertion over synthetic names. No real repository or person is tested.
 
-Three isolated subagents reviewed candidate commit \code{6b607f6} for benchmark
-safety, methods, and reproducibility. All three returned \code{do not approve};
-their raw reports are archived and corrections precede repeat review. These
+Three isolated subagents initially reviewed candidate commit \code{6b607f6} for
+benchmark safety, methods, and reproducibility. All three returned
+\code{do not approve}; their raw reports are archived. Correction addenda inspect
+the combined resolution log and are therefore not isolated. These
 records are labelled AI-assisted internal review, not
 independent human peer review, ethics approval, or arXiv endorsement. Shared
 model, provider, and author-orchestration biases are reported as limitations.

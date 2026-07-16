@@ -84,11 +84,13 @@ export function collectSubscriptionSchedule({
   env = process.env,
   runReview = runFile,
   preflight = preflightSubscriptionClients,
+  authorize = assertAuthorizedArtifacts,
 }) {
   for (const value of [benchmarkRoot, collectionRoot, outputRoot]) {
     if (!value) throw new Error("benchmarkRoot, collectionRoot, and outputRoot are required");
   }
   mkdirSync(outputRoot, { recursive: true });
+  authorize({ benchmarkRoot, collectionRoot });
   const provenance = preflight({ codexBin, claudeBin, env });
   const prompts = new Map(readJsonl(join(benchmarkRoot, "prompts.jsonl"))
     .map((prompt) => [prompt.prompt_id, prompt.request]));
@@ -99,9 +101,15 @@ export function collectSubscriptionSchedule({
   const completed = new Set((existsSync(resultsPath) ? readJsonl(resultsPath) : [])
     .filter(({ status }) => ["valid", "abstain", "missing"].includes(status))
     .map(({ call_id }) => call_id));
-  const started = new Map();
+  const failures = new Map();
+  const returnedModels = new Map();
   for (const attempt of existsSync(attemptsPath) ? readJsonl(attemptsPath) : []) {
-    if (attempt.event === "started") started.set(attempt.call_id, (started.get(attempt.call_id) ?? 0) + 1);
+    if (attempt.event === "suspended" && attempt.reason === "client_failure") {
+      failures.set(attempt.call_id, (failures.get(attempt.call_id) ?? 0) + 1);
+    }
+    if (attempt.event === "completed" && attempt.returned_model && attempt.system) {
+      returnedModels.set(attempt.system, attempt.returned_model);
+    }
   }
   const schemaPath = join(import.meta.dirname, "review-schema.json");
   const emptyCwd = join(outputRoot, "empty");
@@ -109,7 +117,7 @@ export function collectSubscriptionSchedule({
 
   for (const call of calls) {
     if (completed.has(call.call_id)) continue;
-    if ((started.get(call.call_id) ?? 0) >= 3) {
+    if ((failures.get(call.call_id) ?? 0) >= 3) {
       durableAppend(resultsPath, { call_id: call.call_id, status: "missing", reason: "three_attempts_exhausted" });
       completed.add(call.call_id);
       continue;
@@ -120,7 +128,6 @@ export function collectSubscriptionSchedule({
     const startedAt = new Date().toISOString();
     durableAppend(attemptsPath, { call_id: call.call_id, schedule_index: call.schedule_index,
       event: "started", started_at: startedAt, system: call.model, provenance });
-    started.set(call.call_id, (started.get(call.call_id) ?? 0) + 1);
     try {
       const delivery = runReview(command.command, command.args, {
         cwd: command.cwd,
@@ -143,8 +150,13 @@ export function collectSubscriptionSchedule({
       if (parsed.returned_model && !modelMatches(call.model, parsed.returned_model)) {
         throw new Error(`Returned model drift: ${parsed.returned_model}`);
       }
+      const baselineModel = returnedModels.get(call.model);
+      if (baselineModel && parsed.returned_model && baselineModel !== parsed.returned_model) {
+        throw new Error(`Returned model drift: ${baselineModel} -> ${parsed.returned_model}`);
+      }
+      if (parsed.returned_model && !baselineModel) returnedModels.set(call.model, parsed.returned_model);
       durableAppend(attemptsPath, { call_id: call.call_id, event: "completed",
-        finished_at: new Date().toISOString(), returned_model: parsed.returned_model,
+        finished_at: new Date().toISOString(), system: call.model, returned_model: parsed.returned_model,
         tool_deviation: parsed.tool_deviation, usage: parsed.usage,
         raw_output_sha256: sha256(delivery.stdout) });
       durableAppend(resultsPath, { call_id: call.call_id, status: "valid", response: parsed.response,
@@ -152,6 +164,9 @@ export function collectSubscriptionSchedule({
       completed.add(call.call_id);
     } catch (error) {
       const reason = /rate.?limit|usage.?limit|reset/i.test(error.message) ? "rate_limit" : "client_failure";
+      if (reason === "client_failure") {
+        failures.set(call.call_id, (failures.get(call.call_id) ?? 0) + 1);
+      }
       durableAppend(attemptsPath, { call_id: call.call_id, event: "suspended",
         finished_at: new Date().toISOString(), reason, error: error.message });
       return { completed: completed.size, remaining: calls.length - completed.size,
@@ -159,6 +174,25 @@ export function collectSubscriptionSchedule({
     }
   }
   return { completed: completed.size, remaining: calls.length - completed.size, provenance };
+}
+
+export function assertAuthorizedArtifacts({ benchmarkRoot, collectionRoot }) {
+  const study = JSON.parse(readFileSync(join(import.meta.dirname, "study.json"), "utf8"));
+  const active = study.active_subscription_design;
+  if (!study.frozen || !study.ecological_layer?.subscription_calls_authorized
+    || !study.preregistration_v2_draft?.external_identifier) {
+    throw new Error("Subscription collection is not authorized by a frozen OSF-registered manifest");
+  }
+  const actual = {
+    cards_sha256: sha256(JSON.stringify(JSON.parse(readFileSync(join(benchmarkRoot, "cards.json"), "utf8")))),
+    prompts_sha256: sha256(readFileSync(join(benchmarkRoot, "prompts.jsonl"))),
+    calls_sha256: sha256(readFileSync(join(collectionRoot, "calls.jsonl"))),
+    ground_truth_sha256: sha256(readFileSync(join(collectionRoot, "ground-truth.jsonl"))),
+    schedule_sha256: JSON.parse(readFileSync(join(collectionRoot, "collection.json"), "utf8")).schedule_sha256,
+  };
+  for (const [name, value] of Object.entries(actual)) {
+    if (value !== active.artifacts[name]) throw new Error(`${name} does not match the authorized manifest`);
+  }
 }
 
 function modelMatches(systemId, returned) {

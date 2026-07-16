@@ -48,7 +48,7 @@ node research/llm-review-sequences/ecological.mjs \
   "$root/collection"
 ```
 
-The supported environment is Node 20 with the lockfile-pinned dependencies. Per-run temporary directories avoid collisions between reviewers.
+The supported environment is Node 20.19.0 with the lockfile-pinned dependencies. Per-run temporary directories avoid collisions between reviewers.
 
 The active candidate must reproduce:
 
@@ -99,7 +99,7 @@ Exploratory estimates are trunk minus pull-request detection and the decompositi
 
 Uncertainty uses a 10,000-replicate family-stratified structural-template bootstrap. Missingness is exposed with estimand-specific bounds: H1 assigns missing malicious and benign cells oppositely, while H2 assigns missing atomic and split malicious cells oppositely. A review-system-specific complete-pair analysis is also reported. No imputation model is fitted.
 
-Under the preregistered central assumptions, the 40-pair, one-trial design has estimated power 0.2584 for the directional split effect, assurance 0.0038 for workflow equivalence, and power 0.1016 for the workflow interaction. No H1 power calculation was performed. These values are limitations, not pilot results.
+Under the preregistered central assumptions, the 40-pair, one-trial design has estimated power 0.2577 for the directional split effect, assurance 0.0038 for workflow equivalence, and power 0.1016 for the workflow interaction. No H1 power calculation was performed. These values are limitations, not pilot results.
 
 ## Deterministic baseline
 
@@ -109,13 +109,13 @@ A separate zero-finding Semgrep feasibility probe is disclosed but excluded beca
 
 ## Internal review
 
-Three isolated subagents reviewed commit `6b607f6` for:
+Three isolated subagents initially reviewed commit `6b607f6` for:
 
 - Benchmark safety and responsible release.
 - Statistical methods and claims.
 - Reproducibility and subscription-only execution.
 
-All three returned `do not approve`; their [raw reports](./reviews/) are archived verbatim and their findings are being corrected before repeat review. They are described as AI-assisted internal review, not independent human peer review, ethics approval, or arXiv endorsement.
+All three returned `do not approve`; their [raw reports](./reviews/) are archived verbatim. Correction addenda inspect the combined resolution log and are therefore not isolated. They are described as AI-assisted internal review, not independent human peer review, ethics approval, or arXiv endorsement.
 
 See [`independent-review.md`](./independent-review.md) for the review rubric. The filename is retained for history; the protocol itself must use the accurate AI-assisted terminology.
 

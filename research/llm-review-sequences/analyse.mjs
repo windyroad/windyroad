@@ -174,7 +174,7 @@ export function metrics(outcomes) {
 
 export function descriptiveAnalysis(
   outcomes,
-  { bootstrapReplicates = 10_000, seed = 20260716 } = {},
+  { bootstrapReplicates = 10_000, seed = 20260718 } = {},
 ) {
   if (!Number.isInteger(bootstrapReplicates) || bootstrapReplicates < 1) {
     throw new Error("bootstrapReplicates must be positive");
@@ -398,7 +398,6 @@ export function confirmatoryAnalysis(
     decomposition_workflow_interaction: {
       estimate: estimates.decomposition_workflow_interaction,
       confidence_interval_95: workflowInteractionInterval,
-      detected: workflowInteractionInterval[0] > 0 || workflowInteractionInterval[1] < 0,
     },
   };
 }
@@ -612,6 +611,7 @@ async function main(groundTruthPath, resultsPath) {
   process.stdout.write(`${JSON.stringify({
     descriptive: metrics(outcomes),
     confirmatory: confirmatoryMissingnessBounds(outcomes),
+    complete_pair_sensitivity: completePairSensitivity(outcomes),
   }, null, 2)}\n`);
 }
 

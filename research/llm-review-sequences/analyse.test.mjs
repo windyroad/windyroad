@@ -297,13 +297,12 @@ describe("sequence-level metrics", () => {
       decomposition_workflow_interaction: {
         estimate: 0.5,
         confidence_interval_95: [0.5, 0.5],
-        detected: true,
       },
     });
     expect(descriptiveAnalysis(outcomes, { bootstrapReplicates: 100 })).toEqual({
       structural_templates: 4,
       bootstrap_replicates: 100,
-      seed: 20260716,
+      seed: 20260718,
       estimates: {
         malicious_sequences: 64,
         benign_sequences: 64,

@@ -36,6 +36,13 @@ describe("preregistered study design", () => {
     }
   });
 
+  it("reproduces the active directional H2 power audit", () => {
+    const [active] = runPowerSimulation({
+      scenarioCounts: [40], simulations: 20_000, trialsPerCell: 1, seed: 20260718,
+    }).candidates;
+    expect(active.primary_power).toBe(0.2577);
+  });
+
   it("requires adequate interaction power before selecting a sample size", () => {
     const result = runPowerSimulation({
       scenarioCounts: [160, 320],

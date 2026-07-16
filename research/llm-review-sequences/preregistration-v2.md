@@ -90,13 +90,13 @@ The candidate schedule SHA-256 is `e704e82c8c052cd05fdef8e2d19e8551e07617c537d81
 
 The additional spending ceiling is US$0. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, the crash-safe runner records a suspension at the current call. The author resumes the same fixed queue only after the same subscription window resets.
 
-Collection also suspends on a safety or provider-terms conflict, authentication change, benchmark-integrity failure, CLI version change, returned model-identity change, or 100 consecutive infrastructure failures. There is no outcome-dependent stopping.
+Collection also suspends on a safety or provider-terms conflict, authentication change, benchmark-integrity failure, CLI version change, or returned model-identity change. There is no outcome-dependent stopping.
 
 An infrastructure failure that yields no usable response suspends the current call for author diagnosis. The same call may be retried without reordering, up to three recorded attempts. Refusals and schema-invalid responses are observed abstentions and are not retried. Every start, completion, and suspension remains in the fsynced append-only ledger.
 
 ## Sampling and power
 
-The products and sample size are a convenience selection constrained by subscriptions already held by the author rather than selected to achieve 80% power. Under the earlier central assumptions of atomic recall 0.65, a split penalty of 0.15, workflow effect zero, interaction 0.10, scenario logit standard deviation 0.75, one trial, and 20,000 simulations, the 40-pair design has estimated directional split-effect power 0.2584, workflow-equivalence assurance 0.0038, and interaction power 0.1016. No H1 operating-characteristic calculation was performed.
+The products and sample size are a convenience selection constrained by subscriptions already held by the author rather than selected to achieve 80% power. Under the earlier central assumptions of atomic recall 0.65, a split penalty of 0.15, workflow effect zero, interaction 0.10, scenario logit standard deviation 0.75, one trial, and 20,000 simulations, the 40-pair design has estimated directional split-effect power 0.2577, workflow-equivalence assurance 0.0038, and interaction power 0.1016. No H1 operating-characteristic calculation was performed.
 
 Accordingly, H1 and H2 remain directional prospective tests, but all estimates emphasize interval width. Workflow equivalence is not tested, the workflow interaction is exploratory, and null results cannot support claims of no effect. The study is best interpreted as a bounded empirical evaluation and feasibility estimate for a larger replication.
 
@@ -133,7 +133,7 @@ The preregistered contrasts are:
 
 Missing boundaries are abstentions in the operational analysis. Mandatory estimand-specific bounds assign missing malicious and benign boundaries oppositely for H1 and missing atomic and split malicious boundaries oppositely for H2. A review-system-specific complete-pair analysis drops a structural template only for the affected system.
 
-No imputation model is fitted. H1 and H2 are separately registered directional claims and are not combined into one multiplicity family. Workflow and interaction intervals are exploratory descriptions with no inferential decision; no Holm adjustment is applied.
+No imputation model is fitted. H1 and H2 are separately registered directional claims and are not combined into one multiplicity family; this does not provide familywise error control across them. Workflow and interaction intervals are exploratory descriptions with no inferential decision; no Holm adjustment is applied.
 
 ## Quality control
 
@@ -145,7 +145,7 @@ Review systems necessarily see the assigned workflow framing and current diff. T
 
 ### Internal review
 
-Three isolated subagents review the same frozen packet for benchmark safety and responsible release, statistical methods, and reproducibility. Their raw reports and the author's resolution log are archived.
+Three isolated subagents performed the initial review of one candidate commit for benchmark safety and responsible release, statistical methods, and reproducibility. Their raw reports are archived. Correction addenda inspect the combined author resolution log and are therefore not isolated from the other roles' findings.
 
 These records are labelled AI-assisted internal review. They are not represented as independent human peer review, ethics approval, or arXiv endorsement. Shared model, provider, author-orchestration, and automation biases are explicit limitations.
 

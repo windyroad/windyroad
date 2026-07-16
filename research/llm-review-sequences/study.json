@@ -61,7 +61,7 @@
     "power_audit": {
       "method": "Paired scenario-cluster Monte Carlo using the preregistration-v1 central assumptions; 20,000 simulations.",
       "seed": 20260718,
-      "split_effect_power": 0.2584,
+      "split_effect_power": 0.2577,
       "h1_power": null,
       "workflow_equivalence_assurance": 0.0038,
       "decomposition_by_workflow_interaction_power": 0.1016,
@@ -241,7 +241,7 @@
       "not_retried": "Provider refusals and schema-invalid responses are observed abstentions.",
       "missing_primary": "Retry-exhausted boundaries are abstentions and therefore not detections in the primary operational analysis.",
       "missing_sensitivity": "Mandatory detection-favorable and detection-unfavorable bounds plus complete-pair sensitivity analysis.",
-      "suspension": "Suspend on spending ceiling, safety or terms conflict, benchmark-integrity failure, or 100 consecutive infrastructure failures. No outcome-based stopping."
+      "suspension": "Legacy API rule: suspend on spending ceiling, safety or terms conflict, benchmark-integrity failure, or 100 consecutive infrastructure failures. This rule does not apply to the active subscription runner."
     },
     "estimated_usd_by_model": {
       "anthropic/claude-sonnet-4.6": 377.856,
@@ -316,7 +316,7 @@
     "prompts_sha256": "59cbb3bca125b34aacfae7394982398d7b70da23cfabd9cd5f8b04506c2e066d",
     "maximum_request_bytes": 3606,
     "confirmatory_eligible": false,
-    "eligibility_blocker": "The machine-validated benchmark reaches the 200-template, two-instance layout selected by the pre-outcome audit, but independent benchmark and simulation review, exact tokenizer preflight, external preregistration v2, and explicit paid-call authorization remain pending. No model outcomes may be collected from this candidate."
+    "eligibility_blocker": "Legacy API candidate: the machine-validated benchmark reached the selected layout, but its review, tokenizer, registration, and paid-call gates remained pending. It was superseded before any model outcome was collected."
   },
   "collection_dry_run": {
     "status": "passed-no-network",
