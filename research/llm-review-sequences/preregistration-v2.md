@@ -48,9 +48,9 @@ The confirmatory endpoint is `blocked_by_activation`. A sequence is blocked when
 
 ### Foreknowledge of data or evidence
 
-Select: **Data does not yet exist. No part of the data that will be used for this analysis plan exists, and no part will be generated until after this plan is registered.**
+Select the OSF option indicating that **some data have been collected**, then use the disclosure below.
 
-The investigators generated benchmark structure, deterministic safety oracles, randomized schedules, and fabricated responses used only to test analysis plumbing. No frozen model has been asked to review any confirmatory benchmark prompt, and no confirmatory outcome exists. Preregistration v1 and the pre-outcome hierarchical amendment history remain preserved in [`study.json`](./study.json). Scenario construction and power assumptions were developed without model outcomes. Independent reviewers must declare that they have not seen any confirmatory response.
+The investigators generated benchmark structure, deterministic safety oracles, randomized schedules, and fabricated responses used only to test analysis plumbing. They also ran the fully deterministic final-state ESLint baseline described below; all 2,400 generated files passed. An excluded Semgrep feasibility probe likewise produced zero findings. These deterministic observations existed before this registration and are fully disclosed in [`study.json`](./study.json). No frozen model has been asked to review any benchmark prompt, no human-review outcome exists, and no confirmatory or ecological LLM outcome exists. Preregistration v1 and the pre-outcome hierarchical amendment history remain preserved. Scenario construction, hypotheses, power assumptions, prompts, and confirmatory analysis were fixed without LLM outcomes. Independent reviewers must declare that they have not seen any LLM outcome.
 
 ## Research design
 
@@ -240,7 +240,9 @@ Secondary reports include recall, false-positive rate, precision, abstention rat
 
 The ecological layer reports the same descriptive outcomes and controlled-versus-ecological differences by workflow and context. Because its native artifact fields differ by workflow and it has one trial per cell, all ecological comparisons are exploratory; reviewer-consistency estimates are not reported for that layer.
 
-A deterministic static-analysis baseline is run on the generated source where an existing installed tool applies, with its limitations stated; it is not treated as semantically equivalent to LLM review. A blinded human-review baseline is contingent on recruitment feasibility, consent, anonymization, and any required ethics approval. If those conditions are not met before model collection, the human baseline is omitted and reported as infeasible rather than replaced post hoc.
+The completed deterministic baseline runs ESLint 9.39.3 with the repository's hashed configuration and lockfile over all 800 final-state case trees. A case is flagged if any of its three files produces a warning or error. All 2,400 files passed, so the baseline has recall 0, false-positive rate 0, and undefined precision. This is a conventional pipeline lint baseline, not security SAST; it cannot estimate decomposition, context, or workflow effects and is not treated as semantically equivalent to LLM review.
+
+A separate Semgrep Community Edition feasibility probe produced no findings but is excluded from all study analyses because its registry rules snapshot cannot be redistributed under the [Semgrep Rules License v1.0](https://semgrep.dev/legal/rules-license/). A blinded human-review baseline is contingent on recruitment feasibility, consent, anonymization, and any required ethics approval. If those conditions are not met before model collection, the human baseline is omitted and reported as infeasible rather than replaced post hoc.
 
 The controlled local-versus-cumulative context factor is the powered history ablation. Additional candidate ablations are metadata removal, repository-snapshot presence, split timestamp spacing, and neutral interleaving. None is in the current call ledgers. An additional ablation is collected only if its generator, call count, token preflight, analysis, and prospective registration are frozen before any ablation outcome exists. Otherwise it is omitted and described as future work.
 
@@ -262,6 +264,8 @@ At the candidate freeze represented by [`study.json`](./study.json):
 - Schedule SHA-256: `e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663`.
 - Ecological rendered prompts SHA-256: `b2837c4088147e036fbdf7e7e985bfbd3b15d3f1a187c735bf1096236d806580`.
 - Ecological schedule SHA-256: `d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e`.
+- ESLint configuration SHA-256: `fd9af0693c9fb3c7b9f9dfd573b944184a03ae0bd8b09f734cd97bb6dae15709`.
+- Package lock SHA-256: `d18c4808497a007aba23a2ab12abc99e76a45e42b9c614f31b587e4aaf782553`.
 
 Required before submission: replace “candidate freeze” with the final Git commit identifier, attach or archive the approved reviewer records, record exact native token-count evidence, and verify these hashes from a clean checkout. If any hash changes, update this draft and repeat the affected pre-outcome review before registration.
 

@@ -25,11 +25,15 @@ node research/llm-review-sequences/ecological.mjs \
   /tmp/llm-review-benchmark-review \
   /tmp/llm-review-ecological-review \
   /tmp/llm-review-ecological-collection-review
+test ! -e tmp/llm-review-baseline-review
+node research/llm-review-sequences/benchmark.mjs tmp/llm-review-baseline-review
+npx eslint 'tmp/llm-review-baseline-review/scenario-*/*.mjs' \
+  --format json --output-file /tmp/llm-review-eslint-baseline.json
 EXHAUSTIVE_BENCHMARK=1 npx vitest run research/llm-review-sequences/benchmark.test.mjs
 EXHAUSTIVE_POWER=1 npx vitest run research/llm-review-sequences/design.test.mjs
 ```
 
-Compare the generated counts and SHA-256 values with [`study.json`](./study.json). Stop the review if they differ. The generated controlled benchmark directory must contain 400 scenario pairs, 800 cases, 200 template identifiers, 12,800 blinded requests, and no retained `.counterfactuals` directory. Its collection directory must contain 115,200 blinded call rows and 115,200 separately keyed ground-truth rows. The ecological directories must contain 80 scenario pairs, 160 cases, 40 template identifiers, 2,560 native-artifact requests, 7,680 blinded call rows, and 7,680 separately keyed ground-truth rows. Confirm that no call row in either layer contains intent, scenario, sequence, family, template, or expected-severity fields.
+Compare the generated counts and SHA-256 values with [`study.json`](./study.json). Stop the review if they differ. The generated controlled benchmark directory must contain 400 scenario pairs, 800 cases, 200 template identifiers, 12,800 blinded requests, and no retained `.counterfactuals` directory. Its collection directory must contain 115,200 blinded call rows and 115,200 separately keyed ground-truth rows. The ecological directories must contain 80 scenario pairs, 160 cases, 40 template identifiers, 2,560 native-artifact requests, 7,680 blinded call rows, and 7,680 separately keyed ground-truth rows. Confirm that no call row in either layer contains intent, scenario, sequence, family, template, or expected-severity fields. The ESLint baseline report must cover 2,400 files and contain no warning, error, or fatal-error message.
 
 The reviewers receive the study manifest, generator sources, generated cards and prompts, power-analysis source and output, fixed prompt, [`preregistration-v2.md`](./preregistration-v2.md), analysis plan, and this protocol. They do not receive confirmatory responses, outcome summaries, or model-specific performance observations.
 
@@ -51,6 +55,8 @@ The benchmark reviewer must inspect:
 - The final-tree, changed-line, timestamp, blindness, and counterfactual-oracle checks.
 - The ecological subset selection and its one-per-family coverage of every data representation and control-flow shape.
 - Native pull-request and untrusted-main artifact renderings, including history boundaries, realistic neutrality, and absence of ground-truth leakage.
+- The ESLint baseline's hashed configuration, complete 800-case coverage, zero-finding result, and explicit limitation to conventional final-state lint.
+- Disclosure and exclusion of the zero-finding Semgrep feasibility probe because its exact rules snapshot cannot be redistributed.
 
 For each of the 200 template identifiers, record `pass`, `revise`, or `exclude` for:
 
@@ -131,6 +137,8 @@ Copy this section into one record per reviewer. Do not combine the two required 
 - Ecological call-ledger SHA-256:
 - Ecological ground-truth-ledger SHA-256:
 - Native token-count evidence reviewed:
+- ESLint version, configuration hash, file count, and zero-finding result:
+- Semgrep feasibility-probe exclusion and license disclosure reviewed:
 
 ### Decisions
 

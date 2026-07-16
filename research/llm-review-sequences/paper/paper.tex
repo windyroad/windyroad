@@ -99,9 +99,8 @@ localization, showing that aggregate accuracy can conceal weaknesses in detailed
 analysis \cite{liu2024vuldetectbench}. We likewise distinguish timely blocking,
 calibration, severity, and localization. Zhou et al. compare repository-level
 LLMs and static analysis tools and report a recall-false-positive tradeoff
-\cite{zhou2024sast}. We retain a deterministic baseline where an installed tool
-applies, but do not claim that syntactic static analysis and semantic review are
-equivalent tasks.
+\cite{zhou2024sast}. We retain a deterministic conventional-lint baseline but
+do not claim that lint and semantic security review are equivalent tasks.
 
 Field evidence also indicates that review context and interaction design affect
 developer trust and usefulness. Adalsteinsson et al. report context switching,
@@ -335,6 +334,16 @@ localization, consistency, and exploratory ecological comparisons after
 prospective registration and authorized collection. Until then, no empirical
 conclusion about H1--H4 or the ecological layer is warranted.
 
+The deterministic baseline ran ESLint 9.39.3 over the three final-state modules
+in all 800 cases. It emitted no warnings or errors: zero malicious and zero
+benign cases were flagged, giving recall 0, false-positive rate 0, and undefined
+precision. This result shows only that conventional lint does not identify the
+benchmark's abstract cross-module policy failures. Because it sees final trees
+only, it cannot estimate decomposition, context, or workflow effects. A separate
+zero-finding Semgrep feasibility probe is disclosed but excluded because its
+registry rules snapshot cannot be redistributed under the provider's rules
+license (\url{https://semgrep.dev/legal/rules-license/}).
+
 \section{Interpretation Framework}
 
 Several result patterns have distinct interpretations. A split penalty under
@@ -414,6 +423,8 @@ independent-review protocol. Candidate artifact hashes are:
   \code{b2837c4088147e036fbdf7e7e985bfbd3b15d3f1a187c735bf1096236d806580}
   \item ecological randomized schedule:\par
   \code{d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e}
+  \item ESLint configuration:\par
+  \code{fd9af0693c9fb3c7b9f9dfd573b944184a03ae0bd8b09f734cd97bb6dae15709}
 \end{itemize}
 
 The repository is available at \url{https://github.com/windyroad/windyroad}.

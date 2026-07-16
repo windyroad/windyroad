@@ -270,11 +270,19 @@ No outcome-driven optional stopping is permitted.
 
 The study includes:
 
-- A deterministic static-analysis baseline where applicable, reported without claiming semantic equivalence to an LLM review.
+- A deterministic final-state lint baseline using the repository's existing ESLint 9.39.3 configuration. Any warning or error flags a case. All 2,400 files across 800 cases passed, giving zero malicious flags and zero benign flags: recall 0, false-positive rate 0, and undefined precision. This conventional pipeline baseline is not security SAST and cannot estimate decomposition, context, or workflow effects.
 - A blinded human-reviewer baseline on a balanced subset, subject to recruitment and ethics approval.
 - A no-history versus cumulative-history ablation, already represented by the context factor.
-- A metadata-free ablation to test whether titles and commit messages help or mislead.
-- A repository-snapshot ablation on split sequences to distinguish missing historical diffs from missing final-state context.
+- Candidate metadata-free and repository-snapshot ablations, included only if prospectively generated, counted, reviewed, and registered before their outcomes exist.
+
+Reproduce the lint baseline after generating the benchmark into a repository-local temporary directory:
+
+```sh
+node research/llm-review-sequences/benchmark.mjs tmp/llm-review-baseline
+npx eslint 'tmp/llm-review-baseline/scenario-*/*.mjs' --format json
+```
+
+The ESLint configuration and lockfile hashes are recorded in [`study.json`](./study.json). A separate pre-registration feasibility probe ran Semgrep Community Edition 1.163.0 with the 74-rule `p/javascript` registry snapshot: 68 rules applied to 2,400 files and produced no findings or errors. That probe is disclosed but excluded because the [Semgrep Rules License v1.0](https://semgrep.dev/legal/rules-license/) prohibits redistributing the exact rules snapshot required for reproduction.
 
 The generator and reviewer must be separate sessions. Scenario authors and adjudicators cannot act as LLM reviewers for their own generated cases.
 
@@ -354,6 +362,7 @@ Completed in this slice:
 - A field-by-field standard-OSF [`preregistration-v2.md`](./preregistration-v2.md) draft with exact retry, stopping, exclusion, missingness, and inference rules.
 - A seven-page pre-outcome arXiv manuscript with related work, frozen methods and estimands, ethics, threats to validity, reproducibility hashes, and no model outcomes.
 - A deterministic ecological workflow generator and blinded ledger covering native pull-request history and landed-main pipeline history on a balanced 80-pair subset, without changing the controlled confirmatory hashes.
+- A reproducible final-state ESLint baseline with zero findings across all 800 cases, plus disclosure and exclusion of a non-redistributable Semgrep feasibility probe.
 
 Not yet complete:
 
