@@ -3,6 +3,8 @@ date: '2026-07-15'
 title: 'The snake oil in no-code and low-code was the promise'
 author: 'Tom Howard'
 tags: ['no-code', 'low-code', 'AI coding', 'software delivery', 'market analysis']
+image: '/img/social/low-code-market-performance.png'
+imageAlt: 'Market-performance chart: seven public low-code companies fell 15% to 18% and a nine-company view fell 3% to 6%, while IGV rose 88% and QQQ rose 182%, from the end of 2022 to 14 July 2026.'
 draft: false
 ---
 

@@ -141,6 +141,7 @@ export interface PostFrontmatter {
   author: string;
   tags: string[];
   image?: string;
+  imageAlt?: string;
   link?: string;
   draft?: boolean;
 }

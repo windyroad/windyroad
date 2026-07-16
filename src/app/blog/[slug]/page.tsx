@@ -19,9 +19,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return { title: 'Not Found' };
+
+  const image = post.frontmatter.image?.startsWith('/')
+    ? `https://windyroad.com.au${post.frontmatter.image}`
+    : undefined;
+
   return {
     title: `${post.frontmatter.title} | Tom Howard`,
     description: post.excerpt,
+    openGraph: {
+      title: post.frontmatter.title,
+      description: post.excerpt,
+      url: `https://windyroad.com.au/blog/${slug}`,
+      siteName: 'Windy Road Technology',
+      type: 'article',
+      images: image
+        ? [{
+            url: image,
+            width: 1200,
+            height: 630,
+            alt: post.frontmatter.imageAlt ?? post.frontmatter.title,
+          }]
+        : undefined,
+    },
   };
 }
 

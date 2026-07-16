@@ -23,4 +23,9 @@ describe('blog [slug]/page.tsx source', () => {
   it('does not import the Button component (no longer needed)', () => {
     expect(source).not.toMatch(/from ['"].*\/Button['"]/);
   });
+
+  it('includes accessible Open Graph image metadata', () => {
+    expect(source).toContain('openGraph:');
+    expect(source).toContain('alt: post.frontmatter.imageAlt ?? post.frontmatter.title');
+  });
 });
