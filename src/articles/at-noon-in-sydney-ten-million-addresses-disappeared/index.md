@@ -1,29 +1,29 @@
 ---
 date: '2026-07-16'
-title: 'At 2am UTC, ten million addresses disappeared'
+title: 'At noon in Sydney, ten million addresses disappeared'
 author: 'Tom Howard'
 tags: ['ai coding', 'claude code', 'opensearch', 'software delivery', 'risk management', 'zero outage']
 image: '/img/social/opensearch-upgrade-failed-cluster.jpg'
-imageAlt: 'Two parallel server clusters at night: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.'
+imageAlt: 'Two parallel server clusters in daylight: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.'
 ---
 
-At 2am UTC, the new OpenSearch cluster held about ten million Australian addresses. At the next CloudWatch reading, it held seven.
+At 11am in Sydney, the new OpenSearch cluster held about ten million Australian addresses. At noon, the next CloudWatch reading counted just seven addresses.
 
-At 03:00:59 UTC, the failed logins began. By the time the import was stopped, the audit log contained 184 of them. The cluster had lost almost all its data and stopped recognising the credentials that had loaded it.
+At 1:00:59pm, the failed logins began. By the time the import was stopped, the audit log contained 184 of them. The cluster had lost almost all its data and stopped recognising the credentials that had loaded it.
 
 Claude Code had been supervising the migration for more than a day. The new cluster was supposed to replace an old one running OpenSearch 1.3.20. It was not yet serving customers, so the production API continued answering searches as if nothing had happened.
 
 That was the first thing the migration got right.
 
-![Two parallel server clusters at night: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.](/img/social/opensearch-upgrade-failed-cluster.jpg)
+![Two parallel server clusters in daylight: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.](/img/social/opensearch-upgrade-failed-cluster.jpg)
 
 ## A cluster too old to leave alone
 
-Addressr searches Australia's Geocoded National Address File: about 16.9 million addresses, rebuilt from source and indexed into OpenSearch. Its production cluster worked, but it was still on OpenSearch 1.3.20, a version family already past upstream maintenance.
+Addressr searches Australia's Geocoded National Address File (G&#8209;NAF), a source dataset of about 16.9 million addresses indexed into OpenSearch. Its production cluster worked, but it was still on OpenSearch 1.3.20, a version family already past upstream maintenance.
 
 The destination was OpenSearch 3.5. Reaching it safely meant stopping at 2.19 first. Each step had to preserve search behaviour, keep the API available and leave a working path back.
 
-An in-place upgrade would have put the only production cluster on the operating table. The chosen design was blue/green. The old cluster would continue serving while a new one was provisioned beside it. Both versions would run in CI. The new cluster would be rebuilt from G-NAF, tested directly, fed copies of real searches and compared with production. Only then would the application switch over.
+An in-place upgrade would have put the only production cluster on the operating table. The chosen design was blue/green. The old cluster would continue serving while a new one was provisioned beside it. In CI, the automated test suite would run against both OpenSearch 1.3.20 and 2.19.5. The new cluster would be rebuilt from G&#8209;NAF, tested directly, fed copies of real searches and compared with production. Only then would the application switch over.
 
 The switch itself would be a configuration change. If it failed, the old cluster would still be warm.
 
@@ -51,7 +51,7 @@ The failed attempt left useful evidence behind. The repository still had a Terra
 
 The second attempt began with that change in sequence.
 
-OpenSearch 2.19 would be provisioned quiet. No shadow reads. No customer traffic. It would receive the complete G-NAF dataset, prove its document count and search behaviour, and only then begin warming on copies of production queries.
+OpenSearch 2.19 would be provisioned quiet. No shadow reads. No customer traffic. It would receive the complete G&#8209;NAF dataset, prove its document count and search behaviour, and only then begin warming on copies of production queries.
 
 Before another dollar of AWS capacity was spent, Claude Code changed the loader. If the index settings and mappings were already correct, it would no longer close and reopen the index for every state. If a close genuinely collided with a snapshot, it would retry with backoff. CI kept testing both 1.3.20 and 2.19.5. A CloudWatch dashboard established the old cluster's latency baseline before the new cluster existed.
 
@@ -65,7 +65,7 @@ At first it looked like a capacity problem. Claude Code checked the AWS metrics.
 
 Direct probes returned 401. The same credentials still matched in 1Password, GitHub Actions and Terraform Cloud, but the domain rejected them. The new audit log showed 184 failed logins, yet no event that changed the password.
 
-CloudWatch supplied the missing half of the picture. The searchable-document count had climbed normally to about ten million. At 02:00 UTC it fell to seven. An hour later the authentication failures started.
+CloudWatch supplied the missing half of the picture. At 11am, the searchable-document count stood at about ten million. At noon, it fell to seven. At 1:00:59pm, the authentication failures started.
 
 That established where the authentication fault lived: the fine-grained access control user store inside the managed domain no longer matched any credential plane under the project's control. It did not establish what had changed it. The audit log contained the failed logins, but no initiating event. The index deletion had left no delete event either.
 
