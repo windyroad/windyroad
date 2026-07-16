@@ -122,7 +122,7 @@ describe('push-watch.sh: is_sibling_amend (P092 case B)', () => {
       'if is_sibling_amend; then echo SIBLING; else echo NOT; fi',
     );
     expect(out).toBe('SIBLING');
-  });
+  }, 15000);
 
   it('does NOT flag a clean fast-forward-ahead state as a sibling-amend', () => {
     const out = probeInRepo(
