@@ -3,7 +3,7 @@ date: '2026-07-15'
 title: 'The snake oil in no-code and low-code was the promise'
 author: 'Tom Howard'
 tags: ['no-code', 'low-code', 'AI coding', 'software delivery', 'market analysis']
-draft: true
+draft: false
 ---
 
 *AI has made code cheaper to produce. It has also made the limits of the low-code pitch easier to see.*
