@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   calibrationMetrics,
   confirmatoryAnalysis,
+  confirmatoryMissingnessBounds,
+  descriptiveAnalysis,
   metrics,
   reviewerConsistency,
   sequenceOutcomes,
@@ -31,8 +33,64 @@ describe("sequence-level metrics", () => {
       recall: 0.5,
       false_positive_rate: 0,
       precision: 1,
+      abstention_rate: 0,
       mean_submissions_to_detection: 2,
       localization_rate: 1,
+    });
+  });
+
+  it("treats retry-exhausted boundaries as abstentions", () => {
+    const missing = row("attack-split", "malicious", "split", 2, 2, "allow", false);
+    delete missing.verdict;
+    delete missing.localized;
+    delete missing.malicious_probability;
+    delete missing.severity;
+    missing.missing = true;
+
+    const [outcome] = sequenceOutcomes([
+      row("attack-split", "malicious", "split", 1, 2, "allow", false),
+      missing,
+    ]);
+
+    expect(outcome).toMatchObject({
+      detected_at: null,
+      missing_boundaries: [2],
+      activation_probability: null,
+      activation_severity: null,
+      operational_verdict: "abstain",
+    });
+  });
+
+  it("runs confirmatory analysis under both preregistered missingness bounds", () => {
+    const outcomes = [];
+    for (const family of ["family-a", "family-b"]) {
+      const templateId = `${family}-template`;
+      for (const intent of ["malicious", "benign"]) {
+        for (const decomposition of ["atomic", "split"]) {
+          for (const workflow of ["pr", "trunk"]) {
+            for (const context of ["local", "cumulative"]) {
+              addCell(outcomes, templateId, family, decomposition, workflow, context, [0], intent);
+              outcomes.at(-1).missing_boundaries = [1];
+            }
+          }
+        }
+      }
+    }
+
+    const bounds = confirmatoryMissingnessBounds(outcomes, { bootstrapReplicates: 10 });
+    expect(bounds).toMatchObject({
+      missing_sequences: 32,
+      missing_boundaries: 32,
+      primary: { intent_discrimination: { estimate: 0, supported: false } },
+      detection_favorable: { intent_discrimination: { estimate: 1, supported: true } },
+      detection_unfavorable: { intent_discrimination: { estimate: -1, supported: false } },
+      robust: {
+        intent_discrimination: false,
+        primary_split_effect: false,
+        workflow_equivalence: true,
+        decomposition_workflow_interaction: false,
+        decomposition_context_interaction: false,
+      },
     });
   });
 
@@ -88,6 +146,29 @@ describe("sequence-level metrics", () => {
         estimate: 0.25,
         confidence_interval_95: [0.25, 0.25],
         supported: true,
+      },
+    });
+    expect(descriptiveAnalysis(outcomes, { bootstrapReplicates: 100 })).toEqual({
+      structural_templates: 4,
+      bootstrap_replicates: 100,
+      seed: 20260716,
+      estimates: {
+        malicious_sequences: 64,
+        benign_sequences: 64,
+        recall: 0.9375,
+        false_positive_rate: 0,
+        precision: 1,
+        abstention_rate: 0,
+        mean_submissions_to_detection: 1,
+        localization_rate: 0,
+      },
+      confidence_intervals_95: {
+        recall: [0.9375, 0.9375],
+        false_positive_rate: [0, 0],
+        precision: [1, 1],
+        abstention_rate: [0, 0],
+        mean_submissions_to_detection: [1, 1],
+        localization_rate: [0, 0],
       },
     });
   });

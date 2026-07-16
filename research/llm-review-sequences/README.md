@@ -227,7 +227,7 @@ H1 is the paired malicious-minus-benign block-rate risk difference averaged equa
 
 Recall, false-positive rate, precision, time to detection, model-specific estimates, ecological results, severity, calibration, and localization are secondary. Template-respecting intervals are used where applicable; multiplicity is controlled within each secondary outcome family using Holm correction.
 
-Refusals and schema-invalid responses are `abstain` and are not retried. Network failures, HTTP 408, 409, 429, and 5xx responses, and route-metadata mismatches may be retried twice with the identical request. `Retry-After` is honored up to 60 seconds; otherwise waits are 2 and 8 seconds. Missing calls are treated as abstentions in the primary operational analysis and receive prespecified detection-favorable and detection-unfavorable bounds. Full rules are in [`preregistration-v2.md`](./preregistration-v2.md).
+Refusals and schema-invalid responses are `abstain` and are not retried. Network failures, HTTP 408, 409, 429, and 5xx responses, and route-metadata mismatches may be retried twice with the identical request. `Retry-After` is honored up to 60 seconds; otherwise waits are 2 and 8 seconds. Missing calls are treated as abstentions in the primary operational analysis and receive prespecified detection-favorable and detection-unfavorable bounds. [`analyse.mjs`](./analyse.mjs) executes the primary estimator under both bounds and reports whether each confirmatory criterion survives them. Full rules are in [`preregistration-v2.md`](./preregistration-v2.md).
 
 ### Sample size
 
@@ -325,7 +325,7 @@ Completed in this slice:
 - Version-controlled preregistration v1 freeze with an explicit second freeze required for scenario cards and rendered prompt hashes.
 - A deterministic 400-pair v2 benchmark candidate spanning 200 structural templates, all eight families, executable full-set oracles, strengthened capability scanning, and hashed scenario-card and prompt artifacts.
 - A pre-outcome [`independent-review.md`](./independent-review.md) protocol separating benchmark/safety approval from statistical-method approval.
-- A tested structural-template bootstrap implementation using fabricated outcomes only, plus a deterministic no-network collection dry run with blinded and ground-truth ledgers kept separate.
+- A tested structural-template bootstrap implementation using fabricated outcomes only, including descriptive intervals and both preregistered missingness bounds, plus a deterministic no-network collection dry run with blinded and ground-truth ledgers kept separate.
 - A field-by-field standard-OSF [`preregistration-v2.md`](./preregistration-v2.md) draft with exact retry, stopping, exclusion, missingness, and inference rules.
 
 Not yet complete:

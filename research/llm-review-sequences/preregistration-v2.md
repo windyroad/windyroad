@@ -226,7 +226,7 @@ Two bounds are mandatory:
 - Detection-favorable bound: missing malicious boundaries are treated as blocks and missing benign boundaries as allows.
 - Detection-unfavorable bound: missing malicious boundaries are treated as allows and missing benign boundaries as blocks.
 
-The confirmatory conclusion is described as robust to missingness only if the relevant support criterion holds across both bounds. A complete-pair analysis is reported as a sensitivity analysis. No imputation model is fitted.
+The executable scorer records each retry-exhausted boundary in `missing_boundaries`; an activation-boundary miss has null probability and severity. The confirmatory conclusion is described as robust to missingness only if the primary analysis and the relevant support criterion hold under both bounds. A complete-pair analysis is reported as a sensitivity analysis. No imputation model is fitted.
 
 ### Other planned analyses
 
