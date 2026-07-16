@@ -1,13 +1,13 @@
 ---
 date: '2026-07-16'
-title: 'At noon in Sydney, ten million addresses disappeared'
+title: 'At noon Sydney time, ten million addresses disappeared'
 author: 'Tom Howard'
 tags: ['ai coding', 'claude code', 'opensearch', 'software delivery', 'risk management', 'zero outage']
 image: '/img/social/opensearch-upgrade-failed-cluster.jpg'
 imageAlt: 'Two parallel server clusters in daylight: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.'
 ---
 
-At 11am in Sydney, the new OpenSearch cluster held about ten million Australian addresses. At noon, the next CloudWatch reading counted just seven addresses.
+At 11am Sydney time, the new OpenSearch cluster held about ten million Australian addresses. At noon, the next CloudWatch reading counted just seven addresses.
 
 At 1:00:59pm, the failed logins began. By the time the import was stopped, the audit log contained 184 of them. The cluster had lost almost all its data and stopped recognising the credentials that had loaded it.
 
@@ -19,7 +19,7 @@ That was the first thing the migration got right.
 
 ## A cluster too old to leave alone
 
-Addressr searches Australia's Geocoded National Address File (G&#8209;NAF), a source dataset of about 16.9 million addresses indexed into OpenSearch. Its production cluster worked, but it was still on OpenSearch 1.3.20, a version family already past upstream maintenance.
+Addressr is an Australian address-validation and search service. It indexes the Geocoded National Address File (G&#8209;NAF), a source dataset of about 16.9 million addresses, in OpenSearch. Its production cluster worked, but it was still on OpenSearch 1.3.20, a version family already past upstream maintenance.
 
 The destination was OpenSearch 3.5. Reaching it safely meant stopping at 2.19 first. Each step had to preserve search behaviour, keep the API available and leave a working path back.
 
