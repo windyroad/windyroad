@@ -37,6 +37,8 @@ The reviewers receive the study manifest, generator sources, generated cards and
 
 The author exercised the complete reproduction protocol at commit `a860532` on 2026-07-17. This is evidence that the packet runs; it is not an independent approval. The full suite passed 137 tests with the two exhaustive checks intentionally skipped, the exhaustive benchmark then passed both tests, and the exhaustive power audit passed all eight tests. Regeneration produced the frozen 400 pairs, 12,800 prompts, 115,200 call rows, and all manifest hashes. Across every call row, the only fields were `call_id`, `case_id`, `model`, `prompt_id`, `schedule_index`, and `trial`.
 
+After adding the ecological layer, the author reran the expanded protocol at commit `42eb883` on 2026-07-17. The full suite passed 139 tests with two exhaustive checks skipped; the exhaustive benchmark passed both tests and the exhaustive design audit passed all nine. The run reproduced both layers' manifest hashes, including 2,560 ecological prompts and 7,680 ecological call rows. This remains a preflight, not either required independent approval.
+
 ## Benchmark and safety review
 
 The benchmark reviewer must inspect:
