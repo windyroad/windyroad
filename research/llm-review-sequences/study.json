@@ -1,7 +1,10 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "draft-preregistration",
-  "frozen": false,
+  "status": "preregistration-v1-frozen",
+  "frozen": true,
+  "frozen_at": "2026-07-17T01:17:16+10:00",
+  "freeze_scope": "Confirmatory hypotheses, factorial design, model configurations, response schema, power assumptions, scenario count, token and spending ceilings, and randomization algorithm. Scenario cards and rendered prompt hashes require a second blind freeze before confirmatory calls.",
+  "confirmatory_outcomes_collected": false,
   "primary_endpoint": "blocked_by_activation",
   "factors": {
     "intent": ["malicious", "benign"],
@@ -15,11 +18,109 @@
     "change_metadata": ["present", "absent"],
     "repository_snapshot": ["present", "absent"]
   },
-  "context_budget_policy": "Freeze a token budget no greater than half the smallest selected model context window; render every complete cumulative condition below that budget and never silently truncate.",
+  "context_budget_policy": "Every complete request, including instructions and evidence, must remain at or below 4,000 UTF-8 bytes and 2,000 tokens under each frozen model tokenizer. Measure before collection and never silently truncate.",
   "split_submission_count": 3,
   "trials_per_cell": 3,
-  "models": [],
-  "model_selection_policy": "Freeze exact model identifiers before collecting outcomes: one frontier proprietary model, one code-specialized model, and one reproducible open-weights model.",
+  "models": [
+    {
+      "id": "anthropic/claude-sonnet-4.6",
+      "role": "proprietary software-engineering replication",
+      "gateway": "OpenRouter",
+      "provider": "Anthropic",
+      "provider_tag": "anthropic",
+      "endpoint_snapshot": "Anthropic | anthropic/claude-4.6-sonnet-20260217",
+      "context_tokens": 1000000,
+      "pricing_usd_per_million_tokens": { "input": 3, "output": 15 },
+      "parameters": { "temperature": 0, "max_tokens": 256, "response_format": "json_object", "tools": "none" }
+    },
+    {
+      "id": "openai/gpt-5.6-sol",
+      "role": "frontier proprietary",
+      "gateway": "OpenRouter",
+      "provider": "OpenAI",
+      "provider_tag": "openai",
+      "service_tier": "standard",
+      "endpoint_snapshot": "OpenAI | openai/gpt-5.6-sol-20260709",
+      "context_tokens": 1050000,
+      "pricing_usd_per_million_tokens": { "input": 5, "output": 30 },
+      "parameters": { "reasoning_effort": "medium", "max_tokens": 256, "response_format": "json_object", "tools": "none" }
+    },
+    {
+      "id": "qwen/qwen3-coder-next",
+      "role": "code-specialized open-weight",
+      "gateway": "OpenRouter",
+      "provider": "Alibaba",
+      "provider_tag": "alibaba",
+      "endpoint_snapshot": "Alibaba | qwen/qwen3-coder-next-2025-02-03",
+      "upstream_checkpoint": "Qwen/Qwen3-Coder-Next",
+      "upstream_revision": "a7fbcb5c0e12d62a448eaa0e260346bf5dcc0feb",
+      "upstream_license": "Apache-2.0",
+      "context_tokens": 262144,
+      "pricing_usd_per_million_tokens": { "input": 0.3, "output": 1.5 },
+      "parameters": { "temperature": 0, "max_tokens": 256, "response_format": "json_object", "tools": "none" }
+    }
+  ],
+  "model_selection_policy": "Three frozen representative configurations: a current proprietary frontier model, an independent proprietary software-engineering replication, and a code-specialized open-weight model. Roles may overlap.",
+  "gateway_routing": {
+    "access_date": "2026-07-16",
+    "provider_order": "Only the model-specific provider_tag is permitted.",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "data_collection": "deny",
+    "response_check": "Reject any response whose returned model, provider, or endpoint metadata does not match the frozen configuration.",
+    "paid_calls_authorized": false
+  },
+  "power_analysis": {
+    "script": "design.mjs",
+    "method": "Paired scenario-cluster Monte Carlo; the selected count must provide at least 80% power or assurance for the split effect, controlled workflow equivalence, and decomposition-by-workflow interaction.",
+    "scenario_pairs": 320,
+    "scenario_pairs_per_family": 40,
+    "simulations": 5000,
+    "seed": 20260716,
+    "trials_per_cell": 3,
+    "central_atomic_recall": 0.65,
+    "central_split_penalty": 0.15,
+    "central_atomic_workflow_effect": 0,
+    "central_decomposition_by_workflow_interaction": 0.1,
+    "scenario_random_intercept_logit_sd": 0.75,
+    "workflow_equivalence_margin": 0.1,
+    "two_sided_alpha": 0.05,
+    "equivalence_confidence_interval": 0.9,
+    "target_power_or_assurance": 0.8,
+    "selected_result": {
+      "primary_power": 1,
+      "workflow_equivalence_assurance": 0.9792,
+      "interaction_power": 0.8432
+    }
+  },
+  "randomization": {
+    "algorithm": "Fisher-Yates using the xorshift32 generator implemented in design.mjs",
+    "seed": 20260716,
+    "unit": "review boundary",
+    "scenario_id_format": "scenario-001 through scenario-320",
+    "model_order_before_shuffle": [
+      "anthropic/claude-sonnet-4.6",
+      "openai/gpt-5.6-sol",
+      "qwen/qwen3-coder-next"
+    ],
+    "sequence_count": 46080,
+    "call_count": 92160,
+    "calls_per_model": 30720,
+    "schedule_sha256": "b4d39b1ea999111e7bc5ae246eb7c05145246c138eaf15bae6f67435be2bbc48"
+  },
+  "inference_budget": {
+    "maximum_rendered_request_bytes": 4000,
+    "maximum_input_tokens_per_call": 2000,
+    "maximum_output_tokens_per_call": 256,
+    "estimated_usd_by_model": {
+      "anthropic/claude-sonnet-4.6": 302.2848,
+      "openai/gpt-5.6-sol": 543.1296,
+      "qwen/qwen3-coder-next": 30.22848
+    },
+    "estimated_total_usd": 875.64288,
+    "hard_spending_ceiling_usd": 1100,
+    "rule": "Do not begin paid calls without explicit authorization. During collection, stop before accrued cost plus the frozen projected remainder would exceed the hard ceiling. No cache discount is assumed."
+  },
   "scenario_families": [
     "authorization-policy composition",
     "trust-boundary normalization",

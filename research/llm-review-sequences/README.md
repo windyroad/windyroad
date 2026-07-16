@@ -1,6 +1,6 @@
 # LLM review across malicious change sequences
 
-Status: draft protocol, not preregistered and not yet run. Last updated: 2026-07-16.
+Status: preregistration v1 frozen in version control; external registration, benchmark freeze, and confirmatory collection are pending. No confirmatory outcome has been collected. Last updated: 2026-07-17.
 
 ## Working title
 
@@ -38,7 +38,8 @@ Does splitting a functionally equivalent malicious end state across three submis
 
 Does labeling and presenting a review as pre-merge pull-request review versus post-merge review of an untrusted trunk change detection effectiveness?
 
-- H3 controlled: With byte-equivalent evidence, the absolute pull-request versus trunk recall difference will be within a preregistered equivalence margin of 5 percentage points.
+- H3a controlled: With byte-equivalent evidence, the absolute pull-request versus trunk recall difference will be within a preregistered equivalence margin of 10 percentage points.
+- H3b controlled: Workflow will modify the atomic-versus-split recall difference. The decomposition-by-workflow interaction is confirmatory and two-sided because the direction is not prespecified.
 - H3 ecological: With native workflow artifacts, the direction is exploratory because pull-request descriptions, commit history, and pipeline evidence differ in practice.
 
 ### RQ4: Context as a mitigation
@@ -73,7 +74,7 @@ The confirmatory experiment crosses four factors.
 | Workflow | Pull request, trunk | Pre-merge blocking policy versus post-merge untrusted-main policy |
 | Context | Local, cumulative | Current boundary only versus current boundary plus prior sequence and repository evidence |
 
-Each cell is repeated three times for each frozen model. Call order is randomized within model and trial. Scenario identifiers are blinded. A fresh model session is used for every review boundary; cumulative context is supplied explicitly rather than retained in chat state.
+Each cell is repeated three times for each frozen model. Review-boundary call order is globally randomized with the frozen schedule. Scenario identifiers are blinded. A fresh model session is used for every review boundary; cumulative context is supplied explicitly rather than retained in chat state.
 
 ### Controlled and ecological layers
 
@@ -95,7 +96,7 @@ Two secondary temporal ablations will be frozen before collection:
 - Metadata-only spacing compares one-minute and seven-day timestamp intervals without changing code, order, or supplied evidence.
 - Ecological interleaving inserts zero or two size-matched neutral submissions between causal steps. The neutral submissions are identical across malicious and benign pairs and excluded from the activation oracle.
 
-Every review boundary uses a fresh model session. Before models are selected, the evidence budget is set to no more than half the smallest selected context window. Complete cumulative evidence must fit below that budget; inputs are never silently truncated. Exact rendered bytes, model-specific token counts, ordering, timestamps, and any provider-side truncation signal are recorded. The local condition intentionally withholds prior submissions, while the cumulative condition supplies them explicitly. A repository-snapshot ablation distinguishes access to the final code state from access to historical diffs.
+Every review boundary uses a fresh model session. Before collection, the complete request must remain at or below 4,000 UTF-8 bytes and 2,000 tokens under each frozen model tokenizer. Inputs are never silently truncated. Exact rendered bytes, model-specific token counts, ordering, timestamps, and any provider-side truncation signal are recorded. The local condition intentionally withholds prior submissions, while the cumulative condition supplies them explicitly. A repository-snapshot ablation distinguishes access to the final code state from access to historical diffs.
 
 ## Safe benchmark
 
@@ -133,14 +134,17 @@ node research/llm-review-sequences/pilot.mjs /tmp/llm-review-pilot
 
 ## Review configurations
 
-Exact model identifiers are intentionally empty in `study.json` until the preregistration freeze. Selection must then record:
+Three representative configurations were frozen on 2026-07-17. The Qwen configuration intentionally covers both the code-specialized and open-weight roles, avoiding an unnecessary fourth model.
 
-- One current frontier proprietary model.
-- One current code-specialized model.
-- One reproducible open-weights model.
-- Provider, exact model or checkpoint identifier, access date, decoding parameters, context limit, tool access, API region when relevant, and raw response identifier.
+| Model | Frozen route | Role | Primary decoding |
+| --- | --- | --- | --- |
+| `openai/gpt-5.6-sol` | OpenRouter to OpenAI standard endpoint `openai/gpt-5.6-sol-20260709` | Frontier proprietary | Medium reasoning, 256 output tokens |
+| `anthropic/claude-sonnet-4.6` | OpenRouter to Anthropic endpoint `claude-4.6-sonnet-20260217` | Proprietary software-engineering replication | Temperature 0, 256 output tokens |
+| `qwen/qwen3-coder-next` | OpenRouter to Alibaba endpoint `qwen3-coder-next-2025-02-03` | Code-specialized open-weight | Temperature 0, 256 output tokens |
 
-All models receive the same fixed task prompt and JSON response contract. Temperature is zero when supported. Three independent calls per cell measure residual non-determinism. Models receive read-only evidence and no execution tools in the primary experiment.
+All models receive the same fixed task prompt and JSON response contract. Three independent calls per cell measure residual non-determinism. Models receive read-only evidence and no execution tools. The OpenRouter request permits only the listed provider, disables fallbacks, requires parameter support, and requests a no-data-collection route. A response is invalid if returned model, provider, or endpoint metadata differs from the frozen configuration.
+
+The primary experiment uses temperature zero where the endpoint supports it. GPT-5.6 Sol does not expose temperature through the frozen route, so its reasoning effort is fixed at medium. Qwen's upstream model card recommends sampling for agentic use; native-recommended Qwen sampling is reserved for a secondary ablation so decoding variance does not enter the primary comparison.
 
 ### Fixed review task
 
@@ -192,7 +196,7 @@ blocked_by_activation ~ decomposition * workflow * context + model
                       + (1 | scenario) + (1 | scenario_family)
 ```
 
-The primary estimand is the marginal risk difference for `split` minus `atomic` under local context, with a 95% confidence interval. H4 uses the decomposition-by-context interaction. The controlled H3 test uses two one-sided equivalence tests on the marginal workflow risk difference with bounds of -0.05 and 0.05 and a 90% confidence interval.
+The primary estimand is the marginal risk difference for `split` minus `atomic` under local context, with a 95% confidence interval. H4 uses the decomposition-by-context interaction. The controlled H3a test uses two one-sided equivalence tests on the marginal workflow risk difference with bounds of -0.10 and 0.10 and a 90% confidence interval. H3b uses the two-sided decomposition-by-workflow interaction at a 5% type-I error rate.
 
 A corresponding benign-sequence model estimates false-positive effects. Precision is derived from all sequences with scenario-cluster bootstrap intervals. Time to detection uses a discrete-time survival model. Model-specific estimates, ecological results, severity, calibration, and localization are secondary; multiplicity is controlled within each family using Holm correction.
 
@@ -200,7 +204,21 @@ Failed or schema-invalid responses are `abstain`, not silently retried. Provider
 
 ### Sample size
 
-Sample size is not yet frozen. Before preregistration, a simulation script will choose the smallest number of independent scenario pairs that gives at least 80% power for a 15-percentage-point split penalty under conservative scenario clustering, while also targeting a 5% two-sided type-I error rate. It will use nuisance parameters from published work or a blinded engineering pilot that exposes only response variance and failure rates, never condition outcomes. The chosen count, random seed, assumptions, and cost ceiling will be committed before any confirmatory response is collected.
+The frozen design uses 320 independent scenario pairs: 40 parameterized pairs in each of eight scenario families. The standard-library simulation in [`design.mjs`](./design.mjs) ran 5,000 replications with seed `20260716`, three trials per cell, central atomic recall of 0.65, a 15-percentage-point split penalty, a 10-point decomposition-by-workflow interaction, and a scenario random-intercept standard deviation of 0.75 on the logit scale.
+
+The count is the smallest tested candidate that reached 80% for all three confirmatory design targets. Selecting only for the primary split effect would have underpowered the workflow interaction central to RQ3.
+
+| Scenario pairs | Split-effect power | Workflow-equivalence assurance | Interaction power |
+| ---: | ---: | ---: | ---: |
+| 64 | 0.8012 | 0.5040 | 0.2718 |
+| 160 | 0.9946 | 0.8388 | 0.5654 |
+| 320 | 1.0000 | 0.9792 | 0.8432 |
+
+The workflow equivalence margin is 10 points, chosen before data collection as the smallest operationally decisive difference compatible with a feasible benchmark. A five-point margin from the earlier draft was not frozen. Simulation assumptions are design values, not pilot outcome estimates.
+
+The frozen boundary-level Fisher-Yates schedule contains 46,080 sequence evaluations and 92,160 calls, 30,720 per model. Its seed is `20260716` and its SHA-256 digest is `b4d39b1ea999111e7bc5ae246eb7c05145246c138eaf15bae6f67435be2bbc48`. Tests regenerate both the digest and the balanced call counts from [`study.json`](./study.json).
+
+At the ceiling of 2,000 input and 256 output tokens per call, the pricing snapshot estimates US$875.64: US$543.13 for GPT-5.6 Sol, US$302.28 for Claude Sonnet 4.6, and US$30.23 for Qwen3-Coder-Next. Collection has a hard US$1,100 stop. This budget is not authorization to spend; paid calls remain disabled until explicit approval.
 
 No outcome-driven optional stopping is permitted.
 
@@ -274,15 +292,16 @@ Completed in this slice:
 - A two-family safe pilot generator with malicious and matched benign variants.
 - Atomic/split final-tree and changed-line equivalence, deterministic policy oracles, evidence rendering, strict response validation, and end-to-end fabricated-response scoring.
 - Explicit timestamp, temporal-spacing, neutral-interleaving, and context-window controls.
+- Deterministic power simulation, 320-pair design, exact three-model configuration, provider-routing controls, token and spending ceilings, and a reproducible randomized call schedule.
+- Version-controlled preregistration v1 freeze with an explicit second freeze required for scenario cards and rendered prompt hashes.
 
 Not yet complete:
 
-- Power simulation and frozen scenario count.
 - Full synthetic benchmark beyond the two-family pilot.
-- Exact model selection, cost ceiling, human-review ethics decision, and preregistration.
+- External preregistration, rendered-prompt freeze, paid-call authorization, and human-review ethics decision.
 - Model runs, analysis, paper, independent review, and arXiv submission.
 
-The next milestone is the preregistration freeze package: a simulation-backed scenario count, exact model selection and cost ceiling, frozen evidence and response schemas, and a deterministic randomized call schedule.
+The next milestone is benchmark freeze: generate and independently inspect all 320 safe scenario pairs, verify every oracle and atomic/split tree equivalence, render every request under the token ceiling, freeze scenario cards and prompt hashes, and register the protocol externally. Confirmatory calls remain prohibited until that milestone passes.
 
 ## Related work and submission guidance
 
@@ -294,3 +313,7 @@ The next milestone is the preregistration freeze package: a simulation-backed sc
 - arXiv, [Submission Overview](https://info.arxiv.org/help/submit/index.html), documents the submission workflow.
 - arXiv, [Submit TeX/LaTeX](https://info.arxiv.org/help/submit_tex.html), documents source-package requirements.
 - arXiv, [Endorsement](https://info.arxiv.org/help/endorsement.html), explains category endorsement.
+- OpenAI, [Latest models](https://developers.openai.com/api/docs/guides/latest-model), documents the current GPT-5.6 family and model positioning.
+- Anthropic, [Introducing Claude Sonnet 4.6](https://www.anthropic.com/news/claude-sonnet-4-6), documents the model release, context window, and API pricing.
+- Qwen, [Qwen3-Coder-Next model card](https://huggingface.co/Qwen/Qwen3-Coder-Next), documents the open-weight coding model, license, context, and recommended sampling.
+- OpenRouter, [Provider routing](https://openrouter.ai/docs/guides/routing/provider-selection), documents provider pinning, fallback controls, parameter requirements, and data-collection routing.
