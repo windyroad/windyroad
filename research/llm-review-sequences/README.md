@@ -1,6 +1,6 @@
 # LLM review across malicious change sequences
 
-Status: preregistration v1 frozen in version control; external registration, benchmark freeze, and confirmatory collection are pending. No confirmatory outcome has been collected. Last updated: 2026-07-17.
+Status: preregistration v1 is frozen in version control; preregistration v2 and the pre-outcome paper are drafted. External registration, benchmark eligibility, and confirmatory collection are pending. No confirmatory outcome has been collected. Last updated: 2026-07-17.
 
 ## Working title
 
@@ -304,6 +304,14 @@ The final package must contain:
 
 The target is an arXiv submission with `cs.SE` as the expected primary category and `cs.CR` as a possible cross-list, subject to author endorsement and moderator classification. arXiv recommends submitting TeX source and requires the source package to compile in its supported environment. The paper is not considered complete until the submission is accepted and its arXiv identifier is recorded here.
 
+The current pre-outcome manuscript is available as [`paper.tex`](./paper/paper.tex) and a locally compiled [`paper.pdf`](../../output/pdf/paper.pdf). From the repository root, build it with:
+
+```sh
+tectonic -X compile research/llm-review-sequences/paper/paper.tex --outdir output/pdf
+```
+
+The PDF has title, author, `en-AU` language, title-display metadata, outlines, extractable Unicode text, and embedded fonts. It is not structurally tagged, so it does not yet satisfy `PDFUA.01.001` or `PDFUA.01.002` and must not be described as PDF/UA conformant. The arXiv source submission permits a source-derived HTML reading path; the final submission preview must be checked, and a compatible tagged-PDF toolchain should be used if arXiv accepts it without compromising source reproducibility.
+
 Before submission:
 
 1. Freeze authorship, disclosures, license choice, category, and endorsement status.
@@ -329,12 +337,13 @@ Completed in this slice:
 - A pre-outcome [`independent-review.md`](./independent-review.md) protocol separating benchmark/safety approval from statistical-method approval.
 - A tested structural-template bootstrap implementation using fabricated outcomes only, including result-ledger joining, descriptive intervals, both preregistered missingness bounds, and per-model complete-pair sensitivity, plus a deterministic no-network collection dry run and fake-transport retry runner with blinded and ground-truth ledgers kept separate.
 - A field-by-field standard-OSF [`preregistration-v2.md`](./preregistration-v2.md) draft with exact retry, stopping, exclusion, missingness, and inference rules.
+- A seven-page pre-outcome arXiv manuscript with related work, frozen methods and estimands, ethics, threats to validity, reproducibility hashes, and no model outcomes.
 
 Not yet complete:
 
 - Independent inspection of the machine-validated structural templates and hierarchical design.
 - External preregistration, rendered-prompt freeze, paid-call authorization, and human-review ethics decision.
-- Model runs, analysis, paper, independent review, and arXiv submission.
+- Model runs, outcome analysis, independent review, final paper revision, and arXiv submission.
 
 The next milestone is benchmark eligibility and second freeze: independently review the hierarchical power analysis and safe templates, verify exact tokenizer counts, and register preregistration v2 externally. Confirmatory calls remain prohibited until that milestone passes.
 
