@@ -310,6 +310,8 @@ The current pre-outcome manuscript is available as [`paper.tex`](./paper/paper.t
 tectonic -X compile research/llm-review-sequences/paper/paper.tex --outdir output/pdf
 ```
 
+The same source also completed two warning-free `pdflatex` passes in the public TeX Live 2025 image `texlive/texlive@sha256:ccf0168bb3dc1e5ba18094131ebb57177f90eca37ab2727bc2d2afb54ad60a51`, producing the same seven-page layout. arXiv's exact base image is access-controlled, so its submission preview remains the authoritative compatibility check.
+
 The PDF has title, author, `en-AU` language, title-display metadata, outlines, extractable Unicode text, and embedded fonts. It is not structurally tagged, so it does not yet satisfy `PDFUA.01.001` or `PDFUA.01.002` and must not be described as PDF/UA conformant. The arXiv source submission permits a source-derived HTML reading path; the final submission preview must be checked, and a compatible tagged-PDF toolchain should be used if arXiv accepts it without compromising source reproducibility.
 
 Before submission:
