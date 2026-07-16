@@ -1,5 +1,6 @@
 ---
 status: "proposed"
+first-released: 2026-07-16
 date: 2026-07-14
 human-oversight: confirmed
 oversight-date: 2026-07-14
