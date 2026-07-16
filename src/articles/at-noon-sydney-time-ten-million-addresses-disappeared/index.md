@@ -7,7 +7,7 @@ image: '/img/social/opensearch-upgrade-failed-cluster.jpg'
 imageAlt: 'Two parallel server clusters in daylight: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.'
 ---
 
-At 11am Sydney time on a Saturday, the new OpenSearch cluster held about ten million Australian addresses. At noon, the next CloudWatch reading counted just seven addresses.
+At 11am Sydney time, the new OpenSearch cluster held about ten million Australian addresses. At noon, the next CloudWatch reading counted just seven addresses.
 
 At 1:00:59pm, the failed logins began. By the time the import was stopped, the audit log contained 184 of them. The cluster had lost almost all its data and stopped recognising the credentials that had loaded it.
 
@@ -33,7 +33,7 @@ The plan was careful. The first attempt still failed.
 
 ## The first attempt
 
-The first OpenSearch 2.19 domain came up during the initial weekend attempt. Read-shadowing sent it copies of production searches without using its answers, giving the migration a way to observe real behaviour before cutover.
+The first OpenSearch 2.19 domain came up during the initial attempt. Read-shadowing sent it copies of production searches without using its answers, giving the migration a way to observe real behaviour before cutover.
 
 Then several faults began to overlap.
 
@@ -43,7 +43,7 @@ During the full data load, Queensland and Western Australia collided with an hou
 
 The cluster was resized to get the load through. AWS began its managed blue/green resize and remained stuck for more than three hours, reporting shard progress that moved forward and then backwards. Authentication failed again after the reconfiguration.
 
-Later that weekend, the migration was rolled back. The new domain was deleted and shadow traffic was disabled. Production stayed on 1.3.20 throughout.
+Those failures ended the initial attempt. The new domain was deleted and shadow traffic was disabled. Production stayed on 1.3.20 throughout.
 
 The failed attempt left useful evidence behind. The repository still had a Terraform module for parallel domains, a default-off shadow client, a two-version CI matrix and incident records describing where the plan had broken. It also left a better question: what if the cluster were allowed to finish loading before it saw a single search?
 
@@ -134,15 +134,15 @@ The deployment platform used `/health` to decide whether a new application versi
 
 Claude Code changed the health check to ping the configured OpenSearch cluster. A sustained connection or authentication failure now returned 503 and triggered the platform's automatic rollback. A kill switch could restore the old shallow check if the new dependency itself caused trouble.
 
-On the first cutover weekend, the deployment changed the primary host and authentication mode together. The old 1.3 cluster remained warm while the platform rolled the change through its instances and checked each one. Search stayed available. The smoke tests passed. Production was running on OpenSearch 2.19.
+At the first cutover, the deployment changed the primary host and authentication mode together. The old 1.3 cluster remained warm while the platform rolled the change through its instances and checked each one. Search stayed available. The smoke tests passed. Production was running on OpenSearch 2.19.
 
-The quarterly data-refresh workflows were moved to SigV4 through GitHub's short-lived AWS identity, first with one small territory as a canary and then with the remaining eight states. The following day, the 1.3 domain was decommissioned.
+Once the quarterly data-refresh workflows had moved to SigV4 through GitHub's short-lived AWS identity, first with one small territory as a canary and then with the remaining eight states, the 1.3 domain was decommissioned.
 
 The migration that had already failed twice was complete.
 
 ## "There is an OpenSearch v3 as well, isn't there?"
 
-That question arrived the following weekend.
+That question arrived after the 2.19 migration was complete.
 
 The second upgrade began with something the first had never possessed: a working migration system.
 
@@ -157,7 +157,7 @@ Claude Code ran the missing test instead of bypassing the gate. The 3.5 domain h
   <figcaption>Application-level search latency at the concurrency gate measured 66 milliseconds at the median, 227 milliseconds at p90 and 368 milliseconds at p95. This tested concurrency, not production latency.</figcaption>
 </figure>
 
-Production cut over that Saturday. Over its first three hours as the sole primary, the 3.5 domain stayed green with the full dataset, no server errors and no search rejections. Across 37 five-minute CloudWatch readings, domain-side, per-shard p95 SearchLatency ranged from 18 to 82 milliseconds and ended at 61 milliseconds. The p50 stayed at or below 34 milliseconds and ended at 29 milliseconds. The separate CloudWatch SearchableDocuments alarm remained OK; it would have fired if the count stayed below 15 million for two consecutive five-minute periods.
+With the concurrency evidence in place, production cut over to 3.5. Over its first three hours as the sole primary, the 3.5 domain stayed green with the full dataset, no server errors and no search rejections. Across 37 five-minute CloudWatch readings, domain-side, per-shard p95 SearchLatency ranged from 18 to 82 milliseconds and ended at 61 milliseconds. The p50 stayed at or below 34 milliseconds and ended at 29 milliseconds. The separate CloudWatch SearchableDocuments alarm remained OK; it would have fired if the count stayed below 15 million for two consecutive five-minute periods.
 
 <figure tabindex="0">
   <img src="/img/articles/opensearch-35-production-watch.svg" width="1200" height="780" loading="lazy" alt="Chart showing OpenSearch 3.5 stayed healthy during the first three production hours and passed the separate warm-parity gate." />
