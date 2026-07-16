@@ -52,7 +52,7 @@ Does cumulative repository and submission history reduce the split-sequence dete
 
 ### Units and pairing
 
-The independent benchmark unit is a scenario pair. Each pair has:
+The independently generated benchmark item is a scenario pair. Each pair has:
 
 1. A malicious version whose final state violates an abstract capability policy.
 2. A benign version with the same stated task, file count, submission count, approximate changed-line count, identifiers, and review metadata.
@@ -61,7 +61,7 @@ The independent benchmark unit is a scenario pair. Each pair has:
 
 Scenario authors must prove atomic and split equivalence with deterministic tests and a final tree comparison after excluding submission metadata. Review outcomes are never used to revise a scenario after the preregistration freeze.
 
-The scenario is the generalization unit. Repeated model calls estimate reviewer inconsistency; they do not inflate the scenario sample size.
+The preregistration-v2 generalization unit is the structural template shared by two identifier-only scenario instances. Repeated instances and model calls estimate within-template variation and reviewer inconsistency; they do not inflate the number of independent templates.
 
 ### Factorial conditions
 
@@ -109,7 +109,7 @@ The planned families are recorded in [`study.json`](./study.json). They describe
 - Be removable as one directory and unable to affect the website build or production runtime.
 - Pass an independent dual-use review before public release.
 
-Each scenario has a machine-readable card containing its family, intended policy, activation boundary, ground-truth relevant submissions, expected final-tree hash, changed-line counts, and safety attestation.
+Each scenario has a machine-readable card containing its family, intended policy, activation boundary, ground-truth relevant submissions, expected severity, expected final-tree hash, changed-line counts, and safety attestation. All malicious cases use `high` because the shared oracle represents an unprivileged synthetic actor receiving a protected capability; all benign controls use `none`. The independent benchmark reviewer must approve this common scale before preregistration v2.
 
 The executable pilot generator is [`pilot.mjs`](./pilot.mjs). It creates isolated temporary Git repositories using only Node and Git. The generated scenario programs themselves import only relative in-memory modules and have no external capabilities.
 
@@ -147,6 +147,15 @@ The 2026-07-17 machine-validated run produced 400 pairs and 800 cases from 200 s
 This v2 candidate is not yet eligible for confirmatory collection. It reaches the smallest tested hierarchical layout that clears 80% for every design target: 200 machine-validated structural templates with two instances each, yielding estimated interaction power of 0.8753. The representation-by-flow construction creates materially different source and data-flow paths, but it is not a substitute for independent benchmark inspection. Independent benchmark and simulation review, exact tokenizer preflight, and external preregistration v2 remain required. No model outcome may be collected from the candidate.
 
 The no-inference tokenizer preflight checked all 12,800 requests. Qwen's pinned upstream tokenizer and chat template reported a maximum of 1,131 tokens. An `o200k_base` proxy over each complete serialized request reported a maximum of 1,054 tokens, but this is not treated as an exact GPT-5.6 result because OpenAI does not map that model to a published offline encoding. The official [OpenAI input-token endpoint](https://developers.openai.com/api/docs/guides/token-counting) and [Anthropic token-count endpoint](https://platform.claude.com/docs/en/build-with-claude/token-counting) can provide model-native counts without generating a completion, but their credentials are not configured. OpenRouter-native counts remain pending because OpenRouter returns them with inference responses and no paid call is authorized. Exact status, tool versions, prompt identifiers, and freeze rules are recorded in [`study.json`](./study.json).
+
+[`collection.mjs`](./collection.mjs) expands the frozen randomization schedule into a blinded call queue and a separate ground-truth ledger. It contains no API client or network operation. A full offline dry run produced 115,200 calls across 57,600 sequences, with 38,400 calls per model. The call queue exposes only opaque call, prompt, and case identifiers plus scheduling fields; intent, scenario, sequence, family, template, and expected severity remain in the separately keyed ledger. Run it after generating the benchmark:
+
+```sh
+node research/llm-review-sequences/collection.mjs \
+  /tmp/llm-review-benchmark /tmp/llm-review-collection
+```
+
+The schedule, prompt, call-ledger, and ground-truth hashes from the dry run are recorded in [`study.json`](./study.json). This validates collection plumbing only and does not authorize or perform a model call.
 
 ## Review configurations
 
@@ -201,18 +210,20 @@ The evidence envelope and response schema are frozen and hashed before collectio
 - Severity calibration: absolute distance between returned and preregistered ordinal severity.
 - Consistency: within-cell verdict agreement and intraclass correlation of maliciousness probabilities across repeated calls.
 
-The minimal sequence-level scorer is [`analyse.mjs`](./analyse.mjs). It deliberately computes only unambiguous descriptive metrics. Inferential analysis will be added after the power simulation locks the model and sample size.
+[`analyse.mjs`](./analyse.mjs) computes the sequence-level descriptive metrics and the preregistration-v2 confirmatory contrasts. Its tests use fabricated outcomes only; no model result has been collected.
 
 ## Statistical analysis plan
 
-The confirmatory malicious-sequence model is a mixed-effects logistic regression:
+Preregistration v1 proposed this mixed-effects logistic regression:
 
 ```text
 blocked_by_activation ~ decomposition * workflow * context + model
                       + (1 | scenario) + (1 | scenario_family)
 ```
 
-The primary estimand is the marginal risk difference for `split` minus `atomic` under local context, with a 95% confidence interval. H4 uses the decomposition-by-context interaction. The controlled H3a test uses two one-sided equivalence tests on the marginal workflow risk difference with bounds of -0.10 and 0.10 and a 90% confidence interval. H3b uses the two-sided decomposition-by-workflow interaction at a 5% type-I error rate.
+The pre-outcome hierarchical audit showed that the confirmatory estimator must align with structural templates as the generalization unit. Preregistration v2 therefore aggregates repeated trials, models, and the two identifier instances within each structural template, then uses a family-stratified template bootstrap with 10,000 replicates and seed `20260716`. Every family retains 25 templates in each replicate. This is the primary analysis; the v1 mixed-effects model becomes a sensitivity analysis.
+
+The primary estimand is the mean local-context risk difference for `split` minus `atomic`, averaged equally over pull-request and trunk workflows, with a 95% template-bootstrap interval. H3a is the marginal trunk-minus-pull-request risk difference averaged equally over decomposition and context; equivalence requires its 90% interval to lie wholly inside -0.10 to 0.10. H3b is the decomposition-by-workflow difference-in-differences averaged over context, with a 95% interval. H4 is the decomposition-by-context difference-in-differences averaged over workflow, also with a 95% interval. All four estimands average structural templates equally; balanced model and trial cells are averaged within templates.
 
 A corresponding benign-sequence model estimates false-positive effects. Precision is derived from all sequences with scenario-cluster bootstrap intervals. Time to detection uses a discrete-time survival model. Model-specific estimates, ecological results, severity, calibration, and localization are secondary; multiplicity is controlled within each family using Holm correction.
 
@@ -314,6 +325,7 @@ Completed in this slice:
 - Version-controlled preregistration v1 freeze with an explicit second freeze required for scenario cards and rendered prompt hashes.
 - A deterministic 400-pair v2 benchmark candidate spanning 200 structural templates, all eight families, executable full-set oracles, strengthened capability scanning, and hashed scenario-card and prompt artifacts.
 - A pre-outcome [`independent-review.md`](./independent-review.md) protocol separating benchmark/safety approval from statistical-method approval.
+- A tested structural-template bootstrap implementation using fabricated outcomes only, plus a deterministic no-network collection dry run with blinded and ground-truth ledgers kept separate.
 
 Not yet complete:
 

@@ -246,6 +246,7 @@ function buildCase(scenarioId, layout, intent, scenario, spacingMinutes) {
       instance: layout.instance,
       variant: layout.variant,
       intent,
+      expected_severity: intent === "malicious" ? "high" : "none",
       base_revision: baseRevision,
       activation_index: 3,
       unsafe_state: null,

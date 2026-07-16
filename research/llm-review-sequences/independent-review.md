@@ -19,10 +19,12 @@ Review the repository at the proposed freeze commit. Run:
 npm test
 node research/llm-review-sequences/design.mjs
 node research/llm-review-sequences/benchmark.mjs /tmp/llm-review-benchmark-review
+node research/llm-review-sequences/collection.mjs \
+  /tmp/llm-review-benchmark-review /tmp/llm-review-collection-review
 EXHAUSTIVE_BENCHMARK=1 npx vitest run research/llm-review-sequences/benchmark.test.mjs
 ```
 
-Compare the generated counts and SHA-256 values with [`study.json`](./study.json). Stop the review if they differ. The generated directory must contain 400 scenario pairs, 800 cases, 200 template identifiers, 12,800 blinded requests, and no retained `.counterfactuals` directory.
+Compare the generated counts and SHA-256 values with [`study.json`](./study.json). Stop the review if they differ. The generated benchmark directory must contain 400 scenario pairs, 800 cases, 200 template identifiers, 12,800 blinded requests, and no retained `.counterfactuals` directory. The collection directory must contain 115,200 blinded call rows and 115,200 separately keyed ground-truth rows. Confirm that no call row contains intent, scenario, sequence, family, template, or expected-severity fields.
 
 The reviewers receive the study manifest, generator source, generated cards and prompts, power-analysis source and output, fixed prompt, analysis plan, and this protocol. They do not receive confirmatory responses, outcome summaries, or model-specific performance observations.
 
@@ -53,11 +55,14 @@ Any safety failure is a stop condition. Revisions are permitted only before prer
 The methods reviewer must independently rerun [`design.mjs`](./design.mjs) and inspect [`analyse.mjs`](./analyse.mjs). Record `pass`, `revise`, or `reject` for:
 
 - Treating structural templates, rather than calls or identifier instances, as the generalization unit.
-- The template random intercept and template-specific split and workflow-interaction slopes.
+- The template random intercept and template-specific split and workflow-interaction slopes used by the power simulation.
 - The 20,000-replication simulation, frozen seed, and selected 200-template by two-instance layout.
-- The primary split-effect estimand and cluster-respecting uncertainty calculation.
-- The workflow equivalence margin and two one-sided testing procedure.
-- The two-sided decomposition-by-workflow interaction test.
+- Equal weighting of structural templates after balanced within-template aggregation.
+- The family-stratified 10,000-replicate template bootstrap and frozen seed.
+- The primary local-context split-minus-atomic risk difference and 95% interval.
+- The marginal trunk-minus-pull-request risk difference, 90% interval, and equivalence margin.
+- The decomposition-by-workflow and decomposition-by-context difference-in-differences and 95% intervals.
+- Treating the preregistration-v1 mixed-effects model as a sensitivity analysis rather than the primary estimator.
 - Handling of repeated trials, benign false positives, invalid responses, missing calls, and multiplicity.
 - The randomized schedule hash, balanced call counts, and spending stop.
 - The claim that the v2 amendment predates all confirmatory outcomes.

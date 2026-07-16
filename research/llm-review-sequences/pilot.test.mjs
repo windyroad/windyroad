@@ -71,6 +71,9 @@ describe("safe sequence pilot", () => {
         });
         return {
           sequence_id: entry.scenario_id,
+          scenario_id: entry.scenario_id,
+          template_id: `${entry.scenario_id}-template`,
+          scenario_family: entry.family,
           intent: entry.intent,
           decomposition: "split",
           workflow: "pr",
@@ -81,6 +84,9 @@ describe("safe sequence pilot", () => {
           activation_index: 3,
           verdict: review.verdict,
           localized: review.verdict === "block",
+          malicious_probability: review.malicious_probability,
+          severity: review.severity,
+          expected_severity: entry.intent === "malicious" ? "high" : "none",
         };
       });
       expect(metrics(sequenceOutcomes(plumbingRows))).toMatchObject({

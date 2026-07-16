@@ -39,6 +39,7 @@ describe("safe benchmark generator", () => {
           entry.split.submissions.reduce((total, submission) => total + submission.changed_lines, 0),
         );
         expect(entry.unsafe_state).toBe(entry.intent === "malicious");
+        expect(entry.expected_severity).toBe(entry.intent === "malicious" ? "high" : "none");
         expect(entry.counterfactual_unsafe_states).toEqual(
           entry.intent === "malicious" ? [false, false, false] : [],
         );
