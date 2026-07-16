@@ -142,9 +142,9 @@ Generate the current prototype into a new empty directory:
 node research/llm-review-sequences/benchmark.mjs /tmp/llm-review-benchmark
 ```
 
-The 2026-07-17 machine-validated run produced 320 pairs and 640 cases. All 320 malicious oracles activated, all 320 benign oracles remained safe, and the structural scanner reported no forbidden capability. Atomic and split trees, changed-line totals, and activation timestamps matched. Submission identifiers contain no intent label, and the prompt ledger replaces ground truth with an opaque case identifier. The 10,240 unique boundary requests remained below the 4,000-byte ceiling; the maximum was 3,256 bytes. Checksums are frozen in [`study.json`](./study.json), while the 35 MB generated artifact is reproduced on demand instead of committed.
+The 2026-07-17 machine-validated run produced 400 pairs and 800 cases from 200 structural templates with two matched identifier instances each. Within each of the eight families, five data representations are crossed with five control-flow shapes. All 400 malicious oracles activated, all 400 benign oracles remained safe, and the structural scanner reported no forbidden capability. Atomic and split trees, changed-line totals, and activation timestamps matched. Submission identifiers contain no intent label, and the prompt ledger replaces ground truth with an opaque case identifier. The 12,800 unique boundary requests remained below the 4,000-byte ceiling; the maximum was 3,620 bytes. Checksums are recorded in [`study.json`](./study.json), while the 46 MB generated artifact is reproduced on demand instead of committed.
 
-This prototype is not eligible for confirmatory collection. It currently has eight structural templates with 40 parameter variants each, which does not justify treating all 320 pairs as independent under the frozen power model. A 20,000-replication pre-outcome hierarchical audit estimates interaction power of 0.5966 for that layout. Neither 160 templates with two instances nor 320 single-instance templates reliably clears 80%. The smallest tested layout that does is 200 independently reviewable structural templates with two instances each: 400 pairs with estimated interaction power of 0.8753. The second freeze and preregistration v2 must record that hierarchy after independent design review. No model outcome may be collected from the prototype.
+This v2 candidate is not yet eligible for confirmatory collection. It reaches the smallest tested hierarchical layout that clears 80% for every design target: 200 machine-validated structural templates with two instances each, yielding estimated interaction power of 0.8753. The representation-by-flow construction creates materially different source and data-flow paths, but it is not a substitute for independent benchmark inspection. Independent benchmark and simulation review, exact tokenizer preflight, and external preregistration v2 remain required. No model outcome may be collected from the candidate.
 
 ## Review configurations
 
@@ -310,15 +310,15 @@ Completed in this slice:
 - Explicit timestamp, temporal-spacing, neutral-interleaving, and context-window controls.
 - Deterministic power simulation, 320-pair design, exact three-model configuration, provider-routing controls, token and spending ceilings, and a reproducible randomized call schedule.
 - Version-controlled preregistration v1 freeze with an explicit second freeze required for scenario cards and rendered prompt hashes.
-- A deterministic 320-pair benchmark prototype spanning all eight families, executable full-set oracles, strengthened capability scanning, and hashed scenario-card and prompt artifacts.
+- A deterministic 400-pair v2 benchmark candidate spanning 200 structural templates, all eight families, executable full-set oracles, strengthened capability scanning, and hashed scenario-card and prompt artifacts.
 
 Not yet complete:
 
-- Confirmatory-eligible structural diversity and independent benchmark review beyond the machine-validated prototype.
+- Independent inspection of the machine-validated structural templates and hierarchical design.
 - External preregistration, rendered-prompt freeze, paid-call authorization, and human-review ethics decision.
 - Model runs, analysis, paper, independent review, and arXiv submission.
 
-The next milestone is benchmark eligibility and second freeze: expand to 200 independently reviewable structural templates with two matched instances each, rerun and independently review the hierarchical power analysis, inspect the safe scenarios, verify exact tokenizer counts, and register preregistration v2 externally. Confirmatory calls remain prohibited until that milestone passes.
+The next milestone is benchmark eligibility and second freeze: independently review the hierarchical power analysis and safe templates, verify exact tokenizer counts, and register preregistration v2 externally. Confirmatory calls remain prohibited until that milestone passes.
 
 ## Related work and submission guidance
 
