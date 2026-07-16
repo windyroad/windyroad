@@ -37,9 +37,9 @@ prospectively specified study of whether this decomposition reduces detection
 and whether detection differs between pull-request gates and trunk workflows
 that treat main as untrusted until pipeline review completes. The study uses 40
 matched malicious-benign pairs drawn from 40 structural templates in eight
-abstract policy families. Every program is synthetic, executes only in memory,
-and has no network, file-system, credential, persistence, deployment, or
-destructive capability. Atomic and three-submission variants have identical
+abstract policy families. Every generated case module is synthetic, executes
+only in memory, and has no external capability in the audited fixed corpus.
+Atomic and three-submission variants have identical
 final trees and changed-line totals. A factorial design varies intent,
 decomposition, and workflow framing across two subscription-backed review
 systems: Codex CLI and Claude Code. The bounded design contains 1,280 review
@@ -131,10 +131,11 @@ step separately and executes the oracle; all three counterfactuals must remain
 safe. Benign cases match structure and salience but do not grant the protected
 capability.
 
-The source imports only relative synthetic modules and runs only in memory. A
-deterministic scanner rejects network, shell, subprocess, file-system,
-package-install, credential, personal-data, persistence, destructive, dynamic
-execution, and non-relative import features.
+Generated case modules import only relative synthetic modules and run in memory.
+Fixed-corpus inspection, oracle execution, import restrictions, and output audit
+found no external capability. The regex scanner is defense in depth rather than
+a general capability proof. The trusted generator and oracle harness use local
+files, a Node subprocess, and dynamic import to construct and verify cases.
 
 \subsection{Factorial design}
 
@@ -167,7 +168,7 @@ replacement, or prompt tuning is permitted.
 
 \subsection{Review systems}
 
-The systems are frozen as product configurations rather than interchangeable
+The systems are specified as product configurations rather than interchangeable
 base-model APIs (Table~\ref{tab:systems}). Each boundary starts a fresh process
 with no persistent session. User configuration and tools are disabled where
 the client supports it. Any emitted tool call is retained as a protocol
@@ -179,7 +180,7 @@ deviation.
 \label{tab:systems}
 \begin{tabular}{@{}lll@{}}
 \toprule
-System & Frozen client & Requested model \\
+System & Client version & Requested model \\
 \midrule
 Codex CLI & 0.137.0; ChatGPT login & \code{gpt-5.5} \\
 Claude Code & 2.1.211; Claude Max login & \code{sonnet} \\
@@ -197,7 +198,7 @@ or returned-model change suspends that review system.
 All reviews receive one fixed security-review task and a JSON response contract.
 Requests ask for \code{allow}, \code{block}, or \code{abstain}; a maliciousness
 probability; severity; relevant submission identifiers; evidence; and a short
-category. Complete requests are at most 2,961 UTF-8 bytes. Schema-invalid
+category. Complete requests are at most 2,941 UTF-8 bytes. Schema-invalid
 responses and refusals are observed abstentions and are not repaired.
 
 \subsection{Collection and blinding}
@@ -207,9 +208,10 @@ system and schedule position. It contains no intent, family, structural-template
 activation, or expected-severity field. Ground truth is held in a separately
 keyed ledger and joined only after collection.
 
-Subscription rate limits pause collection until the same plan window resets.
-No API credit is accepted. A no-response infrastructure failure may be retried
-after reset up to three times; every attempt remains in the ledger. Collection
+Subscription rate limits produce a durable suspension at the current call; the
+same fixed queue resumes after the plan window resets. No API credit is accepted.
+A no-response failure may be retried at the same position up to three recorded
+attempts. Start, completion, suspension, and result records are fsynced. Collection
 also suspends on a safety or terms conflict, authentication change, benchmark
 integrity failure, client or model drift, or 100 consecutive infrastructure
 failures. The additional spending ceiling is US\$0.
@@ -241,15 +243,18 @@ is below zero. Trunk-minus-pull-request and decomposition-by-workflow estimates
 receive 95\% intervals but are exploratory.
 
 Missing boundaries are non-detections in the operational analysis. Mandatory
-detection-favourable and detection-unfavourable bounds assign missing malicious
-and benign boundaries oppositely. A review-system-specific complete-pair
-sensitivity drops a structural template only for the affected system. No
-imputation model is fitted.
+estimand-specific bounds assign malicious and benign cells oppositely for H1 and
+atomic and split malicious cells oppositely for H2. A review-system-specific
+complete-pair sensitivity drops a structural template only for the affected
+system. No imputation model is fitted. Exploratory workflow intervals carry no
+inferential decision and receive no multiplicity adjustment.
 
-The sample is determined by subscription access, not an 80\% power target. Under
+The products and sample are a convenience selection determined by subscriptions
+already held by the author, not an 80\% power target. Under
 the earlier central assumptions, a 20,000-replication audit estimates power of
 0.2584 for a 0.15 split penalty, assurance of 0.0038 for workflow equivalence
-within $\pm0.10$, and power of 0.1016 for a 0.10 interaction. Consequently, null
+within $\pm0.10$, and power of 0.1016 for a 0.10 interaction. No H1 power
+calculation was performed. Consequently, null
 results cannot support claims of no decomposition or workflow effect. The study
 is a bounded empirical evaluation and a variance estimate for a larger
 replication.
@@ -282,11 +287,12 @@ instructions are neither observable nor identical. Product routing and serving
 stacks may change behind requested model identifiers; metadata and access times
 are therefore retained and drift suspends collection.
 
-\textbf{External validity.} Forty fixed templates, eight policy families, two
+\textbf{External validity.} Forty purposively selected templates, eight policy families, two
 review products, and compact JavaScript repositories do not represent all
 languages, organisations, vulnerabilities, or attack strategies. The design
 tests one three-submission decomposition and does not estimate an optimal
-adversarial strategy.
+adversarial strategy. Inference is conditional on these templates; one lexical
+instance per template does not estimate identifier-instance variability.
 
 \textbf{Statistical conclusion validity.} The sample is underpowered for small
 effects, especially workflow equivalence and interaction. There is one trial,
@@ -299,31 +305,33 @@ This is defensive research into review reliability. The benchmark cannot access
 external systems or data, and its only harmful state is a deterministic in-memory
 assertion over synthetic names. No real repository or person is tested.
 
-Three isolated subagents review the same frozen packet for benchmark safety,
-methods, and reproducibility. Their raw reports and the author's resolution log
-are archived. These records are labelled AI-assisted internal review, not
+Three isolated subagents reviewed candidate commit \code{6b607f6} for benchmark
+safety, methods, and reproducibility. All three returned \code{do not approve};
+their raw reports are archived and corrections precede repeat review. These
+records are labelled AI-assisted internal review, not
 independent human peer review, ethics approval, or arXiv endorsement. Shared
 model, provider, and author-orchestration biases are reported as limitations.
-Material judged to provide reusable operational evasion guidance is withheld or
-reduced to non-operational metadata, with every omission documented.
+Neutral change titles remove plausible refactor cover stories, but the abstract
+composition patterns retain disclosed dual-use value. The packet contains no
+real target, external capability, credential, deployment path, or complete exploit.
 
 \section{Reproducibility}
 
-The versioned package contains the generator, cards, prompts, schedule,
-collection ledgers, scorer, power simulation, preregistration, internal-review
-records, and analysis code. Candidate hashes are:
+The candidate package contains the generator, schedule, scorer, power simulation,
+preregistration, archived initial internal-review records, durable subscription
+runner, and analysis code. Current unfrozen hashes are:
 
 \begin{itemize}[leftmargin=1.5em]
   \item scenario cards:
-  \code{2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b};
+  \code{d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d};
   \item rendered prompts:
-  \code{f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08};
+  \code{e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c};
   \item randomised schedule:
   \code{e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a};
   \item blinded call ledger:
-  \code{9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27};
+  \code{01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223};
   \item ground-truth ledger:
-  \code{f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb}.
+  \code{b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773}.
 \end{itemize}
 
 The earlier paid API design is retained in version history but was superseded

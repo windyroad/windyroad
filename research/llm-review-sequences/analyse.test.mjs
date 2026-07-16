@@ -164,16 +164,51 @@ describe("sequence-level metrics", () => {
       missing_sequences: 32,
       missing_boundaries: 32,
       primary: { intent_discrimination: { estimate: 0, supported: false } },
-      detection_favorable: { intent_discrimination: { estimate: 1, supported: true } },
-      detection_unfavorable: { intent_discrimination: { estimate: -1, supported: false } },
+      h1: {
+        favorable: { intent_discrimination: { estimate: 1, supported: true } },
+        unfavorable: { intent_discrimination: { estimate: -1, supported: false } },
+      },
+      h2: {
+        favorable: { primary_split_effect: { estimate: -1, supported: true } },
+        unfavorable: { primary_split_effect: { estimate: 1, supported: false } },
+      },
       robust: {
         intent_discrimination: false,
         primary_split_effect: false,
-        workflow_equivalence: true,
-        decomposition_workflow_interaction: false,
-        decomposition_context_interaction: false,
       },
     });
+  });
+
+  it("analyses the active local-only design with estimand-specific missingness bounds", () => {
+    const outcomes = [];
+    for (const family of ["family-a", "family-b"]) {
+      const templateId = `${family}-template`;
+      for (const intent of ["malicious", "benign"]) {
+        for (const decomposition of ["atomic", "split"]) {
+          for (const workflow of ["pr", "trunk"]) {
+            addCell(outcomes, templateId, family, decomposition, workflow, "local", [0], intent);
+          }
+        }
+      }
+    }
+    for (const outcome of outcomes.filter(({ intent }) => intent === "malicious")) {
+      outcome.missing_boundaries = [1];
+    }
+
+    const analysis = confirmatoryAnalysis(outcomes, { bootstrapReplicates: 10 });
+    expect(analysis).toMatchObject({
+      seed: 20260718,
+      workflow_effect: { confidence_interval_95: [0, 0] },
+      decomposition_workflow_interaction: { confidence_interval_95: [0, 0] },
+    });
+    expect(analysis.workflow_effect).not.toHaveProperty("equivalent");
+    expect(analysis).not.toHaveProperty("decomposition_context_interaction");
+
+    const bounds = confirmatoryMissingnessBounds(outcomes, { bootstrapReplicates: 10 });
+    expect(bounds.h1.favorable.intent_discrimination.estimate).toBe(1);
+    expect(bounds.h1.unfavorable.intent_discrimination.estimate).toBe(0);
+    expect(bounds.h2.favorable.primary_split_effect.estimate).toBe(-1);
+    expect(bounds.h2.unfavorable.primary_split_effect.estimate).toBe(1);
   });
 
   it("drops incomplete templates only within each model sensitivity analysis", () => {
@@ -244,10 +279,10 @@ describe("sequence-level metrics", () => {
     expect(confirmatoryAnalysis(outcomes, { bootstrapReplicates: 100 })).toEqual({
       structural_templates: 4,
       bootstrap_replicates: 100,
-      seed: 20260716,
+      seed: 20260718,
       intent_discrimination: {
-        estimate: 0.9375,
-        confidence_interval_95: [0.9375, 0.9375],
+        estimate: 0.875,
+        confidence_interval_95: [0.875, 0.875],
         supported: true,
       },
       primary_split_effect: {
@@ -256,20 +291,13 @@ describe("sequence-level metrics", () => {
         supported: true,
       },
       workflow_effect: {
-        estimate: 0.125,
-        confidence_interval_90: [0.125, 0.125],
-        equivalence_margin: 0.1,
-        equivalent: false,
+        estimate: 0.25,
+        confidence_interval_95: [0.25, 0.25],
       },
       decomposition_workflow_interaction: {
-        estimate: 0.25,
-        confidence_interval_95: [0.25, 0.25],
+        estimate: 0.5,
+        confidence_interval_95: [0.5, 0.5],
         detected: true,
-      },
-      decomposition_context_interaction: {
-        estimate: 0.25,
-        confidence_interval_95: [0.25, 0.25],
-        supported: true,
       },
     });
     expect(descriptiveAnalysis(outcomes, { bootstrapReplicates: 100 })).toEqual({

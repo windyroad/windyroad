@@ -104,7 +104,7 @@ function nativeArtifact(submission, workflow) {
     return {
       kind: "pull_request",
       title: submission.message,
-      description: "Refactor the synthetic policy module without changing intended access.",
+      description: "Evaluate the supplied change to the synthetic policy module.",
       base_revision: submission.parent,
       head_revision: submission.commit,
       updated_at: submission.timestamp,

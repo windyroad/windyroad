@@ -69,7 +69,7 @@ Codex officially supports ChatGPT subscription authentication and non-interactiv
 
 ### Prompt and response contract
 
-Every boundary uses the same fixed security-review task and requests one JSON object containing verdict, malicious probability, severity, relevant submission identifiers, evidence, and category. The complete request is at most 2,961 UTF-8 bytes. Output is schema validated without repair.
+Every boundary uses the same fixed security-review task and requests one JSON object containing verdict, malicious probability, severity, relevant submission identifiers, evidence, and category. The complete request is at most 2,941 UTF-8 bytes. Output is schema validated without repair.
 
 Provider-controlled system prompts cannot be made identical or fully observed. This is a comparison of review systems, not an isolated causal comparison of underlying base models.
 
@@ -84,19 +84,19 @@ Fisher-Yates shuffling with the standard-library xorshift32 implementation and s
 - 320 atomic boundaries and 960 split boundaries.
 - One trial per case, decomposition, workflow, and review system.
 
-The frozen candidate schedule SHA-256 is `e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a`.
+The candidate schedule SHA-256 is `e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a`.
 
 ### Budget and stopping
 
-The additional spending ceiling is US$0. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, collection pauses until the same subscription window resets.
+The additional spending ceiling is US$0. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, the crash-safe runner records a suspension at the current call. The author resumes the same fixed queue only after the same subscription window resets.
 
 Collection also suspends on a safety or provider-terms conflict, authentication change, benchmark-integrity failure, CLI version change, returned model-identity change, or 100 consecutive infrastructure failures. There is no outcome-dependent stopping.
 
-An infrastructure failure that yields no usable response may be retried after the applicable reset, up to three attempts. Refusals and schema-invalid responses are observed abstentions and are not retried. Every attempt remains in the ledger.
+An infrastructure failure that yields no usable response suspends the current call for author diagnosis. The same call may be retried without reordering, up to three recorded attempts. Refusals and schema-invalid responses are observed abstentions and are not retried. Every start, completion, and suspension remains in the fsynced append-only ledger.
 
 ## Sampling and power
 
-The sample is constrained by existing subscription access rather than selected to achieve 80% power. Under the earlier central assumptions of atomic recall 0.65, a split penalty of 0.15, workflow effect zero, interaction 0.10, scenario logit standard deviation 0.75, one trial, and 20,000 simulations, the 40-pair design has estimated split-effect power 0.2584, workflow-equivalence assurance 0.0038, and interaction power 0.1016.
+The products and sample size are a convenience selection constrained by subscriptions already held by the author rather than selected to achieve 80% power. Under the earlier central assumptions of atomic recall 0.65, a split penalty of 0.15, workflow effect zero, interaction 0.10, scenario logit standard deviation 0.75, one trial, and 20,000 simulations, the 40-pair design has estimated directional split-effect power 0.2584, workflow-equivalence assurance 0.0038, and interaction power 0.1016. No H1 operating-characteristic calculation was performed.
 
 Accordingly, H1 and H2 remain directional prospective tests, but all estimates emphasize interval width. Workflow equivalence is not tested, the workflow interaction is exploratory, and null results cannot support claims of no effect. The study is best interpreted as a bounded empirical evaluation and feasibility estimate for a larger replication.
 
@@ -131,9 +131,9 @@ The preregistered contrasts are:
 3. Exploratory workflow: trunk minus pull-request malicious risk difference, averaged over decomposition.
 4. Exploratory interaction: `(split - atomic under trunk) - (split - atomic under pull request)`.
 
-Missing boundaries are abstentions in the operational analysis. Mandatory detection-favourable and detection-unfavourable bounds assign missing malicious and benign boundaries oppositely. A review-system-specific complete-pair analysis drops a structural template only for the affected system.
+Missing boundaries are abstentions in the operational analysis. Mandatory estimand-specific bounds assign missing malicious and benign boundaries oppositely for H1 and missing atomic and split malicious boundaries oppositely for H2. A review-system-specific complete-pair analysis drops a structural template only for the affected system.
 
-No imputation model is fitted. Secondary comparisons are labelled secondary and Holm-adjusted within outcome families where inferential intervals are used.
+No imputation model is fitted. H1 and H2 are separately registered directional claims and are not combined into one multiplicity family. Workflow and interaction intervals are exploratory descriptions with no inferential decision; no Holm adjustment is applied.
 
 ## Quality control
 
@@ -155,9 +155,9 @@ ESLint 9.39.3 scanned all 2,400 files in the full 800-case generator output with
 
 ## Ethics and responsible release
 
-Every program executes only in memory and has no network, shell, subprocess, file-system, package-install, credential, personal-data, persistence, destructive, dynamic-execution, or deployment capability. It models an abstract policy failure, not an exploit against a real target.
+Every generated case module executes only in memory. Fixed-corpus inspection, oracle execution, relative-import restrictions, and output audit found no external capability; the regex scanner is only defense in depth. The trusted generator and oracle harness use local files, a Node subprocess, and dynamic import to construct and verify cases. The benchmark models an abstract policy failure, not an exploit against a real target.
 
-Release artifacts receive AI-assisted dual-use review. Material judged to provide reusable operational evasion guidance is withheld or reduced to non-operational metadata, and every omission is documented. Raw product output is released only where provider terms permit.
+Release artifacts receive AI-assisted dual-use review. Neutral change titles remove plausible refactor cover stories, but the abstract three-step composition patterns retain dual-use value. The public release includes no real target, deployment path, credential, external capability, or complete exploit. Any further omission is documented, and raw product output is released only where provider terms permit.
 
 ## Limitations
 
@@ -168,16 +168,19 @@ Release artifacts receive AI-assisted dual-use review. Material judged to provid
 - Local current-boundary evidence intentionally withholds submission history, so the study does not estimate whether explicit cumulative history mitigates a decomposition penalty.
 - Product framing cannot reproduce organizational incentives, reviewer fatigue, rollback pressure, or the blast radius of a real main branch.
 - AI-assisted internal review is not independent human validation.
+- The two review products are a convenience sample determined by subscriptions already held by the author and do not represent other products or base models.
+- Inference is conditional on 40 purposively selected diagonal templates; five fixed templates per family make bootstrap intervals coarse.
+- One lexical instance per template does not estimate identifier-instance variability.
 
 ## Artifact freeze
 
-At the current candidate freeze:
+Current unfrozen candidate hashes are:
 
-- Scenario cards SHA-256: `2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b`.
-- Rendered prompts SHA-256: `f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08`.
+- Scenario cards SHA-256: `d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d`.
+- Rendered prompts SHA-256: `e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c`.
 - Randomized schedule SHA-256: `e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a`.
-- Blinded call ledger SHA-256: `9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27`.
-- Ground-truth ledger SHA-256: `f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb`.
+- Blinded call ledger SHA-256: `01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223`.
+- Ground-truth ledger SHA-256: `b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773`.
 
 Before OSF submission, replace “candidate freeze” with the final Git commit, archive the three AI-assisted internal reviews and resolution log, confirm the license and optional ORCID decision, and reproduce these hashes from a clean checkout. Any artifact change requires a new pre-outcome review before registration.
 

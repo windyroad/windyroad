@@ -27,10 +27,15 @@ export function renderCliPrompt(request) {
   return `SYSTEM:\n${request.messages[0].content}\n\nUSER:\n${request.messages[1].content}\n`;
 }
 
-export function buildSubscriptionCommand(systemId, schemaPath, cwd) {
+export function buildSubscriptionCommand(
+  systemId,
+  schemaPath,
+  cwd,
+  { codexBin = "codex", claudeBin = "claude" } = {},
+) {
   if (systemId === "codex-cli/gpt-5.5") {
     return {
-      command: "codex",
+      command: codexBin,
       args: [
         "exec", "--ephemeral", "--json", "--sandbox", "read-only",
         "--ignore-user-config", "--ignore-rules", "--skip-git-repo-check",
@@ -40,7 +45,7 @@ export function buildSubscriptionCommand(systemId, schemaPath, cwd) {
   }
   if (systemId === "claude-code/sonnet") {
     return {
-      command: "claude",
+      command: claudeBin,
       args: [
         "-p", "--output-format", "json", "--json-schema",
         JSON.stringify(JSON.parse(readFileSync(schemaPath, "utf8"))),

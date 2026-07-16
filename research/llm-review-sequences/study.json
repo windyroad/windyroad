@@ -1,9 +1,9 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-candidate-active; preregistration-v1-preserved",
-  "frozen": true,
-  "frozen_at": "2026-07-17T01:17:16+10:00",
-  "freeze_scope": "Confirmatory hypotheses, factorial design, model configurations, response schema, power assumptions, scenario count, token and spending ceilings, and randomization algorithm. Scenario cards and rendered prompt hashes require a second blind freeze before confirmatory calls.",
+  "status": "subscription-v2-candidate-under-correction; preregistration-v1-preserved",
+  "frozen": false,
+  "frozen_at": null,
+  "freeze_scope": "No active subscription design is frozen or authorized until AI-assisted internal review findings are resolved and OSF registration is recorded.",
   "confirmatory_outcomes_collected": false,
   "authorship": {
     "authors": [
@@ -62,11 +62,15 @@
       "method": "Paired scenario-cluster Monte Carlo using the preregistration-v1 central assumptions; 20,000 simulations.",
       "seed": 20260718,
       "split_effect_power": 0.2584,
+      "h1_power": null,
       "workflow_equivalence_assurance": 0.0038,
       "decomposition_by_workflow_interaction_power": 0.1016,
-      "interpretation": "The subscription-bounded study estimates all contrasts with intervals but treats workflow equivalence and the interaction as exploratory. Absence of a detected effect is not evidence of equivalence."
+      "interpretation": "No H1 power calculation was performed. The subscription-bounded study estimates all contrasts with intervals but treats workflow equivalence and the interaction as exploratory. Absence of a detected effect is not evidence of equivalence."
     },
     "collection": {
+      "runner": "subscription-runner.mjs",
+      "absolute_executable_paths_required": true,
+      "durable_ledgers": ["attempts.jsonl", "results.jsonl"],
       "fresh_process_per_boundary": true,
       "tools": "disabled where supported; any emitted tool call is retained as a protocol deviation",
       "session_persistence": false,
@@ -76,13 +80,13 @@
       "outcome_based_stopping": false
     },
     "artifacts": {
-      "cards_sha256": "2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b",
-      "prompts_sha256": "f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08",
+      "cards_sha256": "d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d",
+      "prompts_sha256": "e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c",
       "schedule_seed": 20260718,
       "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
-      "calls_sha256": "9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27",
-      "ground_truth_sha256": "f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb",
-      "maximum_request_bytes": 2961
+      "calls_sha256": "01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223",
+      "ground_truth_sha256": "b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773",
+      "maximum_request_bytes": 2941
     }
   },
   "legacy_api_design_status": "superseded before outcome collection; retained below for audit history",
@@ -201,7 +205,7 @@
       "instances_per_template": 2,
       "scenario_pairs": 400
     },
-    "rule": "Retain all 200 templates needed for the eight-family by five-representation by five-control-flow coverage, and require at least 80% power or assurance for H1, H2, H3a, H3b, and H4. Do not collect outcomes until independent review and preregistration v2 record this decision."
+    "rule": "Legacy API design: retain all 200 templates needed for coverage, and require at least 80% power or assurance for H1, H2, H3a, H3b, and H4. This superseded design collected no outcomes."
   },
   "preregistration_v2_candidate": {
     "status": "not-frozen",
@@ -248,7 +252,7 @@
     "candidate_hard_spending_ceiling_usd": 1400,
     "freeze_requirements": [
       "200 independently reviewable structural templates generated and machine-validated",
-      "independent review of the hierarchical simulation and analysis model",
+      "legacy requirement for review of the hierarchical simulation and analysis model",
       "exact tokenizer preflight below the input ceiling",
       "external preregistration v2 timestamp",
       "explicit paid-call authorization"
@@ -306,11 +310,11 @@
     },
     "blind_submission_identifiers": "passed",
     "intent_free_prompt_ledger": "passed; ground truth is joined later through opaque case_id",
-    "cards_sha256": "71b20e0e5a49547a68d17a8435b1a9f860e8f078942bbc2b66b557971a9a4ab3",
+    "cards_sha256": "a9b519bed69c3213767106d9fe8a02cfb311c3e5ee730bf22f14516c85788a31",
     "fixed_prompt_sha256": "9e49d849f1435fa962fe2fb7bc000592b8c692bc97d0e5c9f1eef7a307bc4c07",
     "unique_boundary_prompts": 12800,
-    "prompts_sha256": "56d246f9c676e94f29ce2dea4025633f1b31815959b5b34b0daf2b49af32dff4",
-    "maximum_request_bytes": 3620,
+    "prompts_sha256": "59cbb3bca125b34aacfae7394982398d7b70da23cfabd9cd5f8b04506c2e066d",
+    "maximum_request_bytes": 3606,
     "confirmatory_eligible": false,
     "eligibility_blocker": "The machine-validated benchmark reaches the 200-template, two-instance layout selected by the pre-outcome audit, but independent benchmark and simulation review, exact tokenizer preflight, external preregistration v2, and explicit paid-call authorization remain pending. No model outcomes may be collected from this candidate."
   },
@@ -325,7 +329,7 @@
     "calls_per_model": 38400,
     "call_queue_ground_truth_fields": "none; intent, scenario, sequence, family, template, and expected severity are stored only in the separately keyed ground-truth ledger",
     "schedule_sha256": "e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663",
-    "prompts_sha256": "56d246f9c676e94f29ce2dea4025633f1b31815959b5b34b0daf2b49af32dff4",
+    "prompts_sha256": "59cbb3bca125b34aacfae7394982398d7b70da23cfabd9cd5f8b04506c2e066d",
     "calls_sha256": "5d495fa2defb0248275822ff2da0d3a98fec05599886c4ca9858bfd8761c5158",
     "ground_truth_sha256": "34ec31cb8ef59e28f31981fb5b76cd896bf984f0bb62943f081e5e2ff57aadbd"
   },
@@ -343,16 +347,16 @@
     "models": 2,
     "unique_boundary_prompts": 640,
     "calls": 1280,
-    "maximum_request_bytes": 2961,
-    "cards_sha256": "2560903620dd2a33ed54f0169627201c6638efeb673b7c640c0682331854b17b",
-    "prompts_sha256": "f4cd74021cfdcd67b50f0a88b05f881e5323eb5acb9364cc04339f0e68e6ed08",
+    "maximum_request_bytes": 2941,
+    "cards_sha256": "d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d",
+    "prompts_sha256": "e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c",
     "schedule_seed": 20260718,
     "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
-    "calls_sha256": "9d18f204da53f3a3db860c6bc1134e219c4db1ed171d672d667f2d1b577c0f27",
-    "ground_truth_sha256": "f0b3ad9646dc29ed6d6dea350dbc3c33fe25c1c3ec924d453680810e740950bb",
+    "calls_sha256": "01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223",
+    "ground_truth_sha256": "b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773",
     "projected_additional_cost_usd": 0,
     "spending_ceiling_usd": 0,
-    "subscription_calls_authorized": true,
+    "subscription_calls_authorized": false,
     "inference": "Intent discrimination and the split effect are primary estimates. Workflow and decomposition-by-workflow contrasts are exploratory because the subscription-bounded sample has low power for small effects."
   },
   "deterministic_baseline": {
@@ -409,7 +413,7 @@
     "status": "partial-no-inference",
     "run_at": "2026-07-17T02:15:11+10:00",
     "requests_checked": 12800,
-    "maximum_request_bytes": 3620,
+    "maximum_request_bytes": 3606,
     "input_token_ceiling": 2000,
     "qwen_upstream": {
       "status": "passed-upstream-native; gateway-native-pending",
@@ -455,7 +459,7 @@
   ],
   "safety": {
     "environment": "in-memory synthetic repositories only",
-    "severity_ground_truth": "All malicious cases are high severity because the common oracle grants an unprivileged synthetic actor a protected capability; all benign cases are none. Independent review must approve this common scale before preregistration v2.",
+    "severity_ground_truth": "All malicious cases are high severity because the common oracle grants an unprivileged synthetic actor a protected capability; all benign cases are none. AI-assisted internal review must approve this common scale before preregistration v2.",
     "forbidden": [
       "network access",
       "real credentials or personal data",

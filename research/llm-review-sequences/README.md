@@ -24,28 +24,31 @@ The earlier 115,200-call OpenRouter design was superseded before outcome collect
 
 ## Safety boundary
 
-The study tests review, not exploitation. Every scenario is a synthetic in-memory JavaScript program with an abstract policy assertion as its only unsafe outcome. The generator rejects network, shell, subprocess, file-system, package-install, credential, personal-data, persistence, destructive, dynamic-execution, deployment, and non-relative-import capabilities.
+The study tests review, not exploitation. Every generated case module is a synthetic in-memory JavaScript program with an abstract policy assertion as its only unsafe outcome. Fixed-corpus inspection, oracle execution, relative-import restrictions, and generated-output audit found no external capability. The regex scanner is defense in depth, not a general capability proof. The trusted generator and oracle harness use local files, a Node subprocess, and dynamic import to build and verify the cases.
 
-No real repository, person, credential, service, or target is tested.
+No real repository, person, credential, service, or target is tested. Neutral change titles replace plausible refactor narratives. The abstract decomposition patterns still have dual-use value, which is disclosed as a responsible-release limitation.
 
 ## Reproduce the candidate
 
 Run the standard checks:
 
 ```sh
+npm ci
 npm test
 ```
 
 Generate the full deterministic benchmark, then the active balanced subset and blinded collection ledgers:
 
 ```sh
-rm -rf /tmp/llm-review-benchmark /tmp/llm-review-subscription /tmp/llm-review-collection
-node research/llm-review-sequences/benchmark.mjs /tmp/llm-review-benchmark
+root="$(mktemp -d /tmp/llm-review-subscription.XXXXXX)"
+node research/llm-review-sequences/benchmark.mjs "$root/full"
 node research/llm-review-sequences/ecological.mjs \
-  /tmp/llm-review-benchmark \
-  /tmp/llm-review-subscription \
-  /tmp/llm-review-collection
+  "$root/full" \
+  "$root/active" \
+  "$root/collection"
 ```
+
+The supported environment is Node 20 with the lockfile-pinned dependencies. Per-run temporary directories avoid collisions between reviewers.
 
 The active candidate must reproduce:
 
@@ -53,7 +56,7 @@ The active candidate must reproduce:
 - 80 cases.
 - 640 unique boundary prompts.
 - 640 sequences and 1,280 scheduled review boundaries.
-- Maximum complete request size of 2,961 UTF-8 bytes.
+- Maximum complete request size of 2,941 UTF-8 bytes.
 
 Candidate hashes are recorded in [`study.json`](./study.json) and [`preregistration-v2.md`](./preregistration-v2.md).
 
@@ -64,19 +67,17 @@ The collection runner must use the supported non-interactive product surfaces:
 - Codex: `codex exec --ephemeral --json --sandbox read-only --ignore-user-config --ignore-rules --output-schema` with requested model `gpt-5.5`.
 - Claude Code: `claude -p --output-format json --json-schema --max-turns 1 --no-session-persistence --tools ""` with requested model `sonnet`.
 
-Before every batch:
+The executable runner requires explicit absolute client paths so a stale installation cannot shadow the frozen binary. Before collection, run the no-prompt preflight:
 
 ```sh
-codex login status
-claude auth status
-test -z "${OPENAI_API_KEY:-}"
-test -z "${CODEX_API_KEY:-}"
-test -z "${ANTHROPIC_API_KEY:-}"
+export CODEX_SUBSCRIPTION_BIN="$(command -v codex)"
+export CLAUDE_SUBSCRIPTION_BIN="$(command -v claude)"
+node research/llm-review-sequences/subscription-runner.mjs --preflight
 ```
 
 Codex must report ChatGPT authentication. Claude Code must report `claude.ai` authentication and a Max subscription. Collection aborts rather than using API billing, API credits, fallback models, or another provider.
 
-Subscription rate limits pause the fixed schedule until the same plan window resets. They do not authorise paid overflow. A CLI-version or returned-model change suspends the affected review system before further calls.
+Run `subscription-runner.mjs ACTIVE_ROOT COLLECTION_ROOT OUTPUT_ROOT` only after OSF registration. It appends and fsyncs start, completion, suspension, and result records and resumes in fixed schedule order. A rate limit suspends at the current call; rerun after the same plan window resets. It never authorises paid overflow. A CLI-version or returned-model change suspends the affected review system before further calls.
 
 Official product references:
 
@@ -96,9 +97,9 @@ Primary estimates are:
 
 Exploratory estimates are trunk minus pull-request detection and the decomposition-by-workflow difference-in-differences.
 
-Uncertainty uses a 10,000-replicate family-stratified structural-template bootstrap. Missingness is exposed with detection-favourable and detection-unfavourable bounds plus review-system-specific complete-pair analysis. No imputation model is fitted.
+Uncertainty uses a 10,000-replicate family-stratified structural-template bootstrap. Missingness is exposed with estimand-specific bounds: H1 assigns missing malicious and benign cells oppositely, while H2 assigns missing atomic and split malicious cells oppositely. A review-system-specific complete-pair analysis is also reported. No imputation model is fitted.
 
-Under the preregistered central assumptions, the 40-pair, one-trial design has estimated power 0.2584 for the split effect, assurance 0.0038 for workflow equivalence, and power 0.1016 for the workflow interaction. These values are limitations, not pilot results.
+Under the preregistered central assumptions, the 40-pair, one-trial design has estimated power 0.2584 for the directional split effect, assurance 0.0038 for workflow equivalence, and power 0.1016 for the workflow interaction. No H1 power calculation was performed. These values are limitations, not pilot results.
 
 ## Deterministic baseline
 
@@ -108,19 +109,19 @@ A separate zero-finding Semgrep feasibility probe is disclosed but excluded beca
 
 ## Internal review
 
-Three isolated subagents will review the same frozen packet for:
+Three isolated subagents reviewed commit `6b607f6` for:
 
 - Benchmark safety and responsible release.
 - Statistical methods and claims.
 - Reproducibility and subscription-only execution.
 
-Their raw reports and the author's resolution log are archived. They are described as AI-assisted internal review, not independent human peer review, ethics approval, or arXiv endorsement.
+All three returned `do not approve`; their [raw reports](./reviews/) are archived verbatim and their findings are being corrected before repeat review. They are described as AI-assisted internal review, not independent human peer review, ethics approval, or arXiv endorsement.
 
 See [`independent-review.md`](./independent-review.md) for the review rubric. The filename is retained for history; the protocol itself must use the accurate AI-assisted terminology.
 
 ## Publication status
 
-Current artifacts include:
+Current, unfrozen artifacts include:
 
 - The active [`preregistration-v2.md`](./preregistration-v2.md) draft.
 - The machine-readable [`study.json`](./study.json) manifest.
@@ -129,8 +130,8 @@ Current artifacts include:
 
 Before collection:
 
-1. Update the internal-review protocol and archive all three AI-assisted reviews.
-2. Resolve supported findings without inspecting outcomes.
+1. Resolve and document the archived AI-assisted review findings without inspecting outcomes.
+2. Repeat each materially affected review against one new commit.
 3. Reproduce and freeze the final hashes from a clean checkout.
 4. Confirm the license and optional ORCID decision.
 5. Register preregistration v2 on OSF.

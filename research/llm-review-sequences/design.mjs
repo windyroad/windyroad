@@ -320,7 +320,7 @@ function simulateCandidate(scenarioPairs, config) {
       interaction.push((trunkSplit - trunkAtomic) - (prSplit - prAtomic));
     }
 
-    if (effectDetected(primary, 1.96)) primaryDetections += 1;
+    if (directionDetected(primary, -1, 1.96)) primaryDetections += 1;
     if (equivalent(workflow, config.equivalenceMargin, 1.645)) workflowEquivalences += 1;
     if (effectDetected(interaction, 1.96)) interactionDetections += 1;
   }

@@ -17,6 +17,7 @@ The frozen packet contains:
 - [`collection.mjs`](./collection.mjs)
 - [`design.mjs`](./design.mjs)
 - [`subscription.mjs`](./subscription.mjs)
+- [`subscription-runner.mjs`](./subscription-runner.mjs)
 - [`review-schema.json`](./review-schema.json)
 - [`analyse.mjs`](./analyse.mjs)
 - All directly associated tests
@@ -24,13 +25,17 @@ The frozen packet contains:
 Run from a clean checkout:
 
 ```sh
+npm ci
 npm test
-rm -rf /tmp/llm-review-benchmark /tmp/llm-review-subscription /tmp/llm-review-collection
-node research/llm-review-sequences/benchmark.mjs /tmp/llm-review-benchmark
+EXHAUSTIVE_BENCHMARK=1 npx vitest run \
+  research/llm-review-sequences/benchmark.test.mjs \
+  research/llm-review-sequences/ecological.test.mjs
+root="$(mktemp -d /tmp/llm-review-subscription.XXXXXX)"
+node research/llm-review-sequences/benchmark.mjs "$root/full"
 node research/llm-review-sequences/ecological.mjs \
-  /tmp/llm-review-benchmark \
-  /tmp/llm-review-subscription \
-  /tmp/llm-review-collection
+  "$root/full" \
+  "$root/active" \
+  "$root/collection"
 ```
 
 Stop if the generated counts or SHA-256 values differ from [`study.json`](./study.json). Do not invoke Codex or Claude Code on a benchmark prompt.

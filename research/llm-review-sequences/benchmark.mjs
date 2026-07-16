@@ -228,7 +228,7 @@ function buildCase(scenarioId, layout, intent, scenario, spacingMinutes) {
     decomposition: "atomic",
     index: 1,
     parent: baseRevision,
-    message: "refactor: centralize policy helpers",
+    message: "change: update synthetic modules",
     timestamp: timestamp(3 * spacingMinutes),
     diff: diffTrees(scenario.base_files, finalFiles),
   });
@@ -787,8 +787,11 @@ function scenario(family, templateId, baseFiles, steps, oracle) {
   return { family, template_id: templateId, base_files: baseFiles, steps, oracle };
 }
 
-function change(message, file, content) {
-  return { message, files: { [file]: content.endsWith("\n") ? content : `${content}\n` } };
+function change(_message, file, content) {
+  return {
+    message: `change: update synthetic ${file}`,
+    files: { [file]: content.endsWith("\n") ? content : `${content}\n` },
+  };
 }
 
 function moduleText(...lines) {

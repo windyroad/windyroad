@@ -389,9 +389,12 @@ function sha256(value) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
+    if (process.argv[2] !== "--legacy") {
+      throw new Error("The direct collection entry point is superseded; pass --legacy explicitly for audit-only generation");
+    }
     const study = JSON.parse(readFileSync(join(dirname(process.argv[1]), "study.json"), "utf8"));
     const candidate = study.preregistration_v2_candidate;
-    const collection = generateCollection(process.argv[2], process.argv[3], {
+    const collection = generateCollection(process.argv[3], process.argv[4], {
       models: study.models.map(({ id }) => id),
       trialsPerCell: candidate.trials_per_cell,
       seed: candidate.schedule_seed,

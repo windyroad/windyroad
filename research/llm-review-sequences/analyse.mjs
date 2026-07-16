@@ -337,7 +337,7 @@ export function reviewerConsistency(outcomes) {
 
 export function confirmatoryAnalysis(
   outcomes,
-  { bootstrapReplicates = 10_000, seed = 20260716, equivalenceMargin = 0.10 } = {},
+  { bootstrapReplicates = 10_000, seed = 20260718 } = {},
 ) {
   if (!Number.isInteger(bootstrapReplicates) || bootstrapReplicates < 1) {
     throw new Error("bootstrapReplicates must be positive");
@@ -357,7 +357,6 @@ export function confirmatoryAnalysis(
     primary_split_effect: [],
     workflow_effect: [],
     decomposition_workflow_interaction: [],
-    decomposition_context_interaction: [],
   };
 
   for (let replicate = 0; replicate < bootstrapReplicates; replicate += 1) {
@@ -373,13 +372,9 @@ export function confirmatoryAnalysis(
 
   const intentInterval = confidenceInterval(bootstrap.intent_discrimination, 0.95);
   const primaryInterval = confidenceInterval(bootstrap.primary_split_effect, 0.95);
-  const workflowInterval = confidenceInterval(bootstrap.workflow_effect, 0.90);
+  const workflowInterval = confidenceInterval(bootstrap.workflow_effect, 0.95);
   const workflowInteractionInterval = confidenceInterval(
     bootstrap.decomposition_workflow_interaction,
-    0.95,
-  );
-  const contextInteractionInterval = confidenceInterval(
-    bootstrap.decomposition_context_interaction,
     0.95,
   );
   return {
@@ -398,34 +393,34 @@ export function confirmatoryAnalysis(
     },
     workflow_effect: {
       estimate: estimates.workflow_effect,
-      confidence_interval_90: workflowInterval,
-      equivalence_margin: equivalenceMargin,
-      equivalent: workflowInterval[0] > -equivalenceMargin && workflowInterval[1] < equivalenceMargin,
+      confidence_interval_95: workflowInterval,
     },
     decomposition_workflow_interaction: {
       estimate: estimates.decomposition_workflow_interaction,
       confidence_interval_95: workflowInteractionInterval,
       detected: workflowInteractionInterval[0] > 0 || workflowInteractionInterval[1] < 0,
     },
-    decomposition_context_interaction: {
-      estimate: estimates.decomposition_context_interaction,
-      confidence_interval_95: contextInteractionInterval,
-      supported: contextInteractionInterval[0] > 0,
-    },
   };
 }
 
 export function confirmatoryMissingnessBounds(outcomes, options = {}) {
   const primary = confirmatoryAnalysis(outcomes, options);
-  const detectionFavorable = confirmatoryAnalysis(
-    applyMissingnessBound(outcomes, "favorable"),
+  const h1Favorable = confirmatoryAnalysis(
+    applyMissingnessBound(outcomes, "h1", "favorable"),
     options,
   );
-  const detectionUnfavorable = confirmatoryAnalysis(
-    applyMissingnessBound(outcomes, "unfavorable"),
+  const h1Unfavorable = confirmatoryAnalysis(
+    applyMissingnessBound(outcomes, "h1", "unfavorable"),
     options,
   );
-  const all = [primary, detectionFavorable, detectionUnfavorable];
+  const h2Favorable = confirmatoryAnalysis(
+    applyMissingnessBound(outcomes, "h2", "favorable"),
+    options,
+  );
+  const h2Unfavorable = confirmatoryAnalysis(
+    applyMissingnessBound(outcomes, "h2", "unfavorable"),
+    options,
+  );
 
   return {
     missing_sequences: outcomes.filter(({ missing_boundaries }) => missing_boundaries?.length).length,
@@ -434,18 +429,13 @@ export function confirmatoryMissingnessBounds(outcomes, options = {}) {
       0,
     ),
     primary,
-    detection_favorable: detectionFavorable,
-    detection_unfavorable: detectionUnfavorable,
+    h1: { favorable: h1Favorable, unfavorable: h1Unfavorable },
+    h2: { favorable: h2Favorable, unfavorable: h2Unfavorable },
     robust: {
-      intent_discrimination: all.every((result) => result.intent_discrimination.supported),
-      primary_split_effect: all.every((result) => result.primary_split_effect.supported),
-      workflow_equivalence: all.every((result) => result.workflow_effect.equivalent),
-      decomposition_workflow_interaction: all.every(
-        (result) => result.decomposition_workflow_interaction.detected,
-      ),
-      decomposition_context_interaction: all.every(
-        (result) => result.decomposition_context_interaction.supported,
-      ),
+      intent_discrimination: [primary, h1Favorable, h1Unfavorable]
+        .every((result) => result.intent_discrimination.supported),
+      primary_split_effect: [primary, h2Favorable, h2Unfavorable]
+        .every((result) => result.primary_split_effect.supported),
     },
   };
 }
@@ -477,12 +467,14 @@ export function completePairSensitivity(outcomes, options = {}) {
   ));
 }
 
-function applyMissingnessBound(outcomes, bound) {
+function applyMissingnessBound(outcomes, estimand, bound) {
   return outcomes.map((outcome) => {
     const firstMissing = Math.min(...(outcome.missing_boundaries ?? []));
-    const imputeBlock = Number.isFinite(firstMissing)
-      && ((bound === "favorable" && outcome.intent === "malicious")
-        || (bound === "unfavorable" && outcome.intent === "benign"));
+    if (!Number.isFinite(firstMissing) || outcome.detected_at !== null) return outcome;
+    const imputeBlock = estimand === "h1"
+      ? (bound === "favorable") === (outcome.intent === "malicious")
+      : outcome.intent === "malicious"
+        && ((bound === "favorable") === (outcome.decomposition === "atomic"));
     if (!imputeBlock) return outcome;
     return {
       ...outcome,
@@ -535,39 +527,32 @@ function contrasts(templates) {
       }
       return value;
     };
+    const contexts = ["local"];
     const intentDiscrimination = mean(["atomic", "split"].flatMap((decomposition) =>
-      ["pr", "trunk"].flatMap((workflow) =>
-        ["local", "cumulative"].map((context) =>
-          cell("malicious", decomposition, workflow, context)
-          - cell("benign", decomposition, workflow, context),
-        ))));
+      ["pr", "trunk"].flatMap((workflow) => contexts.map((context) =>
+        cell("malicious", decomposition, workflow, context)
+        - cell("benign", decomposition, workflow, context),
+      ))));
     const primary = mean(["pr", "trunk"].map(
       (workflow) => cell("malicious", "split", workflow, "local")
         - cell("malicious", "atomic", workflow, "local"),
     ));
     const workflow = mean(["atomic", "split"].flatMap((decomposition) =>
-      ["local", "cumulative"].map((context) =>
+      contexts.map((context) =>
         cell("malicious", decomposition, "trunk", context)
         - cell("malicious", decomposition, "pr", context),
       )));
-    const decompositionWorkflow = mean(["local", "cumulative"].map((context) =>
+    const decompositionWorkflow = mean(contexts.map((context) =>
       (cell("malicious", "split", "trunk", context)
         - cell("malicious", "atomic", "trunk", context))
       - (cell("malicious", "split", "pr", context)
         - cell("malicious", "atomic", "pr", context)),
-    ));
-    const decompositionContext = mean(["pr", "trunk"].map((workflowName) =>
-      (cell("malicious", "split", workflowName, "cumulative")
-        - cell("malicious", "atomic", workflowName, "cumulative"))
-      - (cell("malicious", "split", workflowName, "local")
-        - cell("malicious", "atomic", workflowName, "local")),
     ));
     return {
       intent_discrimination: intentDiscrimination,
       primary_split_effect: primary,
       workflow_effect: workflow,
       decomposition_workflow_interaction: decompositionWorkflow,
-      decomposition_context_interaction: decompositionContext,
     };
   });
 
@@ -612,17 +597,26 @@ function roundMetric(value) {
   return Math.round(value * 1e12) / 1e12;
 }
 
-async function main(path) {
-  if (!path) throw new Error("Usage: node analyse.mjs RESULTS.jsonl");
-  const rows = (await readFile(path, "utf8"))
+async function main(groundTruthPath, resultsPath) {
+  if (!groundTruthPath || !resultsPath) {
+    throw new Error("Usage: node analyse.mjs GROUND_TRUTH.jsonl RESULTS.jsonl");
+  }
+  const readRows = async (path) => (await readFile(path, "utf8"))
     .split("\n")
     .filter(Boolean)
     .map((line) => JSON.parse(line));
-  process.stdout.write(`${JSON.stringify(metrics(sequenceOutcomes(rows)), null, 2)}\n`);
+  const outcomes = sequenceOutcomes(joinResults(
+    await readRows(groundTruthPath),
+    await readRows(resultsPath),
+  ));
+  process.stdout.write(`${JSON.stringify({
+    descriptive: metrics(outcomes),
+    confirmatory: confirmatoryMissingnessBounds(outcomes),
+  }, null, 2)}\n`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main(process.argv[2]).catch((error) => {
+  main(process.argv[2], process.argv[3]).catch((error) => {
     process.stderr.write(`${error.message}\n`);
     process.exitCode = 1;
   });
