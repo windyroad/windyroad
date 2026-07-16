@@ -22,11 +22,12 @@ node research/llm-review-sequences/benchmark.mjs /tmp/llm-review-benchmark-revie
 node research/llm-review-sequences/collection.mjs \
   /tmp/llm-review-benchmark-review /tmp/llm-review-collection-review
 EXHAUSTIVE_BENCHMARK=1 npx vitest run research/llm-review-sequences/benchmark.test.mjs
+EXHAUSTIVE_POWER=1 npx vitest run research/llm-review-sequences/design.test.mjs
 ```
 
 Compare the generated counts and SHA-256 values with [`study.json`](./study.json). Stop the review if they differ. The generated benchmark directory must contain 400 scenario pairs, 800 cases, 200 template identifiers, 12,800 blinded requests, and no retained `.counterfactuals` directory. The collection directory must contain 115,200 blinded call rows and 115,200 separately keyed ground-truth rows. Confirm that no call row contains intent, scenario, sequence, family, template, or expected-severity fields.
 
-The reviewers receive the study manifest, generator source, generated cards and prompts, power-analysis source and output, fixed prompt, analysis plan, and this protocol. They do not receive confirmatory responses, outcome summaries, or model-specific performance observations.
+The reviewers receive the study manifest, generator source, generated cards and prompts, power-analysis source and output, fixed prompt, [`preregistration-v2.md`](./preregistration-v2.md), analysis plan, and this protocol. They do not receive confirmatory responses, outcome summaries, or model-specific performance observations.
 
 ## Benchmark and safety review
 
@@ -55,10 +56,11 @@ Any safety failure is a stop condition. Revisions are permitted only before prer
 The methods reviewer must independently rerun [`design.mjs`](./design.mjs) and inspect [`analyse.mjs`](./analyse.mjs). Record `pass`, `revise`, or `reject` for:
 
 - Treating structural templates, rather than calls or identifier instances, as the generalization unit.
-- The template random intercept and template-specific split and workflow-interaction slopes used by the power simulation.
-- The 20,000-replication simulation, frozen seed, and selected 200-template by two-instance layout.
+- The template random intercept and template-specific split, workflow-interaction, and context-interaction slopes used by the power simulation.
+- The 20,000-replication simulation, frozen seed, 200-template structural-coverage floor, and selected two-instance layout.
 - Equal weighting of structural templates after balanced within-template aggregation.
 - The family-stratified 10,000-replicate template bootstrap and frozen seed.
+- The paired malicious-minus-benign discrimination estimand and 95% interval.
 - The primary local-context split-minus-atomic risk difference and 95% interval.
 - The marginal trunk-minus-pull-request risk difference, 90% interval, and equivalence margin.
 - The decomposition-by-workflow and decomposition-by-context difference-in-differences and 95% intervals.
@@ -67,7 +69,7 @@ The methods reviewer must independently rerun [`design.mjs`](./design.mjs) and i
 - The randomized schedule hash, balanced call counts, and spending stop.
 - The claim that the v2 amendment predates all confirmatory outcomes.
 
-The reviewer should rerun reasonable sensitivity cases for the three template-level variance assumptions. A sensitivity failure does not automatically reject the study, but it must be recorded and reflected in the confirmatory claim or sample-size decision before the second freeze.
+The reviewer should rerun reasonable sensitivity cases for the template intercept, split-slope, workflow-interaction-slope, and context-interaction-slope assumptions. A sensitivity failure does not automatically reject the study, but it must be recorded and reflected in the confirmatory claim or sample-size decision before the second freeze.
 
 ## Token and routing review
 
@@ -85,3 +87,40 @@ Each reviewer supplies a dated, signed record containing:
 - Final decision: `approve`, `approve with documented limitations`, or `do not approve`.
 
 The records and any amendments become part of the reproducibility package. Preregistration v2 may be frozen only after both review tracks approve, exact token preflight passes, all hashes are regenerated, and the external registration timestamp is recorded.
+
+## Review record template
+
+Copy this section into one record per reviewer. Do not combine the two required roles into a self-review by an author of the approved component.
+
+### Reviewer identity and scope
+
+- Name or stable pseudonym:
+- Date:
+- Relevant expertise:
+- Role: benchmark and safety, or methods
+- Conflicts:
+- Freeze commit:
+- Confirmatory-outcome access: none, or explain
+
+### Reproduction evidence
+
+- `npm test` result:
+- Exhaustive benchmark result:
+- Scenario-card SHA-256:
+- Rendered-prompt SHA-256:
+- Schedule SHA-256:
+- Call-ledger SHA-256:
+- Ground-truth-ledger SHA-256:
+- Native token-count evidence reviewed:
+
+### Decisions
+
+Record `pass`, `revise`, `exclude`, or `not applicable` against every item in the relevant review section above. Attach the completed 200-template record for benchmark review or the method-level decisions and power sensitivities for methods review.
+
+### Revisions and final decision
+
+- Requested revisions:
+- Resolution verified:
+- Limitations that must appear in the paper:
+- Final decision: approve, approve with documented limitations, or do not approve
+- Signature or stable verification method:

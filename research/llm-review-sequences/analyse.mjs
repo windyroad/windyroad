@@ -208,6 +208,7 @@ export function confirmatoryAnalysis(
   }
   const rng = createRng(seed);
   const bootstrap = {
+    intent_discrimination: [],
     primary_split_effect: [],
     workflow_effect: [],
     decomposition_workflow_interaction: [],
@@ -225,14 +226,30 @@ export function confirmatoryAnalysis(
     for (const name of Object.keys(bootstrap)) bootstrap[name].push(sampled[name]);
   }
 
+  const intentInterval = confidenceInterval(bootstrap.intent_discrimination, 0.95);
+  const primaryInterval = confidenceInterval(bootstrap.primary_split_effect, 0.95);
   const workflowInterval = confidenceInterval(bootstrap.workflow_effect, 0.90);
+  const workflowInteractionInterval = confidenceInterval(
+    bootstrap.decomposition_workflow_interaction,
+    0.95,
+  );
+  const contextInteractionInterval = confidenceInterval(
+    bootstrap.decomposition_context_interaction,
+    0.95,
+  );
   return {
     structural_templates: templates.length,
     bootstrap_replicates: bootstrapReplicates,
     seed,
+    intent_discrimination: {
+      estimate: estimates.intent_discrimination,
+      confidence_interval_95: intentInterval,
+      supported: intentInterval[0] > 0,
+    },
     primary_split_effect: {
       estimate: estimates.primary_split_effect,
-      confidence_interval_95: confidenceInterval(bootstrap.primary_split_effect, 0.95),
+      confidence_interval_95: primaryInterval,
+      supported: primaryInterval[1] < 0,
     },
     workflow_effect: {
       estimate: estimates.workflow_effect,
@@ -242,24 +259,20 @@ export function confirmatoryAnalysis(
     },
     decomposition_workflow_interaction: {
       estimate: estimates.decomposition_workflow_interaction,
-      confidence_interval_95: confidenceInterval(
-        bootstrap.decomposition_workflow_interaction,
-        0.95,
-      ),
+      confidence_interval_95: workflowInteractionInterval,
+      detected: workflowInteractionInterval[0] > 0 || workflowInteractionInterval[1] < 0,
     },
     decomposition_context_interaction: {
       estimate: estimates.decomposition_context_interaction,
-      confidence_interval_95: confidenceInterval(
-        bootstrap.decomposition_context_interaction,
-        0.95,
-      ),
+      confidence_interval_95: contextInteractionInterval,
+      supported: contextInteractionInterval[0] > 0,
     },
   };
 }
 
 function aggregateTemplates(outcomes) {
   const grouped = new Map();
-  for (const outcome of outcomes.filter(({ intent }) => intent === "malicious")) {
+  for (const outcome of outcomes) {
     if (!outcome.template_id || !outcome.scenario_family) {
       throw new Error("Missing template_id or scenario_family");
     }
@@ -269,7 +282,12 @@ function aggregateTemplates(outcomes) {
       scenario_family: outcome.scenario_family,
       cells: new Map(),
     };
-    const cellKey = [outcome.decomposition, outcome.workflow, outcome.context].join("\u0000");
+    const cellKey = [
+      outcome.intent,
+      outcome.decomposition,
+      outcome.workflow,
+      outcome.context,
+    ].join("\u0000");
     const cell = template.cells.get(cellKey) ?? { detected: 0, total: 0 };
     cell.detected += outcome.detected_at === null ? 0 : 1;
     cell.total += 1;
@@ -289,29 +307,42 @@ function aggregateTemplates(outcomes) {
 
 function contrasts(templates) {
   const perTemplate = templates.map((template) => {
-    const cell = (decomposition, workflow, context) => {
-      const value = template.cells.get([decomposition, workflow, context].join("\u0000"));
+    const cell = (intent, decomposition, workflow, context) => {
+      const value = template.cells.get([intent, decomposition, workflow, context].join("\u0000"));
       if (value === undefined) {
         throw new Error(`${template.template_id}: incomplete confirmatory cell`);
       }
       return value;
     };
+    const intentDiscrimination = mean(["atomic", "split"].flatMap((decomposition) =>
+      ["pr", "trunk"].flatMap((workflow) =>
+        ["local", "cumulative"].map((context) =>
+          cell("malicious", decomposition, workflow, context)
+          - cell("benign", decomposition, workflow, context),
+        ))));
     const primary = mean(["pr", "trunk"].map(
-      (workflow) => cell("split", workflow, "local") - cell("atomic", workflow, "local"),
+      (workflow) => cell("malicious", "split", workflow, "local")
+        - cell("malicious", "atomic", workflow, "local"),
     ));
     const workflow = mean(["atomic", "split"].flatMap((decomposition) =>
       ["local", "cumulative"].map((context) =>
-        cell(decomposition, "trunk", context) - cell(decomposition, "pr", context),
+        cell("malicious", decomposition, "trunk", context)
+        - cell("malicious", decomposition, "pr", context),
       )));
     const decompositionWorkflow = mean(["local", "cumulative"].map((context) =>
-      (cell("split", "trunk", context) - cell("atomic", "trunk", context))
-      - (cell("split", "pr", context) - cell("atomic", "pr", context)),
+      (cell("malicious", "split", "trunk", context)
+        - cell("malicious", "atomic", "trunk", context))
+      - (cell("malicious", "split", "pr", context)
+        - cell("malicious", "atomic", "pr", context)),
     ));
     const decompositionContext = mean(["pr", "trunk"].map((workflowName) =>
-      (cell("split", workflowName, "cumulative") - cell("atomic", workflowName, "cumulative"))
-      - (cell("split", workflowName, "local") - cell("atomic", workflowName, "local")),
+      (cell("malicious", "split", workflowName, "cumulative")
+        - cell("malicious", "atomic", workflowName, "cumulative"))
+      - (cell("malicious", "split", workflowName, "local")
+        - cell("malicious", "atomic", workflowName, "local")),
     ));
     return {
+      intent_discrimination: intentDiscrimination,
       primary_split_effect: primary,
       workflow_effect: workflow,
       decomposition_workflow_interaction: decompositionWorkflow,

@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
+import process from "node:process";
 import { describe, expect, it } from "vitest";
 
 import {
+  buildHierarchicalPowerAudit,
   buildScheduleRecord,
   estimateCost,
   generateCallSchedule,
@@ -64,12 +66,30 @@ describe("preregistered study design", () => {
     expect(first.candidates.map(({ scenario_pairs }) => scenario_pairs)).toEqual([16, 16]);
     expect(first.candidates.map(({ structural_templates }) => structural_templates)).toEqual([8, 16]);
     for (const candidate of first.candidates) {
+      expect(candidate.intent_discrimination_power).toBeGreaterThanOrEqual(0);
+      expect(candidate.intent_discrimination_power).toBeLessThanOrEqual(1);
       expect(candidate.primary_power).toBeGreaterThanOrEqual(0);
       expect(candidate.primary_power).toBeLessThanOrEqual(1);
       expect(candidate.interaction_power).toBeGreaterThanOrEqual(0);
       expect(candidate.interaction_power).toBeLessThanOrEqual(1);
+      expect(candidate.context_interaction_power).toBeGreaterThanOrEqual(0);
+      expect(candidate.context_interaction_power).toBeLessThanOrEqual(1);
     }
   });
+
+  it.skipIf(process.env.EXHAUSTIVE_POWER !== "1")(
+    "reproduces the full hierarchical audit frozen in the study manifest",
+    () => {
+      const study = JSON.parse(readFileSync("research/llm-review-sequences/study.json", "utf8"));
+      const audit = buildHierarchicalPowerAudit(study);
+
+      expect(audit.candidates).toEqual(study.hierarchical_power_audit.candidate_layouts);
+      expect(audit.selected_layout).toEqual(
+        study.hierarchical_power_audit.selected_amendment_candidate,
+      );
+    },
+    120_000,
+  );
 
   it("generates a deterministic, balanced boundary-level call schedule", () => {
     const options = {

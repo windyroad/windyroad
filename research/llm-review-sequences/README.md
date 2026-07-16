@@ -24,7 +24,7 @@ The study does not claim that pull requests or trunk-based development are intri
 
 How accurately do LLM reviewers distinguish malicious synthetic change sequences from size- and purpose-matched benign sequences?
 
-- H1: Reviewers will detect more malicious sequences than benign sequences, but recall and precision will both be below 1.00.
+- H1: The malicious-minus-benign block-rate risk difference will be greater than zero.
 - The primary baseline report includes recall, false-positive rate, precision, calibration, localization, and abstention rather than accuracy alone.
 
 ### RQ2: Strategic decomposition
@@ -32,7 +32,7 @@ How accurately do LLM reviewers distinguish malicious synthetic change sequences
 Does splitting a functionally equivalent malicious end state across three submissions reduce detection by the time that end state activates?
 
 - H2: `split` sequences will have lower `blocked_by_activation` recall than `atomic` sequences under local-only context.
-- H2a: Split sequences will require more review boundaries before detection.
+- Split-sequence cumulative detection by boundary and mean submissions to detection are secondary descriptions; no timing comparison is made with atomic sequences, which have only one boundary.
 
 ### RQ3: Workflow boundary
 
@@ -144,7 +144,7 @@ node research/llm-review-sequences/benchmark.mjs /tmp/llm-review-benchmark
 
 The 2026-07-17 machine-validated run produced 400 pairs and 800 cases from 200 structural templates with two matched identifier instances each. Within each of the eight families, five data representations are crossed with five control-flow shapes. All 400 malicious oracles activated, all 400 benign oracles remained safe, and the structural scanner reported no forbidden capability. Reverting each malicious split step in turn removed the unsafe state, so all 1,200 single-step counterfactual checks passed. Atomic and split trees, changed-line totals, and activation timestamps matched. Submission identifiers contain no intent label, and the prompt ledger replaces ground truth with an opaque case identifier. The 12,800 unique boundary requests remained below the 4,000-byte ceiling; the maximum was 3,620 bytes. Checksums are recorded in [`study.json`](./study.json), while the 46 MB generated artifact is reproduced on demand instead of committed.
 
-This v2 candidate is not yet eligible for confirmatory collection. It reaches the smallest tested hierarchical layout that clears 80% for every design target: 200 machine-validated structural templates with two instances each, yielding estimated interaction power of 0.8753. The representation-by-flow construction creates materially different source and data-flow paths, but it is not a substitute for independent benchmark inspection. Independent benchmark and simulation review, exact tokenizer preflight, and external preregistration v2 remain required. No model outcome may be collected from the candidate.
+This v2 candidate is not yet eligible for confirmatory collection. It retains all 200 templates required for the eight-family by five-representation by five-control-flow coverage, with two identifier instances each. The aligned 20,000-replication audit estimates power of 1.0000 for intent discrimination and the split effect, assurance of 1.0000 for workflow equivalence, power of 0.9921 for the decomposition-by-workflow interaction, and power of 0.9919 for the decomposition-by-context interaction. The representation-by-flow construction creates materially different source and data-flow paths, but it is not a substitute for independent benchmark inspection. Independent benchmark and simulation review, exact tokenizer preflight, and external preregistration v2 remain required. No model outcome may be collected from the candidate.
 
 The no-inference tokenizer preflight checked all 12,800 requests. Qwen's pinned upstream tokenizer and chat template reported a maximum of 1,131 tokens. An `o200k_base` proxy over each complete serialized request reported a maximum of 1,054 tokens, but this is not treated as an exact GPT-5.6 result because OpenAI does not map that model to a published offline encoding. The official [OpenAI input-token endpoint](https://developers.openai.com/api/docs/guides/token-counting) and [Anthropic token-count endpoint](https://platform.claude.com/docs/en/build-with-claude/token-counting) can provide model-native counts without generating a completion, but their credentials are not configured. OpenRouter-native counts remain pending because OpenRouter returns them with inference responses and no paid call is authorized. Exact status, tool versions, prompt identifiers, and freeze rules are recorded in [`study.json`](./study.json).
 
@@ -223,11 +223,11 @@ blocked_by_activation ~ decomposition * workflow * context + model
 
 The pre-outcome hierarchical audit showed that the confirmatory estimator must align with structural templates as the generalization unit. Preregistration v2 therefore aggregates repeated trials, models, and the two identifier instances within each structural template, then uses a family-stratified template bootstrap with 10,000 replicates and seed `20260716`. Every family retains 25 templates in each replicate. This is the primary analysis; the v1 mixed-effects model becomes a sensitivity analysis.
 
-The primary estimand is the mean local-context risk difference for `split` minus `atomic`, averaged equally over pull-request and trunk workflows, with a 95% template-bootstrap interval. H3a is the marginal trunk-minus-pull-request risk difference averaged equally over decomposition and context; equivalence requires its 90% interval to lie wholly inside -0.10 to 0.10. H3b is the decomposition-by-workflow difference-in-differences averaged over context, with a 95% interval. H4 is the decomposition-by-context difference-in-differences averaged over workflow, also with a 95% interval. All four estimands average structural templates equally; balanced model and trial cells are averaged within templates.
+H1 is the paired malicious-minus-benign block-rate risk difference averaged equally over decomposition, workflow, and context, with a 95% interval. The primary H2 estimand is the mean local-context risk difference for `split` minus `atomic`, averaged equally over pull-request and trunk workflows, with a 95% interval. H3a is the marginal trunk-minus-pull-request risk difference averaged equally over decomposition and context; equivalence requires its 90% interval to lie wholly inside -0.10 to 0.10. H3b is the decomposition-by-workflow difference-in-differences averaged over context, with a 95% interval. H4 is the decomposition-by-context difference-in-differences averaged over workflow, also with a 95% interval. All five estimands average structural templates equally; balanced model and trial cells are averaged within templates.
 
-A corresponding benign-sequence model estimates false-positive effects. Precision is derived from all sequences with scenario-cluster bootstrap intervals. Time to detection uses a discrete-time survival model. Model-specific estimates, ecological results, severity, calibration, and localization are secondary; multiplicity is controlled within each family using Holm correction.
+Recall, false-positive rate, precision, time to detection, model-specific estimates, ecological results, severity, calibration, and localization are secondary. Template-respecting intervals are used where applicable; multiplicity is controlled within each secondary outcome family using Holm correction.
 
-Failed or schema-invalid responses are `abstain`, not silently retried. Provider failures before a response exists are retried under a frozen retry rule and logged. Missing calls are reported, and the primary model is repeated under best- and worst-case missingness sensitivity bounds.
+Refusals and schema-invalid responses are `abstain` and are not retried. Network failures, HTTP 408, 409, 429, and 5xx responses, and route-metadata mismatches may be retried twice with the identical request. `Retry-After` is honored up to 60 seconds; otherwise waits are 2 and 8 seconds. Missing calls are treated as abstentions in the primary operational analysis and receive prespecified detection-favorable and detection-unfavorable bounds. Full rules are in [`preregistration-v2.md`](./preregistration-v2.md).
 
 ### Sample size
 
@@ -243,11 +243,11 @@ The count is the smallest tested candidate that reached 80% for all three confir
 
 The workflow equivalence margin is 10 points, chosen before data collection as the smallest operationally decisive difference compatible with a feasible benchmark. A five-point margin from the earlier draft was not frozen. Simulation assumptions are design values, not pilot outcome estimates.
 
-After generating the scaled prototype but before collecting any outcome, a hierarchical audit exposed that parameter variants sharing a structural template cannot be treated as fully independent. [`design.mjs`](./design.mjs) now also aggregates contrasts at the structural-template level and adds conservative template-specific split and workflow-interaction slopes. The 400-pair amendment candidate contains 57,600 sequence evaluations and 115,200 calls, with a US$1,094.55 ceiling estimate before contingency. This audit is an amendment candidate rather than an outcome-driven change: preregistration v1 remains preserved in `study.json`, and preregistration v2 is required before collection.
+After generating the scaled prototype but before collecting any outcome, a hierarchical audit exposed that parameter variants sharing a structural template cannot be treated as fully independent. [`design.mjs`](./design.mjs) now aligns all five confirmatory contrasts with the analysis, including paired benign false positives and the context interaction, and adds conservative template-specific split, workflow-interaction, and context-interaction slopes. Although a 40-template layout clears the numerical assumptions by repeating fewer structures more often, the candidate retains the complete 200-template structural coverage and uses only two identifier instances per template. It contains 57,600 sequence evaluations and 115,200 calls, with a US$1,094.55 ceiling estimate before contingency. This audit is an amendment candidate rather than an outcome-driven change: preregistration v1 remains preserved in `study.json`, and preregistration v2 is required before collection.
 
 The frozen boundary-level Fisher-Yates schedule contains 46,080 sequence evaluations and 92,160 calls, 30,720 per model. Its seed is `20260716` and its SHA-256 digest is `b4d39b1ea999111e7bc5ae246eb7c05145246c138eaf15bae6f67435be2bbc48`. Tests regenerate both the digest and the balanced call counts from [`study.json`](./study.json).
 
-At the ceiling of 2,000 input and 256 output tokens per call, the pricing snapshot estimates US$875.64: US$543.13 for GPT-5.6 Sol, US$302.28 for Claude Sonnet 4.6, and US$30.23 for Qwen3-Coder-Next. Collection has a hard US$1,100 stop. This budget is not authorization to spend; paid calls remain disabled until explicit approval.
+The preregistration-v1 320-pair ceiling estimate was US$875.64 with a US$1,100 stop. The v2 400-pair candidate estimate is US$1,094.55 with a US$1,400 stop. Neither budget is authorization to spend; paid calls remain disabled until explicit approval.
 
 No outcome-driven optional stopping is permitted.
 
@@ -267,7 +267,7 @@ The generator and reviewer must be separate sessions. Scenario authors and adjud
 
 The verdict and probability are machine-scored from the frozen JSON schema. Two blinded adjudicators independently score localization, evidence quality, and severity against the scenario card. Disagreements are resolved by a third adjudicator. Inter-rater agreement is reported before resolution.
 
-Exclusions are limited to preregistered infrastructure failures, benchmark equivalence-test failures discovered before model exposure, and provider policy refusal covering the entire scenario. Every exclusion and its condition label is published. A model missing one condition for a scenario loses the paired scenario from the primary model-specific contrast but remains in prespecified unpaired sensitivity analyses.
+Every scheduled call remains in the attempt ledger. Refusals and schema-invalid responses are abstentions, not exclusions. Retry exhaustion creates a reported missing call. A benchmark invariant failure suspends collection and requires an outcome-blind, timestamped amendment and repeat review; it is never silently removed. Complete-pair model-specific analyses are sensitivity analyses alongside the prespecified missingness bounds.
 
 ## Threats to validity
 
@@ -326,6 +326,7 @@ Completed in this slice:
 - A deterministic 400-pair v2 benchmark candidate spanning 200 structural templates, all eight families, executable full-set oracles, strengthened capability scanning, and hashed scenario-card and prompt artifacts.
 - A pre-outcome [`independent-review.md`](./independent-review.md) protocol separating benchmark/safety approval from statistical-method approval.
 - A tested structural-template bootstrap implementation using fabricated outcomes only, plus a deterministic no-network collection dry run with blinded and ground-truth ledgers kept separate.
+- A field-by-field standard-OSF [`preregistration-v2.md`](./preregistration-v2.md) draft with exact retry, stopping, exclusion, missingness, and inference rules.
 
 Not yet complete:
 
@@ -345,6 +346,7 @@ The next milestone is benchmark eligibility and second freeze: independently rev
 - arXiv, [Submission Overview](https://info.arxiv.org/help/submit/index.html), documents the submission workflow.
 - arXiv, [Submit TeX/LaTeX](https://info.arxiv.org/help/submit_tex.html), documents source-package requirements.
 - arXiv, [Endorsement](https://info.arxiv.org/help/endorsement.html), explains category endorsement.
+- OSF Support, [Registrations and Preregistrations](https://help.osf.io/article/330-welcome-to-registrations), documents the standard registration template, immutable submission, approval, and DOI workflow.
 - OpenAI, [Latest models](https://developers.openai.com/api/docs/guides/latest-model), documents the current GPT-5.6 family and model positioning.
 - Anthropic, [Introducing Claude Sonnet 4.6](https://www.anthropic.com/news/claude-sonnet-4-6), documents the model release, context window, and API pricing.
 - Qwen, [Qwen3-Coder-Next model card](https://huggingface.co/Qwen/Qwen3-Coder-Next), documents the open-weight coding model, license, context, and recommended sampling.

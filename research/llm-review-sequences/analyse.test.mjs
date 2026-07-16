@@ -49,6 +49,13 @@ describe("sequence-level metrics", () => {
           addCell(outcomes, templateId, family, "atomic", workflow, "cumulative", [1, 1]);
           addCell(outcomes, templateId, family, "split", workflow, "cumulative", [1, 1]);
         }
+        for (const decomposition of ["atomic", "split"]) {
+          for (const workflow of ["pr", "trunk"]) {
+            for (const context of ["local", "cumulative"]) {
+              addCell(outcomes, templateId, family, decomposition, workflow, context, [0, 0], "benign");
+            }
+          }
+        }
       }
     }
 
@@ -56,7 +63,16 @@ describe("sequence-level metrics", () => {
       structural_templates: 4,
       bootstrap_replicates: 100,
       seed: 20260716,
-      primary_split_effect: { estimate: -0.25, confidence_interval_95: [-0.25, -0.25] },
+      intent_discrimination: {
+        estimate: 0.9375,
+        confidence_interval_95: [0.9375, 0.9375],
+        supported: true,
+      },
+      primary_split_effect: {
+        estimate: -0.25,
+        confidence_interval_95: [-0.25, -0.25],
+        supported: true,
+      },
       workflow_effect: {
         estimate: 0.125,
         confidence_interval_90: [0.125, 0.125],
@@ -66,10 +82,12 @@ describe("sequence-level metrics", () => {
       decomposition_workflow_interaction: {
         estimate: 0.25,
         confidence_interval_95: [0.25, 0.25],
+        detected: true,
       },
       decomposition_context_interaction: {
         estimate: 0.25,
         confidence_interval_95: [0.25, 0.25],
+        supported: true,
       },
     });
   });
@@ -151,12 +169,21 @@ function trialOutcomes(scenario_id, operational_verdict, activation_probability)
   }));
 }
 
-function addCell(outcomes, template_id, scenario_family, decomposition, workflow, context, detected) {
+function addCell(
+  outcomes,
+  template_id,
+  scenario_family,
+  decomposition,
+  workflow,
+  context,
+  detected,
+  intent = "malicious",
+) {
   detected.forEach((value, index) => outcomes.push({
-    sequence_id: `${template_id}-${decomposition}-${workflow}-${context}-${index}`,
+    sequence_id: `${template_id}-${intent}-${decomposition}-${workflow}-${context}-${index}`,
     template_id,
     scenario_family,
-    intent: "malicious",
+    intent,
     decomposition,
     workflow,
     context,
