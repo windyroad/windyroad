@@ -229,6 +229,8 @@ Recall, false-positive rate, precision, time to detection, model-specific estima
 
 Refusals and schema-invalid responses are `abstain` and are not retried. Network failures, HTTP 408, 409, 429, and 5xx responses, and route-metadata mismatches may be retried twice with the identical request. `Retry-After` is honored up to 60 seconds; otherwise waits are 2 and 8 seconds. Missing calls are treated as abstentions in the primary operational analysis and receive prespecified detection-favorable and detection-unfavorable bounds. [`analyse.mjs`](./analyse.mjs) executes the primary estimator under both bounds and reports whether each confirmatory criterion survives them. Full rules are in [`preregistration-v2.md`](./preregistration-v2.md).
 
+[`collection.mjs`](./collection.mjs) executes those rules through an injected transport, maintains a ground-truth-free attempt ledger, accounts for billed route mismatches and invalid responses, suspends at the spending ceiling or 100 consecutive infrastructure failures, and has been tested only with a fake transport. It does not contain provider credentials and no paid model request has been made.
+
 ### Sample size
 
 The frozen design uses 320 independent scenario pairs: 40 parameterized pairs in each of eight scenario families. The standard-library simulation in [`design.mjs`](./design.mjs) ran 5,000 replications with seed `20260716`, three trials per cell, central atomic recall of 0.65, a 15-percentage-point split penalty, a 10-point decomposition-by-workflow interaction, and a scenario random-intercept standard deviation of 0.75 on the logit scale.
@@ -325,7 +327,7 @@ Completed in this slice:
 - Version-controlled preregistration v1 freeze with an explicit second freeze required for scenario cards and rendered prompt hashes.
 - A deterministic 400-pair v2 benchmark candidate spanning 200 structural templates, all eight families, executable full-set oracles, strengthened capability scanning, and hashed scenario-card and prompt artifacts.
 - A pre-outcome [`independent-review.md`](./independent-review.md) protocol separating benchmark/safety approval from statistical-method approval.
-- A tested structural-template bootstrap implementation using fabricated outcomes only, including descriptive intervals and both preregistered missingness bounds, plus a deterministic no-network collection dry run with blinded and ground-truth ledgers kept separate.
+- A tested structural-template bootstrap implementation using fabricated outcomes only, including descriptive intervals and both preregistered missingness bounds, plus a deterministic no-network collection dry run and fake-transport retry runner with blinded and ground-truth ledgers kept separate.
 - A field-by-field standard-OSF [`preregistration-v2.md`](./preregistration-v2.md) draft with exact retry, stopping, exclusion, missingness, and inference rules.
 
 Not yet complete:
