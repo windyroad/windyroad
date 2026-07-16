@@ -27,6 +27,7 @@ export function sequenceOutcomes(rows) {
 
     const key = [
       row.sequence_id,
+      row.intent,
       row.decomposition,
       row.workflow,
       row.context,
@@ -79,7 +80,7 @@ async function main(path) {
   process.stdout.write(`${JSON.stringify(metrics(sequenceOutcomes(rows)), null, 2)}\n`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv[2]).catch((error) => {
     console.error(error.message);
     process.exitCode = 1;

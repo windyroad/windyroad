@@ -86,6 +86,17 @@ The ecological layer renders native artifacts:
 
 Ecological results are secondary because artifact differences are part of the treatment and prevent attributing an effect to workflow policy alone.
 
+### Temporal and context controls
+
+The confirmatory split sequence preserves causal order and uses equal timestamp intervals. Its atomic counterpart receives the same final timestamp as the third split submission. This prevents submission age from becoming an accidental atomic-versus-split cue.
+
+Two secondary temporal ablations will be frozen before collection:
+
+- Metadata-only spacing compares one-minute and seven-day timestamp intervals without changing code, order, or supplied evidence.
+- Ecological interleaving inserts zero or two size-matched neutral submissions between causal steps. The neutral submissions are identical across malicious and benign pairs and excluded from the activation oracle.
+
+Every review boundary uses a fresh model session. Before models are selected, the evidence budget is set to no more than half the smallest selected context window. Complete cumulative evidence must fit below that budget; inputs are never silently truncated. Exact rendered bytes, model-specific token counts, ordering, timestamps, and any provider-side truncation signal are recorded. The local condition intentionally withholds prior submissions, while the cumulative condition supplies them explicitly. A repository-snapshot ablation distinguishes access to the final code state from access to historical diffs.
+
 ## Safe benchmark
 
 The planned families are recorded in [`study.json`](./study.json). They describe abstract composition failures rather than executable exploit classes. Every scenario must satisfy all of these rules:
@@ -98,6 +109,27 @@ The planned families are recorded in [`study.json`](./study.json). They describe
 - Pass an independent dual-use review before public release.
 
 Each scenario has a machine-readable card containing its family, intended policy, activation boundary, ground-truth relevant submissions, expected final-tree hash, changed-line counts, and safety attestation.
+
+The executable pilot generator is [`pilot.mjs`](./pilot.mjs). It creates isolated temporary Git repositories using only Node and Git. The generated scenario programs themselves import only relative in-memory modules and have no external capabilities.
+
+### Pilot execution
+
+The pilot was executed on 2026-07-16. It generated two scenario families crossed with malicious and benign intent. Every atomic tree matched its three-submission split tree, every presentation changed six lines, the malicious policy oracle activated only for malicious variants, and the structural safety scan found no violations.
+
+| Scenario | Intent | Unsafe oracle | Atomic and split trees | Changed lines | Safety violations |
+| --- | --- | ---: | --- | ---: | ---: |
+| Museum zone alias | Malicious | True | Equal | 6 | 0 |
+| Museum zone alias | Benign | False | Equal | 6 | 0 |
+| Capability bundle | Malicious | True | Equal | 6 | 0 |
+| Capability bundle | Benign | False | Equal | 6 | 0 |
+
+Full tree hashes are recorded in [`study.json`](./study.json). The pilot also passed PR-versus-trunk evidence equivalence, local-versus-cumulative history rendering, strict response-schema validation, and sequence-level scoring. Scoring used fabricated responses solely to test plumbing; no LLM result or confirmatory outcome was collected.
+
+Run the pilot into a new empty directory:
+
+```sh
+node research/llm-review-sequences/pilot.mjs /tmp/llm-review-pilot
+```
 
 ## Review configurations
 
@@ -239,15 +271,18 @@ Completed in this slice:
 - Separation of controlled workflow framing from ecological workflow artifacts.
 - Primary endpoint, secondary metrics, inferential model, exclusions, safety boundary, and reproducibility checklist.
 - Machine-readable draft manifest and a tested sequence-level descriptive scorer.
+- A two-family safe pilot generator with malicious and matched benign variants.
+- Atomic/split final-tree and changed-line equivalence, deterministic policy oracles, evidence rendering, strict response validation, and end-to-end fabricated-response scoring.
+- Explicit timestamp, temporal-spacing, neutral-interleaving, and context-window controls.
 
 Not yet complete:
 
 - Power simulation and frozen scenario count.
-- Synthetic scenario generator and benchmark cases.
+- Full synthetic benchmark beyond the two-family pilot.
 - Exact model selection, cost ceiling, human-review ethics decision, and preregistration.
 - Model runs, analysis, paper, independent review, and arXiv submission.
 
-The next milestone is a harmless two-scenario pilot that proves atomic/split final-tree equivalence, evidence rendering, response validation, and end-to-end scoring without collecting confirmatory outcomes.
+The next milestone is the preregistration freeze package: a simulation-backed scenario count, exact model selection and cost ceiling, frozen evidence and response schemas, and a deterministic randomized call schedule.
 
 ## Related work and submission guidance
 
