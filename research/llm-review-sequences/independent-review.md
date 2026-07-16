@@ -29,6 +29,10 @@ Compare the generated counts and SHA-256 values with [`study.json`](./study.json
 
 The reviewers receive the study manifest, generator source, generated cards and prompts, power-analysis source and output, fixed prompt, [`preregistration-v2.md`](./preregistration-v2.md), analysis plan, and this protocol. They do not receive confirmatory responses, outcome summaries, or model-specific performance observations.
 
+### Protocol preflight
+
+The author exercised the complete reproduction protocol at commit `a860532` on 2026-07-17. This is evidence that the packet runs; it is not an independent approval. The full suite passed 137 tests with the two exhaustive checks intentionally skipped, the exhaustive benchmark then passed both tests, and the exhaustive power audit passed all eight tests. Regeneration produced the frozen 400 pairs, 12,800 prompts, 115,200 call rows, and all manifest hashes. Across every call row, the only fields were `call_id`, `case_id`, `model`, `prompt_id`, `schedule_index`, and `trial`.
+
 ## Benchmark and safety review
 
 The benchmark reviewer must inspect:
