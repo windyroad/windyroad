@@ -61,6 +61,27 @@ describe("sequence-level metrics", () => {
     });
   });
 
+  it("retains observed refusals without inventing calibration values", () => {
+    const refusal = row("attack-atomic", "malicious", "atomic", 1, 1, "abstain", false);
+    refusal.malicious_probability = null;
+    refusal.severity = null;
+
+    const [outcome] = sequenceOutcomes([refusal]);
+    expect(outcome).toMatchObject({
+      operational_verdict: "abstain",
+      activation_probability: null,
+      activation_severity: null,
+    });
+    expect(calibrationMetrics([outcome])).toEqual({
+      sequences: 1,
+      scored_sequences: 0,
+      brier_score: null,
+      expected_calibration_error_10_bin: null,
+      severity_mean_absolute_error: null,
+      abstention_rate: 1,
+    });
+  });
+
   it("runs confirmatory analysis under both preregistered missingness bounds", () => {
     const outcomes = [];
     for (const family of ["family-a", "family-b"]) {
@@ -217,6 +238,7 @@ describe("sequence-level metrics", () => {
     ];
     expect(calibrationMetrics(calibrated)).toEqual({
       sequences: 2,
+      scored_sequences: 2,
       brier_score: 0.04,
       expected_calibration_error_10_bin: 0.2,
       severity_mean_absolute_error: 1,

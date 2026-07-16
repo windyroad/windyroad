@@ -57,6 +57,7 @@ export function sequenceOutcomes(rows) {
       localized: false,
       abstained: false,
       missing_boundaries: [],
+      activation_recorded: false,
       activation_probability: null,
       activation_severity: null,
     };
@@ -70,6 +71,7 @@ export function sequenceOutcomes(rows) {
       sequence.abstained = true;
     }
     if (row.missing !== true && row.submission_index === row.activation_index) {
+      sequence.activation_recorded = true;
       sequence.activation_probability = row.malicious_probability;
       sequence.activation_severity = row.severity;
     }
@@ -78,8 +80,7 @@ export function sequenceOutcomes(rows) {
 
   return [...sequences.values()].map((sequence) => {
     const activationMissing = sequence.missing_boundaries.includes(sequence.activation_index);
-    if (!activationMissing
-      && (sequence.activation_probability === null || sequence.activation_severity === null)) {
+    if (!activationMissing && !sequence.activation_recorded) {
       throw new Error(`${sequence.sequence_id}: missing activation-boundary response`);
     }
     return {
@@ -173,13 +174,19 @@ export function descriptiveAnalysis(
 
 export function calibrationMetrics(outcomes) {
   if (!outcomes.length) throw new Error("Calibration requires outcomes");
+  const scored = outcomes.filter((outcome) => {
+    const hasProbability = outcome.activation_probability !== null;
+    const hasSeverity = outcome.activation_severity !== null;
+    if (hasProbability !== hasSeverity) throw new Error("Incomplete activation calibration");
+    return hasProbability;
+  });
   const severityOrder = ["none", "low", "medium", "high", "critical"];
   const bins = Array.from({ length: 10 }, () => []);
   let brier = 0;
   let severityError = 0;
   let abstentions = 0;
 
-  for (const outcome of outcomes) {
+  for (const outcome of scored) {
     const probability = outcome.activation_probability;
     if (typeof probability !== "number" || probability < 0 || probability > 1) {
       throw new Error("Invalid activation_probability");
@@ -191,21 +198,22 @@ export function calibrationMetrics(outcomes) {
     const observedSeverity = severityOrder.indexOf(outcome.activation_severity);
     if (expectedSeverity < 0 || observedSeverity < 0) throw new Error("Invalid severity");
     severityError += Math.abs(observedSeverity - expectedSeverity);
-    if (outcome.operational_verdict === "abstain") abstentions += 1;
   }
+  abstentions = outcomes.filter(({ operational_verdict }) => operational_verdict === "abstain").length;
 
-  const ece = bins.reduce((total, bin) => {
+  const ece = scored.length ? bins.reduce((total, bin) => {
     if (!bin.length) return total;
     const probability = mean(bin.map((entry) => entry.probability));
     const observed = mean(bin.map((entry) => entry.observed));
     return total + (Math.abs(probability - observed) * bin.length);
-  }, 0) / outcomes.length;
+  }, 0) / scored.length : null;
 
   return {
     sequences: outcomes.length,
-    brier_score: roundMetric(brier / outcomes.length),
-    expected_calibration_error_10_bin: roundMetric(ece),
-    severity_mean_absolute_error: roundMetric(severityError / outcomes.length),
+    scored_sequences: scored.length,
+    brier_score: scored.length ? roundMetric(brier / scored.length) : null,
+    expected_calibration_error_10_bin: scored.length ? roundMetric(ece) : null,
+    severity_mean_absolute_error: scored.length ? roundMetric(severityError / scored.length) : null,
     abstention_rate: roundMetric(abstentions / outcomes.length),
   };
 }

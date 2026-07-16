@@ -215,6 +215,8 @@ Every scheduled call is retained in the attempt ledger. No response is excluded 
 - A benchmark invariant failure discovered after registration suspends the study. Affected outcomes are not inspected to decide a remedy. Any correction requires a public, timestamped amendment, regenerated hashes, repeat independent review, and clear separation of pre- and post-amendment data.
 - No scenario is removed merely because every model refuses it. Provider refusals are outcomes, not an exclusion criterion.
 
+Refusals and schema-invalid responses have no invented probability or severity. They remain in the operational-verdict denominator, have null activation calibration fields, and are excluded only from probability and severity metric denominators. The scored count and coverage are reported with every such metric.
+
 For a model-specific paired contrast, a template with a missing condition is omitted from that complete-pair sensitivity analysis only. It remains in the all-model primary operational analysis under the missing-data rule below.
 
 ### Missing data
