@@ -43,6 +43,8 @@ The author exercised the complete reproduction protocol at commit `a860532` on 2
 
 After adding the ecological layer, the author reran the expanded protocol at commit `42eb883` on 2026-07-17. The full suite passed 139 tests with two exhaustive checks skipped; the exhaustive benchmark passed both tests and the exhaustive design audit passed all nine. The run reproduced both layers' manifest hashes, including 2,560 ecological prompts and 7,680 ecological call rows. This remains a preflight, not either required independent approval.
 
+The author then reproduced the deterministic baseline at commit `15a9d41` on 2026-07-17. ESLint 9.39.3 scanned all 2,400 generated final-state files with zero warnings, errors, or fatal errors, and the standard suite again passed 139 tests with the two exhaustive checks skipped. The previously recorded exhaustive benchmark and design results remain applicable because this slice changed only documentation, the study manifest, and the rendered paper. This is still author preflight evidence, not independent approval.
+
 ## Benchmark and safety review
 
 The benchmark reviewer must inspect:
