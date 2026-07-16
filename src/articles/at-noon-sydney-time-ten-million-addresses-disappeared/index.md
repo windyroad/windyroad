@@ -1,5 +1,5 @@
 ---
-date: '2026-07-16'
+date: '2026-07-19'
 title: 'At noon Sydney time, ten million addresses disappeared'
 author: 'Tom Howard'
 tags: ['ai coding', 'claude code', 'opensearch', 'software delivery', 'risk management', 'zero outage']
@@ -7,7 +7,9 @@ image: '/img/social/opensearch-upgrade-failed-cluster.jpg'
 imageAlt: 'Two parallel server clusters in daylight: the production cluster remains lit in teal while the candidate cluster is almost dark, with orange warning indicators.'
 ---
 
-At 11am Sydney time, the new OpenSearch cluster held about ten million Australian addresses. At noon, the next CloudWatch reading counted just seven addresses.
+*Some dates in this account have been shifted to adjacent weekends. The technical sequence, measurements and outcomes are unchanged.*
+
+At 11am Sydney time on a Saturday, the new OpenSearch cluster held about ten million Australian addresses. At noon, the next CloudWatch reading counted just seven addresses.
 
 At 1:00:59pm, the failed logins began. By the time the import was stopped, the audit log contained 184 of them. The cluster had lost almost all its data and stopped recognising the credentials that had loaded it.
 
@@ -43,7 +45,7 @@ During the full data load, Queensland and Western Australia collided with an hou
 
 The cluster was resized to get the load through. AWS began its managed blue/green resize and remained stuck for more than three hours, reporting shard progress that moved forward and then backwards. Authentication failed again after the reconfiguration.
 
-On 14 May, the migration was rolled back. The new domain was deleted and shadow traffic was disabled. Production stayed on 1.3.20 throughout.
+On Sunday 17 May, the migration was rolled back. The new domain was deleted and shadow traffic was disabled. Production stayed on 1.3.20 throughout.
 
 The failed attempt left useful evidence behind. The repository still had a Terraform module for parallel domains, a default-off shadow client, a two-version CI matrix and incident records describing where the plan had broken. It also left a better question: what if the cluster were allowed to finish loading before it saw a single search?
 
@@ -53,7 +55,7 @@ The second attempt began with that change in sequence.
 
 OpenSearch 2.19 would be provisioned quiet. No shadow reads. No customer traffic. It would receive the complete G&#8209;NAF dataset, prove its document count and search behaviour, and only then begin warming on copies of production queries.
 
-Before another dollar of AWS capacity was spent, Claude Code changed the loader. If the index settings and mappings were already correct, it would no longer close and reopen the index for every state. If a close genuinely collided with a snapshot, it would retry with backoff. CI kept testing both 1.3.20 and 2.19.5. A CloudWatch dashboard established the old cluster's latency baseline before the new cluster existed.
+Before another dollar of AWS capacity was spent, Claude Code changed the loader. If the index settings and mappings were already correct, it would no longer close and reopen the index before loading each Australian state or territory. If a close genuinely collided with a snapshot, it would retry with backoff. CI kept testing both 1.3.20 and 2.19.5. A CloudWatch dashboard established the old cluster's latency baseline before the new cluster existed.
 
 Audit logging was enabled as well. The first attempt had shown the symptoms of the credential failure but not the moment it occurred. This time the migration would be watching.
 
@@ -119,9 +121,9 @@ The deployment platform used `/health` to decide whether a new application versi
 
 Claude Code changed the health check to ping the configured OpenSearch cluster. A sustained connection or authentication failure now returned 503 and triggered the platform's automatic rollback. A kill switch could restore the old shallow check if the new dependency itself caused trouble.
 
-On 10 July, the deployment changed the primary host and authentication mode together. The old 1.3 cluster remained warm while the platform rolled the change through its instances and checked each one. Search stayed available. The smoke tests passed. Production was running on OpenSearch 2.19.
+On Saturday 11 July, the deployment changed the primary host and authentication mode together. The old 1.3 cluster remained warm while the platform rolled the change through its instances and checked each one. Search stayed available. The smoke tests passed. Production was running on OpenSearch 2.19.
 
-The quarterly data-refresh workflows were moved to SigV4 through GitHub's short-lived AWS identity, first with one small territory as a canary and then with the remaining eight states. On 11 July, the 1.3 domain was decommissioned.
+The quarterly data-refresh workflows were moved to SigV4 through GitHub's short-lived AWS identity, first with one small territory as a canary and then with the remaining eight states. On Sunday 12 July, the 1.3 domain was decommissioned.
 
 The migration that had already failed twice was complete.
 
@@ -137,9 +139,9 @@ The machinery did not make the cutover automatic. The project's release gate sco
 
 Claude Code ran the missing test instead of bypassing the gate. A shortened run of the same application-level k6 harness ramped to 20 virtual users, then held them against a local application pointed directly at 3.5 over SigV4. In four and a half minutes it completed 4,311 requests. Every check passed, there were no failed requests, and 95th-percentile search latency was 368 milliseconds. The test was not a comparison with production latency; it exercised the missing concurrency condition. With that likelihood reduced by evidence, residual risk fell to four out of 25.
 
-Production cut over on 14 July. Three hours later, the 3.5 domain was green with the full dataset, no server errors and no search rejections. CloudWatch's domain-side search metric reported a 95th percentile of 24 milliseconds. After the operator accepted the loss of the warm rollback domain, the 2.19 infrastructure was removed. Its CI leg remained, preserving code compatibility until 2.19 reaches end of life.
+Production cut over on Saturday 18 July. Three hours later, the 3.5 domain was green with the full dataset, no server errors and no search rejections. CloudWatch's domain-side search metric reported a 95th percentile of 24 milliseconds. After the operator accepted the loss of the warm rollback domain, the 2.19 infrastructure was removed. Its CI leg remained, preserving code compatibility until 2.19 reaches end of life.
 
-By 14 July, OpenSearch 3.5 was the only search domain left running.
+By Saturday 18 July, OpenSearch 3.5 was the only search domain left running.
 
 ## What made Claude Code capable
 
