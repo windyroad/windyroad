@@ -1,5 +1,12 @@
 # windy-road
 
+## 2.13.4
+
+### Patch Changes
+
+- 87f6580: Add a social share image to the low-code article.
+- 3fc0961: Publish the story of Claude Code upgrading Addressr from OpenSearch 1.3 to 3.5.
+
 ## 2.13.3
 
 ### Patch Changes
