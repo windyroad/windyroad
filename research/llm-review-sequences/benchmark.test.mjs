@@ -1,23 +1,28 @@
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import process from "node:process";
 import { describe, expect, it } from "vitest";
 
 import { generateBenchmark } from "./benchmark.mjs";
+
+const study = JSON.parse(readFileSync("research/llm-review-sequences/study.json"));
 
 describe("safe benchmark generator", () => {
   it("executes every family and preserves paired sequence invariants", () => {
     const root = mkdtempSync(join(tmpdir(), "llm-review-benchmark-"));
 
     try {
-      const benchmark = generateBenchmark(root);
-      expect(benchmark.cases).toHaveLength(800);
-      expect(new Set(benchmark.cases.map(({ scenario_id }) => scenario_id)).size).toBe(400);
+      const benchmark = generateBenchmark(root, {
+        templateIndexes: [1, 2, 3, 4, 5, 6, 11, 16, 21],
+      });
+      expect(benchmark.cases).toHaveLength(288);
+      expect(new Set(benchmark.cases.map(({ scenario_id }) => scenario_id)).size).toBe(144);
       expect(new Set(benchmark.cases.map(({ family }) => family)).size).toBe(8);
-      expect(new Set(benchmark.cases.map(({ template_id }) => template_id)).size).toBe(200);
+      expect(new Set(benchmark.cases.map(({ template_id }) => template_id)).size).toBe(72);
       expect(benchmark.cards_sha256).toMatch(/^[a-f0-9]{64}$/);
       expect(benchmark.prompts_sha256).toMatch(/^[a-f0-9]{64}$/);
-      expect(benchmark.prompts).toHaveLength(12_800);
+      expect(benchmark.prompts).toHaveLength(4_608);
       expect(benchmark.prompts.every((prompt) => !("intent" in prompt))).toBe(true);
       expect(benchmark.prompts.every(({ case_id }) => /^[a-f0-9]{64}$/.test(case_id))).toBe(true);
       expect(benchmark.maximum_request_bytes).toBeLessThanOrEqual(4_000);
@@ -34,6 +39,9 @@ describe("safe benchmark generator", () => {
           entry.split.submissions.reduce((total, submission) => total + submission.changed_lines, 0),
         );
         expect(entry.unsafe_state).toBe(entry.intent === "malicious");
+        expect(entry.counterfactual_unsafe_states).toEqual(
+          entry.intent === "malicious" ? [false, false, false] : [],
+        );
         expect(entry.safety_violations).toEqual([]);
         expect(entry.ground_truth_relevant_submissions).toEqual([1, 2, 3]);
       }
@@ -49,16 +57,38 @@ describe("safe benchmark generator", () => {
         expect(templateCases).toHaveLength(4);
         expect(new Set(templateCases.map(({ instance }) => instance))).toEqual(new Set([1, 2]));
         expect(new Set(templateCases.map(({ intent }) => intent))).toEqual(new Set(["malicious", "benign"]));
+        for (const intent of ["malicious", "benign"]) {
+          const instances = templateCases
+            .filter((entry) => entry.intent === intent)
+            .map((entry) => JSON.stringify([entry.base_files, entry.final_files]).replace(/t\d{2}i\d+/g, "INSTANCE"));
+          expect(new Set(instances).size).toBe(1);
+        }
       }
 
       for (const family of new Set(benchmark.cases.map(({ family }) => family))) {
         const signatures = benchmark.cases
           .filter((entry) => entry.family === family && entry.intent === "malicious" && entry.instance === 1)
           .map((entry) => JSON.stringify([entry.base_files, entry.final_files]).replace(/t\d{2}i\d+/g, "INSTANCE"));
-        expect(new Set(signatures).size).toBe(25);
+        expect(new Set(signatures).size).toBe(9);
       }
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
   }, 60_000);
+
+  it.runIf(Boolean(process.env.EXHAUSTIVE_BENCHMARK))(
+    "reproduces the full candidate hashes and request ceiling",
+    () => {
+      const root = mkdtempSync(join(tmpdir(), "llm-review-benchmark-full-"));
+      try {
+        const benchmark = generateBenchmark(root);
+        expect(benchmark.cards_sha256).toBe(study.benchmark_prototype.cards_sha256);
+        expect(benchmark.prompts_sha256).toBe(study.benchmark_prototype.prompts_sha256);
+        expect(benchmark.maximum_request_bytes).toBe(study.benchmark_prototype.maximum_request_bytes);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+    60_000,
+  );
 });

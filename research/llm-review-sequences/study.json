@@ -176,7 +176,7 @@
   },
   "benchmark_prototype": {
     "status": "machine-validated-v2-candidate",
-    "generated_at": "2026-07-17T02:01:15+10:00",
+    "generated_at": "2026-07-17T02:15:11+10:00",
     "generator": "benchmark.mjs",
     "scenario_pairs": 400,
     "cases": 800,
@@ -193,17 +193,54 @@
       "atomic_split_tree_equivalence": "passed",
       "atomic_split_changed_line_equivalence": "passed",
       "malicious_benign_changed_line_matching": "passed",
-      "activation_timestamp_matching": "passed"
+      "activation_timestamp_matching": "passed",
+      "single_step_counterfactuals_safe": "passed; 1200 of 1200 malicious reverted-step oracles were safe"
     },
     "blind_submission_identifiers": "passed",
     "intent_free_prompt_ledger": "passed; ground truth is joined later through opaque case_id",
-    "cards_sha256": "d2f9224cb84e9bee6da46b8b966397542332f492e44ef3b695bc13eeea5b669f",
+    "cards_sha256": "716e259307ac7377171c8ff7d903f5078ab591967ee1d81ecb3257be5fb09ac1",
     "fixed_prompt_sha256": "9e49d849f1435fa962fe2fb7bc000592b8c692bc97d0e5c9f1eef7a307bc4c07",
     "unique_boundary_prompts": 12800,
     "prompts_sha256": "56d246f9c676e94f29ce2dea4025633f1b31815959b5b34b0daf2b49af32dff4",
     "maximum_request_bytes": 3620,
     "confirmatory_eligible": false,
     "eligibility_blocker": "The machine-validated benchmark reaches the 200-template, two-instance layout selected by the pre-outcome audit, but independent benchmark and simulation review, exact tokenizer preflight, external preregistration v2, and explicit paid-call authorization remain pending. No model outcomes may be collected from this candidate."
+  },
+  "token_preflight": {
+    "status": "partial-no-inference",
+    "run_at": "2026-07-17T02:15:11+10:00",
+    "requests_checked": 12800,
+    "maximum_request_bytes": 3620,
+    "input_token_ceiling": 2000,
+    "qwen_upstream": {
+      "status": "passed-upstream-native; gateway-native-pending",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "revision": "a7fbcb5c0e12d62a448eaa0e260346bf5dcc0feb",
+      "method": "Pinned upstream tokenizer and chat template with add_generation_prompt=true",
+      "transformers_version": "5.14.1",
+      "tokenizers_version": "0.22.2",
+      "maximum_tokens": 1131,
+      "maximum_prompt_id": "8788e101e9db2887745b9c4df4c4e3622d19b3b09e78b36ef872343bde1e537f"
+    },
+    "openai": {
+      "status": "proxy-passed; model-native-pending",
+      "proxy_method": "o200k_base over the complete serialized request; not represented as an exact GPT-5.6 count",
+      "tiktoken_version": "0.13.0",
+      "proxy_maximum_tokens": 1054,
+      "maximum_prompt_id": "8788e101e9db2887745b9c4df4c4e3622d19b3b09e78b36ef872343bde1e537f",
+      "native_method": "OpenAI POST /v1/responses/input_tokens with model gpt-5.6",
+      "native_blocker": "OPENAI_API_KEY is not configured"
+    },
+    "anthropic": {
+      "status": "model-native-pending",
+      "native_method": "Anthropic POST /v1/messages/count_tokens with model claude-sonnet-4-6",
+      "native_blocker": "ANTHROPIC_API_KEY is not configured"
+    },
+    "gateway_native": {
+      "status": "pending-paid-authorization",
+      "reason": "OpenRouter documents native counts on completion responses, and no inference call is authorized."
+    },
+    "rule": "Do not freeze preregistration v2 until native counts for every frozen route are below the ceiling. Proxy and upstream counts provide headroom evidence but do not satisfy the freeze requirement."
   },
   "scenario_families": [
     "authorization-policy composition",
