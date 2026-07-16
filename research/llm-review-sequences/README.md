@@ -85,18 +85,20 @@ The ecological layer renders native artifacts:
 - Pull request: title, description, base revision, diff, checks, and earlier pull requests only when the context condition permits them.
 - Trunk: commit message, parent revision, diff, pipeline state, and earlier commits only when the context condition permits them.
 
-Ecological results are secondary because artifact differences are part of the treatment and prevent attributing an effect to workflow policy alone.
+Ecological results are exploratory because artifact differences are part of the treatment and prevent attributing an effect to workflow policy alone.
+
+[`ecological.mjs`](./ecological.mjs) implements this as a separate prospective exploratory layer. It selects template indexes 1, 7, 13, 19, and 25 in each family, retaining every data representation and control-flow shape once per family. With two identifier instances, one trial, and all three models, the layer contains 80 scenario pairs, 2,560 unique prompts, and 7,680 calls. It cannot support or alter H1-H4.
 
 ### Temporal and context controls
 
 The confirmatory split sequence preserves causal order and uses equal timestamp intervals. Its atomic counterpart receives the same final timestamp as the third split submission. This prevents submission age from becoming an accidental atomic-versus-split cue.
 
-Two secondary temporal ablations will be frozen before collection:
+Two additional temporal ablations remain candidates rather than frozen call ledgers:
 
 - Metadata-only spacing compares one-minute and seven-day timestamp intervals without changing code, order, or supplied evidence.
 - Ecological interleaving inserts zero or two size-matched neutral submissions between causal steps. The neutral submissions are identical across malicious and benign pairs and excluded from the activation oracle.
 
-Every review boundary uses a fresh model session. Before collection, the complete request must remain at or below 4,000 UTF-8 bytes and 2,000 tokens under each frozen model tokenizer. Inputs are never silently truncated. Exact rendered bytes, model-specific token counts, ordering, timestamps, and any provider-side truncation signal are recorded. The local condition intentionally withholds prior submissions, while the cumulative condition supplies them explicitly. A repository-snapshot ablation distinguishes access to the final code state from access to historical diffs.
+Every review boundary uses a fresh model session. Before collection, the complete request must remain at or below 4,000 UTF-8 bytes and 2,000 tokens under each frozen model tokenizer. Inputs are never silently truncated. Exact rendered bytes, model-specific token counts, ordering, timestamps, and any provider-side truncation signal are recorded. The local condition intentionally withholds prior submissions, while the cumulative condition supplies them explicitly. A repository-snapshot ablation remains a candidate and is omitted unless prospectively generated, counted, reviewed, and registered before any such outcome exists.
 
 ## Safe benchmark
 
@@ -156,6 +158,17 @@ node research/llm-review-sequences/collection.mjs \
 ```
 
 The schedule, prompt, call-ledger, and ground-truth hashes from the dry run are recorded in [`study.json`](./study.json). This validates collection plumbing only and does not authorize or perform a model call.
+
+Generate the separate ecological benchmark and its one-trial collection ledger from the full controlled benchmark:
+
+```sh
+node research/llm-review-sequences/ecological.mjs \
+  /tmp/llm-review-benchmark \
+  /tmp/llm-review-ecological \
+  /tmp/llm-review-ecological-collection
+```
+
+The offline run produced 7,680 calls and 3,840 sequences. Its prompt and schedule hashes are recorded in [`study.json`](./study.json). The maximum request was 3,992 bytes. The projected ecological cost is US$72.97024 with a separate US$100 stop; neither amount authorizes spending.
 
 ## Review configurations
 
@@ -332,7 +345,7 @@ Completed in this slice:
 - Machine-readable draft manifest and a tested sequence-level descriptive scorer.
 - A two-family safe pilot generator with malicious and matched benign variants.
 - Atomic/split final-tree and changed-line equivalence, deterministic policy oracles, evidence rendering, strict response validation, and end-to-end fabricated-response scoring.
-- Explicit timestamp, temporal-spacing, neutral-interleaving, and context-window controls.
+- Explicit timestamp, order, and context-window controls, with spacing and neutral-interleaving correctly retained as unfrozen candidates.
 - Deterministic power simulation, 320-pair design, exact three-model configuration, provider-routing controls, token and spending ceilings, and a reproducible randomized call schedule.
 - Version-controlled preregistration v1 freeze with an explicit second freeze required for scenario cards and rendered prompt hashes.
 - A deterministic 400-pair v2 benchmark candidate spanning 200 structural templates, all eight families, executable full-set oracles, strengthened capability scanning, and hashed scenario-card and prompt artifacts.
@@ -340,11 +353,12 @@ Completed in this slice:
 - A tested structural-template bootstrap implementation using fabricated outcomes only, including result-ledger joining, descriptive intervals, both preregistered missingness bounds, and per-model complete-pair sensitivity, plus a deterministic no-network collection dry run and fake-transport retry runner with blinded and ground-truth ledgers kept separate.
 - A field-by-field standard-OSF [`preregistration-v2.md`](./preregistration-v2.md) draft with exact retry, stopping, exclusion, missingness, and inference rules.
 - A seven-page pre-outcome arXiv manuscript with related work, frozen methods and estimands, ethics, threats to validity, reproducibility hashes, and no model outcomes.
+- A deterministic ecological workflow generator and blinded ledger covering native pull-request history and landed-main pipeline history on a balanced 80-pair subset, without changing the controlled confirmatory hashes.
 
 Not yet complete:
 
 - Independent inspection of the machine-validated structural templates and hierarchical design.
-- External preregistration, rendered-prompt freeze, paid-call authorization, and human-review ethics decision.
+- External preregistration, rendered-prompt freeze, native-token preflight for both controlled and ecological requests, paid-call authorization, and human-review ethics decision.
 - Model runs, outcome analysis, independent review, final paper revision, and arXiv submission.
 
 The next milestone is benchmark eligibility and second freeze: independently review the hierarchical power analysis and safe templates, verify exact tokenizer counts, and register preregistration v2 externally. Confirmatory calls remain prohibited until that milestone passes.

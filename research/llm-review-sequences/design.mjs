@@ -335,17 +335,32 @@ function simulateCandidate(scenarioPairs, config) {
 
 export function generateCallSchedule({
   scenarioCount,
+  scenarioIds = null,
   models,
   trialsPerCell = 3,
   splitSubmissionCount = 3,
   seed = 20260716,
 }) {
-  if (!Number.isInteger(scenarioCount) || scenarioCount < 1) throw new Error("scenarioCount must be positive");
+  const scheduledScenarioIds = scenarioIds ?? (
+    Number.isInteger(scenarioCount) && scenarioCount > 0
+      ? Array.from(
+          { length: scenarioCount },
+          (_, index) => `scenario-${String(index + 1).padStart(3, "0")}`,
+        )
+      : null
+  );
+  if (
+    !Array.isArray(scheduledScenarioIds)
+    || !scheduledScenarioIds.length
+    || new Set(scheduledScenarioIds).size !== scheduledScenarioIds.length
+    || scheduledScenarioIds.some((scenarioId) => typeof scenarioId !== "string" || !scenarioId)
+  ) {
+    throw new Error("scenarioCount must be positive or scenarioIds must contain unique identifiers");
+  }
   if (!Array.isArray(models) || models.length === 0) throw new Error("models must not be empty");
 
   const rows = [];
-  for (let scenario = 1; scenario <= scenarioCount; scenario += 1) {
-    const scenarioId = `scenario-${String(scenario).padStart(3, "0")}`;
+  for (const scenarioId of scheduledScenarioIds) {
     for (const intent of ["malicious", "benign"]) {
       for (const decomposition of ["atomic", "split"]) {
         const submissions = decomposition === "atomic" ? 1 : splitSubmissionCount;

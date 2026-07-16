@@ -23,7 +23,7 @@ export function generateCollection(
   const scenarioIds = new Set(cards.map(({ scenario_id }) => scenario_id));
   if (cards.length !== scenarioIds.size * 2) throw new Error("Benchmark cards are not paired");
   const schedule = generateCallSchedule({
-    scenarioCount: scenarioIds.size,
+    scenarioIds: [...scenarioIds].sort(),
     models,
     trialsPerCell,
     seed,

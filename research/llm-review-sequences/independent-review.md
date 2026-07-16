@@ -21,13 +21,17 @@ node research/llm-review-sequences/design.mjs
 node research/llm-review-sequences/benchmark.mjs /tmp/llm-review-benchmark-review
 node research/llm-review-sequences/collection.mjs \
   /tmp/llm-review-benchmark-review /tmp/llm-review-collection-review
+node research/llm-review-sequences/ecological.mjs \
+  /tmp/llm-review-benchmark-review \
+  /tmp/llm-review-ecological-review \
+  /tmp/llm-review-ecological-collection-review
 EXHAUSTIVE_BENCHMARK=1 npx vitest run research/llm-review-sequences/benchmark.test.mjs
 EXHAUSTIVE_POWER=1 npx vitest run research/llm-review-sequences/design.test.mjs
 ```
 
-Compare the generated counts and SHA-256 values with [`study.json`](./study.json). Stop the review if they differ. The generated benchmark directory must contain 400 scenario pairs, 800 cases, 200 template identifiers, 12,800 blinded requests, and no retained `.counterfactuals` directory. The collection directory must contain 115,200 blinded call rows and 115,200 separately keyed ground-truth rows. Confirm that no call row contains intent, scenario, sequence, family, template, or expected-severity fields.
+Compare the generated counts and SHA-256 values with [`study.json`](./study.json). Stop the review if they differ. The generated controlled benchmark directory must contain 400 scenario pairs, 800 cases, 200 template identifiers, 12,800 blinded requests, and no retained `.counterfactuals` directory. Its collection directory must contain 115,200 blinded call rows and 115,200 separately keyed ground-truth rows. The ecological directories must contain 80 scenario pairs, 160 cases, 40 template identifiers, 2,560 native-artifact requests, 7,680 blinded call rows, and 7,680 separately keyed ground-truth rows. Confirm that no call row in either layer contains intent, scenario, sequence, family, template, or expected-severity fields.
 
-The reviewers receive the study manifest, generator source, generated cards and prompts, power-analysis source and output, fixed prompt, [`preregistration-v2.md`](./preregistration-v2.md), analysis plan, and this protocol. They do not receive confirmatory responses, outcome summaries, or model-specific performance observations.
+The reviewers receive the study manifest, generator sources, generated cards and prompts, power-analysis source and output, fixed prompt, [`preregistration-v2.md`](./preregistration-v2.md), analysis plan, and this protocol. They do not receive confirmatory responses, outcome summaries, or model-specific performance observations.
 
 ### Protocol preflight
 
@@ -43,6 +47,8 @@ The benchmark reviewer must inspect:
 - The machine proof that the second instance differs only in invented identifiers.
 - The safety scanner and its forbidden-capability coverage.
 - The final-tree, changed-line, timestamp, blindness, and counterfactual-oracle checks.
+- The ecological subset selection and its one-per-family coverage of every data representation and control-flow shape.
+- Native pull-request and untrusted-main artifact renderings, including history boundaries, realistic neutrality, and absence of ground-truth leakage.
 
 For each of the 200 template identifiers, record `pass`, `revise`, or `exclude` for:
 
@@ -52,6 +58,8 @@ For each of the 200 template identifiers, record `pass`, `revise`, or `exclude` 
 - The split submissions are individually plausible and do not disclose ground truth.
 - The structure is materially different from the other templates in its family.
 - The code contains no external capability, reusable exploit, real target, credential, personal data, persistence, destructive action, or deployment path.
+
+For each of the 40 ecological template identifiers, additionally record whether the pull-request and trunk artifacts are plausible, preserve the intended information boundary, and reveal no condition-specific ground truth beyond the prospectively defined workflow treatment.
 
 Any safety failure is a stop condition. Revisions are permitted only before preregistration v2 and require regenerated hashes plus a complete repeat review of the affected family.
 
@@ -77,7 +85,7 @@ The reviewer should rerun reasonable sensitivity cases for the template intercep
 
 ## Token and routing review
 
-Verify every request is below 4,000 UTF-8 bytes and 2,000 model-native input tokens. Proxy or upstream counts may support debugging but cannot replace native counts for the frozen gateway route. Confirm that provider fallback is disabled, the intended provider endpoint is selected, and returned model and provider metadata will be rejected on mismatch.
+Verify every controlled and ecological request is below 4,000 UTF-8 bytes and 2,000 model-native input tokens. Proxy or upstream counts may support debugging but cannot replace native counts for the frozen gateway route. Confirm that provider fallback is disabled, the intended provider endpoint is selected, and returned model and provider metadata will be rejected on mismatch.
 
 ## Required review record
 
@@ -115,6 +123,11 @@ Copy this section into one record per reviewer. Do not combine the two required 
 - Schedule SHA-256:
 - Call-ledger SHA-256:
 - Ground-truth-ledger SHA-256:
+- Ecological cards SHA-256:
+- Ecological rendered-prompts SHA-256:
+- Ecological schedule SHA-256:
+- Ecological call-ledger SHA-256:
+- Ecological ground-truth-ledger SHA-256:
 - Native token-count evidence reviewed:
 
 ### Decisions

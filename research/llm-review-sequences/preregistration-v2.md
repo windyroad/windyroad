@@ -88,11 +88,13 @@ The controlled experiment crosses:
 
 Each of eight scenario families contains 25 structural templates. Every template has two instances that differ only in invented identifiers, giving 200 templates, 400 scenario pairs, and 800 intent-specific cases. Atomic and split variants have identical final trees, changed-line totals, and activation timestamps. Each of the three malicious split steps is necessary: reverting any one step makes the deterministic final oracle safe.
 
-This registration covers the controlled, byte-equivalent workflow experiment. A later ecological experiment using native pull-request and commit artifacts will require a separate preregistration or a clearly timestamped prospective update before its data collection; it is not part of the confirmatory call count here.
+This registration covers the controlled, byte-equivalent workflow experiment and a separate exploratory ecological layer. The ecological layer uses native-looking pull-request artifacts for the PR condition and landed-commit plus untrusted-pipeline artifacts for the trunk condition. It retains the same intent, decomposition, workflow, and context factors but cannot support or alter H1-H4.
 
 ### Randomization
 
 Review boundaries are globally shuffled with Fisher-Yates using the standard-library xorshift32 implementation in [`design.mjs`](./design.mjs), seed `20260716`. The frozen v2 schedule contains 115,200 calls in 57,600 sequences and has SHA-256 digest `e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663`. Each model receives 38,400 calls. Every review boundary starts a fresh model session; history is rendered explicitly only in cumulative conditions.
+
+The ecological schedule uses seed `20260718`, contains 7,680 calls in 3,840 sequences, and has SHA-256 digest `d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e`. Each model receives 2,560 ecological calls. Its ledger and hashes are separate from the confirmatory schedule.
 
 ## Sampling
 
@@ -128,6 +130,8 @@ The generalization sample is 200 structural templates, 25 in each of eight fixed
 
 Models, trials, and identifier instances are repeated observations within templates and do not increase the generalization sample size.
 
+The exploratory ecological layer selects template indexes 1, 7, 13, 19, and 25 in every family. This Latin-square subset retains every data representation and control-flow shape once per family, giving 40 structural templates, two identifier instances, 80 scenario pairs, one trial per model and condition, and 7,680 calls. It is sized for a bounded native-artifact replication, not for a confirmatory power claim.
+
 ### Sample-size rationale
 
 The standard-library hierarchical simulation in [`design.mjs`](./design.mjs) used 20,000 replications, seed `20260716`, three Bernoulli replicates per cell, central atomic recall 0.65, benign false-positive rate 0.10, split penalty 0.15, decomposition-by-workflow interaction 0.10, decomposition-by-context interaction 0.10, and conservative template-level random intercept and slope variation. It does not assume that the three models create additional independent templates. The selected 200-template by two-instance layout retains the complete eight-family by five-representation by five-control-flow coverage. Estimated H1 power was 1.0000, H2 power 1.0000, H3a equivalence assurance 1.0000, H3b interaction power 0.9921, and H4 interaction power 0.9919. A 40-template layout also clears 0.80 under these assumptions but discards the planned structural crossing in favor of repeated identifier variants, so it is not selected. These are design assumptions, not pilot estimates.
@@ -138,7 +142,7 @@ Confirmatory collection starts only after all five eligibility conditions above 
 
 If no usable response exists because of a network error, HTTP 408, HTTP 409, HTTP 429, HTTP 5xx response, or route-metadata mismatch, the identical request may be retried twice, for three total attempts. The executor honors `Retry-After` values up to 60 seconds; a longer value suspends collection instead of retrying early. Without `Retry-After`, it waits 2 seconds before the second attempt and 8 seconds before the third. A provider refusal or schema-invalid response is an observed `abstain` and is not retried. Every attempt is logged.
 
-Collection stops before accrued cost plus the frozen projected remainder would exceed US$1,400. A safety-policy change, provider-terms conflict, benchmark-integrity failure, or 100 consecutive infrastructure failures suspends collection before further calls. Resumption requires a documented, outcome-blind decision. If the full schedule cannot be completed, all collected and missing calls remain reportable; no replacement templates or additional trials are added.
+Confirmatory collection stops before accrued cost plus the frozen projected remainder would exceed US$1,400. Ecological collection has a separate US$72.97024 projection and US$100 ceiling. Neither ceiling authorizes spending. A safety-policy change, provider-terms conflict, benchmark-integrity failure, or 100 consecutive infrastructure failures suspends collection before further calls. Resumption requires a documented, outcome-blind decision. If a schedule cannot be completed, all collected and missing calls remain reportable; no replacement templates or additional trials are added.
 
 ## Variables
 
@@ -234,9 +238,11 @@ The executable scorer records each retry-exhausted boundary in `missing_boundari
 
 Secondary reports include recall, false-positive rate, precision, abstention rate, cumulative detection by submission boundary, mean submissions to detection among detections, calibration, severity error, localization, refusal and failure rates, and repeated-trial consistency. All receive template-respecting intervals where applicable.
 
+The ecological layer reports the same descriptive outcomes and controlled-versus-ecological differences by workflow and context. Because its native artifact fields differ by workflow and it has one trial per cell, all ecological comparisons are exploratory; reviewer-consistency estimates are not reported for that layer.
+
 A deterministic static-analysis baseline is run on the generated source where an existing installed tool applies, with its limitations stated; it is not treated as semantically equivalent to LLM review. A blinded human-review baseline is contingent on recruitment feasibility, consent, anonymization, and any required ethics approval. If those conditions are not met before model collection, the human baseline is omitted and reported as infeasible rather than replaced post hoc.
 
-Prespecified secondary ablations are metadata removal, repository-snapshot presence, split timestamp spacing, and neutral interleaving. An ablation is collected only if its generator, call count, token preflight, analysis, and prospective registration are frozen before any ablation outcome exists. Otherwise it is omitted from this study and described as future work.
+The controlled local-versus-cumulative context factor is the powered history ablation. Additional candidate ablations are metadata removal, repository-snapshot presence, split timestamp spacing, and neutral interleaving. None is in the current call ledgers. An additional ablation is collected only if its generator, call count, token preflight, analysis, and prospective registration are frozen before any ablation outcome exists. Otherwise it is omitted and described as future work.
 
 ## Other context
 
@@ -254,6 +260,8 @@ At the candidate freeze represented by [`study.json`](./study.json):
 - Fixed prompt SHA-256: `9e49d849f1435fa962fe2fb7bc000592b8c692bc97d0e5c9f1eef7a307bc4c07`.
 - Rendered prompts SHA-256: `56d246f9c676e94f29ce2dea4025633f1b31815959b5b34b0daf2b49af32dff4`.
 - Schedule SHA-256: `e90a26028bfd0b0a38f15ce55c71ffb5c983c8eaf03b7ef18cc74f697481a663`.
+- Ecological rendered prompts SHA-256: `b2837c4088147e036fbdf7e7e985bfbd3b15d3f1a187c735bf1096236d806580`.
+- Ecological schedule SHA-256: `d2ffe01262af1d1a93facc441c6df03bd9e32d745548da541ddc01cf25cbdc5e`.
 
 Required before submission: replace “candidate freeze” with the final Git commit identifier, attach or archive the approved reviewer records, record exact native token-count evidence, and verify these hashes from a clean checkout. If any hash changes, update this draft and repeat the affected pre-outcome review before registration.
 

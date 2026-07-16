@@ -118,6 +118,19 @@ describe("preregistered study design", () => {
     )).toBe(true);
   });
 
+  it("schedules the scenario identifiers present in a benchmark subset", () => {
+    const schedule = generateCallSchedule({
+      scenarioIds: ["scenario-001", "scenario-177"],
+      models: ["model-a"],
+      trialsPerCell: 1,
+    });
+
+    expect(new Set(schedule.rows.map(({ scenario_id }) => scenario_id))).toEqual(
+      new Set(["scenario-001", "scenario-177"]),
+    );
+    expect(schedule.rows).toHaveLength(64);
+  });
+
   it("estimates the maximum inference cost from frozen token ceilings", () => {
     expect(estimateCost({
       callsByModel: { "model-a": 10, "model-b": 20 },
