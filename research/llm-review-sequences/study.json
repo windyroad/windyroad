@@ -1,6 +1,6 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-candidate-under-correction; preregistration-v1-preserved",
+  "status": "subscription-v2-reviewed; OSF-registration-pending; preregistration-v1-preserved",
   "frozen": false,
   "frozen_at": null,
   "freeze_scope": "No active subscription design is frozen or authorized until AI-assisted internal review findings are resolved and OSF registration is recorded.",
@@ -19,7 +19,7 @@
   },
   "primary_endpoint": "blocked_by_activation",
   "active_subscription_design": {
-    "status": "prospective-candidate; AI-internal-review-and-OSF-registration-pending",
+    "status": "prospective-candidate; AI-internal-review-complete; OSF-registration-pending",
     "supersedes": "The uncollected OpenRouter candidates below are retained as design history only.",
     "reason": "The sole author authorized no expenditure beyond existing ChatGPT/Codex and Claude Code subscriptions.",
     "confirmatory_outcomes_collected": false,
@@ -334,7 +334,7 @@
     "ground_truth_sha256": "34ec31cb8ef59e28f31981fb5b76cd896bf984f0bb62943f081e5e2ff57aadbd"
   },
   "ecological_layer": {
-    "status": "active-subscription-v2-candidate; AI-internal-review-and-registration-pending",
+    "status": "active-subscription-v2-candidate; AI-internal-review-complete; registration-pending",
     "generator": "ecological.mjs",
     "confirmatory": true,
     "confirmatory_outcomes_collected": false,
@@ -396,14 +396,12 @@
     "reason": "The Semgrep Rules License v1.0 prohibits redistribution, so the exact rules snapshot cannot be included in the public reproducibility package. The observed zero-finding feasibility result is disclosed but excluded from study analyses."
   },
   "preregistration_v2_draft": {
-    "status": "subscription-v2-draft; AI-internal-review-and-registration-pending",
+    "status": "subscription-v2-reviewed; OSF-registration-pending",
     "template": "OSF Preregistration",
     "file": "preregistration-v2.md",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
-      "confirm optional ORCID identifier, OSF administrator permissions, and license",
-      "archive AI-assisted safety, methods, and reproducibility review records",
-      "verify subscription-only authentication and zero paid API credentials",
+      "create the OSF registration with Tom Howard as sole administrator; no ORCID is recorded unless supplied before registration",
       "replace candidate freeze with final commit and reverify artifact hashes"
     ],
     "external_identifier": null,

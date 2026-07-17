@@ -81,3 +81,13 @@ The three final correction reviews again returned `do not approve`. Their remain
 - Methods `METH-FB01`: accepted by relabelling `0.2577`, `0.0038`, and `0.1016` as single-review-system normal-approximation sensitivity diagnostics. The manifest, preregistration, README, manuscript, and test now state that this audit neither pools the two review systems nor runs the registered family-stratified percentile bootstrap and therefore does not estimate power or assurance for the registered analysis.
 
 These corrections remain pre-outcome and require one final verification by the affected roles before OSF registration.
+
+## Finding-specific verification of `4b48101`
+
+All three affected roles verified the accepted corrections against commit `4b48101ea57f074c14b1c4ab72c42d861c788e8c` without receiving confirmatory outcomes:
+
+- `AI-SAFETY-01`: `approve with documented limitations`. `B-01-R2` and `M-04-R2` are resolved; the existing fixed-corpus, dual-use, and non-isolated-correction disclosures remain required.
+- `AI-METHODS-01`: `approve`. `METH-FB01` is resolved because the three reproducible simulation values are consistently presented as sensitivity diagnostics rather than operating characteristics of the registered analysis.
+- `AI-REPRO-01`: `approve`. `AI-REPRO-01-FB01` is resolved; four fabricated resumes preserve model drift as a durable suspension with no missing result.
+
+The verbatim verification records are archived beside this log. No AI-assisted internal-review blocker remains. OSF registration may proceed, but subscription collection remains unauthorized until the external identifier is recorded, the manifest is frozen, and all authorization/hash checks pass.
