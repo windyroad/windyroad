@@ -34,7 +34,13 @@ describe('Header source', () => {
 
 describe('Header mobile menu focus', () => {
   it('keeps Tab focus inside the open menu', () => {
-    render(<Header />);
+    render(
+      <>
+        <Header />
+        <main data-testid="page-content" />
+        <footer data-testid="page-footer" />
+      </>,
+    );
 
     const menuButton = screen.getByRole('button', { name: 'Menu' });
     fireEvent.click(menuButton);
@@ -47,20 +53,38 @@ describe('Header mobile menu focus', () => {
 
     newsletterLink.focus();
     fireEvent.keyDown(window, { key: 'Tab' });
-    expect(menuButton).toHaveFocus();
+    const homeLink = screen.getByRole('link', {
+      name: 'Windy Road Technology, home',
+    });
+    expect(homeLink).toHaveFocus();
 
     fireEvent.keyDown(window, { key: 'Tab', shiftKey: true });
     expect(newsletterLink).toHaveFocus();
   });
 
   it('returns focus to the menu button when Escape closes it', () => {
-    render(<Header />);
+    render(
+      <>
+        <Header />
+        <main data-testid="page-content" />
+        <footer data-testid="page-footer" />
+      </>,
+    );
 
     const menuButton = screen.getByRole('button', { name: 'Menu' });
     fireEvent.click(menuButton);
+
+    expect(
+      screen.getByRole('dialog', { name: 'Main menu' }),
+    ).toHaveAttribute('aria-modal', 'true');
+    expect(screen.getByTestId('page-content')).toHaveAttribute('inert');
+    expect(screen.getByTestId('page-footer')).toHaveAttribute('inert');
+
     fireEvent.keyDown(window, { key: 'Escape' });
 
     expect(menuButton).toHaveAttribute('aria-expanded', 'false');
     expect(menuButton).toHaveFocus();
+    expect(screen.getByTestId('page-content')).not.toHaveAttribute('inert');
+    expect(screen.getByTestId('page-footer')).not.toHaveAttribute('inert');
   });
 });

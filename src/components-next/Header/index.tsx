@@ -8,6 +8,7 @@ import styles from './Header.module.scss';
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
@@ -27,12 +28,27 @@ export default function Header() {
   }, [closeMenu]);
 
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
+    if (!menuOpen) {
       document.body.style.overflow = '';
+      return;
     }
-    return () => { document.body.style.overflow = ''; };
+
+    const backgroundElements = Array.from(
+      document.querySelectorAll<HTMLElement>('main, footer, .skip-link'),
+    );
+    const previousInert = backgroundElements.map((element) =>
+      element.hasAttribute('inert'),
+    );
+
+    document.body.style.overflow = 'hidden';
+    backgroundElements.forEach((element) => element.setAttribute('inert', ''));
+
+    return () => {
+      document.body.style.overflow = '';
+      backgroundElements.forEach((element, index) => {
+        if (!previousInert[index]) element.removeAttribute('inert');
+      });
+    };
   }, [menuOpen]);
 
   useEffect(() => {
@@ -42,9 +58,11 @@ export default function Header() {
     const navLinks = Array.from(
       navRef.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [],
     );
-    const focusable: HTMLElement[] = [];
-    if (menuButton) focusable.push(menuButton);
-    focusable.push(...navLinks);
+    const focusable = Array.from(
+      headerRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled])',
+      ) ?? [],
+    );
     (navLinks[0] ?? menuButton)?.focus();
 
     function onKeyDown(e: KeyboardEvent) {
@@ -80,7 +98,13 @@ export default function Header() {
   }, [menuOpen]);
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+    <header
+      ref={headerRef}
+      role={menuOpen ? 'dialog' : undefined}
+      aria-modal={menuOpen || undefined}
+      aria-label={menuOpen ? 'Main menu' : undefined}
+      className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}
+    >
       <Link href="/" className={styles.wordmark} aria-label="Windy Road Technology, home">
         <svg
           aria-hidden="true"
