@@ -236,6 +236,24 @@
   margin-bottom: 1.25rem;
 }
 
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+
+.ctaRelated {
+  color: var(--color-accent-on-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+
+  &:hover {
+    color: var(--color-text-light);
+  }
+}
+
 .readMore {
   display: inline-block;
   margin-top: 1rem;

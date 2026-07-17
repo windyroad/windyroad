@@ -20,8 +20,13 @@ describe('blog [slug]/page.tsx source', () => {
     expect(source).not.toMatch(/CTA_TAGS/);
   });
 
-  it('does not import the Button component (no longer needed)', () => {
+  it('does not import the generic Button component', () => {
     expect(source).not.toMatch(/from ['"].*\/Button['"]/);
+  });
+
+  it('offers a tracked newsletter subscription and more articles', () => {
+    expect(source).toContain('placement="article-end"');
+    expect(source).toContain('href="/blog"');
   });
 
   it('includes accessible Open Graph image metadata', () => {

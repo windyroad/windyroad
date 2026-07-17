@@ -1,3 +1,4 @@
+import type { MouseEventHandler, ReactNode } from 'react';
 import styles from './Button.module.scss';
 
 interface ButtonProps {
@@ -5,7 +6,8 @@ interface ButtonProps {
   variant?: 'primary' | 'outline' | 'inverted' | 'ghost';
   size?: 'default' | 'large';
   external?: boolean;
-  children: React.ReactNode;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  children: ReactNode;
 }
 
 export default function Button({
@@ -13,6 +15,7 @@ export default function Button({
   variant = 'primary',
   size = 'default',
   external = false,
+  onClick,
   children,
 }: ButtonProps) {
   const className = [
@@ -27,6 +30,7 @@ export default function Button({
     <a
       href={href}
       className={className}
+      onClick={onClick}
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {children}

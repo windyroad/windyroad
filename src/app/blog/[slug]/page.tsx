@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { format, parse } from 'date-fns';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
+import NewsletterButton from '@/src/components-next/NewsletterButton';
 import styles from '../post.module.scss';
 import ArticleContent from './ArticleContent';
 import 'highlight.js/styles/github-dark.css';
@@ -92,6 +93,24 @@ export default async function BlogPost({
           <section className={styles.content}>
             <ArticleContent html={html} />
             {moreLink}
+          </section>
+          <hr className={styles.ctaDivider} />
+          <section className={styles.cta}>
+            <h2 className={styles.ctaHeadline}>
+              Keep following The Shift
+            </h2>
+            <p className={styles.ctaBody}>
+              A practical newsletter about AI engineering, software delivery,
+              and the systems around them.
+            </p>
+            <div className={styles.ctaActions}>
+              <NewsletterButton placement="article-end">
+                Subscribe to The Shift on LinkedIn
+              </NewsletterButton>
+              <Link href="/blog" className={styles.ctaRelated}>
+                Browse all articles <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
           </section>
         </article>
       </div>

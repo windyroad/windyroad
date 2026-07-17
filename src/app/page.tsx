@@ -2,12 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { format, parse } from 'date-fns';
 import Button from '@/src/components-next/Button';
+import NewsletterButton from '@/src/components-next/NewsletterButton';
 import { getAllPosts } from '@/src/lib/markdown';
 import { HERO_HEADLINE } from '@/src/lib/siteCopy.mjs';
 import styles from './page.module.scss';
-
-const NEWSLETTER_URL =
-  'https://www.linkedin.com/newsletters/the-shift-7450748696826134528/';
 
 export const metadata: Metadata = {
   title: 'The Shift: AI engineering, every week | Windy Road Technology',
@@ -52,9 +50,9 @@ export default function Home() {
             what it means for the tools you ship with.
           </p>
           <div className={styles.cta}>
-            <Button href={NEWSLETTER_URL} size="large" external>
-              Subscribe on LinkedIn
-            </Button>
+            <NewsletterButton placement="hero">
+              Subscribe to The Shift on LinkedIn
+            </NewsletterButton>
             <Button href="/blog" variant="ghost" size="large">
               Read the blog <span aria-hidden="true">&rarr;</span>
             </Button>
@@ -165,9 +163,9 @@ export default function Home() {
           <h2 className={styles.ctaTitle}>
             The Shift lands most Mondays. One email, a few minutes, no fluff.
           </h2>
-          <Button href={NEWSLETTER_URL} size="large" external>
-            Subscribe on LinkedIn
-          </Button>
+          <NewsletterButton placement="footer">
+            Subscribe to The Shift on LinkedIn
+          </NewsletterButton>
         </div>
       </section>
     </>

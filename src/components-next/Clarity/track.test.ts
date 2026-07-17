@@ -11,8 +11,8 @@ vi.mock('@microsoft/clarity', () => ({
 }));
 
 beforeEach(() => {
-  mockEvent.mockClear();
-  mockSetTag.mockClear();
+  mockEvent.mockReset();
+  mockSetTag.mockReset();
 });
 
 describe('trackEvent', () => {
@@ -50,5 +50,14 @@ describe('trackEvent', () => {
     trackEvent('fully_booked_hover');
     expect(mockSetTag).not.toHaveBeenCalled();
     expect(mockEvent).toHaveBeenCalledWith('fully_booked_hover');
+  });
+
+  it('does not let Clarity failures escape into navigation handlers', async () => {
+    const { trackEvent } = await import('./track');
+    mockEvent.mockImplementationOnce(() => {
+      throw new Error('Clarity unavailable');
+    });
+
+    expect(() => trackEvent('newsletter_subscribe_click')).not.toThrow();
   });
 });

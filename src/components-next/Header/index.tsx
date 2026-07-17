@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { trackEvent } from '@/src/components-next/Clarity/track';
 import styles from './Header.module.scss';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     function onScroll() {
@@ -18,6 +21,10 @@ export default function Header() {
   }, []);
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const handleNewsletterClick = useCallback(() => {
+    trackEvent('newsletter_subscribe_click', { placement: 'header' });
+    closeMenu();
+  }, [closeMenu]);
 
   useEffect(() => {
     if (menuOpen) {
@@ -30,9 +37,42 @@ export default function Header() {
 
   useEffect(() => {
     if (!menuOpen) return;
+
+    const menuButton = menuButtonRef.current;
+    const navLinks = Array.from(
+      navRef.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [],
+    );
+    const focusable: HTMLElement[] = [];
+    if (menuButton) focusable.push(menuButton);
+    focusable.push(...navLinks);
+    (navLinks[0] ?? menuButton)?.focus();
+
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
+        e.preventDefault();
         setMenuOpen(false);
+        menuButton?.focus();
+        return;
+      }
+
+      if (e.key !== 'Tab' || focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (
+        e.shiftKey &&
+        (active === first || !focusable.includes(active as HTMLElement))
+      ) {
+        e.preventDefault();
+        last.focus();
+      } else if (
+        !e.shiftKey &&
+        (active === last || !focusable.includes(active as HTMLElement))
+      ) {
+        e.preventDefault();
+        first.focus();
       }
     }
     window.addEventListener('keydown', onKeyDown);
@@ -68,6 +108,7 @@ export default function Header() {
 
       {/* Hamburger toggle - visible on mobile only */}
       <button
+        ref={menuButtonRef}
         type="button"
         className={styles.hamburger}
         aria-expanded={menuOpen}
@@ -92,6 +133,7 @@ export default function Header() {
       </button>
 
       <nav
+        ref={navRef}
         id="main-nav"
         aria-label="Main"
         className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}
@@ -104,7 +146,7 @@ export default function Header() {
           target="_blank"
           rel="noopener noreferrer"
           className={styles.navLink}
-          onClick={closeMenu}
+          onClick={handleNewsletterClick}
         >
           The Shift<span className="sr-only"> (opens in new tab)</span>
         </a>

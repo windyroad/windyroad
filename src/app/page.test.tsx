@@ -14,7 +14,12 @@ describe('Homepage page.tsx source', () => {
   });
 
   it('drives subscription to The Shift newsletter', () => {
-    expect(source).toMatch(/linkedin\.com\/newsletters\/the-shift/);
+    expect(source).toContain('NewsletterButton');
+  });
+
+  it('tracks newsletter clicks from the hero and footer separately', () => {
+    expect(source).toContain('placement="hero"');
+    expect(source).toContain('placement="footer"');
   });
 
   it('links to the blog', () => {
