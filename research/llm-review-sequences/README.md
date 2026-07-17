@@ -99,7 +99,7 @@ Exploratory estimates are trunk minus pull-request detection and the decompositi
 
 Uncertainty uses a 10,000-replicate family-stratified structural-template bootstrap. Missingness is exposed with estimand-specific bounds: H1 assigns missing malicious and benign cells oppositely, while H2 assigns missing atomic and split malicious cells oppositely. A review-system-specific complete-pair analysis is also reported. No imputation model is fitted.
 
-Under the preregistered central assumptions, the 40-pair, one-trial design has estimated power 0.2577 for the directional split effect, assurance 0.0038 for workflow equivalence, and power 0.1016 for the workflow interaction. No H1 power calculation was performed. These values are limitations, not pilot results.
+Under the preregistered central assumptions, a single-review-system normal-approximation audit yields a split-effect rejection fraction of 0.2577, a workflow-equivalence fraction of 0.0038, and an interaction rejection fraction of 0.1016. The audit neither pools two review systems nor runs the registered family-stratified percentile bootstrap, so these are sensitivity diagnostics—not power or assurance for the registered analysis. No H1 operating-characteristic calculation was performed; the values are not pilot results.
 
 ## Deterministic baseline
 

@@ -36,7 +36,7 @@ describe("preregistered study design", () => {
     }
   });
 
-  it("reproduces the active directional H2 power audit", () => {
+  it("reproduces the active normal-approximation sensitivity audit", () => {
     const [active] = runPowerSimulation({
       scenarioCounts: [40], simulations: 20_000, trialsPerCell: 1, seed: 20260718,
     }).candidates;

@@ -58,14 +58,14 @@
       "review_boundaries": 1280,
       "boundaries_per_review_system": 640
     },
-    "power_audit": {
-      "method": "Paired scenario-cluster Monte Carlo using the preregistration-v1 central assumptions; 20,000 simulations.",
+    "normal_approximation_sensitivity_audit": {
+      "method": "Single-review-system paired scenario-cluster Monte Carlo using a normal approximation and preregistration-v1 central assumptions; 20,000 simulations. This does not execute the registered pooled two-system family-stratified bootstrap and is not its operating characteristic.",
       "seed": 20260718,
-      "split_effect_power": 0.2577,
-      "h1_power": null,
-      "workflow_equivalence_assurance": 0.0038,
-      "decomposition_by_workflow_interaction_power": 0.1016,
-      "interpretation": "No H1 power calculation was performed. The subscription-bounded study estimates all contrasts with intervals but treats workflow equivalence and the interaction as exploratory. Absence of a detected effect is not evidence of equivalence."
+      "split_effect_rejection_fraction": 0.2577,
+      "h1_diagnostic": null,
+      "workflow_equivalence_fraction": 0.0038,
+      "decomposition_by_workflow_interaction_rejection_fraction": 0.1016,
+      "interpretation": "These values are sensitivity diagnostics, not power or assurance for the registered pooled-bootstrap analysis. No H1 diagnostic was performed. The subscription-bounded study estimates all contrasts with intervals but treats workflow equivalence and the interaction as exploratory. Absence of a detected effect is not evidence of equivalence."
     },
     "collection": {
       "runner": "subscription-runner.mjs",

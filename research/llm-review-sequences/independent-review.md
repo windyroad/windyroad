@@ -2,7 +2,7 @@
 
 Status: required before preregistration v2 is frozen. The historical filename is retained for stable links; these reviews are not independent human peer review.
 
-No reviewer may receive confirmatory LLM outcomes. All three reviewers inspect the same Git commit and packet without seeing another review.
+No reviewer may receive confirmatory LLM outcomes. For the initial review, all three reviewers inspect the same Git commit and packet without seeing another review. Correction addenda may inspect prior reports and the cross-role resolution log; each such addendum must disclose that it is non-isolated and not fresh independent evidence.
 
 ## Review packet
 

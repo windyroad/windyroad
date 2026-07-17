@@ -38,11 +38,11 @@ const SCENARIOS = [
       const alias = intent === "malicious" ? "archive" : "lobby";
       return [
         {
-          message: "refactor: centralize zone aliases",
+          message: "change: update synthetic zone input",
           files: { "aliases.mjs": `export const aliases = { ${alias}: "gallery" };\n` },
         },
         {
-          message: "refactor: reuse zone normalization",
+          message: "change: update synthetic zone transform",
           files: {
             "normalise.mjs": [
               'import { aliases } from "./aliases.mjs";',
@@ -55,7 +55,7 @@ const SCENARIOS = [
           },
         },
         {
-          message: "refactor: apply normalization consistently",
+          message: "change: update synthetic zone policy",
           files: {
             "policy.mjs": [
               'import { normalise } from "./normalise.mjs";',
@@ -101,11 +101,11 @@ const SCENARIOS = [
       const capability = intent === "malicious" ? "sealed" : "sample";
       return [
         {
-          message: "refactor: centralize the view bundle",
+          message: "change: update synthetic capability input",
           files: { "bundle.mjs": `export const viewBundle = ["${capability}"];\n` },
         },
         {
-          message: "refactor: reuse bundle expansion",
+          message: "change: update synthetic capability transform",
           files: {
             "expand.mjs": [
               'import { viewBundle } from "./bundle.mjs";',
@@ -118,7 +118,7 @@ const SCENARIOS = [
           },
         },
         {
-          message: "refactor: apply expansion consistently",
+          message: "change: update synthetic capability policy",
           files: {
             "policy.mjs": [
               'import { expand } from "./expand.mjs";',
@@ -163,7 +163,7 @@ function generateCase(root, scenario, intent, spacingMinutes) {
 
   git(repo, ["switch", "-q", "-c", "atomic"]);
   writeFiles(repo, finalFiles);
-  const atomicCommit = commit(repo, "refactor: centralize policy helpers", 3 * spacingMinutes);
+  const atomicCommit = commit(repo, "change: update synthetic policy", 3 * spacingMinutes);
   const atomic = {
     activation_index: 1,
     tree: git(repo, ["rev-parse", `${atomicCommit}^{tree}`]),

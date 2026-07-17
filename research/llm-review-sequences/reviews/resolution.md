@@ -69,3 +69,15 @@ The first correction addenda also returned `do not approve`. Their additional fi
 - Reproducibility `Cm02`: accepted. The deterministic manuscript instructions now include the release copy and checksum commands.
 
 These corrections remain pre-outcome and require another affected-role review before OSF registration.
+
+## Resolution of final correction reviews for `3a77286`
+
+The three final correction reviews again returned `do not approve`. Their remaining findings are accepted as follows:
+
+- Safety `B-01-R2`: accepted. The imported pilot generator's six split titles and atomic title now use neutral synthetic input, transform, and policy labels.
+- Safety `M-04-R2`: accepted. The governing protocol now limits isolation to the initial reviews and requires non-isolation disclosure for correction addenda.
+- Reproducibility `AI-REPRO-01-FB01`: accepted. Returned-model drift now creates a durable `model_drift` suspension that never consumes the three-infrastructure-failure ceiling; a four-resume fabricated regression test proves that it produces neither a result nor missingness.
+- Reproducibility minor positive-path/hash-branch tests: noted as useful additional coverage but not required for the preregistration gate because clean regeneration, the closed authorization test, and the five-hash check are independently exercised. No outcome call is authorized until the manifest is frozen and registered.
+- Methods `METH-FB01`: accepted by relabelling `0.2577`, `0.0038`, and `0.1016` as single-review-system normal-approximation sensitivity diagnostics. The manifest, preregistration, README, manuscript, and test now state that this audit neither pools the two review systems nor runs the registered family-stratified percentile bootstrap and therefore does not estimate power or assurance for the registered analysis.
+
+These corrections remain pre-outcome and require one final verification by the affected roles before OSF registration.

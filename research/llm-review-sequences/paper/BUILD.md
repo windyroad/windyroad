@@ -25,5 +25,5 @@ cp research/llm-review-sequences/paper/paper.pdf output/pdf/paper.pdf
 shasum -a 256 research/llm-review-sequences/paper/paper.tex output/pdf/paper.pdf
 ```
 
-- `paper.tex` SHA-256: `b577e558081f0ca42d4c18a9418fb405c99be37216f27ff082451a5f2df636bb`
-- `output/pdf/paper.pdf` SHA-256: `2f941666c073c03a418059b6fe1d24a7597edca4cc756fbf5b4b2e797abad3d8`
+- `paper.tex` SHA-256: `e7a53813083fe1112e18444fcc1088c029e2569ec83a15c4b0f1c228506333e4`
+- `output/pdf/paper.pdf` SHA-256: `8b576794765411e2cc25b3473ff06598cbb312ef50cdbd2f4a843e03c05aaf19`

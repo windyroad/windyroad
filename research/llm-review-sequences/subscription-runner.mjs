@@ -163,7 +163,9 @@ export function collectSubscriptionSchedule({
         returned_model: parsed.returned_model, tool_deviation: parsed.tool_deviation, usage: parsed.usage });
       completed.add(call.call_id);
     } catch (error) {
-      const reason = /rate.?limit|usage.?limit|reset/i.test(error.message) ? "rate_limit" : "client_failure";
+      const reason = /rate.?limit|usage.?limit|reset/i.test(error.message)
+        ? "rate_limit"
+        : /returned model drift/i.test(error.message) ? "model_drift" : "client_failure";
       if (reason === "client_failure") {
         failures.set(call.call_id, (failures.get(call.call_id) ?? 0) + 1);
       }

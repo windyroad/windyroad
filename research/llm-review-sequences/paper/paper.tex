@@ -252,10 +252,13 @@ intervals carry no inferential decision and receive no multiplicity adjustment.
 
 The products and sample are a convenience selection determined by subscriptions
 already held by the author, not an 80\% power target. Under
-the earlier central assumptions, a 20,000-replication audit estimates power of
-0.2577 for a 0.15 split penalty, assurance of 0.0038 for workflow equivalence
-within $\pm0.10$, and power of 0.1016 for a 0.10 interaction. No H1 power
-calculation was performed. Consequently, null
+the earlier central assumptions, a 20,000-replication single-review-system
+normal-approximation audit yields rejection fractions of 0.2577 for a 0.15 split
+penalty and 0.1016 for a 0.10 interaction, plus a workflow-equivalence fraction
+of 0.0038 within $\pm0.10$. The audit neither pools two review systems nor runs
+the registered family-stratified percentile bootstrap, so these values are
+sensitivity diagnostics, not power or assurance for the registered analysis.
+No H1 operating-characteristic calculation was performed. Consequently, null
 results cannot support claims of no decomposition or workflow effect. The study
 is a bounded empirical evaluation and a variance estimate for a larger
 replication.
@@ -323,7 +326,7 @@ real target, external capability, credential, deployment path, or complete explo
 
 \section{Reproducibility}
 
-The candidate package contains the generator, schedule, scorer, power simulation,
+The candidate package contains the generator, schedule, scorer, sensitivity simulation,
 preregistration, archived initial internal-review records, durable subscription
 runner, and analysis code. Current unfrozen hashes are:
 

@@ -94,9 +94,9 @@ Collection also suspends on a safety or provider-terms conflict, authentication 
 
 An infrastructure failure that yields no usable response suspends the current call for author diagnosis. The same call may be retried without reordering, up to three recorded attempts. Refusals and schema-invalid responses are observed abstentions and are not retried. Every start, completion, and suspension remains in the fsynced append-only ledger.
 
-## Sampling and power
+## Sampling and sensitivity diagnostics
 
-The products and sample size are a convenience selection constrained by subscriptions already held by the author rather than selected to achieve 80% power. Under the earlier central assumptions of atomic recall 0.65, a split penalty of 0.15, workflow effect zero, interaction 0.10, scenario logit standard deviation 0.75, one trial, and 20,000 simulations, the 40-pair design has estimated directional split-effect power 0.2577, workflow-equivalence assurance 0.0038, and interaction power 0.1016. No H1 operating-characteristic calculation was performed.
+The products and sample size are a convenience selection constrained by subscriptions already held by the author rather than selected to achieve 80% power. Under the earlier central assumptions of atomic recall 0.65, a split penalty of 0.15, workflow effect zero, interaction 0.10, scenario logit standard deviation 0.75, one trial, and 20,000 simulations, a single-review-system normal-approximation audit yields a split-effect rejection fraction of 0.2577, a workflow-equivalence fraction of 0.0038, and an interaction rejection fraction of 0.1016. This audit neither pools two review systems nor runs the registered family-stratified percentile bootstrap, so these values are sensitivity diagnostics, not power or assurance for the registered analysis. No H1 operating-characteristic calculation was performed.
 
 Accordingly, H1 and H2 remain directional prospective tests, but all estimates emphasize interval width. Workflow equivalence is not tested, the workflow interaction is exploratory, and null results cannot support claims of no effect. The study is best interpreted as a bounded empirical evaluation and feasibility estimate for a larger replication.
 

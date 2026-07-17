@@ -137,7 +137,7 @@ describe("subscription collection runner", () => {
       submission_ids: [], evidence: "No unsafe composition.", category: "none",
     };
     let index = 0;
-    const result = collectSubscriptionSchedule({
+    const options = {
       benchmarkRoot: benchmark, collectionRoot: collection, outputRoot: output,
       codexBin: "/opt/codex", claudeBin: "/opt/claude", authorize: () => {},
       preflight: () => ({ codex_version: "0.137.0", claude_version: "2.1.211" }),
@@ -145,8 +145,13 @@ describe("subscription collection runner", () => {
         structured_output: response,
         model: index++ === 0 ? "claude-sonnet-4-6" : "claude-sonnet-5-0",
       }) }),
-    });
-    expect(result).toMatchObject({ completed: 1, suspended_call_id: "c2", reason: "client_failure" });
+    };
+    for (let resume = 0; resume < 4; resume += 1) {
+      expect(collectSubscriptionSchedule(options)).toMatchObject({
+        completed: 1, suspended_call_id: "c2", reason: "model_drift",
+      });
+    }
+    expect(readFileSync(join(output, "results.jsonl"), "utf8")).not.toContain('"call_id":"c2"');
   });
 });
 
