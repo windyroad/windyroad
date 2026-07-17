@@ -8,7 +8,7 @@ import styles from './Header.module.scss';
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const headerRef = useRef<HTMLElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
@@ -59,7 +59,7 @@ export default function Header() {
       navRef.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [],
     );
     const focusable = Array.from(
-      headerRef.current?.querySelectorAll<HTMLElement>(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
         'a[href], button:not([disabled])',
       ) ?? [],
     );
@@ -98,14 +98,15 @@ export default function Header() {
   }, [menuOpen]);
 
   return (
-    <header
-      ref={headerRef}
-      role={menuOpen ? 'dialog' : undefined}
-      aria-modal={menuOpen || undefined}
-      aria-label={menuOpen ? 'Main menu' : undefined}
-      className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}
-    >
-      <Link href="/" className={styles.wordmark} aria-label="Windy Road Technology, home">
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+      <div
+        ref={dialogRef}
+        role={menuOpen ? 'dialog' : undefined}
+        aria-modal={menuOpen || undefined}
+        aria-label={menuOpen ? 'Main menu' : undefined}
+        className={styles.inner}
+      >
+      <Link href="/" className={styles.wordmark} aria-label="Windy Road Technology, home" onClick={closeMenu}>
         <svg
           aria-hidden="true"
           focusable="false"
@@ -136,6 +137,7 @@ export default function Header() {
         type="button"
         className={styles.hamburger}
         aria-expanded={menuOpen}
+        aria-haspopup="dialog"
         aria-controls="main-nav"
         aria-label="Menu"
         onClick={() => setMenuOpen(!menuOpen)}
@@ -175,6 +177,7 @@ export default function Header() {
           The Shift<span className="sr-only"> (opens in new tab)</span>
         </a>
       </nav>
+      </div>
     </header>
   );
 }

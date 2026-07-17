@@ -74,9 +74,10 @@ describe('Header mobile menu focus', () => {
     const menuButton = screen.getByRole('button', { name: 'Menu' });
     fireEvent.click(menuButton);
 
-    expect(
-      screen.getByRole('dialog', { name: 'Main menu' }),
-    ).toHaveAttribute('aria-modal', 'true');
+    const dialog = screen.getByRole('dialog', { name: 'Main menu' });
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(dialog.tagName).toBe('DIV');
+    expect(dialog.closest('header')).not.toHaveAttribute('role');
     expect(screen.getByTestId('page-content')).toHaveAttribute('inert');
     expect(screen.getByTestId('page-footer')).toHaveAttribute('inert');
 
@@ -86,5 +87,20 @@ describe('Header mobile menu focus', () => {
     expect(menuButton).toHaveFocus();
     expect(screen.getByTestId('page-content')).not.toHaveAttribute('inert');
     expect(screen.getByTestId('page-footer')).not.toHaveAttribute('inert');
+  });
+
+  it('closes when the home link is used', () => {
+    render(<Header />);
+
+    const menuButton = screen.getByRole('button', { name: 'Menu' });
+    expect(menuButton).toHaveAttribute('aria-haspopup', 'dialog');
+    fireEvent.click(menuButton);
+
+    fireEvent.click(
+      screen.getByRole('link', { name: 'Windy Road Technology, home' }),
+    );
+
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });
