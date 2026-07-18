@@ -144,3 +144,9 @@ The three verification bodies are archived as `2026-07-19-ai-*-ollama-01-verific
 - Reproducibility returned `do not approve`. It found that the initial authoritative-field rule was overbroad because the confirmatory runner legitimately reads `ecological_layer` and `preregistration_v2_draft`, and that replacing the deterministic baseline's historical lock hash with the current hash erased collection-time provenance.
 
 Both reproducibility findings are accepted. The manifest now distinguishes authoritative current-design fields from authoritative current operational-control fields, explicitly enumerates the legacy API-design fields, preserves the baseline-time lock hash, and records the current lock hash separately. Status and archival wording are reconciled. This successor requires one final finding-specific verification before review completion.
+
+## Final narrow verification of `7a3d6c3`
+
+Methods and safety returned `approve with documented limitations`. Reproducibility verified the lock provenance, legacy-field enumeration, and status/archive wording but returned `do not approve` because the runner's top-level `frozen` control was not named in either authoritative-field list.
+
+That finding is accepted. `frozen`, `frozen_at`, and `freeze_scope` are now explicit authoritative current operational-control fields alongside `ecological_layer` and `preregistration_v2_draft`. No runtime code, design factor, queue, outcome, authorization, or spending gate changed. Final reproducibility verification of that exact correction is required.

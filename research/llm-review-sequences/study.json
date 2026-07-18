@@ -1,6 +1,6 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; finding-specific-schema-correction-pending-verification; Ollama-permission-pending; OSF-registration-pending; preregistration-v1-preserved",
+  "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; final-reproducibility-verification-pending; Ollama-permission-pending; OSF-registration-pending; preregistration-v1-preserved",
   "frozen": false,
   "frozen_at": null,
   "freeze_scope": "No outcome collection is frozen or authorized until the Ollama activation decision is final, the applicable package receives targeted AI-assisted internal review, and OSF registration is recorded.",
@@ -155,6 +155,9 @@
     "exploratory_ollama_cloud_replication"
   ],
   "authoritative_current_operational_control_fields": [
+    "frozen",
+    "frozen_at",
+    "freeze_scope",
     "ecological_layer",
     "deterministic_baseline",
     "excluded_semgrep_feasibility_probe",
@@ -492,12 +495,12 @@
     "reason": "The Semgrep Rules License v1.0 prohibits redistribution, so the exact rules snapshot cannot be included in the public reproducibility package. The observed zero-finding feasibility result is disclosed but excluded from study analyses."
   },
   "preregistration_v2_draft": {
-    "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; finding-specific-schema-correction-pending-verification; OSF-registration-pending",
+    "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; final-reproducibility-verification-pending; OSF-registration-pending",
     "template": "OSF Preregistration",
     "file": "preregistration-v2.md",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
-      "archive approval of the finding-specific manifest-schema correction",
+      "archive reproducibility approval of the final manifest-schema correction",
       "finalize the Ollama activation or non-activation branch before any outcome",
       "create the OSF registration with Tom Howard as sole administrator and ORCID 0009-0001-4714-5747",
       "replace candidate freeze with final commit and reverify artifact hashes"
