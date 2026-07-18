@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.13.5
+
+### Patch Changes
+
+- b5a71fb: Measure newsletter clicks by placement, exclude non-production Clarity traffic, and add an article-end subscription path.
+
 ## 2.13.4
 
 ### Patch Changes
