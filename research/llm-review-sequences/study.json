@@ -1,6 +1,6 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-pre-registration-revision; targeted-correction-review-pending; Ollama-permission-pending; OSF-registration-pending; preregistration-v1-preserved",
+  "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; finding-specific-verification-pending; Ollama-permission-pending; OSF-registration-pending; preregistration-v1-preserved",
   "frozen": false,
   "frozen_at": null,
   "freeze_scope": "No outcome collection is frozen or authorized until the Ollama activation decision is final, the applicable package receives targeted AI-assisted internal review, and OSF registration is recorded.",
@@ -105,15 +105,15 @@
       "availability": "unverified for this account",
       "interface": "POST http://localhost:11434/api/chat with stream=false, think=false, tools absent, format absent, and options.num_predict=256",
       "response_contract": "Accept only exact returned model identity qwen3.5:397b-cloud and the complete message.content. Apply the unchanged local schema validator without repair or fence stripping; invalid output is an abstention. Reject any reasoning trace or tool call.",
-      "billing_guard": "No purchase is authorized by this revision. Before any purchase, the exact plan and fixed fee require action-time author approval. Before every batch or resume, prove extra-usage balance is zero or disabled; OLLAMA_API_KEY, per-call billing, overage, fallback models, and paid overflow are prohibited."
+      "billing_guard": "No purchase is authorized by this revision. Before any purchase, the exact plan and fixed fee require action-time author approval. Before every batch or resume, machine-check that OLLAMA_API_KEY is absent and prove extra-usage balance is zero or disabled; per-call billing, overage, fallback models, and paid overflow are prohibited."
     },
     "ordered_pre_activation_stages": [
       "1. Archive written Ollama permission covering automated preflight, the 640-call benchmark, cadence and retries, synthetic security-review content, aggregate publication, raw-output handling, and model attribution. No automated Ollama access occurs before this permission.",
-      "2. With permission, run a no-prompt preflight that records account and plan, exact candidate availability, client and server versions, the exact /api/tags model record and its canonical SHA-256, the dated public model-page SHA-256, and proof that extra-usage balance is zero or disabled.",
+      "2. With permission, run a no-prompt preflight that records account and plan, exact candidate availability, client and server versions, the complete matching /api/tags JSON model record, its RFC 8785 JSON Canonicalization Scheme SHA-256, the dated public-model-page raw-byte SHA-256, machine-verified absence of OLLAMA_API_KEY, and proof that extra-usage balance is zero or disabled.",
       "3. Implement fixture-only runner and analysis routes, generate the separate queue and ledgers offline, and freeze the request-envelope schema, response-envelope schema, schedule, authorization record, and hashes. No model inference occurs.",
       "4. Archive targeted methods, reproducibility, and safety reviews of the exact activation candidate and resolve every blocker.",
       "5. Finalize the activation decision before any study outcome, register and freeze the applicable plan on OSF, record its identifier and timestamp, and explicitly authorize only the frozen queues.",
-      "6. Before every initial or resumed Ollama batch, repeat and compare the frozen identity, plan, entitlement, version, model-record, returned-model, and zero-balance checks; any ambiguity or drift creates a durable non-consuming suspension."
+      "6. Before every initial or resumed Ollama batch, repeat and compare the frozen account, plan, entitlement, client/server version, complete model-record, OLLAMA_API_KEY-absence, and zero-balance checks. On every response, compare the returned model before scoring or durable acceptance. Any ambiguity or drift creates a durable non-consuming suspension."
     ],
     "non_activation_branch": "If written permission is denied or the pre-activation package is incomplete when the author finalizes OSF registration, set this status to not-activated before any study outcome. Make no Ollama call and register, freeze, and authorize only the unchanged two-system confirmatory package.",
     "activation_branch": "Only after stages 1 through 5 pass may the arm become activated. Preflight, fixture-only implementation, and offline artifact generation are preparations, not activation or outcome collection.",
@@ -150,7 +150,11 @@
       "https://ollama.com/library/qwen3.5/tags"
     ]
   },
-  "legacy_api_design_status": "superseded before outcome collection; retained below for audit history",
+  "authoritative_current_design_fields": [
+    "active_subscription_design",
+    "exploratory_ollama_cloud_replication"
+  ],
+  "legacy_api_design_status": "superseded before outcome collection; retained below for audit history; no OSF export, runner, or analysis may interpret the following legacy fields as active",
   "factors": {
     "intent": ["malicious", "benign"],
     "decomposition": ["atomic", "split"],
@@ -427,7 +431,7 @@
     "tool": "ESLint",
     "tool_version": "9.39.3",
     "eslint_config_sha256": "fd9af0693c9fb3c7b9f9dfd573b944184a03ae0bd8b09f734cd97bb6dae15709",
-    "package_lock_sha256": "d18c4808497a007aba23a2ab12abc99e76a45e42b9c614f31b587e4aaf782553",
+    "package_lock_sha256": "40c4e9f2f102a185c80ca03974aff80d2b4c418d3b6e08a4264cc3fbb486c4f6",
     "target": "All 800 generated final-state case trees; three JavaScript modules per case.",
     "flag_rule": "Flag a case if ESLint emits any warning or error for any file in its final tree.",
     "cases": 800,

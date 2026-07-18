@@ -115,8 +115,8 @@ Every targeted review of the conditional Ollama stratum must also verify the ord
 
 ### AI-REPRO-01 additions
 
-- The permission record, action-time fixed-fee authorization, plan, entitlement, and zero or disabled extra-usage balance are machine-readable and checked before every batch or resume.
-- Client and server versions, exact tag, canonical `/api/tags` model-record SHA-256, public model-page SHA-256, request envelope, response envelope, and exact returned model identity are frozen and drift checked.
+- The permission record, action-time fixed-fee authorization, plan, entitlement, machine-verified absence of `OLLAMA_API_KEY`, and zero or disabled extra-usage balance are machine-readable and checked before every batch or resume.
+- Client and server versions, exact tag, the complete matching `/api/tags` JSON record and its RFC 8785 JSON Canonicalization Scheme SHA-256, public-model-page raw-byte SHA-256, request envelope, and response envelope are frozen and drift checked. Exact returned model identity is checked on every response before scoring or durable acceptance.
 - The Ollama queue, blinded ledger, ground truth, authorization, attempts, results, and hashes are separate from the two-system confirmatory package.
 - Fixture-only tests prove no inference occurs during preparation, reject reasoning traces and tool calls, and prove confirmatory contamination rejection plus decision-free Ollama reporting.
 - The manuscript, manifest, preregistration, README, generated counts, hashes, and activation record agree.

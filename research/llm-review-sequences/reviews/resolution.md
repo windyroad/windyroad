@@ -116,3 +116,21 @@ The statement above applies only to the previously approved two-system package a
 - Methods limitations: retained. The Ollama stratum adds no independent templates or confirmatory power, remains descriptively analyzed, and cannot support provider, base-model, equivalence, open-versus-closed-weight, or general LLM-review claims.
 
 Changed files require targeted correction review before OSF freeze. No benchmark prompt, automated Ollama preflight, subscription purchase, or model outcome occurred during correction.
+
+## Targeted Ollama correction reviews for `7937e1e`
+
+All three author-orchestrated correction reviewers inspected the same exact commit, `7937e1eb8cd11b386aa0a1fe419c560eeb45bb20`, without receiving study outcomes and without making an Ollama, provider, subscription, or OSF call. Their verbatim reports are archived as `2026-07-19-ai-*-ollama-01-correction-7937e1e.md`.
+
+- Methods: `approve with documented limitations`. The conditional design is adequate for prospective registration, but activation remains blocked until confirmatory-contamination rejection, a separate decision-free Ollama analysis path, fabricated-response tests, and review of the exact implementation exist.
+- Reproducibility: `approve with documented limitations`. The ordered activation branches, manuscript alignment, financial guard, identity controls, analysis isolation, and request contract are adequate at the permission-pending stage.
+- Safety: `approve with documented limitations`. The ordered fail-closed governance resolves the first-round blockers but does not authorize automated access, purchase, preflight, collection, OSF activity, or raw-output release.
+
+### Resolution of correction-review minor findings
+
+- Canonicalization: accepted. The complete matching `/api/tags` JSON record is canonicalized under RFC 8785 before SHA-256; the public model page uses a raw-byte SHA-256.
+- Returned-model timing: accepted. Pre-batch checks cover the account, plan, entitlement, client/server versions, complete model record, API-key absence, and zero-balance state. Exact returned identity is checked on every response before scoring or durable acceptance.
+- API-key guard: accepted. Absence of `OLLAMA_API_KEY` is machine-checked before every initial or resumed batch.
+- Lockfile hash: accepted. `study.json` now records the current `package-lock.json` SHA-256, `40c4e9f2f102a185c80ca03974aff80d2b4c418d3b6e08a4264cc3fbb486c4f6`.
+- Legacy-field ambiguity: accepted. The manifest and README identify only `active_subscription_design` and `exploratory_ollama_cloud_replication` as authoritative current-design fields; legacy API fields remain audit history only.
+
+These finding-specific changes require reproducibility and safety verification before the permission-pending preregistration package is treated as review-complete. The methods limitations remain mandatory. No Ollama activation or outcome collection is authorized.

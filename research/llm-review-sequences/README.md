@@ -20,7 +20,7 @@ The active preregistration-v2 candidate uses:
 
 H1 tests malicious-versus-benign discrimination. H2 tests the split-minus-atomic detection difference. Workflow and decomposition-by-workflow estimates are exploratory because the subscription-bounded sample is underpowered for small effects. A null workflow result is not evidence of equivalence.
 
-The earlier 115,200-call OpenRouter design was superseded before outcome collection. It remains in Git history and the legacy sections of [`study.json`](./study.json) for auditability.
+The earlier 115,200-call OpenRouter design was superseded before outcome collection. It remains in Git history and the legacy sections of [`study.json`](./study.json) for auditability. OSF exports, runners, and analysis tooling must treat only `active_subscription_design` and `exploratory_ollama_cloud_replication` as authoritative current-design fields.
 
 ### Permission-pending Ollama replication
 
