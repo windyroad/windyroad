@@ -24,7 +24,7 @@ The earlier 115,200-call OpenRouter design was superseded before outcome collect
 
 ### Permission-pending Ollama replication
 
-An Ollama Cloud `qwen3.5:397b-cloud` arm is prospectively declared as a separate exploratory replication. It is not a third confirmatory system and cannot alter the existing 1,280-call queue or analysis. No automated Ollama access or purchase is currently authorized.
+An Ollama Cloud `qwen3.5:397b-cloud` arm is prospectively declared as a separate exploratory replication. It is not a third confirmatory system and cannot alter the existing 1,280-call queue or analysis. The [exact permission request](./provider-permission-request.md) was sent to Ollama on 2026-07-19; a written response is pending. The outbound request is not provider permission, and no automated Ollama access or purchase is currently authorized.
 
 The fixed order is: written permission before any automated preflight; permitted no-prompt entitlement, identity, plan, version, model-record, and zero-balance checks; fixture-only implementation and offline generation of separate 320-sequence and 640-boundary artifacts; targeted review; then a final activation or non-activation decision before any outcome and one applicable OSF registration. If permission or preparation is incomplete at registration, Ollama is recorded as not activated and only the unchanged confirmatory package runs.
 

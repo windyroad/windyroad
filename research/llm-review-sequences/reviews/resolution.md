@@ -156,3 +156,9 @@ That finding is accepted. `frozen`, `frozen_at`, and `freeze_scope` are now expl
 Reproducibility returned `approve with documented limitations` for exact commit `4ed8244e8ae4933f3cb1df8f7db617f13118a0f8`. Every manifest field read by the confirmatory subscription runner is now present in the applicable authoritative list; baseline and current lock hashes remain separately attributable; and no runtime, design, queue, outcome, hash, or authorization value changed.
 
 No AI-assisted internal preregistration-review blocker remains. The conditional Ollama design is approved only as a permission-pending contingency. Ollama activation still requires written provider permission, action-time approval for any exact fixed subscription and fee, no-prompt entitlement and zero-balance evidence, fixture-only implementation and separate frozen artifacts, targeted review of that exact activation candidate, an outcome-blind activation decision, and OSF registration before any outcome call. The non-activation branch remains available and must be fixed before every system's outcome collection.
+
+## Ollama permission request sent
+
+At 2026-07-19T02:28:25+10:00, after action-time author approval, the sole author sent `hello@ollama.com` the permission request archived as `provider-permission-request.md` with SHA-256 `6f2abe6fb16f5bfe5f0749bf981b4f5f289727d0f2d197c1a75635b4b3cd2bdd`. It requests automated no-prompt preflight, up to 640 outcomes, a ten-second minimum inter-request interval, no more than two infrastructure retries per boundary, zero usage-based spend, aggregate publication, model attribution, and a ruling on any redacted raw-output release.
+
+The outbound request is not provider permission. Until an affirmative written response covers the requested scope, automated Ollama access, preflight, purchase, implementation, artifacts, and outcome calls remain unauthorized. No confirmatory outcome has been collected.
