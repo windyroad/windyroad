@@ -1,6 +1,6 @@
 # LLM review across malicious change sequences
 
-Prospective, zero-additional-spend study of whether subscription-backed LLM code-review systems detect a harmless synthetic policy violation, whether detection falls when the same final state is assembled through three submissions, and whether pull-request versus untrusted-main framing changes the estimate.
+Prospective, subscription-only study of whether LLM code-review systems detect a harmless synthetic policy violation, whether detection falls when the same final state is assembled through three submissions, and whether pull-request versus untrusted-main framing changes the estimate. API, per-call, overage, extra-balance, and paid-fallback spend are prohibited.
 
 No LLM benchmark outcome has been collected.
 
@@ -16,11 +16,17 @@ The active preregistration-v2 candidate uses:
 - Codex CLI through the saved ChatGPT subscription login.
 - Claude Code through the saved `claude.ai` Max subscription login.
 - One trial per condition and 1,280 total review boundaries, 640 per review system.
-- An additional spending ceiling of US$0.
+- A usage-based spending ceiling of US$0; fixed subscription fees are disclosed separately.
 
 H1 tests malicious-versus-benign discrimination. H2 tests the split-minus-atomic detection difference. Workflow and decomposition-by-workflow estimates are exploratory because the subscription-bounded sample is underpowered for small effects. A null workflow result is not evidence of equivalence.
 
 The earlier 115,200-call OpenRouter design was superseded before outcome collection. It remains in Git history and the legacy sections of [`study.json`](./study.json) for auditability.
+
+### Permission-pending Ollama replication
+
+An Ollama Cloud `qwen3.5:cloud` arm is prospectively declared as a separate exploratory replication. It is not a third confirmatory system and cannot alter the existing 1,280-call queue or analysis. Activation requires written provider permission, a no-prompt entitlement and identity preflight, separate 320-sequence and 640-boundary ledgers and hashes, isolated runner support, an exact-model-set analysis guard, targeted AI-assisted review, and OSF registration before any outcome call. Until those gates pass, no Ollama prompt or runtime code is authorized.
+
+If activated, the arm reuses the same 640 prompts in a separately shuffled queue with seed `20260719`. Ollama Cloud lacks provider-enforced structured outputs, so invalid JSON is retained as an abstention after the unchanged local validation. No API key, paid overage, extra-usage balance, or fallback model is allowed. See the [Ollama Terms](https://ollama.com/terms), [Ollama Privacy Policy](https://ollama.com/privacy), [Ollama Cloud documentation](https://docs.ollama.com/cloud), and [structured-output limitations](https://docs.ollama.com/capabilities/structured-outputs).
 
 ## Safety boundary
 
@@ -95,7 +101,7 @@ Primary estimates are:
 1. Malicious minus benign block-rate risk difference, averaged over decomposition and workflow.
 2. Split minus atomic malicious block-rate risk difference, averaged over workflow.
 
-Exploratory estimates are trunk minus pull-request detection and the decomposition-by-workflow difference-in-differences.
+Exploratory estimates are trunk minus pull-request detection and the decomposition-by-workflow difference-in-differences. If activated, Ollama receives the same analysis separately, with descriptive intervals and no hypothesis-support, equivalence, provider-superiority, or pooled-model claim.
 
 Uncertainty uses a 10,000-replicate family-stratified structural-template bootstrap. Missingness is exposed with estimand-specific bounds: H1 assigns missing malicious and benign cells oppositely, while H2 assigns missing atomic and split malicious cells oppositely. A review-system-specific complete-pair analysis is also reported. No imputation model is fitted.
 
@@ -133,7 +139,7 @@ Before collection:
 1. Resolve and document the archived AI-assisted review findings without inspecting outcomes.
 2. Repeat each materially affected review against one new commit.
 3. Reproduce and freeze the final hashes from a clean checkout.
-4. Confirm the license and optional ORCID decision.
+4. Confirm the license and ORCID record.
 5. Register preregistration v2 on OSF.
 
 After the fixed schedule completes, the prespecified analysis and paper revision can proceed. arXiv submission occurs only after the results, permitted artifacts, and final manuscript are verified.
