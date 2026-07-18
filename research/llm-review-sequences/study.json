@@ -1,6 +1,6 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; finding-specific-verification-pending; Ollama-permission-pending; OSF-registration-pending; preregistration-v1-preserved",
+  "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; finding-specific-schema-correction-pending-verification; Ollama-permission-pending; OSF-registration-pending; preregistration-v1-preserved",
   "frozen": false,
   "frozen_at": null,
   "freeze_scope": "No outcome collection is frozen or authorized until the Ollama activation decision is final, the applicable package receives targeted AI-assisted internal review, and OSF registration is recorded.",
@@ -154,7 +154,35 @@
     "active_subscription_design",
     "exploratory_ollama_cloud_replication"
   ],
-  "legacy_api_design_status": "superseded before outcome collection; retained below for audit history; no OSF export, runner, or analysis may interpret the following legacy fields as active",
+  "authoritative_current_operational_control_fields": [
+    "ecological_layer",
+    "deterministic_baseline",
+    "excluded_semgrep_feasibility_probe",
+    "preregistration_v2_draft",
+    "token_preflight",
+    "scenario_families",
+    "safety",
+    "review_response_schema",
+    "pilot"
+  ],
+  "legacy_api_design_status": "superseded before outcome collection; retained for audit history only",
+  "legacy_api_design_fields": [
+    "factors",
+    "secondary_ablations",
+    "context_budget_policy",
+    "split_submission_count",
+    "trials_per_cell",
+    "models",
+    "model_selection_policy",
+    "gateway_routing",
+    "power_analysis",
+    "hierarchical_power_audit",
+    "preregistration_v2_candidate",
+    "randomization",
+    "inference_budget",
+    "benchmark_prototype",
+    "collection_dry_run"
+  ],
   "factors": {
     "intent": ["malicious", "benign"],
     "decomposition": ["atomic", "split"],
@@ -431,7 +459,9 @@
     "tool": "ESLint",
     "tool_version": "9.39.3",
     "eslint_config_sha256": "fd9af0693c9fb3c7b9f9dfd573b944184a03ae0bd8b09f734cd97bb6dae15709",
-    "package_lock_sha256": "40c4e9f2f102a185c80ca03974aff80d2b4c418d3b6e08a4264cc3fbb486c4f6",
+    "package_lock_sha256_at_baseline": "d18c4808497a007aba23a2ab12abc99e76a45e42b9c614f31b587e4aaf782553",
+    "current_package_lock_sha256": "40c4e9f2f102a185c80ca03974aff80d2b4c418d3b6e08a4264cc3fbb486c4f6",
+    "current_package_lock_recorded_at": "2026-07-19",
     "target": "All 800 generated final-state case trees; three JavaScript modules per case.",
     "flag_rule": "Flag a case if ESLint emits any warning or error for any file in its final tree.",
     "cases": 800,
@@ -462,12 +492,12 @@
     "reason": "The Semgrep Rules License v1.0 prohibits redistribution, so the exact rules snapshot cannot be included in the public reproducibility package. The observed zero-finding feasibility result is disclosed but excluded from study analyses."
   },
   "preregistration_v2_draft": {
-    "status": "subscription-v2-pre-registration-revision; targeted-correction-review-pending; OSF-registration-pending",
+    "status": "subscription-v2-pre-registration-revision; targeted-correction-reviews-approved-with-limitations; finding-specific-schema-correction-pending-verification; OSF-registration-pending",
     "template": "OSF Preregistration",
     "file": "preregistration-v2.md",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
-      "archive targeted methods, reproducibility, and safety correction reviews of the Ollama pre-registration revision",
+      "archive approval of the finding-specific manifest-schema correction",
       "finalize the Ollama activation or non-activation branch before any outcome",
       "create the OSF registration with Tom Howard as sole administrator and ORCID 0009-0001-4714-5747",
       "replace candidate freeze with final commit and reverify artifact hashes"

@@ -1,6 +1,6 @@
 # Author resolution of initial AI-assisted reviews
 
-Status: pre-outcome corrections awaiting repeat review. No benchmark prompt has been submitted to Codex or Claude Code.
+Status: pre-outcome Ollama finding-specific schema correction awaiting verification. No benchmark prompt has been submitted to Codex, Claude, or Ollama.
 
 The raw reports for commit `6b607f6a83c5787de0b5c06abf7594cbb2769c68` remain archived verbatim beside this file. All changes below invalidate the earlier candidate cards, prompts, call-ledger, and ground-truth hashes; the replacement hashes are recorded in `study.json` and must be reviewed as one new commit.
 
@@ -119,7 +119,7 @@ Changed files require targeted correction review before OSF freeze. No benchmark
 
 ## Targeted Ollama correction reviews for `7937e1e`
 
-All three author-orchestrated correction reviewers inspected the same exact commit, `7937e1eb8cd11b386aa0a1fe419c560eeb45bb20`, without receiving study outcomes and without making an Ollama, provider, subscription, or OSF call. Their verbatim reports are archived as `2026-07-19-ai-*-ollama-01-correction-7937e1e.md`.
+All three author-orchestrated correction reviewers inspected the same exact commit, `7937e1eb8cd11b386aa0a1fe419c560eeb45bb20`, without receiving study outcomes and without making an Ollama, provider, subscription, or OSF call. Their substantive report bodies are archived verbatim as `2026-07-19-ai-*-ollama-01-correction-7937e1e.md`; platform transport metadata is not part of the research record.
 
 - Methods: `approve with documented limitations`. The conditional design is adequate for prospective registration, but activation remains blocked until confirmatory-contamination rejection, a separate decision-free Ollama analysis path, fabricated-response tests, and review of the exact implementation exist.
 - Reproducibility: `approve with documented limitations`. The ordered activation branches, manuscript alignment, financial guard, identity controls, analysis isolation, and request contract are adequate at the permission-pending stage.
@@ -130,7 +130,17 @@ All three author-orchestrated correction reviewers inspected the same exact comm
 - Canonicalization: accepted. The complete matching `/api/tags` JSON record is canonicalized under RFC 8785 before SHA-256; the public model page uses a raw-byte SHA-256.
 - Returned-model timing: accepted. Pre-batch checks cover the account, plan, entitlement, client/server versions, complete model record, API-key absence, and zero-balance state. Exact returned identity is checked on every response before scoring or durable acceptance.
 - API-key guard: accepted. Absence of `OLLAMA_API_KEY` is machine-checked before every initial or resumed batch.
-- Lockfile hash: accepted. `study.json` now records the current `package-lock.json` SHA-256, `40c4e9f2f102a185c80ca03974aff80d2b4c418d3b6e08a4264cc3fbb486c4f6`.
-- Legacy-field ambiguity: accepted. The manifest and README identify only `active_subscription_design` and `exploratory_ollama_cloud_replication` as authoritative current-design fields; legacy API fields remain audit history only.
+- Lockfile hash: accepted. `study.json` preserves the collection-time baseline hash `d18c4808497a007aba23a2ab12abc99e76a45e42b9c614f31b587e4aaf782553` and separately records the current `package-lock.json` SHA-256, `40c4e9f2f102a185c80ca03974aff80d2b4c418d3b6e08a4264cc3fbb486c4f6`, with its record date.
+- Legacy-field ambiguity: accepted after finding-specific correction. The manifest separately enumerates authoritative current-design fields, authoritative current operational-control fields used by the runner and registration gate, and the exact legacy API-design fields retained for audit history. The README mirrors that schema.
 
 These finding-specific changes require reproducibility and safety verification before the permission-pending preregistration package is treated as review-complete. The methods limitations remain mandatory. No Ollama activation or outcome collection is authorized.
+
+## Finding-specific verification of `657ef18`
+
+The three verification bodies are archived as `2026-07-19-ai-*-ollama-01-verification-657ef18.md`.
+
+- Methods returned `approve with documented limitations` and found its legacy-field ambiguity resolved.
+- Safety returned `approve with documented limitations`; it requested reconciliation of conservative stale status text and clarification that substantive report bodies, not platform transport metadata, are archived verbatim.
+- Reproducibility returned `do not approve`. It found that the initial authoritative-field rule was overbroad because the confirmatory runner legitimately reads `ecological_layer` and `preregistration_v2_draft`, and that replacing the deterministic baseline's historical lock hash with the current hash erased collection-time provenance.
+
+Both reproducibility findings are accepted. The manifest now distinguishes authoritative current-design fields from authoritative current operational-control fields, explicitly enumerates the legacy API-design fields, preserves the baseline-time lock hash, and records the current lock hash separately. Status and archival wording are reconciled. This successor requires one final finding-specific verification before review completion.
