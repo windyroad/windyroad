@@ -1,6 +1,6 @@
 # Preregistration v2: subscription-backed LLM review of decomposed changes
 
-Status: prospective pre-registration revision. No benchmark prompt has been submitted to any review system. Do not begin outcome collection until the Ollama activation decision is final, the applicable targeted AI-assisted reviews are archived, the final artifact hashes are verified from a clean checkout, and the applicable plan is registered on OSF.
+Status: prospective pre-registration revision. No benchmark prompt has been submitted to any review system. Do not begin outcome collection until the Ollama activation decision is final, the applicable targeted AI-assisted reviews are archived, the final artifact hashes are verified from a clean checkout, the applicable plan is registered on OSF, and a separate post-registration execution record authorizes the exact registered queue.
 
 ## Study information
 
@@ -192,7 +192,7 @@ Release artifacts receive AI-assisted dual-use review. Neutral change titles rem
 - Inference is conditional on 40 purposively selected diagonal templates; five fixed templates per family make bootstrap intervals coarse.
 - One lexical instance per template does not estimate identifier-instance variability.
 
-## Artifact freeze
+## Content freeze and execution authorization
 
 Current unfrozen candidate hashes are:
 
@@ -202,7 +202,21 @@ Current unfrozen candidate hashes are:
 - Blinded call ledger SHA-256: `01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223`.
 - Ground-truth ledger SHA-256: `b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773`.
 
-Before OSF submission, replace “candidate freeze” with the final Git commit, archive targeted methods, reproducibility, and safety correction reviews of this pre-registration revision, confirm the license, and reproduce these hashes from a clean checkout. If permission is unavailable, record Ollama non-activation and freeze only the unchanged two-system package. If permission is archived, complete the ordered offline preparation, freeze the separate Ollama artifacts, and review the exact activation candidate before one OSF registration. Any later artifact change requires a new pre-outcome review before registration or a dated post-registration revision before outcomes.
+The freeze has two phases so the unknown OSF identifier is not falsely represented as part of the pre-submission content.
+
+### Phase 1: pre-submission content freeze
+
+Before OSF submission, the author will finalize the activation or non-activation branch, archive the applicable targeted reviews, confirm the study-local license, reproduce every hash from a clean checkout, and commit the exact registration content. A deterministic release-safe registration payload bundle will be made from that content commit. The outer [`registration-content-freeze.json`](./registration-content-freeze.json) record will then name the study, content commit, branch, OSF schema, payload-bundle filename and raw-byte SHA-256, every registered queue and artifact hash, and raw-byte hashes for the manifest, confirmatory runner, subscription command builder, response validator, and response schema. Executable benchmark cases are excluded from the OSF payload; their provenance remains bound by the content commit and registered hashes.
+
+Both detached state records are excluded from the payload bundle to avoid self-referential hashing. The content-freeze record is uploaded beside the bundle whose hash it records. The later execution-authorization record does not exist in authorized form until after registration.
+
+The phase-1 record permanently keeps `outcome_calls_authorized` false. It freezes content but cannot authorize a model call. If Ollama permission is unavailable, the record names the confirmatory-only branch. If permission and every activation gate pass, it names the confirmatory-plus-Ollama-exploratory branch and separately identifies both queues.
+
+### Phase 2: post-registration execution authorization
+
+After OSF registration, the registered files will be downloaded and rehashed. Only then may the author populate [`execution-authorization.json`](./execution-authorization.json) with the OSF identifier, URL and registration timestamp; authorization timestamp and author; raw-byte hash of the phase-1 record; content commit; branch; registered payload-bundle hash; and the exact queues, review systems, and artifact hashes authorized to run.
+
+The confirmatory runner computes the phase-1 record hash and the actual named payload-bundle hash itself. It rejects collection unless the two records agree, the timestamps are ordered as freeze then registration then authorization, the study identity and freeze timestamp match, the confirmatory queue and systems match the active manifest, all runtime-critical files match their frozen hashes, and the generated artifact bytes reproduce all five authorized hashes. Rejection occurs before an output directory, client preflight, or model process is created. Any artifact change requires a new pre-outcome review and content freeze before registration, or a transparent dated OSF update and new execution authorization before outcomes where OSF permits the change.
 
 ## Deviations
 

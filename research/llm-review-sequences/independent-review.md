@@ -18,6 +18,8 @@ The frozen packet contains:
 - [`design.mjs`](./design.mjs)
 - [`subscription.mjs`](./subscription.mjs)
 - [`subscription-runner.mjs`](./subscription-runner.mjs)
+- [`registration-content-freeze.json`](./registration-content-freeze.json)
+- [`execution-authorization.json`](./execution-authorization.json)
 - [`review-schema.json`](./review-schema.json)
 - [`analyse.mjs`](./analyse.mjs)
 - All directly associated tests
@@ -166,6 +168,9 @@ Preregistration v2 may be frozen only when:
 - The final generated hashes reproduce from a clean checkout.
 - Subscription-only authentication and the US$0 usage-based spending guard are verified without sending a benchmark prompt. Any new fixed subscription has separate action-time authorization, and any Ollama extra-usage balance is proven zero or disabled.
 - The Ollama activation or non-activation branch is final before any study outcome. If activated, every conditional-rubric requirement is satisfied; if not activated, no Ollama runtime or artifact is authorized.
-- The OSF registration timestamp and identifier are recorded.
+- A phase-1 content-freeze record made before OSF submission names the exact reviewed study, content commit, branch, deterministic release-safe payload-bundle hash, queues, systems, artifact hashes, and runtime-critical file hashes while permanently keeping `outcome_calls_authorized` false.
+- Both detached state records are excluded from the payload bundle. The content-freeze record is uploaded beside the bundle whose hash it records; both are downloaded and rehashed before submission and again after registration.
+- Only after registration, a separate execution-authorization record names the OSF identifier, URL and timestamp, the raw-byte content-freeze-record hash, content commit, branch, registered payload-bundle hash, and exact authorized queues. Freeze, registration, and authorization timestamps are ordered.
+- The runner recomputes the actual bundle, runtime-file, cross-record, and artifact hashes before creating output or starting client preflight. The content freeze alone never authorizes execution.
 
 Human peer review remains desirable but is not represented as completed. arXiv endorsement, if required, is a separate account-level process and is not supplied by these subagents.

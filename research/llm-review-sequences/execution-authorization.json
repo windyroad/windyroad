@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "study_id": "llm-review-sequences-v0",
+  "status": "unauthorized-registration-pending",
+  "outcome_calls_authorized": false,
+  "authorized_at": null,
+  "authorized_by": {
+    "name": "Tom Howard",
+    "orcid": "0009-0001-4714-5747"
+  },
+  "osf_registration": {
+    "id": null,
+    "url": null,
+    "registered_at": null
+  },
+  "content_freeze": {
+    "record_sha256": null,
+    "content_commit": null,
+    "branch": null,
+    "bundle_sha256": null
+  },
+  "authorized_queues": [],
+  "rule": "Populate this detached record only after OSF registration and download verification. Authorization must name the registered content-freeze record and only the exact registered queues."
+}

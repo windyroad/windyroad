@@ -23,7 +23,7 @@ with Subscription-Backed LLM Reviewers}
 \author{Tom Howard\\
 Independent researcher\\
 \href{mailto:tom@windyroad.com.au}{tom@windyroad.com.au}}
-\date{17 July 2026}
+\date{19 July 2026}
 
 \begin{document}
 \maketitle
@@ -203,7 +203,8 @@ or returned-model change suspends that review system.
 No automated Ollama access or purchase is currently authorised. Its fixed order
 is written provider permission, permitted no-prompt entitlement and identity
 preflight, fixture-only implementation and offline artifact generation, targeted
-review, an outcome-blind activation decision, and OSF registration and freeze.
+review, an outcome-blind activation decision, a pre-submission content freeze,
+and OSF registration followed by a separately bound execution authorisation.
 If activated, requests set \code{stream=false} and \code{think=false}, omit tools
 and structured-output format, and require exact returned-model identity. Invalid
 JSON is an abstention; any reasoning trace or tool call suspends the arm. The
@@ -362,13 +363,13 @@ Neutral change titles remove plausible refactor cover stories, but the abstract
 composition patterns retain disclosed dual-use value. The packet contains no
 real target, external capability, credential, deployment path, or complete exploit.
 Targeted non-isolated reviews must approve the applicable activation or
-non-activation package before registration freeze.
+non-activation package before the pre-submission content freeze.
 
 \section{Reproducibility}
 
 The candidate package contains the generator, schedule, scorer, sensitivity simulation,
 preregistration, archived initial internal-review records, durable subscription
-runner, and analysis code. Current unfrozen hashes are:
+runner, two-phase freeze records, and analysis code. Current unfrozen hashes are:
 
 \begin{itemize}[leftmargin=1.5em]
   \item scenario cards:
@@ -382,6 +383,17 @@ runner, and analysis code. Current unfrozen hashes are:
   \item ground-truth ledger:
   \code{b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773}.
 \end{itemize}
+
+The first freeze phase records the study, exact content commit, selected branch,
+release-safe registration-bundle hash, queues, systems, artifact hashes, and
+runtime-critical file hashes before OSF
+submission, while explicitly leaving outcome calls unauthorised. After
+registration and download verification, a separate execution record binds the
+OSF identifier and timestamps to the raw-byte freeze-record hash, content commit,
+branch, bundle hash, and exact queues. The runner recomputes these bindings and
+the actual bundle, runtime files, and five artifact hashes before creating output
+or starting client preflight. Both detached records are excluded from the bundle
+to avoid self-referential hashing.
 
 The earlier paid API design is retained in version history but was superseded
 before outcome collection. The final release will add permitted raw responses,

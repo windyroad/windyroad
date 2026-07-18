@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "study_id": "llm-review-sequences-v0",
+  "status": "unfrozen",
+  "frozen_at": null,
+  "content_commit": null,
+  "branch": null,
+  "osf_schema": {
+    "name": "OSF Preregistration",
+    "version": 4,
+    "id": "697b72f611a8e98484c6139b"
+  },
+  "registration_bundle": {
+    "file": null,
+    "sha256": null
+  },
+  "runtime_files": {
+    "study.json": null,
+    "subscription-runner.mjs": null,
+    "subscription.mjs": null,
+    "pilot.mjs": null,
+    "review-schema.json": null
+  },
+  "outcome_calls_authorized": false,
+  "queues": [
+    {
+      "id": "confirmatory-subscription-v2",
+      "review_systems": [
+        "codex-cli/gpt-5.5",
+        "claude-code/sonnet"
+      ],
+      "artifacts": {
+        "cards_sha256": "d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d",
+        "prompts_sha256": "e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c",
+        "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
+        "calls_sha256": "01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223",
+        "ground_truth_sha256": "b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773"
+      }
+    }
+  ],
+  "rule": "This outer record identifies the exact release-safe payload bundle and runtime-critical file hashes frozen before OSF submission. The bundle excludes both detached state records. This record never authorizes outcome calls."
+}

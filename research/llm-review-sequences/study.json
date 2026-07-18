@@ -1,9 +1,9 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-pre-registration-revision; AI-assisted-internal-preregistration-review-complete-with-documented-limitations; Ollama-permission-request-sent-response-pending; OSF-registration-pending; preregistration-v1-preserved",
+  "status": "subscription-v2-pre-registration-revision; two-phase-freeze-protocol-defined-unfrozen; AI-assisted-internal-preregistration-review-complete-with-documented-limitations; Ollama-permission-request-sent-response-pending; OSF-registration-pending; preregistration-v1-preserved",
   "frozen": false,
   "frozen_at": null,
-  "freeze_scope": "No outcome collection is frozen or authorized until the Ollama activation decision is final, the applicable package receives targeted AI-assisted internal review, and OSF registration is recorded.",
+  "freeze_scope": "Phase 1 freezes the exact content commit, branch, registration bundle, and queues before OSF submission while outcome calls remain unauthorized. Phase 2 is a separate execution-authorization record created only after OSF registration. Neither phase is complete.",
   "confirmatory_outcomes_collected": false,
   "authorship": {
     "authors": [
@@ -462,7 +462,9 @@
     "ground_truth_sha256": "b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773",
     "projected_additional_cost_usd": 0,
     "spending_ceiling_usd": 0,
-    "subscription_calls_authorized": false,
+    "content_freeze_record": "registration-content-freeze.json",
+    "execution_authorization_record": "execution-authorization.json",
+    "authorization_rule": "The pre-submission content-freeze record always keeps outcome_calls_authorized false. Only a later execution-authorization record bound to the OSF identifier, registration timestamp, frozen-record hash, content commit, branch, actual bundle bytes, runtime-file hashes, queue, systems, and artifact hashes can authorize collection.",
     "inference": "Intent discrimination and the split effect are primary estimates. Workflow and decomposition-by-workflow contrasts are exploratory because the subscription-bounded sample has low power for small effects."
   },
   "deterministic_baseline": {
@@ -504,18 +506,22 @@
     "reason": "The Semgrep Rules License v1.0 prohibits redistribution, so the exact rules snapshot cannot be included in the public reproducibility package. The observed zero-finding feasibility result is disclosed but excluded from study analyses."
   },
   "preregistration_v2_draft": {
-    "status": "subscription-v2-pre-registration-revision; AI-assisted-internal-preregistration-review-complete-with-documented-limitations; Ollama-permission-request-sent-response-pending; OSF-registration-pending",
+    "status": "subscription-v2-pre-registration-revision; two-phase-freeze-protocol-defined-unfrozen; AI-assisted-internal-preregistration-review-complete-with-documented-limitations; Ollama-permission-request-sent-response-pending; OSF-registration-pending",
     "template": "OSF Preregistration",
+    "template_schema_version": 4,
+    "template_schema_id": "697b72f611a8e98484c6139b",
     "file": "preregistration-v2.md",
+    "content_freeze_record": "registration-content-freeze.json",
+    "execution_authorization_record": "execution-authorization.json",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
       "obtain an affirmative written Ollama response covering the requested scope or select the non-activation branch before every study outcome",
       "finalize the Ollama activation or non-activation branch before any outcome",
+      "confirm the study-local license and OSF visibility choice",
+      "freeze the exact content commit and deterministic registration bundle with outcome calls still unauthorized",
       "create the OSF registration with Tom Howard as sole administrator and ORCID 0009-0001-4714-5747",
-      "replace candidate freeze with final commit and reverify artifact hashes"
-    ],
-    "external_identifier": null,
-    "submitted_at": null
+      "download and reverify the registered packet before creating the separate execution authorization"
+    ]
   },
   "token_preflight": {
     "status": "partial-no-inference",

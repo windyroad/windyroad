@@ -70,6 +70,15 @@ The active candidate must reproduce:
 
 Candidate hashes are recorded in [`study.json`](./study.json) and [`preregistration-v2.md`](./preregistration-v2.md).
 
+## Freeze and authorization boundary
+
+Registration uses two records with different authority:
+
+1. [`registration-content-freeze.json`](./registration-content-freeze.json) is completed before OSF submission. It identifies the study, exact content commit, selected study branch, deterministic release-safe payload-bundle hash, queues, systems, artifact hashes, and runtime-critical file hashes. It always keeps `outcome_calls_authorized` false.
+2. [`execution-authorization.json`](./execution-authorization.json) is completed only after OSF registration and download verification. It records the OSF identifier and timestamps and binds authorization to the raw-byte hash of the phase-1 record, its content commit, branch, bundle hash, and exact queues.
+
+Both detached state records are excluded from the payload bundle. The content-freeze record is an outer envelope uploaded beside the bundle whose hash it records; the authorized execution record is created only after registration. The runner computes the actual envelope, bundle, runtime-file, and artifact hashes itself and checks study identity, freeze-time equality, timestamp order, and every cross-record binding before creating output or starting client preflight. The current templates are unfrozen and unauthorized.
+
 ## Subscription-only execution
 
 The collection runner must use the supported non-interactive product surfaces:
@@ -87,7 +96,7 @@ node research/llm-review-sequences/subscription-runner.mjs --preflight
 
 Codex must report ChatGPT authentication. Claude Code must report `claude.ai` authentication and a Max subscription. Collection aborts rather than using API billing, API credits, fallback models, or another provider.
 
-Run `subscription-runner.mjs ACTIVE_ROOT COLLECTION_ROOT OUTPUT_ROOT` only after OSF registration. It appends and fsyncs start, completion, suspension, and result records and resumes in fixed schedule order. A rate limit suspends at the current call; rerun after the same plan window resets. It never authorises paid overflow. A CLI-version or returned-model change suspends the affected review system before further calls.
+Run `subscription-runner.mjs ACTIVE_ROOT COLLECTION_ROOT OUTPUT_ROOT` only after OSF registration and creation of the bound execution-authorization record. It appends and fsyncs start, completion, suspension, and result records and resumes in fixed schedule order. A rate limit suspends at the current call; rerun after the same plan window resets. It never authorises paid overflow. A CLI-version or returned-model change suspends the affected review system before further calls.
 
 Official product references:
 

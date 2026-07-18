@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
@@ -18,6 +19,21 @@ import { assertSubscriptionAccess, buildSubscriptionCommand, renderCliPrompt } f
 
 const CODEX_VERSION = "0.137.0";
 const CLAUDE_VERSION = "2.1.211";
+const CONFIRMATORY_QUEUE_ID = "confirmatory-subscription-v2";
+const ARTIFACT_HASH_NAMES = [
+  "cards_sha256",
+  "prompts_sha256",
+  "schedule_sha256",
+  "calls_sha256",
+  "ground_truth_sha256",
+];
+const REQUIRED_RUNTIME_FILES = [
+  "study.json",
+  "subscription-runner.mjs",
+  "subscription.mjs",
+  "pilot.mjs",
+  "review-schema.json",
+];
 
 export function preflightSubscriptionClients({
   codexBin,
@@ -89,8 +105,8 @@ export function collectSubscriptionSchedule({
   for (const value of [benchmarkRoot, collectionRoot, outputRoot]) {
     if (!value) throw new Error("benchmarkRoot, collectionRoot, and outputRoot are required");
   }
-  mkdirSync(outputRoot, { recursive: true });
   authorize({ benchmarkRoot, collectionRoot });
+  mkdirSync(outputRoot, { recursive: true });
   const provenance = preflight({ codexBin, claudeBin, env });
   const prompts = new Map(readJsonl(join(benchmarkRoot, "prompts.jsonl"))
     .map((prompt) => [prompt.prompt_id, prompt.request]));
@@ -178,13 +194,32 @@ export function collectSubscriptionSchedule({
   return { completed: completed.size, remaining: calls.length - completed.size, provenance };
 }
 
-export function assertAuthorizedArtifacts({ benchmarkRoot, collectionRoot }) {
-  const study = JSON.parse(readFileSync(join(import.meta.dirname, "study.json"), "utf8"));
-  const active = study.active_subscription_design;
-  if (!study.frozen || !study.ecological_layer?.subscription_calls_authorized
-    || !study.preregistration_v2_draft?.external_identifier) {
-    throw new Error("Subscription collection is not authorized by a frozen OSF-registered manifest");
-  }
+export function assertAuthorizedArtifacts({
+  benchmarkRoot,
+  collectionRoot,
+  recordsRoot = import.meta.dirname,
+}) {
+  const study = JSON.parse(readFileSync(join(recordsRoot, "study.json"), "utf8"));
+  const contentFreezeBytes = readFileSync(join(recordsRoot, "registration-content-freeze.json"));
+  const contentFreeze = JSON.parse(contentFreezeBytes.toString("utf8"));
+  const executionAuthorization = JSON.parse(readFileSync(
+    join(recordsRoot, "execution-authorization.json"), "utf8",
+  ));
+  assertAuthorizedState(study, contentFreeze, executionAuthorization);
+  const bundlePath = packetFile(recordsRoot, contentFreeze.registration_bundle?.file);
+  const registrationBundleSha256 = sha256(readFileSync(bundlePath));
+  const runtimeFileHashes = Object.fromEntries(REQUIRED_RUNTIME_FILES.map((name) => [
+    name,
+    sha256(readFileSync(join(recordsRoot, name))),
+  ]));
+  const authorized = assertExecutionAuthorization({
+    study,
+    contentFreeze,
+    contentFreezeSha256: sha256(contentFreezeBytes),
+    registrationBundleSha256,
+    runtimeFileHashes,
+    executionAuthorization,
+  });
   const actual = {
     cards_sha256: sha256(JSON.stringify(JSON.parse(readFileSync(join(benchmarkRoot, "cards.json"), "utf8")))),
     prompts_sha256: sha256(readFileSync(join(benchmarkRoot, "prompts.jsonl"))),
@@ -193,8 +228,142 @@ export function assertAuthorizedArtifacts({ benchmarkRoot, collectionRoot }) {
     schedule_sha256: JSON.parse(readFileSync(join(collectionRoot, "collection.json"), "utf8")).schedule_sha256,
   };
   for (const [name, value] of Object.entries(actual)) {
-    if (value !== active.artifacts[name]) throw new Error(`${name} does not match the authorized manifest`);
+    if (value !== authorized.artifacts[name]) throw new Error(`${name} does not match the authorized manifest`);
   }
+}
+
+export function assertExecutionAuthorization({
+  study,
+  contentFreeze,
+  contentFreezeSha256,
+  registrationBundleSha256,
+  runtimeFileHashes,
+  executionAuthorization,
+}) {
+  assertAuthorizedState(study, contentFreeze, executionAuthorization);
+  if (contentFreeze.schema_version !== 1 || executionAuthorization.schema_version !== 1) {
+    throw new Error("Unsupported freeze or execution-authorization schema");
+  }
+  if (!study.study_id || contentFreeze.study_id !== study.study_id
+    || executionAuthorization.study_id !== study.study_id) {
+    throw new Error("Freeze or authorization study identity does not match");
+  }
+  if (contentFreeze.frozen_at !== study.frozen_at) {
+    throw new Error("Content-freeze timestamp does not match the frozen study manifest");
+  }
+  const registeredSchema = study.preregistration_v2_draft;
+  if (contentFreeze.osf_schema?.name !== registeredSchema?.template
+    || contentFreeze.osf_schema?.version !== registeredSchema?.template_schema_version
+    || contentFreeze.osf_schema?.id !== registeredSchema?.template_schema_id) {
+    throw new Error("Frozen OSF schema does not match the study manifest");
+  }
+  const osfId = executionAuthorization.osf_registration?.id;
+  const osfUrl = String(executionAuthorization.osf_registration?.url ?? "");
+  if (!validTimestamp(contentFreeze.frozen_at)
+    || !validTimestamp(executionAuthorization.authorized_at)
+    || !validTimestamp(executionAuthorization.osf_registration?.registered_at)
+    || !osfId
+    || !osfUrl.startsWith("https://osf.io/")
+    || !osfUrl.includes(`/${osfId}`)) {
+    throw new Error("Execution authorization lacks a valid OSF registration record");
+  }
+  if (Date.parse(contentFreeze.frozen_at) > Date.parse(executionAuthorization.osf_registration.registered_at)
+    || Date.parse(executionAuthorization.osf_registration.registered_at)
+      > Date.parse(executionAuthorization.authorized_at)) {
+    throw new Error("Freeze, registration, and authorization timestamp order is invalid");
+  }
+  if (!/^[a-f0-9]{40,64}$/.test(contentFreeze.content_commit ?? "")
+    || !/^[a-f0-9]{64}$/.test(contentFreeze.registration_bundle?.sha256 ?? "")
+    || !/^[a-f0-9]{64}$/.test(contentFreezeSha256 ?? "")) {
+    throw new Error("Content freeze lacks valid commit or bundle hashes");
+  }
+  if (registrationBundleSha256 !== contentFreeze.registration_bundle.sha256) {
+    throw new Error("Registered payload bundle hash does not match the content freeze");
+  }
+  const frozenRuntimeNames = Object.keys(contentFreeze.runtime_files ?? {}).sort();
+  if (JSON.stringify(frozenRuntimeNames) !== JSON.stringify([...REQUIRED_RUNTIME_FILES].sort())) {
+    throw new Error("Content freeze does not name the exact required runtime files");
+  }
+  for (const name of REQUIRED_RUNTIME_FILES) {
+    if (!/^[a-f0-9]{64}$/.test(contentFreeze.runtime_files[name] ?? "")
+      || runtimeFileHashes?.[name] !== contentFreeze.runtime_files[name]) {
+      throw new Error(`Frozen runtime file hash does not match: ${name}`);
+    }
+  }
+  const reference = executionAuthorization.content_freeze ?? {};
+  if (reference.record_sha256 !== contentFreezeSha256) {
+    throw new Error("Execution authorization content-freeze record hash does not match");
+  }
+  if (reference.content_commit !== contentFreeze.content_commit) {
+    throw new Error("Execution authorization content commit does not match");
+  }
+  if (reference.branch !== contentFreeze.branch) {
+    throw new Error("Execution authorization branch does not match");
+  }
+  if (reference.bundle_sha256 !== contentFreeze.registration_bundle.sha256) {
+    throw new Error("Execution authorization bundle hash does not match");
+  }
+  if (!["confirmatory-only", "confirmatory-plus-ollama-exploratory"].includes(contentFreeze.branch)) {
+    throw new Error("Unknown frozen study branch");
+  }
+  if (!Array.isArray(contentFreeze.queues) || !Array.isArray(executionAuthorization.authorized_queues)) {
+    throw new Error("Frozen and authorized queues must be arrays");
+  }
+  const frozenQueues = contentFreeze.queues.filter(({ id }) => id === CONFIRMATORY_QUEUE_ID);
+  const authorizedQueues = executionAuthorization.authorized_queues
+    .filter(({ id }) => id === CONFIRMATORY_QUEUE_ID);
+  if (frozenQueues.length !== 1 || authorizedQueues.length !== 1) {
+    throw new Error("Confirmatory queue is not present in both freeze and authorization records");
+  }
+  const [frozenQueue] = frozenQueues;
+  const [authorizedQueue] = authorizedQueues;
+  const active = study.active_subscription_design;
+  assertSameArtifacts(active?.artifacts, frozenQueue.artifacts);
+  assertSameArtifacts(active?.artifacts, authorizedQueue.artifacts);
+  const activeSystems = active?.review_systems?.map(({ id }) => id);
+  if (!Array.isArray(activeSystems) || activeSystems.length === 0
+    || JSON.stringify(activeSystems) !== JSON.stringify(frozenQueue.review_systems)
+    || JSON.stringify(activeSystems) !== JSON.stringify(authorizedQueue.review_systems)) {
+    throw new Error("Authorized review systems do not match the frozen manifest");
+  }
+  if (JSON.stringify(contentFreeze.queues) !== JSON.stringify(executionAuthorization.authorized_queues)) {
+    throw new Error("Authorized queues do not exactly match the frozen queues");
+  }
+  const author = study.authorship?.authors?.[0];
+  if (!author || executionAuthorization.authorized_by?.name !== author.name
+    || executionAuthorization.authorized_by?.orcid !== author.orcid) {
+    throw new Error("Execution authorizer does not match the study author");
+  }
+  return { queue_id: CONFIRMATORY_QUEUE_ID, artifacts: active.artifacts };
+}
+
+function assertAuthorizedState(study, contentFreeze, executionAuthorization) {
+  if (!study?.frozen || !validTimestamp(study.frozen_at)
+    || contentFreeze?.status !== "frozen-pre-submission"
+    || contentFreeze?.outcome_calls_authorized !== false
+    || executionAuthorization?.status !== "authorized-post-registration"
+    || executionAuthorization?.outcome_calls_authorized !== true) {
+    throw new Error("Subscription collection is not authorized by the frozen OSF-registered packet");
+  }
+}
+
+function assertSameArtifacts(expected, actual) {
+  if (!expected || !actual || ARTIFACT_HASH_NAMES.some((name) =>
+    !/^[a-f0-9]{64}$/.test(expected[name] ?? "") || expected[name] !== actual[name])) {
+    throw new Error("Authorized artifact hashes do not match the frozen manifest");
+  }
+}
+
+function validTimestamp(value) {
+  return typeof value === "string" && value.length > 0 && !Number.isNaN(Date.parse(value));
+}
+
+function packetFile(root, relativePath) {
+  if (typeof relativePath !== "string" || relativePath.length === 0
+    || isAbsolute(relativePath) || relativePath.split(/[\\/]/).includes("..")) {
+    throw new Error("Registered payload bundle file must be a safe relative path");
+  }
+  return join(root, relativePath);
 }
 
 function modelMatches(systemId, returned) {
@@ -203,7 +372,7 @@ function modelMatches(systemId, returned) {
 }
 
 function sha256(value) {
-  return createHash("sha256").update(String(value)).digest("hex");
+  return createHash("sha256").update(Buffer.isBuffer(value) ? value : String(value)).digest("hex");
 }
 
 function durableAppend(path, value) {
