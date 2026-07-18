@@ -1,6 +1,6 @@
 # Author resolution of initial AI-assisted reviews
 
-Status: pre-outcome Ollama finding-specific schema correction awaiting verification. No benchmark prompt has been submitted to Codex, Claude, or Ollama.
+Status: pre-outcome AI-assisted internal preregistration review complete with documented limitations. Ollama permission and OSF registration remain pending. No benchmark prompt has been submitted to Codex, Claude, or Ollama.
 
 The raw reports for commit `6b607f6a83c5787de0b5c06abf7594cbb2769c68` remain archived verbatim beside this file. All changes below invalidate the earlier candidate cards, prompts, call-ledger, and ground-truth hashes; the replacement hashes are recorded in `study.json` and must be reviewed as one new commit.
 
@@ -150,3 +150,9 @@ Both reproducibility findings are accepted. The manifest now distinguishes autho
 Methods and safety returned `approve with documented limitations`. Reproducibility verified the lock provenance, legacy-field enumeration, and status/archive wording but returned `do not approve` because the runner's top-level `frozen` control was not named in either authoritative-field list.
 
 That finding is accepted. `frozen`, `frozen_at`, and `freeze_scope` are now explicit authoritative current operational-control fields alongside `ecological_layer` and `preregistration_v2_draft`. No runtime code, design factor, queue, outcome, authorization, or spending gate changed. Final reproducibility verification of that exact correction is required.
+
+## Reproducibility verification of `4ed8244`
+
+Reproducibility returned `approve with documented limitations` for exact commit `4ed8244e8ae4933f3cb1df8f7db617f13118a0f8`. Every manifest field read by the confirmatory subscription runner is now present in the applicable authoritative list; baseline and current lock hashes remain separately attributable; and no runtime, design, queue, outcome, hash, or authorization value changed.
+
+No AI-assisted internal preregistration-review blocker remains. The conditional Ollama design is approved only as a permission-pending contingency. Ollama activation still requires written provider permission, action-time approval for any exact fixed subscription and fee, no-prompt entitlement and zero-balance evidence, fixture-only implementation and separate frozen artifacts, targeted review of that exact activation candidate, an outcome-blind activation decision, and OSF registration before any outcome call. The non-activation branch remains available and must be fixed before every system's outcome collection.
