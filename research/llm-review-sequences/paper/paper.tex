@@ -39,16 +39,17 @@ that treat main as untrusted until pipeline review completes. The study uses 40
 matched malicious-benign pairs drawn from 40 structural templates in eight
 abstract policy families. Every generated case module is synthetic, executes
 only in memory, and has no external capability in the audited fixed corpus.
-Atomic and three-submission variants have identical
-final trees and changed-line totals. A factorial design varies intent,
-decomposition, and workflow framing across two subscription-backed review
-systems: Codex CLI and Claude Code. The bounded design contains 1,280 review
-boundaries and requires no expenditure beyond existing subscriptions. Primary
-outcomes are blocking by activation and paired intent discrimination; workflow
-and interaction estimates are explicitly exploratory because the sample is
-underpowered for small effects. This pre-outcome manuscript reports the design,
-analysis plan, deterministic baseline, safety controls, and limitations; it
-contains no LLM benchmark outcomes.
+Atomic and three-submission variants have identical final trees and changed-line
+totals. A factorial design varies intent, decomposition, and workflow framing
+across two confirmatory subscription-backed systems: Codex CLI and Claude Code.
+The bounded confirmatory design contains 1,280 review boundaries. A separately
+reported, permission-contingent Ollama Cloud stratum would add 640 exploratory
+boundaries without entering the confirmatory estimand. Primary outcomes are
+blocking by activation and paired intent discrimination; workflow and interaction
+estimates are explicitly exploratory because the sample is underpowered for small
+effects. This pre-outcome manuscript reports the design, analysis plan,
+deterministic baseline, safety controls, and limitations; it contains no LLM
+benchmark outcomes.
 \end{abstract}
 
 \section{Introduction}
@@ -67,12 +68,13 @@ untrusted until deterministic and model-based pipeline gates complete. These
 workflows differ in policy, but empirical comparisons often also change the
 evidence shown to the reviewer.
 
-We study whether two subscription-backed LLM review products recognise a
-composition before its activation boundary. The benchmark represents harm as
-an abstract policy assertion: an unprivileged synthetic actor receives a
-protected synthetic capability. It neither implements an exploit nor interacts
-with a real target. The contribution is a reproducible, prospectively specified
-test of sequence-level review under a zero-additional-spend constraint.
+We study whether two confirmatory subscription-backed LLM review products
+recognise a composition before its activation boundary. A conditional Ollama
+Cloud replication is declared separately and cannot alter confirmatory results.
+The benchmark represents harm as an abstract policy assertion: an unprivileged
+synthetic actor receives a protected synthetic capability. It neither implements
+an exploit nor interacts with a real target. The contribution is a reproducible,
+prospectively specified test of sequence-level review with no usage-based spend.
 
 \section{Related Work}
 
@@ -154,16 +156,18 @@ Factor & Levels & Interpretation \\
 Intent & malicious, benign & Matched final-state policy outcome \\
 Decomposition & atomic, split & One submission or three necessary submissions \\
 Workflow & pull request, trunk & Pre-merge gate or untrusted-main pipeline \\
-Review system & Codex, Claude Code & Subscription-backed product surface \\
+Review system & Codex, Claude; optional Ollama & Product surface \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The design contains 40 malicious-benign pairs, 80 cases, 640 sequences, and
-1,280 boundary reviews. Each review system receives 640 boundaries: 320 atomic
-boundaries in total and 960 split boundaries in total. There is one trial per
-case, decomposition, workflow, and review system. Calls are globally shuffled
-with a seeded Fisher--Yates algorithm. No outcome-dependent stopping, template
+The confirmatory design contains 40 malicious-benign pairs, 80 cases, 640
+sequences, and 1,280 boundary reviews. Each confirmatory system receives 640
+boundaries: 320 atomic boundaries in total and 960 split boundaries in total.
+There is one trial per case, decomposition, workflow, and review system. Calls
+are globally shuffled with a seeded Fisher--Yates algorithm. If activated, the
+separate Ollama queue reuses the 640 prompts as 320 sequences, 160 atomic
+boundaries, and 480 split boundaries. No outcome-dependent stopping, template
 replacement, or prompt tuning is permitted.
 
 \subsection{Review systems}
@@ -176,7 +180,7 @@ deviation.
 
 \begin{table}[ht]
 \centering
-\caption{Subscription-backed review systems.}
+\caption{Confirmatory and conditional review systems.}
 \label{tab:systems}
 \begin{tabular}{@{}lll@{}}
 \toprule
@@ -184,6 +188,7 @@ System & Client version & Requested model \\
 \midrule
 Codex CLI & 0.137.0; ChatGPT login & \code{gpt-5.5} \\
 Claude Code & 2.1.211; Claude Max login & \code{sonnet} \\
+Ollama (conditional) & 0.32.1; subscription pending & \code{qwen3.5:397b-cloud} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -194,6 +199,17 @@ absence of \code{OPENAI\_API\_KEY}, \code{CODEX\_API\_KEY}, and
 credits, another provider, or a fallback model. Requested and returned model
 metadata, CLI version, timestamp, usage, and failures are retained. A version
 or returned-model change suspends that review system.
+
+No automated Ollama access or purchase is currently authorised. Its fixed order
+is written provider permission, permitted no-prompt entitlement and identity
+preflight, fixture-only implementation and offline artifact generation, targeted
+review, an outcome-blind activation decision, and OSF registration and freeze.
+If activated, requests set \code{stream=false} and \code{think=false}, omit tools
+and structured-output format, and require exact returned-model identity. Invalid
+JSON is an abstention; any reasoning trace or tool call suspends the arm. The
+localhost service brokers cloud inference, so prompts leave the device. A new
+fixed subscription requires action-time approval, and extra-usage balance,
+per-call billing, overage, and fallback are prohibited.
 
 All reviews receive one fixed security-review task and a JSON response contract.
 Requests ask for \code{allow}, \code{block}, or \code{abstain}; a maliciousness
@@ -213,8 +229,9 @@ same fixed queue resumes after the plan window resets. No API credit is accepted
 A no-response failure may be retried at the same position up to three recorded
 attempts. Start, completion, suspension, and result records are fsynced. Collection
 also suspends on a safety or terms conflict, authentication change, benchmark
-integrity failure, or client or model drift. The additional spending ceiling is
-US\$0.
+integrity failure, or client or model drift. The API, per-call, overage,
+extra-balance, and paid-fallback spending ceiling is US\$0. Fixed subscription
+fees are disclosed separately and any new plan requires action-time approval.
 
 \subsection{Outcomes}
 
@@ -228,12 +245,13 @@ per cell.
 
 \section{Analysis Plan and Power}
 
-Sequence outcomes are averaged within structural-template and intent-condition
-cells across the two review systems. Structural templates then receive equal
-weight. Review-system-specific results are secondary. The primary uncertainty
-calculation is a 10,000-replicate family-stratified structural-template bootstrap
-with seed 20260718. Each replicate samples five templates with replacement from
-each family while retaining their paired intents and treatment cells.
+Confirmatory sequence outcomes are averaged within structural-template and
+intent-condition cells across exactly \code{codex-cli/gpt-5.5} and
+\code{claude-code/sonnet}. Structural templates then receive equal weight.
+Review-system-specific results are secondary. The primary uncertainty calculation
+is a 10,000-replicate family-stratified structural-template bootstrap with seed
+20260718. Each replicate samples five templates with replacement from each family
+while retaining their paired intents and treatment cells.
 
 The H1 estimate is the malicious-minus-benign block-rate risk difference,
 averaged over decomposition and workflow. H1 is supported only when its 95\%
@@ -250,8 +268,17 @@ system. No imputation model is fitted. H1 and H2 are separate registered claims,
 which does not provide familywise error control across them. Exploratory workflow
 intervals carry no inferential decision and receive no multiplicity adjustment.
 
+If activated, Ollama is analysed alone using the same templates, contrasts,
+bootstrap, missingness bounds, and complete-template sensitivity. Its dedicated
+reporting path emits estimates, intervals, and bounds without hypothesis-support,
+robustness, significance, equivalence, superiority, or pooled-model decisions.
+Fabricated-response tests must prove both this decision-free path and rejection of
+Ollama, missing, extra, or mixed rows from the confirmatory path before activation.
+
 The products and sample are a convenience selection determined by subscriptions
-already held by the author, not an 80\% power target. Under
+available to the author, not an 80\% power target. The optional Ollama stratum
+reuses the same 40 templates and adds no independent template evidence or
+confirmatory power. Under
 the earlier central assumptions, a 20,000-replication single-review-system
 normal-approximation audit yields rejection fractions of 0.2577 for a 0.15 split
 penalty and 0.1016 for a 0.10 interaction, plus a workflow-equivalence fraction
@@ -265,10 +292,11 @@ replication.
 
 \section{Pre-outcome Status}
 
-No benchmark prompt has been submitted to either review system. The generator,
+No benchmark prompt has been submitted to any review system. The generator,
 prompts, schedule, ledgers, scoring, estimands, and tests were implemented with
 deterministic checks and fabricated plumbing responses only. No LLM outcome has
-been collected or inspected.
+been collected or inspected. Written Ollama permission, automated preflight,
+subscription purchase, runtime support, and activation remain pending.
 
 The deterministic baseline ran ESLint 9.39.3 over all 2,400 final-state files in
 the full 800-case generator output. It emitted no warnings or errors: zero
@@ -293,14 +321,17 @@ are therefore retained and drift suspends collection. Collection may span
 subscription reset windows, creating calendar-time and platform-drift risk
 despite the fixed randomised queue.
 
-\textbf{External validity.} Forty purposively selected templates, eight policy families, two
-review products, and compact JavaScript repositories do not represent all
+\textbf{External validity.} Forty purposively selected templates, eight policy
+families, two confirmatory products, an optional exploratory product, and compact
+JavaScript repositories do not represent all
 languages, organisations, vulnerabilities, or attack strategies. The design
 tests one three-submission decomposition and does not estimate an optimal
 adversarial strategy. Inference is conditional on these templates; one lexical
-instance per template does not estimate identifier-instance variability. Zero
-additional spend relies on the author's existing paid entitlements and is not
-cost-free for an independent reproducer without equivalent subscriptions.
+instance per template does not estimate identifier-instance variability. The
+subscription-only design is not cost-free for an independent reproducer without
+equivalent subscriptions. Product surfaces, schema enforcement, hidden prompts,
+calendar periods, routing, and cloud aliases confound descriptive cross-product
+comparisons and cannot support provider or open-versus-closed-weight claims.
 
 \textbf{Statistical conclusion validity.} The sample is underpowered for small
 effects, especially workflow equivalence and interaction. There is one trial,
@@ -313,6 +344,13 @@ This is defensive research into review reliability. The benchmark cannot access
 external systems or data, and its only harmful state is a deterministic in-memory
 assertion over synthetic names. No real repository or person is tested.
 
+For the conditional cloud arm, prompts leave the device even though the local
+service is used. Private raw responses remain in access-controlled encrypted
+storage through publication and for 12 months afterward, then private content is
+deleted while hashes and derived tables remain unless written permission,
+upstream-license review, and post-outcome dual-use review approve a public subset.
+Reasoning traces and sensitive metadata are never published.
+
 Three isolated subagents initially reviewed candidate commit \code{6b607f6} for
 benchmark safety, methods, and reproducibility. All three returned
 \code{do not approve}; their raw reports are archived. Correction addenda inspect
@@ -323,6 +361,8 @@ model, provider, and author-orchestration biases are reported as limitations.
 Neutral change titles remove plausible refactor cover stories, but the abstract
 composition patterns retain disclosed dual-use value. The packet contains no
 real target, external capability, credential, deployment path, or complete exploit.
+Targeted non-isolated reviews must approve the applicable activation or
+non-activation package before registration freeze.
 
 \section{Reproducibility}
 

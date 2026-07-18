@@ -38,7 +38,7 @@ node research/llm-review-sequences/ecological.mjs \
   "$root/collection"
 ```
 
-Stop if the generated counts or SHA-256 values differ from [`study.json`](./study.json). Do not invoke Codex or Claude Code on a benchmark prompt.
+Stop if the generated counts or SHA-256 values differ from [`study.json`](./study.json). Do not invoke Codex, Claude Code, or Ollama on a benchmark prompt.
 
 ## Shared declarations
 
@@ -95,6 +95,32 @@ Inspect reproducibility and subscription-only execution:
 - OSF and arXiv artifact readiness without attempting submission.
 - Consistency among the manifest, preregistration, README, manuscript, and generated counts.
 
+## Conditional Ollama revision rubric
+
+Every targeted review of the conditional Ollama stratum must also verify the ordered state sequence: written provider permission before any automated access; permitted no-prompt preflight; fixture-only implementation and offline artifact generation; targeted review; final activation or non-activation before any outcome; OSF registration and freeze; then explicit outcome-call authorization.
+
+### AI-SAFETY-01 additions
+
+- Written permission covers automated preflight, request volume and cadence, synthetic security-review content, aggregate publication, raw-output handling, and model attribution.
+- The localhost route is disclosed as cloud processing, with dated Terms, Privacy, Pricing, model, and capability evidence.
+- `think: false` is frozen and any reasoning trace fails closed; reasoning traces and sensitive metadata are excluded from public release.
+- Researcher retention, access, deletion, upstream-license review, and post-outcome dual-use release gates are explicit.
+
+### AI-METHODS-01 additions
+
+- Ollama reuses the same 40 templates and adds no independent template evidence or confirmatory power.
+- The exact two-system confirmatory estimand rejects missing, extra, mixed, or Ollama rows.
+- The Ollama-only path reports estimates, intervals, and bounds without support, robustness, significance, equivalence, superiority, or pooled decisions.
+- Activation or non-activation is fixed before every study outcome and cannot depend on results.
+
+### AI-REPRO-01 additions
+
+- The permission record, action-time fixed-fee authorization, plan, entitlement, and zero or disabled extra-usage balance are machine-readable and checked before every batch or resume.
+- Client and server versions, exact tag, canonical `/api/tags` model-record SHA-256, public model-page SHA-256, request envelope, response envelope, and exact returned model identity are frozen and drift checked.
+- The Ollama queue, blinded ledger, ground truth, authorization, attempts, results, and hashes are separate from the two-system confirmatory package.
+- Fixture-only tests prove no inference occurs during preparation, reject reasoning traces and tool calls, and prove confirmatory contamination rejection plus decision-free Ollama reporting.
+- The manuscript, manifest, preregistration, README, generated counts, hashes, and activation record agree.
+
 ## Fixed report format
 
 Each raw report must contain these headings:
@@ -138,7 +164,8 @@ Preregistration v2 may be frozen only when:
 - No reviewer has an unresolved blocking finding.
 - Supported corrections are applied before any outcome collection.
 - The final generated hashes reproduce from a clean checkout.
-- Subscription-only authentication and the US$0 spending guard are verified without sending a benchmark prompt.
+- Subscription-only authentication and the US$0 usage-based spending guard are verified without sending a benchmark prompt. Any new fixed subscription has separate action-time authorization, and any Ollama extra-usage balance is proven zero or disabled.
+- The Ollama activation or non-activation branch is final before any study outcome. If activated, every conditional-rubric requirement is satisfied; if not activated, no Ollama runtime or artifact is authorized.
 - The OSF registration timestamp and identifier are recorded.
 
 Human peer review remains desirable but is not represented as completed. arXiv endorsement, if required, is a separate account-level process and is not supplied by these subagents.

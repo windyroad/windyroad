@@ -16,7 +16,7 @@ docker run --rm --platform linux/amd64 \
   -interaction=nonstopmode -halt-on-error paper.tex
 ```
 
-The 2026-07-17 correction build produced six pages with no warning on the second pass.
+The 2026-07-19 pre-registration correction build produced six pages with no warning on the second pass.
 
 Copy and verify the release artifact:
 
@@ -25,5 +25,5 @@ cp research/llm-review-sequences/paper/paper.pdf output/pdf/paper.pdf
 shasum -a 256 research/llm-review-sequences/paper/paper.tex output/pdf/paper.pdf
 ```
 
-- `paper.tex` SHA-256: `e7a53813083fe1112e18444fcc1088c029e2569ec83a15c4b0f1c228506333e4`
-- `output/pdf/paper.pdf` SHA-256: `8b576794765411e2cc25b3473ff06598cbb312ef50cdbd2f4a843e03c05aaf19`
+- `paper.tex` SHA-256: `9e954ad4946685f58602264d5d11d0e3f00fc76c2cad987e2b6be06e1e38fa2d`
+- `output/pdf/paper.pdf` SHA-256: `bbe0578e9700226860f70fe620d5dd466eb64947fe174625d2b2b1c87ddfa0d2`

@@ -1,6 +1,6 @@
 # Preregistration v2: subscription-backed LLM review of decomposed changes
 
-Status: prospective amendment draft. No benchmark prompt has been submitted to any review system. Do not begin outcome collection until the targeted AI-assisted amendment reviews are archived, the final artifact hashes are verified from a clean checkout, and this plan is registered on OSF.
+Status: prospective pre-registration revision. No benchmark prompt has been submitted to any review system. Do not begin outcome collection until the Ollama activation decision is final, the applicable targeted AI-assisted reviews are archived, the final artifact hashes are verified from a clean checkout, and the applicable plan is registered on OSF.
 
 ## Study information
 
@@ -45,7 +45,7 @@ This is a controlled repeated-measures experiment on synthetic code-review evide
 - Decomposition: one atomic submission or three necessary submissions with the same final tree.
 - Workflow: pre-merge pull request or landed commit on main that remains untrusted pending pipeline review.
 - Confirmatory review system: Codex CLI through a ChatGPT subscription or Claude Code through a Claude subscription.
-- Conditional exploratory review system: Ollama Cloud through an Ollama subscription, only if every activation gate below is met before the first study outcome call.
+- Conditional exploratory review system: Ollama Cloud through an Ollama subscription, only if every ordered pre-activation stage below is met before the first study outcome call.
 
 Every review receives only the current boundary artifact. Prior submission diffs are not supplied. This local information boundary is the mechanism under test and is identical across the two workflow framings apart from prospectively specified native artifact fields and policy text.
 
@@ -70,11 +70,17 @@ Codex officially supports ChatGPT subscription authentication and non-interactiv
 
 #### Conditional exploratory Ollama Cloud stratum
 
-Ollama Cloud is prospectively declared as a separate, non-confirmatory product-replication stratum. If activated, Ollama 0.32.1 uses the signed-in local Ollama service to request `qwen3.5:cloud` through `POST http://localhost:11434/api/chat`, with streaming and tools disabled. Candidate availability and account entitlement are currently unverified. The full catalog digest, client and server versions, plan tier, and access timestamp must be frozen after a no-prompt preflight.
+Ollama Cloud is prospectively declared as a separate, non-confirmatory product-replication stratum. If activated, Ollama 0.32.1 uses the signed-in local Ollama service to request the explicit tag `qwen3.5:397b-cloud` through `POST http://localhost:11434/api/chat`. The fixed body sets `stream: false`, `think: false`, omits tools and `format`, and sets `options.num_predict` to 256. Candidate availability and account entitlement are currently unverified.
 
-Activation requires written Ollama permission for this automated benchmark, archived before any confirmatory or exploratory outcome call. It also requires a separate fixed queue and ledgers, separate authorization and hashes, a tested isolated runner route, and a tested exact-model-set guard that prevents Ollama rows from entering the confirmatory analysis. If any gate is unmet before the first study outcome call, the arm is recorded as not activated and only the unchanged two-system confirmatory queue runs. This decision cannot depend on model outcomes.
+The pre-activation order is fixed. First, written Ollama permission must cover automated preflight, the 640-call benchmark, cadence and retries, synthetic security-review content, aggregate publication, raw-output handling, and model attribution; no automated Ollama access occurs before that permission. Second, a permitted no-prompt preflight records the account and plan, exact tag availability, client and server versions, the exact `/api/tags` model record and canonical SHA-256, a dated public-model-page SHA-256, and proof that extra-usage balance is zero or disabled. Third, fixture-only runner and analysis routes are implemented and tested, separate queue and ledgers are generated offline, and request, response, schedule, authorization, and artifact hashes are frozen without inference. Fourth, the exact activation candidate receives targeted methods, reproducibility, and safety review. Fifth, the author finalizes activation before any outcome, registers and freezes the applicable OSF plan, and explicitly authorizes only those queues.
 
-Ollama Cloud does not currently support provider-enforced structured outputs. The fixed prompt therefore requests the same JSON contract, and the same local schema validator is applied without repair. Invalid or non-JSON output is an observed abstention. `OLLAMA_API_KEY`, extra-usage balance, per-call billing, overage, fallback models, and paid overflow are prohibited. Relevant official records are the [Ollama Terms](https://ollama.com/terms), [Ollama Privacy Policy](https://ollama.com/privacy), [Ollama pricing](https://ollama.com/pricing), [Ollama Cloud documentation](https://docs.ollama.com/cloud), [API authentication](https://docs.ollama.com/api/authentication), [chat API](https://docs.ollama.com/api/chat), and [structured-output limitations](https://docs.ollama.com/capabilities/structured-outputs).
+At final OSF registration, either every pre-activation stage has passed or the arm is recorded as not activated. Non-activation permits only the separately frozen and registered two-system confirmatory queue and is fixed before any Codex, Claude, or Ollama outcome. If activated, every initial or resumed batch repeats the frozen identity, plan, entitlement, version, model-record, exact returned-model, and zero-balance checks; ambiguity or drift creates a durable non-consuming suspension.
+
+Ollama Cloud does not currently support provider-enforced structured outputs. The fixed prompt therefore requests the same JSON contract, and the runner accepts only exact returned model identity and complete `message.content`, applying the existing local schema validator without repair or fence stripping. Invalid or non-JSON output is an observed abstention. If `think: false` is unsupported or any reasoning trace or tool call appears, the arm suspends and no response is scored or publicly released.
+
+The localhost endpoint brokers cloud inference: prompts and responses leave the device. Ollama currently represents cloud content processing as transient, not logged, and not used for training, while request counts, IP or general location, device, diagnostic, and model-download metadata may still be processed or retained by Ollama or infrastructure providers in multiple regions. The sole author keeps private raw responses in access-controlled encrypted storage through publication and for 12 months afterward, then deletes private content while retaining hashes and derived tables, unless written permission plus post-outcome dual-use and upstream-license review approve a public subset. Reasoning traces and sensitive metadata are never published.
+
+No purchase is authorized by this revision. The exact Ollama plan and fixed fee require action-time author approval before purchase. `OLLAMA_API_KEY`, a positive or enabled extra-usage balance, per-call billing, overage, fallback models, and paid overflow are prohibited. Aggregate publication and any raw-output release require written Ollama permission; raw release also requires post-outcome dual-use and upstream-license review. Official pages were accessed on 2026-07-19 and must be archived with SHA-256 values in the activation record: [Ollama Terms](https://ollama.com/terms), [Ollama Privacy Policy](https://ollama.com/privacy), [Ollama pricing](https://ollama.com/pricing), [Ollama Cloud documentation](https://docs.ollama.com/cloud), [API authentication](https://docs.ollama.com/api/authentication), [chat API](https://docs.ollama.com/api/chat), [model tags](https://docs.ollama.com/api/tags), [structured-output limitations](https://docs.ollama.com/capabilities/structured-outputs), and [thinking behavior](https://docs.ollama.com/capabilities/thinking).
 
 ### Prompt and response contract
 
@@ -99,7 +105,7 @@ If the Ollama stratum is activated, it reuses the same 640 frozen boundary promp
 
 ### Budget and stopping
 
-The API, per-call, overage, extra-balance, and paid-fallback spending ceiling is US$0. Fixed subscription fees already paid or newly purchased for this study are disclosed by product and tier but do not authorize usage-based spend. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, the crash-safe runner records a suspension at the current call. The author resumes the same fixed queue only after the same subscription window resets.
+The API, per-call, overage, extra-balance, and paid-fallback spending ceiling is US$0. Existing ChatGPT and Claude fixed subscription fees are disclosed. No Ollama purchase is authorized by this revision; its exact plan and fixed fee require separate action-time approval and are recorded before activation. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, the crash-safe runner records a suspension at the current call. The author resumes the same fixed queue only after the same subscription window resets.
 
 Collection also suspends on a safety or provider-terms conflict, authentication change, benchmark-integrity failure, CLI version change, or returned model-identity change. There is no outcome-dependent stopping.
 
@@ -146,7 +152,7 @@ Missing boundaries are abstentions in the operational analysis. Mandatory estima
 
 No imputation model is fitted. H1 and H2 are separately registered directional claims and are not combined into one multiplicity family; this does not provide familywise error control across them. Workflow and interaction intervals are exploratory descriptions with no inferential decision; no Holm adjustment is applied.
 
-If activated, the Ollama stratum is analyzed alone using the same 40-template family-stratified bootstrap, contrast definitions, 10,000 replicates, seed `20260718`, missingness bounds, and complete-template sensitivity. Point estimates and 95% intervals are reported for intent discrimination, decomposition, workflow, and decomposition-by-workflow interaction, together with the prespecified secondary outcomes. No hypothesis-support, equivalence, provider-superiority, or pooled-model claim is made. Cross-product differences remain descriptive because product surfaces, system prompts, schema enforcement, routing, and serving stacks differ.
+If activated, the Ollama stratum is analyzed alone using the same 40-template family-stratified bootstrap, contrast definitions, 10,000 replicates, seed `20260718`, missingness bounds, and complete-template sensitivity. A dedicated reporting path exposes point estimates and 95% intervals without `supported`, `robust`, significance, equivalence, provider-superiority, or pooled-model fields or claims. Fabricated-response tests must prove this decision-free path and prove that missing, extra, mixed, or Ollama rows are rejected by the exact two-system confirmatory path before activation. Cross-product differences remain descriptive because product surfaces, system prompts, schema enforcement, routing, and serving stacks differ.
 
 ## Quality control
 
@@ -170,7 +176,7 @@ ESLint 9.39.3 scanned all 2,400 files in the full 800-case generator output with
 
 Every generated case module executes only in memory. Fixed-corpus inspection, oracle execution, relative-import restrictions, and output audit found no external capability; the regex scanner is only defense in depth. The trusted generator and oracle harness use local files, a Node subprocess, and dynamic import to construct and verify cases. The benchmark models an abstract policy failure, not an exploit against a real target.
 
-Release artifacts receive AI-assisted dual-use review. Neutral change titles remove plausible refactor cover stories, but the abstract three-step composition patterns retain dual-use value. The public release includes no real target, deployment path, credential, external capability, or complete exploit. Any further omission is documented, and raw product output is released only where provider terms permit.
+Release artifacts receive AI-assisted dual-use review. Neutral change titles remove plausible refactor cover stories, but the abstract three-step composition patterns retain dual-use value. The public release includes no real target, deployment path, credential, external capability, or complete exploit. Any further omission is documented. Raw product output requires provider permission, upstream-license review, and post-outcome dual-use review; reasoning traces and sensitive metadata are never released.
 
 ## Limitations
 
@@ -196,10 +202,10 @@ Current unfrozen candidate hashes are:
 - Blinded call ledger SHA-256: `01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223`.
 - Ground-truth ledger SHA-256: `b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773`.
 
-Before OSF submission, replace “candidate freeze” with the final Git commit, archive targeted methods, reproducibility, and safety reviews of this amendment, confirm the license, and reproduce these hashes from a clean checkout. The conditional Ollama arm has no generated queue or hashes until its activation gates pass. Any later artifact change requires a new pre-outcome review before registration or a dated post-registration amendment before outcomes.
+Before OSF submission, replace “candidate freeze” with the final Git commit, archive targeted methods, reproducibility, and safety correction reviews of this pre-registration revision, confirm the license, and reproduce these hashes from a clean checkout. If permission is unavailable, record Ollama non-activation and freeze only the unchanged two-system package. If permission is archived, complete the ordered offline preparation, freeze the separate Ollama artifacts, and review the exact activation candidate before one OSF registration. Any later artifact change requires a new pre-outcome review before registration or a dated post-registration revision before outcomes.
 
 ## Deviations
 
-This v2 draft prospectively supersedes the uncollected API/OpenRouter design because the sole author has no research budget beyond subscription access. On 2026-07-19, before any outcome call, the author added the permission-contingent Ollama Cloud replication without changing the two-system confirmatory estimand, queue, or hashes. No LLM benchmark outcome existed when either change was made. The original preregistration-v1 and API-design history remain available in Git and in the legacy fields of [`study.json`](./study.json).
+This v2 draft prospectively supersedes the uncollected API/OpenRouter design because the sole author has no research budget beyond subscription access. On 2026-07-19, before any outcome call or OSF registration, the author added the permission-contingent Ollama Cloud replication without changing the two-system confirmatory estimand, queue, or hashes. No LLM benchmark outcome existed when either change was made. The original preregistration-v1 and API-design history remain available in Git and in the legacy fields of [`study.json`](./study.json).
 
 All later deviations are dated, justified, and classified as occurring before or after outcome access. Unregistered analyses are labelled exploratory.

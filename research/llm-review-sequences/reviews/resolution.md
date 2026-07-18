@@ -91,3 +91,28 @@ All three affected roles verified the accepted corrections against commit `4b481
 - `AI-REPRO-01`: `approve`. `AI-REPRO-01-FB01` is resolved; four fabricated resumes preserve model drift as a durable suspension with no missing result.
 
 The verbatim verification records are archived beside this log. No AI-assisted internal-review blocker remains. OSF registration may proceed, but subscription collection remains unauthorized until the external identifier is recorded, the manifest is frozen, and all authorization/hash checks pass.
+
+## Resolution of Ollama pre-registration reviews for `94959bd`
+
+The statement above applies only to the previously approved two-system package at `4b48101`. Before OSF registration and before any outcome, the author added a conditional Ollama Cloud stratum at `94959bdb9bcf64dd15ca946f6f395a385f5102af`. The three non-isolated targeted reports are archived verbatim as `2026-07-19-ai-*-ollama-01-94959bd.md`. Methods returned `approve with documented limitations`; safety and reproducibility returned `do not approve`.
+
+### Shared blocking findings
+
+- Activation sequencing: accepted. The revision now defines two outcome-blind branches and an ordered sequence: written permission before automated access; permitted no-prompt preflight; fixture-only implementation and offline artifact generation; targeted review; final activation or non-activation; one applicable OSF registration and freeze; then explicit outcome-call authorization.
+- Amendment-specific governance: accepted. `independent-review.md` now requires permission, cloud/privacy and release review, fixed-fee and zero-balance evidence, exact identity and request contracts, separate ledgers, confirmatory contamination rejection, and decision-free Ollama reporting.
+- Manuscript inconsistency: accepted. `paper/paper.tex` now describes the conditional stratum, counts, permission and spending gates, structured-output and thinking differences, cloud data handling, separate analysis, and limitations.
+- Default thinking trace: accepted. The candidate request fixes `think: false`; any reasoning trace or tool call creates a fail-closed suspension, is not scored, and is never publicly released.
+
+### Major and minor findings
+
+- Spending controls: accepted. This revision authorizes no purchase. The exact fixed plan and fee require action-time author approval, and extra-usage balance must be proven zero or disabled before every batch or resume. Usage-based, overage, fallback, and extra-balance spend remain capped at US$0.
+- Cloud data handling and retention: accepted. The protocol discloses that localhost brokers cloud inference, records the current metadata boundary, and defines sole-author encrypted retention through publication plus 12 months, followed by private-content deletion unless a reviewed public subset is permitted.
+- Raw-output release: accepted. Written provider permission, upstream-license review, and post-outcome dual-use review are all required; reasoning traces and sensitive metadata are excluded.
+- Analysis isolation: accepted as a pre-activation gate. The revision requires an exact two-system allowlist plus a separate decision-free Ollama route and fabricated-response tests. No Ollama runtime or analysis path is implemented before written permission.
+- Identity, drift, and request contract: accepted. The activation record freezes the exact tag, canonical `/api/tags` model record, public model-page hash, client/server versions, request and response envelopes, and exact returned identity, and repeats checks on every batch or resume.
+- Live documentation dates: accepted. Official sources are marked accessed on 2026-07-19; dated snapshots and SHA-256 values are mandatory activation artifacts.
+- Chronology wording: accepted. “Amendment” is replaced with “pre-registration revision” in governing current-state text.
+- Package version mismatch: accepted. The root lockfile metadata now matches package version `2.13.5`; dependency versions are unchanged.
+- Methods limitations: retained. The Ollama stratum adds no independent templates or confirmatory power, remains descriptively analyzed, and cannot support provider, base-model, equivalence, open-versus-closed-weight, or general LLM-review claims.
+
+Changed files require targeted correction review before OSF freeze. No benchmark prompt, automated Ollama preflight, subscription purchase, or model outcome occurred during correction.

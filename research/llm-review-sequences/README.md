@@ -24,9 +24,13 @@ The earlier 115,200-call OpenRouter design was superseded before outcome collect
 
 ### Permission-pending Ollama replication
 
-An Ollama Cloud `qwen3.5:cloud` arm is prospectively declared as a separate exploratory replication. It is not a third confirmatory system and cannot alter the existing 1,280-call queue or analysis. Activation requires written provider permission, a no-prompt entitlement and identity preflight, separate 320-sequence and 640-boundary ledgers and hashes, isolated runner support, an exact-model-set analysis guard, targeted AI-assisted review, and OSF registration before any outcome call. Until those gates pass, no Ollama prompt or runtime code is authorized.
+An Ollama Cloud `qwen3.5:397b-cloud` arm is prospectively declared as a separate exploratory replication. It is not a third confirmatory system and cannot alter the existing 1,280-call queue or analysis. No automated Ollama access or purchase is currently authorized.
 
-If activated, the arm reuses the same 640 prompts in a separately shuffled queue with seed `20260719`. Ollama Cloud lacks provider-enforced structured outputs, so invalid JSON is retained as an abstention after the unchanged local validation. No API key, paid overage, extra-usage balance, or fallback model is allowed. See the [Ollama Terms](https://ollama.com/terms), [Ollama Privacy Policy](https://ollama.com/privacy), [Ollama Cloud documentation](https://docs.ollama.com/cloud), and [structured-output limitations](https://docs.ollama.com/capabilities/structured-outputs).
+The fixed order is: written permission before any automated preflight; permitted no-prompt entitlement, identity, plan, version, model-record, and zero-balance checks; fixture-only implementation and offline generation of separate 320-sequence and 640-boundary artifacts; targeted review; then a final activation or non-activation decision before any outcome and one applicable OSF registration. If permission or preparation is incomplete at registration, Ollama is recorded as not activated and only the unchanged confirmatory package runs.
+
+If activated, the arm reuses the same 640 prompts in a separately shuffled queue with seed `20260719`. The request fixes `stream: false`, `think: false`, no tools or `format`, and a 256-token output ceiling. Ollama Cloud lacks provider-enforced structured outputs, so invalid JSON is retained as an abstention after unchanged local validation; any reasoning trace or tool call suspends the arm. No API key, paid overage, positive or enabled extra-usage balance, or fallback model is allowed. A new fixed subscription requires separate action-time approval. See the dated [Ollama Terms](https://ollama.com/terms), [Ollama Privacy Policy](https://ollama.com/privacy), [Ollama pricing](https://ollama.com/pricing), [Ollama Cloud documentation](https://docs.ollama.com/cloud), [structured-output limitations](https://docs.ollama.com/capabilities/structured-outputs), and [thinking behavior](https://docs.ollama.com/capabilities/thinking).
+
+The localhost route brokers cloud inference, so prompts leave the device. Private raw responses remain in access-controlled encrypted storage through publication and for 12 months afterward, then private content is deleted while hashes and derived tables remain, unless written permission plus post-outcome dual-use and upstream-license review approve a public subset. Reasoning traces and sensitive metadata are never published.
 
 ## Safety boundary
 
@@ -140,6 +144,7 @@ Before collection:
 2. Repeat each materially affected review against one new commit.
 3. Reproduce and freeze the final hashes from a clean checkout.
 4. Confirm the license and ORCID record.
-5. Register preregistration v2 on OSF.
+5. Finalize and record the Ollama activation or non-activation branch.
+6. Register the applicable preregistration v2 package on OSF.
 
 After the fixed schedule completes, the prespecified analysis and paper revision can proceed. arXiv submission occurs only after the results, permitted artifacts, and final manuscript are verified.
