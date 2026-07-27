@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-27 **P009 closed**: the wr-content-risk-scorer fresh-context subagent (ADR-018) was exercised repeatedly across the Issue 15 finalise and its two external-review fix passes, emitting the ADR-015 five-axis CONTENT_RISK block with PASS verdicts matching editorial judgement; edition published. Closed on session evidence per run-retro Step 4a.
+> Last reviewed: 2026-07-27 **P118 captured**: newsletter publish step uses `git mv` on untracked drafts, which fails (the documented finalise reminder does not work as written; `mv` + `git add` workaround used publishing Issues 14 and 15) (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -18,6 +18,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 8.0 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 8 (Medium) | Known Error | M | 2026-06-03 | internal |
 | 8.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 8 (Medium) | Known Error | M | 2026-06-03 | internal |
 | 8.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and 15.6 re-runs all gates per edit | 8 (Medium) | Known Error | M | 2026-07-13 | internal |
+| 8.0 | P118 | Newsletter publish step uses `git mv` on untracked drafts, which fails | 8 (Medium) | Open | S | 2026-07-27 | internal |
 | 6.0 | P016 | wr-newsletter filter drops significant stories without corroboration (flip-back: 2026-05-08 observed regression) | 6 (Medium) | Known Error | M | 2026-04-24 | internal |
 | 6.0 | P036 | wr-newsletter drafter leaks editorial-process meta-commentary into body (flip-back: 2026-05-08 observed regression) | 6 (Medium) | Known Error | M | 2026-05-01 | internal |
 | 6.0 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 6 (Medium) | Known Error | M | 2026-06-03 | internal |
