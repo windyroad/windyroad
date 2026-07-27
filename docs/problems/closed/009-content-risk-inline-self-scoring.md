@@ -1,10 +1,11 @@
 # Problem 009: Content-risk review is inline self-scoring by the drafter, not a fresh-context subagent
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-17
 **Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed in description; workaround = inline scoring + Tom's external review)
 **Transitioned to Verification Pending**: 2026-04-25 (fix released: ADR 018 + content-risk-rubric.md + wr-content-risk-scorer agent + SKILL step 14/14-prime updated to invoke the subagent)
+**Closed**: 2026-07-27 (run-retro Step 4a close-on-evidence: the wr-content-risk-scorer fresh-context subagent ran repeatedly across the Issue 15 finalise and its two external-review fix passes, emitting the ADR-015 five-axis `CONTENT_RISK:` block with PASS verdicts that matched editorial judgement; edition published. The ADR-018 subagent gate is verified live.)
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3)
 **Effort**: M (new wr-content-risk-scorer agent + new content-risk-rubric.md + ADR 018 + SKILL step 14 update)
 **WSJF**: (9 x 2.0) / 2 = 9.0

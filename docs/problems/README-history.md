@@ -240,3 +240,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-07-15
 
 > Last reviewed: 2026-07-15 **full review pass**: re-rated 19 deferred/placeholder tickets; auto-transitioned 15 Open -> Known Error (root cause + workaround documented: P085-P087, P098, P104-P106, P108-P115); flipped P016 + P036 Verifying -> Known Error on their 2026-05-08 observed-regression cells (P186 Bucket 3); inbound poll fresh (0 reports); 16 relevance close-candidates carry caveats, queued for interactive confirmation (see Notes).
+
+## 2026-07-27
+
+> Last reviewed: 2026-07-15 **P105 verification pending**: added the machine-readable "Reviewed quarterly" blockquote line to RISK-POLICY.md so the installed wr-risk-scorer staleness gate resolves the attested quarterly cadence (90 days) instead of its 14-day fallback (upstream half shipped in 0.16.5, agent-plugins#322 closed); gate parse verified quarterly/90d in-session. Traced as RFC-001, the first entry in the newly-established local docs/rfcs/ tier.
