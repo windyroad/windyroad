@@ -27,9 +27,9 @@ The pipeline runs in one of three phases, selected by the `phase` argument at st
 
 | phase     | When to run                          | Steps executed                              | Saves                              |
 |-----------|--------------------------------------|---------------------------------------------|------------------------------------|
-| `prep`    | Days before `<publish-day>` (e.g. Sat-Sun for The Shift's Monday publish per ADR 030) | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
+| `prep`    | Days before `<publish-day>` (e.g. Sat-Sun for The Shift's Monday publish per ADR 030) | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 9.7, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
 | `finalise`| `<publish-day>` morning (Monday morning AEST for The Shift)                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11a-prime (theme-anchor re-confirm gate per ADR-037), 11b-prime (re-draft only changed sections), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
-| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 9.7, 10, 11, 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.5 (LinkedIn post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 
 Default behaviour when no `phase` argument is present: `phase=full` (preserves the original single-shot run for backward compatibility per ADR 017 line 51).
 
@@ -324,13 +324,26 @@ Capture the final critic block for inclusion in the saved draft.
 
 Among the candidates that cleared step 4, and using this week's updated map (steps 5-8) plus the Wardley critic's latest verdict (step 9), order by `<three-lens-weighting>` from the persona config. Items strong on the persona's primary lens rank above items strong only on secondary lenses. Ties broken by `<source-weighting>` (a primary-tier-source item beats a secondary-tier-source item on the same lens score). Map movement this week is explicit input to the ordering: candidates whose related map component moved this week rank above candidates with comparable lens scores whose components did not move.
 
-Output: the final persona-weighted shortlist. This is the input to step 10's per-item voice capture.
+Output: the final persona-weighted pool (every step-4-cleared candidate, ordered). This full pool is the input to step 9.7, which presents it, captures Tom's per-item voice on every story, then selects the theme.
 
 **Phase variant `9.5-prime` (phase=finalise only):** re-rank only if new items joined the shortlist at step 4-prime, or if the late-story branch (step 5-prime) chose `Restructure` (which changes map state and may shift the ranking input). Otherwise carry `<prep-shortlist-snapshot>`'s ranking forward unchanged.
 
-### 10. Per-item interactive voice capture (AskUserQuestion)
+### 9.7. Full-pool presentation, per-item voice capture, then theme selection (Tom-confirmed 2026-07-24; capture-first correction 2026-07-28)
 
-For each shortlisted candidate, call the `AskUserQuestion` tool with:
+Present the pool and the theme decision to Tom in CHAT PROSE, not via `AskUserQuestion`: the full-inventory presentation and the per-theme rationale are long-form content-review, the surface P107 identifies `AskUserQuestion` as the wrong tool for (its bounded-option shape forced the full inventory out across many question rounds, the Issue-14 failure). Four moves, in order:
+
+1. **Show the full persona-relevant pool (prose).** Summarise EVERY candidate that cleared the step-4 filter (the full inventory, not a pre-cut 3-4 item shortlist), each as a one-line story summary plus a one-line `<target-reader>`-angle brief ("why you care"). Number them. Nothing relevant is dropped before Tom sees it. This closes the P043 / Issue-14 failure where a pre-cut shortlist made the theme "not pop" because relevant stories had been silently relegated (see the memory note `newsletter-full-pool-then-theme`).
+2. **Capture Tom's voice on EVERY story in the pool, before any theme is chosen (capture-first correction 2026-07-28).** Run step 10's per-item Agree / Adjust / Drop capture across the WHOLE pool now, not just on the deep items a theme later selects. This restores the per-item voice process Tom values (`feedback_per_item_interactive_voice`): the correction fixes the regression where the 2026-07-24 theme-first ordering only captured Tom's voice on the roughly three post-theme deep items, losing his take on every other IT-leader-relevant story. His Adjust free-text per story feeds the drafter (step 11b) whether the story ends up a deep item or an Also-worth-noting entry. The bounded three-option decision may use `AskUserQuestion` (the process Tom likes) or prose if he is running the edition conversationally; only the full-pool PRESENTATION (move 1) and the theme rationale (move 3) are prose-pinned per P107.
+3. **Offer 3-4 candidate themes, each with a "why", plus an explicit recommendation (prose).** Draw the themes from across the FULL, now voice-captured set, not only the top-ranked items. For each theme, name the deep items it would promote and give a one-line rationale; mark one "Recommended" with the reason. This week's map movement (steps 5-8) is a strong input to the recommendation, and Tom's per-story reactions from move 2 are another.
+4. **On Tom's theme pick, promote and demote.** The stories that fit the chosen theme become the Level-1 deep items (ADR-032 three-deep shape; the 3-target / 4-soft-cap / 5+-external-review count rule still governs). Every other persona-relevant story goes to the `### Also worth noting` section, carrying its move-2 capture forward. Nothing is dropped: the theme decides depth, not inclusion (the only Drops are the stories Tom explicitly dropped in move 2).
+
+Record the full-pool per-item decisions (move 2), the chosen theme, the deep-item set, and the also-worth-noting set in internal metadata and the capture transcript (step 10). Step 11a then composes the anchor for the chosen theme.
+
+**Phase variant `9.7-prime` (phase=finalise only):** re-present the pool + theme only if new items joined at step 4-prime or the late-story branch (step 5-prime) changed the set. Otherwise carry the prep-time theme and deep / also-worth-noting split forward; the 11a-prime anchor gate still re-confirms the theme.
+
+### 10. Per-item interactive voice capture
+
+For each story in the full persona-relevant pool (the step 9.5 output), run this capture at step 9.7 move 2, BEFORE theme selection (capture-first correction 2026-07-28). This is the step whose scope the correction widened: it no longer runs only on the theme-driven deep items, so Tom's voice is captured on every IT-leader-relevant story. Capture an Agree / Adjust / Drop decision per story. Use the `AskUserQuestion` tool for the bounded three-option choice (the process Tom values), or chat prose if Tom is running the edition conversationally; the full-pool PRESENTATION and theme rationale at 9.7 stay prose per P107. Present per item:
 
 - **question**: `"Item <N>: <one-sentence story summary>. Our take: <1-2 sentences on why it matters or the angle we'd emphasise, grounded in this week's map movement from step 8's analysis>. Source: <URL>. Agree, Adjust, or Drop?"`
 - **options**:
@@ -356,7 +369,7 @@ After the main shortlist per-item capture completes, run a second pass for any c
 
 Weak-attribution handling preserves the signal that the earlier filter would have silently dropped. A weak-attribution candidate that Tom keeps joins the main draft as an Also-worth-noting entry (short paragraph, not a full Item). Tom's Drop reasons feed future filter tuning.
 
-**Capture transcript artifact (ADR 019).** After both passes (main shortlist plus weak-attribution) complete, write the per-item capture decisions to `<draft-folder>/<publication-date>.capture.md`. This file is the persisted reference the drafter (step 11b) reads against to preserve verbatim spans, and the comparison surface for human editorial review. Format per ADR 019:
+**Capture transcript artifact (ADR 019).** After both passes (full-pool per-item plus weak-attribution) complete, write the per-item capture decisions for EVERY pool story to `<draft-folder>/<publication-date>.capture.md`, each annotated with its theme role (deep item / also-worth-noting / dropped) once 9.7 move 4 resolves it. This file is the persisted reference the drafter (step 11b) reads against to preserve verbatim spans, and the comparison surface for human editorial review. Format per ADR 019:
 
 ```
 ---
@@ -371,6 +384,7 @@ phase-last-appended: <prep|finalise|full>
 
 ## Item N: <one-sentence story summary>
 
+- **Theme role** (set after 9.7 move 4): <deep item | also-worth-noting | dropped>
 - **Outcome**: <Agree | Adjust | Drop | Keep as Also-worth-noting | Ask for help>
 - **Original take presented**: <the "Our take" sentence shown in the AskUserQuestion prompt>
 - **Source**: <URL>
@@ -424,14 +438,14 @@ Voice rules at 11a (subset of step-13 voice gate, applied to the anchor only):
 
 #### 11a Tom-approval gate (per ADR-037)
 
-After composing the theme anchor, fire an `AskUserQuestion` (per ADR-013 Rule 1):
+After composing the theme anchor, present it for approval. ADR-037 requires this Accept / Refine / Reject gate between the anchor and the body; the presentation surface is `AskUserQuestion` OR chat prose (P107 interaction contract; when Tom is running the edition conversationally, as at step 9.7, present the anchor in chat and take his Accept / Refine / Reject reply). Present:
 
 - `header`: "Theme anchor"
 - `question`: "Theme anchor for Issue <N>. H1: <H1 text>. Hook lines: <line 1> / <line 2>. Theme statement: <theme statement>. Approve?"
 - Options:
   1. **Accept** (Recommended) - proceed to 11b with the approved anchor.
-  2. **Refine** - Tom edits the H1, hook lines, or theme statement via the "Other" free-text escape hatch; 11a re-runs the approval gate with the refined anchor.
-  3. **Reject** - back to step 9.5 (re-ranking) or step 10 (per-item capture) with a note on what failed.
+  2. **Refine** - Tom edits the H1, hook lines, or theme statement (via the "Other" free-text escape hatch, or in chat); 11a re-runs the approval gate with the refined anchor.
+  3. **Reject** - back to step 9.5 (re-ranking) or step 9.7 (pool / theme re-selection) with a note on what failed.
 
 Do NOT proceed to 11b until the gate returns Accept. The approved anchor is the load-bearing frame the body work amortises against (per ADR-037 Decision Drivers: theme anchor first).
 
@@ -564,7 +578,7 @@ The subagent returns a structured block beginning with `CROSS_EDITION_CONSISTENC
 |---------|--------|
 | `SUPPORTED` | Gate passes silently. Append verdict block to `.reviews.md ## Cross-Edition Consistency` (see step 16). Proceed to step 11.5. |
 | `NEUTRAL` | Gate passes silently. Append verdict block to `.reviews.md ## Cross-Edition Consistency`. Proceed to step 11.5. |
-| `CONTRADICTS` | Block save. Fire `AskUserQuestion` (per ADR-013 Rule 1) with the contradictions surfaced. Three options: |
+| `CONTRADICTS` | Block save. Surface the contradictions to Tom (`AskUserQuestion` or chat prose per P107) with three options: |
 
 **`AskUserQuestion` on CONTRADICTS**:
 
@@ -643,10 +657,10 @@ Ordered resolution sequence. The terminal step is the ask, not the drop:
 
 1. **Automated transports first.** Exhaust the per-URL transport ladder above for every URL in the draft. Most URLs resolve here and never reach this fallback.
 2. **Collect, do not drop.** Accumulate every citation that survives the ladder unresolved into a single unresolved-citations list (outlet name, the specific claim it attributes, and any partial / bare-domain URL the news fetch surfaced). Keep working through the rest of the draft; do not degrade attribution mid-pass.
-3. **Ask the user with one batched question (terminal fallback before any drop).** After the ladder has run for every URL, if the unresolved-citations list is non-empty, fire a SINGLE batched `AskUserQuestion` (per ADR-013 Rule 1) that lists every unresolved citation and asks the user for the canonical URLs. Brief each citation's outlet plus claim in the prompt so the user can answer without filesystem access (P350 brief-before-ID discipline). Re-run step 11.5 on each URL the user supplies through the normal transport ladder plus semantic verification.
+3. **Ask the user with one batched question (terminal fallback before any drop).** After the ladder has run for every URL, if the unresolved-citations list is non-empty, ask the user for the canonical URLs in ONE batched prompt (a single `AskUserQuestion` or a chat-prose batch per P107) that lists every unresolved citation. Brief each citation's outlet plus claim in the prompt so the user can answer without filesystem access (P350 brief-before-ID discipline). Re-run step 11.5 on each URL the user supplies through the normal transport ladder plus semantic verification.
 4. **Drop only after the user declines.** A citation is dropped (outlet name removed; the claim re-sourced or cut) ONLY after the user explicitly declines to supply a URL for it via the batched question. Dropping a citation the user was never asked about is the P091 defect this fallback closes.
 
-**AFK / non-interactive carve-out (ADR-013 Rule 6).** When `AskUserQuestion` is unavailable (the `/wr-newsletter` run is orchestrated AFK or otherwise non-interactive), do NOT silently drop. Record every unresolved citation (outlet, claim, partial URL) in the `## URL Verification` block of `<draft-folder>/<publication-date>.reviews.md` with verdict `UNRESOLVED (awaiting user URL)`, and surface the list at finalise (step 17 names the count) so the user resolves the URLs on the next interactive pass before publish. The brief is held with the unresolved citations flagged, not published with degraded attribution.
+**AFK / non-interactive carve-out.** When the user cannot be reached (the `/wr-newsletter` run is orchestrated AFK or otherwise non-interactive, so neither `AskUserQuestion` nor a chat-prose ask can be answered), do NOT silently drop. Record every unresolved citation (outlet, claim, partial URL) in the `## URL Verification` block of `<draft-folder>/<publication-date>.reviews.md` with verdict `UNRESOLVED (awaiting user URL)`, and surface the list at finalise (step 17 names the count) so the user resolves the URLs on the next interactive pass before publish. The brief is held with the unresolved citations flagged, not published with degraded attribution.
 
 **Composition with the P089 structural lint (not duplication).** `scripts/check-newsletter-structure.sh` check (b) catches the OUTPUT symptom, a line naming two or more outlets with no link, at save. This fallback addresses the PROCESS: it prevents *producing* a name-without-link by asking the user for the URL first. They compose. The lint is the deterministic backstop for a name-without-link that slips through (including the single-outlet case check (b) deliberately allows); this fallback is the human-in-the-loop step that stops the drafter degrading attribution in the first place. Do not fold one into the other.
 

@@ -83,3 +83,38 @@ Reassess after four editions: if soft-cap justifications appear more than once p
 - Resolves the architect-design blocker on P070 (work-problems iter 8, 2026-05-30).
 - Composes with ADR 012 (content review gates), ADR 015 (reader respect + REJECTED policy), ADR 016 (sw-critic iteration), ADR 020 (newsletter-editor subagent), ADR 026 (sibling-file content separation).
 - Cross-references VOICE-AND-TONE.md LinkedIn carve-outs landed for P066 (the closing reply prompt's substantive-question rule).
+
+## Amendment 2026-07-24: full-pool-then-theme selection policy
+
+Tom-confirmed 2026-07-24 (Issue 15 prep, re-confirming the 2026-07-20 Issue-14 direction previously held only in the `newsletter-full-pool-then-theme` memory note). This ADR already owns the *resulting shape* (thesis-first intro plus roughly three deep items plus Also-worth-noting); this amendment codifies the *selection path* that reaches it, so the policy has durable substance rather than living only in a decaying memory note (ADR-031) and the skill prose.
+
+**Policy.** The deep-item / Also-worth-noting split is decided by a theme chosen across the FULL persona-relevant candidate pool, not by a pre-cut shortlist:
+
+1. Present Tom the complete set of candidates that cleared the three-lens filter, each with a one-line target-reader angle brief. The full inventory, nothing relevant relegated before he sees it.
+2. Offer 3-4 candidate themes drawn from across that full set, each with a "why", plus an explicit recommendation.
+3. The chosen theme's stories become the Level-1 deep items (this ADR's 3-target / 4-soft-cap / 5+-external-review count still governs); every other persona-relevant story goes to Also worth noting. The theme decides depth, not inclusion. Nothing is dropped before Tom sees it.
+
+**Interaction modality.** The full-pool summary and theme selection are conducted in CHAT PROSE, not `AskUserQuestion`. Long-form content review and full-inventory presentation are the surface P107 identifies `AskUserQuestion` as the wrong tool for (its bounded-option shape forced the Issue-14 inventory out across many question rounds). This is consistent with, not a change to, ADR-037: the 11a theme-anchor Accept / Refine / Reject gate still runs; only its presentation surface may be prose. Modality is not otherwise ADR-governed (the real interaction contract is the still-open P107).
+
+**Why.** In the Issue-14 run the pipeline pre-filtered to a 3-4 item shortlist before theme selection, and the theme "did not pop" because relevant stories (investment governance, the deciding-blind essay, Torvalds, IBM-CEO pressure, the EU AI Act deadline) had been silently relegated; Tom had to pull the full inventory out interactively. Deciding the theme against the full set fixes that (P043 lens-level relevance is preserved; this adds the human-facing selection surface on top).
+
+**Codification home.** `.claude/skills/wr-newsletter/SKILL.md` step 9.7 (new, between 9.5 ranking and step 10 per-item capture), with step 11a composing the anchor for the chosen theme. (The 2026-07-24 wording of move 3 and the closing paragraph, that step 10's per-item Agree/Adjust/Drop capture runs on the theme-driven deep-item set, is SUPERSEDED by the 2026-07-28 correction below: per-item capture runs on the full pool, before theme.) The phantom `ADR-013 Rule 1` / `Rule 6` citations at the 11a gate, the cross-edition CONTRADICTS gate, and the P091 URL-fallback ask were corrected to cite P107 in the same edit (ADR-013 has no numbered interaction rules; it governs the no-automated-LinkedIn-scraping posture only).
+
+**Reassessment.** Reassess with this ADR's existing four-edition trigger: if the full-pool presentation regularly runs long enough to be friction, or if Tom stops adjusting the pool at step 9.7 (implying the pre-9.7 ranking already lands the right set), revisit whether the full-pool surface still earns its cost.
+
+## Correction 2026-07-28: per-item voice capture runs on the full pool, before theme
+
+Tom-directed 2026-07-28 after the Issue 15 run: *"one issue with the new approach was it didn't get my voice on each story. That process we had before was good and we should do that for each IT leader relevant story, then you can go into the new theme process."*
+
+**What this supersedes.** The 2026-07-24 amendment above ordered theme selection first (its move 2), then ran step 10's per-item capture on only the theme-driven deep-item set (its move 3 + closing paragraph). That lost Tom's authorial voice on every story the theme did not promote to a deep item, which for the leader persona is the newsletter's differentiator (JTBD-005). The clause "step 10's per-item capture runs on the theme-driven deep-item set" is REVERSED.
+
+**Corrected selection path (SKILL.md step 9.7, four moves).**
+
+1. Present the full persona-relevant pool (prose).
+2. **Capture Tom's per-item Agree / Adjust / Drop voice on EVERY story in the pool, before any theme is chosen.** His Adjust free-text per story feeds the drafter whether the story becomes a deep item or an Also-worth-noting entry. This restores the process recorded in the `feedback_per_item_interactive_voice` memory, now applied to the full pool.
+3. Offer 3-4 themes with a "why" plus a recommendation (prose), informed by Tom's per-story reactions from move 2.
+4. On the theme pick, promote the fitting stories to deep items; the rest carry their move-2 capture into Also worth noting. The theme still decides depth, not inclusion; the three-deep count rule is unchanged.
+
+**Interaction modality (refines the 2026-07-24 clause, does not reverse it).** The full-pool PRESENTATION (move 1) and the theme rationale (move 3) stay prose per P107. The per-item bounded three-option capture (move 2) may use `AskUserQuestion` (the process Tom values, per `feedback_per_item_interactive_voice`) or prose if he is running the edition conversationally. P107's Issue-14 failure was the full INVENTORY dragged out via `AskUserQuestion`; showing the inventory in prose first removes that, so the bounded per-item decision keeps its `AskUserQuestion` option.
+
+**Unchanged.** The three-deep shape (3-target / 4-soft-cap / 5+-external-review), ADR-037's 11a theme-anchor gate, and the "nothing dropped before Tom sees it" invariant all hold.

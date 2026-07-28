@@ -149,7 +149,9 @@ _37 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-032 - Newsletter editorial-discipline policy: thesis-coherence plus three-deep-items shape
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **Single canonical ADR plus referenced enforcement**, because it places the rule in one architectural-decision-record where it composes with other policy ADRs (012, 015, 016, 020, 026), preserves the drafter's editorial latit...
+**Decides:** One canonical ADR owns newsletter editorial shape (thesis-first intro, three deep items each a variation on one constraint (4 soft-cap, 5+ needs external review), Also-worth-noting for the rest, Disclosure line, closing reply prompt), with draft-template, persona configs and SKILL.md referencing it instead of carrying contradictory count rules. Amended 2026-07-24 to decide the theme across the FULL persona-relevant pool (nothing relegated before Tom sees it), then corrected 2026-07-28 so per-item Agree/Adjust/Drop voice capture runs on the whole pool BEFORE theme selection, not just the promoted deep items.
+**Confirmation:** ADR lands; draft-template + persona configs + SKILL.md Step 11 reference it as single source of truth; next three editions publish three deep items unless justified in reviews.md; critic rubric carries a thesis-coherence check
+**Related:** ADR-012, ADR-013, ADR-015, ADR-016, ADR-020, ADR-026, ADR-031, ADR-037, ADR-066
 
 ### ADR-033 - Domain-specific critic agents supersede the parameterised wr-sw-critic pattern
 **Status:** accepted | **Oversight:** confirmed | **Supersedes:** 016-sw-critic-subagents-and-iteration-loop
