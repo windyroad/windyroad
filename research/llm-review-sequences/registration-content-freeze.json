@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "study_id": "llm-review-sequences-v0",
   "status": "unfrozen",
   "frozen_at": null,
@@ -12,14 +12,20 @@
   },
   "registration_bundle": {
     "file": null,
-    "sha256": null
+    "sha256": null,
+    "member_manifest_sha256": null
   },
+  "review_attestations": [],
   "runtime_files": {
-    "study.json": null,
-    "subscription-runner.mjs": null,
-    "subscription.mjs": null,
-    "pilot.mjs": null,
-    "review-schema.json": null
+    "study.json": { "git_mode": null, "sha256": null },
+    "analyse.mjs": { "git_mode": null, "sha256": null },
+    "design.mjs": { "git_mode": null, "sha256": null },
+    "precision-audit.mjs": { "git_mode": null, "sha256": null },
+    "registration-packet.mjs": { "git_mode": null, "sha256": null },
+    "subscription-runner.mjs": { "git_mode": null, "sha256": null },
+    "subscription.mjs": { "git_mode": null, "sha256": null },
+    "pilot.mjs": { "git_mode": null, "sha256": null },
+    "review-schema.json": { "git_mode": null, "sha256": null }
   },
   "outcome_calls_authorized": false,
   "queues": [
@@ -31,12 +37,31 @@
       ],
       "artifacts": {
         "cards_sha256": "d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d",
-        "prompts_sha256": "e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c",
-        "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
-        "calls_sha256": "01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223",
-        "ground_truth_sha256": "b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773"
+        "prompts_sha256": "e99d650f5f670e138b0c31047c6009a1eea99f2d2005c742971419618c86bdf0",
+        "schedule_sha256": "80c78d846bf264fcb8a136bffd3b6d3af50c0e8dfe622383272e0d4798ab63a1",
+        "calls_sha256": "53422146aef4497fbb4da0819a3134f46b1e75351857a37ac92d0d3114bbbfb1",
+        "ground_truth_sha256": "9453faab7b1bc1dc06cdef7bb83c7d4a15e96d6f6c06d407acd0aa823931cf6d"
+      },
+      "raw_files": {
+        "cards.json": null,
+        "prompts.jsonl": null,
+        "calls.jsonl": null,
+        "ground-truth.jsonl": null,
+        "collection.json": null
+      },
+      "counts": {
+        "sequence_system_trials": 1408,
+        "review_boundaries": 2816,
+        "review_boundaries_by_system": {
+          "claude-code/sonnet": 1408,
+          "codex-cli/gpt-5.5": 1408
+        },
+        "review_boundaries_by_decomposition": {
+          "atomic": 704,
+          "split": 2112
+        }
       }
     }
   ],
-  "rule": "This outer record identifies the exact release-safe payload bundle and runtime-critical file hashes frozen before OSF submission. The bundle excludes both detached state records. This record never authorizes outcome calls."
+  "rule": "This outer record identifies the exact allowlisted release-safe payload envelope, its canonical member-manifest digest, all three physically distinct exact-commit review reports whose machine-readable metadata matches approving detached dispositions with no unresolved blocker, the raw bytes of every execution artifact, queue metadata, and every runtime-critical file byte and Git mode as read directly from content_commit before OSF submission. The confirmatory-only branch also requires the manifest's Ollama activation_decision to be not-activated and every pre-outcome flag to remain false. Every queue uses exactly the count fields sequence_system_trials, review_boundaries, review_boundaries_by_system, and review_boundaries_by_decomposition. The payload excludes both detached state records, executable cases, credentials, account state, attempts, results, raw provider output, and reasoning traces. This record never authorizes outcome calls."
 }

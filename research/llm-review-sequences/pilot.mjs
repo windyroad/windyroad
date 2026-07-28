@@ -9,6 +9,17 @@ const WORKFLOW_POLICIES = {
   trunk: "This commit is already on untrusted main. A block prevents promotion from the pipeline.",
 };
 
+export const WEAKNESS_CATEGORIES = Object.freeze([
+  "authorization-policy composition",
+  "trust-boundary normalization",
+  "fail-open fallback composition",
+  "integrity-check composition",
+  "resource-scope widening",
+  "feature-default inversion",
+  "provenance loss",
+  "dependency-selection substitution",
+]);
+
 const SCENARIOS = [
   {
     id: "museum-zone-alias",
@@ -306,7 +317,8 @@ export function validateReviewResponse(response) {
   if (!Array.isArray(response.submission_ids) || response.submission_ids.some((id) => typeof id !== "string")) {
     throw new Error("Invalid submission_ids");
   }
-  if (!response.evidence?.trim?.() || !response.category?.trim?.()) {
+  if (!response.evidence?.trim?.()
+    || !["none", "other", ...WEAKNESS_CATEGORIES].includes(response.category)) {
     throw new Error("Invalid evidence or category");
   }
   return response;

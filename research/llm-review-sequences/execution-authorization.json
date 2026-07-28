@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 5,
   "study_id": "llm-review-sequences-v0",
   "status": "unauthorized-registration-pending",
   "outcome_calls_authorized": false,
@@ -10,15 +10,69 @@
   },
   "osf_registration": {
     "id": null,
+    "type": null,
     "url": null,
-    "registered_at": null
+    "registered_at": null,
+    "registration_schema_id": null,
+    "download_evidence": {
+      "registration_record": {
+        "file": null,
+        "url": null,
+        "sha256": null
+      },
+      "providers_list": {
+        "file": null,
+        "url": null,
+        "sha256": null
+      },
+      "provider_file_list_pages": [],
+      "downloaded_files": [],
+      "verified_at": null,
+      "verified_by": {
+        "name": "Tom Howard",
+        "orcid": "0009-0001-4714-5747"
+      }
+    }
+  },
+  "author_confirmation": {
+    "confirmed": false,
+    "confirmed_at": null,
+    "name": "Tom Howard",
+    "orcid": "0009-0001-4714-5747",
+    "statement": null
   },
   "content_freeze": {
     "record_sha256": null,
     "content_commit": null,
     "branch": null,
-    "bundle_sha256": null
+    "bundle_sha256": null,
+    "member_manifest_sha256": null
   },
   "authorized_queues": [],
-  "rule": "Populate this detached record only after OSF registration and download verification. Authorization must name the registered content-freeze record and only the exact registered queues."
+  "subscription_access": {
+    "schema_version": 1,
+    "confirmed": false,
+    "confirmed_at": null,
+    "confirmed_by": {
+      "name": "Tom Howard",
+      "orcid": "0009-0001-4714-5747"
+    },
+    "codex": {
+      "expected_auth_status_sha256": null,
+      "account_identity_sha256": null,
+      "usage_evidence": {
+        "file": null,
+        "sha256": null
+      }
+    },
+    "claude": {
+      "expected_auth_status_sha256": null,
+      "account_identity_sha256": null,
+      "usage_evidence": {
+        "file": null,
+        "sha256": null
+      }
+    }
+  },
+  "rule": "Populate this detached record only after OSF registration. download_evidence names untouched raw OSF-origin JSON bytes plus the downloaded registration-payload.json and registration-content-freeze.json bytes, all bound by raw SHA-256. subscription_access is a separate action-time author confirmation: it binds the current Codex and Claude auth-status fingerprints, live account-identity fingerprints derived by the runner, and private 0600 evidence that extra or overage usage is disabled. Immediately before every collection or resume invocation, a second private current-user-owned 0600 author confirmation no more than 15 minutes old must bind both authorized account fingerprints and reconfirm extra_usage_status disabled; it is validated before output creation or client preflight and is not part of the frozen run binding. Every authorized queue must exactly match the frozen confirmatory queue. No outcome call is authorized while this template remains pending."
 }

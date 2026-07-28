@@ -6,7 +6,7 @@ describe("frozen review request", () => {
   it("renders a strict stateless JSON review request", () => {
     const request = renderReviewRequest({
       workflow_policy: "A block prevents promotion.",
-      current_submission: { id: "submission-1", diff: "+safe synthetic change" },
+      current_submission: { head_revision: "submission-1", diff: "+safe synthetic change" },
       prior_submissions: [],
     });
 
@@ -17,5 +17,6 @@ describe("frozen review request", () => {
     expect(request.messages[0].role).toBe("system");
     expect(request.messages[1].content).toContain('"additional_properties":false');
     expect(request.messages[1].content).toContain('"submission-1"');
+    expect(request.messages[1].content).toContain("head_revision or commit_revision values");
   });
 });

@@ -15,6 +15,7 @@ export function generateCollection(
     models,
     trialsPerCell = 3,
     contexts = ["local", "cumulative"],
+    nestedPlan = null,
     seed = 20260716,
     expectedScheduleSha256 = null,
   } = {},
@@ -33,6 +34,7 @@ export function generateCollection(
     models,
     trialsPerCell,
     contexts,
+    nestedPlan,
     seed,
   });
   if (expectedScheduleSha256 && schedule.sha256 !== expectedScheduleSha256) {
@@ -67,6 +69,15 @@ export function generateCollection(
       model: scheduled.model,
       trial: scheduled.trial,
     });
+    const submissions = card[scheduled.decomposition]?.submissions;
+    const currentSubmission = submissions?.[scheduled.submission_index - 1];
+    const relevantIndexes = new Set(card.ground_truth_relevant_submissions);
+    const relevantSubmissionIds = submissions
+      ?.filter(({ index }) => relevantIndexes.has(index))
+      .map(({ commit }) => commit);
+    if (!currentSubmission || !relevantSubmissionIds?.length) {
+      throw new Error(`${scheduled.sequence_id}: incomplete submission ground truth`);
+    }
     groundTruth.push({
       call_id: callId,
       ...scheduled,
@@ -74,6 +85,9 @@ export function generateCollection(
       template_id: card.template_id,
       scenario_family: card.family,
       expected_severity: card.expected_severity,
+      relevant_submission_ids: relevantSubmissionIds,
+      submitted_at: currentSubmission.timestamp,
+      sequence_started_at: submissions[0].timestamp,
     });
   }
 

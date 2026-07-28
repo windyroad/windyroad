@@ -340,6 +340,7 @@ export function generateCallSchedule({
   trialsPerCell = 3,
   splitSubmissionCount = 3,
   contexts = ["local", "cumulative"],
+  nestedPlan = null,
   seed = 20260716,
 }) {
   const scheduledScenarioIds = scenarioIds ?? (
@@ -359,19 +360,57 @@ export function generateCallSchedule({
     throw new Error("scenarioCount must be positive or scenarioIds must contain unique identifiers");
   }
   if (!Array.isArray(models) || models.length === 0) throw new Error("models must not be empty");
+  if (!Number.isInteger(trialsPerCell) || trialsPerCell < 1) {
+    throw new Error("trialsPerCell must be a positive integer");
+  }
   if (!Array.isArray(contexts) || !contexts.length
+    || new Set(contexts).size !== contexts.length
     || contexts.some((context) => !["local", "cumulative"].includes(context))) {
     throw new Error("contexts must contain local and/or cumulative");
   }
 
+  const nestedScenarioIds = new Set();
+  let nestedContexts = contexts;
+  let nestedTrialsPerCell = trialsPerCell;
+  if (nestedPlan !== null) {
+    if (!nestedPlan || typeof nestedPlan !== "object" || Array.isArray(nestedPlan)) {
+      throw new Error("nestedPlan must be an object");
+    }
+    const allowedKeys = ["contexts", "scenarioIds", "trialsPerCell"];
+    if (Object.keys(nestedPlan).some((key) => !allowedKeys.includes(key))) {
+      throw new Error("nestedPlan contains an unexpected field");
+    }
+    if (!Array.isArray(nestedPlan.scenarioIds) || !nestedPlan.scenarioIds.length
+      || new Set(nestedPlan.scenarioIds).size !== nestedPlan.scenarioIds.length
+      || nestedPlan.scenarioIds.some((scenarioId) => !scheduledScenarioIds.includes(scenarioId))) {
+      throw new Error("nestedPlan scenarioIds must be a subset of the scheduled scenarios");
+    }
+    nestedContexts = nestedPlan.contexts;
+    nestedTrialsPerCell = nestedPlan.trialsPerCell;
+    if (!Array.isArray(nestedContexts) || !nestedContexts.length
+      || new Set(nestedContexts).size !== nestedContexts.length
+      || nestedContexts.some((context) => !["local", "cumulative"].includes(context))
+      || contexts.some((context) => !nestedContexts.includes(context))) {
+      throw new Error("nestedPlan contexts must be a valid superset of the base contexts");
+    }
+    if (!Number.isInteger(nestedTrialsPerCell) || nestedTrialsPerCell < trialsPerCell) {
+      throw new Error("nestedPlan trialsPerCell must be at least the base trial count");
+    }
+    for (const scenarioId of nestedPlan.scenarioIds) nestedScenarioIds.add(scenarioId);
+  }
+
   const rows = [];
   for (const scenarioId of scheduledScenarioIds) {
+    const scenarioContexts = nestedScenarioIds.has(scenarioId) ? nestedContexts : contexts;
+    const scenarioTrials = nestedScenarioIds.has(scenarioId)
+      ? nestedTrialsPerCell
+      : trialsPerCell;
     for (const intent of ["malicious", "benign"]) {
       for (const decomposition of ["atomic", "split"]) {
         const submissions = decomposition === "atomic" ? 1 : splitSubmissionCount;
         for (const workflow of ["pr", "trunk"]) {
-          for (const context of contexts) {
-            for (let trial = 1; trial <= trialsPerCell; trial += 1) {
+          for (const context of scenarioContexts) {
+            for (let trial = 1; trial <= scenarioTrials; trial += 1) {
               for (const model of models) {
                 const sequenceId = [scenarioId, intent, decomposition, workflow, context, model, `trial-${trial}`].join(":");
                 for (let submissionIndex = 1; submissionIndex <= submissions; submissionIndex += 1) {

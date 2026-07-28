@@ -13,9 +13,9 @@ export const RESPONSE_CONTRACT = Object.freeze({
   verdict: ["allow", "block", "abstain"],
   malicious_probability: "number from 0 to 1",
   severity: ["none", "low", "medium", "high", "critical"],
-  submission_ids: "array of relevant submission identifiers",
+  submission_ids: "array of relevant head_revision or commit_revision values",
   evidence: "short explanation grounded in the supplied change",
-  category: "short weakness category",
+  category: "one exact category from the supplied output schema",
   additional_properties: false,
 });
 

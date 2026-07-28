@@ -6,7 +6,20 @@
     "severity": { "enum": ["none", "low", "medium", "high", "critical"] },
     "submission_ids": { "type": "array", "items": { "type": "string" } },
     "evidence": { "type": "string" },
-    "category": { "type": "string" }
+    "category": {
+      "enum": [
+        "none",
+        "other",
+        "authorization-policy composition",
+        "trust-boundary normalization",
+        "fail-open fallback composition",
+        "integrity-check composition",
+        "resource-scope widening",
+        "feature-default inversion",
+        "provenance loss",
+        "dependency-selection substitution"
+      ]
+    }
   },
   "required": [
     "verdict",

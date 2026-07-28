@@ -13,6 +13,69 @@ import {
 } from "./design.mjs";
 
 describe("preregistered study design", () => {
+  it("ships an unfrozen phase-one record with no invented review approvals", () => {
+    const contentFreeze = JSON.parse(
+      readFileSync("research/llm-review-sequences/registration-content-freeze.json", "utf8"),
+    );
+
+    expect(contentFreeze).toMatchObject({
+      schema_version: 3,
+      status: "unfrozen",
+      outcome_calls_authorized: false,
+      review_attestations: [],
+    });
+  });
+
+  it("ships a phase-two template that can represent raw OSF evidence and both downloads", () => {
+    const authorization = JSON.parse(
+      readFileSync("research/llm-review-sequences/execution-authorization.json", "utf8"),
+    );
+
+    expect(authorization).toMatchObject({
+      schema_version: 5,
+      status: "unauthorized-registration-pending",
+      outcome_calls_authorized: false,
+      osf_registration: {
+        id: null,
+        type: null,
+        url: null,
+        registered_at: null,
+        registration_schema_id: null,
+        download_evidence: {
+          registration_record: { file: null, url: null, sha256: null },
+          providers_list: { file: null, url: null, sha256: null },
+          provider_file_list_pages: [],
+          downloaded_files: [],
+          verified_at: null,
+          verified_by: {
+            name: "Tom Howard",
+            orcid: "0009-0001-4714-5747",
+          },
+        },
+      },
+    });
+  });
+
+  it("keeps the permission-pending Ollama arm explicitly outcome-unauthorized", () => {
+    const study = JSON.parse(readFileSync("research/llm-review-sequences/study.json", "utf8"));
+
+    expect(study.exploratory_ollama_cloud_replication.activation_decision).toBe("pending");
+    expect(study.exploratory_ollama_cloud_replication.outcome_calls_authorized).toBe(false);
+  });
+
+  it("records the historical no-prompt preflight and pending hardened revalidation", () => {
+    const study = JSON.parse(readFileSync("research/llm-review-sequences/study.json", "utf8"));
+    const preflight = study.active_subscription_design.collection.pre_registration_preflight;
+
+    expect(preflight).toMatchObject({
+      status: "historical-passed-no-prompt-no-inference; current-hardened-runner-revalidation-pending",
+      api_key_variables_absent: ["OPENAI_API_KEY", "CODEX_API_KEY", "ANTHROPIC_API_KEY"],
+      codex: { version: "0.137.0" },
+      claude: { version: "2.1.211" },
+    });
+    expect(JSON.stringify(preflight)).not.toMatch(/credential|access[_-]?token|refresh[_-]?token/i);
+  });
+
   it("simulates power and equivalence assurance deterministically", () => {
     const options = {
       scenarioCounts: [24, 48],
@@ -148,6 +211,50 @@ describe("preregistered study design", () => {
 
     expect(schedule.rows).toHaveLength(1_280);
     expect(new Set(schedule.rows.map(({ context }) => context))).toEqual(new Set(["local"]));
+  });
+
+  it("nests repeated cumulative-context cells within selected scenarios", () => {
+    const schedule = generateCallSchedule({
+      scenarioIds: ["scenario-001", "scenario-002", "scenario-003"],
+      models: ["model-a", "model-b"],
+      trialsPerCell: 1,
+      contexts: ["local"],
+      nestedPlan: {
+        scenarioIds: ["scenario-002"],
+        trialsPerCell: 2,
+        contexts: ["local", "cumulative"],
+      },
+      seed: 20260718,
+    });
+
+    expect(summarizeSchedule(schedule.rows)).toEqual({
+      calls: 192,
+      sequences: 96,
+      calls_by_model: { "model-a": 96, "model-b": 96 },
+      calls_by_decomposition: { atomic: 48, split: 144 },
+    });
+    expect(new Set(schedule.rows
+      .filter(({ scenario_id }) => scenario_id === "scenario-001")
+      .map(({ context, trial }) => `${context}:${trial}`))).toEqual(new Set(["local:1"]));
+    expect(new Set(schedule.rows
+      .filter(({ scenario_id }) => scenario_id === "scenario-002")
+      .map(({ context, trial }) => `${context}:${trial}`))).toEqual(
+      new Set(["local:1", "local:2", "cumulative:1", "cumulative:2"]),
+    );
+  });
+
+  it("rejects an invalid nested schedule plan", () => {
+    expect(() => generateCallSchedule({
+      scenarioIds: ["scenario-001"],
+      models: ["model-a"],
+      trialsPerCell: 1,
+      contexts: ["local"],
+      nestedPlan: {
+        scenarioIds: ["scenario-unknown"],
+        trialsPerCell: 2,
+        contexts: ["local", "cumulative"],
+      },
+    })).toThrow("nestedPlan scenarioIds must be a subset");
   });
 
   it("estimates the maximum inference cost from frozen token ceilings", () => {

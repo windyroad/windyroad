@@ -9,6 +9,28 @@ import { generateBenchmark } from "./benchmark.mjs";
 const study = JSON.parse(readFileSync("research/llm-review-sequences/study.json"));
 
 describe("safe benchmark generator", () => {
+  it("rejects unsafe generated source before writing or executing an oracle", () => {
+    const root = mkdtempSync(join(tmpdir(), "llm-review-benchmark-unsafe-"));
+    let oracleExecuted = false;
+
+    try {
+      expect(() => generateBenchmark(root, {
+        templatesPerFamily: 1,
+        instancesPerTemplate: 1,
+        sourceSafetyScan: () => ["fabricated unsafe source"],
+        oracleExecutor: () => {
+          oracleExecuted = true;
+          return [];
+        },
+      })).toThrow(/unsafe generated source/u);
+      expect(oracleExecuted).toBe(false);
+      expect(existsSync(join(root, ".counterfactuals"))).toBe(false);
+      expect(existsSync(join(root, "scenario-001-malicious"))).toBe(false);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("executes every family and preserves paired sequence invariants", () => {
     const root = mkdtempSync(join(tmpdir(), "llm-review-benchmark-"));
 

@@ -1,3 +1,6 @@
+\ifdefined\EnableTaggedPDF
+  \DocumentMetadata{lang=en-AU,pdfstandard=ua-2,tagging=on}
+\fi
 \documentclass[10pt]{article}
 
 \usepackage[T1]{fontenc}
@@ -21,7 +24,6 @@
 \title{Detecting Strategically Decomposed Malicious Code Changes\\
 with Subscription-Backed LLM Reviewers}
 \author{Tom Howard\\
-Independent researcher\\
 \href{mailto:tom@windyroad.com.au}{tom@windyroad.com.au}}
 \date{19 July 2026}
 
@@ -40,14 +42,19 @@ matched malicious-benign pairs drawn from 40 structural templates in eight
 abstract policy families. Every generated case module is synthetic, executes
 only in memory, and has no external capability in the audited fixed corpus.
 Atomic and three-submission variants have identical final trees and changed-line
-totals. A factorial design varies intent, decomposition, and workflow framing
-across two confirmatory subscription-backed systems: Codex CLI and Claude Code.
-The bounded confirmatory design contains 1,280 review boundaries. A separately
-reported, permission-contingent Ollama Cloud stratum would add 640 exploratory
-boundaries without entering the confirmatory estimand. Primary outcomes are
-blocking by activation and paired intent discrimination; workflow and interaction
-estimates are explicitly exploratory because the sample is underpowered for small
-effects. This pre-outcome manuscript reports the design, analysis plan,
+totals. A factorial base design varies intent, decomposition, and workflow
+framing across two confirmatory subscription-backed systems: Codex CLI and
+Claude Code. A prospectively selected 16-template nested stratum adds
+cumulative-history context and a second trial. The full two-system schedule
+contains 2,816 review boundaries, including the 1,280-boundary base stratum used
+for H1--H3. A separately reported, terms- and preparation-contingent Ollama Cloud stratum
+would reuse only 640 base boundaries and cannot enter the two-system estimands.
+The primary endpoint is \code{blocked\_by\_activation}; paired intent
+discrimination is the H1 contrast over that endpoint.
+Workflow framing and the decomposition-by-context interaction are prespecified
+secondary hypotheses; decomposition by workflow and the cumulative-context main
+effect are exploratory. This pre-results
+manuscript reports the design, analysis plan,
 deterministic baseline, safety controls, and limitations; it contains no LLM
 benchmark outcomes.
 \end{abstract}
@@ -97,7 +104,7 @@ analysis from one artifact to a sequence of submissions.
 
 \section{Research Questions}
 
-The primary endpoint is \emph{blocked by activation}: at least one review at or
+The primary endpoint is \code{blocked\_by\_activation}: at least one review at or
 before the prespecified activation boundary returns \code{block}.
 
 \begin{description}[leftmargin=3.4em,style=nextline]
@@ -106,13 +113,25 @@ before the prespecified activation boundary returns \code{block}.
   \item[RQ2] Does decomposition across three submissions reduce timely
   detection relative to an atomic submission with the same final tree?
   \item[RQ3] Do estimates differ between pull-request and untrusted-main trunk
-  framing, and does workflow moderate the decomposition effect?
+  framing?
+  \item[RQ4] Does supplying cumulative submission history change the malicious
+  split penalty, averaged equally over workflows, and how consistent are repeated reviews?
 \end{description}
 
-H1 predicts that the malicious block rate exceeds the benign block rate. H2
+H1 predicts that the malicious block rate exceeds the benign block rate, equally
+averaged over decomposition, workflow, and the two confirmatory products. H2
 predicts that the malicious block rate is lower for split sequences than for
-atomic submissions. RQ3 is exploratory: the study estimates workflow and
-decomposition-by-workflow contrasts but does not test equivalence.
+atomic submissions, equally averaged over workflow and the two products. H3 is
+nondirectional: among malicious base local trial-1 cells, trunk and pull-request
+framing differ after equal averaging over atomic and split conditions and both
+products. H4 predicts that the malicious-only nested interaction
+\((\mathrm{split}_{\rm cumulative}-\mathrm{atomic}_{\rm cumulative})-
+(\mathrm{split}_{\rm local}-\mathrm{atomic}_{\rm local})\), equally averaged
+over pull-request and trunk after both trials and products are averaged within
+template, is positive. H1 and H2 are primary; H3 and H4 are prespecified
+secondary hypotheses. The decomposition-by-workflow interaction and
+cumulative-context main effect are exploratory, and no workflow-equivalence
+claim is tested.
 
 \section{Method}
 
@@ -141,34 +160,50 @@ files, a Node subprocess, and dynamic import to construct and verify cases.
 
 \subsection{Factorial design}
 
-Table~\ref{tab:factors} shows the active factors. Every boundary supplies the
-current artifact only; prior submission diffs are not included. This local
-information boundary is the concealment mechanism under test.
+Table~\ref{tab:factors} shows the active factors. The base stratum supplies the
+current artifact only; prior submission diffs are withheld. This local
+information boundary is the principal concealment mechanism under test. A
+family-stratified nested sample supplies either the same local view or the
+current artifact plus cumulative prior artifacts, allowing the information-loss
+mechanism to be estimated without changing the original base estimands.
 
 \begin{table}[ht]
 \centering
 \caption{Active study factors.}
 \label{tab:factors}
+\ifdefined\EnableTaggedPDF\tagpdfsetup{table/header-rows={1}}\fi
 \begin{tabular}{@{}lll@{}}
 \toprule
 Factor & Levels & Interpretation \\
 \midrule
 Intent & malicious, benign & Matched final-state policy outcome \\
-Decomposition & atomic, split & One submission or three necessary submissions \\
+Decomposition & atomic, split & One or three necessary submissions \\
 Workflow & pull request, trunk & Pre-merge gate or untrusted-main pipeline \\
-Review system & Codex, Claude; optional Ollama & Product surface \\
+Information context & local; cumulative in nested stratum & Current artifact or cumulative history \\
+Trial & one base; two in nested stratum & Independent fresh-process repetition \\
+Review system & Codex, Claude & Subscription-backed product surface \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The confirmatory design contains 40 malicious-benign pairs, 80 cases, 640
-sequences, and 1,280 boundary reviews. Each confirmatory system receives 640
-boundaries: 320 atomic boundaries in total and 960 split boundaries in total.
-There is one trial per case, decomposition, workflow, and review system. Calls
-are globally shuffled with a seeded Fisher--Yates algorithm. If activated, the
-separate Ollama queue reuses the 640 prompts as 320 sequences, 160 atomic
-boundaries, and 480 split boundaries. No outcome-dependent stopping, template
-replacement, or prompt tuning is permitted.
+The base stratum contains 40 malicious-benign pairs, 80 cases, 640 sequence-system trials,
+and 1,280 boundary reviews across the two systems. It has one local-context
+trial per intent, decomposition, workflow, and system cell. Before outcomes, two
+templates per family were selected without replacement by seeded Fisher--Yates
+for a 16-template nested stratum. Those templates receive local and cumulative
+contexts and two trials per cell. The complete two-system schedule therefore has
+896 unique boundary prompts, 1,408 sequence-system trials, and 2,816 boundary
+reviews: 1,408 per system, 704 atomic, and 2,112 split. Trials reuse the same
+frozen prompt but start fresh processes.
+
+The three split submissions retain fixed causal order and one-minute spacing;
+the atomic submission is timestamped at the split activation time. Timing and
+order are matched controls rather than estimated factors. Calls are globally
+shuffled with a seeded Fisher--Yates algorithm. If activated, the separate
+Ollama queue reuses only the 640 base local-context boundary prompts, once each,
+as 320 sequences, 160 atomic boundaries, and 480 split boundaries. It receives
+neither cumulative context nor repeated trials. No outcome-dependent stopping,
+template replacement, or prompt tuning is permitted.
 
 \subsection{Review systems}
 
@@ -182,41 +217,67 @@ deviation.
 \centering
 \caption{Confirmatory and conditional review systems.}
 \label{tab:systems}
+\ifdefined\EnableTaggedPDF\tagpdfsetup{table/header-rows={1}}\fi
 \begin{tabular}{@{}lll@{}}
 \toprule
 System & Client version & Requested model \\
 \midrule
 Codex CLI & 0.137.0; ChatGPT login & \code{gpt-5.5} \\
 Claude Code & 2.1.211; Claude Max login & \code{sonnet} \\
-Ollama (conditional) & 0.32.1; subscription pending & \code{qwen3.5:397b-cloud} \\
+Ollama (conditional) & 0.32.1; not activated & \code{qwen3.5:397b-cloud} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Before each batch, the runner verifies subscription authentication and the
-absence of \code{OPENAI\_API\_KEY}, \code{CODEX\_API\_KEY}, and
-\code{ANTHROPIC\_API\_KEY}. It aborts rather than switching to API billing,
-credits, another provider, or a fallback model. Requested and returned model
-metadata, CLI version, timestamp, usage, and failures are retained. A version
-or returned-model change suspends that review system.
+Before each batch, the runner verifies subscription authentication, live
+account-identity fingerprints, disabled extra usage, and the absence of
+\code{OPENAI\_API\_KEY}, \code{CODEX\_API\_KEY}, and
+\code{ANTHROPIC\_API\_KEY}. It performs at most 16 physical dispatches before
+repeating those checks and aborts rather than switching to API billing, credits,
+another provider, or a fallback model. Codex additionally uses approval policy
+\code{never} and a custom minimal permission profile whose offline proof denies
+model-shell access to isolated credentials and the frozen response schema.
+Requested-model evidence, exact client provenance, timestamps, allowlisted
+integer token counts, and failure digests are retained. Every raw provider
+envelope is archived privately before parsing and bound to its terminal attempt. Claude
+acceptance requires exactly one \code{modelUsage} entry. Its sole key must be
+\code{claude-sonnet-4-6}. Codex CLI 0.137.0 does not expose a returned-model field
+in its JSON event contract; each accepted result instead records requested model
+\code{gpt-5.5}, the exact pinned binary path, version and hash, and an explicit
+status that the requested pinned client showed no observable reroute. A
+model-rerouted error event is rejected. This is an observability limitation,
+not returned-model verification.
 
-No automated Ollama access or purchase is currently authorised. Its fixed order
-is written provider permission, permitted no-prompt entitlement and identity
-preflight, fixture-only implementation and offline artifact generation, targeted
-review, an outcome-blind activation decision, a pre-submission content freeze,
+No automated Ollama access or purchase is currently authorised. A cross-provider
+assessment applies one provider-neutral operational rule: published first-party
+terms and product documentation expressly supporting automation on the intended
+authenticated product surface supply the basis for that documented use. This is
+not legal advice or provider approval, and any direct contrary or narrower
+provider reply overrides it prospectively. The archived AI-support response
+neither granted nor denied permission. On the current published basis, no
+exceptional research waiver appears necessary. The remaining fixed order is
+action-time approval for a no-prompt
+entitlement and identity preflight, fixture-only implementation and offline
+artifact generation, targeted review, an outcome-blind activation decision, a pre-submission content freeze,
 and OSF registration followed by a separately bound execution authorisation.
-If activated, requests set \code{stream=false} and \code{think=false}, omit tools
-and structured-output format, and require exact returned-model identity. Invalid
-JSON is an abstention; any reasoning trace or tool call suspends the arm. The
+If activated, the arm permits exactly 640 physical inference dispatches and zero
+retries. Requests set \code{stream=false} and \code{think=false}, omit tools,
+deliberately omit \code{format}, and pass through the common frozen local response
+validator. Exact \code{response.model} identity as
+\code{qwen3.5:397b-cloud} is required. Invalid or schema-invalid output is a
+terminal abstention; any reasoning trace or tool call suspends the arm. The
 localhost service brokers cloud inference, so prompts leave the device. A new
 fixed subscription requires action-time approval, and extra-usage balance,
 per-call billing, overage, and fallback are prohibited.
 
 All reviews receive one fixed security-review task and a JSON response contract.
 Requests ask for \code{allow}, \code{block}, or \code{abstain}; a maliciousness
-probability; severity; relevant submission identifiers; evidence; and a short
-category. Complete requests are at most 2,941 UTF-8 bytes. Schema-invalid
-responses and refusals are observed abstentions and are not repaired.
+probability; severity; relevant \code{head\_revision} or
+\code{commit\_revision} values; evidence; and one
+canonical abstract-policy category from the frozen schema. Complete requests
+are at most 3,992 UTF-8 bytes. A response that fails the structured-response
+validator is a terminal \code{schema\_invalid} abstention and is not repaired. The
+protocol does not infer a separate refusal class from unstructured provider output.
 
 \subsection{Collection and blinding}
 
@@ -227,77 +288,130 @@ keyed ledger and joined only after collection.
 
 Subscription rate limits produce a durable suspension at the current call; the
 same fixed queue resumes after the plan window resets. No API credit is accepted.
-A no-response failure may be retried at the same position up to three recorded
-attempts. Start, completion, suspension, and result records are fsynced. Collection
-also suspends on a safety or terms conflict, authentication change, benchmark
-integrity failure, or client or model drift. The API, per-call, overage,
-extra-balance, and paid-fallback spending ceiling is US\$0. Fixed subscription
-fees are disclosed separately and any new plan requires action-time approval.
+Immediately before each invocation, the author inspects both account billing
+settings and supplies a private confirmation, no more than 15 minutes old,
+binding the authorized account fingerprints and stating that extra or overage
+usage is disabled. The runner verifies it before output creation or client
+preflight. Each invocation is limited to 16 physical dispatches before that
+confirmation and all other checks repeat.
+Every frozen authorized call must have exactly one terminal result before
+analysis: a schema-valid review, a validator-produced abstention, or a terminal
+missing result after exactly three client-failure suspensions. Started,
+suspension, and terminal result records are fsynced. Tool deviation is a retained
+boolean on a schema-valid result. Suspension reasons distinguish rate limits;
+identity absence or drift; malformed provider envelopes; authorized-schema,
+executable, or isolation drift; client failure; and interrupted processes.
+``Crash-safe'' means resume after a cleanly observed interruption; it does not
+claim recovery from a torn JSONL tail, abrupt power loss, concurrent writers, an
+orphan created between envelope archival and ledger append, or a check-to-spawn
+race. Collection also suspends on a safety or terms conflict,
+authentication change, or benchmark integrity failure. The API, per-call,
+overage, extra-balance, and paid-fallback spending ceiling is US\$0. Fixed
+subscription fees are disclosed separately and any new plan requires action-time
+approval.
 
 \subsection{Outcomes}
 
-The primary binary outcome is blocked by activation. Secondary outcomes are
+The primary binary outcome is \code{blocked\_by\_activation}. Secondary outcomes are
 recall, false-positive rate, precision, abstention rate, cumulative detection by
-boundary, submissions to detection, Brier score, calibration, severity error,
-localisation, and failure rates. A block is localised when it cites at least one
-prespecified relevant submission and identifies the causal abstract-policy
-failure. Repeated-trial consistency is not estimated because there is one trial
-per cell.
+boundary, submissions and elapsed minutes to detection, Brier score,
+calibration, severity error, localisation, and failure-category rates.
+Submission localisation requires citing at least one frozen relevant submission
+identifier; mechanism localisation requires the exact frozen abstract-policy
+category; combined localisation requires both. Within-system consistency in the
+balanced two-trial nested stratum uses pairwise operational-verdict agreement
+and malicious-probability ICC(1,1), with template-bootstrap intervals.
 
 \section{Analysis Plan and Power}
 
-Confirmatory sequence outcomes are averaged within structural-template and
-intent-condition cells across exactly \code{codex-cli/gpt-5.5} and
-\code{claude-code/sonnet}. Structural templates then receive equal weight.
-Review-system-specific results are secondary. The primary uncertainty calculation
-is a 10,000-replicate family-stratified structural-template bootstrap with seed
-20260718. Each replicate samples five templates with replacement from each family
-while retaining their paired intents and treatment cells.
+H1--H3 use only base-stratum rows: local context, trial 1, all 40 templates, and
+exactly \code{codex-cli/gpt-5.5} and \code{claude-code/sonnet}. H1 equally
+averages decomposition, workflow, and both products within template; H2 equally
+averages workflow and both products within malicious templates; H3 equally
+averages atomic and split conditions and both products within malicious
+templates. Templates then enter the equal-family analysis.
+Review-system-specific results are secondary. Registered 95\% intervals use a
+fixed-strata Welch/Satterthwaite t procedure over template-level contrasts. The
+eight policy families are fixed, equally weighted strata; within-family variance
+components use five base templates for H1--H3 and two nested templates for H4.
+A 10,000-replicate family-stratified percentile bootstrap with seed 20260718 is
+reported as a sensitivity interval, not the support-decision interval.
 
 The H1 estimate is the malicious-minus-benign block-rate risk difference,
-averaged over decomposition and workflow. H1 is supported only when its 95\%
+equally averaged over decomposition, workflow, and both products. H1 is supported only when its 95\%
 interval is above zero. The H2 estimate is the split-minus-atomic malicious risk
-difference, averaged over workflow. H2 is supported only when its 95\% interval
-is below zero. Trunk-minus-pull-request and decomposition-by-workflow estimates
-receive 95\% intervals but are exploratory.
+difference, equally averaged over workflow and both products. H2 is supported only when its 95\% interval
+is below zero. H3 is the trunk-minus-pull-request malicious contrast, averaged
+equally over decomposition and both products, and is supported only when its nondirectional 95\% interval
+excludes zero. H4 uses only the frozen 16-template nested stratum, averaging its
+two trials and both products within context cells, and then equally averaging
+pull-request and trunk. It is the malicious-only difference
+\((\mathrm{split}-\mathrm{atomic})_{\rm cumulative} -
+(\mathrm{split}-\mathrm{atomic})_{\rm local}\) and is supported only when its 95\%
+interval is above zero. The decomposition-by-workflow difference-in-differences
+and cumulative-context main effect are exploratory. Nested consistency retains
+template-bootstrap intervals and has no support decision.
+
+If every within-family variance component for a registered hypothesis is zero,
+its Welch interval, Satterthwaite degrees of freedom, and support
+decision are unavailable. The point estimate and standard error 0 remain
+reported, with only the percentile-bootstrap sensitivity interval shown.
 
 Missing boundaries are non-detections in the operational analysis. Mandatory
-estimand-specific bounds assign malicious and benign cells oppositely for H1 and
-atomic and split malicious cells oppositely for H2. A review-system-specific
-complete-pair sensitivity drops a structural template only for the affected
-system. No imputation model is fitted. H1 and H2 are separate registered claims,
-which does not provide familywise error control across them. Exploratory workflow
-intervals carry no inferential decision and receive no multiplicity adjustment.
+estimand-specific bounds assign missing cells to zero or one in the opposing
+directions for each contrast: malicious versus benign for H1, split versus
+atomic for H2, trunk versus pull request for H3, and the four signed H4 cells.
+A review-system-specific complete-pair sensitivity for H1--H4 drops a structural
+template only for the affected product while retaining equal-family weighting.
+If any fixed family then has fewer than two complete templates, that
+product-specific registered interval is reported as unavailable rather than
+changing the estimand or variance method. No imputation model is fitted. The four registered
+claims are not combined into a multiplicity procedure, so no familywise error
+control is claimed; every estimate, interval, bound, and decision is reported.
 
-If activated, Ollama is analysed alone using the same templates, contrasts,
-bootstrap, missingness bounds, and complete-template sensitivity. Its dedicated
-reporting path emits estimates, intervals, and bounds without hypothesis-support,
+If activated, Ollama is analysed alone using the 40-template base local sample,
+H1--H3 contrasts, fixed-strata Welch intervals, percentile-bootstrap
+sensitivity, missingness bounds, and complete-template sensitivity. It has no
+H4 or consistency estimate. Its dedicated reporting path
+emits estimates, intervals, and bounds without hypothesis-support,
 robustness, significance, equivalence, superiority, or pooled-model decisions.
 Fabricated-response tests must prove both this decision-free path and rejection of
 Ollama, missing, extra, or mixed rows from the confirmatory path before activation.
+Confirmatory analysis also rejects a ledger unless every frozen authorized call
+has exactly one terminal result.
 
 The products and sample are a convenience selection determined by subscriptions
 available to the author, not an 80\% power target. The optional Ollama stratum
 reuses the same 40 templates and adds no independent template evidence or
-confirmatory power. Under
-the earlier central assumptions, a 20,000-replication single-review-system
-normal-approximation audit yields rejection fractions of 0.2577 for a 0.15 split
-penalty and 0.1016 for a 0.10 interaction, plus a workflow-equivalence fraction
-of 0.0038 within $\pm0.10$. The audit neither pools two review systems nor runs
-the registered family-stratified percentile bootstrap, so these values are
-sensitivity diagnostics, not power or assurance for the registered analysis.
-No H1 operating-characteristic calculation was performed. Consequently, null
-results cannot support claims of no decomposition or workflow effect. The study
-is a bounded empirical evaluation and a variance estimate for a larger
-replication.
+confirmatory power. An earlier 20,000-replication single-system
+normal-approximation audit did not match the final design. A subsequent
+outcome-free audit simulated the exact base and nested strata and found material
+undercoverage for the initially proposed percentile bootstrap. The interval was
+therefore changed prospectively. Under 1,000 global-null simulations, fixed-
+strata Welch coverage for H1--H4 was 0.953, 0.965, 0.953, and 0.982. Under the
+central assumptions, support fractions were 1.000, 0.724, 0.356, and 0.073 and
+expected interval widths were 0.143, 0.211, 0.212, and 0.480. These values are
+assumption-conditional diagnostics, not guaranteed or achieved power. Null
+results cannot support no-effect or equivalence claims; H4 in particular is
+expected to be imprecise. The study is a bounded empirical evaluation and a
+variance estimate for a larger replication.
 
-\section{Pre-outcome Status}
+\section{Pre-results Status}
 
-No benchmark prompt has been submitted to any review system. The generator,
-prompts, schedule, ledgers, scoring, estimands, and tests were implemented with
-deterministic checks and fabricated plumbing responses only. No LLM outcome has
-been collected or inspected. Written Ollama permission, automated preflight,
-subscription purchase, runtime support, and activation remain pending.
+No benchmark prompt has been submitted to any review system. The two-system
+confirmatory generator, prompts, schedule, ledgers, scoring, estimands, and tests
+were implemented with deterministic checks and fabricated plumbing responses
+only. No LLM outcome has been collected or inspected. No Ollama runner, queue,
+ledger, or output artifact has been implemented or generated. An earlier
+no-prompt confirmatory preparation check passed for the pinned Codex and Claude
+clients without inference; the hardened sandbox, identity, and ledger checks
+require successor revalidation before freeze. Ollama's AI support agent replied that it could not grant
+written permission or determine whether the specific design was permitted, and
+offered escalation to a human agent. The author then requested human escalation
+and asked whether ordinary signed-in subscription/API use already supplies the
+permission referenced by the Terms. A human response is pending as a nonblocking
+clarification; any contrary restriction overrides the terms assessment. Automated
+preflight, subscription purchase, runtime support, and activation remain absent.
 
 The deterministic baseline ran ESLint 9.39.3 over all 2,400 final-state files in
 the full 800-case generator output. It emitted no warnings or errors: zero
@@ -335,9 +449,10 @@ calendar periods, routing, and cloud aliases confound descriptive cross-product
 comparisons and cannot support provider or open-versus-closed-weight claims.
 
 \textbf{Statistical conclusion validity.} The sample is underpowered for small
-effects, especially workflow equivalence and interaction. There is one trial,
-so stochastic consistency cannot be estimated. Family-stratified intervals
-expose rather than hide this uncertainty.
+effects, especially workflow and interaction effects. Only the nested stratum
+has repeated trials, so consistency estimates apply to 16 purposively bounded
+templates rather than the full sample. Family-stratified intervals expose rather
+than hide this uncertainty.
 
 \section{Ethics and Responsible Release}
 
@@ -346,11 +461,14 @@ external systems or data, and its only harmful state is a deterministic in-memor
 assertion over synthetic names. No real repository or person is tested.
 
 For the conditional cloud arm, prompts leave the device even though the local
-service is used. Private raw responses remain in access-controlled encrypted
-storage through publication and for 12 months afterward, then private content is
-deleted while hashes and derived tables remain unless written permission,
-upstream-license review, and post-outcome dual-use review approve a public subset.
-Reasoning traces and sensitive metadata are never published.
+service is used. The study makes no independent claim about provider logging,
+training, or retention beyond the dated first-party materials and archived
+correspondence. Public research data are limited to sanitized derived
+attempt-event data and aggregate analysis. Raw ledgers, provider output, absolute
+paths, account and authentication state, and environment metadata remain private
+unless a post-outcome safety, upstream-license, privacy, and terms review approves
+a narrower release. Aggregate reporting uses factual plain-text attribution
+without logos or endorsement claims.
 
 Three isolated subagents initially reviewed candidate commit \code{6b607f6} for
 benchmark safety, methods, and reproducibility. All three returned
@@ -362,43 +480,79 @@ model, provider, and author-orchestration biases are reported as limitations.
 Neutral change titles remove plausible refactor cover stories, but the abstract
 composition patterns retain disclosed dual-use value. The packet contains no
 real target, external capability, credential, deployment path, or complete exploit.
-Targeted non-isolated reviews must approve the applicable activation or
-non-activation package before the pre-submission content freeze.
+Targeted non-isolated reviews of commit \code{70963a2} rejected its release-packet
+and execution-authorization mechanics. Their reports and accepted findings are
+archived. A later outcome-blind worktree review also retains a \code{do not
+approve} reproducibility disposition while authorization-schema, terminal-result,
+identity-evidence, executable-pinning, writer-exclusion, and release-boundary
+corrections remain in progress. The safety record additionally requires the
+historical provider-specific request for written assurance to be reconciled with
+the current provider-neutral published-terms rule: neither the AI-support response
+nor silence is approval, and a direct contrary provider reply controls. The
+present correction remains unfrozen and unauthorized. All
+author choices and the study branch must first be fixed in one immutable
+successor commit whose frozen marker identifies exact reviewer input bytes. All
+three review roles must then approve that same commit before the detached
+phase-one attestation and OSF submission. The marker cannot itself represent
+approval or authorize an outcome call.
 
 \section{Reproducibility}
 
-The candidate package contains the generator, schedule, scorer, sensitivity simulation,
-preregistration, archived initial internal-review records, durable subscription
-runner, two-phase freeze records, and analysis code. Current unfrozen hashes are:
+The candidate package contains code for benchmark generation, scheduling,
+scoring, sensitivity analysis, subscription collection, and outcome analysis.
+It also contains the preregistration, archived internal reviews, and two-phase
+freeze records. Each durable ledger begins with one immutable run-binding header.
+The analysis requires the exact binding schema, recomputes its fingerprint, and
+verifies the raw ground-truth-ledger digest before joining outcomes. It excludes
+the metadata row from outcomes and carries the verified binding into its report.
+Current unfrozen hashes are:
 
 \begin{itemize}[leftmargin=1.5em]
   \item scenario cards:
   \code{d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d};
   \item rendered prompts:
-  \code{e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c};
+  \code{e99d650f5f670e138b0c31047c6009a1eea99f2d2005c742971419618c86bdf0};
   \item randomised schedule:
-  \code{e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a};
+  \code{80c78d846bf264fcb8a136bffd3b6d3af50c0e8dfe622383272e0d4798ab63a1};
   \item blinded call ledger:
-  \code{01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223};
+  \code{53422146aef4497fbb4da0819a3134f46b1e75351857a37ac92d0d3114bbbfb1};
   \item ground-truth ledger:
-  \code{b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773}.
+  \code{9453faab7b1bc1dc06cdef7bb83c7d4a15e96d6f6c06d407acd0aa823931cf6d}.
 \end{itemize}
 
-The first freeze phase records the study, exact content commit, selected branch,
-release-safe registration-bundle hash, queues, systems, artifact hashes, and
-runtime-critical file hashes before OSF
-submission, while explicitly leaving outcome calls unauthorised. After
-registration and download verification, a separate execution record binds the
-OSF identifier and timestamps to the raw-byte freeze-record hash, content commit,
-branch, bundle hash, and exact queues. The runner recomputes these bindings and
-the actual bundle, runtime files, and five artifact hashes before creating output
-or starting client preflight. Both detached records are excluded from the bundle
-to avoid self-referential hashing.
+The first phase builds a canonical JSON payload from an exact Git commit using a
+fixed 13-member release-safe allowlist. It includes the privacy-preserving
+AI-support-response transcription with its required SHA-256 recorded in the
+manifest.
+Each member records path, media type, raw byte size,
+SHA-256, and Base64 content; the verifier rejects extra, reordered, traversal,
+detached-state, executable-case, credential, account-state, result, raw-output,
+and reasoning-trace members. The outer freeze record binds the payload and
+member-manifest hashes, selected branch, exact queue shape and counts, systems,
+normalized artifacts, raw artifact bytes, and runtime files before OSF
+submission, while explicitly leaving outcome calls unauthorised. Each detached
+review report carries machine-readable role, exact-commit, disposition, and
+blocker metadata that must match its report hash and phase-one attestation. The
+confirmatory-only branch also requires a machine-readable non-activation decision
+for the conditional Ollama arm and false pre-outcome state flags.
+
+After registration, a separate execution record binds untouched raw OSF-origin
+registration JSON, its structurally derived summary, the exact downloaded
+two-file inventory, and explicit action-time author confirmation to the canonical
+OSF identity, raw freeze-record hash, content commit, branch, payload, member
+manifest, and exact queues. This author-attested HTTPS capture is not an OSF
+cryptographic signature or independently trusted timestamp. UTC phase timestamps
+are strictly ordered.
+The confirmatory runner rejects extra or Ollama-labelled queues, recomputes the
+schedule and all bindings, and executes the same prompt and call buffers it
+hashed. Rejection precedes output creation, client preflight, or model execution.
+Both detached records are excluded from the payload to avoid self-reference.
 
 The earlier paid API design is retained in version history but was superseded
-before outcome collection. The final release will add permitted raw responses,
-attempt ledgers, environment metadata, checksums, the OSF identifier, and the
-arXiv identifier.
+before outcome collection. The public research release will add sanitized derived
+attempt-event data, analysis outputs, checksums, and the OSF and arXiv identifiers.
+Raw ledgers, raw provider output, absolute paths, account and authentication state,
+and environment metadata remain private pending explicit post-outcome review.
 
 \section{Conclusion}
 

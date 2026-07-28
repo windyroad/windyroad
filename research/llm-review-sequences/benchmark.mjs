@@ -27,6 +27,8 @@ export function generateBenchmark(
     templateIndexes = null,
     instancesPerTemplate = 2,
     spacingMinutes = 1,
+    sourceSafetyScan = safetyViolations,
+    oracleExecutor = executeOracles,
   } = {},
 ) {
   if (!root) throw new Error("Usage: node benchmark.mjs OUTPUT_DIR");
@@ -35,6 +37,9 @@ export function generateBenchmark(
   }
   if (!Number.isInteger(instancesPerTemplate) || instancesPerTemplate < 1) {
     throw new Error("instancesPerTemplate must be positive");
+  }
+  if (typeof sourceSafetyScan !== "function" || typeof oracleExecutor !== "function") {
+    throw new Error("sourceSafetyScan and oracleExecutor must be functions");
   }
   const templates = templateIndexes ?? Array.from(
     { length: templatesPerFamily },
@@ -61,11 +66,19 @@ export function generateBenchmark(
         const scenarioId = `scenario-${String(scenarioNumber).padStart(3, "0")}`;
         const layout = templateLayout(templateIndex, instance, instancesPerTemplate);
         for (const intent of ["malicious", "benign"]) {
-          generated.push(buildCase(scenarioId, layout, intent, family(layout, intent), spacingMinutes));
+          generated.push(buildCase(
+            scenarioId,
+            layout,
+            intent,
+            family(layout, intent),
+            spacingMinutes,
+            sourceSafetyScan,
+          ));
         }
       }
     }
   }
+  assertGeneratedSourcesSafe(generated);
 
   const counterfactualRoot = join(root, ".counterfactuals");
   mkdirSync(counterfactualRoot);
@@ -87,7 +100,7 @@ export function generateBenchmark(
       oracle: entry.oracle,
     })),
   ]);
-  const observed = executeOracles(root, checks);
+  const observed = oracleExecutor(root, checks);
   rmSync(counterfactualRoot, { recursive: true });
   let observationIndex = 0;
   const cases = generated.map((entry) => {
@@ -123,6 +136,14 @@ export function generateBenchmark(
     prompts_sha256: sha256(promptJsonl),
     maximum_request_bytes: maximumRequestBytes,
   };
+}
+
+function assertGeneratedSourcesSafe(generated) {
+  for (const { card } of generated) {
+    if (card.safety_violations.length) {
+      throw new Error(`${card.scenario_id}/${card.intent}: unsafe generated source`);
+    }
+  }
 }
 
 function validateCases(cases) {
@@ -191,7 +212,7 @@ function renderPrompts(cases) {
   return prompts;
 }
 
-function buildCase(scenarioId, layout, intent, scenario, spacingMinutes) {
+function buildCase(scenarioId, layout, intent, scenario, spacingMinutes, sourceSafetyScan) {
   let files = scenario.base_files;
   const snapshots = [files];
   const baseRevision = sha256(`base\n${scenarioId}\n${intent}\n${treeHash(files)}`);
@@ -232,7 +253,7 @@ function buildCase(scenarioId, layout, intent, scenario, spacingMinutes) {
     timestamp: timestamp(3 * spacingMinutes),
     diff: diffTrees(scenario.base_files, finalFiles),
   });
-  const violations = [...new Set(snapshots.flatMap((snapshot) => safetyViolations(snapshot)))];
+  const violations = [...new Set(snapshots.flatMap((snapshot) => sourceSafetyScan(snapshot)))];
 
   return {
     oracle: scenario.oracle,

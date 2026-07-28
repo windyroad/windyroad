@@ -10,6 +10,8 @@ import { renderEvidence } from "./pilot.mjs";
 import { renderReviewRequest } from "./prompts.mjs";
 
 export const ECOLOGICAL_TEMPLATE_INDEXES = Object.freeze([1, 7, 13, 19, 25]);
+export const NESTED_EVALUATION_PER_FAMILY = 2;
+export const NESTED_EVALUATION_SEED = 20260719;
 
 export function generateEcologicalBenchmark(controlledRoot, outputRoot) {
   if (!controlledRoot || !outputRoot) throw new Error("controlledRoot and outputRoot are required");
@@ -31,7 +33,8 @@ export function generateEcologicalBenchmark(controlledRoot, outputRoot) {
   const cardsSha256 = sha256(cardsCanonical);
   writeFileSync(join(outputRoot, "cards.json"), `${JSON.stringify(payload, null, 2)}\n`);
 
-  const prompts = renderPrompts(cases);
+  const nestedScenarioIds = selectNestedScenarioIds(cases);
+  const prompts = renderPrompts(cases, nestedScenarioIds);
   const promptsJsonl = `${prompts.map((prompt) => JSON.stringify(prompt)).join("\n")}\n`;
   const maximumRequestBytes = Math.max(
     ...prompts.map(({ request }) => Buffer.byteLength(JSON.stringify(request))),
@@ -47,19 +50,28 @@ export function generateEcologicalBenchmark(controlledRoot, outputRoot) {
     prompt_count: prompts.length,
     prompts_sha256: sha256(promptsJsonl),
     maximum_request_bytes: maximumRequestBytes,
+    nested_evaluation: {
+      selection_seed: NESTED_EVALUATION_SEED,
+      scenarios_per_family: NESTED_EVALUATION_PER_FAMILY,
+      scenario_ids: nestedScenarioIds,
+      contexts: ["local", "cumulative"],
+      trials_per_cell: 2,
+    },
   };
   writeFileSync(join(outputRoot, "prompts.jsonl"), promptsJsonl);
   writeFileSync(join(outputRoot, "ecological.json"), `${JSON.stringify(summary, null, 2)}\n`);
-  return { cases, prompts, ...summary };
+  return { cases, prompts, nested_scenario_ids: nestedScenarioIds, ...summary };
 }
 
-function renderPrompts(cases) {
+function renderPrompts(cases, nestedScenarioIds) {
+  const nested = new Set(nestedScenarioIds);
   const prompts = [];
   for (const entry of cases) {
     for (const decomposition of ["atomic", "split"]) {
       const submissions = entry[decomposition].submissions;
       for (const workflow of ["pr", "trunk"]) {
-        for (const context of ["local"]) {
+        const contexts = nested.has(entry.scenario_id) ? ["local", "cumulative"] : ["local"];
+        for (const context of contexts) {
           for (let submissionIndex = 1; submissionIndex <= submissions.length; submissionIndex += 1) {
             const request = renderReviewRequest(
               renderEcologicalEvidence(submissions, workflow, context, submissionIndex),
@@ -83,6 +95,29 @@ function renderPrompts(cases) {
     }
   }
   return prompts;
+}
+
+function selectNestedScenarioIds(cases) {
+  const byFamily = new Map();
+  for (const entry of cases) {
+    const ids = byFamily.get(entry.family) ?? new Set();
+    ids.add(entry.scenario_id);
+    byFamily.set(entry.family, ids);
+  }
+  const rng = createRng(NESTED_EVALUATION_SEED);
+  const selected = [];
+  for (const family of [...byFamily.keys()].sort()) {
+    const candidates = [...byFamily.get(family)].sort();
+    if (candidates.length < NESTED_EVALUATION_PER_FAMILY) {
+      throw new Error(`${family}: insufficient scenarios for nested evaluation`);
+    }
+    for (let index = candidates.length - 1; index > 0; index -= 1) {
+      const other = Math.floor(rng() * (index + 1));
+      [candidates[index], candidates[other]] = [candidates[other], candidates[index]];
+    }
+    selected.push(...candidates.slice(0, NESTED_EVALUATION_PER_FAMILY));
+  }
+  return selected.sort();
 }
 
 function renderEcologicalEvidence(submissions, workflow, context, submissionIndex) {
@@ -132,6 +167,16 @@ function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function createRng(seed) {
+  let state = seed >>> 0;
+  return () => {
+    state ^= state << 13;
+    state ^= state >>> 17;
+    state ^= state << 5;
+    return (state >>> 0) / 0x1_0000_0000;
+  };
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     generateEcologicalBenchmark(process.argv[2], process.argv[3]);
@@ -144,6 +189,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
         models: study.active_subscription_design.review_systems.map(({ id }) => id),
         trialsPerCell: 1,
         contexts: ["local"],
+        nestedPlan: {
+          scenarioIds: output.benchmark.nested_evaluation.scenario_ids,
+          trialsPerCell: output.benchmark.nested_evaluation.trials_per_cell,
+          contexts: output.benchmark.nested_evaluation.contexts,
+        },
         seed: 20260718,
       }).summary;
     }

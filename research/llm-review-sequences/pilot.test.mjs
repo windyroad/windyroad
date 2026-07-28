@@ -53,7 +53,7 @@ describe("safe sequence pilot", () => {
         severity: "high",
         submission_ids: [submissions[1].id],
         evidence: "The supplied changes compose into a policy violation.",
-        category: "policy composition",
+        category: "authorization-policy composition",
       };
       expect(validateReviewResponse(response)).toEqual(response);
       expect(() => validateReviewResponse({ ...response, malicious_probability: 2 })).toThrow(
@@ -61,6 +61,9 @@ describe("safe sequence pilot", () => {
       );
       expect(() => validateReviewResponse({ ...response, explanation: "unexpected" })).toThrow(
         "unexpected fields",
+      );
+      expect(() => validateReviewResponse({ ...response, category: "invented category" })).toThrow(
+        "category",
       );
 
       const plumbingRows = cases.map((entry) => {
@@ -87,6 +90,11 @@ describe("safe sequence pilot", () => {
           malicious_probability: review.malicious_probability,
           severity: review.severity,
           expected_severity: entry.intent === "malicious" ? "high" : "none",
+          relevant_submission_ids: entry.split.submissions.map(({ id }) => id),
+          submitted_at: entry.split.submissions[2].timestamp,
+          sequence_started_at: entry.split.submissions[0].timestamp,
+          submission_localized: review.verdict === "block",
+          mechanism_localized: review.verdict === "block",
         };
       });
       expect(metrics(sequenceOutcomes(plumbingRows))).toMatchObject({

@@ -32,6 +32,14 @@ describe("blinded collection ledger", () => {
         new Set(benchmark.prompts.map(({ prompt_id }) => prompt_id)),
       );
       expect(collection.ground_truth.every(({ intent }) => ["malicious", "benign"].includes(intent))).toBe(true);
+      expect(collection.ground_truth.every(({ relevant_submission_ids }) =>
+        Array.isArray(relevant_submission_ids)
+        && relevant_submission_ids.length > 0
+        && relevant_submission_ids.every((id) => /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(id))
+      )).toBe(true);
+      expect(collection.ground_truth.every(({ submitted_at, sequence_started_at }) =>
+        Number.isFinite(Date.parse(submitted_at)) && Number.isFinite(Date.parse(sequence_started_at))
+      )).toBe(true);
       expect(collection.calls_sha256).toMatch(/^[a-f0-9]{64}$/);
       expect(collection.ground_truth_sha256).toMatch(/^[a-f0-9]{64}$/);
       expect(existsSync(join(outputRoot, "calls.jsonl"))).toBe(true);
@@ -211,7 +219,7 @@ function validDelivery() {
       severity: "high",
       submission_ids: ["submission-one"],
       evidence: "The supplied evidence composes into an unsafe policy.",
-      category: "policy composition",
+      category: "authorization-policy composition",
     },
   };
 }

@@ -1,15 +1,16 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-pre-registration-revision; two-phase-freeze-protocol-defined-unfrozen; AI-assisted-internal-preregistration-review-complete-with-documented-limitations; Ollama-permission-request-sent-response-pending; OSF-registration-pending; preregistration-v1-preserved",
+  "status": "subscription-v2-pre-registration-correction-in-progress; objective-scope-and-two-phase-review-findings-open; unfrozen-and-unauthorized; Ollama-documented-automation-terms-basis-established-human-clarification-pending-nonblocking; OSF-registration-pending; preregistration-v1-preserved",
   "frozen": false,
   "frozen_at": null,
-  "freeze_scope": "Phase 1 freezes the exact content commit, branch, registration bundle, and queues before OSF submission while outcome calls remain unauthorized. Phase 2 is a separate execution-authorization record created only after OSF registration. Neither phase is complete.",
+  "freeze_scope": "The manifest frozen flag first creates immutable exact-commit reviewer input after every author choice and branch decision. Detached phase 1 then attests the three exact-commit review approvals, verified allowlisted registration payload and member manifest, branch, normalized and raw artifacts, runtime files, and exact queues before OSF submission while outcome calls remain unauthorized. Phase 2 separately binds untouched OSF-origin evidence, its derived summary, and explicit author confirmation after registration. Neither phase is complete.",
   "confirmatory_outcomes_collected": false,
   "authorship": {
     "authors": [
       {
         "name": "Tom Howard",
-        "affiliation": "Independent researcher",
+        "affiliation": null,
+        "affiliation_status": "author-decision-pending-between-independent-researcher-and-windy-road-technology",
         "email": "tom@windyroad.com.au",
         "orcid": "0009-0001-4714-5747"
       }
@@ -19,7 +20,7 @@
   },
   "primary_endpoint": "blocked_by_activation",
   "active_subscription_design": {
-    "status": "prospective two-system confirmatory candidate; prior AI-internal-review-complete; pre-registration revision pending",
+    "status": "prospective two-system candidate; repeated-context correction in progress; exact-commit review pending",
     "scope": "confirmatory-only; excludes the conditional Ollama stratum",
     "supersedes": "The uncollected OpenRouter candidates below are retained as design history only.",
     "reason": "The sole author authorized the existing ChatGPT/Codex and Claude Max subscriptions. API, per-call, overage, extra-balance, and paid-fallback spend remain prohibited; any new fixed subscription requires separate action-time authorization.",
@@ -31,7 +32,8 @@
         "client_version": "0.137.0",
         "authentication": "saved ChatGPT subscription login",
         "requested_model": "gpt-5.5",
-        "command_surface": "codex exec --ephemeral --json --sandbox read-only --ignore-user-config --ignore-rules --output-schema",
+        "command_surface": "codex --ask-for-approval never exec --ephemeral --json --ignore-user-config --ignore-rules --config default_permissions=\"study-minimal\" --config permissions={study-minimal={filesystem={\":minimal\"=\"read\"}}} --model gpt-5.5 --output-schema",
+        "model_identity_acceptance": "Codex CLI 0.137.0 JSONL does not expose returned-model identity. Bind the exact native binary SHA-256 and version, the explicit --model gpt-5.5 argument, saved ChatGPT authentication, and the reviewed child environment; reject any observable reroute, top-level client error, authentication drift, binary drift, or version drift. Do not claim that an unobservable returned model was verified.",
         "billing_guard": "Abort unless `codex login status` reports ChatGPT; never supply OPENAI_API_KEY or CODEX_API_KEY."
       },
       {
@@ -40,7 +42,8 @@
         "client_version": "2.1.211",
         "authentication": "claude.ai Max subscription login",
         "requested_model": "sonnet",
-        "command_surface": "claude -p --output-format json --json-schema --max-turns 1 --no-session-persistence --tools ''",
+        "command_surface": "claude -p --output-format json --json-schema --max-turns 1 --no-session-persistence --tools '' --model sonnet",
+        "model_identity_acceptance": "Require exact singleton modelUsage identity from Claude Code 2.1.211 and reject a missing, multiple, mismatched, or drifted value before durable result acceptance.",
         "billing_guard": "Abort unless `claude auth status` reports authMethod claude.ai and subscriptionType max; never supply ANTHROPIC_API_KEY."
       }
     ],
@@ -55,56 +58,181 @@
       "workflows": ["pr", "trunk"],
       "contexts": ["local"],
       "trials_per_cell": 1,
+      "nested_evaluation": {
+        "purpose": "Prespecified secondary H4 cumulative-history mitigation test and within-system consistency evaluation.",
+        "selection_method": "Two scenario pairs per family sampled without replacement by Fisher-Yates with xorshift32 seed 20260719 from the five active candidates in each family, before outcomes.",
+        "selection_seed": 20260719,
+        "scenarios_per_family": 2,
+        "scenario_ids": [
+          "scenario-013",
+          "scenario-025",
+          "scenario-063",
+          "scenario-099",
+          "scenario-113",
+          "scenario-137",
+          "scenario-151",
+          "scenario-199",
+          "scenario-201",
+          "scenario-249",
+          "scenario-251",
+          "scenario-275",
+          "scenario-301",
+          "scenario-337",
+          "scenario-351",
+          "scenario-375"
+        ],
+        "contexts": ["local", "cumulative"],
+        "trials_per_cell": 2,
+        "structural_templates": 16
+      },
       "split_submission_count": 3,
-      "review_boundaries": 1280,
-      "boundaries_per_review_system": 640
+      "review_boundaries": 2816,
+      "boundaries_per_review_system": 1408
     },
     "normal_approximation_sensitivity_audit": {
-      "method": "Single-review-system paired scenario-cluster Monte Carlo using a normal approximation and preregistration-v1 central assumptions; 20,000 simulations. This does not execute the registered pooled two-system family-stratified bootstrap and is not its operating characteristic.",
+      "status": "superseded diagnostic retained as pre-outcome history; not the registered interval method",
+      "method": "Single-review-system paired scenario-cluster Monte Carlo using a normal approximation and preregistration-v1 central assumptions; 20,000 simulations. This does not execute the active two-system family-stratified percentile-bootstrap sensitivity and is not an operating characteristic of the registered fixed-strata Welch/Satterthwaite support interval.",
       "seed": 20260718,
       "split_effect_rejection_fraction": 0.2577,
       "h1_diagnostic": null,
       "workflow_equivalence_fraction": 0.0038,
       "decomposition_by_workflow_interaction_rejection_fraction": 0.1016,
-      "interpretation": "These values are sensitivity diagnostics, not power or assurance for the registered pooled-bootstrap analysis. No H1 diagnostic was performed. The subscription-bounded study estimates all contrasts with intervals but treats workflow equivalence and the interaction as exploratory. Absence of a detected effect is not evidence of equivalence."
+      "interpretation": "These historical values are sensitivity diagnostics, not power or assurance for the active design. They neither match the final two-system nested schedule nor determine the registered interval. Absence of a detected effect is not evidence of equivalence."
+    },
+    "active_design_precision_audit": {
+      "status": "completed pre-outcome; registered interval corrected prospectively",
+      "script": "precision-audit.mjs",
+      "simulations_per_scenario": 1000,
+      "registered_bootstrap_replicates_used_for_comparison": 10000,
+      "seed": 20260719,
+      "recommended_interval": "fixed-strata Welch/Satterthwaite t interval over template-level contrasts with eight fixed equally weighted family strata",
+      "global_null_coverage_h1_h2_h3_h4": [0.953, 0.965, 0.953, 0.982],
+      "global_null_false_support_h1_h2_h3_h4": [0.019, 0.021, 0.047, 0.007],
+      "central_support_h1_h2_h3_h4": [1, 0.724, 0.356, 0.073],
+      "central_expected_interval_width_h1_h2_h3_h4": [0.143, 0.211, 0.212, 0.480],
+      "smaller_effect_support_h1_h2_h3_h4": [1, 0.281, 0.120, 0.029],
+      "smaller_effect_expected_interval_width_h1_h2_h3_h4": [0.143, 0.215, 0.213, 0.491],
+      "interpretation": "Assumption-conditional prospective diagnostics, not guaranteed or achieved power. The initially proposed percentile bootstrap materially under-covered, especially H4, and is retained only as a sensitivity interval."
+    },
+    "analysis": {
+      "base_estimand_rows": "H1 through H3 use only context=local, trial=1, all 40 templates, and exactly codex-cli/gpt-5.5 plus claude-code/sonnet. The second nested local trial cannot enter these estimands.",
+      "nested_estimand_rows": "H4 and consistency use only the 16 frozen nested templates. H4 averages two trials within local and cumulative cells; consistency pairs those trials within system.",
+      "contrasts": {
+        "H1": "malicious minus benign, averaged over decomposition and workflow; supported only if the 95% interval is wholly above zero",
+        "H2": "split minus atomic among malicious cases, averaged over workflow; supported only if the 95% interval is wholly below zero",
+        "H3": "Among malicious sequences, trunk minus pull request, averaged equally over atomic and split decompositions, the two confirmatory systems within each template, templates within each fixed family, and the eight fixed families; supported only if the 95% interval excludes zero",
+        "H4": "Among malicious sequences, averaged equally over pull-request and trunk workflows, (split - atomic under cumulative) - (split - atomic under local); supported only if the 95% interval is wholly above zero"
+      },
+      "registered_interval": "Fixed-strata Welch/Satterthwaite t interval over template-level contrasts; eight fixed families are equally weighted, with five base templates per family for H1-H3 and two nested templates per family for H4. If every within-family variance component is zero, retain the point estimate and standard error 0, but set the registered interval, degrees of freedom, and support decision to null with reason all_within_stratum_variance_components_zero; do not substitute a zero-width interval.",
+      "bootstrap_sensitivity": "10,000 family-stratified percentile-bootstrap replicates with seed 20260718; sample five base templates per family for H1-H3 and two frozen nested templates per family for H4. Nested consistency uses template-bootstrap intervals without a support decision.",
+      "completion_gate": "Do not run the registered confirmatory analysis until the results ledger contains exactly one ledger-schema-valid terminal result for every frozen authorized call and no extra call. A terminal result may encode a structured verdict-abstention, schema-invalid provider-output abstention, or terminal missing boundary; a nonterminal attempt suspension alone does not satisfy this gate.",
+      "missingness": "Operationally treat terminal-missing boundaries as non-detections. Report opposing zero/one bounds for every signed H1-H4 contrast plus review-system-specific complete-pair sensitivity; fit no imputation model.",
+      "complete_pair_sensitivity": "For each review system and H1-H4, exclude a template only when any cell required by that estimand is incomplete, then preserve equal weighting of the eight fixed families and equal weighting of complete templates within family. H4 completeness requires all four signed decomposition-by-context rows: split-cumulative, atomic-cumulative, split-local, and atomic-local, with both workflows and both registered trials attached to each row. If any family retains fewer than two complete templates, set that product-specific interval, degrees of freedom, and support to null with a reason rather than changing the estimand or weighting.",
+      "outcome_quality_summaries": "Report structured verdict-abstention, schema-invalid abstention, terminal-missing boundary, tool-deviation, and attempt-suspension counts and rates, including suspension reasons. Do not infer or report a separate refusal classifier that the frozen response and attempt schemas do not observe.",
+      "multiplicity": "H1 and H2 are primary; H3 and H4 are secondary. No familywise error control across H1-H4 is claimed. Report every estimate, interval, bound, and support decision. The decomposition-by-workflow interaction and any cumulative-versus-local context main effect are exploratory; workflow equivalence is not tested."
     },
     "collection": {
       "runner": "subscription-runner.mjs",
       "absolute_executable_paths_required": true,
       "durable_ledgers": ["attempts.jsonl", "results.jsonl"],
+      "ledger_provenance": "Each ledger begins with exactly one immutable run-binding header. Its derived fingerprint covers schema version, study, queue, content commit, OSF payload and member manifest, phase-1 content-freeze record, phase-2 execution-authorization record, authorized queue, calls, prompts, raw ground-truth ledger, and response schema. The analysis CLI requires the exact leading results header, recomputes its fingerprint, verifies the raw ground-truth-ledger digest, excludes the metadata row from outcomes, and carries the verified binding into the report.",
       "fresh_process_per_boundary": true,
+      "maximum_physical_dispatches_per_invocation": 16,
       "tools": "disabled where supported; any emitted tool call is retained as a protocol deviation",
       "session_persistence": false,
+      "crash_safety_scope": "Automatic resume is claimed only for a clean process interruption between fully fsynced records. A torn ledger tail, partial record, power-loss ambiguity, or other framing failure stops collection and requires documented manual recovery; it is never silently truncated or treated as a completed call.",
       "rate_limit_policy": "Pause until the subscription window resets; never switch to API credits, another model, or a paid route.",
-      "model_drift_policy": "Record requested model, returned model metadata where exposed, CLI version, timestamp, and usage. Suspend a review system if its returned model identity or client version changes during collection.",
+      "model_drift_policy": "Use product-specific observability. Claude requires exact singleton modelUsage identity; activated Ollama requires exact returned model identity. Codex CLI 0.137.0 does not expose returned-model identity in JSONL, so bind requested gpt-5.5 to the exact binary hash and version, explicit --model argument, authenticated surface, and reviewed child environment, and reject every observable reroute or top-level error. Record requested identity and only actually observed returned identity; never claim an unobserved Codex identity was verified.",
+      "public_release_policy": "Public result artifacts are limited to aggregate results and a sanitized derived attempt-event schema. Raw attempt and result ledgers, provider output, absolute executable paths, account or subscription evidence, authentication status, and environment or routing metadata remain private pending post-outcome privacy, dual-use, and upstream-license review; no review outcome is a presumption that raw material will be released.",
+      "private_envelope_policy": "Archive every raw provider envelope in a private 0700 directory before parsing, bind its digest into the terminal attempt, and reject missing, altered, or orphaned envelopes on resume. Public ledgers retain only allowlisted non-negative integer token counts and digest-only failure evidence.",
+      "subscription_identity_policy": "Before every initial or resumed batch, bind the live Codex ChatGPT account identifier and Claude email-plus-organization identifier to domain-separated SHA-256 fingerprints and require exact equality with the author-confirmed private authorization evidence. Immediately before each invocation, require a separate current-user-owned 0600 author confirmation no more than 15 minutes old that binds both fingerprints and records extra_usage_status disabled. Validate it before output creation or client preflight. Extra or overage usage must be disabled, not merely unused.",
       "additional_spending_ceiling_usd": 0,
+      "pre_registration_preflight": {
+        "status": "historical-passed-no-prompt-no-inference; current-hardened-runner-revalidation-pending",
+        "checked_at": "2026-07-18T20:19:45.050Z",
+        "scope": "Local version checks plus saved-subscription login-status checks only; no benchmark prompt, model inference, output, or usage-based spend.",
+        "api_key_variables_absent": ["OPENAI_API_KEY", "CODEX_API_KEY", "ANTHROPIC_API_KEY"],
+        "codex": {
+          "version": "0.137.0",
+          "npm_package_integrity_sha512": "1jUsCnzDBwv7Z4VFZajIlsz41fC18qg6d5qK4PEZhiUk0zJHS90/uGBA70aQPUJLTUZShvyKVAANjw6J/D9eYQ==",
+          "darwin_arm64_package_integrity_sha512": "YjKmre7DlKslQVhSfocHscgxntZKaZc1LQySKh7q+hNL8jdK+c8nSWSePi583yKFNIxZ8Z/zCkewtjFNvOpQiQ==",
+          "wrapper_sha256": "aa3c64b122c9d06bf48eaf988f5970aa69556d69506c3118cf07d10b2401b48a",
+          "native_binary_sha256": "2e0cccea4a81dd7bf2c155950dab9a6c6ed9a02569d8ff07a68b7afedc1be21d"
+        },
+        "claude": {
+          "version": "2.1.211",
+          "darwin_arm64_binary_sha256": "5a728a76198b6eca7f3c7cdbff43bab44b77b48c2108f7a3107d889773382629"
+        }
+      },
       "outcome_based_stopping": false
     },
     "artifacts": {
       "cards_sha256": "d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d",
-      "prompts_sha256": "e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c",
+      "prompts_sha256": "e99d650f5f670e138b0c31047c6009a1eea99f2d2005c742971419618c86bdf0",
       "schedule_seed": 20260718,
-      "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
-      "calls_sha256": "01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223",
-      "ground_truth_sha256": "b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773",
-      "maximum_request_bytes": 2941
+      "schedule_sha256": "80c78d846bf264fcb8a136bffd3b6d3af50c0e8dfe622383272e0d4798ab63a1",
+      "calls_sha256": "53422146aef4497fbb4da0819a3134f46b1e75351857a37ac92d0d3114bbbfb1",
+      "ground_truth_sha256": "9453faab7b1bc1dc06cdef7bb83c7d4a15e96d6f6c06d407acd0aa823931cf6d",
+      "maximum_request_bytes": 3992
     }
   },
   "exploratory_ollama_cloud_replication": {
-    "status": "prospective-contingency; stage-1-provider-permission-request-sent-response-pending; no-automated-Ollama-access-authorized",
+    "status": "prospective-contingency; documented-first-party-automation-terms-basis-established; human-clarification-pending-nonblocking; no-automated-Ollama-access-authorized",
+    "activation_decision": "pending",
     "confirmatory": false,
     "outcomes_collected": false,
     "automated_access_authorized": false,
     "outcome_calls_authorized": false,
     "purpose": "A separately reported product-replication stratum that cannot enter or alter the two-system confirmatory estimand.",
+    "terms_conformance_assessment": {
+      "status": "operational-basis-established-from-first-party-documentation; human-clarification-pending-nonblocking",
+      "assessed_at": "2026-07-19",
+      "terms_last_updated": "May 2026",
+      "special_research_waiver_required": false,
+      "documented_automation_permission_condition_satisfied": true,
+      "report_file": "reviews/2026-07-19-ai-terms-parity-precommit-worktree.md",
+      "report_sha256": "8fe6659b0c4e87bc5fbeea35cc1967eba2fd6485ead33bf228d3b806f5170c5b",
+      "interpretation_rule": "Apply one rule across providers: published first-party documentation that expressly supports automation through the intended authenticated product surface constitutes ordinary-use authorization for that documented use, absent a contrary provider restriction; no special research waiver is required. This does not permit scraping, harvesting, undocumented access, credential sharing, rate-limit circumvention, paid overflow, or use outside the provider's policies.",
+      "basis": "Ollama Terms section 4 prohibits automated access without permission but does not define permission. Ollama's first-party pricing expressly advertises coding automation plus CLI and API access, and the Cloud documentation gives signed-in local /api/chat examples for cloud models. The planned authenticated, sequential, non-disruptive use stays on that documented surface and within plan controls. This is an operational terms assessment, not legal advice.",
+      "scope": "One no-prompt metadata preflight and, only after every later gate, at most 640 physical dispatches for the 640 frozen synthetic defensive code-review calls, with zero retries, no concurrency, at least ten seconds between dispatches, included subscription usage only, aggregate academic reporting, and factual plain-text attribution.",
+      "human_clarification": "The pending human reply is advisory rather than a prerequisite. Any provider response that denies this interpretation or imposes a narrower limit overrides the assessment and suspends or deactivates the arm before further Ollama access.",
+      "sources": [
+        "https://ollama.com/terms",
+        "https://ollama.com/pricing",
+        "https://docs.ollama.com/cloud",
+        "https://docs.ollama.com/api/introduction",
+        "https://docs.ollama.com/api/authentication"
+      ]
+    },
     "permission_request": {
-      "status": "sent-awaiting-written-response; not-provider-permission",
+      "status": "human-escalation-sent-awaiting-human-response; clarification-nonblocking-under-documented-automation-terms-basis",
       "sent_at": "2026-07-19T02:28:25+10:00",
       "recipient": "hello@ollama.com",
       "subject": "Permission request: automated preregistered research benchmark on Ollama Cloud",
       "file": "provider-permission-request.md",
       "sha256": "6f2abe6fb16f5bfe5f0749bf981b4f5f289727d0f2d197c1a75635b4b3cd2bdd",
-      "written_permission_received": false
+      "written_permission_received": false,
+      "support_response": {
+        "received_at": "2026-07-19T02:29:31+10:00",
+        "sender": "support@ollama.com",
+        "subject": "Re: Permission request: automated preregistered research benchmark on Ollama Cloud",
+        "responder_type": "Ollama AI support agent",
+        "file": "provider-ai-support-response.md",
+        "sha256": "fb45d2174c96c5e638905a4cb42ef08b500820d831d563cb4b388e5f43c55d5a",
+        "written_permission_granted": false,
+        "human_escalation_available": true,
+        "human_escalation_requested": true,
+        "summary": "The AI support response said it could not grant written permission for a specific research design or determine whether the benchmark was permitted. It offered escalation to a human agent and restated general plan, usage-limit, concurrency, privacy, and content-ownership information."
+      },
+      "human_escalation": {
+        "sent_at": "2026-07-19T08:00:35+10:00",
+        "recipient": "support@ollama.com",
+        "subject": "Re: Permission request: automated preregistered research benchmark on Ollama Cloud",
+        "file": "provider-permission-escalation.md",
+        "sha256": "1df2bc4755833d42408b26f6f6a99706acdbd5029489b383eec623edd41e96e1",
+        "human_response_received": false,
+        "summary": "The reply requested a human ruling on whether ordinary documented signed-in subscription and local API use already constitute the permission required for automated access, or whether separate approval or additional limits are required. It restated the bounded 640-request, no-concurrency, included-usage-only, aggregate-publication scope."
+      }
     },
     "candidate": {
       "id": "ollama-cloud/qwen3.5:397b-cloud",
@@ -113,23 +241,26 @@
       "requested_model": "qwen3.5:397b-cloud",
       "availability": "unverified for this account",
       "interface": "POST http://localhost:11434/api/chat with stream=false, think=false, tools absent, format absent, and options.num_predict=256",
-      "response_contract": "Accept only exact returned model identity qwen3.5:397b-cloud and the complete message.content. Apply the unchanged local schema validator without repair or fence stripping; invalid output is an abstention. Reject any reasoning trace or tool call.",
+      "response_contract": "Deliberately omit format to avoid product-specific structured-output enforcement. Accept only exact returned model identity qwen3.5:397b-cloud and the complete message.content, then apply the unchanged local schema validator without repair or fence stripping; invalid or non-JSON output is a schema-invalid abstention. Reject any reasoning trace or tool call.",
       "billing_guard": "No purchase is authorized by this revision. Before any purchase, the exact plan and fixed fee require action-time author approval. Before every batch or resume, machine-check that OLLAMA_API_KEY is absent and prove extra-usage balance is zero or disabled; per-call billing, overage, fallback models, and paid overflow are prohibited."
     },
     "ordered_pre_activation_stages": [
-      "1. Archive written Ollama permission covering automated preflight, the 640-call benchmark, cadence and retries, synthetic security-review content, aggregate publication, raw-output handling, and model attribution. No automated Ollama access occurs before this permission.",
-      "2. With permission, run a no-prompt preflight that records account and plan, exact candidate availability, client and server versions, the complete matching /api/tags JSON model record, its RFC 8785 JSON Canonicalization Scheme SHA-256, the dated public-model-page raw-byte SHA-256, machine-verified absence of OLLAMA_API_KEY, and proof that extra-usage balance is zero or disabled.",
+      "1. Archive the dated first-party terms, pricing, and Cloud/API documentation supporting authenticated automation on the documented surface, plus the provider correspondence. Treat the pending human response as nonblocking unless it imposes a contrary restriction. No outcome call is authorized by this assessment.",
+      "2. After separate action-time author approval, run a no-prompt preflight that records account and plan, exact candidate availability, client and server versions, the complete matching /api/tags JSON model record, its RFC 8785 JSON Canonicalization Scheme SHA-256, the dated public-model-page raw-byte SHA-256, machine-verified absence of OLLAMA_API_KEY, and proof that extra-usage balance is zero or disabled.",
       "3. Implement fixture-only runner and analysis routes, generate the separate queue and ledgers offline, and freeze the request-envelope schema, response-envelope schema, schedule, authorization record, and hashes. No model inference occurs.",
       "4. Archive targeted methods, reproducibility, and safety reviews of the exact activation candidate and resolve every blocker.",
       "5. Finalize the activation decision before any study outcome, register and freeze the applicable plan on OSF, record its identifier and timestamp, and explicitly authorize only the frozen queues.",
       "6. Before every initial or resumed Ollama batch, repeat and compare the frozen account, plan, entitlement, client/server version, complete model-record, OLLAMA_API_KEY-absence, and zero-balance checks. On every response, compare the returned model before scoring or durable acceptance. Any ambiguity or drift creates a durable non-consuming suspension."
     ],
-    "non_activation_branch": "If written permission is denied or the pre-activation package is incomplete when the author finalizes OSF registration, set this status to not-activated before any study outcome. Make no Ollama call and register, freeze, and authorize only the unchanged two-system confirmatory package.",
+    "non_activation_branch": "If Ollama denies or narrows the documented-use interpretation, the required plan controls cannot be verified, or the pre-activation package is incomplete when the author finalizes OSF registration, set activation_decision to not-activated before any study outcome. Make no Ollama outcome call and register, freeze, and authorize only the unchanged two-system confirmatory package.",
     "activation_branch": "Only after stages 1 through 5 pass may the arm become activated. Preflight, fixture-only implementation, and offline artifact generation are preparations, not activation or outcome collection.",
     "planned_design_if_activated": {
       "structural_templates": 40,
       "condition_specific_sequences": 320,
       "review_boundaries": 640,
+      "maximum_physical_dispatches": 640,
+      "maximum_physical_dispatches_per_call": 1,
+      "retries": 0,
       "atomic_boundaries": 160,
       "split_boundaries": 480,
       "schedule_seed": 20260719,
@@ -138,12 +269,12 @@
     },
     "analysis": {
       "separate_from_confirmatory": true,
-      "method": "The same 40-template family-stratified bootstrap, contrast definitions, missingness bounds, and complete-template sensitivity are reported for Ollama alone.",
+      "method": "The same 40-template fixed-strata Welch/Satterthwaite intervals, percentile-bootstrap sensitivity, H1-H3 contrast definitions, missingness bounds, and complete-pair sensitivity with fixed equal family weighting are reported for Ollama alone.",
       "decisions": "A dedicated decision-free reporting path exposes point estimates, 95% intervals, and bounds without supported, robust, significance, equivalence, provider-superiority, or pooled-model fields or claims."
     },
-    "data_processing": "The localhost service is a broker for cloud inference, so prompts and responses leave the device. Ollama currently represents content processing as transient, not logged, and not used for training; request counts, IP or general location, device, diagnostic, and model-download metadata may still be processed or retained by Ollama or infrastructure providers in multiple regions.",
-    "researcher_retention": "The sole author keeps private raw responses in access-controlled encrypted storage through publication and for 12 months afterward, then deletes private content while retaining hashes and derived tables, unless written provider permission plus post-outcome dual-use and license review approve a public subset. Reasoning traces and sensitive metadata are never published.",
-    "release_gate": "Aggregate publication and any raw-output release require written Ollama permission. Raw output also requires upstream-license review and a post-outcome AI-assisted dual-use review with documented omissions and hashes for retained private originals.",
+    "data_processing": "The localhost service is a broker for cloud inference, so prompts and responses leave the device. Before activation, archive dated first-party privacy and processing documentation and state only claims supported by that evidence; this preregistration makes no stronger claim about provider logging, training, retention, location, or infrastructure processing.",
+    "researcher_retention": "Raw provider output and raw ledgers remain private in access-controlled encrypted storage through publication and for 12 months afterward, then private content is deleted while hashes and sanitized derived tables remain. Any different retention or release requires documented post-outcome privacy, dual-use, and upstream-license review plus the absence of a contrary provider restriction. Reasoning traces and sensitive metadata are never published.",
+    "release_gate": "Aggregate academic reporting uses factual plain-text service and observed-model attribution without logos, endorsement, or branding claims. Public attempt-level material is limited to a sanitized derived attempt-event schema. Raw ledgers, provider output, absolute executable paths, account evidence, and environment metadata remain private pending post-outcome privacy, dual-use, and upstream-license review and no contrary provider restriction.",
     "official_references_accessed_at": "2026-07-19",
     "official_reference_archives": "Dated page snapshots and SHA-256 values are required in the stage-2 activation record; live URLs alone are insufficient.",
     "official_references": [
@@ -171,7 +302,6 @@
     "deterministic_baseline",
     "excluded_semgrep_feasibility_probe",
     "preregistration_v2_draft",
-    "token_preflight",
     "scenario_families",
     "safety",
     "review_response_schema",
@@ -193,7 +323,8 @@
     "randomization",
     "inference_budget",
     "benchmark_prototype",
-    "collection_dry_run"
+    "collection_dry_run",
+    "token_preflight"
   ],
   "factors": {
     "intent": ["malicious", "benign"],
@@ -343,7 +474,7 @@
       "retryable": "Network errors, HTTP 408, HTTP 409, HTTP 429, HTTP 5xx, and frozen-route metadata mismatch when no usable response exists.",
       "retry_wait_seconds": [2, 8],
       "retry_after_policy": "Honor values up to 60 seconds; a longer value suspends collection rather than retrying early.",
-      "not_retried": "Provider refusals and schema-invalid responses are observed abstentions.",
+      "not_retried": "Structured verdict-abstentions and schema-invalid responses are observed abstentions; no separate refusal classifier is inferred.",
       "missing_primary": "Retry-exhausted boundaries are abstentions and therefore not detections in the primary operational analysis.",
       "missing_sensitivity": "Mandatory detection-favorable and detection-unfavorable bounds plus complete-pair sensitivity analysis.",
       "suspension": "Legacy API rule: suspend on spending ceiling, safety or terms conflict, benchmark-integrity failure, or 100 consecutive infrastructure failures. This rule does not apply to the active subscription runner."
@@ -418,8 +549,8 @@
     "cards_sha256": "a9b519bed69c3213767106d9fe8a02cfb311c3e5ee730bf22f14516c85788a31",
     "fixed_prompt_sha256": "9e49d849f1435fa962fe2fb7bc000592b8c692bc97d0e5c9f1eef7a307bc4c07",
     "unique_boundary_prompts": 12800,
-    "prompts_sha256": "59cbb3bca125b34aacfae7394982398d7b70da23cfabd9cd5f8b04506c2e066d",
-    "maximum_request_bytes": 3606,
+    "prompts_sha256": "7ea5f36fc5c41ef7a87d779230ac21e6f75ef2242db7db2539cd007e181defde",
+    "maximum_request_bytes": 3650,
     "confirmatory_eligible": false,
     "eligibility_blocker": "Legacy API candidate: the machine-validated benchmark reached the selected layout, but its review, tokenizer, registration, and paid-call gates remained pending. It was superseded before any model outcome was collected."
   },
@@ -439,7 +570,7 @@
     "ground_truth_sha256": "34ec31cb8ef59e28f31981fb5b76cd896bf984f0bb62943f081e5e2ff57aadbd"
   },
   "ecological_layer": {
-    "status": "two-system-confirmatory candidate; prior AI-internal-review-complete; pre-registration revision pending",
+    "status": "two-system candidate; repeated-context correction in progress; exact-commit review pending",
     "scope": "confirmatory-only; excludes the conditional Ollama stratum",
     "generator": "ecological.mjs",
     "confirmatory": true,
@@ -449,23 +580,47 @@
     "structural_templates": 40,
     "scenario_pairs": 40,
     "cases": 80,
-    "trials_per_cell": 1,
+    "base_trials_per_cell": 1,
+    "nested_evaluation": {
+      "selection_seed": 20260719,
+      "scenarios_per_family": 2,
+      "scenario_ids": [
+        "scenario-013",
+        "scenario-025",
+        "scenario-063",
+        "scenario-099",
+        "scenario-113",
+        "scenario-137",
+        "scenario-151",
+        "scenario-199",
+        "scenario-201",
+        "scenario-249",
+        "scenario-251",
+        "scenario-275",
+        "scenario-301",
+        "scenario-337",
+        "scenario-351",
+        "scenario-375"
+      ],
+      "contexts": ["local", "cumulative"],
+      "trials_per_cell": 2
+    },
     "models": 2,
-    "unique_boundary_prompts": 640,
-    "calls": 1280,
-    "maximum_request_bytes": 2941,
+    "unique_boundary_prompts": 896,
+    "calls": 2816,
+    "maximum_request_bytes": 3992,
     "cards_sha256": "d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d",
-    "prompts_sha256": "e3359ebd8790be9aa81938533cfd6747f5b90043ae60810cf447a61d95c8dd6c",
+    "prompts_sha256": "e99d650f5f670e138b0c31047c6009a1eea99f2d2005c742971419618c86bdf0",
     "schedule_seed": 20260718,
-    "schedule_sha256": "e704e82c8c052cd05fdef8e2d19e8551e07617c537d81b52872d829d7e37ad1a",
-    "calls_sha256": "01139eafb7541a840919be30607438c5a3b279303dea092d0a1a8203e1b02223",
-    "ground_truth_sha256": "b5d1cb531d7d5137c1e8153aabafdf1475528700ff529706b58c1e9553057773",
+    "schedule_sha256": "80c78d846bf264fcb8a136bffd3b6d3af50c0e8dfe622383272e0d4798ab63a1",
+    "calls_sha256": "53422146aef4497fbb4da0819a3134f46b1e75351857a37ac92d0d3114bbbfb1",
+    "ground_truth_sha256": "9453faab7b1bc1dc06cdef7bb83c7d4a15e96d6f6c06d407acd0aa823931cf6d",
     "projected_additional_cost_usd": 0,
     "spending_ceiling_usd": 0,
     "content_freeze_record": "registration-content-freeze.json",
     "execution_authorization_record": "execution-authorization.json",
-    "authorization_rule": "The pre-submission content-freeze record always keeps outcome_calls_authorized false. Only a later execution-authorization record bound to the OSF identifier, registration timestamp, frozen-record hash, content commit, branch, actual bundle bytes, runtime-file hashes, queue, systems, and artifact hashes can authorize collection.",
-    "inference": "Intent discrimination and the split effect are primary estimates. Workflow and decomposition-by-workflow contrasts are exploratory because the subscription-bounded sample has low power for small effects."
+    "authorization_rule": "The pre-submission content-freeze record always keeps outcome_calls_authorized false. Only a later execution-authorization record bound to untouched raw OSF-origin registration JSON and its SHA-256, the structurally derived canonical OSF summary, the exact downloaded two-file inventory, explicit action-time author confirmation, strict UTC phase ordering, the frozen-record hash, content commit, branch, verified allowlisted payload and member manifest, runtime files, exact queue shape and counts, systems, normalized artifacts, and raw artifact bytes can authorize collection. The HTTPS capture is author-attested integrity evidence, not an OSF cryptographic signature or independently trusted timestamp. The same hashed prompt and call buffers are executed.",
+    "inference": "Intent discrimination and the split effect are primary directional hypotheses on the 40-template local trial-1 base stratum. The nondirectional PR-versus-trunk contrast is a prespecified secondary hypothesis on the same base rows. Cumulative-context mitigation is a directional secondary hypothesis on the 16-template two-trial nested stratum. Decomposition-by-workflow and consistency are exploratory and secondary respectively; weak precision and multiplicity are reported explicitly."
   },
   "deterministic_baseline": {
     "status": "completed-pre-registration",
@@ -506,21 +661,25 @@
     "reason": "The Semgrep Rules License v1.0 prohibits redistribution, so the exact rules snapshot cannot be included in the public reproducibility package. The observed zero-finding feasibility result is disclosed but excluded from study analyses."
   },
   "preregistration_v2_draft": {
-    "status": "subscription-v2-pre-registration-revision; two-phase-freeze-protocol-defined-unfrozen; AI-assisted-internal-preregistration-review-complete-with-documented-limitations; Ollama-permission-request-sent-response-pending; OSF-registration-pending",
+    "status": "subscription-v2-pre-registration-correction-in-progress; unfrozen-and-unauthorized; latest-methods-reproducibility-and-safety-findings-require-exact-commit-review; Ollama-documented-automation-terms-basis-established-human-clarification-pending-nonblocking; OSF-registration-pending",
     "template": "OSF Preregistration",
     "template_schema_version": 4,
     "template_schema_id": "697b72f611a8e98484c6139b",
     "file": "preregistration-v2.md",
+    "osf_form_answers_file": "osf-preregistration-v4-draft.md",
     "content_freeze_record": "registration-content-freeze.json",
     "execution_authorization_record": "execution-authorization.json",
+    "registration_payload_builder": "registration-packet.mjs",
+    "registration_payload_format": "canonical allowlisted JSON envelope with embedded raw member bytes, member metadata, whole-payload SHA-256, and member-manifest SHA-256",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
-      "obtain an affirmative written Ollama response covering the requested scope or select the non-activation branch before every study outcome",
+      "archive the dated cross-provider terms-conformance basis and apply any contrary Ollama human response before phase 1",
       "finalize the Ollama activation or non-activation branch before any outcome",
-      "confirm the study-local license and OSF visibility choice",
-      "freeze the exact content commit and deterministic registration bundle with outcome calls still unauthorized",
+      "resolve the latest methods, reproducibility, and safety findings and obtain all three approvals on one exact frozen-input commit",
+      "confirm the study-local license, OSF visibility, and author affiliation choices",
+      "freeze the exact content commit and verified deterministic registration payload with outcome calls still unauthorized",
       "create the OSF registration with Tom Howard as sole administrator and ORCID 0009-0001-4714-5747",
-      "download and reverify the registered packet before creating the separate execution authorization"
+      "download and reverify the registered packet and raw OSF evidence, then record explicit action-time author confirmation before creating the separate execution authorization"
     ]
   },
   "token_preflight": {
@@ -588,9 +747,20 @@
     "verdict": ["allow", "block", "abstain"],
     "malicious_probability": "number from 0 to 1",
     "severity": ["none", "low", "medium", "high", "critical"],
-    "submission_ids": "array of relevant submission identifiers",
+    "submission_ids": "array of relevant artifact head_revision or commit_revision values",
     "evidence": "short explanation grounded in the supplied change",
-    "category": "short weakness category",
+    "category": [
+      "none",
+      "other",
+      "authorization-policy composition",
+      "trust-boundary normalization",
+      "fail-open fallback composition",
+      "integrity-check composition",
+      "resource-scope widening",
+      "feature-default inversion",
+      "provenance loss",
+      "dependency-selection substitution"
+    ],
     "additional_properties": false
   },
   "pilot": {
