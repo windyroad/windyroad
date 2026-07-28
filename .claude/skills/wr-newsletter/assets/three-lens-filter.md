@@ -10,7 +10,7 @@ The `named_action` recorded for a yes-scored lens must come from the persona's a
 
 | `<persona>` | `<target-reader>` | Acceptable `named_action` types (this-quarter scope) |
 |-------------|-------------------|------------------------------------------------------|
-| `leader`    | Engineering Leader (CTO / Head of Engineering / VP Engineering); jobs JTBD-001 through JTBD-004 | procurement question; capability investment; risk audit; measurement update; hiring decision; role redesign; training investment; comms / change-management action; policy update |
+| `leader`    | Engineering Leader (CTO / Head of Engineering / VP Engineering); job JTBD-005 (Stay Ahead of the Shift) | procurement question; capability investment; risk audit; measurement update; hiring decision; role redesign; training investment; comms / change-management action; policy update |
 | `developer` | Working Developer; jobs JTBD-200 through JTBD-205 | spot-test (half-day or less); adopt; pilot; watch; skip; time-box experimentation; abstain; re-evaluate evidence stance (shipped vs demo); change personal workflow / tool selection; raise-to-lead / champion-to-team / surface objection (upward-influence action class per JTBD-203) |
 
 Vocabularies are non-exhaustive but illustrative. New actions are admissible if they match the persona's documented decision authority OR documented influence channel (`docs/jtbd/engineering-leader/persona.md` for leader, `docs/jtbd/developer/persona.md` for developer) and fall inside a quarter-scope horizon.
