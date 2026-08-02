@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-27 **P118 captured**: newsletter publish step uses `git mv` on untracked drafts, which fails (the documented finalise reminder does not work as written; `mv` + `git add` workaround used publishing Issues 14 and 15) (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-08-03 **P119 captured**: newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields a spurious "missing Also worth noting" FAIL on a valid brief (observed 1 run in 6 during the Issue 16 prep run; flake rate scales with body length) (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,6 +9,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
+| 16.0 | P119 | Newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields spurious "missing Also worth noting" FAIL | 8 (Medium) | Open | S | 2026-08-03 | internal |
 | 12.0 | P108 | wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy (unpushed commits + stale buffer) | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 (High) | Known Error | M | 2026-07-14 | internal |

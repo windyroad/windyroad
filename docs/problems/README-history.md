@@ -246,3 +246,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-07-15 **P105 verification pending**: added the machine-readable "Reviewed quarterly" blockquote line to RISK-POLICY.md so the installed wr-risk-scorer staleness gate resolves the attested quarterly cadence (90 days) instead of its 14-day fallback (upstream half shipped in 0.16.5, agent-plugins#322 closed); gate parse verified quarterly/90d in-session. Traced as RFC-001, the first entry in the newly-established local docs/rfcs/ tier.
 
 > Last reviewed: 2026-07-27 **P009 closed**: the wr-content-risk-scorer fresh-context subagent (ADR-018) was exercised repeatedly across the Issue 15 finalise and its two external-review fix passes, emitting the ADR-015 five-axis CONTENT_RISK block with PASS verdicts matching editorial judgement; edition published. Closed on session evidence per run-retro Step 4a.
+
+## 2026-08-03
+
+> Last reviewed: 2026-07-27 **P118 captured**: newsletter publish step uses `git mv` on untracked drafts, which fails (the documented finalise reminder does not work as written; `mv` + `git add` workaround used publishing Issues 14 and 15) (lightweight aside via /wr-itil:capture-problem).
