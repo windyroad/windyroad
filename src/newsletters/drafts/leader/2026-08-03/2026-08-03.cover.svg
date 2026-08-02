@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 627" width="1200" height="627">
   <title>The Shift Issue 16, week ending 2026-08-02</title>
-  <desc>Cover for The Shift Issue 16. Dark background with the orange shift-gate brand mark, &quot;The Shift&quot; wordmark, &quot;AI ENGINEERING, WEEKLY · ISSUE 16&quot; subtitle, and the headline &quot;Everyone wrote AI rules. Humans on the process, not code.&quot;</desc>
+  <desc>Cover for The Shift Issue 16. Dark background with the orange shift-gate brand mark, &quot;The Shift&quot; wordmark, &quot;AI ENGINEERING, WEEKLY · ISSUE 16&quot; subtitle, and the headline &quot;Everyone is writing AI rules. The good ones govern the system.&quot;</desc>
 
   <rect width="1200" height="627" fill="#1A1A1A"/>
 
@@ -25,8 +25,8 @@
   <line x1="80" y1="240" x2="1120" y2="240" stroke="#444444" stroke-width="1"/>
 
   <!-- Two-line hook: white + accent. Avenir Next Medium (weight 500). -->
-  <text x="80" y="380" font-family="'Avenir Next', sans-serif" font-weight="500" font-size="80" fill="#FFFFFF">Everyone wrote AI rules.</text>
-  <text x="80" y="460" font-family="'Avenir Next', sans-serif" font-weight="500" font-size="60" fill="#E8644A">Humans on the process, not code.</text>
+  <text x="80" y="380" font-family="'Avenir Next', sans-serif" font-weight="500" font-size="80" fill="#FFFFFF">Everyone is writing AI rules.</text>
+  <text x="80" y="460" font-family="'Avenir Next', sans-serif" font-weight="500" font-size="60" fill="#E8644A">The good ones govern the system.</text>
 
   <!-- Bottom rule -->
   <line x1="80" y1="540" x2="1120" y2="540" stroke="#444444" stroke-width="1"/>
