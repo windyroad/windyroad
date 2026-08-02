@@ -14,7 +14,7 @@
   .evolve-label { font-size: 11px; fill: #c44; }
 </style>
 <rect width="1200" height="800" fill="white"/>
-<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-07-26)</text>
+<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-08-02)</text>
 <line x1="80" y1="60" x2="80" y2="720" stroke="#333" stroke-width="1.5"/>
 <line x1="80" y1="720" x2="1140" y2="720" stroke="#333" stroke-width="1.5"/>
 <polygon points="1140,720 1132,716 1132,724" fill="#333"/>
@@ -33,10 +33,10 @@
 <line x1="419.2" y1="178.8" x2="716" y2="310.8" stroke="#aaa" stroke-width="1.5"/>
 <line x1="663" y1="258" x2="716" y2="310.8" stroke="#aaa" stroke-width="1.5"/>
 <line x1="663" y1="258" x2="292" y2="469.2" stroke="#aaa" stroke-width="1.5"/>
-<line x1="716" y1="310.8" x2="800.8000000000001" y2="508.79999999999995" stroke="#aaa" stroke-width="1.5"/>
+<line x1="716" y1="310.8" x2="843.1999999999999" y2="508.79999999999995" stroke="#aaa" stroke-width="1.5"/>
 <line x1="716" y1="310.8" x2="822" y2="574.8000000000001" stroke="#aaa" stroke-width="1.5"/>
 <line x1="716" y1="310.8" x2="398" y2="423.00000000000006" stroke="#aaa" stroke-width="1.5"/>
-<line x1="525.2" y1="356.99999999999994" x2="800.8000000000001" y2="508.79999999999995" stroke="#aaa" stroke-width="1.5"/>
+<line x1="525.2" y1="356.99999999999994" x2="843.1999999999999" y2="508.79999999999995" stroke="#aaa" stroke-width="1.5"/>
 <line x1="525.2" y1="356.99999999999994" x2="822" y2="574.8000000000001" stroke="#aaa" stroke-width="1.5"/>
 <line x1="525.2" y1="356.99999999999994" x2="398" y2="423.00000000000006" stroke="#aaa" stroke-width="1.5"/>
 <line x1="525.2" y1="356.99999999999994" x2="398" y2="442.80000000000007" stroke="#aaa" stroke-width="1.5"/>
@@ -44,15 +44,15 @@
 <line x1="292" y1="469.2" x2="525.2" y2="356.99999999999994" stroke="#aaa" stroke-width="1.5"/>
 <line x1="292" y1="469.2" x2="164.8" y2="489" stroke="#aaa" stroke-width="1.5"/>
 <line x1="164.8" y1="489" x2="525.2" y2="356.99999999999994" stroke="#aaa" stroke-width="1.5"/>
-<line x1="419.2" y1="324" x2="419.2" y2="178.8" stroke="#aaa" stroke-width="1.5"/>
+<line x1="440.40000000000003" y1="324" x2="419.2" y2="178.8" stroke="#aaa" stroke-width="1.5"/>
 <line x1="419.2" y1="178.8" x2="239" y2="205.2" stroke="#aaa" stroke-width="1.5"/>
-<line x1="800.8000000000001" y1="508.79999999999995" x2="949.1999999999999" y2="654" stroke="#aaa" stroke-width="1.5"/>
+<line x1="843.1999999999999" y1="508.79999999999995" x2="949.1999999999999" y2="654" stroke="#aaa" stroke-width="1.5"/>
 <line x1="822" y1="574.8000000000001" x2="949.1999999999999" y2="654" stroke="#aaa" stroke-width="1.5"/>
 <line x1="724" y1="310.8" x2="968.4" y2="310.8" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="970.4" cy="310.8" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="533.2" y1="356.99999999999994" x2="735.2" y2="356.99999999999994" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="737.2" cy="356.99999999999994" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
-<line x1="808.8000000000001" y1="508.79999999999995" x2="989.6" y2="508.79999999999995" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
+<line x1="851.1999999999999" y1="508.79999999999995" x2="989.6" y2="508.79999999999995" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="991.6" cy="508.79999999999995" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="406" y1="442.80000000000007" x2="586.8" y2="442.80000000000007" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="588.8" cy="442.80000000000007" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
@@ -60,7 +60,7 @@
 <circle cx="461.59999999999997" cy="469.2" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="406" y1="423.00000000000006" x2="586.8" y2="423.00000000000006" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="588.8" cy="423.00000000000006" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
-<line x1="427.2" y1="324" x2="756.4" y2="324" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
+<line x1="448.40000000000003" y1="324" x2="756.4" y2="324" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="758.4" cy="324" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="247" y1="205.2" x2="449" y2="205.2" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="451" cy="205.2" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
@@ -83,12 +83,12 @@
 <text x="408" y="432.80000000000007" class="comp-label">Model Evaluation Frameworks</text>
 <circle cx="292" cy="469.2" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="302" y="459.2" class="comp-label">AI Security Tooling</text>
-<circle cx="800.8000000000001" cy="508.79999999999995" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="810.8000000000001" y="498.79999999999995" class="comp-label">Foundation Models</text>
+<circle cx="843.1999999999999" cy="508.79999999999995" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="853.1999999999999" y="498.79999999999995" class="comp-label">Foundation Models</text>
 <circle cx="822" cy="574.8000000000001" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="832" y="564.8000000000001" class="comp-label">Model Hosting and Inference</text>
-<circle cx="419.2" cy="324" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
-<text x="429.2" y="314" class="comp-label">AI Regulation and Compliance</text>
+<circle cx="440.40000000000003" cy="324" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="450.40000000000003" y="314" class="comp-label">AI Regulation and Compliance</text>
 <circle cx="949.1999999999999" cy="654" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="959.1999999999999" y="644" class="comp-label">Compute and GPU Infrastructure</text>
 <circle cx="164.8" cy="489" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
