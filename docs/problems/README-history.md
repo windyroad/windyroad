@@ -253,6 +253,8 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 
 ## 2026-08-04
 
+> Last reviewed: 2026-08-04 **P119 known error**: SIGPIPE-under-pipefail root cause established and fixed in bbb6ca1, with an N-run falsification test that fails 20/20 against the pre-fix code (the first version of that test was wrong and passed against the bug).
+
 > Last reviewed: 2026-08-04 **P120 captured**: editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden (Issue 16 evidence: the editor named three defects the external reviewer then re-derived independently) (lightweight aside via /wr-itil:capture-problem).
 
 > Last reviewed: 2026-08-03 **P119 captured**: newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields a spurious "missing Also worth noting" FAIL on a valid brief (observed 1 run in 6 during the Issue 16 prep run; flake rate scales with body length) (lightweight aside via /wr-itil:capture-problem).
