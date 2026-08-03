@@ -164,7 +164,11 @@ done < <(printf '%s\n' "$body" | awk -F'\t' -v full="$OUTLETS_FULL" '
 ')
 
 # --- (c) "### Also worth noting" section present ------------------------------
-if ! body_text | grep -qE '^### Also worth noting'; then
+# Capture first, then test. `grep -q` closing the pipe early makes the upstream
+# printf/cut take SIGPIPE (141), which `pipefail` turns into a spurious FAIL on
+# long bodies. Command substitution plus `|| true` swallows it, same as (d). P119.
+atwn=$(body_text | grep -m1 -E '^### Also worth noting' || true)
+if [ -z "$atwn" ]; then
   fail c "$brief: missing '### Also worth noting' section"
 fi
 

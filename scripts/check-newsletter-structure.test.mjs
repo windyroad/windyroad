@@ -247,4 +247,26 @@ describe('check-newsletter-structure.sh', () => {
     expect(r.status).toBe(1);
     expect(r.stderr).toContain('[g]');
   });
+
+  // P119 regression. Check (c) used to run `body_text | grep -qE '^### Also worth
+  // noting'` directly under `set -uo pipefail`. `grep -q` exits on its FIRST match
+  // and closes the pipe; the upstream printf/cut then takes SIGPIPE (141) with
+  // output still buffered, and pipefail promoted that to a spurious "missing
+  // section" FAIL. Reproducing it needs both conditions: the match must come early
+  // enough that a lot is still unwritten, and the remainder must exceed the pipe
+  // buffer (64KB on macOS/Linux). So the padding goes AFTER the heading, and is
+  // sized well past the buffer. Verified to fail against the pre-fix check (c).
+  it('(c) is deterministic on a long body (P119 SIGPIPE under pipefail)', () => {
+    const filler = Array.from(
+      { length: 1500 },
+      (_, i) => `Padding entry ${i} kept after the heading so the match fires early and the writer still has more than a pipe buffer left to flush.`,
+    ).join('\n\n');
+    const longBrief = VALID_BRIEF.replace(
+      '### Also worth noting\n',
+      `### Also worth noting\n\n${filler}\n`,
+    );
+    const path = fixture(longBrief, VALID_LINKEDIN);
+    const codes = Array.from({ length: 20 }, () => run(path).status);
+    expect(new Set(codes), `unstable exit codes: ${codes.join(' ')}`).toEqual(new Set([0]));
+  }, 30_000);
 });
