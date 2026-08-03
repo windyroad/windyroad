@@ -250,3 +250,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-08-03
 
 > Last reviewed: 2026-07-27 **P118 captured**: newsletter publish step uses `git mv` on untracked drafts, which fails (the documented finalise reminder does not work as written; `mv` + `git add` workaround used publishing Issues 14 and 15) (lightweight aside via /wr-itil:capture-problem).
+
+## 2026-08-04
+
+> Last reviewed: 2026-08-03 **P119 captured**: newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields a spurious "missing Also worth noting" FAIL on a valid brief (observed 1 run in 6 during the Issue 16 prep run; flake rate scales with body length) (lightweight aside via /wr-itil:capture-problem).
