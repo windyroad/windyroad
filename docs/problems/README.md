@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-04 **P120 captured**: editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden (Issue 16 evidence: the editor named three defects the external reviewer then re-derived independently) (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-08-04 **P119 known error**: SIGPIPE-under-pipefail root cause established and fixed in bbb6ca1, with an N-run falsification test that fails 20/20 against the pre-fix code (the first version of that test was wrong and passed against the bug).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 16.0 | P119 | Newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields spurious "missing Also worth noting" FAIL | 8 (Medium) | Open | S | 2026-08-03 | internal |
+| 16.0 | P119 | Newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields spurious "missing Also worth noting" FAIL | 8 (Medium) | Known Error | S | 2026-08-03 | internal |
 | 12.0 | P108 | wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy (unpushed commits + stale buffer) | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 (High) | Known Error | M | 2026-07-14 | internal |
