@@ -97,3 +97,26 @@ Captured via /wr-itil:capture-problem after the duplicate check surfaced P008 an
 - Memory `feedback_rubric_pass_does_not_mean_newsletter_is_good.md`. The documented rubric-pass-vs-substance gap this ticket is the third recurrence of.
 - ADR-016 / ADR-020 / ADR-033 / ADR-035 / ADR-042. The governed critic/editor pipeline the new gate extends; ADR-042 is this ticket's delivered fix.
 - P117 (`docs/problems/open/117-tighten-newsletter-gate-prompts-for-lower-frequency-external-review-classes.md`). The lower-frequency prompt-tightening classes (through-line, cross-edition dropped-threads, so-what actionability) split out so this ticket verifies and closes on the adversarial skeptic gate alone.
+
+## Verification evidence: Issue 16 (2026-08-04). Do NOT close on this edition
+
+The adversarial skeptic gate this ticket built (ADR-042) SHIPPED and RAN on Issue 16. It returned
+`WEAKNESSES_FOUND` on both the brief and the LinkedIn post. The external-review burden did NOT drop:
+Issue 16 took six further external editorial review rounds after the gate battery terminated.
+
+This is the fourth tracked recurrence, and it refines the root cause rather than repeating it. The
+gate is not failing to detect. On this edition the `wr-newsletter-editor` gate named three defects in
+writing (fold-compression, atwn-thesis-fit on two Also-worth-noting notes, audience-pointer-specificity)
+that Tom's external reviewer then re-derived independently after the edition was publication-ready.
+The finding was recorded in the reviews ledger as "Non-blocking per ADR 020" and never actioned.
+
+So the remaining gap is not a missing ceiling gate. It is that the ceiling gates this ticket and P117
+delivered are both non-blocking and single-shot by contract, which relocates Tom's review load rather
+than reducing it. That is captured separately as **P120** (`docs/problems/open/120-editor-and-skeptic-gates-surface-findings-to-tom-instead-of-remediating-them.md`),
+which also carries the ADR-020 pre-registered lift condition ("If retrospective evidence shows
+iteration would help, a follow-up ADR can lift the loop").
+
+Recommended disposition: keep this ticket in Verification Pending. Its own deliverable (the gate exists
+and fires) is verified; the outcome it was opened to achieve (less external review) is not, and the
+reason is now a separate, better-scoped ticket. Close this only once P120's loop lands and an edition
+ships with the external-review round count actually down.
