@@ -56,6 +56,8 @@ Do NOT lead with news. Lead with a perspective. The drafter should attempt this 
 
 [THESIS-FIRST INTRO (ADR 032 element 1): one or two sentences naming the deep items by their shared constraint and previewing the variation each one shows. State the theme in plain industry language. The Wardley map is internal substrate (ADR 014); do NOT reference "the map", "position shifts", "evolution axis", or any map vocabulary. Example: "This week the agent-runtime layer fragments while coding assistants converge; three stories on what engineering teams are having to relearn."]
 
+[PROVENANCE (ADR 032 element 5): REQUIRED every edition, both personas. A short italic paragraph closing the From Tom opener, after the thesis-first intro and immediately before Item 1, stating that the edition is AI-drafted, that a different AI reviews it and never the one that wrote the draft, and who holds editorial responsibility. First person, per the element-5 carve-out to the team-voice rule (SKILL.md step 11b Voice rules). Do not call the publication "the brief". State retrospective-loop claims as intention, not accomplished fact. Do NOT assert any legal or regulatory position. See ADR 032 Amendment 2026-08-03 for the shipped wording.]
+
 ### Item 1: [HEADLINE, 6 TO 10 WORDS]
 
 **What happened:**

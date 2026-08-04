@@ -46,8 +46,9 @@ A leader edition targets:
 1. **Thesis-first intro.** One paragraph that names the deep items by their shared constraint and previews the variation each item shows.
 2. **Three deep items.** Each item is a variation on the thesis named in the intro. The variation explains a specific observed move, not a general claim.
 3. **Also worth noting section.** Single section (no sub-headings) listing every other candidate that cleared the filter, each in one to two sentences. No deep treatment.
-4. **Disclosure line.** Isolated, single line; any commercial relationship that warrants disclosure for the edition's items.
-5. **Closing reply prompt.** One substantive content-tied question against one of the deep items' threads. Per ADR-066 / VOICE-AND-TONE.md LinkedIn carve-outs (P066), distinct from engagement bait.
+4. **Disclosure line.** Isolated, single line; any commercial relationship that warrants disclosure for the edition's items. Omitted entirely when there is nothing to disclose.
+5. **Provenance line.** Standing, every edition, both personas. States that the edition is AI-drafted, that the reviewers are AI and are never the agent that wrote the draft, and who holds editorial responsibility. Short paragraph rather than a single line. Distinct from element 4 so a reader who has learned that slot means "commercial relationship" does not mis-parse it. The LinkedIn companion carries a compressed variant covering the same three facts. See Amendment 2026-08-03.
+6. **Closing reply prompt.** One substantive content-tied question against one of the deep items' threads. Per VOICE-AND-TONE.md LinkedIn carve-outs (P066), distinct from engagement bait.
 
 Cap rule: three deep items is the target; four is a soft cap (justify in `<date>.reviews.md`); five plus requires external review before publish.
 
@@ -55,6 +56,7 @@ Cap rule: three deep items is the target; four is a soft cap (justify in `<date>
 
 - `.claude/skills/wr-newsletter/assets/draft-template.md`: contradictory count lines collapse to a single reference to this ADR.
 - `.claude/skills/wr-newsletter/personas/leader.md` and `developer.md`: the cap-rule section references this ADR rather than carrying its own count rule.
+- Element 5's surfaces: the PROVENANCE slot in `draft-template.md` (between the thesis-first intro slot and Item 1), `SKILL.md` step 11b's body checklist, and `SKILL.md` step 15.5's LinkedIn-post contents list.
 - `.claude/skills/wr-newsletter/SKILL.md` Step 11: the editorial-shape rule references this ADR; the existing review rubric (`newsletter-critic-rubric.md`) gains a check (likely check_39) for thesis-coherence per this ADR.
 
 ## Consequences
@@ -72,7 +74,7 @@ Cap rule: three deep items is the target; four is a soft cap (justify in `<date>
 
 ## Confirmation
 
-The fix is confirmed once: (a) this ADR lands, (b) the draft-template + persona configs + SKILL.md Step 11 reference it (single source of truth), (c) the next three editions publish with three deep items unless justified in reviews.md, and (d) the critic rubric carries a thesis-coherence check.
+The fix is confirmed once: (a) this ADR lands, (b) the draft-template + persona configs + SKILL.md Step 11 reference it (single source of truth), (c) the next three editions publish with three deep items unless justified in reviews.md, (d) the critic rubric carries a thesis-coherence check, and (e) the PROVENANCE slot is present in `draft-template.md`, `SKILL.md` step 11b and `SKILL.md` step 15.5, every published edition carries the provenance line before the first `### Item` heading, and Issues 17 and 18 both ship the line in the brief and in the LinkedIn sibling.
 
 ## Reassessment
 
@@ -86,7 +88,7 @@ Reassess after four editions: if soft-cap justifications appear more than once p
 
 ## Amendment 2026-07-24: full-pool-then-theme selection policy
 
-Tom-confirmed 2026-07-24 (Issue 15 prep, re-confirming the 2026-07-20 Issue-14 direction previously held only in the `newsletter-full-pool-then-theme` memory note). This ADR already owns the *resulting shape* (thesis-first intro plus roughly three deep items plus Also-worth-noting); this amendment codifies the *selection path* that reaches it, so the policy has durable substance rather than living only in a decaying memory note (ADR-031) and the skill prose.
+Tom-confirmed 2026-07-24 (Issue 15 prep, re-confirming the 2026-07-20 Issue-14 direction previously held only in the `newsletter-full-pool-then-theme` memory note). This ADR already owns the *resulting shape* (thesis-first intro plus roughly three deep items plus Also-worth-noting); this amendment codifies the *selection path* that reaches it, so the policy has durable substance rather than living only in a decaying memory note and the skill prose.
 
 **Policy.** The deep-item / Also-worth-noting split is decided by a theme chosen across the FULL persona-relevant candidate pool, not by a pre-cut shortlist:
 
@@ -118,3 +120,33 @@ Tom-directed 2026-07-28 after the Issue 15 run: *"one issue with the new approac
 **Interaction modality (refines the 2026-07-24 clause, does not reverse it).** The full-pool PRESENTATION (move 1) and the theme rationale (move 3) stay prose per P107. The per-item bounded three-option capture (move 2) may use `AskUserQuestion` (the process Tom values, per `feedback_per_item_interactive_voice`) or prose if he is running the edition conversationally. P107's Issue-14 failure was the full INVENTORY dragged out via `AskUserQuestion`; showing the inventory in prose first removes that, so the bounded per-item decision keeps its `AskUserQuestion` option.
 
 **Unchanged.** The three-deep shape (3-target / 4-soft-cap / 5+-external-review), ADR-037's 11a theme-anchor gate, and the "nothing dropped before Tom sees it" invariant all hold.
+
+## Amendment 2026-08-03: standing provenance line (element 5)
+
+Tom-confirmed 2026-08-03 (Issue 16 finalise). Every edition carries a standing provenance disclosure, in a slot distinct from element 4's per-edition commercial disclosure.
+
+**Why voluntary.** EU AI Act Article 50(4) requires deployers publishing AI-generated text "with the purpose of informing the public on matters of public interest" to disclose it, but exempts content that "has undergone a process of human review or editorial control and where a natural or legal person holds editorial responsibility for the publication of the content". Our reading, which is not advice and has not been tested, is that Windy Road sits in that exemption, and that the territorial hook is weak besides. We are treating the disclosure as a credibility decision, not a compliance one, and **the published line must not assert a legal position**: an earlier Issue 16 draft claimed the exemption in-body and was cut, because Item 2 of the same edition tells readers the scope test comes first and the line skipped it.
+
+**Why it earns its place.** The Shift's recurring argument is that humans belong on the loop rather than in it. The publication is produced by that arrangement, so stating it converts the argument into a worked example. The line also states honestly which part is not yet automated, per the transitional position published in Issue 06 ("keep review running until the machinery holds the line on its own, then ease it back").
+
+**Issue 16 text as shipped.** Brief, inside the From Tom block:
+
+> *Disclosure, new this week, though the practice is not. The Shift is drafted by AI, and a different AI reviews it, never the one that wrote the draft. I pick the stories, set the argument and hold editorial responsibility for what follows. I still read every line, and the work is to move that check onto the AI that reads the draft, not to end it.*
+
+LinkedIn companion, compressed:
+
+> Disclosure, new this week, though the practice is not: AI drafts this newsletter and a different AI reviews it, never the one that wrote it. I set the argument, hold editorial responsibility, and still read every line.
+
+The compression is instructive: the companion drops the forward-looking clause entirely and keeps only the three facts the element requires.
+
+**Constraints learned at Issue 16.** The line is **first person**, and the pronoun settled only after several review rounds. The deciding argument is narrow: "we still read every line" sitting immediately after "a different AI reviews it" leaves "we" ambiguous about whether it includes the machines, which is unaffordable in the one paragraph whose job is naming who is accountable. First person also reads stronger than self-naming, which in a bylined publication distances the author at the moment the copy claims responsibility. The editorial "we" continues to carry the publication's positions everywhere else; the disclosure draws no we-versus-I distinction, because making the pronoun load-bearing is what caused the churn. Permission for the pronoun comes from the element-5 carve-out recorded below, not from where the line sits, so moving it does not change what is allowed. Placement is decided separately and on different grounds: **inside the From Tom opener, after the thesis-first intro and immediately before the first item**. A footer placement interrupts the landing and reaches only readers who finish the Also-worth-noting section, and the disclosure is most load-bearing for readers who never get that far. Do not call the publication "the brief" in reader-facing copy. State retrospective-loop claims as intention, not accomplished fact.
+
+**Deferred, not decided.** Whether the provenance policy warrants its own ADR spanning all AI-generated outbound surfaces (ADR-012 enumerates that scope in its Reassessment section at line 95) is open; this amendment covers newsletters only. Also deferred: a deterministic check (h) asserting the line's presence, the ADR-032 confirmation criterion (b) persona-config references, and the leader-side JTBD gap the JTBD review raised (no documented job covers content-provenance trust; a new job needs human ratification per the upstream agent-plugins decision-delegation contract).
+
+**Voice carve-out.** Element 5 is first person on both surfaces. In the brief that is already permitted, because the slot sits inside the From Tom opener. On the LinkedIn companion there is no From Tom opener, so the permission is recorded explicitly in `SKILL.md`'s step 11b Voice rules (the team-voice bullet) and at line 31 of both persona configs. This is consonant with ADR-010 rather than an exception to it: ADR-010's Consequences section (line 92) already holds that on social posts "'I' remains acceptable for personal observations", and a first-person accountability statement is nearer a personal observation than service copy. What ADR-010 does not do is reach newsletters at all: its Confirmation section enumerates service copy, metadata, credentials, testimonials, blog articles, FAQ and external threat copy. The binding rule for newsletter surfaces is therefore the skill files, which is why the carve-out is recorded there and not by amending ADR-010.
+
+**Interaction with P120 (gate remediation loops).** P120 proposes lifting the editor and skeptic gates from single-shot to remediate-then-re-gate. Two constraints follow for element 5. First, the provenance line is **remediation-invariant**: a gate loop may flag it, but may not silently rewrite it, because its wording is ADR-governed rather than per-edition editorial. The staleness this amendment corrects was produced by exactly that drift operating manually, when six external-review rounds superseded a text this ADR had already quoted; automating the loop raises the frequency. Second, the deferred deterministic check (h) gains a sharper spec and a higher priority: it must assert the line is present **before the first `### Item` heading**, not merely present somewhere, because a presence-anywhere check written against the old footer placement would pass a footer-placed line, which is now wrong. That spec is brief-only by construction. The LinkedIn companion's placement (after the item bullets, before the CTA) is prose-enforced at `SKILL.md` step 15.5 only, with no deterministic backstop; if check (h) is built, extending it to the sibling is the cheap second half. Under P120's loops, check (h) becomes the only mechanism that catches loop-induced drift, so it should be built with the loop rather than after it.
+
+**Compendium is knowingly partial.** `docs/decisions/README.md`'s ADR-032 entry has been hand-edited only to drop two phantom Related references (ADR-066, ADR-031) that this amendment removes from the body, and to add ADR-010, which this amendment newly cites. Its Decides and Confirmation summaries predate this amendment and do not mention element 5. Regenerating is blocked by P087 (the upstream generator emits em-dashes that trip this repo's no-em-dash hook), so the entry is deliberately left partial rather than hand-diverged further.
+
+**Not done:** a discoverability pointer in ADR-010's Confirmation section was considered and declined. It would make ADR-010 a changed body needing its own compendium touch under P087, to signpost a rule already recorded at the three point-of-use surfaces a drafter reads.

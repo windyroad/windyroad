@@ -456,6 +456,7 @@ Using the approved H1, hook lines, and theme statement from 11a, produce the ful
 - The approved headline + subtitle from 11a.
 - One-sentence intro that elaborates the 11a theme statement (the body opener leads with the approved theme; do not author a fresh intro that competes with the anchor).
 - For developer persona, label each item's evidence stance as **shipped**, **benchmarked**, **demo**, or **not yet** (J9 + J11 paired). For leader persona, the evidence label is optional; business-consequence framing carries primary weight.
+- Standing provenance line (ADR 032 element 5), closing the From Tom opener after the thesis-first intro and immediately before Item 1. First person, per the element-5 carve-out to the team-voice rule. Do not assert a legal or regulatory position; state retrospective-loop claims as intention, not accomplished fact.
 - One `### Item N` block per shortlisted candidate (minimum 3, no maximum), ordered by `<three-lens-weighting>`. Each item has: What happened (with the primary claim inline-linked), Why it matters to your team, The human angle. Do NOT append a separate `**Source:**` block when the What-happened text already carries inline links (structural invariant, P089).
 - Item Why-it-matters lines reference the 11a theme where natural (per ADR-037: body threads the approved frame).
 - Closing CTA: pick one `<cta-invitation>` from the persona config (rotate week to week to avoid verbatim repetition), followed by the closing line `windyroad.com.au`. Do NOT emit a Windy Road services-description sentence (P090): the CTA is invitation + linked `windyroad.com.au` only. This is enforced at save by `check-newsletter-structure.sh` check (g).
@@ -468,7 +469,7 @@ Using the approved H1, hook lines, and theme statement from 11a, produce the ful
 The step-15 critic's "Headline craft" rubric section is the catch-it-in-review backstop; this drafter discipline prevents producing the failure in the first place.
 
 Voice rules (enforced by step 13 voice gate):
-- Team voice ("we"), not "I" (ADR 010). The "From Tom" opener is the only place where "I" is permitted.
+- Team voice ("we"), not "I" (ADR 010). The "From Tom" opener is the only place where "I" is permitted in the brief. One further carve-out: the standing provenance line (ADR 032 element 5) is first person on BOTH surfaces, including the LinkedIn companion, which has no From Tom opener. The reason is specific to that paragraph: "we still read every line" sitting immediately after "a different AI reviews it" leaves "we" ambiguous about whether it includes the machines, which is unaffordable in the one paragraph whose job is naming who is accountable.
 - Direct, specific, confident. Name the org, name the artifact, name the date.
 - No em-dashes. Use commas, periods, colons, or parentheses.
 - No hype words.
@@ -901,6 +902,7 @@ For `phase=finalise` and `phase=full`, draft a LinkedIn post that:
 - Opens with a hook line (one sentence) that names the week's theme and the main map movement.
 - Carries the headline H1 from step 11a / 11a-prime.
 - Includes 2-3 bullet items (the strongest items from the brief), each one sentence.
+- Carries the compressed provenance variant (ADR 032 element 5), placed after the item bullets and immediately before the CTA invitation: AI-drafted, a different AI reviews and never the drafting agent, asserts editorial responsibility in first person. First person, per the element-5 carve-out to the team-voice rule. Do not assert a legal or regulatory position.
 - Closes with the rotating CTA invitation (a substance-tied question, e.g. "Reply with the conversation you are having with your CTO this week."), then the `windyroad.com.au` brand sign-off line. Do NOT add a manual "Read the full issue" / "Full edition link in the first comment" line: The Shift publishes via LinkedIn Newsletter auto-share, which auto-injects the article URL card on publish (docs/VOICE-AND-TONE.md auto-share carve-out; P079).
 - Is no longer than the LinkedIn 3000-character limit.
 

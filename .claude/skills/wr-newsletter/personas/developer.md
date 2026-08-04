@@ -28,7 +28,7 @@ Technical > operational > human. The brief leads with what changed under the hoo
 
 ## Voice addendum
 
-Team voice ("we") in body, "I" only in the "From Tom" opener. Direct, evidence-led, skeptical-by-default. Developer-craft vocabulary is welcome where precise (compile, ship, branch, review, runtime, latency, tokens, context window, eval). Avoid leader-coded vocabulary (governance, posture, pipeline-as-strategy, board-level) unless the item is explicitly about org-level dynamics affecting developers.
+Team voice ("we") in body, "I" only in the "From Tom" opener and in the standing provenance line (ADR 032 element 5, first person on both the brief and the LinkedIn companion). Direct, evidence-led, skeptical-by-default. Developer-craft vocabulary is welcome where precise (compile, ship, branch, review, runtime, latency, tokens, context window, eval). Avoid leader-coded vocabulary (governance, posture, pipeline-as-strategy, board-level) unless the item is explicitly about org-level dynamics affecting developers.
 
 On the human-in-the-loop question, follow the codified editorial stance in `assets/three-lens-filter.md`: humans ratify architecture and product-direction decisions, automated gates and evals carry code-level quality, so do not frame human code review as the answer to AI-generated code.
 
