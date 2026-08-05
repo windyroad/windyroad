@@ -261,4 +261,6 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 
 ## 2026-08-05
 
+> Last reviewed: 2026-08-05 **P122 captured**: no gate owns within-edition structural mechanics (item order vs thesis, close discharging the headline, inter-section duplication, forward references), sequenced behind P120 (lightweight aside via /wr-itil:capture-problem).
+
 > Last reviewed: 2026-08-04 **P121 captured**: no gate compares an edition against the prior edition's shape, so recurring slots drop and the companion post drifts to twice the precedent length (lightweight aside via /wr-itil:capture-problem).

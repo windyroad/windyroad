@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-05 **P122 captured**: no gate owns within-edition structural mechanics (item order vs thesis, close discharging the headline, inter-section duplication, forward references), sequenced behind P120 (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-08-05 **P123 captured**: fix:deps gates on vitest only, so a lockfile npm ci cannot install passes locally and reddens master (observed today: 425 tests green, CI EBADPLATFORM) (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,6 +9,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
+| 18.0 | P123 | fix:deps gates on vitest only, so a lockfile npm ci cannot install passes locally and reddens master | 9 (Medium) | Open | S | 2026-08-05 | internal |
 | 16.0 | P119 | Newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields spurious "missing Also worth noting" FAIL | 8 (Medium) | Known Error | S | 2026-08-03 | internal |
 | 12.0 | P108 | wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy (unpushed commits + stale buffer) | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
