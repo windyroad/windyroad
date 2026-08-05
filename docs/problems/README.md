@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-05 **P125 captured** -- nothing recomputes WSJF on a status transition, so the Open multiplier persists and halves the ticket's rank (lightweight aside via /wr-itil:capture-problem). Observed on the P121 transition in the same iteration: Effort was correctly re-rated M to L but the multiplier stayed at 1.0, and the wrong value was written consistently into both the ticket and this README, so reconcile-readme passed clean. Caught only by the commit-gate risk scorer, after four other gates had passed. Fifth recorded instance of the same arithmetic surface.
+> Last reviewed: 2026-08-05 **P122 known error** -- root cause confirmed and reproduced against a commit PAIR (`d2d674a` pre-revision against the published Issue 16), because assembly is a whole-edition property only legible as a diff of two assemblies. Home settled as a third sweep inside the existing editor invocation, on ADR-042's own assignment of through-line work to the editor plus the stance test, not on the P081 analogy (ADR-042 rejected the mirror-image absorption on stance grounds). Six candidate axes collapse to four; finding 8 stays with the skeptic and finding 7's duplicate-citation half goes to the P089 lint. Finding-vs-advisory and the P113 stop-rule question share one answer: classify by remediation grain, not by axis, with stop-and-surface for cross-boundary moves plus three exemption limbs (ADR-032 provenance, ADR-037 theme anchor, deflationary direction). Effort M to L (three ADR amendments, not one); WSJF holds at 6.0 as the re-rate and the multiplier change cancel. Blocked on one precondition: ADR-043 is unratified, and the fix would amend its contract twice. Same blocker as P121, one iteration earlier, on the same surface.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -40,8 +40,8 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0 | P110 | work-problems Step 5 iter/pre-flight dispatch exceeds the interactive-harness foreground Bash ceiling | 6 (Medium) | Known Error | M | 2026-07-03 | internal |
 | 6.0 | P112 | accessibility-lead review passes markup but misses colour-contrast, caught only by the CI axe gate | 6 (Medium) | Known Error | M | 2026-07-12 | internal |
 | 6.0 | P121 | No gate compares an edition against the prior edition's shape, so pattern breaks and precedent drift reach the reader | 12 (High) | Known Error | L | 2026-08-04 | internal |
+| 6.0 | P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | 12 (High) | Known Error | L | 2026-08-05 | internal |
 | 6.0 | P107 | Assistant routes free-text input collection through AskUserQuestion instead of presenting per-item copyable blocks | 6 (Medium) | Open | S | 2026-06-28 | internal |
-| 6.0 | P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | 12 (High) | Open | M | 2026-08-05 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
 | 4.5 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 9 (Medium) | Open | M | 2026-08-05 | internal |
