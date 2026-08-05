@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-04 **P121 captured**: no gate compares an edition against the prior edition's shape, so recurring slots drop and the companion post drifts to twice the precedent length (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-08-05 **P122 captured**: no gate owns within-edition structural mechanics (item order vs thesis, close discharging the headline, inter-section duplication, forward references), sequenced behind P120 (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -14,6 +14,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy (unpushed commits + stale buffer) | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 (High) | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P121 | No gate compares an edition against the prior edition's shape, so pattern breaks and precedent drift reach the reader | 12 (Medium) | Open | M | 2026-08-04 | internal |
+| 12.0 | P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | 12 (Medium) | Open | M | 2026-08-05 | internal |
 | 10.0 | P120 | Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden | 20 (High) | Open | L | 2026-08-04 | internal |
 | 9.0 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 9 (Medium) | Known Error | M | 2026-07-06 | internal |
 | 8.0 | P114 | wr-newsletter step 15.5 LinkedIn sign-off contradicts the VOICE-AND-TONE.md auto-share carve-out | 4 (Low) | Known Error | S | 2026-07-13 | internal |

@@ -258,3 +258,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-08-04 **P120 captured**: editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden (Issue 16 evidence: the editor named three defects the external reviewer then re-derived independently) (lightweight aside via /wr-itil:capture-problem).
 
 > Last reviewed: 2026-08-03 **P119 captured**: newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields a spurious "missing Also worth noting" FAIL on a valid brief (observed 1 run in 6 during the Issue 16 prep run; flake rate scales with body length) (lightweight aside via /wr-itil:capture-problem).
+
+## 2026-08-05
+
+> Last reviewed: 2026-08-04 **P121 captured**: no gate compares an edition against the prior edition's shape, so recurring slots drop and the companion post drifts to twice the precedent length (lightweight aside via /wr-itil:capture-problem).
