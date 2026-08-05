@@ -27,6 +27,11 @@ Concrete evidence:
 - 2026-05-12 iter 2 first attempt (P043 named_action): poll loop showed 62-min gap between consecutive 60s sleeps (OS suspend; cross-references the sibling P056 ticket). SIGTERM at 5848s elapsed; JSON 0 bytes.
 - 2026-05-12 iter 2 retry (P043 named_action): `duration_ms: 1906381` (31.8 min), `num_turns: 44`, `total_cost_usd: 6.82`, `is_error: true`. Partial work: 27 insertion / 13 deletion edit to `.claude/skills/wr-newsletter/assets/three-lens-filter.md`. JSON preserved at `.afk-run-state/resolved/iter-2-retry-2026-05-12.json`.
 
+**Recurrence 2026-08-05** (four-ticket work-problems loop, iter 2 on P123): `duration_ms: 864097` (14.4 min), `num_turns: 30`, `total_cost_usd: 6.20`, `is_error: true`, `subtype: success`, `stop_reason: stop_sequence`, `result: "API Error: Connection closed mid-response. The response above may be incomplete."`. Sits inside the profile this ticket documents at line 18 (cost $6+, 19 to 44 turns, 13 to 32 min) on all three axes. Two notes:
+
+- **The result string differs.** This ticket's signature is `Stream idle timeout - partial response received`; this occurrence read `Connection closed mid-response`. Whether that is the same watchdog with different wording or a distinct transport failure is not established here. An orchestrator matching on the literal `Stream idle timeout` substring would not classify this occurrence, which matters because the handling rule is keyed on that classification.
+- **Zero partial work, unlike every prior occurrence.** All three 2026-05-12 cases left partial edits in the tree; this one left none. Verified independently: no new commits, `git status` clean of new dirt. Retried from scratch and the retry completed normally (101 turns, $19.48, commit `6736e90`). So the "manual completion of the partial work" recovery path at line 22 was not needed, and a plain retry was sufficient and safe once the clean-tree check confirmed nothing had landed.
+
 ## Symptoms
 
 (deferred to investigation)
