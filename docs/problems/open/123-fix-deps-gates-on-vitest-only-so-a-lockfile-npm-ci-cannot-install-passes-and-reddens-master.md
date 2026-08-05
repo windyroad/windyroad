@@ -87,3 +87,9 @@ Zero is the healthy state. Any hit is an `npm ci` EBADPLATFORM waiting to happen
 - **P112** (`docs/problems/.../112-accessibility-lead-review-misses-contrast-caught-only-by-ci-axe-gate.md`): same shape at a different surface. A local reviewer passes, the CI gate catches what the local check structurally cannot see. Both are "the local check and the CI check do not share a surface".
 - Evidence: red run at `13ba099`, repair at `bcfe283`, both on master 2026-08-05.
 - Captured via `/wr-itil:capture-problem` while repairing the red master it describes.
+
+## RFCs
+
+| RFC | Status | Title |
+|-----|--------|-------|
+| RFC-003 | proposed | Extend the fix:deps green gate to CI parity so an uninstallable lockfile cannot commit green |
