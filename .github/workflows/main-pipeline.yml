@@ -18,6 +18,9 @@ jobs:
         with:
           extra_args: --only-verified
 
+  # scripts/fix-deps.sh mirrors this job's steps by hand in its pre-commit gate,
+  # so a dependency refresh cannot commit green here and red on CI (P123 /
+  # RFC-003). Adding a step below without adding it there re-opens that gap.
   build:
     name: Lint, check deps & build
     needs: [gate-secrets]

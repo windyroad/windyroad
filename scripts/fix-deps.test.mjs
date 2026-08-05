@@ -130,3 +130,89 @@ describe('fix-deps.sh: exact_pin_deadlock_targets', () => {
     expect(probe(`exact_pin_deadlock_targets ${JSON.stringify(clean)}`)).toBe('');
   });
 });
+
+// P123 / RFC-003: the flow's green gate used to be `npm test` alone, which
+// never exercises `npm ci`. A lockfile entry carrying os/cpu constraints
+// without `optional: true` is a required install of a platform-specific
+// artefact, so `npm ci` rejects it on any platform it does not match. This
+// helper is the cheap proxy that catches that shape before the flow commits.
+describe('fix-deps.sh: lockfile_platform_flag_violations', () => {
+  const lockfile = (packages) => fixture({ packages });
+
+  it('flags the observed P123 shape: os/cpu constraints with the optional flag stripped', () => {
+    const f = lockfile({
+      '': { name: 'root' },
+      'node_modules/netlify-cli/node_modules/@rollup/rollup-android-arm-eabi': {
+        version: '4.52.2',
+        os: ['android'],
+        cpu: ['arm'],
+      },
+    });
+    const out = probe(`lockfile_platform_flag_violations ${JSON.stringify(f)}`);
+    expect(out).toBe(
+      'node_modules/netlify-cli/node_modules/@rollup/rollup-android-arm-eabi',
+    );
+  });
+
+  it('stays silent on a healthy lockfile where every constrained entry is optional', () => {
+    const f = lockfile({
+      '': { name: 'root' },
+      'node_modules/@rollup/rollup-darwin-arm64': {
+        version: '4.60.1',
+        optional: true,
+        os: ['darwin'],
+        cpu: ['arm64'],
+      },
+      'node_modules/@esbuild/linux-x64': {
+        version: '0.25.0',
+        optional: true,
+        os: ['linux'],
+        cpu: ['x64'],
+      },
+    });
+    expect(probe(`lockfile_platform_flag_violations ${JSON.stringify(f)}`)).toBe('');
+  });
+
+  it('ignores entries with no platform constraints at all', () => {
+    const f = lockfile({
+      '': { name: 'root' },
+      'node_modules/react': { version: '19.2.7' },
+    });
+    expect(probe(`lockfile_platform_flag_violations ${JSON.stringify(f)}`)).toBe('');
+  });
+
+  it('flags a cpu-only constraint as well as an os-only one', () => {
+    const f = lockfile({
+      'node_modules/cpu-only': { version: '1.0.0', cpu: ['arm64'] },
+      'node_modules/os-only': { version: '1.0.0', os: ['linux'] },
+    });
+    const out = probe(`lockfile_platform_flag_violations ${JSON.stringify(f)}`);
+    expect(out.split('\n').sort()).toEqual([
+      'node_modules/cpu-only',
+      'node_modules/os-only',
+    ]);
+  });
+
+  it('treats optional: false as a violation, not as a flag', () => {
+    const f = lockfile({
+      'node_modules/explicitly-not-optional': {
+        version: '1.0.0',
+        optional: false,
+        os: ['android'],
+      },
+    });
+    expect(probe(`lockfile_platform_flag_violations ${JSON.stringify(f)}`)).toBe(
+      'node_modules/explicitly-not-optional',
+    );
+  });
+
+  it('tolerates a lockfile with no packages map rather than erroring', () => {
+    const f = lockfile(undefined);
+    expect(probe(`lockfile_platform_flag_violations ${JSON.stringify(f)}`)).toBe('');
+  });
+
+  it('reports the real repo lockfile as clean', () => {
+    const out = probe('lockfile_platform_flag_violations package-lock.json');
+    expect(out).toBe('');
+  });
+});

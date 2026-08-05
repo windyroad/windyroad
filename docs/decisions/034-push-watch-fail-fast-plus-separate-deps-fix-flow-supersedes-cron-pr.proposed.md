@@ -80,6 +80,10 @@ This decision covers root-manifest deps (package.json + package-lock.json) only,
 
 The supersede is confirmed once: (a) this ADR lands, (b) `scripts/push-watch.sh` carries the fail-fast branch, (c) `/wr-itil:fix-deps` (or equivalent) exists and is invocable, (d) the next dep issue that occurs is handled end-to-end via the new flow without manual cron-PR-style review, and (e) ADR 022 status flips to "superseded" and `.github/workflows/deps-refresh.yml` is retired.
 
+**(d) EXERCISED 2026-08-05, DID NOT HOLD. Re-armed.** The next real dep issue arrived and the flow did not handle it end-to-end. `npm run fix:deps` applied updates, passed its green gate at 425/425 tests, and committed `13ba099`. That commit then failed CI at `npm ci` with EBADPLATFORM: the lockfile rewrite had stripped `"optional": true` from 22 nested `@rollup/rollup-*` entries while leaving their `os` and `cpu` constraints intact. Master went red, and clearing it cost a diagnostic cycle plus a repair commit (`bcfe283`). The root cause was not the update itself but the gate: the flow gated on `npm test` (vitest) while the CI job the commit must survive runs `npm ci`, `npm run lint`, `npm run deps:check` and `npm run build`, so the two gates shared almost no surface. Recorded as P123; the fix is RFC-003, which replaces the single-command gate with a CI-parity composite gate plus a lockfile install-shape scan. Criterion (d) is re-armed against the next dep issue after that gate lands. The decision itself is unchanged: fail-fast plus a separate fix flow remains the right shape, and this was a gap in the fix flow's validation depth, not in its structure.
+
+The **Reassessment** trigger below is live but not yet due: the observed record is 1 failure in 1 dep issue, against a threshold assessed after three.
+
 ## Reassessment
 
 Reassess after the first three dep issues handled via the new flow. If the fix flow takes longer than the prior cron-PR cycle (mean time to "deps current") or fails for more than 30% of issues, revisit the design (e.g., partial automation, hybrid back to cron PR for specific failure classes).

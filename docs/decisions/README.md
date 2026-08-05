@@ -161,7 +161,9 @@ _39 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-034 - push:watch fail-fast on dry-aged-deps non-zero plus separate deps-fix flow
 **Status:** proposed | **Oversight:** confirmed | **Supersedes:** 022-scheduled-stale-deps-refresh-pr
-**Chosen:** Chosen option: **push:watch fail-fast plus separate fix flow**, because it satisfies all five drivers, aligns with the user's explicit design direction (P072), and matches the project's existing pattern of "policy-authorised silent proceed ...
+**Decides:** `push:watch` halts at the push gate when `dry-aged-deps` still exits non-zero after ADR-021's inline auto-resolve, and a separate `/wr-itil:fix-deps` flow does the auto-update, test, fix and commit, so dep changes land validated instead of arriving as an untested cron PR for review.
+**Confirmation:** ADR lands; push-watch.sh carries the fail-fast branch; fix-deps flow exists and is invocable; next dep issue handled end-to-end (EXERCISED 2026-08-05, did not hold: CI-parity gap, P123/RFC-003, re-armed); ADR-022 flipped to superseded and deps-refresh.yml retired.
+**Related:** ADR-021, ADR-022, ADR-028
 
 ### ADR-035 - Critic rubric shape is strengths + weaknesses + optional relevant context (no structured numbered-check rubrics)
 **Status:** accepted | **Oversight:** confirmed
