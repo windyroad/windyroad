@@ -1,6 +1,6 @@
 # Problem 082: Subagent outputs include fabricated references to artefacts not on disk
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-02
 **Priority**: 3 (Medium). Impact: 3 x Likelihood: 1 (deferred. Re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -103,3 +103,14 @@ Shipped 2026-06-27 (AFK `/wr-itil:work-problems` iter) as a windyroad-local disc
 - `~/.claude/projects/-Users-tomhoward-Projects-windyroad/memory/feedback_verify_subagent_references_before_propagating.md` (plus `MEMORY.md` index pointer).
 
 **Verification criterion (recurrence-watch):** awaiting confirmation that future iters consuming governance-subagent verdicts ground cited references before propagating them, and that no fabricated-reference-propagation recurs. Same verification shape as the sibling P032 / P045 / P103 discipline-note fixes. Close on user confirmation or a clean recurrence-watch window.
+
+## Closed on evidence (2026-08-05)
+
+Exercised successfully during the P120 iteration, in the direction the fix targets: a governance-subagent verdict cited a project-state claim, and the consuming agent verified it on disk instead of propagating it.
+
+- The `wr-risk-scorer:pipeline` agent's second scoring pass raised remediation R6 on the claim that leader jobs JTBD-001 through JTBD-004 "remain as `.proposed.md` under `docs/jtbd/engineering-leader/` despite ADR-041 retiring them on 2026-07-10; nothing on disk signals retirement". The claim was not propagated into the ticket or the commit. It was checked against `grep -l "status: retired" docs/jtbd/*/*.md`, which had already matched all four files earlier in the session, and challenged in the next scoring prompt. The scorer re-read the frontmatter, confirmed `status: retired` / `retired-by: ADR-041` / `retired-date: 2026-07-10`, and withdrew R6 in its third pass.
+- Same discipline applied to the architect verdicts: the cited `ADR-020` line references (38, 41, 107, 158), and the `wr-architect-generate-decisions-compendium` tool the compendium header names, were each grounded (`command -v`, direct reads) before being treated as load-bearing preconditions. The tool resolves on `$PATH` in this environment; the earlier session that found it absent is what the ticket records.
+
+The consumer-verifies contract held in both directions: a wrong subagent claim was caught before it reached an artefact, and correct claims were confirmed rather than assumed.
+
+**Recovery**: reversible via `/wr-itil:transition-problem 082 known-error` if this closure was wrong.

@@ -1,6 +1,6 @@
 # Problem 103: Assistant asserts negative project-state claims from an incomplete search without verifying or asking
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-24
 **Priority**: 9 (Significant). Impact: Moderate (3) x Likelihood: Likely (3) (deferred, re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -81,3 +81,15 @@ Doc-class memory/guide edit, live on commit (no npm/release vehicle, no changese
 - Memory `feedback_verify_project_state_before_writing.md` extended with the negative/absence-claim section and P103 evidence (memory lives outside the repo, not part of this commit).
 
 **Verification trigger (behavioural).** Like P032/P045, there is no automated test. Verified when a future session declines to assert a negative/absence claim from a bounded search that returns nothing, instead verifying exhaustively or asking. This iteration's I13/RFC-tier handling is one in-session witness, but a single freshly-shipped instance is too thin to self-close (confirmation-bias guard); a later `/wr-itil:review-problems` or retro pass can close on accumulated observed evidence.
+
+## Closed on evidence (2026-08-05)
+
+Exercised successfully during the P120 iteration. Every negative or absence claim the iteration made about project state was grounded in an exhaustive check before it was written into an artefact, rather than inferred from a bounded search.
+
+- **"This repository has no story tier"** (written into `docs/rfcs/RFC-002-...proposed.md` § Stories to justify `stories: []` against ADR-089's every-RFC-carries-a-story rule): grounded by `ls docs/stories` and `ls docs/story-maps`, both returning "No such file or directory", before the claim was authored.
+- **"No packages/ directory, so no changeset is needed"** (which decided whether the iteration owed a `.changeset/*.md` entry): grounded by `ls -d packages .changeset` plus a direct read of `package.json` confirming `private: true`, before the conclusion was acted on.
+- **The inverse direction also held.** The `wr-risk-scorer:pipeline` agent asserted a negative claim of its own, that "nothing on disk signals retirement" for JTBD-001 through JTBD-004. It was not accepted; the frontmatter was re-read and the claim disproved. A negative claim from a subagent gets the same treatment as one the assistant is about to make.
+
+The discipline the ticket asked for is the one that ran: a bounded search returning nothing was treated as inconclusive until the check was made exhaustive.
+
+**Recovery**: reversible via `/wr-itil:transition-problem 103 known-error` if this closure was wrong.
