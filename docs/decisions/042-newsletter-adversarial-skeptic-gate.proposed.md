@@ -9,6 +9,7 @@ consulted: [wr-architect agent]
 informed: []
 related: [012-ai-generated-content-review-gates, 015-reader-respect-and-gate-rejection-policy, 020-newsletter-editor-subagent, 025-pass-with-author-overrides-verdict-for-sw-critic, 033-domain-specific-critic-agents-supersede-parameterised-sw-critic, 035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate]
 reassessment-date: 2026-10-14
+amended-by: [043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates]
 ---
 
 # Add an adversarial skeptic gate to the newsletter pipeline
@@ -201,6 +202,22 @@ gate whose stance is wrong for it.
   an adversarial reader trying to refute. The same passage may draw comment
   from both; that is acceptable defence-in-depth, declared here so a retro can
   detect boundary collapse per ADR-020 reassessment criterion 2.
+
+## Amendment 2026-08-05 (P120): the skeptic joins a bounded remediation loop; two clauses lifted by ADR-043
+
+Problem 120 (`docs/problems/known-error/120-editor-and-skeptic-gates-surface-findings-to-tom-instead-of-remediating-them.md`) records that this gate, like the editor it borrowed its posture from, detects defects correctly and then hands them to Tom rather than remediating them. On The Shift Issue 16 the skeptic returned `WEAKNESSES_FOUND` on both the brief and the LinkedIn post; neither was remediated before Tom saw the draft. ADR-043 (Bounded editorial remediation loop for editor and skeptic gates) adds a one-round remediation loop at SKILL.md step 15.37, and applies the same one-round rule inline at step 15.55 for the LinkedIn post. Two clauses of this ADR's Decision Outcome are lifted.
+
+**Clause 1: "No new multi-round loop machinery is added."** There is now loop machinery, and the skeptic is inside it. It is bounded at one remediation round, which is the tightest bound that fixes the routing defect, and the ADR-025 `PASS_WITH_AUTHOR_OVERRIDES` override-list is still NOT reintroduced. ADR-043 considered an author-override stop arm and rejected it explicitly, on this ADR's own reasoning plus a second ground: "the drafter" is the agent that wrote the passage, so letting it self-certify an unremediated finding as an acceptable editorial choice is the confirmation-bias failure this whole gate stack exists to break. The only exit for an unremediated finding is a recorded residual advisory in the `.reviews.md` sibling, surfaced in the Tom-summary. The non-blocking save-but-revise posture (ADR-015) is preserved at the loop's terminal state: after one round, a surviving finding lands in front of Tom exactly as it does today.
+
+**Clause 2: "any revision re-enters the full gate set via the existing SKILL.md section 15.6 dirty-body re-gate discipline."** Section 15.6 still governs, but its firing point relative to the loop is now pinned. The loop's remediation edits do not each trigger a full re-gate; the full pass runs once, against the final post-remediation body, at loop exit. Any edit that the loop-exit pass itself forces re-marks the body dirty and re-enters 15.6 exactly as before. The remediation counter is per body pass and does not reset, so a loop-exit-forced edit gets one more editor and skeptic look and any remaining findings go straight to residual advisory. This is what keeps P099 closed: without the non-reset rule the loop would either ping-pong or silently skip these two gates on the re-edited body, and the silent skip is the regression.
+
+**A remediation contract specific to this gate.** The skeptic's findings are truth calibration, not presentation shape, so ADR-043 makes their remediation asymmetric: it may only REDUCE a claim to what the cited source supports, narrowing scope, downgrading certainty, or correcting direction. It may never add evidence, never introduce a source that was not already cited and verified, and never strengthen a claim to meet the assertion. A finding that cannot be remediated without new sourcing is stop-and-surface, recorded as a residual advisory without consuming the round. Two section 15.6 rows have claim-scoped triggers that this remediation fires by construction and that a "body changed" test would miss: cross-edition consistency (11.4, ADR-038), because thesis-truth remediation changes thesis-bearing lines, and URL verification (11.5, ADR-024), because reducing a claim to what its source supports changes URL-anchored claims by definition.
+
+**Confirmation criterion 2 closed in the same commit.** That criterion required the SKILL.md phase table to include the skeptic block. On disk it did not: the phase-table rows ended their gate enumeration at 15.25 and named none of 11.4, 15.35, 15.4 or 15.55, and the "critic gates run independently in prep and finalise" line carried the same gap. ADR-043's SKILL.md sweep adds all of them, including the new 15.37.
+
+**Not a supersession.** The agent, its name, its fresh-context rule, its target-agnostic scope across brief body and LinkedIn post, its pinned `SKEPTIC_REVIEW` output block, its mechanical verdict vocabulary, its axis set, its skip-on-critic-REJECTED rule, and its declared boundary partitions are all preserved.
+
+**Reviews:** architect PASS (2026-08-05); JTBD PASS (2026-08-05, confirming the reduce-only remediation rule as a faithful encoding of JTBD-205 that protects JTBD-203).
 
 ## Consequences
 

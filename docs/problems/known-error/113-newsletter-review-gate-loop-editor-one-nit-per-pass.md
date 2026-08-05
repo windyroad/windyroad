@@ -53,6 +53,14 @@ Accept the editor's NEEDS_EDITORIAL_REVISION as non-blocking after the critic an
 
 Captured via /wr-itil:capture-problem during the Issue 13 finalise retro (2026-07-13). Expand at next investigation.
 
+**2026-08-05: both Fix Strategy items landed via ADR-043, co-designed with P120.** P120 (Editor and skeptic gates surface findings to Tom instead of remediating them) is the opposite bound on this same knob: it wanted a START rule because gate findings were never acted on, while this ticket wants a STOP rule because the editor treadmills. The two were designed as one loop contract, per P120's second Investigation Task, because tightening either alone would fight the other. ADR-043 (Bounded editorial remediation loop for editor and skeptic gates) carries both bounds:
+
+- **Fix item (a), editor batching, is shipped.** `.claude/agents/wr-newsletter-editor.md` `## Hard rules` now carries "Return ALL findings on every axis in a single pass; never surface one nit at a time", naming this ticket's ~8-consecutive-single-nit evidence as the rationale. It is load-bearing for ADR-043's one-round cap: anything the editor holds back is not remediated at all, it becomes a residual advisory that lands on Tom.
+- **Fix item (b), the stop rule, is shipped as the loop's cap plus its residual-advisory exit.** SKILL.md step 15.37 caps remediation at ONE round. Findings still standing after that round are recorded as accepted residual advisories in the `.reviews.md` sibling and surfaced in the Tom-summary, which is exactly the "accept residual non-blocking advisories and proceed to save" guidance this ticket asked for, now written down rather than left to the drafter's judgement.
+- **Cause 2, the section 15.6 per-edit full-gate cost, is bounded.** ADR-043 condition (a) fires the full gate set ONCE at loop exit rather than per remediation round; inner rounds re-invoke only the editor and the skeptic. Conditions (b) and (c) keep P099 closed: a loop-exit-forced edit re-marks the body dirty as normal, and the remediation counter does not reset, so that edit gets one more editor and skeptic look and anything remaining becomes a residual advisory rather than another round.
+
+This ticket is NOT transitioned on the back of that work. The fix is authored but unexercised: no edition has run through the loop yet, and this ticket's own symptom (a treadmill measured in rounds per edition) can only be verified against a live `/wr-newsletter` run. Re-rate and transition after the next edition, using the `## Editorial Remediation Loop` block in that edition's `.reviews.md` as the evidence: rounds spent should be at most 1 per body pass, and the editor's findings should arrive batched rather than one per verdict.
+
 ## Fix Strategy
 
 - **Kind**: improve
