@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-05 **P123 verification pending**: the `fix:deps` green gate was `npm test` alone while the CI job its commit must survive runs `npm ci`, lint, deps:check and build, so an uninstallable lockfile committed green and reddened master. Gate is now a CI-parity composite (lockfile install-shape scan, lint, tests, build) with the failing gate named in the halt message, traced by RFC-003, covered by seven behavioural tests. ADR-034 Confirmation criterion (d) amended: EXERCISED 2026-08-05, DID NOT HOLD, re-armed against the next dep issue.
+> Last reviewed: 2026-08-05 **P121 known error**: root cause confirmed and reproduced at commit `d2d674a` (the pipeline's own publication-ready Issue 16, carrying all five shape breaks; the published edition is post-remediation and unusable as a fixture). Both homes the ticket proposed are ruled out: the ADR-038 gate runs at step 11.4, before the LinkedIn post exists at 15.5, so it cannot see the surface carrying most of the evidence, and a sibling subagent is barred by the invocation budget ADR-043 records as already breached. Settled fix is a deterministic lint bounded against ADR-032's deferred check (h), with findings routed through ADR-043's step 15.37 and its 15.55 inline rule rather than becoming a fifth Tom advisory. Effort re-rated M -> L, and WSJF holds at 6.0 because the larger effort divisor and the Known Error status multiplier cancel. Fix not proposed: blocked on ADR-043 ratification and on whether a stable weekly shape is a documented reader benefit at all (no job records it).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -38,8 +38,8 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0 | P106 | Verification Queue evidence cells never populated from subsequent-session exercises, so the auto-drain never fires | 6 (Medium) | Known Error | M | 2026-06-28 | internal |
 | 6.0 | P110 | work-problems Step 5 iter/pre-flight dispatch exceeds the interactive-harness foreground Bash ceiling | 6 (Medium) | Known Error | M | 2026-07-03 | internal |
 | 6.0 | P112 | accessibility-lead review passes markup but misses colour-contrast, caught only by the CI axe gate | 6 (Medium) | Known Error | M | 2026-07-12 | internal |
+| 6.0 | P121 | No gate compares an edition against the prior edition's shape, so pattern breaks and precedent drift reach the reader | 12 (High) | Known Error | L | 2026-08-04 | internal |
 | 6.0 | P107 | Assistant routes free-text input collection through AskUserQuestion instead of presenting per-item copyable blocks | 6 (Medium) | Open | S | 2026-06-28 | internal |
-| 6.0 | P121 | No gate compares an edition against the prior edition's shape, so pattern breaks and precedent drift reach the reader | 12 (High) | Open | M | 2026-08-04 | internal |
 | 6.0 | P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | 12 (High) | Open | M | 2026-08-05 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
