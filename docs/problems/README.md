@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-05 **P120 verification pending; P082 + P103 closed on evidence**: bounded one-round editorial remediation loop shipped as ADR-043 (new SKILL step 15.37, amendment sections inside ADR-020 + ADR-042, editor batching invariant, leader persona re-grounded from ADR-041-retired JTBD-001/002/003 to JTBD-005), traced by RFC-002; P120 Effort re-rated L -> XL as delivered; P113's two Fix Strategy items land with it but P113 stays Known Error pending a live-run rounds-per-edition measurement. Retro Step 4a closed P082 (subagent-reference verification) and P103 (negative-claim verification) on in-session evidence: a risk-scorer claim about retired-JTBD state was disproved rather than propagated, and every absence claim written into an artefact was grounded first.
+> Last reviewed: 2026-08-05 **P124 captured**: governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round (lightweight aside via /wr-itil:capture-problem). Two causes observed in the P120 iteration: the architect mark-reviewed hook anchors on a literal bold verdict line and fails closed on a heading-form PASS, and SendMessage resumption of a review agent never fires the PostToolUse marker hook at all.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -44,6 +44,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0 | P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | 12 (High) | Open | M | 2026-08-05 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 (Medium) | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 (Medium) | Open | M | 2026-06-01 | internal |
+| 4.5 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 9 (Medium) | Open | M | 2026-08-05 | internal |
 | 4.0 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading | 4 (Low) | Open | S | 2026-06-17 | internal |
 | 3.0 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 (Low) | Open | S | 2026-05-13 | internal |
 | 3.0 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts | 6 (Medium) | Open | M | 2026-05-31 | internal |
