@@ -264,3 +264,4 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-08-05 **P122 captured**: no gate owns within-edition structural mechanics (item order vs thesis, close discharging the headline, inter-section duplication, forward references), sequenced behind P120 (lightweight aside via /wr-itil:capture-problem).
 
 > Last reviewed: 2026-08-04 **P121 captured**: no gate compares an edition against the prior edition's shape, so recurring slots drop and the companion post drifts to twice the precedent length (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-08-05 **P123 captured**: fix:deps gates on vitest only, so a lockfile npm ci cannot install passes locally and reddens master (observed today: 425 tests green, CI EBADPLATFORM) (lightweight aside via /wr-itil:capture-problem).

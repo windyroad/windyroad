@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4). Derived at capture: trivial workaround, no data/reader impact, but recurs on every publish where drafts were not pre-committed (the default).
 **Origin**: internal
 **Effort**: S (one-line change to the finalise reminder, or a `git add` in the publish flow)
+**WSJF**: 8.0 = (8 x 1.0) / 1
 
 ## Description
 

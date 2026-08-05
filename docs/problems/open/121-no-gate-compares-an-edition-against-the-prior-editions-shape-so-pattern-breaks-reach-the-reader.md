@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-08-04
-**Priority**: 12 (Medium), Impact: 3 x Likelihood: 4, derived at capture from the description. Impact is 3 because pattern breaks reach the reader and are noticed by returning subscribers (the class the external reviewer described as "the two things a returning subscriber will notice"), but nothing factually wrong ships. Likelihood is 4 because every edition is drafted against the skill template rather than against the prior edition's artefact, so drift is the default rather than the exception.
+**Priority**: 12 (High), Impact: 3 x Likelihood: 4, derived at capture from the description. Impact is 3 because pattern breaks reach the reader and are noticed by returning subscribers (the class the external reviewer described as "the two things a returning subscriber will notice"), but nothing factually wrong ships. Likelihood is 4 because every edition is drafted against the skill template rather than against the prior edition's artefact, so drift is the default rather than the exception.
 **Origin**: internal
 **Effort**: M, derived at capture. Extend the existing `wr-newsletter-cross-edition-consistency` gate's prompt with a structural-shape axis, or add a sibling step; comparable to P117's prompt-tightening work, also rated M.
+**WSJF**: 6.0 = (12 x 1.0) / 2
 
 ## Description
 

@@ -2,7 +2,7 @@
 
 **Status**: Known Error
 **Reported**: 2026-07-14
-**Priority**: 12 (Significant), Impact: 3 x Likelihood: 4, derived at capture from the description
+**Priority**: 12 (High), Impact: 3 x Likelihood: 4, derived at capture from the description
 **Origin**: internal
 **Effort**: M, derived at capture
 **WSJF**: 12.0 = (12 x 2.0) / 2

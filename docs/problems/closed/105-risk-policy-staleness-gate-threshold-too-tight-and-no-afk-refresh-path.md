@@ -1,6 +1,6 @@
 # Problem 105: risk-score-commit-gate RISK-POLICY staleness threshold is too tight (14 days) and has no AFK-satisfiable refresh path
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-27
 **Priority**: 9 (Medium). Impact: Moderate (3) x Likelihood: Possible (3) (re-rated 2026-07-15 review: deterministic loop-fatal commit deny every 14 days; policy re-attested 2026-07-12 so next fire ~2026-07-26; doc cadence and gate threshold still disagree)
 **Origin**: internal
@@ -85,3 +85,31 @@ Captured via /wr-itil:capture-problem during /wr-itil:work-problems orchestrator
 | RFC | Status | Title |
 |-----|--------|-------|
 | RFC-001 | proposed | Align RISK-POLICY.md machine-readable review cadence with the shipped upstream staleness gate |
+
+## Closed on evidence (2026-08-05 review pass)
+
+**Verdict**: `yes - observed`. Closed per `/wr-itil:review-problems` Step 4 Bucket 1
+(close-on-evidence, framework-mediated per ADR-044 category 4; fires in AFK).
+
+**Evidence cited (ADR-026 grounding)**:
+
+1. **Direct gate exercise, in session.** Ran the installed gate's cadence-parse and
+   staleness comparison (`~/.claude/plugins/cache/windyroad/wr-risk-scorer/0.18.6/hooks/risk-score-commit-gate.sh`,
+   the highest installed version and the one the enabled `wr-risk-scorer@windyroad`
+   entry resolves to) against the current `RISK-POLICY.md`:
+   `cadence='quarterly' threshold=90 elapsed=24` -> **PASS**. Under the pre-fix
+   14-day fallback the same policy at 24 days elapsed returns **STALE-DENY**.
+   This is the discriminating observation: the policy is now in the window that
+   used to block and no longer does.
+2. **Real-world signal, as pre-registered.** The ticket named "commits continue
+   passing the gate after ~2026-07-26 (day 14 past the 2026-07-12 attestation)
+   without a staleness deny". 23 commits landed on master between 2026-07-26 and
+   2026-08-05 inclusive, the most recent being `d1b83d7`. No staleness deny was
+   recorded in that window.
+
+**Uncertainty**: evidence 2 is inferential (a commit existing implies the gate did
+not deny, unless `BYPASS_RISK_GATE=1` was set, which is not recoverable from git
+history). Evidence 1 is direct and does not depend on that inference, so the close
+stands on evidence 1 alone with evidence 2 as corroboration.
+
+**Recovery**: rerun `/wr-itil:transition-problem 105 known-error` to reopen.

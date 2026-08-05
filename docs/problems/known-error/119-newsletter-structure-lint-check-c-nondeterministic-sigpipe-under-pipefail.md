@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium). Impact: 2 x Likelihood: 4, derived at capture. Impact is 2 rather than 3 because nothing is lost or mis-published: the save is blocked, not corrupted, and a re-run clears it. Likelihood is 4 because the gate runs several times per edition and fires roughly 1 run in 6 on current body lengths. WSJF 16.0 at Effort S, cf. P108 (Severity 6, Effort S, WSJF 12.0)
 **Origin**: internal
 **Effort**: S, derived at capture; one-line reshape plus an audit of sibling pipelines
+**WSJF**: 16.0 = (8 x 2.0) / 1
 
 ## Description
 

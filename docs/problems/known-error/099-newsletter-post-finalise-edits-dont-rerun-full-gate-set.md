@@ -1,11 +1,11 @@
 # Problem 099: wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-06-22
-**Priority**: 6 (Medium). Impact: Moderate (3) x Likelihood: Likely (2) (deferred, re-rate at next /wr-itil:review-problems)
+**Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-08-05 review, up from a deferred 6: Impact 4 per RISK-POLICY "pipeline ships poor-quality content past one of the ... gates ... indicates gate weakness" -- Issue 16's publish-morning thesis rewrite shipped without cross-edition or skeptic re-validation. Likelihood 4 because post-gate external-review edits are now routine on every edition and no hook or automated check covers the re-run, which the ticket's own Fix Strategy records as infeasible.)
 **Origin**: internal
-**Effort**: S (deferred, re-rate at next /wr-itil:review-problems)
-**WSJF**: deferred, re-rate at next /wr-itil:review-problems
+**Effort**: M (re-rated 2026-08-05 review, up from S: the S bucket covered authoring the §15.6 prose rule, which shipped and did not hold. The remaining work is a stronger enforcement mechanism -- the marker file the Fix Strategy rejected as YAGNI, or a dirty-body check at save -- designed alongside P113's gate-loop cost and P120's remediation loop, since those determine whether re-running the heavy gates is affordable at all.)
+**WSJF**: 16.0 = (16 x 2.0) / 2
 **Type**: technical
 
 ## Description
@@ -67,3 +67,44 @@ Discipline rule shipped to `.claude/skills/wr-newsletter/SKILL.md` (§15.6 + fai
 ## Related
 
 Captured during the 2026-06-22 Issue 10 retrospective. Sibling to the "gates pass but defects remain" class (P089).
+
+## Flip-back: Verification Pending -> Known Error (2026-08-05 review pass)
+
+**Verdict**: `no - observed regression`. Routed to `/wr-itil:review-problems` Step 4
+Bucket 3 (botched-fix candidate, never batch-closed).
+
+**Recurrence citation.** Issue 16 (`src/newsletters/published/leader/2026-08-03/2026-08-03.reviews.md`)
+is the first edition after the §15.6 rule shipped, and it took three separate
+post-gate body-edit passes (external editorial review, browser-assisted sourcing,
+then six further external review rounds). The FULL gate set did **not** re-enter on
+those edits. What re-ran: content-risk, voice, URL verification, structural lint.
+What did not:
+
+- **Cross-edition consistency.** The reviews ledger states it plainly: "Not re-run at
+  finalise. **This is a gap worth naming:** Tom's publish-morning thesis correction
+  moved the edition's position further than the prep-phase rewrite did ... it has not
+  been checked against the prior eight editions."
+- **Skeptic (brief).** "it has not been re-tested, because the skeptic's budget for the
+  brief was spent before the final rewrite."
+- **Skeptic (LinkedIn).** "The post was subsequently rewritten again around Tom's
+  corrected thesis ... Not re-tested."
+
+That is precisely the cheap-subset-instead-of-full-set failure the rule was written to
+prevent, observed on the first edition that could exercise it.
+
+**What this says about the fix.** The rule's text is not the defect; the delivery
+mechanism is. §15.6 is a save-time discipline checkpoint enforced only by agent
+adherence, with no marker and no automated check, and the ticket's own Fix Strategy
+recorded that choice ("chose the save-time checklist + in-context 'dirty' judgement;
+rejected a marker file (YAGNI)") and recorded that no automated repro was feasible.
+Under real publish-morning pressure the in-context judgement did not fire. Re-opening
+at Known Error is the honest state: root cause is understood, workaround is the manual
+re-run, and a stronger mechanism is outstanding.
+
+**Composes with**: P113 (gate-loop cost per pass, which is the reason the heavy gates
+get skipped) and P120 (gates surface findings rather than remediating them). The
+skipped-gate cost and the unactioned-finding cost are the same economics from two
+sides.
+
+**Recovery**: rerun `/wr-itil:transition-problem 099 verifying` if this flip-back is
+judged wrong.

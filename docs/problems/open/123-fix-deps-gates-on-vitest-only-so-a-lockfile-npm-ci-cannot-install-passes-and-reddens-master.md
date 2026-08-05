@@ -4,6 +4,7 @@
 **Reported**: 2026-08-05
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture from the description. Impact is 3 because RISK-POLICY rates a broken or delayed build as Moderate, and a red `build` job blocks the whole delivery graph: `gate-accessibility` and `deploy-test` declare `needs: build` directly, and `release-pr` is blocked transitively through `needs: [deploy-test]`. Likelihood is 3 because the uncovered surface is not lockfile shape, it is three entire CI steps: `fix:deps` gates on `npm test` (vitest) and the commit must then survive `npm ci`, `npm run lint`, `npm run deps:check` and `npm run build`, none of which run locally. The dominant member of that class is not an exotic lockfile shape but an ordinary dependency upgrade breaking the static export or the lint config. The EBADPLATFORM instance is one draw from that population, not the population. The observed base rate is one failure in one exercise, and the workaround is operator discipline rather than an automated control.
 **Effort**: S, derived at capture. Add `npm run build` and an install-shape check to the flow's green gate at `scripts/fix-deps.sh:146`. One-line-plus change to an existing conditional.
+**WSJF**: 9.0 = (9 x 1.0) / 1
 **Origin**: internal
 
 ## Description

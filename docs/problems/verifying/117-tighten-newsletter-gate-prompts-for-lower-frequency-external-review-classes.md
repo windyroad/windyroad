@@ -68,3 +68,24 @@ Split from P116 (the corpus analysis that surfaced these three classes lives the
 
 - P116 (`docs/problems/verifying/116-newsletter-gates-lack-adversarial-ceiling-gate-external-review-still-finds-substance-issues.md`). The adversarial skeptic gate for the dominant claim-evidence class; this ticket is its lower-frequency prompt-tightening siblings.
 - ADR-020 (editor gate), ADR-038 (cross-edition-consistency gate), ADR-033/035 (critic). The three gates this ticket tightens.
+
+## Verification evidence: Issue 16 (2026-08-05 review pass). Partial, do not close
+
+Two of the three sharpened gates fired as designed on Issue 16
+(`src/newsletters/published/leader/2026-08-03/2026-08-03.reviews.md`):
+
+- **Editor per-bullet ATWN sweep: fired.** The Editor Review names
+  `atwn-thesis-fit` on two Also-worth-noting notes (the hedge fund and the maths
+  result, "connect to nothing in the edition's frame"), which is exactly the
+  per-bullet sweep this ticket added.
+- **Critic: ran** and returned its verdict in-pipeline.
+- **Cross-edition dropped-thread Notes scan: did not fire on the thread that was
+  actually dropped.** Issues 14 and 15 both carried a forward-deadline beat ("Two
+  weeks out", "Six days out"); Issue 16 dropped it. The external reviewer caught
+  that, not the gate. The gate's own Notes instead flagged a different gap (it was
+  not re-run at finalise after the publish-morning thesis correction, which is the
+  P099 failure rather than this one).
+
+So the dropped-thread scan is unverified: it has not yet been shown to surface a
+dropped thread on an edition that had one. Keep in Verification Pending until an
+edition exercises that third criterion.

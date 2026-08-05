@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-08-04
-**Priority**: 20 (High), Impact: 4 x Likelihood: 5, derived at capture from the description. Impact is 4 rather than 5 because no wrong output reaches readers (external review catches it) but the cost lands on the newsletter, which ADR-027 rates as the primary business surface. Likelihood is 5 because this fires on every edition by contract rather than by chance: the gates are non-blocking by design, so every finding they produce is routed to Tom.
+**Priority**: 20 (Very High), Impact: 4 x Likelihood: 5, derived at capture from the description. Impact is 4 rather than 5 because no wrong output reaches readers (external review catches it) but the cost lands on the newsletter, which ADR-027 rates as the primary business surface. Likelihood is 5 because this fires on every edition by contract rather than by chance: the gates are non-blocking by design, so every finding they produce is routed to Tom.
 **Origin**: internal
 **Effort**: L, derived at capture. A follow-up ADR amending two ratified decisions (ADR-020 single-shot, ADR-042 non-blocking), plus loop wiring in SKILL.md steps 15.25 and 15.35, plus round-cap and stop-rule design co-ordinated with P113. Comparable to the P116 build (new gate plus ADR plus rubric plus SKILL wiring), also rated L.
+**WSJF**: 5.0 = (20 x 1.0) / 4
 
 ## Description
 

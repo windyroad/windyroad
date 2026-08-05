@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-08-05
-**Priority**: 12 (Medium), Impact: 3 x Likelihood: 4, derived at capture from the description. Impact is 3 because assembly defects degrade the read for every reader (an item run that fights its own thesis, a close that does not discharge the headline) without shipping anything factually wrong. Likelihood is 4 because every edition is assembled fresh and no gate reads for assembly, so the defects are detected only if a human happens to notice.
+**Priority**: 12 (High), Impact: 3 x Likelihood: 4, derived at capture from the description. Impact is 3 because assembly defects degrade the read for every reader (an item run that fights its own thesis, a close that does not discharge the headline) without shipping anything factually wrong. Likelihood is 4 because every edition is assembled fresh and no gate reads for assembly, so the defects are detected only if a human happens to notice.
 **Origin**: internal
 **Effort**: M, derived at capture. Extend the editor gate's craft-axis set and its prompt, or add a sibling pass. Comparable to P117's three-gate prompt tightening, also rated M.
+**WSJF**: 6.0 = (12 x 1.0) / 2
 
 ## Description
 
