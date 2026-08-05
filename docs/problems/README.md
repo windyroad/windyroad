@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-05 **P121 known error**: root cause confirmed and reproduced at commit `d2d674a` (the pipeline's own publication-ready Issue 16, carrying all five shape breaks; the published edition is post-remediation and unusable as a fixture). Both homes the ticket proposed are ruled out: the ADR-038 gate runs at step 11.4, before the LinkedIn post exists at 15.5, so it cannot see the surface carrying most of the evidence, and a sibling subagent is barred by the invocation budget ADR-043 records as already breached. Settled fix is a deterministic lint bounded against ADR-032's deferred check (h), with findings routed through ADR-043's step 15.37 and its 15.55 inline rule rather than becoming a fifth Tom advisory. Effort re-rated M -> L, and WSJF holds at 6.0 because the larger effort divisor and the Known Error status multiplier cancel. Fix not proposed: blocked on ADR-043 ratification and on whether a stable weekly shape is a documented reader benefit at all (no job records it).
+> Last reviewed: 2026-08-05 **P125 captured** -- nothing recomputes WSJF on a status transition, so the Open multiplier persists and halves the ticket's rank (lightweight aside via /wr-itil:capture-problem). Observed on the P121 transition in the same iteration: Effort was correctly re-rated M to L but the multiplier stayed at 1.0, and the wrong value was written consistently into both the ticket and this README, so reconcile-readme passed clean. Caught only by the commit-gate risk scorer, after four other gates had passed. Fifth recorded instance of the same arithmetic surface.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -30,6 +30,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 8.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 8 (Medium) | Known Error | M | 2026-06-03 | internal |
 | 8.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and 15.6 re-runs all gates per edit | 8 (Medium) | Known Error | M | 2026-07-13 | internal |
 | 8.0 | P118 | Newsletter publish step uses `git mv` on untracked drafts, which fails | 8 (Medium) | Open | S | 2026-07-27 | internal |
+| 8.0 | P125 | Nothing recomputes WSJF on a status transition, so the Open multiplier persists and halves the rank | 8 (Medium) | Open | S | 2026-08-05 | internal |
 | 6.0 | P016 | wr-newsletter filter drops significant stories without corroboration (flip-back: 2026-05-08 observed regression) | 6 (Medium) | Known Error | M | 2026-04-24 | internal |
 | 6.0 | P036 | wr-newsletter drafter leaks editorial-process meta-commentary into body (flip-back: 2026-05-08 observed regression) | 6 (Medium) | Known Error | M | 2026-05-01 | internal |
 | 6.0 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 6 (Medium) | Known Error | M | 2026-06-03 | internal |
