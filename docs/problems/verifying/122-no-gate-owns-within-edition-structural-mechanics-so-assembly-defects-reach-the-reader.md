@@ -1,6 +1,6 @@
 # Problem 122: No gate owns within-edition structural mechanics, so assembly defects reach the reader
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-08-05
 **Priority**: 12 (High), Impact: 3 x Likelihood: 4, derived at capture from the description. Impact is 3 because assembly defects degrade the read for every reader (an item run that fights its own thesis, a close that does not discharge the headline) without shipping anything factually wrong. Likelihood is 4 because every edition is assembled fresh and no gate reads for assembly, so the defects are detected only if a human happens to notice. Unchanged at the Known Error transition: investigation confirmed the mechanism rather than resizing it.
 **Origin**: internal
@@ -228,6 +228,26 @@ No new ADR. The home is an existing gate, ADR-020 confirmation criterion 1 expli
    **Re-argued 2026-08-07.** The original ceiling warrant is withdrawn and two attempts to replace it with an in-principle argument failed, so the rule now ships as a cost-benefit judgement with ADR-043 reassessment criterion 1 as the pre-registered check. The trigger keys on **artefact byte-identity**, and the clause must close two open holes (a named identity mechanism with a default-on-doubt, and whether a skipped round is consumed). See Fix Strategy section 5.
 
 3. **Tom's shape direction (2026-08-07) does not change this ticket's axes, and that is worth stating.** The direction settled that ungrounded *prior-edition* probes ship advisory-only with a distribution rationale. All four axes here are **within-edition** and grounded differently: they test an edition against its own promises, not against a precedent. Nothing in this ticket relies on "a stable weekly shape is good", so the advisory-only class P121 introduces does not extend here. The forward rule this ticket already pins, that any axis justified only by "this reduces Tom's review rounds" is blocked until an author persona is ratified, remains in force and is untouched by the distribution rationale, which is a different justification.
+
+
+## Fix Released
+
+Shipped 2026-08-08 across four commits, against three decisions Tom ratified 2026-08-07.
+
+| Commit | What landed |
+|---|---|
+| `5aabece` | ADR-020 amendment: four assembly axes, criterion-4 false-positive note, reassessment criterion 7 |
+| `5305344`, `c7947da`, `e459f1d` | ADR-042's evidential/navigational seam; the skip rule extracted to ADR-046 as its own decision; both ratified |
+| `c77e0cb` | Editor Step 4.6, structure-lint check (k), SKILL.md wiring across eighteen surfaces |
+| `7aea95e` | Two citation and restatement residues from the risk scorer |
+
+**Awaiting Tom's verification.** The test is the next `/wr-newsletter` run: whether the editor's Step 4.6 surfaces assembly findings of the Issue 16 class before Tom reads the draft, and whether its classification routes cross-boundary findings to stop-and-surface rather than attempting them inside the one-round cap.
+
+**Two things to watch, both recorded rather than assumed.**
+
+Check (k) shipped **narrower than ADR-020's ratified amendment specifies**. The amendment assigns "the same source URL appearing in two sections" to the lint. Built that way it fired on three published editions, all legitimate: a Thoughtworks Radar landing page cited three times for three different findings, a Nature article cited in the From Tom opener and again in the item detailing it, and one source across two items for two distinct claims. Same-URL is computable but is not the defect; the defect is the same source making the same point twice, which needs judgement. The check keys on the identical citation (same anchor text and URL), zero false positives corpus-wide. **The consequence is that `edition-internal-consistency` must catch more than the amendment anticipated**, and the agent file says so. ADR-020's amendment still describes the wider rule and needs correcting to match.
+
+The four axes have never fired in anger. Their definitions, boundaries and exemption limbs are reasoned from Issue 16's eight findings, not from observed gate behaviour. First live run is the real test of the boundary declarations, particularly `item-placement` against the existing `through-line` and `item-count-proportionality` axes, which ADR-020's new reassessment criterion 7 limb 2 watches for collapse.
 
 ## Dependencies
 
