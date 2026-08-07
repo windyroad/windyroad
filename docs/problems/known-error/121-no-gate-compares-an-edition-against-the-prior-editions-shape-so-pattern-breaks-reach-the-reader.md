@@ -242,6 +242,32 @@ So the decision this ticket asked for was made, and made against this strategy r
 
 Flagged rather than transitioned because transitioning on "a decision was made" would record a fix that has not been shown to close the ticket's own evidence.
 
+
+## Dry-run result, 2026-08-08: one probe of three is a real gap
+
+The shape gate was run against the published Issue 16 companion post with Issues 15 and 14 as priors, before any new edition, specifically to answer whether ADR-044's subagent covers the probes this strategy specified. It does not need a live run to settle; the published corpus is sufficient evidence.
+
+**LENGTH ceiling: NOT covered. This is the gap.** Section 3 specifies the post's character count against a **1.5x trailing median** of the prior editions' posts, and marks it JTBD-005-grounded and therefore remediating. The gate read the same three posts and reported 1,320 / 1,650 / 2,340 characters. The median of the two priors is 1,485, so the 1.5x ceiling sits at 2,228 and Issue 16's post is 2,340, over it by about five percent. The gate saw the trend and said so, then explicitly declined to make it a finding: *"This is explicitly not a finding, since nothing appears cut to fit and my only length criterion is the upper bound"*, that bound being LinkedIn's 3,000-character platform limit. So the gate applies a much looser, differently-grounded threshold. On this edition, this strategy's probe fires and the gate does not.
+
+**DROP forward-deadline: no gap demonstrated.** All three briefs carry forward-deadline language (Issue 14 "from 6 to 10 months through 2025", Issue 15 the Article 50 transparency obligation, Issue 16 "deadline took effect"). Nothing was dropped, so the probe would not have fired either. The gate's silence is correct behaviour rather than a miss. Untested, not failed.
+
+**DRIFT: expected absence.** This strategy already recorded that the two-prior precedent test would not fire DRIFT on Issue 16, because only Issue 15 carried the label line. Confirmed.
+
+**What the gate did instead, which is worth keeping.** It surfaced two differences this strategy's probes would have missed entirely: the brief's headline no longer reproduced verbatim anywhere in the post, and the post giving no signal that the issue holds ten more roundup entries including a direct continuation of the prior issue's lead. Both classed `deviation` / `advisory`, both argued rather than asserted. So the subagent is not a weaker instrument than the lint; it is a differently-shaped one that misses a mechanical threshold while catching judgement-shaped breaks a probe could not express.
+
+**Residue is therefore one probe**, and it is the one that is purely arithmetic: character count against a trailing median. Where it should live is an open question, recorded below rather than decided here.
+
+
+## Residue closed 2026-08-08: check (l) in the structure lint
+
+Tom's direction: the arithmetic check goes to the deterministic lint, not into the subagent. Grounds: it is a character count against a median, so a script does it exactly and for free, and ADR-042 already assigns structural hygiene to this lint while keeping judgement with the agents. The dry-run above is the evidence that the agent does not do it reliably, since it read the same numbers and declined to act on them.
+
+Shipped as **check (l)** in `scripts/check-newsletter-structure.sh`. Verified against the corpus: it fires on Issue 16 (2,343 characters against a 2,182 ceiling, being 1.5x the 1,455-character median of Issues 15 and 14) and stays quiet on Issues 14 and 15. It self-excludes, so re-linting a published edition does not compare it against itself, and it skips rather than fails when fewer than two priors exist.
+
+**Known limitation, measured rather than assumed.** The trailing median ratchets: Issue 16's over-length post lifts the following edition's ceiling from 2,182 to 2,986, which is within a whisker of LinkedIn's 3,000 limit. So the check reliably catches the first over-length edition in a run and is weakest immediately after one, and a sustained upward drift could walk past it one edition at a time. This is faithful to the trailing-median rule section 3 specifies rather than a defect in the implementation. If drift is observed, the fix is to take the median over recent editions that themselves passed rather than over all recent ones. Recorded here so it is not rediscovered as a surprise.
+
+With this shipped, all three of section 3's finding classes are accounted for: LENGTH is the lint's, DROP and DRIFT are the subagent's and neither showed a gap on the dry run. Sections 1 and 4 are superseded by ADR-044 on the home question. Transitioning to Verification Pending on the next run's evidence remains the right gate, because the subagent half has still not run in anger.
+
 ## Dependencies
 
 - **Blocks**: (none)

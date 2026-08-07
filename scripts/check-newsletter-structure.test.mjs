@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, existsSync, readdirSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -443,6 +443,82 @@ describe('check-newsletter-structure.sh', () => {
     const firing = editions.filter((f) => run(f).stderr.includes('[k]'));
     expect(firing, `check (k) fired on: ${firing.join(', ')}`).toEqual([]);
   }, 60_000);
+
+  // --- (l) LinkedIn post length against the trailing median (P121) -----------
+  // The threshold is 1.5x the median of the two most recent published posts for
+  // the same persona. These pin the ARITHMETIC against a synthetic corpus via
+  // NEWSLETTER_PUBLISHED_DIR, deliberately: an earlier version asserted against
+  // the live corpus and would have gone red the moment Issue 17 published, since
+  // Issue 16's priors change under it. A regression test that breaks on ordinary
+  // corpus growth reads as "the check regressed" and invites deleting the check.
+
+  function corpus(entries) {
+    // entries: [{ date, chars }] -> a published-tree fixture for one persona
+    const root = mkdtempSync(join(tmpdir(), 'nl-corpus-'));
+    const personaDir = join(root, 'leader');
+    for (const { date, chars } of entries) {
+      const d = join(personaDir, date);
+      mkdirSync(d, { recursive: true });
+      writeFileSync(join(d, `${date}.linkedin.md`), `---\npost-type: linkedin-share\n---\n${'x'.repeat(chars)}`);
+    }
+    return root;
+  }
+
+  function runWithCorpus(briefPath, root) {
+    return spawnSync('bash', [SCRIPT, briefPath], {
+      encoding: 'utf8',
+      env: { ...process.env, NEWSLETTER_PUBLISHED_DIR: root },
+    });
+  }
+
+  it('(l) fires when the post exceeds 1.5x the median of its two priors', () => {
+    const root = corpus([{ date: '2026-06-01', chars: 1000 }, { date: '2026-06-08', chars: 1000 }]);
+    // median 1000 -> ceiling 1500; make the post 1600
+    const brief = fixture(VALID_BRIEF, `---\npost-type: linkedin-share\n---\n${'y'.repeat(1600)}`);
+    const r = runWithCorpus(brief, root);
+    expect(r.stderr).toContain('[l]');
+    expect(r.stderr).toContain('against a 1500 ceiling');
+  });
+
+  it('(l) stays quiet at exactly the ceiling', () => {
+    const root = corpus([{ date: '2026-06-01', chars: 1000 }, { date: '2026-06-08', chars: 1000 }]);
+    const brief = fixture(VALID_BRIEF, `---\npost-type: linkedin-share\n---\n${'y'.repeat(1500)}`);
+    expect(runWithCorpus(brief, root).stderr).not.toContain('[l]');
+  });
+
+  it('(l) skips loudly, not silently, with fewer than two priors', () => {
+    const root = corpus([{ date: '2026-06-01', chars: 1000 }]);
+    const brief = fixture(VALID_BRIEF, `---\npost-type: linkedin-share\n---\n${'y'.repeat(9000)}`);
+    const r = runWithCorpus(brief, root);
+    expect(r.stderr).toContain('SKIP [l]');
+    expect(r.stderr).not.toContain('FAIL [l]');
+  });
+
+  it('(l) skips loudly when the persona has no published corpus', () => {
+    const root = mkdtempSync(join(tmpdir(), 'nl-corpus-empty-'));
+    const brief = fixture(VALID_BRIEF, `---\npost-type: linkedin-share\n---\n${'y'.repeat(9000)}`);
+    const r = runWithCorpus(brief, root);
+    expect(r.stderr).toContain('SKIP [l]');
+    expect(r.stderr).toContain('no published corpus');
+  });
+
+  it('(l) counts the whole file when the post has no frontmatter', () => {
+    // Fail-open guard: an earlier post_chars quit after line 1 on a bare body,
+    // counting ~1 character and passing the ceiling vacuously.
+    const root = corpus([{ date: '2026-06-01', chars: 1000 }, { date: '2026-06-08', chars: 1000 }]);
+    const brief = fixture(VALID_BRIEF, 'y'.repeat(1600));
+    expect(runWithCorpus(brief, root).stderr).toContain('[l]');
+  });
+
+  // One corpus-coupled test, and it asserts only that the check RUNS cleanly on
+  // the live tree, never that a particular edition fires. Safe across growth.
+  it('(l) evaluates against the live corpus without erroring', () => {
+    const brief = 'src/newsletters/published/leader/2026-08-03/2026-08-03.md';
+    expect(existsSync(brief), `corpus fixture missing: ${brief}`).toBe(true);
+    const r = run(brief);
+    expect(r.status, `unexpected usage/IO error: ${r.stderr}`).not.toBe(2);
+    expect(r.stderr).not.toContain('SKIP [l]');
+  });
 
   // P119 regression. Check (c) used to run `body_text | grep -qE '^### Also worth
   // noting'` directly under `set -uo pipefail`. `grep -q` exits on its FIRST match

@@ -352,6 +352,75 @@ $dup_hits
 EOF
 fi
 
+# --- (l) LinkedIn post length against the trailing median (P121) ---------------
+# Is this week's post materially longer than its recent predecessors? A pure
+# arithmetic check: post body characters against 1.5x the median of the two most
+# recently published editions' posts for the SAME persona.
+#
+# WHY THIS LIVES HERE AND NOT IN THE SHAPE GATE. ADR-044's cross-edition shape
+# subagent reads the same posts and reports the trend, but declines to make it a
+# finding: its only length criterion is LinkedIn's 3,000-character platform
+# limit. Verified by dry-run on 2026-08-08 against the published Issue 16, which
+# sits at 1.58x its trailing median and which the gate passed. An arithmetic
+# threshold is a script's job (ADR-042 assigns structural hygiene to this lint);
+# the gate keeps the judgement-shaped cross-edition work it does well.
+#
+# KNOWN LIMITATION: the trailing median ratchets. An over-length edition joins
+# the next week's baseline and so raises its own successor's allowance. Measured
+# 2026-08-08: Issue 16 at 2,343 characters fails a 2,182 ceiling, and its
+# presence lifts the following edition's ceiling to 2,986, a whisker under the
+# 3,000 platform limit. The check reliably catches the FIRST over-length edition
+# in a run and is weakest immediately after one, so sustained drift can walk past
+# it one edition at a time. Faithful to the trailing-median rule P121 specified
+# rather than a defect here. If drift is observed, take the median over recent
+# editions that themselves passed rather than over all recent ones.
+#
+# Corpus root is overridable via NEWSLETTER_PUBLISHED_DIR so the tests can pin
+# the arithmetic against a synthetic fixture instead of a moving corpus. It
+# resolves relative to this script, not the process cwd, so an off-root
+# invocation does not silently skip.
+if [ -f "$linkedin" ]; then
+  _l_script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+  pub_root="${NEWSLETTER_PUBLISHED_DIR:-$_l_script_dir/../src/newsletters/published}"
+  # Persona is the path segment under published/ or drafts/; default leader.
+  persona=$(printf '%s' "$linkedin" | sed -nE 's#.*/(published|drafts)/([^/]+)/.*#\2#p')
+  [ -n "$persona" ] || persona=leader
+  pub_dir="$pub_root/$persona"
+  if [ ! -d "$pub_dir" ]; then
+    echo "SKIP [l] $linkedin: no published corpus at $pub_dir for persona '$persona'; length ceiling not evaluated" >&2
+  else
+    cur_real=$(cd "$(dirname "$linkedin")" && pwd)/$(basename "$linkedin")
+    priors=$(ls -d "$pub_dir"/*/ 2>/dev/null | sort -r | while read -r d; do
+      stem=$(basename "$d")
+      cand="$d$stem.linkedin.md"
+      [ -f "$cand" ] || continue
+      cand_real=$(cd "$(dirname "$cand")" && pwd)/$(basename "$cand")
+      [ "$cand_real" = "$cur_real" ] && continue
+      echo "$cand"
+    done | head -2)
+    nprior=$(printf '%s\n' "$priors" | grep -c . || true)
+    if [ "$nprior" -lt 2 ]; then
+      echo "SKIP [l] $linkedin: only $nprior prior published post(s) for persona '$persona'; need 2 to take a median" >&2
+    else
+      # Strip frontmatter only when line 1 actually opens one; otherwise count all.
+      post_chars() {
+        if [ "$(head -1 "$1")" = "---" ]; then
+          sed '1,/^---$/d' "$1" | tr -d '\n' | wc -c | tr -d ' '
+        else
+          tr -d '\n' < "$1" | wc -c | tr -d ' '
+        fi
+      }
+      a=$(printf '%s\n' "$priors" | sed -n 1p); b=$(printf '%s\n' "$priors" | sed -n 2p)
+      ca=$(post_chars "$a"); cb=$(post_chars "$b"); cc=$(post_chars "$linkedin")
+      med=$(( (ca + cb) / 2 ))
+      ceiling=$(( med * 3 / 2 ))
+      if [ "$med" -gt 0 ] && [ "$cc" -gt "$ceiling" ]; then
+        fail l "$linkedin: post body is $cc characters against a $ceiling ceiling (1.5x the $med-character median of $(basename "$(dirname "$a")") and $(basename "$(dirname "$b")")); tighten it, or say plainly why this edition earns the extra length"
+      fi
+    fi
+  fi
+fi
+
 # --- verdict ------------------------------------------------------------------
 if [ "$violations" -gt 0 ]; then
   echo "check-newsletter-structure: $violations violation(s) in $brief" >&2
