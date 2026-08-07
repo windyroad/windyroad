@@ -10,7 +10,7 @@ jtbd: [JTBD-005, JTBD-200]
 stories: []
 ---
 
-# RFC-005: Make a post-gate body edit detectable at save, by recording the digest each gate scored
+# RFC-005: Detect post-gate edits at save, and re-run the reviews that missed them
 
 **Status**: proposed
 **Reported**: 2026-08-08
@@ -22,7 +22,7 @@ stories: []
 
 ## Summary
 
-Have each gate record the digest of the artefact version it actually scored, then check at save time that every recorded digest still matches. A mismatch means a gate's verdict attaches to a superseded artefact, which is the P099 failure and is currently invisible.
+Have each gate record the digest of the artefact version it actually scored, then check at save time that every recorded digest still matches. A mismatch means a gate's verdict attaches to a superseded artefact, which is the P099 failure and is currently invisible. **Per Tom's direction of 2026-08-08, a stale gate is re-invoked automatically rather than reported**: handing him a list of skipped reviews on publish morning is the moment the original problem says he is least able to act on it.
 
 ## Driving problem trace
 
@@ -78,7 +78,23 @@ Recognising the states is **derivation, not an open choice**, but on the full su
 
 **`carried-by-design` is recognisable but not verifiable** by a deterministic working-tree lint: the prep artefacts survive in git (Issue 16's `reviews:8` records commit `1cf2691`) but not in the tree. Only `matches-current` and `stale` are actually checked.
 
-## Scope: detect only, and not uniformly a violation
+## Tom's direction, 2026-08-08: re-run the missing reviews, do not just report them
+
+**This supersedes the detect-only scope this RFC was drafted with.** Asked how fussy the check should be, Tom answered: *"I'm happy with Fussy. But I don't want it just telling me that the review hasn't been run. I want to actually run the missing reviews."*
+
+So the mechanism is unchanged (each verdict records the digest of what it scored; the comparison at save finds the stale ones) but the **response** changes. A gate found stale is **re-invoked against the current artefact**, not reported as a finding for Tom to action on publish morning. Detect-only would have handed him a list at exactly the moment the original problem says he is least able to act on it, which is the opposite of the point.
+
+Three things this does not change, because they are the difference between re-running what is stale and re-running everything:
+
+- **Legitimately-skipped gates are not re-run.** The claim-scoped rows still govern: cross-edition triggers on a thesis-bearing line changing, URL verification on a URL or URL-anchored claim changing, and "body changed" is the wrong test for both (SKILL.md:1091). A body edit that touched neither does not re-invoke them.
+- **Sanctioned skips stay skipped.** Where the step-15 re-run returned REJECTED, the rows that skip on it stay skipped. Re-invoking the editor on a body the critic rejected is waste.
+- **The bound still holds.** ADR-043 capped the remediation loop for a reason, and auto-re-running is exactly the cost it bounded. The re-run is of the **stale set**, once, against the current artefact, not an uncapped loop. If a re-run itself forces an edit, that re-enters the existing section 15.6 machinery rather than recursing here.
+
+**What this costs, stated plainly.** Re-running the heavy gates costs agent invocations on publish morning, which is the busiest moment. The trade Tom accepted is that spending them automatically beats handing him a list of what was skipped. The fussy setting he chose means some of those re-runs will turn out to have been unnecessary; that is the accepted cost of not staying quiet about a real miss.
+
+**Consequence for the escalated choice.** The keying granularity below now decides not only what is flagged but what is **automatically re-invoked**, which raises the stakes on dimensions 3 and 5 in particular: an over-broad digest now spends invocations rather than merely printing a line.
+
+## Scope: what re-runs, and what a stale verdict means
 
 "Body changed" is the wrong test for some rows, and SKILL.md:1091 says so outright:
 
@@ -86,9 +102,9 @@ Recognising the states is **derivation, not an open choice**, but on the full su
 
 Cross-edition (`:1081`) triggers on a thesis-bearing line changing; URL verification (`:1082`) on a URL or URL-anchored claim changing, with its skip column sanctioning the carry ("unchanged URLs carry their prior verdict"). The shape gate at `:1077` carries a Tom-cleared deviation forward by design. Across `:1075-1080` the REJECTED skip column sanctions five rows (`:1075` editor, `:1076` skeptic, `:1077` shape-brief, `:1078` remediation loop, `:1080` cog-a11y); `:1079`'s skip is `phase=prep`, and `:1074`'s critic row carries a differently-keyed upstream-content-risk skip.
 
-**For body-triggered rows** a detected staleness IS a condition-(a) violation, and its remedy is condition (a)'s existing full pass (ADR-046:57: condition (a) "makes the full pass the guarantee that no publish-bound body reaches step 16 without a complete gate pass since its last edit, which is the P099 invariant itself"). No discretion is added and no ADR-043 amendment is implied.
+**For body-triggered rows** a detected staleness IS a condition-(a) violation, and its remedy is now the automatic re-invocation above, which is what condition (a)'s existing full pass (ADR-046:57: condition (a) "makes the full pass the guarantee that no publish-bound body reaches step 16 without a complete gate pass since its last edit, which is the P099 invariant itself"). No discretion is added and no ADR-043 amendment is implied.
 
-An earlier draft claimed staleness could stay editorial judgement under ADR-043's residual-advisory vocabulary. That vocabulary governs a **finding that survived remediation** (`:64`, `:82`, `:109`), not a stale verdict, and the claim is withdrawn.
+An earlier draft claimed staleness could stay editorial judgement under ADR-043's residual-advisory vocabulary. That vocabulary governs a **finding that survived remediation** (`:64`, `:82`, `:109`), not a stale verdict, and the claim is withdrawn. Tom's direction settles it further: a stale body-triggered verdict is re-run, not judged.
 
 ### Which reading of `:1075` this RFC holds
 
