@@ -2,10 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-08-07
-**Priority**: 12 (High), Impact: 3 x Likelihood: 4. Impact is 3 because the reachable consequence is a governance artefact changed on a false premise, which misdirects future work and burns iteration budget without reaching readers. Likelihood is 4 because this is the fourth recorded instance of the same behaviour in this repo and the third in a single session, so it fires by default rather than by chance.
+**Priority**: 15 (High), Impact: 3 x Likelihood: 5. Impact is 3 because the reachable consequence is a governance artefact changed on a false premise, which misdirects future work and burns iteration budget without reaching readers. Likelihood is 5 (re-rated 2026-08-08) because it recurred twice more during the P122 build, taking the count to six. Both new instances were load-bearing: a claim that two upstream ADRs still carried a rejected stance, made by propagating a third ADR's stale note without opening either file; and a claim that no published edition would fire a new lint check, made after testing one edition. Six instances across two sessions is certain, not likely.
 **Origin**: internal
 **Effort**: M. The verify-before-asserting family already has four tickets and a memory file, and none of them stopped this instance, so the fix is not another restatement of the rule. It needs a mechanism, and choosing one is the work.
-**WSJF**: 12.0 = (12 x 1.0) / 2
+**WSJF**: 7.5 = (15 x 1.0) / 2 (arithmetic corrected 2026-08-08: the prior line stated 12.0 but 12 x 1.0 / 2 is 6.0; the divisor had not been applied)
 
 ## Description
 

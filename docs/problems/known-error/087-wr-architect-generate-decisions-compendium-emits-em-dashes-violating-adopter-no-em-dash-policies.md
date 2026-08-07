@@ -2,10 +2,10 @@
 
 **Status**: Known Error
 **Reported**: 2026-06-03
-**Priority**: 8 (Medium), Impact: Minor (2) x Likelihood: Likely (4) (re-rated 2026-07-15 review: recurred ~5x on 2026-07-15 alone; fires on every compendium touch via both the regen script and the ADR-078 per-edit hook)
+**Priority**: 10 (Medium), Impact: Minor (2) x Likelihood: Almost Certain (5) (re-rated 2026-08-08: five firings on 2026-08-07 alone, twice within a single ADR's create-then-ratify lifecycle, and the hand-repair does not survive the next edit to the same ADR, so it is a per-edit tax. Fires on every compendium touch via both the regen script and the ADR-078 per-edit hook.)
 **Origin**: internal
 **Effort**: M (upstream fix on two generator surfaces + report)
-**WSJF**: 8.0 = (8 x 2.0) / 2
+**WSJF**: 10.0 = (10 x 2.0) / 2 (re-rated 2026-08-08)
 **Type**: technical
 
 ## Description
