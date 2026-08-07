@@ -61,6 +61,8 @@ with an explicit not-found branch that surfaces a `/install-updates` directive r
 
 One behavioural note for the next run: `0.1.7` emits a PNG alongside the SVG. Step 7's contract names only the SVG, so the PNG is an unclaimed side-effect output. Harmless, but worth knowing before it appears untracked in the working tree.
 
+**Sibling-path sweep, 2026-08-08.** This ticket asked whether other versioned plugin-cache paths exist elsewhere. A repo-wide `git grep` for `plugins/cache/<vendor>/<plugin>/<semver>` across all tracked files, excluding ticket bodies and retros where such paths appear as evidence rather than as code, returns **zero** matches. The step-7 call site was the only one, and it is now version-agnostic. The only absolute-path `node` invocation remaining in the newsletter skill is the fixed line itself. The investigation task on sibling paths is discharged on that evidence.
+
 **Awaiting Tom's verification**: the next `/wr-newsletter` run completing step 7 with a rendered map.
 
 ## Dependencies
