@@ -9,6 +9,7 @@ consulted: [wr-architect:agent, wr-jtbd:agent, wr-voice-tone:agent]
 informed: []
 reassessment-date: 2026-10-05
 amends: [020-newsletter-editor-subagent, 042-newsletter-adversarial-skeptic-gate]
+amended-by: [044-cross-edition-shape-as-a-fresh-context-subagent-gate]
 composes-with: [015-reader-respect-and-gate-rejection-policy, 017-ai-brief-prep-and-finalise-phases, 032-newsletter-editorial-discipline-policy]
 related: [012-ai-generated-content-review-gates, 024-url-verification-gate-in-wr-newsletter, 025-pass-with-author-overrides-verdict-for-sw-critic, 026-reviews-and-meta-content-to-sibling-files, 035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate, 041-retire-consulting-funnel-repurpose-as-the-shift-hub]
 ---
@@ -129,6 +130,8 @@ One round is only sufficient if the editor returns everything it has in a single
 
 ## Invocation budget re-assertion
 
+> **HISTORICAL FRAMING, corrected 2026-08-07. See `## Amendment 2026-08-07 (P121, P122)` clause 5 at the end of this file.** This section describes a ceiling "set" at roughly 15 and "breached" at 25. There is no ceiling: ADR-020 reassessment criterion 6 is a trigger naming two responses. The question this section leaves open was answered on 2026-08-07 by re-asserting the budget. Do not re-open it.
+
 ADR-020 reassessment criterion 6 set a ceiling of roughly 15 subagent invocations per issue and instructed the team to "explicitly re-assert the budget or trim a gate" when it is crossed. The honest tally says the ceiling was **already breached before this change**:
 
 | Per phase, brief body | Invocations |
@@ -189,4 +192,57 @@ The one-round cap is chosen partly to keep that delta at its minimum. Whether ~1
 - **If a skeptic finding is ever remediated by adding evidence or strengthening a claim**, the differential has failed and the skeptic must be removed from the loop and returned to advisory-only. This is the one failure mode that would make the loop worse than the defect it fixes.
 - **Invocation budget: ADR-020 reassessment criterion 6 is open.** The ~15-per-issue ceiling is breached at ~25. It needs either an explicit re-assertion at a higher number or retirement in favour of ADR-017's under-one-hour finalise-session wall-clock criterion, which is the thing the count was proxying. Tom's call, carried as an open question until given.
 - **If the leader `WOULD_FORWARD` axis misfires** in a future edition retro, the gap is in JTBD-005's outcome list, not in the agent. With JTBD-003 retired, no live Engineering Leader job documents a positive forward-or-share outcome, so the axis rests on JTBD-005's "confidence I am not missing a shift" plus a negative credential-sensitivity test. The fix is to add the outcome to the job file.
+- **AMENDED 2026-08-07, see the amendment section below.** The editor-and-skeptic-same-passage criterion stands; the invocation-budget criterion above it is discharged.
 - **If the editor and skeptic remediations routinely address the same passage**, the ADR-020 reassessment criterion 2 boundary has collapsed and one gate should absorb the other before the loop is tuned further.
+
+## Amendment 2026-08-07 (P121, P122)
+
+Landed by ADR-044 (Cross-edition shape as a fresh-context subagent gate). One section covering both tickets' changes to step 15.37, rather than two sequential patches on the same step. **Amendment, not supersession**: the chosen option, the one-round cap, the skeptic reduce-only differential, the residual-advisory arm, the absent author-override arm and the four section-15.6 conditions all survive unchanged.
+
+### Clause 1: the collect step gains sources, and the no-op condition widens
+
+Step 15.37 currently collects editor and skeptic findings only, and no-ops when both return PASS. It now also collects:
+
+- **cross-edition shape findings** from the new shape gate at step 15.36 (brief surface only; the post surface takes the inline path at 15.57, mirroring the skeptic-on-post treatment already established here);
+- **within-edition assembly findings** from the editor's new assembly sweep (P122).
+
+The no-op condition widens accordingly: the loop no-ops only when every contributing source is clean. Re-running a deterministic contributor inside round 2 costs no invocation; re-running an agent contributor does, and counts against the round.
+
+### Clause 2: a third stop-and-surface class, keyed on wrongness
+
+This decision already carries two stop-and-surface classes, and both key on **remediation availability**: a finding needing new sourcing, and a finding whose only remediation crosses an ADR-032 shape boundary.
+
+The new class keys on something different: **wrongness**. A finding may be perfectly remediable and still must not be remediated, because it is not a defect. The distinction:
+
+- A **defect** is wrong against a stated standard. It remediates.
+- A **deviation** is merely different from precedent and may be deliberate. It is surfaced for a stated reason and never becomes an applied edit.
+
+The mechanic is the existing residual-advisory arm; the keying is new and is recorded as its own class so a future reader does not assume it falls out of the other two.
+
+### Clause 3: classification precedence, one rule not two
+
+P121 and P122 each add a classification axis to this step. They are ONE rule with a stated order:
+
+1. **Outer test, wrongness.** Defect or deviation? A deviation never enters remediation, whatever its grain.
+2. **Inner test, grain.** Applied only to defects: remediable within the passage, or does it cross an item or section boundary? Cross-boundary defects are stop-and-surface per ADR-032.
+
+Wrongness outer, grain inner. This ordering subsumes P122's ADR-governed-text limb, since text governed by a ratified decision is by construction not wrong by a lint's or a shape gate's authority. That limb is retained as an explicit restatement because the provenance case is load-bearing.
+
+### Clause 4: who states the reason, and what it may say
+
+A surfaced deviation is cleared by **Tom**, never by the drafter. Considered Option 5 of this decision rejected an author-override arm because "an agent self-certifying that its own unremediated finding is acceptable is the confirmation-bias failure", and a drafter-stated reason would restore that option under a new name.
+
+The reason must be **descriptive only**: why the deviation was deliberate, or why remediation was unavailable. It may never be a judgement that the finding is unimportant.
+
+A deviation Tom clears at prep **carries forward to finalise** with residual status intact, per this decision's existing residual carry-forward rule. It does not re-fire. Asking the same question twice per edition is the review load this work exists to reduce.
+
+### Clause 5: the invocation-budget question is DISCHARGED
+
+This decision's reassessment criteria carried "ADR-020 reassessment criterion 6 is open ... Tom's call, carried as an open question until given". **Tom gave that direction on 2026-08-07. The question is closed.**
+
+Two corrections come with it:
+
+1. **Criterion 6 is a trigger, not a ceiling.** This decision's `## Invocation budget re-assertion` section describes a ceiling "set" at roughly 15 and "breached" at 25. That characterisation is wrong. Criterion 6 contains no prohibitive verb; it names two valid responses to crossing 15, and the precedent it defers to sets no number at all. The word "ceiling" first appears against criterion 6 in ADR-020's own 2026-06-17 amendment, which postdates that ADR's ratification, and propagated from there into ADR-042's ratified text and then into this decision. ADR-020 now carries the correction adjacent to criterion 6 itself.
+2. **The budget is re-asserted, not trimmed.** That is the first of the two responses criterion 6 names. The pipeline stood near 25; the shape gate adds up to 6 worst case (two brief-site calls, two brief re-invocations inside this loop, one post-site call, one post inline re-invocation), landing near 31. The constraint that actually binds is ADR-017's under-one-hour finalise-session criterion, read day-agnostic since publication moved to Monday.
+
+Read this decision's `## Invocation budget re-assertion` section as historical framing, corrected here. Do not re-open the question at the next reassessment pass.

@@ -75,6 +75,13 @@ This is the reproduction fixture for the eventual lint. It is git-addressable an
   2. **15.37's no-op condition has to widen**, from "both 15.25 and 15.35 returned PASS" to "15.25, 15.35 and the shape diff are all clean". Otherwise a shape finding is silently dropped on every edition where the two LLM gates both pass, which is the common case.
   3. **15.37's skip condition must NOT be inherited.** Step 15.37 skips entirely when the step-15 critic returns `REJECTED`, on the stated ground that neither upstream gate ran. That rationale does not transfer to a deterministic script with no upstream dependency and zero invocation cost, so the lint needs its own invocation site with its own skip and phase semantics rather than sitting inside 15.37's skip.
 
+> **STALE PREMISE SWEEP, 2026-08-07.** Both deferral grounds below have since been discharged and this section is retained as history, not as live reasoning.
+>
+> 1. **ADR-043 is ratified** (`human-oversight: confirmed`, `oversight-date: 2026-08-05`). The unratified-dependency argument is spent.
+> 2. **Tom's direction landed 2026-08-07.** The reader-benefit question is answered (see Preconditions item 2), and the invocation-budget argument is withdrawn entirely: there was never a ceiling, only a trigger, and the budget was re-asserted.
+>
+> The fix is now proposed, in ADR-044 (Cross-edition shape as a fresh-context subagent gate). Note it is an **agent**, not the lint this section and the Fix Strategy argue for.
+
 ### Why the fix is not proposed in this iteration
 
 Two direction calls block the build, both category-1 and both Tom's. They are recorded here so the next iteration does not re-derive them:
@@ -87,6 +94,14 @@ No RFC is created in this iteration. Per ADR-022's corrected semantics, Known Er
 ## Fix Strategy
 
 Settled shape, blocked on the two direction calls above. Not yet proposed as an RFC.
+
+> **SUPERSEDED IN PART, 2026-08-07, by ADR-044 (Cross-edition shape as a fresh-context subagent gate).** Sections 1 and 3 below proposed a deterministic lint with fixed probes. Tom chose a **fresh-context subagent gate** instead, at the create-adr substance-confirm, on the grounds that whether a departure from precedent costs the reader anything is a judgement, and that this failure class is defined by not knowing the breaks in advance. Read ADR-044 as authoritative for the home, the probe-versus-judgement question, and the invocation-site design; the sections below are retained for the analysis they carry, which ADR-044 reuses.
+>
+> **What survives unchanged:** the single-edition versus cross-edition boundary and the three template-invariant corrections (section 2); the two-authority split and its grounding logic (section 3, minus the fixed per-probe mapping); the routing intent (section 4); and every Preconditions entry.
+>
+> **What changed:** the home is an agent, not a script. The strict two-prior precedence rule is gone, replaced by judgement over a two-edition window, which also dissolves the known limitation section 3 recorded (that a two-prior rule would have missed the motivating label drift). Authority is now judged per finding rather than fixed per probe: Tom considered a closed default-deny enumeration and declined it, and ADR-044 records the architect's objection to that choice plus the tightening trigger. Routing needs **two** sites, not one, because a single site cannot both precede the remediation loop and see a companion post that is not drafted until after it.
+>
+> **The invocation-budget argument in section 1 is withdrawn.** It rested on a roughly-15-per-issue ceiling that does not exist: ADR-020 reassessment criterion 6 is a trigger naming two responses, and Tom exercised it by re-asserting the budget. ADR-020 and ADR-043 now carry the correction.
 
 ### 1. A deterministic lint, not a gate
 
@@ -164,7 +179,9 @@ Three additions from the architect review of the settled direction (2026-08-07),
 
    **Not a breach of P122's forward rule.** P122 pins that any future axis justified only by "this reduces Tom's review rounds" is ungrounded and must be blocked until an author persona is ratified. Distribution and feed recognition is a different justification from review-load reduction, so the advisory class is compliant as written. The two records will read as inconsistent to a future reader unless the ADR names the distinction, so name it.
 
-3. **New:** settle the step-15.37 classification precedence (section 4) in whichever of P121 or P122 lands first, so the two tickets do not ship two independent classification schemes on the same step.
+3. ~~**New:** settle the step-15.37 classification precedence (section 4) in whichever of P121 or P122 lands first.~~ **DONE 2026-08-07.** Settled as wrongness outer, grain inner, and recorded in ADR-043's `## Amendment 2026-08-07 (P121, P122)` clause 3, which covers both tickets in one section rather than two sequential patches.
+
+4. **DONE 2026-08-07: the decision record exists.** ADR-044 (Cross-edition shape as a fresh-context subagent gate) is written and substance-confirmed, and lands the joint amendment on ADR-043 plus the criterion-6 correction on ADR-020. **This ticket's remaining work is implementation**, not design: author `.claude/agents/wr-newsletter-shape.md`, wire steps 15.36 and 15.57 into SKILL.md, and add the three template-invariant checks to `check-newsletter-structure.sh` with tests. Note that last item is new work ADR-044 creates: the structure lint implements checks (a) through (g) today and none covers the `**From Tom**` opener, the `### Item N:` prefix or the per-item bold labels.
 
 ## Dependencies
 
@@ -179,10 +196,10 @@ Three additions from the architect review of the settled direction (2026-08-07),
 - **P080** (`docs/problems/.../080-newsletter-pipeline-has-no-cross-edition-thesis-contradiction-check.md`): the ticket that built the cross-edition gate under ADR-038, scoping it to thesis contradiction.
 - **P070** (`docs/problems/.../070-newsletter-draft-template-does-not-codify-three-deep-items-plus-notes-discipline.md`): codified the canonical shape into ADR-032. That work encodes the shape in the abstract; this ticket is about the conventions that live only in the published corpus.
 - **ADR-038** (`docs/decisions/038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`): scopes the cross-edition gate to thesis consistency. Capture assumed widening it would need an amendment; investigation ruled the gate out as the home on ordering grounds, so its charter is untouched and no amendment is needed.
-- **ADR-043** (`docs/decisions/043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates.proposed.md`): the decision P120 shipped as. Its step 15.37 is where brief-shape findings route, and its 15.55 inline rule is where post-shape findings route. Currently `human-oversight: unconfirmed`, which is precondition 1.
+- **ADR-043** (`docs/decisions/043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates.proposed.md`): the decision P120 shipped as. Its step 15.37 is where brief-shape findings route, and its 15.55 inline rule is where post-shape findings route. ~~Currently `human-oversight: unconfirmed`, which is precondition 1~~ **RATIFIED 2026-08-05** (`human-oversight: confirmed`, `oversight-date: 2026-08-05`); precondition 1 is discharged.
 - **ADR-032** (`docs/decisions/032-newsletter-editorial-discipline-policy.proposed.md`): owns the newsletter editorial shape, already defers the deterministic check (h) this work has to draw a boundary against, and records the provenance line as remediation-invariant.
 - **ADR-035** (`docs/decisions/035-critic-rubric-shape-is-strengths-weaknesses-plus-context.accepted.md`): the coverage-partitioning driver that rules out loading a shape axis onto an existing gate.
-- **ADR-020** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): reassessment criterion 6 sets the subagent invocation ceiling ADR-043 records as already breached, which is why the fix is a script rather than an agent.
+- **ADR-020** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): ~~reassessment criterion 6 sets the subagent invocation ceiling ADR-043 records as already breached, which is why the fix is a script rather than an agent.~~ **Both halves of that sentence are wrong, corrected 2026-08-07.** Criterion 6 sets no ceiling: it is a trigger naming two valid responses to crossing 15 invocations, and it contains no prohibitive verb. And the fix is an agent, not a script, per ADR-044. The budget was re-asserted, which is the first of the two responses the criterion authorises. ADR-020 now carries the correction adjacent to criterion 6 itself.
 - **P089** (`docs/problems/.../089-...md`): built `scripts/check-newsletter-structure.sh`, the deterministic-lint idiom this fix follows.
 - **JTBD-005** (`docs/jtbd/engineering-leader/JTBD-005-stay-ahead-of-the-shift.proposed.md`) and **JTBD-200** (`docs/jtbd/developer/JTBD-200-signal-from-noise.proposed.md`): the live persona anchors. JTBD-001 through JTBD-004 were retired by ADR-041 on 2026-07-10 and must not be cited here.
 - Reproduction fixture: commit `d2d674a`, `src/newsletters/drafts/leader/2026-08-03/`. The published edition at `src/newsletters/published/leader/2026-08-03/` is post-remediation and is NOT usable as a fixture.

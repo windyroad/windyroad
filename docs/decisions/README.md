@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 43 (39 in-force, 4 historical)
+**Total ADRs:** 44 (40 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_39 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_40 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -101,9 +101,9 @@ _39 ADRs. These are the current rules. The architect agent reads this section fi
 **Chosen:** Chosen option: **"Sibling markdown file at `<draft-folder>/YYYY-MM-DD/YYYY-MM-DD.capture.md`, append-and-survive across phases."**
 ### ADR-020 - Newsletter editor subagent simulates an experienced LinkedIn editor as a fourth review class
 **Status:** proposed | **Oversight:** confirmed
-**Decides:** Adds a fourth review gate (a fresh-context, project-local `wr-newsletter-editor` subagent that simulates an experienced LinkedIn newsletter editor, scoring would-open / would-read-through / would-forward against the persona's JTBD plus, per the 2026-06-17 P081 amendment, a passage-cited editorial-craft pass), because rubric expansion of the sw-critic kept passing drafts whose editorial-judgement weaknesses Tom's external review then caught. Runs at SKILL step 15.25 on the brief body only, skipped when sw-critic returns REJECTED; the agent never rewrites, though the 2026-08-05 P120 amendment lifts the single-shot restriction so ADR-043's bounded loop can remediate its findings and re-invoke it once, and corrects the persona read set to live jobs (developer JTBD-200/201/203/204/205, leader JTBD-005) after ADR-041 retired JTBD-001..004.
+**Decides:** Adds a fourth review gate, a fresh-context, project-local `wr-newsletter-editor` subagent simulating an experienced LinkedIn newsletter editor, scoring would-open / would-read-through / would-forward against the persona's JTBD plus (2026-06-17 P081 amendment) a passage-cited editorial-craft pass, because rubric expansion of the sw-critic kept passing drafts whose editorial-judgement weaknesses Tom's external review then caught. Runs at SKILL step 15.25 on the brief body only, skipped when sw-critic returns REJECTED; the agent never rewrites, though the 2026-08-05 P120 amendment lifts the single-shot restriction so ADR-043's bounded loop can remediate its findings and re-invoke it once, and corrects the persona read set to live jobs (developer JTBD-200/201/203/204/205, leader JTBD-005) after ADR-041 retired JTBD-001..004. Reassessment criterion 6 is a **trigger, not a ceiling** (corrected 2026-08-07 by ADR-044); it was exercised as written and the budget re-asserted rather than a gate trimmed.
 **Confirmation:** `EDITOR_REVIEW` block format pinned verbatim in the agent file (three reader-experience axes, EDITORIAL_FINDINGS, EDITORIAL_CRAFT, EDITOR_VERDICT); agent contract documented (artifact_path + persona + edition_number, persona/JTBD read set, fresh context, no rewrites, mechanical verdict); skip-on-upstream-REJECTED documented as defence-in-depth; SKILL.md updated at step 9 intro, ADR list, new steps 15.25 and 15.25-prime, step 16 save-blocks (prep/finalise/full) and step 17 Tom-summary; first live-run verdict validated against Tom's reading.
-**Related:** ADR-011, ADR-012, ADR-015, ADR-016, ADR-017, ADR-018, ADR-026, ADR-033, ADR-035, ADR-041, ADR-043
+**Related:** ADR-011, ADR-012, ADR-015, ADR-016, ADR-017, ADR-018, ADR-026, ADR-030, ADR-033, ADR-035, ADR-041, ADR-042, ADR-043, ADR-044
 
 ### ADR-021 - Auto-resolve stale dependencies in push:watch
 **Status:** proposed | **Oversight:** confirmed
@@ -207,7 +207,12 @@ _39 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed (2026-08-05)
 **Decides:** The editor (15.25) and adversarial-skeptic (15.35/15.55) gates stop routing findings to Tom and remediate them in-pipeline at a new step 15.37, capped at one paired round, because Issue 16 showed correct gate findings discarded then re-raised in external review while the surrounding gate battery caught every over-correction, discharging ADR-020's pre-registered lift. Findings still standing become recorded residual advisories with no author-override arm; skeptic remediation is asymmetric (reduce a claim to what its sources support, never add evidence or strengthen), and the editor's leader grounding moves from the ADR-041-retired JTBD-001/002/003 to JTBD-005 in the same change.
 **Confirmation:** ADR-020 and ADR-042 carry `## Amendment 2026-08-05 (P120)` sections naming the lifted clauses; SKILL.md gains step 15.37 with the one-round cap, orchestrator-side churn detection, body-only inner rounds, the skeptic differential, residual advisories and section 15.6 conditions (a)–(d) including the two-consecutive-edit-forcing-pass stop; steps 15.25/15.35 route into 15.37 and 15.55 applies the rule inline; section 15.6 names 11.4 and 11.5 as claim-scoped triggers; the editor agent's hard rules require all findings in a single pass; editor read-lists cite JTBD-005 and JTBD-205 with no retired jobs; SKILL.md preamble, phase table and steps 16/17 record the new step and residual advisories; compendium regenerated; first live run validates the loop in `.reviews.md`
-**Related:** ADR-012, ADR-015, ADR-016, ADR-017, ADR-018, ADR-020, ADR-024, ADR-025, ADR-026, ADR-032, ADR-035, ADR-038, ADR-041, ADR-042
+**Related:** ADR-012, ADR-015, ADR-016, ADR-017, ADR-018, ADR-020, ADR-024, ADR-025, ADR-026, ADR-032, ADR-035, ADR-038, ADR-041, ADR-042, ADR-044
+### ADR-044 - Cross-edition shape as a fresh-context subagent gate
+**Status:** proposed | **Oversight:** confirmed
+**Decides:** Cross-edition precedent gets its own fresh-context `wr-newsletter-shape` subagent gate rather than a deterministic lint or a widened thesis gate, because whether a departure from precedent costs the reader anything is a judgement and this failure class is not enumerable in advance. It reads the current edition against the two most recent published ones at two sites (brief at 15.36, companion post at 15.57), with authority split per finding: only job-grounded findings may become applied edits, ungrounded ones are advisory and can never touch reader-facing prose. It also corrects the ~15-invocations-per-issue "ceiling" back to the revisit trigger it always was, re-asserts the budget at roughly 31 per issue, and discharges ADR-043's open budget question.
+**Confirmation:** agent file exists with fresh context, read-only tools, and the ADR-035 output shape; input contract pins the two most recent published editions with its window rationale stated; every finding carries a machine-readable remediating-or-advisory marker; the provenance line and the brief's closing reply prompt are excluded by name; minimum post length appears nowhere; the structure lint gains the three template-invariant checks with tests; `SKILL.md` invokes the gate at both sites with its own skip and phase semantics; no advisory finding can reach an applied edit; ADR-043 carries the five-clause amendment including the budget-question discharge; ADR-020 carries the ceiling-to-trigger correction in place; both ADR-020 and ADR-043 gain `amended-by`; hand-edited compendium entry with no em-dashes and a corrected count; first live run records fired findings, authorities, cleared advisories, and finalise wall-clock against ADR-017.
+**Related:** ADR-016, ADR-017, ADR-020, ADR-030, ADR-032, ADR-033, ADR-035, ADR-037, ADR-038, ADR-039, ADR-041, ADR-042, ADR-043
 
 ---
 
