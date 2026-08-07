@@ -149,6 +149,50 @@ ADR-042's "well inside the ceiling" claim counted only its own +2 delta, not the
 
 The one-round cap is chosen partly to keep that delta at its minimum. Whether ~15 is replaced by an explicit higher ceiling, or retired in favour of the wall-clock metric it was proxying (ADR-017 confirmation criterion 3's under-one-hour finalise session, which is what hurts), is **direction Tom has not yet given**. This decision records the true tally and the breach rather than restating a ceiling it knows to be dead; the reassessment criteria below carry the open question.
 
+
+### Clause 6: skip the agent re-invocation when the artefact has not changed
+
+**Landed by P122's own change, not by ADR-044.** Clauses 1 through 5 were landed by ADR-044 (Cross-edition shape as a fresh-context subagent gate); this clause is landed by the P122 assembly-sweep change and is recorded in the same section because it modifies the same step.
+
+Step 15.37 re-invokes the contributing gates after a remediation round so they can see what changed. When a round produces **no edit at all**, that re-invocation asks an agent to re-read a file byte-identical to the one its findings were already taken against, and it can only return the same findings. The clause: **skip the AGENT re-invocation when the artefact is byte-identical to the version the collected findings were taken against.**
+
+**"Agent" is load-bearing.** A deterministic contributor re-run on a byte-identical body provably returns identical findings, so for that half the skip would be a deduction rather than a judgement, and re-running it costs no invocation while giving the churn comparison a fixed point. Clause 1 already turns on this distinction. Deterministic contributors are therefore **always re-run**; only agent invocations are skipped.
+
+Named for byte-identity of the artefact rather than for the paired shape, because the rule must also read onto step 15.57, which re-invokes a single contributor rather than a pair.
+
+**Which artefact, per surface.** The rule is about *the artefact under review*, which differs by site: the brief body at 15.37, the LinkedIn post at 15.55 and 15.57. A remediation at 15.55 can propagate a claim change back into the brief; where it does, the brief is a changed artefact for any subsequent brief-surface look, and the skip does not apply to it on the ground that the post was the thing edited.
+
+Three holes this clause closes explicitly, because leaving any implicit is what makes a skip rule dangerous:
+
+1. **The comparison needs an operand, and one is added.** Step 15.37 item 1 currently pins a *requirement* (all findings must be against the same body version) but retains nothing to compare against, and this decision deliberately declined a marker file, calling the loop's bookkeeping in-context judgement. A byte comparison against a remembered version is not a byte comparison. So the collect step now **retains a hash of the artefact it collected against, for the duration of the pass, in orchestrator context**, and the skip test is that hash against a fresh read of `artifact_path`. In-context is load-bearing: this decision's Neutral consequences record that no marker file is added, so the retained hash must not become one. Algorithm and placement are RFC-004 item 6's business; the requirement and its in-context form are recorded here because they touch a recorded consequence. Without a retained hash the test is unavailable and the default below fires.
+2. **When in doubt, re-run.** The asymmetry is the whole justification: a needless re-run costs up to three agent invocations on the brief surface (editor, skeptic, and the shape gate when it contributed), while a wrongly-skipped look silently drops a finding, which is the P099 failure this pipeline is built to avoid. The agent judging identity is the agent that just decided whether to edit, so its judgement is not independent; the retained hash exists to remove the judgement, and where the hash is unavailable the default is not optional.
+3. **A skipped round IS consumed, and it is recorded.** This is the half that is **not** purely additive to confirmation criterion 3, which pins the four section 15.6 conditions including "(c) the editor and skeptic counter does not reset". Declining a look because nothing changed still spends that round: **condition (c)'s counter is consumed by a declined look**, leaving the post-full-pass look as the remaining one. **Condition (d) is unaffected**: it bounds a different counter, the outer cycle of consecutive edit-forcing full passes, as this decision's own Consequences state. A future compliance pass will find criterion 3 still *literally* satisfiable, which is exactly why it could miss this change, so it should read the pin against this clause. A declined round is recorded in the edition's `.reviews.md` distinguishably from a taken round, so the trade can be evaluated after the fact rather than asserted.
+
+**This ships as a cost-benefit judgement, not a correction.** Two successive drafts tried to warrant the skip **in principle**, by arguing that the re-invocation is a no-op, and both failed on inspection. P122 Fix Strategy section 5 records both attempts and exactly why each failed, with the superseded drafting history parked under its own heading. What survived is narrower than those drafts claimed: not that the re-invocation is inherently pointless, but that on a byte-identical artefact it cannot return new information, so on that specific condition it is pure cost. The clause is scoped to that condition and no wider.
+
+**The pre-registered falsifier is this decision's reassessment criterion 1**: if external review starts raising classes the loop marked residual, the trade was wrong and the cap is too tight. That is the check this clause is registered against, not a general appeal to caution.
+
+**Surfaces.** The Decision Outcome's loop enumeration states re-invocation of both gates unconditionally, so it carries the exception too; leaving the exception only in this amendment is the drift ADR-020 records as the criterion-6 lesson. Four SKILL.md surfaces are added to RFC-004 item 6's list, which currently names only the condition-(c) restatements: `:902` (collect item 1, which gains the retained hash), `:906` (the brief-surface re-invoke, the primary skip site), and the two companion-surface re-invoke lines at `:1016` and `:1043`. Item 6 already names `:1017` and `:1045`; the re-invoke lines immediately above each are the ones the skip rule actually conditions.
+
+**A departure from RFC-004 item 3 and P122, recorded rather than silent.** Both prescribe the wording "conditions (c) and (d) read that counter". That is false against this decision's own Consequences, which state that condition (c) bounds only the editor and skeptic counter while condition (d) bounds the outer cycle. The prescribed wording is not used, and both source documents carry a correction marker so the false claim does not survive on disk.
+
+**Reconciling with the finding-level rule.** This decision states elsewhere that a stop-and-surface finding "does not consume the round". That rule governs the treatment of a *finding*; clause 6 governs the *loop*. In the all-stop-and-surface case this clause optimises for, no finding consumes the round and the declined look consumes it anyway. Both hold: findings are not charged, looks are.
+
+**Frontmatter.** `amended-by` is a list of ADR slugs, and clause 6 is landed by no ADR: P122's decision substance lives in the ADR-020 and ADR-042 amendments, neither of which amends this one. Rather than put a non-ADR token in a typed field, `amended-by` is left carrying ADR-044 alone, and this clause's own provenance line plus RFC-004 carry clause 6's lineage. RFC-004 item 3 asked for a frontmatter change; this is the deliberate departure from it, recorded here so it does not read as an omission.
+
+---
+
+### Corrections to this section's opening sentence, in the same edit
+
+The section currently opens: "Landed by ADR-044 (Cross-edition shape as a fresh-context subagent gate). ... **Amendment, not supersession**: the chosen option, the one-round cap, the skeptic reduce-only differential, the residual-advisory arm and the absent author-override arm all survive unchanged. The four section-15.6 conditions survive **in wording**, but clause 6 (added 2026-08-07 by the P122 change, not by ADR-044) changes what consumes condition (c)'s counter; condition (d) is unaffected."
+
+Clause 6 falsifies **both** halves, so both are corrected together:
+
+- **Provenance**: clauses 1 through 5 are landed by ADR-044; clause 6 is landed by the P122 change.
+- **"All survive unchanged"**: the chosen option, the one-round cap, the reduce-only differential, the residual-advisory arm and the absent author-override arm all survive unchanged. The four section-15.6 conditions survive **in wording**, but clause 6 changes what consumes condition (c)'s counter.
+
+**Compendium.** The ADR-043 entry in `docs/decisions/README.md` gains clause 6, hand-edited under the same P087 posture recorded in ADR-020's 2026-08-07 amendment.
+
 ## Consequences
 
 ### Good
@@ -197,7 +241,7 @@ The one-round cap is chosen partly to keep that delta at its minimum. Whether ~1
 
 ## Amendment 2026-08-07 (P121, P122)
 
-Landed by ADR-044 (Cross-edition shape as a fresh-context subagent gate). One section covering both tickets' changes to step 15.37, rather than two sequential patches on the same step. **Amendment, not supersession**: the chosen option, the one-round cap, the skeptic reduce-only differential, the residual-advisory arm, the absent author-override arm and the four section-15.6 conditions all survive unchanged.
+Clauses 1 to 5 landed by ADR-044 (Cross-edition shape as a fresh-context subagent gate); clause 6 landed by the P122 change. One section covering both tickets' changes to step 15.37, rather than two sequential patches on the same step. **Amendment, not supersession**: the chosen option, the one-round cap, the skeptic reduce-only differential, the residual-advisory arm, the absent author-override arm and the four section-15.6 conditions all survive unchanged.
 
 ### Clause 1: the collect step gains sources, and the no-op condition widens
 

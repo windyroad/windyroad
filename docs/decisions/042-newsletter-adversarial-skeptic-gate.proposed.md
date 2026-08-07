@@ -203,6 +203,57 @@ gate whose stance is wrong for it.
   from both; that is acceptable defence-in-depth, declared here so a retro can
   detect boundary collapse per ADR-020 reassessment criterion 2.
 
+- **vs editor's assembly axes (ADR-020, post-P122, added 2026-08-07).** The
+  2026-08-07 P122 amendment to ADR-020 gives the editor four whole-edition
+  assembly axes, two of which sit close enough to this gate's `promise-payoff`
+  to need a declared seam: `signpost-promises-match-contents` and
+  `close-collects-the-so-what`.
+
+  **`promise-payoff` is evidential.** It asks whether the substance a promise
+  named is actually delivered somewhere in the body. An unresolved promise is a
+  claim the piece failed to earn, and under this decision's reduce-only
+  differential the default remediation is to drop the promise.
+
+  **The editor's two are navigational and organisational.**
+  `signpost-promises-match-contents` asks whether a heading, item label or
+  in-body signpost describes what *physically follows it*, so a mismatch
+  misroutes the reader even when the substance is present and sound elsewhere.
+  `close-collects-the-so-what` asks whether the close gathers what the body
+  actually delivered.
+
+  The discriminators are **object** and **locality**: this gate's promise
+  sources are the opener, preview and fold (as pinned above); the editor's are
+  headings, item labels, in-body signposts, and the headline whose payoff the
+  close is meant to collect (the close is the collector, not the source). This gate asks
+  whether the substance appears anywhere; the editor asks whether it appears
+  where the label says it will.
+
+  **The worked case is P122's finding 2**, a close that does not collect what
+  the headline promised, and it is settled on the artefact rather than on
+  taste. P122's reproduction record shows the body **did** deliver all three
+  candidates and the close simply never gathered them; the published fix was a
+  collection edit ("Three of the week's moves have the shape:" followed by
+  naming all three), not a claim edit. Run the evidential test on that: the
+  promised substance is present, so nothing is unearned, so `promise-payoff` is
+  clean and the defect is the editor's. The "reads as either" framing belongs to
+  RFC-004, not to P122: RFC-004 introduced the contest on 2026-08-07, after
+  P122's reproduction pass, and P122 itself never contests the assignment,
+  mapping finding 2 to `close-collects-the-so-what` flatly in its axis table.
+  This amendment resolves RFC-004's contest against P122's own record. That the remediations
+  differ corroborates the assignment without being the ground for it, and the
+  difference is narrower than it first looks: this gate drops or evidences,
+  while the editor's axis reorganises the close or, where the headline
+  over-promises, narrows the headline. Both are deflationary; only the object
+  differs.
+
+  A passage genuinely exhibiting both failures may be reported by both. That is
+  the same defence-in-depth the bullet above declares, and it does not trip
+  either collapse trigger: this decision's reassessment criterion fires on the
+  two gates flagging the same passages **with the same framing**, and evidential
+  versus navigational is precisely a framing difference. ADR-020 reassessment
+  criterion 2 (cross-gate) is the sibling trigger; ADR-020's new criterion 7
+  limb 2 is intra-agent only and does not cover this pair.
+
 ## Amendment 2026-08-05 (P120): the skeptic joins a bounded remediation loop; two clauses lifted by ADR-043
 
 Problem 120 (`docs/problems/known-error/120-editor-and-skeptic-gates-surface-findings-to-tom-instead-of-remediating-them.md`) records that this gate, like the editor it borrowed its posture from, detects defects correctly and then hands them to Tom rather than remediating them. On The Shift Issue 16 the skeptic returned `WEAKNESSES_FOUND` on both the brief and the LinkedIn post; neither was remediated before Tom saw the draft. ADR-043 (Bounded editorial remediation loop for editor and skeptic gates) adds a one-round remediation loop at SKILL.md step 15.37, and applies the same one-round rule inline at step 15.55 for the LinkedIn post. Two clauses of this ADR's Decision Outcome are lifted.
@@ -218,6 +269,15 @@ Problem 120 (`docs/problems/known-error/120-editor-and-skeptic-gates-surface-fin
 **Not a supersession.** The agent, its name, its fresh-context rule, its target-agnostic scope across brief body and LinkedIn post, its pinned `SKEPTIC_REVIEW` output block, its mechanical verdict vocabulary, its axis set, its skip-on-critic-REJECTED rule, and its declared boundary partitions are all preserved.
 
 **Reviews:** architect PASS (2026-08-05); JTBD PASS (2026-08-05, confirming the reduce-only remediation rule as a faithful encoding of JTBD-205 that protects JTBD-203).
+
+
+## Amendment 2026-08-07 (P122): seam declared against the editor's assembly axes
+
+> **Ratified by Tom on 2026-08-07**, as written. This amendment's substance is human-confirmed; the frontmatter `oversight-date` records the original confirmation of the decision it amends.
+
+The only change is the `vs editor's assembly axes` bullet in the Boundary partitions list above, declaring the evidential-versus-navigational seam against the editor's `signpost-promises-match-contents` and `close-collects-the-so-what`. `amended-by` is deliberately not changed: this amendment is landed by no ADR, the field is uniformly slug-typed, and ADR-020's own 2026-08-07 (P122) amendment set the precedent by adding nothing.
+
+Recorded so ADR-020's 2026-08-07 amendment, which names the ratification of this amendment as a joint precondition to implementation, points at something locatable.
 
 ## Consequences
 
