@@ -138,6 +138,8 @@ Advisory to record as an accepted trade in the ADR-020 amendment, with a reasses
 
 ### 3. Remediation classification: one rule, three exemption limbs
 
+> **Precedence settled 2026-08-07 (see P121 Fix Strategy section 4).** P121 adds a second classification axis to the same step 15.37, keyed on **wrongness** (defect versus deviation-from-precedent) rather than on grain. A single finding can match both, so the two tickets must not ship independent schemes. The settled order is **wrongness outer, grain inner**: a deviation never enters remediation whatever its grain, and only findings established as defects reach the base rule below. That ordering **subsumes limb (a)**, since ADR-governed text is by construction not wrong by a lint's authority; keep limb (a) as an explicit restatement rather than deleting it, because the provenance case is load-bearing and worth naming twice.
+
 **Base rule.** An assembly finding whose minimal remediation would MOVE or DELETE content across an item or section boundary is **stop-and-surface**: recorded immediately as an ADR-043 residual advisory, not consuming the round. One remediable inside a single passage (a heading rename, a re-collected close, a valence clause) remediates normally within the existing one-round cap. This mirrors ADR-043's existing new-sourcing stop-and-surface rule and its "Bounded by ADR-032" clause.
 
 **Limb (a): ADR-governed text is stop-and-surface regardless of grain.** The base rule keys only on remediation grain, so an in-passage reword classifies as remediate-normally. That is wrong for the standing provenance line: ADR-032's Amendment 2026-08-03 records it as **remediation-invariant**, "a gate loop may flag it, but may not silently rewrite it, because its wording is ADR-governed rather than per-edition editorial". Two of the four axes reach it. The line sits inside the From Tom opener before the first `### Item`, so `signpost-promises-match-contents` can flag its placement, and by ADR-032's own design the brief and the compressed LinkedIn variant state the same three facts in different words, which is a duplication `edition-internal-consistency` will see. Both are stop-and-surface.
@@ -174,7 +176,16 @@ No new ADR. The home is an existing gate, ADR-020 confirmation criterion 1 expli
 
 ### Preconditions
 
-1. **ADR-043 ratified** via `/wr-architect:review-decisions`. The only precondition. Optionally fold Fix Strategy section 3's base rule and section 5's invocation rule into ADR-043 first, so one contract is ratified once.
+1. ~~**ADR-043 ratified** via `/wr-architect:review-decisions`. The only precondition.~~ **DONE 2026-08-05.** `human-oversight: confirmed`, `oversight-date: 2026-08-05`, substance-confirmed by Tom against the full contract (one-round cap, no author-override arm, reduce-only skeptic differential, recorded invocation-budget breach). This ticket is unblocked.
+
+2. **New, from the architect review 2026-08-07: coordinate with P121 rather than landing independently.** Both tickets amend ADR-043's step-15.37 contract within days of each other. Land them as **one** `## Amendment <date> (P121, P122)` section covering both, not two sequential patches on the same section. Two things must be settled jointly:
+
+   - the classification precedence (wrongness outer, grain inner) recorded at the top of Fix Strategy section 3 above;
+   - whether the collect step gains one new source or two, since P121 routes deterministic-lint output in and this ticket routes a third editor sweep in.
+
+   ADR-043 confirmation criterion 3 pins step 15.37's contents verbatim, so any SKILL.md edit landing without the matching amendment is a live confirmation violation against a now-ratified decision. That was cheap to fix while the ADR was unratified; it is not any more.
+
+3. **Tom's shape direction (2026-08-07) does not change this ticket's axes, and that is worth stating.** The direction settled that ungrounded *prior-edition* probes ship advisory-only with a distribution rationale. All four axes here are **within-edition** and grounded differently: they test an edition against its own promises, not against a precedent. Nothing in this ticket relies on "a stable weekly shape is good", so the advisory-only class P121 introduces does not extend here. The forward rule this ticket already pins, that any axis justified only by "this reduces Tom's review rounds" is blocked until an author persona is ratified, remains in force and is untouched by the distribution rationale, which is a different justification.
 
 ## Dependencies
 
