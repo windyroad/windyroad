@@ -273,7 +273,7 @@ Problem 120 (`docs/problems/known-error/120-editor-and-skeptic-gates-surface-fin
 
 ## Amendment 2026-08-07 (P122): seam declared against the editor's assembly axes
 
-> **Ratified by Tom on 2026-08-07**, as written. This amendment's substance is human-confirmed; the frontmatter `oversight-date` records the original confirmation of the decision it amends.
+> **Ratified by Tom on 2026-08-07**, as written, from the rendered ADR plus a substance summary. This amendment's substance is human-confirmed; the frontmatter `oversight-date` records the original confirmation of the decision it amends.
 
 The only change is the `vs editor's assembly axes` bullet in the Boundary partitions list above, declaring the evidential-versus-navigational seam against the editor's `signpost-promises-match-contents` and `close-collects-the-so-what`. `amended-by` is deliberately not changed: this amendment is landed by no ADR, the field is uniformly slug-typed, and ADR-020's own 2026-08-07 (P122) amendment set the precedent by adding nothing.
 

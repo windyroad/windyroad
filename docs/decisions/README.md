@@ -220,7 +220,7 @@ _40 ADRs. These are the current rules. The architect agent reads this section fi
 **Related:** upstream ADR-089, upstream ADR-060, upstream ADR-073, RFC-002, RFC-003, RFC-004, P122
 
 ### ADR-046 - Skip the agent re-invocation when the artefact is unchanged
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** proposed | **Oversight:** confirmed 2026-08-07
 **Decides:** ADR-043's remediation loop re-invokes its gates after each round; when a round produces no edit, that asks an agent to re-read a byte-identical file and costs up to three invocations for information that cannot differ. Skip the AGENT re-invocation on byte-identity (deterministic contributors always re-run, which keeps the churn comparison a fixed point). Three safety conditions: the collect step retains an in-context hash as the comparison operand (not a marker file, which ADR-043 declined); re-run whenever the hash is unavailable; and a declined round still consumes ADR-043 condition (c)'s counter, leaving condition (d) unaffected. The loop-exit full pass is explicitly out of scope, because it is the P099 guarantee itself. Ships on cost-benefit: two attempts to warrant the rule in principle failed. Recorded as its own document rather than an ADR-043 amendment clause, on Tom's 2026-08-07 direction that readers read the main decision and miss amendment sections.
 **Confirmation:** SKILL.md step 15.37 retains the hash and conditions the re-invoke on it, same condition at 15.55 and 15.57; deterministic contributors re-run unconditionally; ADR-043 carries the exception inline in its main body at seven enumerated surfaces; declined rounds appear distinguishably in the edition's reviews file.
 **Related:** ADR-020, ADR-042, ADR-043, ADR-044, RFC-004, P122, P099
