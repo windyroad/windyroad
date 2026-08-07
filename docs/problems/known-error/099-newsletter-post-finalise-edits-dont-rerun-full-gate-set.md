@@ -52,7 +52,15 @@ Added `### 15.6. Post-gate edit discipline: a body edit re-enters the FULL gate 
 
 **Gate reviews:** wr-architect:agent ALIGNED (no ADR conflict; reinforces ADR-012/018/020 mandatory-per-pass intent; no new ADR needed). wr-jtbd:agent PASS (serves JTBD-003 Evaluation for the Engineering Leader persona; removes the author's manual gate-policing backstop). style-guide / voice-tone gates N/A: the edit is internal pipeline-process prose in a `.claude/skills/*.md` file, outside both hooks' scope (CSS / user-facing component copy).
 
-**I13 RFC-trace gate:** the `wr-itil-check-fix-rfc-trace` predicate fired `no-rfc-trace: P099` directing an RFC auto-create. This is the known P104 false positive: the windyroad website is a Phase-1 adopter with no `docs/rfcs/` tier and zero RFC history in git. Verified the premise (`docs/rfcs/` absent, zero RFC commits) and fell back to the legacy direct-implementation path per the P070 / P103 precedent, carrying the fix-design trace on this ticket rather than bootstrapping an RFC tier.
+**I13 RFC-trace gate:** the `wr-itil-check-fix-rfc-trace` predicate fired `no-rfc-trace: P099` directing an RFC auto-create. This is the known P104 false positive: the windyroad website is a Phase-1 adopter with no `docs/rfcs/` tier and zero RFC history in git.
+
+> **Correction 2026-08-08.** That premise is now stale and the conclusion with it. `docs/rfcs/` exists and carries RFC-001 through RFC-005; this ticket traces to **RFC-005** (Make a post-gate body edit detectable at save), recorded in the `## RFCs` section above. When the I13 gate fired again on 2026-08-08 it was legitimate, not a P104 false positive, and was handled as sub-case (b) no-vehicle: none of the four existing RFCs has this ticket's fix as its task set. Marked here rather than silently overwritten because leaving the stale claim beside the new trace would have this ticket asserting both "there is no RFC tier" and "this traces to RFC-005", which is the exact shape RFC-005 exists to detect. Verified the premise (`docs/rfcs/` absent, zero RFC commits) and fell back to the legacy direct-implementation path per the P070 / P103 precedent, carrying the fix-design trace on this ticket rather than bootstrapping an RFC tier.
+
+## RFCs
+
+| RFC | Status | Title |
+|-----|--------|-------|
+| RFC-005 | proposed | Make a post-gate body edit detectable at save, by recording the digest each gate scored |
 
 ## Fix Released
 
