@@ -11,7 +11,7 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 46 (42 in-force, 4 historical)
+**Total ADRs:** 47 (43 in-force, 4 historical)
 
 ---
 
@@ -224,6 +224,13 @@ _40 ADRs. These are the current rules. The architect agent reads this section fi
 **Decides:** ADR-043's remediation loop re-invokes its gates after each round; when a round produces no edit, that asks an agent to re-read a byte-identical file and costs up to three invocations for information that cannot differ. Skip the AGENT re-invocation on byte-identity (deterministic contributors always re-run, which keeps the churn comparison a fixed point). Three safety conditions: the collect step retains an in-context hash as the comparison operand (not a marker file, which ADR-043 declined); re-run whenever the hash is unavailable; and a declined round still consumes ADR-043 condition (c)'s counter, leaving condition (d) unaffected. The loop-exit full pass is explicitly out of scope, because it is the P099 guarantee itself. Ships on cost-benefit: two attempts to warrant the rule in principle failed. Recorded as its own document rather than an ADR-043 amendment clause, on Tom's 2026-08-07 direction that readers read the main decision and miss amendment sections.
 **Confirmation:** SKILL.md step 15.37 retains the hash and conditions the re-invoke on it, same condition at 15.55 and 15.57; deterministic contributors re-run unconditionally; ADR-043 carries the exception inline in its main body at seven enumerated surfaces; declined rounds appear distinguishably in the edition's reviews file.
 **Related:** ADR-020, ADR-042, ADR-043, ADR-044, RFC-004, P122, P099
+
+### ADR-047 - A gate whose verdict predates the current draft is re-run, and the check is tuned to over-report
+**Status:** proposed | **Oversight:** confirmed 2026-08-08
+**Decides:** Seven review gates run before a draft is saved; the draft is then edited, most often on publish morning, and only some gates are asked again. Issue 16's own review sibling records the result unprompted: "that ledger describes a text this edition no longer carries". Two questions RFC-005 left open are settled. The comparison is tuned to OVER-REPORT (where uncertain, report stale; a needless re-run is the accepted cost of never staying silent on a real miss), and a stale gate is RE-INVOKED against the current artefact rather than reported to the author, because handing him a list on publish morning is the moment the driving problem says he cannot act on one. Over-report resolves four of RFC-005's five open dimensions: per-surface digests, carried-without-a-marker reads as stale, frontmatter excluded (its churn is noise not sensitivity), and sibling reached by derivation with override. Three limits keep it from re-running the world: claim-scoped gates keep their own triggers, sanctioned skips stay skipped, and the stale set runs once with a forced edit re-entering section 15.6 rather than recursing, which preserves ADR-043's cap.
+**Confirmation:** stale gates re-invoked not reported; claim-scoped gates untouched by unrelated body edits; documented skips honoured; one re-run per save; brief and companion post digested separately; unmarked carried verdicts treated as stale; frontmatter excluded.
+**Related:** ADR-017, ADR-026, ADR-043, ADR-046, RFC-005, P099
+Hand-edited per the P087 posture.
 Hand-edited per the P087 posture.
 
 

@@ -9,7 +9,7 @@ consulted: [wr-architect:agent, wr-jtbd:agent, wr-voice-tone:agent]
 informed: []
 reassessment-date: 2026-10-05
 amends: [020-newsletter-editor-subagent, 042-newsletter-adversarial-skeptic-gate]
-amended-by: [044-cross-edition-shape-as-a-fresh-context-subagent-gate, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged]
+amended-by: [044-cross-edition-shape-as-a-fresh-context-subagent-gate, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged, 047-stale-gate-verdicts-are-re-run-and-the-check-over-reports]
 composes-with: [015-reader-respect-and-gate-rejection-policy, 017-ai-brief-prep-and-finalise-phases, 032-newsletter-editorial-discipline-policy]
 related: [012-ai-generated-content-review-gates, 024-url-verification-gate-in-wr-newsletter, 025-pass-with-author-overrides-verdict-for-sw-critic, 026-reviews-and-meta-content-to-sibling-files, 035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate, 041-retire-consulting-funnel-repurpose-as-the-shift-hub]
 ---
@@ -161,7 +161,7 @@ The one-round cap is chosen partly to keep that delta at its minimum. Whether ~1
 ### Neutral
 
 - Roughly five more subagent invocations per issue in the worst case. The budget position is stated plainly above rather than assumed.
-- The skill now carries orchestrator-side round bookkeeping: which findings were remediated, which are residual. This is in-context judgement, consistent with the existing `*-prime` and dirty-body discipline; no marker file is added. **ADR-046 adds one piece of in-context state, a hash of the artefact the collect step read, and is pinned to in-context form precisely so it does not become the marker file this consequence declines**.
+- The skill now carries orchestrator-side round bookkeeping: which findings were remediated, which are residual. This is in-context judgement, consistent with the existing `*-prime` and dirty-body discipline; no marker file is added. **ADR-047 (stale gate verdicts are re-run) records a digest per verdict in the review sibling, which IS durable on-disk state; it is deliberately not unified with ADR-046's in-context digest, precisely so ADR-046's pinning against becoming this consequence's marker file survives.** **ADR-046 adds one piece of in-context state, a hash of the artefact the collect step read, and is pinned to in-context form precisely so it does not become the marker file this consequence declines**.
 
 ### Bad
 

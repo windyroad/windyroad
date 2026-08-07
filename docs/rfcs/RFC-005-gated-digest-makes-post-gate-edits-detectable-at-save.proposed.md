@@ -5,7 +5,7 @@ reported: 2026-08-08
 human-oversight: unconfirmed
 decision-makers: [Tom Howard]
 problems: [P099]
-adrs: [017-ai-brief-prep-and-finalise-phases, 026-reviews-and-meta-content-to-sibling-files, 043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged]
+adrs: [047-stale-gate-verdicts-are-re-run-and-the-check-over-reports, 017-ai-brief-prep-and-finalise-phases, 026-reviews-and-meta-content-to-sibling-files, 043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged]
 jtbd: [JTBD-005, JTBD-200]
 stories: []
 ---
@@ -140,7 +140,11 @@ The trailing clause is quoted rather than elided because it ties the holding to 
 
 **A ratified decision already records this primitive as needed**, for an adjacent purpose. ADR-017:70, a Neutral consequence: "Finalise needs a 'did something material change?' check to decide whether to re-render the image; that check is a new piece of state-comparison logic."
 
-## The option choice this RFC does not make
+## The option choice, now made
+
+> **Settled 2026-08-08 by ADR-047 (A gate whose verdict predates the current draft is re-run, and the check is tuned to over-report).** Tom chose over-report plus automatic re-run. That resolves four of the five dimensions below and the fifth was never a tuning question; ADR-047's Decision Outcome records which and why. The dimensions are kept here as the record of what was open and what closed them, not as live questions.
+
+## The option set as it stood
 
 Per upstream ADR-060's I13, an uncovered option-choice escalates to an ADR ratified before implementation and the orchestrator does not pick it. (RFC-004:57 is the local restatement of ratified-not-committed and is itself `human-oversight: unconfirmed`, so it is cited as restatement, not authority.)
 
