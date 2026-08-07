@@ -52,9 +52,9 @@ Write the invitation tied to this edition's thesis and built to foster conversat
 
 The variants below are a fallback well for when no edition-tied question presents itself, not the default:
 
-- "Reply with a tool you want us to pressure-test next week."
-- "Reply with a tool you tried and abandoned, and why."
-- "Tell us what you are shipping with this week."
+- "Which tool do you want us to pressure-test next week?"
+- "Which tool did you try and abandon, and why?"
+- "What are you shipping with this week?"
 
 Closing line: `windyroad.com.au` (no consulting-booking link in body; this is the brand-and-community surface, not the funnel.)
 

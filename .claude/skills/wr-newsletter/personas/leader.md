@@ -52,9 +52,9 @@ Write the invitation tied to this edition's thesis and built to foster conversat
 
 The variants below are a fallback well for when no edition-tied question presents itself, not the default:
 
-- "Reply with what is breaking on your stack this quarter."
-- "Reply with a prediction you are willing to be wrong about."
-- "Tell us the conversation you are having with your CTO this week."
+- "What is breaking on your stack this quarter?"
+- "What prediction are you willing to be wrong about?"
+- "What conversation are you having with your CTO this week?"
 
 Closing line: `windyroad.com.au`
 

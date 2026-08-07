@@ -106,9 +106,9 @@ The CTA is one rotating invitation plus the `windyroad.com.au` closing line only
 
 **Fallback variants (only when no edition-tied question presents itself):**
 
-- "Reply with what is breaking on your stack this quarter."
-- "Reply with a prediction you are willing to be wrong about."
-- "Tell us the conversation you are having with your CTO this week."
+- "What is breaking on your stack this quarter?"
+- "What prediction are you willing to be wrong about?"
+- "What conversation are you having with your CTO this week?"
 
 The former "Forward this to a colleague who runs an engineering team" variant is removed: it is a forward request rather than a reply prompt, so it cannot satisfy element 6 and a fallback that cannot satisfy the rule is a trap.
 

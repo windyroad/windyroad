@@ -195,7 +195,20 @@ Three additions from the architect review of the settled direction (2026-08-07),
 
 Also updated: the preamble gate count (six to seven, with the shape gate described), the ADR reference list, the gate-inventory sentence, all three phase-table rows, the step 16 save-block (`## Shape Review`, plus finalise and LinkedIn-post variants), and the step 17 Tom-summary, which reports advisory differences in full because they are the ones waiting on Tom, and reports the gate's Strengths so a departure that served the edition is visible rather than only the negatives.
 
-**Part 3 remains, and one half of it is blocked on a decision only Tom can make.** Specified below.
+**Part 3 PARTIALLY DONE.** Three checks landed in `scripts/check-newsletter-structure.sh` with six sibling tests (25 passing):
+
+- **(h) provenance line before the first `### Item`.** This discharges ADR-032's deferred check, which its Amendment 2026-08-03 said should be built with the loop rather than after it. The loop shipped as ADR-043 on 2026-08-05, so this was overdue independently of P121. Taking `(h)` for provenance also avoids the letter collision: ADR-032 names it `(h)` twice, so labelling the new checks h-k would have pointed a ratified reference at the wrong check.
+- **(i) the `**From Tom**` opener.** Verified against the corpus: editions published 2026-07-06 and 2026-07-13 open with inline `From Tom: ...` instead of the bold slot, and the test uses that exact shape.
+- **(j) the CTA is a question (ADR-032 element 6).** Tom settled the conflicting-targets question on 2026-08-07 by choosing to keep the ADR and correct the template, which landed in the same session. The check asserts the cheap half, a question mark in the CTA block, and shares check (g)'s extractor so the two cannot disagree about where that block starts. It catches both failing shapes that actually shipped: a statement CTA, and a forward request.
+
+**Behaviour on the historical corpus, which is the point rather than a defect.** Check (h) fires on the editions published 2026-07-20 and 2026-07-27 because element 5 did not exist until the 2026-08-03 amendment; Issue 16 passes. The Issue 09 fixture test was rescoped to assert cleanliness on checks (a) through (g) only, rather than asserting a June edition satisfies August's rules. This is ADR-044's argument for lint ownership made concrete: a precedent-based check would have let these lapse, a template invariant catches them.
+
+**Two checks deliberately NOT written, because the corpus says they would be wrong:**
+
+- **`### Item N:` prefix.** The architect specified carving out `### Also worth noting`. That is necessary but not sufficient: the corpus also carries legitimate non-item `###` sections, including the forward-deadline slot (`### Four months out: ...`), which is the very convention P121 exists to protect. A check asserting every `###` is an item would fire on it every edition. Needs a rule that distinguishes an item section from a named section, which is not obviously deterministic.
+- **Per-item bold labels.** The architect flagged the persona risk and the corpus confirms it: `personas/developer.md` never defines the three labels, and there are no published Tokens Spent editions to check against. Hardcoding `**Why it matters to your team:**` would break the developer persona the first time it runs. Needs the developer labels settled first.
+
+Both are recorded here rather than shipped half-right.
 
 ### Part 2: SKILL.md wiring (delivered 2026-08-07; specification retained)
 

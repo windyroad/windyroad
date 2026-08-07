@@ -29,7 +29,11 @@ edition: 9
 
 *The Shift, AI engineering, week ending 2026-06-14*
 
-From Tom: optionality is the theme this week.
+**From Tom**
+
+Optionality is the theme this week.
+
+*This edition is drafted by AI and reviewed by a different AI, never the one that wrote the draft. I hold editorial responsibility for what follows.*
 
 ### Item 1: A government switched models off
 
@@ -43,7 +47,7 @@ Both [Anthropic](https://www.anthropic.com/news/y) and [OpenAI](https://openai.c
 
 ---
 
-Tell us the conversation you are having with your CTO this week.
+If portability is the cheapest hedge, what is your team hedging against this quarter?
 
 [windyroad.com.au](https://windyroad.com.au)
 `;
@@ -70,9 +74,25 @@ function fixture(brief, linkedin) {
 }
 
 describe('check-newsletter-structure.sh', () => {
-  it('passes the hand-fixed published Issue 09 brief (clean fixture)', () => {
+  it('passes the hand-fixed published Issue 09 brief on every check that existed when it shipped', () => {
+    // Issue 09 published 2026-06-15, before three invariants existed: the
+    // provenance line (h) was introduced by ADR-032's Amendment 2026-08-03,
+    // and the **From Tom** opener (i) and content-tied-question CTA (j) are
+    // template invariants this edition predates. It legitimately fails those
+    // three, which is the point ADR-044 makes about lint ownership: a
+    // precedent-based check would have let them lapse, a template invariant
+    // catches them. Assert it is clean on (a) through (g) instead of asserting
+    // a June edition satisfies August's rules.
     const r = run(ISSUE_09);
-    expect(r.status, r.stderr).toBe(0);
+    // Guard the fixture itself: per-code stderr matching would pass vacuously on
+    // exit 2 ("brief not found"), and ADR-039 and ADR-040 both moved these paths
+    // inside the last two months.
+    expect(r.status, r.stderr).not.toBe(2);
+    for (const code of ['a', 'b', 'c', 'd', 'e', 'f', 'g']) {
+      expect(r.stderr, `check (${code}) should not fire on Issue 09`).not.toContain(
+        `[${code}]`,
+      );
+    }
   });
 
   it('passes a minimal brief satisfying every invariant', () => {
@@ -164,8 +184,8 @@ describe('check-newsletter-structure.sh', () => {
   it('(e) flags a missing "---" rule before the closing CTA', () => {
     // Remove the horizontal rule that precedes the CTA block.
     const broken = VALID_BRIEF.replace(
-      '\n---\n\nTell us the conversation',
-      '\n\nTell us the conversation',
+      '\n---\n\nIf portability is the cheapest hedge,',
+      '\n\nIf portability is the cheapest hedge,',
     );
     const r = run(fixture(broken, VALID_LINKEDIN));
     expect(r.status).toBe(1);
@@ -219,8 +239,8 @@ describe('check-newsletter-structure.sh', () => {
 
   it('(g) flags a services-pitch sentence in the CTA block', () => {
     const broken = VALID_BRIEF.replace(
-      'Tell us the conversation you are having with your CTO this week.',
-      'Windy Road runs Patch Fitness Assessments for engineering teams: one-week audits that leave you with a prioritised fix list.\n\nTell us the conversation you are having with your CTO this week.',
+      'If portability is the cheapest hedge, what is your team hedging against this quarter?',
+      'Windy Road runs Patch Fitness Assessments for engineering teams: one-week audits that leave you with a prioritised fix list.\n\nIf portability is the cheapest hedge, what is your team hedging against this quarter?',
     );
     const r = run(fixture(broken, VALID_LINKEDIN));
     expect(r.status).toBe(1);
@@ -240,12 +260,112 @@ describe('check-newsletter-structure.sh', () => {
     const broken = VALID_BRIEF
       .replace('[windyroad.com.au](https://windyroad.com.au)', 'windyroad.com.au')
       .replace(
-        'Tell us the conversation you are having with your CTO this week.',
-        'Windy Road helps engineering leaders keep their pipelines patch fit.\n\nTell us the conversation you are having with your CTO this week.',
+        'If portability is the cheapest hedge, what is your team hedging against this quarter?',
+        'Windy Road helps engineering leaders keep their pipelines patch fit.\n\nIf portability is the cheapest hedge, what is your team hedging against this quarter?',
       );
     const r = run(fixture(broken, VALID_LINKEDIN));
     expect(r.status).toBe(1);
     expect(r.stderr).toContain('[g]');
+  });
+
+  it('(h) flags a brief with no provenance line before the first item', () => {
+    const broken = VALID_BRIEF.replace(
+      '*This edition is drafted by AI and reviewed by a different AI, never the one that wrote the draft. I hold editorial responsibility for what follows.*\n\n',
+      '',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[h]');
+  });
+
+  it('(h) does not fire when the provenance line sits after the first item', () => {
+    // Placement is the point: ADR-032 element 5 puts it before the first item,
+    // closing the From Tom opener. A line further down is not the same artefact,
+    // so the check must fail rather than pass on a merely-present string.
+    const moved = VALID_BRIEF
+      .replace(
+        '*This edition is drafted by AI and reviewed by a different AI, never the one that wrote the draft. I hold editorial responsibility for what follows.*\n\n',
+        '',
+      )
+      .replace(
+        '### Also worth noting',
+        '*This edition is drafted by AI and reviewed by a different AI, never the one that wrote the draft.*\n\n### Also worth noting',
+      );
+    const r = run(fixture(moved, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[h]');
+  });
+
+  it('(h) fails rather than silently skipping when no "### Item " heading exists', () => {
+    // Downgrade the heading rather than deleting it: that is the real corpus
+    // shape (Issues 12 and 13 use bare `### <headline>`), and it isolates (h).
+    // Deleting the section would also trip the item-boundary checks.
+    const broken = VALID_BRIEF.replace(
+      '### Item 1: A government switched models off',
+      '### A government switched models off',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[h]');
+  });
+
+  it('(h) does not accept an ordinary italic line whose words merely contain "ai"', () => {
+    // The predicate was /[Aa][Ii]/ before 2026-08-07, which matched inside
+    // detail, available, again, maintain and email. Anchored to the standalone
+    // AI token, this line must no longer satisfy it.
+    const broken = VALID_BRIEF.replace(
+      '*This edition is drafted by AI and reviewed by a different AI, never the one that wrote the draft. I hold editorial responsibility for what follows.*',
+      '*We reviewed every claim against the original source; full details are available on request.*',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[h]');
+  });
+
+  it('(i) flags a brief whose author-voice opener is inline prose, not the bold slot', () => {
+    // The corpus shape this catches: editions published 2026-07-06 and
+    // 2026-07-13 opened with "From Tom: ..." inline instead of the bold slot.
+    const broken = VALID_BRIEF.replace(
+      '**From Tom**\n\nOptionality is the theme this week.',
+      'From Tom: optionality is the theme this week.',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[i]');
+  });
+
+  it('(j) flags a CTA that is a statement rather than a question', () => {
+    const broken = VALID_BRIEF.replace(
+      'If portability is the cheapest hedge, what is your team hedging against this quarter?',
+      'This week we watched three vendors converge on the same answer.',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[j]');
+  });
+
+  it('(j) flags a forward request, which cannot satisfy element 6', () => {
+    // The shape removed from the template and both persona configs on
+    // 2026-08-07: forwarding is not replying.
+    const broken = VALID_BRIEF.replace(
+      'If portability is the cheapest hedge, what is your team hedging against this quarter?',
+      'Forward this to a colleague who runs an engineering team.',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[j]');
+  });
+
+  it('(j) does not fire on a question mark inside a linked CTA line', () => {
+    // Shares check (g)'s extractor, which skips markdown-link lines. A question
+    // mark in a link title must not satisfy the invitation requirement.
+    const broken = VALID_BRIEF.replace(
+      'If portability is the cheapest hedge, what is your team hedging against this quarter?',
+      '[Is your stack patch fit?](https://windyroad.com.au/x)',
+    );
+    const r = run(fixture(broken, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[j]');
   });
 
   // P119 regression. Check (c) used to run `body_text | grep -qE '^### Also worth

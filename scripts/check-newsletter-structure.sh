@@ -237,6 +237,66 @@ if [ "$cta_hr_ln" -gt 0 ]; then
   fi
 fi
 
+# --- (h) provenance line present before the first item (ADR-032 element 5) -----
+# Discharges the check ADR-032's Amendment 2026-08-03 deferred: "Under P120's
+# loops, check (h) becomes the only mechanism that catches loop-induced drift,
+# so it should be built with the loop rather than after it." The loop landed as
+# ADR-043; this is the overdue other half. The line is remediation-invariant, so
+# a gate may flag it but never rewrite it, which is exactly why a deterministic
+# check has to own its presence.
+first_item_ln=$(printf '%s\n' "$body" | awk -F'\t' '$2 ~ /^### Item / { print $1; exit }')
+if [ -z "${first_item_ln:-}" ]; then
+  # No `### Item ` heading at all. Do NOT silently skip: a brief with no items is
+  # not a brief that needs no provenance line, and the `### Item N:` prefix check
+  # that would have caught the bare-heading shape was deliberately not built (see
+  # P121). Skipping here would make (h) unenforceable on exactly those briefs.
+  fail h "$brief: no '### Item ' heading found, so the provenance line's required position cannot be checked; briefs must carry '### Item N:' headings per draft-template.md"
+else
+  # `AI` is matched uppercase-anchored rather than as a case-insensitive substring:
+  # /[Aa][Ii]/ matches inside detail, available, again, maintain, email, so an
+  # ordinary italic editorial line would have satisfied the predicate.
+  prov=$(printf '%s\n' "$body" | awk -F'\t' -v h="$first_item_ln" '
+    $1 + 0 < h && $2 ~ /^\*/ && $2 ~ /(^|[^A-Za-z])AI([^A-Za-z]|$)/ && $2 ~ /draft|writ|review/ { c++ }
+    END { print c + 0 }')
+  if [ "${prov:-0}" -eq 0 ]; then
+    fail h "$brief: missing the provenance line before the first '### Item' heading; ADR-032 element 5 requires it every edition, both personas"
+  fi
+fi
+
+# --- (i) "**From Tom**" opener present ----------------------------------------
+# A template invariant, not corpus precedent: the cross-edition shape gate
+# (ADR-044) deliberately does NOT own this, because the opener was absent from
+# the editions published 2026-06-08 through 2026-07-13 and returned 2026-07-20.
+# A precedent test would have let it lapse for six weeks unremarked; a template
+# invariant catches it the first week.
+from_tom=$(body_text | grep -m1 -E '^\*\*From Tom\*\*' || true)
+if [ -z "$from_tom" ]; then
+  fail i "$brief: missing the '**From Tom**' author-voice opener (draft-template.md Structure block)"
+fi
+
+# --- (j) the CTA invitation is a question (ADR-032 element 6) -----------------
+# Element 6 fixes "one substantive content-tied question against one of the deep
+# items' threads". Question-ness is not fully decidable here, so this asserts the
+# cheap half: the CTA block contains a question mark. A generic question passes
+# this and is caught by the LLM gates; a forward request or a bare statement does
+# not pass, which is the shape that actually shipped on Issue 16.
+# Shares check (g)'s CTA-block extractor so the two cannot disagree about where
+# the block starts.
+if [ "${cta_hr_ln:-0}" -gt 0 ]; then
+  cta_q=$(printf '%s\n' "$body" | awk -F'\t' -v h="$cta_hr_ln" '
+    $1 + 0 > h {
+      line = $2;
+      if (line ~ /^[[:space:]]*$/) next;
+      if (line ~ /\]\(/) next;
+      if (line ~ /windyroad\.com\.au/) next;
+      if (line ~ /\?/) q++;
+    }
+    END { print q + 0 }')
+  if [ "${cta_q:-0}" -eq 0 ]; then
+    fail j "$brief: the closing CTA carries no question; ADR-032 element 6 requires a content-tied question, not a statement or a forward request"
+  fi
+fi
+
 # --- verdict ------------------------------------------------------------------
 if [ "$violations" -gt 0 ]; then
   echo "check-newsletter-structure: $violations violation(s) in $brief" >&2
