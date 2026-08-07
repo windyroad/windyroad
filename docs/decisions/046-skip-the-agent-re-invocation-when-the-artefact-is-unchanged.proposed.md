@@ -60,7 +60,7 @@ Three conditions make the rule safe. Each is load-bearing; leaving any implicit 
 
 Step 15.37 item 1 pins a *requirement* (all findings must be against the same body version) but retains nothing to compare against, and ADR-043 deliberately declined a marker file, calling the loop's bookkeeping in-context judgement. A byte comparison against a remembered version is not a byte comparison.
 
-So the collect step **retains a hash of the artefact it collected against, for the duration of the pass, in orchestrator context**, and the skip test is that hash against a fresh read of `artifact_path`. In-context is load-bearing: ADR-043's Neutral consequences record that no marker file is added, so the retained hash must not become one.
+So the collect step **records the artefact's digest with `shasum -a 256` and keeps it in orchestrator context for the duration of the pass**, and the skip test re-runs the same command and compares digests. Naming the command matters: "retain a hash" without one leaves the orchestrator remembering an impression of the body, which is the judgement this condition exists to remove rather than a measurement. A digest that was never computed counts as unavailable, and condition 2 fires. In-context is load-bearing: ADR-043's Neutral consequences record that no marker file is added, so the retained hash must not become one.
 
 ### 2. When in doubt, re-run
 

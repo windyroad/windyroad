@@ -120,6 +120,12 @@ The check carries a **pre-registered exemption set**, stated as a forward guard 
 
 The three anticipated shapes are pre-registered anyway, because each is legitimate if it arises: a repeated closing-line link, provenance or CTA surfaces that later gain links, and an item plus an Also-worth-noting entry deliberately citing the same primary source. Note that check (g) at `:236` is a CTA-composition check (P090) and confers **no** exemption a duplicate-URL check could inherit, so the set is declared from scratch. `check-newsletter-structure.test.mjs` gains a positive fixture (from `d2d674a`) and a **negative fixture drawn from a published edition**, the latter as a regression guard proving the rule stays quiet on real editions rather than as a claimed-live exemption.
 
+**Implemented narrower than specified, on evidence (2026-08-08).** This item, and the ADR-020 amendment it implements, both say the mechanical half is "the same source URL appearing in two sections". Built that way and run against every published edition, it fired on three, and all three are legitimate: `2026-04-17` cites a Thoughtworks Radar landing page three times for three different findings in that report; `2026-06-22` cites a Nature article in the From Tom opener and again in the item detailing it; `2026-07-13` repeats one source across two items for two distinct claims.
+
+Same-URL is computable but it is not the defect. The defect is the same source used to make the same point twice, which needs judgement. Check (k) therefore keys on the **identical citation** (same anchor text AND same URL), the strictest mechanical proxy with zero false positives across the corpus, pinned by a corpus-wide regression test rather than by a single fixture.
+
+The consequence is a real narrowing of what the lint took off the editor: `edition-internal-consistency` must still catch the same source making the same point under different anchor text, and the agent file says so. **ADR-020's amendment and this item both still describe the wider rule and need correcting to match.** Recorded here rather than corrected unilaterally, because the amendment is ratified.
+
 ### 6. SKILL.md wiring
 
 Step 15.25's parse block and step 17's Tom-summary axis list, per the surface table in **item 1**.

@@ -87,9 +87,9 @@ This is a direct encoding of JTBD-205 (Trust, Shipped vs Demo), whose desired ou
 
 The section 15.6 dirty-body discipline (P099) says any post-gate body edit re-enters the FULL gate set. That rule is preserved. What this decision pins is **when** it fires relative to the loop:
 
-- **(a)** The loop's remediation edits do not each trigger a full re-gate. The full pass runs **once**, against the final post-remediation body, at loop exit. Inner rounds re-invoke only the editor and the skeptic.
+- **(a)** The loop's remediation edits do not each trigger a full re-gate. The full pass runs **once**, against the final post-remediation body, at loop exit. Inner rounds re-invoke only the editor and the skeptic. **ADR-046 narrows this further: an inner-round agent re-invocation is skipped when the artefact is byte-identical to the version its findings were collected against.**
 - **(b)** Any edit that the loop-exit full pass itself forces, whether a voice FAIL, a content-risk `REJECTED`, or a critic `WEAKNESSES_FOUND`, re-marks the body dirty and re-enters section 15.6 exactly as today. This is the containment mechanism, and P120's evidence shows it working.
-- **(c)** The remediation counter is **per body pass and does not reset**. If the loop-exit full pass forces an edit, the editor and skeptic re-run once against the re-edited body and any remaining findings go straight to residual advisory. Without this the loop either ping-pongs or silently skips the editor and skeptic on the re-edited body, and the silent skip is the P099 regression.
+- **(c)** The remediation counter is **per body pass and does not reset**. If the loop-exit full pass forces an edit, the editor and skeptic re-run once against the re-edited body (**a look declined under ADR-046 because the artefact was unchanged still consumes this counter**) and any remaining findings go straight to residual advisory. Without this the loop either ping-pongs or silently skips the editor and skeptic on the re-edited body, and the silent skip is the P099 regression.
 
 Two section 15.6 rows have claim-scoped triggers that skeptic remediation fires **by construction**, so the loop names them rather than relying on a "body changed" test:
 
@@ -98,7 +98,7 @@ Two section 15.6 rows have claim-scoped triggers that skeptic remediation fires 
 
 ### Scope: brief body and LinkedIn post
 
-The loop covers the editor and skeptic on the brief body (15.25 and 15.35) **and** the skeptic on the LinkedIn post (15.55), under the same one-round rule applied inline at 15.55. The post is drafted at 15.5, after 15.37 has run, so it cannot route back through 15.37; the inline application is how the post gets the same treatment. ADR-042 gave the post its own invocation precisely because two Issue-13 misses lived there, and P120's evidence records `WEAKNESSES_FOUND` on both surfaces the same edition. A brief-only loop would close the ticket halfway.
+The loop covers the editor and skeptic on the brief body (15.25 and 15.35) **and** the skeptic on the LinkedIn post (15.55), under the same one-round rule applied inline at 15.55 (**ADR-046's skip applies here too, keyed on the post rather than the brief; see its per-surface artefact clause**). The post is drafted at 15.5, after 15.37 has run, so it cannot route back through 15.37; the inline application is how the post gets the same treatment. ADR-042 gave the post its own invocation precisely because two Issue-13 misses lived there, and P120's evidence records `WEAKNESSES_FOUND` on both surfaces the same edition. A brief-only loop would close the ticket halfway.
 
 ### Remediation is bounded by ADR-032
 
@@ -161,7 +161,7 @@ The one-round cap is chosen partly to keep that delta at its minimum. Whether ~1
 ### Neutral
 
 - Roughly five more subagent invocations per issue in the worst case. The budget position is stated plainly above rather than assumed.
-- The skill now carries orchestrator-side round bookkeeping: which findings were remediated, which are residual. This is in-context judgement, consistent with the existing `*-prime` and dirty-body discipline; no marker file is added.
+- The skill now carries orchestrator-side round bookkeeping: which findings were remediated, which are residual. This is in-context judgement, consistent with the existing `*-prime` and dirty-body discipline; no marker file is added. **ADR-046 adds one piece of in-context state, a hash of the artefact the collect step read, and is pinned to in-context form precisely so it does not become the marker file this consequence declines**.
 
 ### Bad
 
@@ -174,7 +174,7 @@ The one-round cap is chosen partly to keep that delta at its minimum. Whether ~1
 
 1. `docs/decisions/020-newsletter-editor-subagent.proposed.md` carries an `## Amendment 2026-08-05 (P120)` section naming four lifted clauses, with Considered Option 4 (line 41, the pre-registered lift) leading, plus Considered Option 1's "Single-shot, no iteration loop", the `**Additive, not superseding**` paragraph, and confirmation criterion 2's "no rewrites". The section records the Issue 16 evidence that discharges the pre-registration, corrects the Decision Outcome persona-grounding enumeration, and states that this decision is ADR-020's overdue reassessment.
 2. `docs/decisions/042-newsletter-adversarial-skeptic-gate.proposed.md` carries an `## Amendment 2026-08-05 (P120)` section naming **both** amended clauses: "No new multi-round loop machinery is added" and "any revision re-enters the full gate set via the existing SKILL.md section 15.6 dirty-body re-gate discipline".
-3. `.claude/skills/wr-newsletter/SKILL.md` has a step `15.37. Editorial remediation loop (ADR-043)` between 15.35 and 15.4, documenting the one-round cap, orchestrator-side churn detection, body-only inner rounds, the skeptic differential, the residual-advisory record, and the four section 15.6 conditions (a) full pass once at loop exit, (b) forced edits re-enter the full set as normal, (c) the editor and skeptic counter does not reset, and (d) the outer cycle stops after two consecutive edit-forcing passes.
+3. `.claude/skills/wr-newsletter/SKILL.md` has a step `15.37. Editorial remediation loop (ADR-043)` between 15.35 and 15.4, documenting the one-round cap, orchestrator-side churn detection, body-only inner rounds, the skeptic differential, the residual-advisory record, and the four section 15.6 conditions (a) full pass once at loop exit, (b) forced edits re-enter the full set as normal, (c) the editor and skeptic counter does not reset, and (d) the outer cycle stops after two consecutive edit-forcing passes. **Read this pin against ADR-046: criterion 3 stays literally satisfiable while ADR-046 changes what consumes condition (c)'s counter, which is exactly why a compliance pass could miss it.**
 4. SKILL.md steps 15.25 and 15.35 route their non-PASS verdicts into 15.37 instead of terminating at "surface to Tom", and step 15.55 carries the same one-round rule inline for the LinkedIn post.
 5. SKILL.md section 15.6 records the inner-loop exemption and names cross-edition consistency (11.4) and URL verification (11.5) as claim-scoped triggers that skeptic remediation fires by construction.
 6. `.claude/agents/wr-newsletter-editor.md` `## Hard rules` carries "return ALL findings on every axis in a single pass; never surface one nit at a time" (P113 fix item a).
@@ -186,7 +186,7 @@ The one-round cap is chosen partly to keep that delta at its minimum. Whether ~1
 
 ## Reassessment Criteria
 
-- **If external review repeatedly raises findings the loop marked residual**, one round is too tight. Raise the cap to two before considering any other change; the cap was chosen as a minimum, not as a ceiling.
+- **If external review repeatedly raises findings the loop marked residual**, one round is too tight. Raise the cap to two before considering any other change; the cap was chosen as a minimum, not as a ceiling. **ADR-046 registers its own pre-registered falsifier against this criterion; a firing here should be read as testing both decisions.**
 - **If remediation rounds routinely introduce regressions the loop-exit battery catches**, the minimal-remediation rule is not being honoured, or the findings are too coarse to act on mechanically. Tighten the remediation contract before loosening the loop.
 - **If the loop-exit full pass routinely forces edits**, condition (c)'s single extra editor and skeptic look is doing real work and condition (d)'s two-pass outer bound is being approached rather than being theoretical. Voice and content-risk already get their second look under condition (b), so the question is not coverage but convergence: if editions keep hitting the (d) bound, either the minimal-remediation rule is not holding or two passes is the wrong number.
 - **If a skeptic finding is ever remediated by adding evidence or strengthening a claim**, the differential has failed and the skeptic must be removed from the loop and returned to advisory-only. This is the one failure mode that would make the loop worse than the defect it fixes.

@@ -297,6 +297,61 @@ if [ "${cta_hr_ln:-0}" -gt 0 ]; then
   fi
 fi
 
+# --- (k) duplicate citation across sections (P122 / RFC-004 item 5) ------------
+# The SAME link (identical anchor text AND identical URL) appearing in two
+# different `### `-delimited sections is a mechanical defect: the reader meets
+# the same citation twice. ADR-042 assigns structural hygiene here, and the
+# ADR-020 P122 amendment keeps only the near-full-length-retelling judgement
+# with the editor's edition-internal-consistency axis.
+#
+# WHY ANCHOR TEXT IS PART OF THE KEY, on evidence rather than on taste. The
+# looser rule (same URL, any anchor text) was implemented first and run against
+# every published edition. It fired on three, and all three are legitimate:
+#   - 2026-04-17 cites thoughtworks.com/radar three times for three DIFFERENT
+#     findings in one report. The URL is a landing page, so one publication with
+#     several findings reads as a duplicate to a URL-only rule.
+#   - 2026-06-22 cites a Nature article in the From Tom opener and again in the
+#     item that details it. Setup-then-detail is a normal editorial move.
+#   - 2026-07-13 repeats a source across two items for two distinct claims.
+# "Same URL" is computable but is not the defect. The defect is the same source
+# used to make the same point twice, and that needs judgement, which is why the
+# residue stays with the editor axis. Requiring identical anchor text is the
+# strictest mechanical proxy that has ZERO false positives on the corpus.
+#
+# Exemption: windyroad.com.au, which recurs legitimately in the CTA and closing.
+# The region before the first `### ` heading is its own section, reported as
+# "opener".
+dup_hits=$(body_text | awk '
+  BEGIN { sec_name = "opener" }
+  /^### / { sec++; sec_name = $0; sub(/^### +/, "", sec_name); next }
+  {
+    rest = $0;
+    while (match(rest, /\[[^]]*\]\(https?:\/\/[^) ]+\)/)) {
+      link = substr(rest, RSTART, RLENGTH);
+      rest = substr(rest, RSTART + RLENGTH);
+      if (link ~ /windyroad\.com\.au/) continue;
+      key = sec SUBSEP link;
+      if (key in seen_pair) continue;
+      seen_pair[key] = 1;
+      nsec[link]++;
+      if (!(link in first_sec)) first_sec[link] = sec_name;
+      else other_sec[link] = sec_name;
+    }
+  }
+  END {
+    for (l in nsec) if (nsec[l] > 1)
+      printf "%s\t%s\t%s\n", l, first_sec[l], other_sec[l];
+  }
+')
+if [ -n "$dup_hits" ]; then
+  while IFS="$(printf '\t')" read -r link s1 s2; do
+    [ -n "$link" ] || continue
+    fail k "$brief: the identical citation $link appears in two different sections (\"$s1\" and \"$s2\"); cite it once. There is no per-edition override: if this fires on a legitimate repeat, widen the exemption set in this script with the edition as evidence"
+  done <<EOF
+$dup_hits
+EOF
+fi
+
 # --- verdict ------------------------------------------------------------------
 if [ "$violations" -gt 0 ]; then
   echo "check-newsletter-structure: $violations violation(s) in $brief" >&2

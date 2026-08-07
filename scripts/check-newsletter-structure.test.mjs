@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -367,6 +367,82 @@ describe('check-newsletter-structure.sh', () => {
     expect(r.status).toBe(1);
     expect(r.stderr).toContain('[j]');
   });
+
+  // --- (k) duplicate citation across sections (P122 / RFC-004 item 5) ---------
+  // The key is the IDENTICAL link: same anchor text AND same URL. The looser
+  // same-URL-only rule was implemented first and fired on three published
+  // editions, all legitimate (a landing-page URL cited for three different
+  // findings; a setup-then-detail opener; one source across two items for two
+  // claims). Those cases are what these tests pin.
+
+  it('(k) flags the identical citation appearing in two sections', () => {
+    const brief = VALID_BRIEF.replace(
+      'Both [Anthropic](https://www.anthropic.com/news/y) and [OpenAI](https://openai.com/z) filed draft S-1s.',
+      'Both [published a statement](https://www.anthropic.com/news/x) and [OpenAI](https://openai.com/z) filed draft S-1s.',
+    );
+    const r = run(fixture(brief, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[k]');
+    expect(r.stderr).toContain('appears in two different sections');
+  });
+
+  it('(k) does not fire when the same URL carries different anchor text', () => {
+    // A landing-page URL cited for two distinct findings. This is the
+    // 2026-04-17 Thoughtworks Radar case: one report, several findings.
+    const brief = VALID_BRIEF.replace(
+      'Both [Anthropic](https://www.anthropic.com/news/y) and [OpenAI](https://openai.com/z) filed draft S-1s.',
+      'Both [a second finding in the same report](https://www.anthropic.com/news/x) and [OpenAI](https://openai.com/z) filed draft S-1s.',
+    );
+    const r = run(fixture(brief, VALID_LINKEDIN));
+    expect(r.stderr).not.toContain('[k]');
+    expect(r.status).toBe(0);
+  });
+
+  it('(k) does not fire on the identical citation twice inside ONE section', () => {
+    const brief = VALID_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      '**Why it matters to your team.** Portability is the cheapest hedge, per [published a statement](https://www.anthropic.com/news/x).',
+    );
+    const r = run(fixture(brief, VALID_LINKEDIN));
+    expect(r.stderr).not.toContain('[k]');
+    expect(r.status).toBe(0);
+  });
+
+  it('(k) exempts windyroad.com.au, which recurs legitimately in the CTA', () => {
+    const brief = VALID_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      '**Why it matters to your team.** Portability is the cheapest hedge. See [windyroad.com.au](https://windyroad.com.au).',
+    );
+    const r = run(fixture(brief, VALID_LINKEDIN));
+    expect(r.stderr).not.toContain('[k]');
+    expect(r.status).toBe(0);
+  });
+
+  it('(k) treats the pre-first-heading region as its own section, named opener', () => {
+    const brief = VALID_BRIEF.replace(
+      '*This edition is drafted by AI',
+      'We covered [published a statement](https://www.anthropic.com/news/x) last week.\n\n*This edition is drafted by AI',
+    );
+    const r = run(fixture(brief, VALID_LINKEDIN));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[k]');
+    expect(r.stderr).toContain('"opener"');
+  });
+
+  // Regression guard, not a claimed-live exemption: the rule must stay quiet on
+  // every real edition. It fires on zero as at 2026-08-08. If this starts
+  // failing, either an edition regressed or the rule needs narrowing further;
+  // do not silence it.
+  it('(k) stays quiet on every published leader edition', () => {
+    const dir = 'src/newsletters/published/leader';
+    expect(existsSync(dir), `regression corpus missing: ${dir}`).toBe(true);
+    const editions = readdirSync(dir)
+      .map((d) => join(dir, d, `${d}.md`))
+      .filter((f) => existsSync(f));
+    expect(editions.length).toBeGreaterThan(0);
+    const firing = editions.filter((f) => run(f).stderr.includes('[k]'));
+    expect(firing, `check (k) fired on: ${firing.join(', ')}`).toEqual([]);
+  }, 60_000);
 
   // P119 regression. Check (c) used to run `body_text | grep -qE '^### Also worth
   // noting'` directly under `set -uo pipefail`. `grep -q` exits on its FIRST match
