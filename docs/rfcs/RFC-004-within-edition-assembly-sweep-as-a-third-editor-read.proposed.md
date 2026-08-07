@@ -46,11 +46,9 @@ Against that text: the **timing here is conformant**. No fix work has been done.
 
 The **shape is not conformant**. This RFC is `Scope` prose with `stories: []`, because this repository has no story tier (no `docs/stories/`, no `docs/story-maps/`). That is a genuine deviation from a confirmed upstream decision, not a formatting choice.
 
-Standing up the story tier in this repository is a separate decision with its own cost, and it is **queued for Tom rather than taken unilaterally**, matching the identical note both sibling RFCs carry (RFC-002:49, RFC-003:45). Tom was asked on 2026-08-07 and chose to leave it, on the ground that the upstream mechanism is being reworked now. The relevant upstream tickets are **P456** (Open, direction ratified 2026-07-15, selector-skip) and **P409** (back-fill of legacy empty-stories RFCs); neither is an adopter carve-out permitting a consumer repo to run with no story tier at all. Nearer are **P412** and **P449**, both Open, and P449's own note records that the two "pull opposite ways and need a joint design read." So the upstream fix this deviation leans on **does not exist yet and its shape is contested**. Saying otherwise would overstate it.
+The empty-stories half of that deviation, and the upstream ADR-089 requirement it breaks, are recorded once in local **ADR-045** (RFCs in this project carry no stories until a story tier exists) and are not re-argued here. ADR-045 was created on 2026-08-07 at Tom's direction, in preference to a `docs/rfcs/README.md` convention clause, precisely so this argument stops being re-derived per RFC.
 
-Upstream **ADR-089** ("every RFC has at least one story") is the specific requirement `stories: []` violates. Its draft carve-out does not reach this RFC, which is `proposed` and records a settled fix.
-
-**Where this should be recorded permanently.** Three RFC bodies now carry a version of this argument. That is a project-level standing posture being re-derived per artefact, and `docs/rfcs/README.md:5` forbids inventing a parallel scheme there. The right home is a **local ADR** recording the deviation, its warrant and its reassessment trigger, with a one-line pointer from `docs/rfcs/README.md`. Writing a bare convention clause into the README instead would silently settle by convention the very call RFC-002 and RFC-003 both recorded as open, and would override a confirmed upstream ADR's confirmation criterion without ratification. That ADR is **not created by this RFC**; it is surfaced to Tom as a direction question, because choosing a home for a confirmed-decision deviation is his call and not the framework's.
+What ADR-045 does **not** cover, and this section therefore still owns, is the ADR-073 **timing** question: whether this RFC exists at the right point in the flow. It does.
 
 ## Scope
 
@@ -143,7 +141,7 @@ ADR-032's entry already declares itself knowingly partial (`032-...md:150`), and
 
 ## Stories
 
-Empty. Upstream ADR-089 requires at least one story per RFC and this repository has no story tier, so `stories: []` is a knowing deviation, argued in full under "Deviation from upstream ADR-073" above. Standing up the tier is queued for Tom rather than taken unilaterally, matching RFC-002:49 and RFC-003:45.
+Empty, per local **ADR-045** (RFCs in this project carry no stories until a story tier exists). Standing up the tier remains queued for Tom.
 
 ## Commits
 

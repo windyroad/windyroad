@@ -214,6 +214,12 @@ _40 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** agent file exists with fresh context, read-only tools, and the ADR-035 output shape; input contract pins the two most recent published editions with its window rationale stated; every finding carries a machine-readable remediating-or-advisory marker; the provenance line and the brief's closing reply prompt are excluded by name; minimum post length appears nowhere; the structure lint gains the three template-invariant checks with tests; `SKILL.md` invokes the gate at both sites with its own skip and phase semantics; no advisory finding can reach an applied edit; ADR-043 carries the five-clause amendment including the budget-question discharge; ADR-020 carries the ceiling-to-trigger correction in place; both ADR-020 and ADR-043 gain `amended-by`; hand-edited compendium entry with no em-dashes and a corrected count; first live run records fired findings, authorities, cleared advisories, and finalise wall-clock against ADR-017.
 **Related:** ADR-016, ADR-017, ADR-020, ADR-030, ADR-032, ADR-033, ADR-035, ADR-037, ADR-038, ADR-039, ADR-041, ADR-042, ADR-043
 
+### ADR-045 - RFCs in this project carry no stories until a story tier exists
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** RFCs in this repository ship `stories: []` and cite this decision in one line instead of re-arguing the warrant, because no story tier (`docs/stories/`, `docs/story-maps/`) exists here for a story to land on. The deviation from upstream ADR-089 is recorded once on a surface Tom ratifies rather than settled by README convention; it does not touch the I1 problem trace, the I13 propose-fix gate, ADR-071, or upstream ADR-073's RFC-first timing.
+**Confirmation:** every `stories: []` RFC carries a `## Stories` section citing this decision by number without re-deriving the warrant (RFC-002/003/004 back-filled when next edited); this is the only place in the repo where the warrant is argued, a second instance is a defect; the Scope paragraph stays load-bearing, it cannot justify skipping the RFC, the problem trace, or RFC-first timing.
+**Related:** upstream ADR-071, upstream ADR-089, upstream ADR-073, upstream ADR-060
+
 ---
 
 ## Historical decisions
