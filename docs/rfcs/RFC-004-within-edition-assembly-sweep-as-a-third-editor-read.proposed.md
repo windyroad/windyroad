@@ -5,7 +5,7 @@ reported: 2026-08-07
 human-oversight: unconfirmed
 decision-makers: [Tom Howard]
 problems: [P122]
-adrs: [020-newsletter-editor-subagent, 042-newsletter-adversarial-skeptic-gate, 043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates]
+adrs: [020-newsletter-editor-subagent, 042-newsletter-adversarial-skeptic-gate, 043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged]
 jtbd: [JTBD-005, JTBD-200, JTBD-300]
 stories: []
 ---
@@ -15,10 +15,10 @@ stories: []
 **Status**: proposed
 **Reported**: 2026-08-07
 **Problems**: P122
-**ADRs**: ADR-020 (Newsletter editor subagent), ADR-042 (Newsletter adversarial skeptic gate), ADR-043 (Bounded editorial remediation loop for the editor and skeptic gates)
+**ADRs**: ADR-020 (Newsletter editor subagent), ADR-042 (Newsletter adversarial skeptic gate), ADR-043 (Bounded editorial remediation loop for the editor and skeptic gates), ADR-046 (Skip the agent re-invocation when the artefact is unchanged)
 **JTBD**: JTBD-005 and JTBD-200 (the reader anchors carrying the warrant), JTBD-300 (Spend editorial judgement where it counts, the author anchor carrying the motivation)
 
-> **ID namespaces.** Bare `ADR-0NN` in this document means a **local** decision in `docs/decisions/` (ADR-020, ADR-032, ADR-035, ADR-042, ADR-043, ADR-044). References to **ADR-060, ADR-072, ADR-073, ADR-074, ADR-089** and to **P371** are **upstream `@windyroad` plugin** IDs and are marked "upstream" at each mention. This repository's local ADRs stop at 044, and the upstream 07x series means something entirely different. Same hazard local ADR-043:19 carries an inline note for.
+> **ID namespaces.** Bare `ADR-0NN` in this document means a **local** decision in `docs/decisions/` (ADR-020, ADR-032, ADR-035, ADR-042, ADR-043, ADR-044, ADR-045, ADR-046). References to **ADR-060, ADR-072, ADR-073, ADR-074, ADR-089** and to **P371** are **upstream `@windyroad` plugin** IDs and are marked "upstream" at each mention. This repository's local ADRs run to 046, and ADR-046 in particular collides with a different upstream decision of the same number, and the upstream 07x series means something entirely different. Same hazard local ADR-043:19 carries an inline note for.
 
 ## Summary
 
@@ -30,7 +30,7 @@ Add a third whole-edition read inside the existing `wr-newsletter-editor` invoca
 
 Two qualifications the ticket's own investigation added, which its Description prose predates and this RFC does not inherit. **One of the eight is not an assembly finding.** P122:82's lead sentence says "two of the eight findings turn out not to be assembly at all", but the axis table immediately below it maps findings 1 through 7 onto the four axes and excludes only finding 8. The table is the authored artefact, so the count follows it: seven findings collapse into four axes, which is why the vocabulary grows by four and not by seven. Finding 8 in particular (a LinkedIn-post bullet that lists where it should argue) is the skeptic's `promise-payoff` axis on `artifact_kind: linkedin-post`, "already in charter at step 15.55 and already running" (P122:91). It is a calibration miss, not a coverage gap, so the claim that *every* existing gate was structurally blind holds only for the assembly subset. **And none of these reached a reader.** P122:47 records that no factual error ships; the edition was hand-remediated before publication, and P122's Correction 2 (`:70`) further records findings 3 and 5 as arising against intermediate revision states rather than the declared-ready `d2d674a` body. The cost this RFC addresses is Tom's hand-remediation, not reader-facing damage.
 
-The fix is a third read inside an invocation that already happens, so the sweep itself costs no new subagent invocation. The three ADR amendments below are what make its findings legible to the remediation loop.
+The fix is a third read inside an invocation that already happens, so the sweep itself costs no new subagent invocation. The two ADR amendments and one new ADR below are what make its findings legible to the remediation loop.
 
 **Warrant versus motivation.** P122's axis table anchors three of the four axes to **JTBD-005** alone; `edition-internal-consistency` cites **JTBD-005 and JTBD-200** together (`122-...:86-89`). Its Related section records both as the live ratified persona anchors, with JTBD-005 carrying the grounding. **JTBD-300** (author job, ratified 2026-08-07) is the *motivation*: it is why the work is worth doing now. It is not the warrant for editing reader-facing prose. P122 states that distinction explicitly and this RFC keeps it, which is why the trace is additive rather than a swap.
 
@@ -52,11 +52,11 @@ What ADR-045 does **not** cover, and this section therefore still owns, is the A
 
 ## Scope
 
-Six items in dependency order. The three ADR amendments are **preconditions, not follow-ups**: `.claude/agents/wr-newsletter-editor.md:190` carries a hard rule that no further axes may be added without amending ADR-020 first.
+Six items in dependency order. The two ADR amendments and one new ADR are **preconditions, not follow-ups**: `.claude/agents/wr-newsletter-editor.md:190` carries a hard rule that no further axes may be added without amending ADR-020 first.
 
-**"Precondition" here means ratified, not committed.** Upstream ADR-073's Decision Outcome clause 3 and upstream ADR-074 (Confirm a decision's substance before building dependent work) both require an out-of-coverage choice to be human-ratified before implementation. Upstream ADR-060's I13 body says it directly for this exact shape: the orchestrator may author a story decomposition for a fix whose choices are already covered by existing ADRs, but an **uncovered** option-choice "escalates to a **new ADR ratified before implementation**", and the orchestrator does not pick it. P122's own Investigation Task 1 states the same thing in its own words: for a decision, "lands" means ratified, not committed. All three amendments carry genuinely new substance (four axis names, a new evidential/navigational seam, and a skip rule that changes what condition (c)'s counter means), so **items 4, 5 and 6 do not begin until items 1, 2 and 3 are ratified**, not merely architect-passed and committed. Building them earlier would stack unconfirmed decisions on unconfirmed decisions, which is the guard's case exactly.
+**"Precondition" here means ratified, not committed.** Upstream ADR-073's Decision Outcome clause 3 and upstream ADR-074 (Confirm a decision's substance before building dependent work) both require an out-of-coverage choice to be human-ratified before implementation. Upstream ADR-060's I13 body says it directly for this exact shape: the orchestrator may author a story decomposition for a fix whose choices are already covered by existing ADRs, but an **uncovered** option-choice "escalates to a **new ADR ratified before implementation**", and the orchestrator does not pick it. P122's own Investigation Task 1 states the same thing in its own words: for a decision, "lands" means ratified, not committed. All three carry genuinely new substance (four axis names, a new evidential/navigational seam, and a skip rule that changes what condition (c)'s counter means), so **items 4, 5 and 6 do not begin until items 1, 2 and 3 are ratified**, not merely architect-passed and committed. Building them earlier would stack unconfirmed decisions on unconfirmed decisions, which is the guard's case exactly.
 
-Following upstream ADR-073:78's rationale, the three decision-file edits land as **separate architect-gate passes**, not one batch, to avoid the multi-decision-file edit deadlock. (ADR-073:78 prescribes separate passes for its own two lockstep amendments and states no general rule; the deadlock reasoning generalises, so the practice is adopted rather than cited as binding.)
+Following upstream ADR-073:78's rationale, the three decision-file changes land as **separate architect-gate passes**, not one batch, to avoid the multi-decision-file edit deadlock. (ADR-073:78 prescribes separate passes for its own two lockstep amendments and states no general rule; the deadlock reasoning generalises, so the practice is adopted rather than cited as binding.)
 
 ### 1. ADR-020 amendment (own gate pass, then ratification)
 
@@ -94,20 +94,13 @@ Two further corrections in the same amendment:
 
 One line in ADR-042's boundary-partition list declaring the **evidential-versus-navigational seam** against the skeptic's promise-payoff axis. The skeptic's is evidential (is the named thing delivered as substance); the editor's `signpost-promises-match-contents` is navigational (does the label describe what physically follows). The contested case is P122 finding 2, a close that does not collect what the headline promised, which reads as either. The amendment argues it rather than assuming it.
 
-### 3. ADR-043 sixth clause (own gate pass, then ratification)
+### 3. ADR-046, a new decision (own gate pass, then ratification)
 
-Added to the **existing** `## Amendment 2026-08-07 (P121, P122)` section rather than opening a second dated section. Four grounds: the section title already names P122; clause 1 already names P122's sweep; the section's stated purpose is one section covering both tickets' changes to step 15.37 rather than two sequential patches on the same step; and clause 3 (precedence) interacts with the skip rule, since an all-stop-and-surface round is what the skip optimises for.
+The skip rule: **skip the agent re-invocation when the artefact is byte-identical to the version the collected findings were taken against.** It is recorded as its own decision, ADR-046 (Skip the agent re-invocation when the artefact is unchanged), rather than as a sixth clause on ADR-043's 2026-08-07 amendment section.
 
-The rule: **skip the agent re-invocation when the artefact is byte-identical to the version the collected findings were taken against.** Named for byte-identity of the artefact, not for the paired shape, because P122 section 5 establishes that "skip the paired re-invocation" does not read onto step 15.57, which is single-contributor.
+That is a deliberate departure from this RFC's original plan, made on Tom's direction of 2026-08-07: a reader who opens an ADR reads the main decision and can miss an amendment section entirely. The corpus has a worked instance in ADR-020's criterion-6 "ceiling" misreading. ADR-046 carries the rule, its three safety conditions (a retained in-context hash as the comparison operand, re-run on doubt, and a declined round still consuming condition (c)'s counter), its rejected alternatives, and an explicit out-of-scope declaration for the loop-exit full pass.
 
-Two holes the clause must close:
-
-- **Identity mechanism.** Re-read `artifact_path` and compare against the version step 15.37 item 1 pinned at collect. Default stated explicitly: when in doubt, re-run.
-- **A skipped round IS consumed.** This is *not* purely additive to ADR-043 confirmation criterion 3 (`:177`), which pins the four section 15.6 conditions including "(c) the editor and skeptic counter does not reset". Resolving the second hole as "a declined paired look is consumed" changes what condition (c)'s counter means and therefore what condition (d) counts. The clause must say so in those terms ("condition (c)'s counter is consumed by a declined paired look; conditions (c) and (d) read that counter"), or a later compliance pass reads criterion 3's pin against a SKILL.md whose (c) means something else and cannot tell whether it was intended. That is the criterion-6 drift shape again, in the same corpus. **(Corrected 2026-08-07 when ADR-043 clause 6 was drafted: this prescribed wording is FALSE. ADR-043's own Consequences state condition (c) bounds only the editor and skeptic counter, while condition (d) bounds a separate outer cycle of consecutive edit-forcing full passes. The clause as landed says (c)'s counter is consumed and (d) is unaffected.)**
-
-**Two corrections to the amendment section's own opening sentence (`:200`), both in one edit.** It reads: "Landed by ADR-044 (Cross-edition shape as a fresh-context subagent gate). ... **Amendment, not supersession**: the chosen option, the one-round cap, the skeptic reduce-only differential, the residual-advisory arm, the absent author-override arm and the four section-15.6 conditions all survive unchanged." Clause 6 falsifies **both** halves: it is landed by P122's own change, not by ADR-044, and it changes condition (c)'s counter semantics, so the four conditions do **not** all survive unchanged. Correcting only the provenance half would leave the amendment section contradicting its own clause. ADR-043's frontmatter `amended-by:` (`:12`, currently `[044-cross-edition-shape-as-a-fresh-context-subagent-gate]` alone) gains this change too.
-
-The rule ships as a **cost-benefit judgement, not a correction**: two attempts to argue it wrong in principle failed, and P122 Fix Strategy section 5 records why, with the superseded drafting history parked under its own heading.
+ADR-043 keeps the exception inline in its main body at the surfaces ADR-046's confirmation criterion 3 enumerates, so a reader of the main decision cannot miss it. Its `amended-by` gains ADR-046.
 
 ### 4. Editor agent Step 4.6
 
@@ -131,11 +124,15 @@ The three anticipated shapes are pre-registered anyway, because each is legitima
 
 Step 15.25's parse block and step 17's Tom-summary axis list, per the surface table in **item 1**.
 
-Separately, and driven by **item 3** rather than item 1, the condition-(c) semantics change touches four SKILL.md surfaces that restate it: the section 15.6 row at `:1071`, the inner-loop exemption prose at `:1082`, and the two post-body-edit restatements at `:1017` and `:1045`.
+Separately, and driven by **item 3** rather than item 1, two sets of SKILL.md surfaces move.
+
+The condition-(c) semantics change touches four surfaces that restate it: the section 15.6 row at `:1071`, the inner-loop exemption prose at `:1082`, and the two post-body-edit restatements at `:1017` and `:1045`.
+
+The skip rule itself conditions four more: `:902` (step 15.37's collect item 1, which gains the retained hash), `:906` (the brief-surface re-invoke, the primary skip site), and the two companion-surface re-invocations at `:1016` and `:1043`. These are recorded here rather than in ADR-046, which deliberately leaves exact placement to this decomposition so the decision does not carry line numbers that rot.
 
 ## Compendium hygiene
 
-`docs/decisions/README.md` must reflect all three amended ADRs. Regeneration is blocked by P087 (the upstream generator emits em-dashes that trip this repo's no-em-dash hook, which fired three times on 2026-08-07), so the three entries are **hand-edited in the same change** rather than deferred. That divergence is knowingly accepted under P087 and has on-disk precedent: ADR-044's own confirmation criterion accepts a hand-edited compendium entry with no em-dashes and a corrected count. Say so in the entries, because `docs/decisions/README.md:3` carries a generated "do NOT hand-edit" banner and the next reader will otherwise revert them.
+`docs/decisions/README.md` must reflect the two amended ADRs and carry a new ADR-046 entry. Regeneration is blocked by P087 (the upstream generator emits em-dashes that trip this repo's no-em-dash hook, which fired three times on 2026-08-07), so the three entries are **hand-edited in the same change** rather than deferred. That divergence is knowingly accepted under P087 and has on-disk precedent: ADR-044's own confirmation criterion accepts a hand-edited compendium entry with no em-dashes and a corrected count. Say so in the entries, because `docs/decisions/README.md:3` carries a generated "do NOT hand-edit" banner and the next reader will otherwise revert them.
 
 ADR-032's entry already declares itself knowingly partial (`032-...md:150`), and `docs/decisions/032-newsletter-editorial-discipline-policy.proposed.md` is modified and uncommitted in the working tree. Resolve that state before layering further divergence on it.
 
