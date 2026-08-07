@@ -12,6 +12,8 @@ informed: []
 # Action-specific pipeline risk management
 
 ## Context and Problem Statement
+> **Amended 2026-08-07.** The threshold moved to **5 or below** (`Threshold: 5`). `RISK-POLICY.md` is the enforcement surface and the single source of truth for the operative value; the figures in this record are point-in-time and are retained as the reasoning at the time of the decision. See RISK-POLICY.md Amendment History.
+
 
 The risk scorer currently answers one question: "what's the risk of this diff?" But risk compounds across the pipeline. A low-risk commit is fine alone, but 10 low-risk commits that haven't been pushed become a medium-risk push. And a push landing on an already-large release PR might make the release high-risk.
 

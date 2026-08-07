@@ -2,7 +2,7 @@
 
 Risk assessment for pipeline actions (commit, push, release), aligned with ISO 31000.
 
-**Last reviewed:** 2026-07-12
+**Last reviewed:** 2026-08-07
 
 > Reviewed quarterly. This blockquote line is machine-read by the wr-risk-scorer commit gate's staleness check (line-anchored, capital R, lowercase cadence word); keep the shape intact so the gate resolves the 90-day quarterly threshold instead of its 14-day fallback.
 
@@ -33,9 +33,13 @@ When discussing such information in tickets or briefings, use generic descriptio
 
 ## Risk Appetite
 
-Residual risk score must be **< 5 (Low)** for any pipeline action (commit, push, release). Scores >= 5 (Medium and above) must be reduced before proceeding.
+**Threshold: 5**
 
-The tight appetite reflects the solo-operator context. With no second pair of eyes, and automated controls as the only safety net, accepting Medium residual risk would mean shipping changes that the existing controls cannot reliably catch.
+Residual risk score must be **5 or below** for any pipeline action (commit, push, release). Scores above 5 must be reduced before proceeding.
+
+The tight appetite reflects the solo-operator context. With no second pair of eyes, and automated controls as the only safety net, a residual above 5 would mean shipping changes that the existing controls cannot reliably catch. A residual of exactly 5 is admissible only where it is reached with likelihood 1: that is, where a severe-impact risk has been driven to Rare by a named control. State the control, do not assert Rare. Absent a named control the likelihood is not 1, so the residual is not 5, so the change is above appetite. This constraint is enforced by the scoring agent, not by the commit hook: the hook compares the product only and cannot see how a 5 was composed.
+
+See Amendment History for how this boundary moved and why.
 
 ## Impact Levels
 
@@ -46,6 +50,14 @@ The tight appetite reflects the solo-operator context. With no second pair of ey
 | 3 | Moderate | Static-site visitor degradation, OR newsletter pipeline disruption that does not reach readers. Blog or home page degraded or inaccessible (the static site is the hub for the LinkedIn-distributed newsletter and Tom's writing; the consulting funnel and its CTAs are retired per ADR-041). Netlify build broken or delayed. Newsletter pipeline broken before draft generation (caught before publish, rescheduling possible). Confidential business metrics (revenue, subscriber counts, pricing, traffic volumes) committed to the public repository (information disclosure requiring immediate remediation but not yet affecting visitor-facing service). |
 | 4 | Significant | Newsletter content quality failure caught at a gate, OR site fully offline. Newsletter draft pipeline ships poor-quality content past one of the voice, content-risk, SW-critic, or editor gates (caught at finalise but indicates gate weakness). Published newsletter on LinkedIn renders incorrectly or contains broken links. Site fully offline (LinkedIn-newsletter article links break; credibility hit at the destination of the funnel). |
 | 5 | Severe | Newsletter content failure reaching LinkedIn readers (the primary channel), OR catastrophic content / trust / security failure on visitor surface. Newsletter content factually wrong or misrepresenting sources reaches LinkedIn readers. Voice-violating outbound copy that frames readers' teams as behind. Misleading or factually wrong content reaching site visitors. Broken accessibility (WCAG AA violation reaching readers or visitors). Exposed secrets or credentials. |
+
+## Amendment History
+
+**2026-08-07, appetite boundary moved from `< 5` to `5 or below` (Tom's direction).** The old boundary put the whole of the Medium band out of reach and could not distinguish a residual of 5 from one of 9. The only cell it newly admits is severe impact at likelihood 1: a 5-impact risk that a named control has driven to Rare. A negligible-impact risk at likelihood 5 also multiplies to 5, but the likelihood-1 constraint above excludes it, so it is not admitted and must still be reduced. It does not admit 6 through 9, which remain the genuinely multi-dimensional Medium risks the solo-operator rationale excludes. This reverses a position recorded on 2026-07-12 that read "stay below Medium" as strictly `< 5`; the reversal is deliberate, not an oversight.
+
+Note the label bands below still read `5-9 Medium`, so a residual of exactly 5 is now an accepted Medium rather than a Low. That is intentional and is why the paragraph above constrains how 5 may be reached.
+
+**Correction recorded in the same change.** The reason originally put to Tom for raising this was that the Impact Levels table rates any reader-facing copy change 5, making newsletter commits structurally un-passable. That is not what the table says: impact 5 requires the failure to reach readers, so a commit to an unpublished draft is impact 4 at most and usually 3. The claim came from a P120 iteration summary and was repeated several times without reading the table. This amendment does not rest on it.
 
 ## Likelihood Levels
 
@@ -85,7 +97,7 @@ This risk matrix is the single source of truth for both the **risk-scorer agent*
 
 ## Action-Specific Risk
 
-The risk appetite (< 5) applies uniformly to all pipeline actions: commit, push, and release. We are delivering change into production; the threshold does not change based on which stage the change is at. CI controls and preview deploys are mitigating controls that reduce residual risk, not reasons to accept higher risk.
+The risk appetite (5 or below) applies uniformly to all pipeline actions: commit, push, and release. We are delivering change into production; the threshold does not change based on which stage the change is at. CI controls and preview deploys are mitigating controls that reduce residual risk, not reasons to accept higher risk.
 
 The risk scorer assesses the accumulated change at each stage, not just counts of commits or files. It must understand what the changes are to judge their impact and likelihood.
 
@@ -93,6 +105,6 @@ The risk scorer assesses the accumulated change at each stage, not just counts o
 
 Each action must consider its effect on the next queue downstream. WIP accumulation acts as back-pressure through the pipeline:
 
-- Do not commit if the accumulated unpushed changes (including this commit) would have risk >= 5
-- Do not push if the accumulated unreleased changes (including this push) would have risk >= 5
+- Do not commit if the accumulated unpushed changes (including this commit) would have risk > 5
+- Do not push if the accumulated unreleased changes (including this push) would have risk > 5
 - Exception: actions that reduce downstream risk bypass back-pressure (e.g. adding tests when release risk is high)

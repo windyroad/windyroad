@@ -12,6 +12,8 @@ informed: []
 # Use impact x likelihood product for risk scoring
 
 ## Context and Problem Statement
+> **Amended 2026-08-07.** The threshold moved to **5 or below** (`Threshold: 5`). `RISK-POLICY.md` is the enforcement surface and the single source of truth for the operative value; the figures in this record are point-in-time and are retained as the reasoning at the time of the decision. See RISK-POLICY.md Amendment History.
+
 
 The risk matrix uses `max(impact, likelihood)` to compute residual risk on a 1-5 scale. This collapses two independent dimensions into one: a Severe impact (5) with Rare likelihood (1) scores identically to an Almost Certain likelihood (5) with Negligible impact (1). Both score 5, but they represent very different risk profiles. The max() approach cannot distinguish between high-impact/low-probability and low-impact/high-probability scenarios.
 

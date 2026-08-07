@@ -45,12 +45,12 @@ _40 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** IDLE state blocks implementation file edits; Writing a failing test transitions to RED; Making the test pass transitions to GREEN; Exempt files are always writable regardless of state; Test runner timeout transitions to BLOCKED
 
 ### ADR-007 - Use impact x likelihood product for risk scoring
-**Status:** proposed | **Oversight:** confirmed
+**Status:** proposed | **Oversight:** confirmed | **Threshold amended 2026-08-07:** the operative appetite is now 5 or below; RISK-POLICY.md is the enforcement surface. The `< 5` and `>= 5` figures below are point-in-time.
 **Chosen:** Chosen option: **Impact x likelihood product**, because it is the simplest formula that gives both dimensions proportional influence. The 1-25 scale maps naturally to five label bands, and the commit threshold (`< 5`) cleanly separates Low ...
 **Confirmation:** RISK-POLICY.md reflects the product formula, label bands, and threshold; risk-scorer agent outputs N/25 (Label) format; Commit gate blocks at score >= 5; Prompt hook nudge triggers at score >= 5
 
 ### ADR-008 - Action-specific pipeline risk management
-**Status:** proposed | **Oversight:** confirmed
+**Status:** proposed | **Oversight:** confirmed | **Threshold amended 2026-08-07:** the operative appetite is now 5 or below; RISK-POLICY.md is the enforcement surface. The `< 5` and `>= 5` figures below are point-in-time.
 **Chosen:** Chosen option: **Action-specific scoring with downstream back-pressure**, because it treats the pipeline as a connected system where risk flows downstream, and it consolidates duplicate data gathering into a single pipeline state script.
 **Confirmation:** pipeline-state.sh --all completes in under 200ms (local git only); Two risk reports appear per prompt (Commit + Push) with downstream projections; Commit gate reads /tmp/risk-commit-${SESSION_ID}; Push gate reads /tmp/risk-push-${SESSION_ID}; Agent suggests pushing when commit+push risk are low
 
