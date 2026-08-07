@@ -252,3 +252,9 @@ No new ADR. The home is an existing gate, ADR-020 confirmation criterion 1 expli
 - **Upstream report pending** -- false positive; detection misfire. The P063 external-root-cause scan matches "external reviewer" throughout this ticket's prose, where it names a human editor rather than an upstream dependency. There is no upstream repository and nothing to report. Recorded rather than auto-filed, matching the same disposition on P121.
 - Gate reviews at the Known Error transition (2026-08-05): architect ISSUES FOUND, jtbd ISSUES FOUND. Every finding from both is folded into the Fix Strategy above rather than deferred, and each cited artefact was verified on disk before propagation (P082). The architect's five substantive corrections were the ADR-043 ratification blocker, the ADR-032 provenance limb, the ADR-037 anchor limb, the undeclared skeptic seam (which corrected the ticket's "no ADR-042 change" assumption), and the loop-cost correction. The jtbd review's blocking correction was the `close-discharges-headline` re-wording. Style-guide and voice-tone gates are no-ops by scope: this iteration touches no `.css`, no UI component file, and no user-facing copy surface.
 - Captured via `/wr-itil:capture-problem` during the Issue 16 follow-up (2026-08-05). This class was identified during the 2026-08-04 retrospective and not ticketed at the time, which was a gap in that retro's Step 4b execution.
+
+## RFCs
+
+| RFC | Status | Title |
+|-----|--------|-------|
+| RFC-004 | proposed | Within-edition assembly sweep as a third editor read, with four craft axes and an ADR-043 remediation contract |
