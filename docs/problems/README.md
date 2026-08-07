@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-08 **P122 fix released, P087 and P127 re-rated up on this session's evidence** -- P122 (no gate owns within-edition assembly) moved to Verification Pending: the editor gained a Step 4.6 whole-edition read, the structure lint gained a duplicate-citation check, and three decisions were ratified to authorise it. P087 (compendium em-dashes) re-rated 8.0 to 10.0: it fired five times on 2026-08-07, twice within one ADR's create-then-ratify lifecycle, and the hand-repair does not survive the next edit to the same ADR, so it is a per-edit tax rather than a one-time scrub. P127 (unverified claims) re-rated to likelihood 5 on two further instances during the P122 build, and its WSJF line was arithmetically wrong: it stated 12.0 where 12 x 1.0 / 2 is 6.0, so the effort divisor had never been applied. Corrected to 7.5 at the new severity.
+> Last reviewed: 2026-08-08 **P122 fix released, P119 transition caught, P087 and P127 re-rated up** -- P122 (no gate owns within-edition assembly) moved to Verification Pending: the editor gained a Step 4.6 whole-edition read, the structure lint gained a duplicate-citation check, and three decisions were ratified to authorise it. P087 (compendium em-dashes) re-rated 8.0 to 10.0: it fired five times on 2026-08-07, twice within one ADR's create-then-ratify lifecycle, and the hand-repair does not survive the next edit to the same ADR, so it is a per-edit tax rather than a one-time scrub. P127 (unverified claims) re-rated to likelihood 5 on two further instances during the P122 build, and its WSJF line was arithmetically wrong: it stated 12.0 where 12 x 1.0 / 2 is 6.0, so the effort divisor had never been applied. Corrected to 7.5 at the new severity. P119 was also found sitting in Known Error with its fix shipped and test-pinned since 2026-08-03; the transition had been missed and is now made.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 16.0 | P119 | Newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields spurious "missing Also worth noting" FAIL | 8 | Known Error | S | 2026-08-03 | internal |
 | 16.0 | P099 | wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set | 16 | Known Error | M | 2026-06-22 | internal |
 | 12.0 | P108 | wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version, breaking the map render on plugin update | 6 | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact | 6 | Known Error | S | 2026-07-03 | internal |
@@ -68,6 +67,7 @@ Fix released, awaiting verification. Sorted by ID ascending within the release-d
 | P116 | Newsletter gates are all floor gates; no adversarial ceiling gate, so external review still finds substance issues every edition | Delivered to master 2026-07-14 in commit `4d6a622` (ADR-042 + `wr-newsletter-skeptic` agent + SKILL wiring at  | no - not observed |
 | P117 | Tighten existing newsletter gate prompts for the lower-frequency external-review classes | Delivered to master 2026-07-15: three prompt/rubric edits to `.claude/skills/wr-newsletter/assets/newsletter-c | no - not observed |
 | P120 | Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden | Shipped 2026-08-05 as ADR-043 plus the SKILL and agent wiring above. Awaiting user verification. | no - not observed |
+| P119 | Newsletter structure lint check (c) is non-deterministic under pipefail | Fixed in bbb6ca1; pinned by a 20-run determinism test | no - not observed (verifies on the next /wr-newsletter run) |
 | P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | Shipped 2026-08-08 across four commits, against three decisions Tom ratified 2026-08-07. | no - not observed (verifies on the next /wr-newsletter run) |
 | P123 | fix:deps gates on vitest only, so a lockfile npm ci cannot install passes locally and reddens master | Shipped 2026-08-05 in the commit that carries this transition: the composite gate and `lockfile_platform_flag_ | no - not observed |
 

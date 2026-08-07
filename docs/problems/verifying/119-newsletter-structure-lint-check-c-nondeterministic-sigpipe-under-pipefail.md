@@ -1,6 +1,6 @@
 # Problem 119: Newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields spurious "missing Also worth noting" FAIL
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-08-03
 **Priority**: 8 (Medium). Impact: 2 x Likelihood: 4, derived at capture. Impact is 2 rather than 3 because nothing is lost or mis-published: the save is blocked, not corrupted, and a re-run clears it. Likelihood is 4 because the gate runs several times per edition and fires roughly 1 run in 6 on current body lengths. WSJF 16.0 at Effort S, cf. P108 (Severity 6, Effort S, WSJF 12.0)
 **Origin**: internal
@@ -72,6 +72,17 @@ The corrected fixture puts roughly 200KB of padding AFTER the heading, satisfyin
 - [x] Audit the rest of `scripts/check-newsletter-structure.sh` for other `| grep -q` pipelines under `pipefail`. Only two exist. Check (c) is fixed. Line 177's `printf '%s' "$h1" | grep -qE` is structurally identical to the pre-fix check (c) and is safe ONLY because `grep -m1` upstream bounds its payload to a single heading line, far under the pipe buffer. That is a payload-size accident, not a structural fix: a future multi-line input at that call site reopens the same class. Checks (e), (f) and (g) use awk or `grep -oE`, which consume their input fully.
 - [ ] Audit sibling repo scripts for the same shape, given P059 was the same class.
 - [x] Add a regression test that runs the lint N times against a long fixture brief and asserts a stable exit code. Landed as `scripts/check-newsletter-structure.test.mjs` "(c) is deterministic on a long body (P119 SIGPIPE under pipefail)".
+
+
+## Fix Released
+
+Fixed in `bbb6ca1` (2026-08-03), alongside the Issue 16 publish. Check (c) previously ran `body_text | grep -qE '^### Also worth noting'` directly under `set -uo pipefail`; `grep -q` exits on its first match and closes the pipe, the upstream writer takes SIGPIPE (141) with output still buffered, and `pipefail` promoted that to a spurious missing-section FAIL. It now runs `atwn=$(body_text | grep -m1 -E '^### Also worth noting' || true)`, so command substitution plus `|| true` swallows the signal.
+
+Pinned by `scripts/check-newsletter-structure.test.mjs:455-467`, which runs the lint 20 consecutive times against a body padded well past the 64KB pipe buffer and asserts the exit-code set is exactly `{0}`. Verified failing against the pre-fix check (c).
+
+**Transitioned 2026-08-08.** The fix and its regression test both landed on 2026-08-03; the ticket was left in Known Error and the transition was missed. Caught during the P122 wrap-up while checking which top-of-backlog tickets bear on the next newsletter run.
+
+**Awaiting Tom's verification**: the next `/wr-newsletter` run completing step 16 without a spurious check (c) failure.
 
 ## Dependencies
 

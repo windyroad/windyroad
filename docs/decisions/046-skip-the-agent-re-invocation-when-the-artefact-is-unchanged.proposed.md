@@ -56,6 +56,12 @@ Three conditions make the rule safe. Each is load-bearing; leaving any implicit 
 
 **The loop-exit full pass is OUT of scope.** On an all-stop-and-surface round the artefact reaching ADR-043's loop-exit full pass is also byte-identical, and that pass costs more agent invocations than the round did, so it is the obvious next place to extend this rule. It is deliberately not extended. ADR-043 condition (a) makes the full pass the guarantee that no publish-bound body reaches step 16 without a complete gate pass since its last edit, which is the P099 invariant itself; skipping it would trade a bounded cost saving against the thing the loop was built to preserve. A future proposal to extend the skip there is a new decision, not an implementation detail of this one.
 
+> **Caveat added 2026-08-08.** The argument above treats condition (a)'s full pass as a reliable backstop, and P099 records that it is not one yet. Its Effort note reads that the section 15.6 prose rule "shipped and did not hold", and that the remaining work is a stronger enforcement mechanism (the marker file its Fix Strategy first rejected as YAGNI, or a dirty-body check at save). So the containment this decision leans on is a documented intent rather than an enforced invariant.
+>
+> That does not put this decision at risk: the skip fails safe on its own terms (byte-identity only, re-run whenever the digest is unavailable), so it does not depend on the backstop to be correct. What it does mean is that the **worst case is worse than "the full pass would catch it"**: if a skip ever mis-fires AND the full pass does not run, nothing catches it. That is P099's exposure, not a new one this decision creates, but this decision's out-of-scope reasoning should not be read as evidence the exposure is closed.
+>
+> P099 also names P120's remediation loop as a design input it was waiting on. That loop has since shipped, so P099's blocked-on condition is discharged and its fix is designable now.
+
 ### 1. The comparison needs an operand, and this decision adds one
 
 Step 15.37 item 1 pins a *requirement* (all findings must be against the same body version) but retains nothing to compare against, and ADR-043 deliberately declined a marker file, calling the loop's bookkeeping in-context judgement. A byte comparison against a remembered version is not a byte comparison.

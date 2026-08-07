@@ -60,6 +60,14 @@ Discipline rule shipped to `.claude/skills/wr-newsletter/SKILL.md` (§15.6 + fai
 
 ## Dependencies
 
+> **Note added 2026-08-08 (P122 build).** Two things changed for this ticket.
+>
+> **A second decision now leans on the invariant this ticket says does not hold.** ADR-046 (Skip the agent re-invocation when the artefact is unchanged) declares the loop-exit full pass out of scope for its skip, on the ground that condition (a)'s full pass is the guarantee no publish-bound body reaches step 16 ungated. ADR-046 carries a caveat recording that this ticket contradicts that reading. The skip fails safe independently, so ADR-046 is not at risk; but the two now share a worst case, and fixing this ticket strengthens both.
+>
+> **The design input this ticket was waiting on has landed.** The Effort note says the enforcement mechanism should be designed alongside P113's gate-loop cost and P120's remediation loop, "since those determine whether re-running the heavy gates is affordable". P120's loop shipped (ADR-043, plus the ADR-044 and ADR-046 amendments), and ADR-046's own digest-at-collect mechanism is a working precedent for the dirty-body check this ticket names as one of its two options. This ticket is designable now.
+
+
+
 - **Blocks**: (none)
 - **Blocked by**: (none)
 - **Composes with**: P089 (structural lint); the five-gate sequence.
