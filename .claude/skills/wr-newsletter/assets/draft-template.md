@@ -93,7 +93,7 @@ Do NOT lead with news. Lead with a perspective. The drafter should attempt this 
 
 ---
 
-[ONE-LINE INVITATION. Example: "Reply with what is breaking on your stack this quarter, or forward to a colleague who runs an engineering team." Vary the verb weekly; this is the subscribe-loop hook. Do NOT precede this with a Windy Road services-description sentence (P090): invitation + closing line only.]
+[ONE-LINE INVITATION, AS A QUESTION TIED TO THIS EDITION (ADR-032 element 6). A specific question only a reader who engaged with this week's items can answer. Example, from an edition arguing the model is now the easy part: "If the model is the easy part now, what is the hard part for your team this quarter?" Do NOT use a generic prompt that could top any edition, and do NOT use a forward request: forwarding is not replying and cannot satisfy element 6. This is the subscribe-loop hook. Do NOT precede this with a Windy Road services-description sentence (P090): invitation + closing line only.]
 
 windyroad.com.au
 ```
@@ -102,12 +102,15 @@ windyroad.com.au
 
 The CTA is one rotating invitation plus the `windyroad.com.au` closing line only. There is no services-description variant (P090; ADR-023 funnel pause): do not add a "Windy Road runs / helps / works..." sentence.
 
-**Invitation variants (pick one; rotate):**
+**The invitation is a question tied to this edition** (ADR-032 element 6). Write a specific question only a reader who engaged with this week's items can answer, built to foster conversation. Do NOT default to a generic prompt that could top any edition. This matches what both persona configs already instruct and what every published edition does; the variant list below is a fallback well for when no edition-tied question presents itself, not a menu to pick from.
+
+**Fallback variants (only when no edition-tied question presents itself):**
 
 - "Reply with what is breaking on your stack this quarter."
-- "Forward this to a colleague who runs an engineering team."
 - "Reply with a prediction you are willing to be wrong about."
 - "Tell us the conversation you are having with your CTO this week."
+
+The former "Forward this to a colleague who runs an engineering team" variant is removed: it is a forward request rather than a reply prompt, so it cannot satisfy element 6 and a fallback that cannot satisfy the rule is a trap.
 
 ## What NOT to do
 

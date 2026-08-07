@@ -53,7 +53,6 @@ Write the invitation tied to this edition's thesis and built to foster conversat
 The variants below are a fallback well for when no edition-tied question presents itself, not the default:
 
 - "Reply with a tool you want us to pressure-test next week."
-- "Forward this to an engineer who is drowning in AI announcements."
 - "Reply with a tool you tried and abandoned, and why."
 - "Tell us what you are shipping with this week."
 

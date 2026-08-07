@@ -57,6 +57,14 @@ Working engineers using AI coding tools day-to-day. Influence-only persona, with
 | JTBD-204 | Experiment vs Delivery Boundary | Important | [JTBD-204-experiment-delivery-boundary.proposed.md](developer/JTBD-204-experiment-delivery-boundary.proposed.md) |
 | JTBD-205 | Trust, Shipped vs Demo | Must-have | [JTBD-205-trust-shipped-vs-demo.proposed.md](developer/JTBD-205-trust-shipped-vs-demo.proposed.md) |
 
+## Publication Author
+
+Tom, on the production side of the same artefacts. Not a reader persona. See [publication-author/persona.md](publication-author/persona.md). Added 2026-08-07: the corpus modelled only readers, so newsletter-pipeline work justified partly on the author's review load had no job to trace to.
+
+| ID | Job | Priority | File |
+|----|-----|----------|------|
+| JTBD-300 | Spend Editorial Judgement Where It Counts | Must-have | [JTBD-300-spend-editorial-judgement-where-it-counts.proposed.md](publication-author/JTBD-300-spend-editorial-judgement-where-it-counts.proposed.md) |
+
 ## Job-to-Screen Mapping
 
 | Route / Surface | Primary jobs served | Persona |
@@ -65,6 +73,7 @@ Working engineers using AI coding tools day-to-day. Influence-only persona, with
 | `/blog` | JTBD-005 | Engineering Leader |
 | The Shift newsletter (LinkedIn, off-site) | JTBD-005 | Engineering Leader |
 | Tokens Spent newsletter (LinkedIn, off-site) | JTBD-200 through JTBD-205 | Developer |
+| `/wr-newsletter` pipeline (prep and finalise) | JTBD-300 | Publication Author |
 
 Retired per ADR-041: `/ai-quality`, `/founders`, `/vibe-code-audit` are deleted and redirect to `/`. The homepage, blog, and The Shift no longer serve the consulting jobs JTBD-001 to JTBD-004 or the Technical Founder's JTBD-100.
 
@@ -83,3 +92,4 @@ Retired per ADR-041. Windy Road no longer sells consulting engagements (Patch Fi
 - Engineering Leader: 001-099
 - Technical Founder: 100-199
 - Developer: 200-299
+- Publication Author: 300-399

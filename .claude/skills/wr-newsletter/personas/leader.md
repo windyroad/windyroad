@@ -53,7 +53,6 @@ Write the invitation tied to this edition's thesis and built to foster conversat
 The variants below are a fallback well for when no edition-tied question presents itself, not the default:
 
 - "Reply with what is breaking on your stack this quarter."
-- "Forward this to a colleague who runs an engineering team."
 - "Reply with a prediction you are willing to be wrong about."
 - "Tell us the conversation you are having with your CTO this week."
 
