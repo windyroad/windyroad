@@ -6,12 +6,12 @@ allowed-tools: Read, Bash, WebFetch, Glob, Grep, Write, Edit, Skill, Agent, AskU
 
 # Windy Road newsletter generator
 
-Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Six review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), editor (ADR 020), adversarial skeptic (ADR 042; claim-evidence calibration read adversarially, the gate that owns the most common external-review catch), and cognitive accessibility (P053; one-round-with-optional-remediation pass against WCAG 2.2 cognitive SC + reading-grade-level target). The editor and skeptic findings then route through a bounded one-round editorial remediation loop at step 15.37 (ADR 043) rather than terminating at the Tom-summary; anything surviving that round is recorded as an accepted residual advisory. Phase boundaries (ADR 017, refined by ADR 030) split the pipeline so the time-expensive work runs in the days before the persona's publish-day (prep) and publish-day morning is reserved for a tier-1 refresh plus publish (finalise).
+Weekly pipeline for either The Shift (persona=leader) or Tokens Spent (persona=developer). Persona and phase are both resolved at step 0 from `$ARGUMENTS`; everything downstream reads the resolved persona's config bundle and branches on phase. The brief is structured as commentary on a living Wardley map of the AI engineering landscape (ADR 014), with the map updated before the brief is drafted. The map and the source-fetch tier are shared across personas; weighting, voice addendum, headline, CTA, and save path differ per persona. Seven review gates run on the outputs: voice (ADR 012), content-risk (ADR 012 + ADR 015 + ADR 018), SW-critic (ADR 016), editor (ADR 020), cross-edition shape (ADR-044; what this edition does differently from its two predecessors, and whether the difference costs the reader anything), adversarial skeptic (ADR 042; claim-evidence calibration read adversarially, the gate that owns the most common external-review catch), and cognitive accessibility (P053; one-round-with-optional-remediation pass against WCAG 2.2 cognitive SC + reading-grade-level target). The editor and skeptic findings then route through a bounded one-round editorial remediation loop at step 15.37 (ADR 043) rather than terminating at the Tom-summary; anything surviving that round is recorded as an accepted residual advisory. Phase boundaries (ADR 017, refined by ADR 030) split the pipeline so the time-expensive work runs in the days before the persona's publish-day (prep) and publish-day morning is reserved for a tier-1 refresh plus publish (finalise).
 
 ## Reference
 
 - Plan: `docs/ai-engineering-brief/PLAN.md`, `docs/ai-engineering-brief/developer-newsletter-concept.md`
-- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.superseded.md` (superseded by ADR 033), `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`, `024-url-verification-gate-in-wr-newsletter.proposed.md`, `025-pass-with-author-overrides-verdict-for-sw-critic.proposed.md` (amended by ADR 035), `026-reviews-and-meta-content-to-sibling-files.proposed.md`, `030-shift-the-shift-publication-day-to-monday-aest.proposed.md`, `032-newsletter-editorial-discipline-policy.proposed.md`, `033-domain-specific-critic-agents-supersede-parameterised-sw-critic.accepted.md`, `035-critic-rubric-shape-is-strengths-weaknesses-plus-context.accepted.md`, `037-compose-newsletter-theme-anchor-before-body.proposed.md`, `038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`, `039-per-date-subdir-layout-for-published-newsletter-editions.proposed.md`, `040-per-date-subdir-layout-for-newsletter-drafts.proposed.md`, `042-newsletter-adversarial-skeptic-gate.proposed.md` (amended by ADR 043), `043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates.proposed.md`
+- ADRs: `docs/decisions/011-ai-brief-orchestration-via-claude-code.proposed.md`, `012-ai-generated-content-review-gates.proposed.md`, `013-no-automated-linkedin-scraping.proposed.md`, `014-wardley-mapping-as-strategic-lens.proposed.md`, `015-reader-respect-and-gate-rejection-policy.proposed.md`, `016-sw-critic-subagents-and-iteration-loop.superseded.md` (superseded by ADR 033), `017-ai-brief-prep-and-finalise-phases.proposed.md`, `018-content-risk-subagent.proposed.md`, `019-capture-transcript-artifact.proposed.md`, `020-newsletter-editor-subagent.proposed.md`, `024-url-verification-gate-in-wr-newsletter.proposed.md`, `025-pass-with-author-overrides-verdict-for-sw-critic.proposed.md` (amended by ADR 035), `026-reviews-and-meta-content-to-sibling-files.proposed.md`, `030-shift-the-shift-publication-day-to-monday-aest.proposed.md`, `032-newsletter-editorial-discipline-policy.proposed.md`, `033-domain-specific-critic-agents-supersede-parameterised-sw-critic.accepted.md`, `035-critic-rubric-shape-is-strengths-weaknesses-plus-context.accepted.md`, `037-compose-newsletter-theme-anchor-before-body.proposed.md`, `038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate.proposed.md`, `039-per-date-subdir-layout-for-published-newsletter-editions.proposed.md`, `040-per-date-subdir-layout-for-newsletter-drafts.proposed.md`, `042-newsletter-adversarial-skeptic-gate.proposed.md` (amended by ADR 043), `043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates.proposed.md`, `044-cross-edition-shape-as-a-fresh-context-subagent-gate.proposed.md`
 - Voice: `docs/VOICE-AND-TONE.md` (base) plus persona addendum from `personas/<persona>.md`
 - Personas: `docs/JOBS_TO_BE_DONE.md` (J1-J4 leader, J5 founder, J6-J11 developer)
 - Persona configs: `.claude/skills/wr-newsletter/personas/leader.md`, `.claude/skills/wr-newsletter/personas/developer.md`
@@ -27,15 +27,15 @@ The pipeline runs in one of three phases, selected by the `phase` argument at st
 
 | phase     | When to run                          | Steps executed                              | Saves                              |
 |-----------|--------------------------------------|---------------------------------------------|------------------------------------|
-| `prep`    | Days before `<publish-day>` (e.g. Sat-Sun for The Shift's Monday publish per ADR 030) | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 9.7, 10, 11, 11.4 (cross-edition), 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.35, 15.37 (remediation loop), 15.4, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
-| `finalise`| `<publish-day>` morning (Monday morning AEST for The Shift)                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11a-prime (theme-anchor re-confirm gate per ADR-037), 11b-prime (re-draft only changed sections), 11.4 (cross-edition re-check on changed thesis lines), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.35, 15.37 (remediation loop), 15.4, 15.5 (LinkedIn post), 15.55 (skeptic on post), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
-| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 9.7, 10, 11, 11.4 (cross-edition), 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.35, 15.37 (remediation loop), 15.4, 15.5 (LinkedIn post), 15.55 (skeptic on post), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `prep`    | Days before `<publish-day>` (e.g. Sat-Sun for The Shift's Monday publish per ADR 030) | 0, 1, 2 (all tiers), 3, 4, 4b, 5-9, 9.5, 9.7, 10, 11, 11.4 (cross-edition), 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.35, 15.36 (shape), 15.37 (remediation loop), 15.4, 16 (as `.prep.md` + `.reviews.md`), 17 | `<draft-folder>/<publication-date>.prep.md` (brief) and `<publication-date>.reviews.md` (sibling) per ADR-026 |
+| `finalise`| `<publish-day>` morning (Monday morning AEST for The Shift)                       | 0, 0.5 (load prep state), 2-prime (tier-1 refresh only), 1-prime (inbox diff), 10-prime (per-item capture on new items only), late-story branch (steps 5-9 if map-moving), 11a-prime (theme-anchor re-confirm gate per ADR-037), 11b-prime (re-draft only changed sections), 11.4 (cross-edition re-check on changed thesis lines), 11.5-prime (URL re-verify on new/changed URLs), 12 (re-render image only if hook changed), 13, 14, 15, 15.25, 15.35, 15.36 (shape), 15.37 (remediation loop), 15.4, 15.5 (LinkedIn post), 15.55 (skeptic on post), 15.57 (post shape), 16 (rename `.prep.md` to `.md`, refresh `.reviews.md`, write `.linkedin.md`), 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
+| `full` (default if no phase argument) | First-time use, one-off editions, or weeks where no mid-week prep ran | 0, 1, 2, 3, 4, 4b, 5-9, 9.5, 9.7, 10, 11, 11.4 (cross-edition), 11.5 (URL verify), 12 (image), 13, 14, 15, 15.25, 15.35, 15.36 (shape), 15.37 (remediation loop), 15.4, 15.5 (LinkedIn post), 15.55 (skeptic on post), 15.57 (post shape), 16, 17 | `<draft-folder>/<publication-date>.md` (brief), `.reviews.md`, `.linkedin.md` siblings per ADR-026 |
 
 Default behaviour when no `phase` argument is present: `phase=full` (preserves the original single-shot run for backward compatibility per ADR 017 line 51).
 
 The "prime" suffix on a step number means the finalise variant of that step. Where the prime variant is materially different (sources fetched, candidates filtered, items captured, sections drafted), the body of the step calls out the difference explicitly.
 
-The review gates (steps 9, 11.4, 13, 14, 15, 15.25, 15.35, 15.37, 15.4, and 15.55 on the LinkedIn post) run independently in prep and finalise. ADR 016's 3-round cap is read per-artifact-pass, not per-edition: prep produces `.prep.md` (one artifact pass, up to 3 rounds), finalise produces the final `.md` (a second artifact pass, up to 3 rounds). See ADR 017 lines 39-41.
+The review gates (steps 9, 11.4, 13, 14, 15, 15.25, 15.35, 15.36, 15.37, 15.4, and 15.55 plus 15.57 on the LinkedIn post) run independently in prep and finalise. ADR 016's 3-round cap is read per-artifact-pass, not per-edition: prep produces `.prep.md` (one artifact pass, up to 3 rounds), finalise produces the final `.md` (a second artifact pass, up to 3 rounds). See ADR 017 lines 39-41.
 
 ## Pipeline
 
@@ -121,7 +121,7 @@ Bind the prior-prep state for downstream steps:
 - `<prep-image-path>`: the path to the cover image generated in step 12 of the prep run, if any.
 - `<prep-source-failures>`: the list of source URLs that failed in prep.
 - `<prep-map-mutation-status>`: whether the map was mutated in prep.
-- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) for the carry-forward sections in the finalise reviews file at step 16.
+- `<prep-reviews-path>`: `<draft-folder>/<publication-date>.reviews.md` (per ADR-026). Read this sibling file to extract prep-time review blocks (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Shape Review, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) for the carry-forward sections in the finalise reviews file at step 16.
 
 Continue to step 1-prime.
 
@@ -857,17 +857,51 @@ If the agent returns `SKEPTIC_ERROR: upstream gate returned REJECTED; skeptic wi
 
 **Phase variant `15.35-prime` (phase=finalise only):** invoke the same agent against the finalise-time full draft body. A prep-time PASS does not exempt finalise: new or restructured items in 11b-prime can introduce new claims whose evidence does not match. If finalise has no material changes (11a-prime returned Accept AND 11b-prime was a no-op AND 15-prime carried the prep critic block forward), the prep-time skeptic block can be carried forward and 15.35-prime is a no-op. Default behaviour when in doubt: re-run.
 
+### 15.36. Cross-edition shape gate on the brief (ADR-044)
+
+Invoke the `wr-newsletter-shape` subagent on the in-progress brief body, against the two most recently published briefs for the persona. It reads what this edition does differently from its predecessors and whether each difference costs the reader anything. It is **not** a consistency enforcer: a difference that serves this week is a good difference and the agent is instructed to say so.
+
+It emits a `SHAPE_VERDICT` (`PASS` | `DIFFERENCES_FOUND`) plus a `REMEDIATING_COUNT`, and every difference carries two composing markers: `CLASS` (`defect` | `deviation`) and `AUTHORITY` (`remediating` | `advisory`). Per ADR-043 clause 3 the outer test is wrongness and the inner is grain, so **a `deviation` never enters remediation** whatever its authority. Only a `defect` that maps to a ratified reader-job outcome is `remediating`.
+
+**Skip-on-upstream-REJECTED.** Skip 15.36 entirely if the terminal verdict from the critic loop at step 15 is `VERDICT: REJECTED`. Same defence-in-depth rule as 15.25 and 15.35: a draft going back for argument rework re-runs the full sequence next pass. Record as `"N/A: newsletter-critic returned REJECTED"` in the save-block.
+
+Resolve `prior_edition_paths` with the same per-date subdirectory glob step 11.4 already uses (ADR-039), filtered to the persona and to briefs. If fewer than two published editions exist, pass what exists; the agent degrades and reports the window rather than blocking.
+
+```
+Agent subagent_type: wr-newsletter-shape
+prompt: "Review this brief against its predecessors for cross-edition shape precedent.
+
+artifact_path: <absolute path to the in-progress draft>
+surface: brief
+prior_edition_paths: <two absolute paths, most recent first>
+persona: <leader|developer>
+publication_date: <YYYY-MM-DD>"
+```
+
+Parse the returned block and carry it to 15.37:
+
+- **`REMEDIATING_COUNT: 0`** (whether the verdict is `PASS` or `DIFFERENCES_FOUND`): this contributor is **clean** for the loop's purposes. Advisory differences are recorded and surfaced, never remediated. Do not let an advisory-only verdict force a remediation round: the loop would spend an agent invocation on findings it is forbidden to act on, for zero change to the body.
+- **`REMEDIATING_COUNT` above 0**: carry the block to 15.37 as a third collect source alongside the editor and skeptic.
+
+Advisory differences are cleared by **Tom** stating a reason, never by the drafter. That is the ADR-043 Considered-Option-5 guard: a drafter self-certifying its own unremediated finding is the confirmation-bias failure the loop's no-override-arm exists to prevent. Surface them in the Tom-summary and record them in `.reviews.md`.
+
+**Two carve-outs the agent enforces, restated here because the call site is where they get violated.** The provenance line is in scope but permanently advisory (ADR-032 remediation-invariance): a loop may flag it, never rewrite it. The brief's closing reply prompt is NOT this gate's territory at all; it is fixed by ADR-032 element 6 and belongs to the deterministic structure lint.
+
+**Phase variant `15.36-prime` (phase=finalise only):** invoke the same agent against the finalise-time body. A prep-time verdict does not exempt finalise: 11b-prime can restructure sections and drop a slot that prep carried. If finalise has no material changes (11a-prime returned Accept AND 11b-prime was a no-op), the prep-time block carries forward with its residual status intact and 15.36-prime is a no-op. **A deviation Tom cleared at prep carries its reason forward and does not re-fire** (ADR-043 amendment clause 4). Default when in doubt: re-run.
+
 ### 15.37. Editorial remediation loop (ADR-043)
 
 The editor (15.25) and the skeptic (15.35) are the two gates whose findings used to terminate at "surface to Tom". This step is where they get acted on instead. It is the START rule P120 opened for and the STOP rule P113 opened for, as one contract.
 
 **Skip** this step entirely when the step-15 critic returned `VERDICT: REJECTED`, because neither upstream gate ran. Record it in the save-block as `"N/A: newsletter-critic returned REJECTED"`.
 
-**No-op** when both 15.25 and 15.35 returned PASS. Proceed to 15.4.
+**No-op** when every contributing source is clean (ADR-043 amendment clause 1). That means: 15.25 returned PASS, AND 15.35 returned PASS, AND 15.36 returned `REMEDIATING_COUNT: 0`. Note the third condition is a count, not a verdict: a `DIFFERENCES_FOUND` carrying only advisory deviations IS clean here, because the loop may not act on them. Proceed to 15.4.
 
 Otherwise:
 
-1. **Collect** the editor's `EDITORIAL_FINDINGS` entries and `EDITORIAL_CRAFT` weaknesses, plus the skeptic's `SKEPTIC_REVIEW` weaknesses. All must be findings against the SAME body version. If the body changed between 15.25 and 15.35 for any reason, re-run the stale gate before collecting.
+1. **Collect** the editor's `EDITORIAL_FINDINGS` entries and `EDITORIAL_CRAFT` weaknesses, the skeptic's `SKEPTIC_REVIEW` weaknesses, and the shape gate's `remediating` differences from 15.36. All must be findings against the SAME body version. If the body changed between 15.25, 15.35 and 15.36 for any reason, re-run the stale gate before collecting.
+
+   **Classify before remediating (ADR-043 amendment clause 3), one rule with a stated order.** Outer test is **wrongness**: a defect is wrong against a stated standard and proceeds; a deviation is merely different from precedent, may be deliberate, and never enters remediation whatever its grain. Inner test is **grain**, applied only to defects: remediable within the passage, or does it cross an item or section boundary? Cross-boundary defects are stop-and-surface per ADR-032. The shape gate emits `CLASS` explicitly so this outer test reads a marker rather than inferring one; findings from the editor and skeptic are defects by construction, since both score against stated standards.
 2. **Remediate each finding minimally.** Address the named defect at the named passage. Do not restructure the piece around a finding, do not rewrite adjacent passages that were not flagged, and do not "improve" anything the gates did not name. Minimal remediation is what keeps the over-correction bounded; ADR-020 predicted over-correction and P120's evidence confirms it happens, so the discipline matters.
 3. **Re-invoke BOTH gates once**, as one paired round, against the revised body. Use the same invocation shape as 15.25 and 15.35 (same three inputs; the agents are fresh-context and take no round number). Run them against the **body only**: do NOT write the round-1 `EDITOR_REVIEW` or `SKEPTIC_REVIEW` blocks into the brief. The blocks live in the `.reviews.md` sibling and are written at step 16, per ADR-026. If a round-1 block were in the brief, round 2 would read its own prior verdict and the fresh-context discipline the gates exist for would be gone.
 4. **Stop. There is no second round.** Compare the round-2 findings against round-1 by axis and passage. This comparison is yours, not the agents' (they have no memory by contract). A round-2 finding that repeats a round-1 axis and passage is churn; a new one is a new finding. Either way, everything still standing after round 2 is recorded as an **accepted residual advisory**.
@@ -984,6 +1018,36 @@ On `WEAKNESSES_FOUND`, apply the **same one-round remediation rule as step 15.37
 
 If the remediation propagates a claim change back into the brief body (for example the post and the brief shared an over-claimed number), the brief is dirty and re-enters section 15.6, including its own 11.4 and 11.5 claim-scoped rows.
 
+### 15.57. Cross-edition shape gate on the LinkedIn post (ADR-044)
+
+Skip when `phase=prep` (no post exists). Runs after 15.55, against the two most recently published `.linkedin.md` siblings for the persona.
+
+This is the surface the shape class was opened on. Issue 16's post dropped four things Issue 15 carried (the issue line, the "This week:" label, the reply instruction) and reached 2,993 characters against 1,655, hitting the platform limit three times during revision and cutting something load-bearing each time. The existing cross-edition gate at 11.4 structurally cannot see any of it: the post is not drafted until 15.5.
+
+```
+Agent subagent_type: wr-newsletter-shape
+prompt: "Review this LinkedIn post against its predecessors for cross-edition shape precedent.
+
+artifact_path: <absolute path to <publication-date>.linkedin.md>
+surface: post
+prior_edition_paths: <two absolute paths to prior .linkedin.md files, most recent first>
+persona: <leader|developer>
+publication_date: <YYYY-MM-DD>"
+```
+
+On `REMEDIATING_COUNT: 0`, record the advisory differences and proceed. Do not open a round for them.
+
+On `REMEDIATING_COUNT` above 0, apply the **same one-round rule as 15.37, inline**, exactly as 15.55 does:
+
+1. **Classify before remediating, same rule and same order as 15.37** (ADR-043 clause 3): outer test is wrongness, so a difference marked `CLASS: deviation` never enters remediation even if its `AUTHORITY` says otherwise; inner test is grain. Read `CLASS`, do not infer it from `AUTHORITY`. Then remediate each surviving remediating difference minimally.
+2. **Re-invoke only the shape gate**, not the skeptic. This is deliberate and it is what keeps the post surface inside ADR-044's budget of one site call plus one re-invocation. The skeptic already had its paired round at 15.55 against a body the shape edit has now changed; that re-gating is section 15.6's job, not a second inline round here.
+3. Anything still standing is a recorded residual advisory tagged `RESIDUAL (round 2, accepted)` under `## Shape Review (LinkedIn post)` in the reviews sibling. No second round, no author-override arm.
+4. A post-body edit re-enters the gate set per section 15.6, and **per ADR-043 condition (c) the counter does not reset**: if the LinkedIn voice gate at 15.5 or the skeptic then forces a further edit, each gets one more look and remaining findings go straight to residual advisory. The cut-to-fit warning matters most here: if a remediation pushes the post back to the platform limit, that is the finding re-firing, not a new one.
+
+**The provenance carve-out binds here too.** The post carries the compressed provenance variant (ADR-032 element 5), so this is the surface that actually holds a provenance line. Any finding touching it is advisory regardless of grounding: a gate may flag it, never rewrite it.
+
+**The post's reply instruction IS in scope here**, as an advisory difference. ADR-032 element 6 fixes the *brief's* closing prompt and extends only element 5 to the companion, so the post's instruction is corpus precedent rather than a ratified invariant. Do not let the brief-side exclusion at 15.36 swallow it.
+
 ### 15.6. Post-gate edit discipline: a body edit re-enters the FULL gate set (P099)
 
 Any edit to the brief body or the LinkedIn post body AFTER the gate sequence (steps 13 to 15.5) has passed marks that body **dirty** and re-enters the **full** gate set on it, NOT the cheap voice + structural-lint subset. This covers the common finalise case: author-directed corrections, fixes prompted by an external review, late copy tweaks. The heavy semantic gates each read the WHOLE body, so a one-line edit can introduce a new weakness anywhere in it.
@@ -1003,16 +1067,19 @@ This is the same "default when in doubt: re-run" discipline the finalise `*-prim
 | Newsletter critic | 15 / 15-prime | brief body changed | skip iff upstream content-risk returned REJECTED |
 | Editor | 15.25 / 15.25-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
 | Adversarial skeptic | 15.35 / 15.35-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
-| Editorial remediation loop | 15.37 / 15.37-prime | either 15.25 or 15.35 returned non-PASS on this pass | skip iff the step-15 re-run returns `VERDICT: REJECTED`; no-op iff both gates returned PASS; **counter does not reset** per ADR-043 condition (c), so a body pass gets at most one remediation round plus one post-full-pass look |
+| Cross-edition shape (brief) | 15.36 / 15.36-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED`; a deviation Tom cleared at prep carries its reason forward and does not re-fire |
+| Editorial remediation loop | 15.37 / 15.37-prime | 15.25 or 15.35 returned non-PASS, or 15.36 returned `REMEDIATING_COUNT` above 0, on this pass | skip iff the step-15 re-run returns `VERDICT: REJECTED`; no-op iff both LLM gates returned PASS **and** 15.36 returned `REMEDIATING_COUNT: 0` (an advisory-only `DIFFERENCES_FOUND` is clean); **counter does not reset** per ADR-043 condition (c), so a body pass gets at most one remediation round plus one post-full-pass look |
+| Cross-edition shape (post) | 15.57 | the LinkedIn post body changed | skip on `phase=prep` (no post exists); a brief-body-only edit does NOT trigger this unless the edit propagated into the post |
 | Cognitive accessibility | 15.4 / 15.4-prime | brief body changed | skip iff the step-15 re-run returns `VERDICT: REJECTED` (`PASS_WITH_AUTHOR_OVERRIDES` does NOT skip) |
 | Cross-edition consistency | 11.4 | a thesis-bearing line in the brief changed | (none) |
 | URL verification | 11.5 / 11.5-prime | a URL or a URL-anchored claim changed | unchanged URLs carry their prior verdict |
+| Adversarial skeptic (post) | 15.55 | the LinkedIn post body changed | skip on `phase=prep` (no post exists). **This row was missing until 2026-08-07.** Step 15.57's design delegates the post's claim-calibration re-gate here rather than pairing the skeptic into its inline round, so without this row a shape remediation could trim the post and no gate would re-read the claims. A trim that drops a qualifier strengthens a claim by omission, which is exactly the cut-to-fit class 15.57 acts on |
 | LinkedIn voice gate | 15.5 | the LinkedIn post body changed | a brief-body-only edit does NOT trigger this unless the edit propagated into the post |
 | Structural lint | 16 pre-save | brief or LinkedIn body changed | (none) |
 
 The "dirty since last full-gate pass" judgement is carried in-context: the agent knows it just edited the body. No marker file or "dirty" flag is added (YAGNI); it would be machinery for a judgement the working agent already holds, mirroring the in-context `*-prime` re-run discipline above.
 
-**Inner-loop exemption for step 15.37 (ADR-043).** The one exception to "every body edit re-enters the full set" is the remediation round inside step 15.37. Its edits re-invoke only the editor and the skeptic; the full set runs **once**, against the final post-remediation body, at loop exit. This is a cost bound, not a weakening: the alternative is the status quo, where Tom hand-remediates the same findings and each of his edits pays a full battery cycle (P113 cause 2). The P099 invariant that no publish-bound body reaches step 16 without a full gate pass since its last edit is preserved by ADR-043's four conditions, all of which are stated at step 15.37: (a) the full pass runs on the final post-remediation body; (b) any edit that pass forces re-marks the body dirty and re-enters this table exactly as normal; (c) the remediation counter does not reset, so a forced edit gets one more editor and skeptic look and any remaining findings become residual advisories rather than another round. Note that a forced edit re-enters the FULL set, voice and content-risk included; condition (c) bounds only the editor and skeptic counter, and condition (d) bounds the outer cycle at two consecutive edit-forcing passes before the drafter stops and surfaces to Tom.
+**Inner-loop exemption for step 15.37 (ADR-043).** The one exception to "every body edit re-enters the full set" is the remediation round inside step 15.37. Its edits re-invoke only the editor, the skeptic and (when it contributed a remediating finding) the shape gate; the full set runs **once**, against the final post-remediation body, at loop exit. This is a cost bound, not a weakening: the alternative is the status quo, where Tom hand-remediates the same findings and each of his edits pays a full battery cycle (P113 cause 2). The P099 invariant that no publish-bound body reaches step 16 without a full gate pass since its last edit is preserved by ADR-043's four conditions, all of which are stated at step 15.37: (a) the full pass runs on the final post-remediation body; (b) any edit that pass forces re-marks the body dirty and re-enters this table exactly as normal; (c) the remediation counter does not reset, so a forced edit gets one more editor and skeptic look and any remaining findings become residual advisories rather than another round. Note that a forced edit re-enters the FULL set, voice and content-risk included; condition (c) bounds only the editor and skeptic counter, and condition (d) bounds the outer cycle at two consecutive edit-forcing passes before the drafter stops and surfaces to Tom.
 
 **Two rows have claim-scoped triggers that step 15.37's remediation fires by construction.** "Body changed" is the wrong test for them, so check them directly after any skeptic remediation:
 
@@ -1085,6 +1152,10 @@ phase: prep
 ## Skeptic Review
 
 <skeptic block from step 15.35, or "N/A: newsletter-critic returned REJECTED" if step 15.35 was skipped>
+
+## Shape Review
+
+<shape block from step 15.36, or "N/A: newsletter-critic returned REJECTED" if step 15.36 was skipped. Record the full block including SHAPE_VERDICT, WINDOW, EDITIONS_REVIEWED and REMEDIATING_COUNT, every difference with its CLASS and AUTHORITY, and any `RESIDUAL (round 2, accepted)` entries. Advisory differences are recorded here even when nothing acted on them: they are the audit trail for what Tom cleared and why.>
 
 ## Editorial Remediation Loop
 
@@ -1198,6 +1269,18 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    <skeptic block from step 15.55 on the LinkedIn post, plus any `RESIDUAL (round 2, accepted)` entries from its inline one-round remediation per ADR-043>
 
+   ## Shape Review (finalise)
+
+   <shape block from step 15.36-prime, or "N/A: newsletter-critic returned REJECTED" if skipped, or "N/A: carried from prep (no material change)" if 15.36-prime was a no-op. A deviation Tom cleared at prep carries its reason forward with residual status intact and does not re-fire.>
+
+   ## Shape Review (prep)
+
+   <shape block carried from prep .reviews.md>
+
+   ## Shape Review (LinkedIn post)
+
+   <shape block from step 15.57 on the LinkedIn post, plus any `RESIDUAL (round 2, accepted)` entries from its inline one-round remediation. Skipped entirely on phase=prep.>
+
    ## Editorial Remediation Loop (finalise)
 
    <rounds spent plus residual advisories from step 15.37-prime, per ADR-043. "N/A: newsletter-critic returned REJECTED" if skipped, "No-op: editor and skeptic both PASSed" if neither gate raised anything.>
@@ -1269,7 +1352,9 @@ Single-pass equivalent of the prep + finalise pair. Three operations:
    <draft body from step 11b>
    ```
 
-2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Editorial Remediation Loop, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus a `## Voice Review (LinkedIn post)` block that captures the step-15.5 LinkedIn-post voice gate verdict (P013) and a `## Skeptic Review (LinkedIn post)` block that captures the step-15.55 LinkedIn-post skeptic verdict (ADR-042). No prep / finalise distinction in the section headings (single-pass).
+2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Shape Review, Editorial Remediation Loop, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus a `## Voice Review (LinkedIn post)` block that captures the step-15.5 LinkedIn-post voice gate verdict (P013) and a `## Skeptic Review (LinkedIn post)` block that captures the step-15.55 LinkedIn-post skeptic verdict (ADR-042). No prep / finalise distinction in the section headings (single-pass).
+
+   Plus the three post-specific sections this phase produces, which the prep variant has no equivalent for because prep drafts no post: `## Voice Review (LinkedIn post)`, `## Skeptic Review (LinkedIn post)`, and `## Shape Review (LinkedIn post)` carrying step 15.57's block and any `RESIDUAL (round 2, accepted)` entries. A phase=full run executes 15.57, so without this section its output has no home and the evidence surface ADR-044 confirmation criterion 13 pre-registers for the first live run is lost.
 
 3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md` with the same shape as the finalise variant above (frontmatter + post body only; no heading wrapper, no image block, no posting-notes block, no manual link line; no voice review block) per P079.
 
@@ -1295,6 +1380,7 @@ Report back in chat:
   - The variant is read from the saved structured verdict, not inferred from the weakness list. If the saved verdict and the inferred verdict disagree (e.g. the agent emitted REJECTED but every remaining weakness is in the override list), treat as a skill-logic bug and surface the inconsistency rather than re-classifying the verdict.
 - Editor verdict (per phase if finalise). If `NEEDS_EDITORIAL_REVISION`, name the failing reader-experience axes (would-open / would-read-through / would-forward) and any EDITORIAL_CRAFT weaknesses (opener-earns-thesis / fold-compression / audience-pointer-specificity / sentence-rhythm / atwn-thesis-fit). If skipped (newsletter-critic returned REJECTED), note "Editor: skipped (upstream REJECTED)".
 - **Editorial remediation loop (step 15.37, ADR-043): lead the whole gate section with this.** Report the rounds spent, a one-line summary of what was remediated, and then every residual advisory in full: originating gate, axis, quoted passage, Suggested fix. Residuals are what Tom still has to decide on, so they belong at the top, not buried under the verdicts that produced them. Carry prep-time residuals into the finalise summary with their residual status intact, even when 15.25-prime and 15.35-prime were no-ops. If a skeptic finding was stop-and-surface because remediating it would have required new sourcing, say so explicitly: that one needs Tom, not another round. Note "No-op: editor and skeptic both PASSed" when the loop did not fire, and "N/A: upstream REJECTED" when it was skipped.
+- **Cross-edition shape (steps 15.36 and 15.57, ADR-044): report advisory differences in full, because they are the ones that need Tom.** For each surface give the verdict, the window actually read, and the remediating count. Then list every ADVISORY difference with its CLASS, what changed against which prior edition, the precedent strength, and the stated basis, since each one is waiting on Tom for a reason and the drafter may not supply it. **For every remediating difference the loop actually applied, at 15.37 and at 15.57, quote the passage before and after.** Not a one-line note of what was fixed. Tom is reading his own prose and cannot see which passage a loop rewrote, so a summary leaves him reviewing text he assumes he wrote. A before-and-after pair turns that read into a diff review, which is the only thing that makes the manual publish step a real check on a wrongly-remediated finding. Record the same pairs in the reviews sibling under the originating Shape Review section. Report the shape gate's Strengths too: a departure from precedent that served this edition is the most useful signal it produces, and burying it would leave only the negatives visible.
 - Wardley critic verdict and round count.
 - Map delta (one sentence; for finalise, include any re-mutation delta).
 - URL verification (step 11.5 / 11.5-prime): per-URL verdict summary as a one-line headline (e.g. "URL verification: 9 SUPPORTED, 1 INDIRECT_CONFIRMED, 0 REFUTED, 0 NOT MENTIONED across 10 URLs"). Surface any save-gate interventions inline: REFUTED fixes (with old URL and replacement URL), 404 replacements, NOT MENTIONED escalations to Tom (with the eventual disposition: dropped, swapped, or author-approved). Full per-URL table lives in `<publication-date>.reviews.md` under `## URL Verification`. Per ADR-024 confirmation criterion 4.
@@ -1302,7 +1388,7 @@ Report back in chat:
 - LinkedIn post: drafted (finalise/full) or skipped (prep).
 - File path to the draft (under the persona's `<draft-folder>`). For prep, this is `<draft-folder>/<publication-date>.prep.md` and the reminder is "Run `/wr-newsletter phase=finalise` on `<publish-day>` to publish." For finalise, this is `<draft-folder>/<publication-date>/<publication-date>.md` with the reminder: "When you have published to LinkedIn, move the whole draft sub-directory into the published tree: `git mv <draft-folder>/<publication-date>/ <published-folder>/<publication-date>/` (per ADR-040, drafts already live in a per-date sub-directory mirroring the ADR-039 published shape, so publishing is a single whole-directory move carrying the brief plus all sibling artefacts: `<publication-date>.reviews.md`, `<publication-date>.linkedin.md`, `<publication-date>.capture.md`, `<publication-date>.cover.svg`, `<publication-date>.cover.png`), then run `/wr-retrospective:run-retro` to capture learnings for next week."
 - Capture transcript path: `<draft-folder>/<publication-date>.capture.md` (written at step 10, appended at 10-prime if finalise). Note any 10-prime missing-file branch outcome (`Continue without`, `Recreate`, `Abort`) per ADR 019.
-- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Editorial Remediation Loop, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review and the LinkedIn-post skeptic review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body only (frontmatter + body; no image/alt-text or posting-notes blocks per P079). Confirm both siblings were written.
+- Reviews and LinkedIn-post sibling-file paths (per ADR-026): `<draft-folder>/<publication-date>.reviews.md` carries all review classes (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Shape Review, Editorial Remediation Loop, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification) plus the LinkedIn-post voice review, the LinkedIn-post skeptic review and the LinkedIn-post shape review. For finalise/full, `<draft-folder>/<publication-date>.linkedin.md` carries the LinkedIn share post body only (frontmatter + body; no image/alt-text or posting-notes blocks per P079). Confirm both siblings were written.
 
 ## Failure modes
 

@@ -187,9 +187,17 @@ Three additions from the architect review of the settled direction (2026-08-07),
 
 **Part 1 DONE.** `.claude/agents/wr-newsletter-shape.md` exists, satisfying ADR-044 confirmation criteria 1 through 5. It carries the fresh-context clause, the mechanical-verdict rule, the N=2 window rationale with the explicit "window not threshold" correction, the ADR-039 path shape, both boundary seams, the two framings, and the two-axis classification. Note the design changed twice under architect review: the post's reply instruction is carved back **in** as advisory (ADR-032 extends only element 5 to the companion, so the brief-side exclusion must not swallow it), and findings now carry **both** `CLASS: defect|deviation` and `AUTHORITY: remediating|advisory` because ADR-043 clause 3's outer wrongness test needs an input rather than inferring one. `REMEDIATING_COUNT` was added so the loop can treat an advisory-only verdict as clean.
 
-**Parts 2 and 3 remain.** Specified below from the architect review of 2026-08-07 so the next iteration does not re-derive them.
+**Part 2 DONE.** SKILL.md carries steps 15.36 (brief) and 15.57 (post), both invoking `wr-newsletter-shape`. Delivered against the specification below; three things were settled in the doing:
 
-### Part 2: SKILL.md wiring
+1. **The post-surface asymmetry resolves as sequence, and 15.57's inline round re-invokes ONLY the shape gate.** Not the skeptic. That is what keeps the post inside ADR-044's budget of one site call plus one re-invocation. The skeptic already had its paired round at 15.55 against a body the shape edit has since changed, and re-gating that is section 15.6's job rather than a second inline round.
+2. **Step 15.37's no-op condition now keys on a count, not a verdict.** It no-ops when 15.25 and 15.35 returned PASS AND 15.36 returned `REMEDIATING_COUNT: 0`. An advisory-only `DIFFERENCES_FOUND` is clean, because the loop is forbidden to act on advisories and would otherwise burn an agent invocation for zero body delta.
+3. **Section 15.6 gained three rows, not two**: 15.36, 15.57, and a rewritten 15.37 row whose trigger and no-op both had to change. The inner-loop exemption paragraph also names the shape contributor now, or a reader would conclude the loop re-invokes only two gates.
+
+Also updated: the preamble gate count (six to seven, with the shape gate described), the ADR reference list, the gate-inventory sentence, all three phase-table rows, the step 16 save-block (`## Shape Review`, plus finalise and LinkedIn-post variants), and the step 17 Tom-summary, which reports advisory differences in full because they are the ones waiting on Tom, and reports the gate's Strengths so a departure that served the edition is visible rather than only the negatives.
+
+**Part 3 remains, and one half of it is blocked on a decision only Tom can make.** Specified below.
+
+### Part 2: SKILL.md wiring (delivered 2026-08-07; specification retained)
 
 Step numbers 15.36 and 15.57 are ADR-pinned in both ADR-044 and ADR-043 clause 1; renumbering needs an amendment. Ordering verified: 15.36 sorts between the skeptic at 15.35 and the loop at 15.37; 15.57 sorts between the skeptic-on-post at 15.55 and section 15.6.
 
