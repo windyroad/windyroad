@@ -1,6 +1,6 @@
 # Problem 108: wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version, breaking the map render on plugin update
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-07-03
 **Priority**: 6 (Medium) -- Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-07-15 review: breaks the mid-run map render on every wr-wardley version bump; occasional but deterministic when it fires)
 **Origin**: internal
@@ -43,6 +43,25 @@ The version pin means the map re-render (step 7 and its finalise variant 7-prime
 - [ ] Replace the hard-coded version segment in SKILL.md step 7 + 7-prime with version-agnostic resolution: glob `~/.claude/plugins/cache/windyroad/wr-wardley/*/skills/generate/owm-to-svg.mjs` and pick the highest semver, OR invoke via the `wr-wardley:generate` skill / a `$PATH` shim rather than the cached script path.
 - [ ] Check whether any other SKILL step hard-codes a versioned plugin-cache path (same failure class).
 - [ ] Create a reproduction (bump the cached version, run step 7, assert graceful resolution).
+
+
+## Fix Released
+
+Fixed 2026-08-08. Step 7 now resolves the converter at the highest installed `wr-wardley` version instead of a pinned one, per ADR-080 (highest-version-wins shim wrapper):
+
+```bash
+owm2svg=$(ls -d ~/.claude/plugins/cache/windyroad/wr-wardley/*/skills/generate/owm-to-svg.mjs 2>/dev/null | sort -V | tail -1)
+```
+
+with an explicit not-found branch that surfaces a `/install-updates` directive rather than failing opaquely.
+
+**This was live, not theoretical.** The pinned path was `wr-wardley/0.1.0/`. Installed versions on disk are `0.1.4` and `0.1.7`; `0.1.0` is gone. Step 7 would have failed on the next `/wr-newsletter` run. Found while checking which backlog tickets bear on that run, not by the step failing.
+
+**Smoke-tested before commit.** The resolved `0.1.7` converter was run against the live `docs/ai-engineering-brief/ai-landscape.owm` and its output is **byte-identical** to the committed `ai-landscape.svg`, so the version substitution is behaviour-preserving and no map re-render is owed.
+
+One behavioural note for the next run: `0.1.7` emits a PNG alongside the SVG. Step 7's contract names only the SVG, so the PNG is an unclaimed side-effect output. Harmless, but worth knowing before it appears untracked in the working tree.
+
+**Awaiting Tom's verification**: the next `/wr-newsletter` run completing step 7 with a rendered map.
 
 ## Dependencies
 

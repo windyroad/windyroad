@@ -227,6 +227,21 @@ Step numbers 15.36 and 15.57 are ADR-pinned in both ADR-044 and ADR-043 clause 1
 - **Two checks encode invariants the recent corpus violates**, which is intended (it is ADR-044's argument for lint ownership) but needs a conformance decision. `**From Tom**`: 2026-06-08 uses an H2 heading and 2026-07-06 and 2026-07-13 use inline prose. Decide whether those forms conform, and make the failure message name the template form. `### Item N:` prefix: Issues 12 and 13 use a bare `### <headline>`. The check must carve out `### Also worth noting` or it fires on the coda every edition, and it must assert the prefix only, never contiguous numbering from 1, which would over-fire.
 - **Per-item bold labels: scope and persona risk.** Scope the check to `### Item` sections only, since Also-worth-noting entries use bold headline leads and would false-positive. Confirm the developer persona uses the same three labels before hardcoding "your team": the lint takes only a path and cannot tell the personas apart, and there are no published developer editions to check against.
 
+
+## Fix delivery diverged from this Fix Strategy (noted 2026-08-08)
+
+**Not transitioned to Verification Pending, deliberately, because the delivered form is not what this strategy specifies and the gap has not been assessed.**
+
+This strategy's section 1 is titled "A deterministic lint, not a gate", and sections 3 and 4 specify three finding classes (DROP, DRIFT, LENGTH) with named probes and a routing table. What shipped is **ADR-044 (Cross-edition shape as a fresh-context subagent gate)**, which Tom ratified on 2026-08-07 after choosing "add a new subagent gate, remove the ceiling" over the lint. The subagent is live: `.claude/agents/wr-newsletter-shape.md` exists, and SKILL.md wires it at step 15.36 (brief) and step 15.57 (LinkedIn post).
+
+So the decision this ticket asked for was made, and made against this strategy rather than for it. The subagent emits `SHAPE_VERDICT` / `SURFACE` / `WINDOW` / `EDITIONS_REVIEWED` / `REMEDIATING_COUNT` plus per-difference `CLASS` and `AUTHORITY`, which is a different output shape from the DROP / DRIFT / LENGTH probe classes this strategy names.
+
+**What is not established** is whether the subagent's judgement covers what the named probes would have caught deterministically. The forward-deadline DROP and the LENGTH ceiling were the two this strategy marked as JTBD-005-grounded and therefore remediating; a subagent may or may not surface them reliably, and no run has exercised it yet.
+
+**Next step**: after the first `/wr-newsletter` run under ADR-044, compare what the shape gate actually reported against the five probes named in section 3. If the grounded two are covered, this ticket transitions to Verification Pending on that evidence and sections 1, 3 and 4 are marked superseded by ADR-044. If they are not, the residue is a real gap and this ticket stays open against it.
+
+Flagged rather than transitioned because transitioning on "a decision was made" would record a fix that has not been shown to close the ticket's own evidence.
+
 ## Dependencies
 
 - **Blocks**: (none)

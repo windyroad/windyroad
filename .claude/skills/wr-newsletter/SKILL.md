@@ -282,11 +282,18 @@ Apply the changes to the `.owm` file. Preserve any hand-edited positions from pr
 
 ### 7. Re-render the map
 
+Resolve the converter at the highest installed `wr-wardley` version rather than a pinned one (ADR-080 highest-version-wins; P108). The previously hard-coded `0.1.0` path stopped resolving once the plugin updated, which failed this step silently against a version that was no longer on disk.
+
 ```bash
-node ~/.claude/plugins/cache/windyroad/wr-wardley/0.1.0/skills/generate/owm-to-svg.mjs docs/ai-engineering-brief/ai-landscape.owm docs/ai-engineering-brief/ai-landscape.svg
+owm2svg=$(ls -d ~/.claude/plugins/cache/windyroad/wr-wardley/*/skills/generate/owm-to-svg.mjs 2>/dev/null | sort -V | tail -1)
+if [ -z "$owm2svg" ]; then
+  echo "wr-wardley owm-to-svg converter not found under ~/.claude/plugins/cache/windyroad/wr-wardley/*/skills/generate/; run /install-updates" >&2
+  exit 1
+fi
+node "$owm2svg" docs/ai-engineering-brief/ai-landscape.owm docs/ai-engineering-brief/ai-landscape.svg
 ```
 
-If the render fails, revert the `.owm` edit and note the failure in the summary.
+If the render fails, revert the `.owm` edit and note the failure in the summary. A missing-converter failure is a tooling problem, not a map problem: do not revert the `.owm` edit for it, surface the install directive instead.
 
 ### 8. Update `ai-landscape.md`
 
