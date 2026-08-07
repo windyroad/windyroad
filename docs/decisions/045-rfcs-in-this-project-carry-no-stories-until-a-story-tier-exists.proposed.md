@@ -2,7 +2,8 @@
 status: "proposed"
 first-released:
 date: 2026-08-07
-human-oversight: unconfirmed
+human-oversight: confirmed
+oversight-date: 2026-08-07
 decision-makers: [Tom Howard, Claude]
 consulted: [wr-architect:agent]
 informed: []
