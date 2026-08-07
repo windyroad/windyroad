@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-05 **P126 captured** -- the deps refresh chain creates a manifest desync and its own recovery path cannot clear it (lightweight aside via /wr-itil:capture-problem). `push-watch.sh:149-156` commits `package.json` without the lockfile because `dry-aged-deps --update` rewrites only the manifest, and `fix-deps.sh:226-228` rolls back to that same desynced BASE_REF, so both the refresh path and its documented recovery leave `npm ci` failing EUSAGE. Distinct from P123 per the hang-off arbitration: P123 fixed gate coverage on the commit path, this is rollback correctness on the failure path plus creation upstream of both. P123's own install-shape scan fired correctly on the same exercise, catching a live EBADPLATFORM reintroduction, which is evidence FOR that fix. Two defects in one ticket because they were discovered as one failure; either fix alone breaks the trap, so splitting stays cheap and Investigation Task 3 records it.
+> Last reviewed: 2026-08-07 **P127 and P128 captured** -- P127: an unverified subprocess claim about RISK-POLICY.md's impact table propagated roughly six times and became the stated reason in an AskUserQuestion asking Tom to change the risk appetite; reading the table falsified it in one command. A P032 recurrence, occurring hours after P082 and P103 closed on evidence, which is the point: five prose rules exist, all were in context, none fired. P128: the risk threshold is restated in ten places across ADR-007, ADR-008 and the compendium; the 2026-08-07 appetite move updated only the enforcement surface, and dated pointers were added rather than editing point-in-time records (lightweight aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -24,6 +24,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy (unpushed commits + stale buffer) | 6 (Medium) | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 (High) | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P126 | The deps refresh chain creates a manifest desync and its own recovery path cannot clear it | 12 (High) | Open | S | 2026-08-05 | internal |
+| 12.0 | P127 | Unverified subprocess claims propagate into decisions without reading the source | 12 (High) | Open | M | 2026-08-07 | internal |
 | 9.0 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 9 (Medium) | Known Error | M | 2026-07-06 | internal |
 | 8.0 | P114 | wr-newsletter step 15.5 LinkedIn sign-off contradicts the VOICE-AND-TONE.md auto-share carve-out | 4 (Low) | Known Error | S | 2026-07-13 | internal |
 | 8.0 | P061 | assistant gates policy-authorised push/release on user permission after risk-scorer cleared (reopened: regression 2026-07-04) | 8 (Medium) | Known Error | M | 2026-05-14 | internal |
@@ -32,6 +33,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 8.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and 15.6 re-runs all gates per edit | 8 (Medium) | Known Error | M | 2026-07-13 | internal |
 | 8.0 | P118 | Newsletter publish step uses `git mv` on untracked drafts, which fails | 8 (Medium) | Open | S | 2026-07-27 | internal |
 | 8.0 | P125 | Nothing recomputes WSJF on a status transition, so the Open multiplier persists and halves the rank | 8 (Medium) | Open | S | 2026-08-05 | internal |
+| 8.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 (Medium) | Open | S | 2026-08-07 | internal |
 | 6.0 | P016 | wr-newsletter filter drops significant stories without corroboration (flip-back: 2026-05-08 observed regression) | 6 (Medium) | Known Error | M | 2026-04-24 | internal |
 | 6.0 | P036 | wr-newsletter drafter leaks editorial-process meta-commentary into body (flip-back: 2026-05-08 observed regression) | 6 (Medium) | Known Error | M | 2026-05-01 | internal |
 | 6.0 | P086 | P165 README-refresh-discipline hook over-fires on non-ranking-bearing problem-ticket edits | 6 (Medium) | Known Error | M | 2026-06-03 | internal |
