@@ -191,6 +191,14 @@ P122 holds a standing rule that any gate axis whose only justification is "this 
 
 **The seam against the deterministic lint.** `edition-internal-consistency` is narrower than its name suggests. P122's finding 7 splits: "the same source cited in two places" is mechanically computable and goes to the P089 structure lint (RFC-004 item 5), while only the judgement of whether content is **told twice at near-full length**, plus whether a fact carries opposite valence in two places, stays with this axis. ADR-042 assigns structural and format hygiene to the deterministic lint and holds those findings out of the LLM gates' axis sets; recording the split only in the ticket would let a reader of this ADR take the axis to cover duplicate citations and re-open that partition.
 
+> **Correction 2026-08-08, from building it (P122 / RFC-004 item 5). The split above is wider than what shipped, and the difference is substantive.**
+>
+> The lint was built to this specification (two sections citing the same source URL) and run against every published edition. It fired on three, and all three are legitimate: `2026-04-17` cites a Thoughtworks Radar landing page three times for three different findings in that one report; `2026-06-22` cites a Nature article in the From Tom opener and again in the item detailing it; `2026-07-13` repeats one source across two items for two distinct claims.
+>
+> Same-URL is computable, but it is not the defect. The defect is the same source used to make the **same point** twice, which needs judgement. Check (k) as shipped keys on the **identical citation** (same anchor text AND same URL), the strictest mechanical proxy with zero false positives across the corpus, pinned by a corpus-wide regression test.
+>
+> **The consequence is that `edition-internal-consistency` carries more than this amendment anticipated**: the same source making the same point under different anchor text is the axis's, not the lint's. `.claude/agents/wr-newsletter-editor.md` states the corrected split and the running agent reads that. Recorded here at the point of divergence rather than leaving this paragraph describing a rule that was not built. **The widened axis scope has not been separately ratified** and is surfaced for Tom's next pass over this ADR.
+
 **The intra-agent seam, declared rather than assumed.**
 
 `item-placement` sits closest to two axes this agent already carries in its `EDITORIAL_FINDINGS` vocabulary, and P122's own home-decision argument turns on their proximity: item-order-serves-thesis *is* through-line read across the item run. Name uniqueness is not a seam, so the seam is declared:
