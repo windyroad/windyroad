@@ -1,6 +1,6 @@
 # Problem 045: Assistant accepts a ticket's Fix Strategy framing about where upstream work should land, without questioning whether the work belongs upstream at all
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-02
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Significant (4) x Likelihood: Possible (3)
@@ -85,6 +85,19 @@ In the orchestrator's iter dispatch prompt (work-problems Step 5 iteration promp
 - [ ] If lever 2 ships: amend `/wr-itil:manage-problem` review path to include the placement-verification check. This is upstream wr-itil work; defer until lever 1 proves insufficient.
 - [ ] If lever 3 ships: amend `/wr-itil:work-problems` SKILL.md Step 5 iter prompt body. This is upstream wr-itil work; defer until lever 1 proves insufficient.
 - [ ] User verification on the next AFK iteration that processes a ticket with upstream-placement prose: did the worker question the placement, or did it parrot the framing?
+
+
+## Closed on session-observed evidence (2026-08-08)
+
+The fix's contract is that the assistant questions a ticket's Fix Strategy framing rather than accepting it. Three specific instances this session, each caught before it drove action:
+
+1. **P099's Fix Strategy** asserted this repo is "a Phase-1 adopter with no `docs/rfcs/` tier and zero RFC history in git" and treated the I13 gate firing as a known P104 false positive on that ground. Verified against disk: five RFCs exist. The firing was legitimate, handled as sub-case (b), and the stale premise was marked inline at P099:55 rather than silently overwritten.
+2. **P121's Fix Strategy** section 1 is titled "A deterministic lint, not a gate". What shipped is ADR-044's subagent gate, chosen by Tom over the lint. Rather than transitioning the ticket on "a decision was made", the divergence was recorded and the ticket left open until a dry run established which probes the subagent actually covers.
+3. **P122's Fix Strategy** section 4 claimed the structure lint "already extracts per-item markdown-link URLs for checks (a) and (b)". Verified against `scripts/check-newsletter-structure.sh`: check (a) tests link presence only, check (b) matches whole lines, and no URL is parsed anywhere in the file. Corrected in RFC-004 rather than built on.
+
+All three are the fix's contract holding under load: the framing was read as a hypothesis and checked, not adopted. Closed on that evidence per run-retro Step 4a.
+
+**Recovery**: `/wr-itil:transition-problem 045 known-error` reopens this if the close was wrong.
 
 ## Dependencies
 
