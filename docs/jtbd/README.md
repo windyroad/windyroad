@@ -18,7 +18,7 @@ CTOs, Heads of Engineering, VPs at mid-to-large organisations with AI-coding-too
 | JTBD-005 | Stay Ahead of the Shift | Must-have | [JTBD-005-stay-ahead-of-the-shift.proposed.md](engineering-leader/JTBD-005-stay-ahead-of-the-shift.proposed.md) |
 | JTBD-006 | Navigate an Edition I Already Know My Way Around | Important | [JTBD-006-navigate-an-edition-i-already-know-my-way-around.proposed.md](engineering-leader/JTBD-006-navigate-an-edition-i-already-know-my-way-around.proposed.md) |
 
-JTBD-006 was added 2026-08-09 on Tom's direction at a question gate and is **not ratified**: it carries `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`. It also reverses a decision recorded on 2026-08-07 (P121 lines 169 to 182 declined to add a stable-shape outcome), and its own Notes section explains why writing it down does not by itself discharge that objection. Read the Notes before citing it.
+JTBD-006 was added 2026-08-09 on Tom's direction at a question gate and **ratified by him the same day**: he read the file in session and approved it, so it carries `human-oversight: confirmed`. It also reverses a decision recorded on 2026-08-07 (P121's bullet "No JTBD outcome is added. Explicitly declined." refused a stable-shape outcome), and its own Notes section explains why writing it down does not by itself discharge that objection. Read the Notes before citing it.
 
 ### Retired (per ADR-041, pending ratification)
 

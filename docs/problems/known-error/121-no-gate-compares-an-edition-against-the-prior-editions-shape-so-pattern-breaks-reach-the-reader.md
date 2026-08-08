@@ -193,8 +193,9 @@ Three additions from the architect review of the settled direction (2026-08-07),
    >   about causal order, so filing the grounding in a new job rather than as new
    >   outcomes on JTBD-005 is a topological move, not an evidentiary one. JTBD-006's
    >   Notes section says so in its own words. What discharges it is ratification via
-   >   `/wr-jtbd:confirm-jobs-and-personas`, which has not happened. JTBD-006 carries
-   >   `human-oversight: unconfirmed`.
+   >   `/wr-jtbd:confirm-jobs-and-personas`, which Tom ran on 2026-08-09; JTBD-006 now
+   >   carries `human-oversight: confirmed`. Read that precisely: ratification
+   >   discharged the objection, and filing the text in a new job never did.
    > - **No probe's authority changes.** The advisory class stays advisory. This
    >   ticket's own rule holds: the licence for that class comes from having no
    >   remediation authority, not from the rationale being strong enough, and those
@@ -209,7 +210,7 @@ Three additions from the architect review of the settled direction (2026-08-07),
    >
    > The "Why a third path is legitimate" paragraph below is now partly stale: feed
    > recognition is a documented reader job as of JTBD-006 outcome 3, not only a
-   > distribution rationale. It becomes fully stale on ratification. It is left in
+   > distribution rationale. Ratification on 2026-08-09 made it fully stale. It is left in
    > place rather than rewritten, because it is the reasoning as it stood on
    > 2026-08-07 and this ticket is the record of that.
 
@@ -321,7 +322,7 @@ With this shipped, all three of section 3's finding classes are accounted for: L
 - **ADR-020** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): ~~reassessment criterion 6 sets the subagent invocation ceiling ADR-043 records as already breached, which is why the fix is a script rather than an agent.~~ **Both halves of that sentence are wrong, corrected 2026-08-07.** Criterion 6 sets no ceiling: it is a trigger naming two valid responses to crossing 15 invocations, and it contains no prohibitive verb. And the fix is an agent, not a script, per ADR-044. The budget was re-asserted, which is the first of the two responses the criterion authorises. ADR-020 now carries the correction adjacent to criterion 6 itself.
 - **P089** (`docs/problems/.../089-...md`): built `scripts/check-newsletter-structure.sh`, the deterministic-lint idiom this fix follows.
 - **JTBD-005** (`docs/jtbd/engineering-leader/JTBD-005-stay-ahead-of-the-shift.proposed.md`) and **JTBD-200** (`docs/jtbd/developer/JTBD-200-signal-from-noise.proposed.md`): the live persona anchors. JTBD-001 through JTBD-004 were retired by ADR-041 on 2026-07-10 and must not be cited here.
-- **JTBD-006** (`docs/jtbd/engineering-leader/JTBD-006-navigate-an-edition-i-already-know-my-way-around.proposed.md`), added 2026-08-09: the reader job this ticket's shape rationale was missing, recorded on Tom's direction. It is the foundation for the ticket's shape claim, and it is **provisional**: `human-oversight: unconfirmed`, and it reverses the 2026-08-07 decline recorded in precondition 2 above without discharging that decline's objection. Cite it as provisional grounding, never as settled. It changes no probe's remediation authority.
+- **JTBD-006** (`docs/jtbd/engineering-leader/JTBD-006-navigate-an-edition-i-already-know-my-way-around.proposed.md`), added 2026-08-09 and **ratified the same day**: the reader job this ticket's shape rationale was missing, recorded on Tom's direction and then read and ratified by him. It is the foundation for the ticket's shape claim, it carries `human-oversight: confirmed`, and its ratification is what discharged the 2026-08-07 decline recorded in precondition 2 above. Cite it as settled grounding for the shape claim. It still changes no probe's remediation authority: grounding and authority are two axes, and moving one does not move the other.
 - Reproduction fixture: commit `d2d674a`, `src/newsletters/drafts/leader/2026-08-03/`. The published edition at `src/newsletters/published/leader/2026-08-03/` is post-remediation and is NOT usable as a fixture.
 - **Upstream report pending** -- false positive; detection misfire. The P063 external-root-cause scan matches the word "external" in this ticket's prose, where it describes a human reviewer rather than an upstream dependency. There is no upstream dependency and nothing to report.
 - Evidence corpus: `src/newsletters/published/leader/2026-07-27/2026-07-27.linkedin.md` (1,655 chars, carries all four elements Issue 16 dropped) against `src/newsletters/published/leader/2026-08-03/2026-08-03.linkedin.md`.

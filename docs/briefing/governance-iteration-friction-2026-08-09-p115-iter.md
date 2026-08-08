@@ -3,9 +3,13 @@
 One AFK iteration: posted the queued P109 upstream comment, added a third witness to P132, and
 investigated P115 to root cause without being able to apply the fix.
 
-## The unratified maintainer persona is a hard stop on executable internal-tooling work, not a caveat
+## The unratified maintainer persona was a hard stop on executable internal-tooling work, not a caveat
 
-This is the finding worth carrying. `docs/jtbd/internal-maintainer/` and JTBD-400/401/402 are
+**Resolved 2026-08-09.** Tom ratified the persona and JTBD-400/401/402 that day; all four now carry
+`human-oversight: confirmed`. The record below is what the block looked like while it was live, kept
+because the shape of it recurs whenever a persona or decision is written ahead of being read.
+
+This was the finding worth carrying. `docs/jtbd/internal-maintainer/` and JTBD-400/401/402 were
 `human-oversight: unconfirmed`. Every internal-tooling ticket in this repo anchors to them, because
 there is nothing else to anchor to. The JTBD edit gate withholds its marker on ISSUES FOUND, and
 "reasons from an unratified persona" is an ISSUES FOUND the agent cannot clear: ratifying is Tom's,
