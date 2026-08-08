@@ -38,6 +38,8 @@ Confirmed by listing the plugin's shipped shims at `~/.claude/plugins/cache/wind
 
 This widens the Fix Strategy: the first bullet below is not a one-line path substitution, it also needs the shim to be authored and shipped, and the same is true for the two sites above.
 
+**Second occurrence 2026-08-09, with the consequence now measured.** The missing briefing-budgets shim reproduced one day later in the ADR-049 / JTBD-006 iteration's retro; nothing had changed, so it failed the same way. What that iteration adds is the cost, which was previously unquantified. Hand-measuring `docs/briefing/*.md` found **eight files at or above the 5,120-byte ADR-040 Tier 3 threshold**, none of which any automated surface can see: `what-you-need-to-know-archive-early.md` 9,379 (1.83x), `what-you-need-to-know.md` 8,983 (1.75x), `what-will-surprise-you-archive-early.md` 8,499 (1.66x), `what-will-surprise-you.md` 7,600 (1.48x), `what-you-need-to-know-archive.md` 7,059 (1.38x), `governance-iteration-friction-2026-08-08-adr-048-iter.md` 6,965 (1.36x), `what-will-surprise-you-archive.md` 6,617 (1.29x), `README.md` 6,427 (1.26x). None reaches the 2x MUST_SPLIT line, so all eight are Branch B, which Step 3 marks rotation-required rather than deferrable. The briefing bucket also grew 24.7% this cycle. So the unenforced budget is not theoretical: the surface it governs is over budget across the board and growing, and the only reason anyone knows is that a retro measured it by hand. Full working in `docs/retros/2026-08-09-context-analysis.md` § Policy Breaches.
+
 ## Symptoms
 
 - Step 3's budget pass produces no output, so the retro has no measured input for the rotation decision it is required to make.
