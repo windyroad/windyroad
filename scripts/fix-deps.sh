@@ -15,15 +15,19 @@
 #   1. detect:  dry-aged-deps --check. Clean -> nothing to do, exit 0.
 #   2. apply:   dry-aged-deps --update (applies available updates beyond the
 #               --yes auto-resolvable subset that push:watch already tried).
-#   3. gate:    lockfile install-shape scan, npm run lint, npm test, npm run
-#               build. This mirrors the CI job the resulting commit must
-#               survive (.github/workflows/main-pipeline.yml, "Lint, check deps
-#               & build"). Gating on npm test alone shared almost no surface
-#               with that job, so an uninstallable lockfile could commit green
-#               and redden master (P123 / RFC-003).
+#   3. gate:    manifest sync scan, lockfile install-shape scan, npm run lint,
+#               npm test, npm run build. This mirrors the CI job the resulting
+#               commit must survive (.github/workflows/main-pipeline.yml, "Lint,
+#               check deps & build"). Gating on npm test alone shared almost no
+#               surface with that job, so an uninstallable lockfile could commit
+#               green and redden master (P123 / RFC-003).
 #   4. green:   commit chore(deps) (root manifests ONLY) and report success.
-#      red:     restore known-good manifests (git checkout + npm ci) so the tree
-#               is not left broken, then HALT non-zero naming the failed gate.
+#      red:     restore the manifests from BASE_REF, VERIFY the restored pair is
+#               actually coherent (BASE_REF is not guaranteed to be: a desynced
+#               commit restores as a desynced pair, which is P126 defect 2) and
+#               regenerate the lockfile when it is not, then npm ci, then HALT
+#               non-zero naming the failed gate. The halt message reports what
+#               the restore actually achieved rather than asserting it.
 #
 # No changeset: the root package is private (package.json "private": true) per
 # ADR-021, so root dep refreshes have no published API contract. The chore(deps)
@@ -35,6 +39,14 @@
 #       1 = update applied but a gate failed (manifests restored; manual fix needed);
 #       2 = usage / environment error.
 set -euo pipefail
+
+# Shared manifest-hygiene scans (P126 / RFC-006): manifest_sync_violations and
+# lockfile_platform_flag_violations, the latter relocated here from this file.
+# Sourced ABOVE the FIX_DEPS_LIB_ONLY seam so scripts/fix-deps.test.mjs still
+# reaches both. Resolved via BASH_SOURCE, not $0: the test harness sources this
+# script under `bash -c`, where $0 is "bash".
+# shellcheck source=lib/manifest-sync.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/manifest-sync.sh"
 
 # ── Pure helper: format the chore(deps) commit body from dry-aged-deps JSON ────
 # Lists each package whose version actually changed as "name current -> recommended".
@@ -84,31 +96,9 @@ exact_pin_deadlock_targets() {
   ' "$json_file" 2>/dev/null || true
 }
 
-# ── Pure helper: list lockfile entries that `npm ci` would refuse to install ───
-# An npm lockfile entry carrying `os` or `cpu` constraints WITHOUT `optional:
-# true` is a required install of a platform-specific artefact, so `npm ci` on a
-# non-matching platform fails EBADPLATFORM. A lockfile rewrite that strips the
-# optional flag while leaving the constraints produces exactly that shape: green
-# tests on the authoring machine, red `npm ci` on CI's linux/x64 runner. That is
-# what happened on 2026-08-05, when 22 nested @rollup/rollup-* duplicates lost
-# their flag and reddened master (P123 / RFC-003).
-#
-# This is a cheap PROXY for installability, not a proof. Proving it needs a
-# clean-tree `npm ci`, which is slow enough to change the flow's character; the
-# scan costs milliseconds and no network, and catches the observed defect class.
-# Zero hits is the healthy state (all 244 platform-constrained entries in the
-# current lockfile carry the flag). Emits one lockfile package key per
-# violation; silent when clean.
-lockfile_platform_flag_violations() {
-  local lockfile="${1:?usage: lockfile_platform_flag_violations <package-lock.json>}"
-  jq -r '
-    (.packages // {})
-    | to_entries[]
-    | select((.value | has("os")) or (.value | has("cpu")))
-    | select((.value.optional // false) != true)
-    | .key
-  ' "$lockfile" 2>/dev/null || true
-}
+# `lockfile_platform_flag_violations` used to be defined here. It now lives in
+# scripts/lib/manifest-sync.sh alongside its sibling `manifest_sync_violations`,
+# sourced at the top of this file (P126 / RFC-006). Both remain in scope below.
 
 # Test seam (mirrors push-watch.sh): sourcing with FIX_DEPS_LIB_ONLY=1 defines
 # the helpers above and returns before the detect/apply/test/commit flow runs.
@@ -140,6 +130,20 @@ if ! npx --no-install dry-aged-deps --update; then
   exit 1
 fi
 rm -f package.json.backup  # --update leaves a stray package.json.backup (P095)
+
+# `dry-aged-deps --update` rewrites package.json ONLY and says so in its own
+# output ("Run 'npm install' to install the updates"). Complete the write so the
+# lockfile follows, otherwise the pair is desynced by construction and `npm ci`
+# refuses it (P126 / RFC-006). `--package-lock-only` rather than a plain `npm
+# install`, which reintroduces the unflagged nested @rollup/rollup-* duplicates
+# of the P123 EBADPLATFORM class. Wrapped non-fatally under `set -e` so a
+# registry blip does not abort mid-refresh; the sync scan in the gate below is
+# what decides whether the result is usable.
+if ! git diff --quiet -- package.json; then
+  if ! npm install --package-lock-only; then
+    echo "  (lockfile regeneration failed; the manifest sync gate below will catch the desync)" >&2
+  fi
+fi
 
 if git diff --quiet -- package.json package-lock.json; then
   # --update changed nothing. If --check still flags deps, they are the exact-pin
@@ -192,8 +196,18 @@ OG_WAS_CLEAN=0
 git diff --quiet -- "$OG_IMAGE" && OG_WAS_CLEAN=1
 
 FAILED_GATE=""
+DESYNC="$(manifest_sync_violations package.json package-lock.json)"
 VIOLATIONS="$(lockfile_platform_flag_violations package-lock.json)"
-if [ -n "$VIOLATIONS" ]; then
+if [ -n "$DESYNC" ]; then
+  # Cheapest check of all, and the one the regeneration above is meant to have
+  # made unreachable: reaching it means the lockfile did not follow package.json
+  # (P126 / RFC-006). `npm ci` rejects such a pair outright with EUSAGE.
+  FAILED_GATE="manifest sync scan"
+  echo "" >&2
+  echo "✗ package.json and package-lock.json disagree on:" >&2
+  printf '    %s\n' "$DESYNC" >&2
+  echo "  'npm ci' would fail EUSAGE: the two manifests are not in sync." >&2
+elif [ -n "$VIOLATIONS" ]; then
   FAILED_GATE="lockfile install-shape scan"
   echo "" >&2
   echo "✗ Lockfile entries carry os/cpu constraints without \"optional\": true:" >&2
@@ -220,21 +234,54 @@ if [ -z "$FAILED_GATE" ]; then
   echo "✓ Dependency fix committed. Re-run: npm run push:watch"
   exit 0
 else
-  # ── 4b. Red: restore known-good manifests, then HALT ────────────────────────
+  # ── 4b. Red: restore the manifests, VERIFY the restore, then HALT ───────────
+  # BASE_REF is just HEAD, and HEAD is not guaranteed to name a coherent pair:
+  # push:watch used to commit a desynced one, so restoring it reinstated the
+  # defect and the npm ci below failed identically while this block claimed the
+  # tree was fine (P126 defect 2). Check what the restore actually produced and
+  # repair it before asserting anything.
   echo "" >&2
   echo "✗ Gate failed under the updated dependencies: $FAILED_GATE." >&2
-  echo "  Restoring known-good manifests (git checkout + npm ci) so the tree is not left broken..." >&2
+  echo "  Restoring the manifests from $BASE_REF..." >&2
   git checkout "$BASE_REF" -- package.json package-lock.json
-  npm ci
+
+  RESTORED_DESYNC="$(manifest_sync_violations package.json package-lock.json)"
+  REGENERATED=0
+  if [ -n "$RESTORED_DESYNC" ]; then
+    echo "  The restored manifests are themselves out of sync on:" >&2
+    printf '    %s\n' "$RESTORED_DESYNC" >&2
+    echo "  $BASE_REF carries a desynced pair, so restoring it is not enough." >&2
+    echo "  Regenerating the lockfile against the restored package.json..." >&2
+    # Non-fatally wrapped under `set -e` so a registry failure still reaches the
+    # next-steps block below rather than aborting on an npm stack trace.
+    if npm install --package-lock-only; then
+      REGENERATED=1
+    else
+      echo "  Lockfile regeneration failed; the tree is still uninstallable." >&2
+    fi
+  fi
+
+  npm ci || echo "  'npm ci' failed against the restored manifests." >&2
+
   echo "" >&2
   echo "✗ fix:deps could not land a green dependency update automatically." >&2
-  echo "  The update broke '$FAILED_GATE' and has been reverted. Next steps:" >&2
+  echo "  The update broke '$FAILED_GATE' and the manifests were restored from $BASE_REF." >&2
+  if [ "$REGENERATED" = "1" ]; then
+    echo "  NOTE: $BASE_REF's own manifests were out of sync, so package-lock.json has been" >&2
+    echo "  REGENERATED and is now uncommitted. Keep it: checking it back out restores the" >&2
+    echo "  desync and 'npm ci' fails again (P126). Commit it once you are green." >&2
+  fi
+  echo "  Next steps:" >&2
   echo "    1. Run 'npx dry-aged-deps --check' to see which packages are stale." >&2
   echo "    2. Update and fix the breakage manually (one package at a time helps isolate it)." >&2
   echo "    3. Re-run '$FAILED_GATE', then 'npm run push:watch' once green." >&2
   if [ "$FAILED_GATE" = "lockfile install-shape scan" ]; then
     echo "  For the lockfile shape specifically: 'npm install --package-lock-only' often" >&2
     echo "  dedupes nested platform-specific duplicates back onto flagged top-level entries." >&2
+  fi
+  if [ "$FAILED_GATE" = "manifest sync scan" ]; then
+    echo "  For the sync failure specifically: 'npm install --package-lock-only' regenerates" >&2
+    echo "  the lockfile against package.json; 'npm ci --dry-run' confirms the pair." >&2
   fi
   exit 1
 fi

@@ -17,7 +17,7 @@ For deep-dive - creating, evolving, ratifying, or contesting a decision - open t
 
 ## In-force decisions
 
-_40 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_43 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -104,11 +104,11 @@ _40 ADRs. These are the current rules. The architect agent reads this section fi
 **Decides:** Adds a fourth review gate, a fresh-context, project-local `wr-newsletter-editor` subagent simulating an experienced LinkedIn newsletter editor, scoring would-open / would-read-through / would-forward against the persona's JTBD plus (2026-06-17 P081 amendment) a passage-cited editorial-craft pass, because rubric expansion of the sw-critic kept passing drafts whose editorial-judgement weaknesses Tom's external review then caught. Runs at SKILL step 15.25 on the brief body only, skipped when sw-critic returns REJECTED; the agent never rewrites, though the 2026-08-05 P120 amendment lifts the single-shot restriction so ADR-043's bounded loop can remediate its findings and re-invoke it once, and corrects the persona read set to live jobs (developer JTBD-200/201/203/204/205, leader JTBD-005) after ADR-041 retired JTBD-001..004. The 2026-08-07 P122 amendment adds four assembly axes (`close-collects-the-so-what`, `signpost-promises-match-contents`, `item-placement`, `edition-internal-consistency`) via a Step 4.6 whole-edition pass inside the same invocation, anchors each to JTBD-005/JTBD-200 rather than to review-round reduction, corrects Bad consequence 2 to 'amending or superseding', and adds reassessment criterion 7 on vocabulary growth, partition collapse and axis mis-fire. Carries a 2026-08-08 correction: the duplicate-citation split shipped narrower than the amendment specifies (identical citation, not same-URL, after the wider rule fired on three legitimate published editions), so edition-internal-consistency carries more residue than the amendment anticipated; that widened axis scope is unratified and flagged for Tom. Reassessment criterion 6 is a **trigger, not a ceiling** (corrected 2026-08-07 by ADR-044); it was exercised as written and the budget re-asserted rather than a gate trimmed.
 **Confirmation:** `EDITOR_REVIEW` block format pinned verbatim in the agent file (three reader-experience axes, EDITORIAL_FINDINGS, EDITORIAL_CRAFT, EDITOR_VERDICT); agent contract documented (artifact_path + persona + edition_number, persona/JTBD read set, fresh context, no rewrites, mechanical verdict); skip-on-upstream-REJECTED documented as defence-in-depth; SKILL.md updated at step 9 intro, ADR list, new steps 15.25 and 15.25-prime, step 16 save-blocks (prep/finalise/full) and step 17 Tom-summary; first live-run verdict validated against Tom's reading.
 **Related:** ADR-011, ADR-012, ADR-015, ADR-016, ADR-017, ADR-018, ADR-026, ADR-030, ADR-033, ADR-035, ADR-041, ADR-042, ADR-043, ADR-044
-
 ### ADR-021 - Auto-resolve stale dependencies in push:watch
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **1. Pre-emptive `--update --yes` inside push-watch.sh, with auto-commit when the lockfile changes**.
-**Confirmation:** scripts/push-watch.sh runs npx dry-aged-deps --update --yes before git push.; The command is wrapped non-fatally; a dry-aged-deps failure does not abort push-watch.sh.; A chore(deps): refresh stale dependencies (P026) commit is produced when and only when the lockfile or package...; Interactive npm run push:watch continues to fire the pre-push gate when no auto-resolvable updates exist.; AFK /wr-itil:work-problems drain step no longer halts on P026's symptom (react/react-dom-style staleness).
+**Decides:** `push-watch.sh` pre-emptively runs `dry-aged-deps --update --yes` (plus a lockfile-completing `npm install --package-lock-only`) before pushing and auto-commits the refreshed root manifests, so AFK problem-draining loops stop halting on the pre-push staleness gate. Both calls are non-fatal and an incoherent manifest pair is rolled back to the pre-refresh state, leaving the existing gate to halt as it would have; the fix lives in the script rather than in each orchestrator so every `push:watch` caller benefits.
+**Confirmation:** `dry-aged-deps --update --yes` runs before `git push`; wrapped non-fatally so its failure does not abort the script; `chore(deps): refresh stale dependencies (P026)` commit produced only when push:watch's own manifest writes changed something (when either manifest is already modified on entry, push:watch writes nothing, commits nothing and reverts nothing); interactive `push:watch` still fires the pre-push gate when nothing is auto-resolvable; AFK `/wr-itil:work-problems` no longer halts on P026's symptom.
+**Related:** ADR-006, ADR-008, ADR-009
 
 ### ADR-024 - URL verification gate in /wr-newsletter
 **Status:** proposed | **Oversight:** confirmed
@@ -158,11 +158,10 @@ _40 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** accepted | **Oversight:** confirmed | **Supersedes:** 016-sw-critic-subagents-and-iteration-loop
 **Chosen:** Chosen option: **Domain-specific critic agents**, because it directly addresses the discoverability + UX failure mode P071 captured, preserves shared logic via a library extraction (lower-risk than parameterisation), and matches the establi...
 **Confirmation:** (a) DONE: this ADR landed .proposed with human-oversight: confirmed on 2026-05-30.; (b) DONE: .claude/agents/wr-newsletter-critic.md and .claude/agents/wr-wardley-critic.md landed 2026-06-02 (wo...; (c) DONE: .claude/skills/wr-newsletter/SKILL.md step 9 and step 15 invocations migrated 2026-06-02 from wr-sw-...; (d) DONE (2026-06-14): The Shift Issue 08 (published 2026-06-08) ran a full prep + finalise cycle that exercis...; (e) RATIFIED by this iter's SKILL.md migration. ADR-016 was renamed to .superseded.md with human-oversight: re...
-
 ### ADR-034 - push:watch fail-fast on dry-aged-deps non-zero plus separate deps-fix flow
 **Status:** proposed | **Oversight:** confirmed | **Supersedes:** 022-scheduled-stale-deps-refresh-pr
-**Decides:** `push:watch` halts at the push gate when `dry-aged-deps` still exits non-zero after ADR-021's inline auto-resolve, and a separate `/wr-itil:fix-deps` flow does the auto-update, test, fix and commit, so dep changes land validated instead of arriving as an untested cron PR for review.
-**Confirmation:** ADR lands; push-watch.sh carries the fail-fast branch; fix-deps flow exists and is invocable; next dep issue handled end-to-end (EXERCISED 2026-08-05, did not hold: CI-parity gap, P123/RFC-003, re-armed); ADR-022 flipped to superseded and deps-refresh.yml retired.
+**Decides:** `push:watch` halts at the push gate when `dry-aged-deps` still exits non-zero after ADR-021's inline auto-resolve, and a separate `/wr-itil:fix-deps` flow does the auto-update, test, fix and commit, so dep changes land validated in the working tree instead of arriving as an untested cron PR for review.
+**Confirmation:** ADR lands; push-watch.sh carries the fail-fast branch; fix-deps flow exists and is invocable; next dep issue handled end-to-end (EXERCISED 2026-08-05, did not hold: CI-parity gap, P123/RFC-003, re-armed; EXERCISED AGAIN 2026-08-05, did not hold: manifest-pair desync plus a rollback restoring the desynced base, P126/RFC-006, re-armed a second time; 2 failures in 2 issues makes the next exercise also the reassessment trigger); ADR-022 flipped to superseded and deps-refresh.yml retired.
 **Related:** ADR-021, ADR-022, ADR-028
 
 ### ADR-035 - Critic rubric shape is strengths + weaknesses + optional relevant context (no structured numbered-check rubrics)
@@ -230,9 +229,7 @@ _40 ADRs. These are the current rules. The architect agent reads this section fi
 **Decides:** Seven review gates run before a draft is saved; the draft is then edited, most often on publish morning, and only some gates are asked again. Issue 16's own review sibling records the result unprompted: "that ledger describes a text this edition no longer carries". Two questions RFC-005 left open are settled. The comparison is tuned to OVER-REPORT (where uncertain, report stale; a needless re-run is the accepted cost of never staying silent on a real miss), and a stale gate is RE-INVOKED against the current artefact rather than reported to the author, because handing him a list on publish morning is the moment the driving problem says he cannot act on one. Over-report resolves four of RFC-005's five open dimensions: per-surface digests, carried-without-a-marker reads as stale, frontmatter excluded (its churn is noise not sensitivity), and sibling reached by derivation with override. Three limits keep it from re-running the world: claim-scoped gates keep their own triggers, sanctioned skips stay skipped, and the stale set runs once with a forced edit re-entering section 15.6 rather than recursing, which preserves ADR-043's cap.
 **Confirmation:** stale gates re-invoked not reported; claim-scoped gates untouched by unrelated body edits; documented skips honoured; one re-run per save; brief and companion post digested separately; unmarked carried verdicts treated as stale; frontmatter excluded.
 **Related:** ADR-017, ADR-026, ADR-043, ADR-046, RFC-005, P099
-Hand-edited per the P087 posture.
-Hand-edited per the P087 posture.
-
+**Provenance:** ADR-047's entry was hand-edited per the P087 posture. (The line was duplicated and left dangling outside any entry; re-attached here 2026-08-08 per P126 / RFC-006.)
 
 ---
 

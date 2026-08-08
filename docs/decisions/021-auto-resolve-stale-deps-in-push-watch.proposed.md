@@ -61,6 +61,8 @@ If a future re-architecture publishes the windyroad root package, this policy mu
 
 The pre-emptive command runs non-fatally. `npx dry-aged-deps --update --yes` is wrapped so that registry hiccups, network failures, or transient errors do not abort the push. If the update fails, the pre-push gate still fires on the original staleness state and the user gets a clear failure message. The push action degrades to its existing behaviour rather than silently swallowing a different failure.
 
+Because `--update --yes` rewrites `package.json` only, a second wrapped call, `npm install --package-lock-only`, completes the write so the lockfile follows; without it the committed pair is desynced by construction and `npm ci` rejects it (P126 / RFC-006). It is wrapped the same way and for the same reason. Two offline scans then check the result, and an incoherent pair is rolled back to the pre-refresh state instead of being committed, restoring only the manifests this block itself authored. That rollback is what makes the degrades-to-existing-behaviour sentence above true of the code rather than aspirational: the unrefreshed staleness reaches the pre-push gate exactly as it would have had the update never run. No halt is added here; the existing gate does the halting.
+
 ### TDD interaction (ADR-006)
 
 ADR-006 enforces TDD on implementation files. The auto-commit only touches `package.json` and `package-lock.json`, which are manifest / lockfile artefacts, not implementation code, and are exempt from the TDD state machine. No TDD state interaction.
@@ -79,7 +81,7 @@ ADR-006 enforces TDD on implementation files. The auto-commit only touches `pack
 
 - `scripts/push-watch.sh` runs `npx dry-aged-deps --update --yes` before `git push`.
 - The command is wrapped non-fatally; a `dry-aged-deps` failure does not abort `push-watch.sh`.
-- A `chore(deps): refresh stale dependencies (P026)` commit is produced when and only when the lockfile or `package.json` changed.
+- A `chore(deps): refresh stale dependencies (P026)` commit is produced when and only when the lockfile or `package.json` changed. Read as scoped to push:watch's OWN writes, which is what the Decision Outcome above already says ("a working-tree change introduced inside `push-watch.sh`"). Since P126 that reading is enforced rather than assumed: when either manifest is already modified on entry, push:watch cannot separate its writes from the operator's, so it makes none, commits none and reverts none. The criterion is otherwise unchanged.
 - Interactive `npm run push:watch` continues to fire the pre-push gate when no auto-resolvable updates exist.
 - AFK `/wr-itil:work-problems` drain step no longer halts on P026's symptom (react/react-dom-style staleness).
 

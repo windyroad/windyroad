@@ -120,6 +120,41 @@ deps_gate_route() {
   if [ "${1:-0}" -eq 0 ]; then echo proceed; else echo halt; fi
 }
 
+# Helper: route the auto-deps refresh from what it produced (P126 / RFC-006).
+# ADR-021 authorises push:watch to rewrite and commit the two root manifests.
+# `dry-aged-deps --update --yes` only writes package.json, so the caller runs
+# `npm install --package-lock-only` to complete the write and then scans the
+# result. This decides what to do with it:
+#   commit   - push:watch authored the change and the pair is coherent (the
+#              ADR-021 path).
+#   rollback - push:watch authored the change but the pair is not coherent, so
+#              undo it rather than commit what `npm ci` rejects with EUSAGE.
+#   skip     - nothing changed, or the change is not push:watch's to act on.
+#
+# Ownership gates BOTH acting branches, not just rollback. When either manifest
+# was already dirty on entry, push:watch cannot separate its own writes from the
+# operator's, so it neither sweeps their work into a chore(deps) commit nor
+# reverts it: it leaves the tree alone and the existing stale-deps gate below
+# does the halting. ADR-021's Decision Outcome scopes the auto-commit to "a
+# working-tree change introduced inside push-watch.sh", which is exactly this.
+#
+# $1 = 1 when BOTH manifests were clean before the refresh (so any change is
+# ours), $2 = 1 when the manifests changed, $3 = scan output (empty = coherent).
+# Missing arguments default to skip (nothing observed, nothing to do).
+manifest_refresh_route() {
+  if [ "${1:-0}" != "1" ]; then echo skip
+  elif [ "${2:-0}" != "1" ]; then echo skip
+  elif [ -n "${3:-}" ]; then echo rollback
+  else echo commit
+  fi
+}
+
+# Shared manifest-hygiene scans (P126 / RFC-006), sourced ABOVE the seam below so
+# scripts/push-watch.test.mjs reaches them. BASH_SOURCE, not $0: the test harness
+# sources this script under `bash -c`, where $0 is "bash".
+# shellcheck source=lib/manifest-sync.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/manifest-sync.sh"
+
 # Test seam (P092): allow the behavioural test (scripts/push-watch.test.mjs) to
 # source the helper functions above without executing the push/watch flow. The
 # "&&" short-circuit is exempt from "set -e" when the condition is false.
@@ -146,15 +181,97 @@ fi
 # cannot clear the gate without a human, so apply --update --yes here.
 # Anything not auto-resolvable stays stale and the pre-push gate still fires.
 # See ADR 021 for the policy and ADR-008 risk-reducing-bypass framing.
-if ! npx dry-aged-deps --update --yes; then
-  echo "  (dry-aged-deps auto-update non-fatal; pre-push gate will fire if state is still stale)"
+#
+# Record which manifests were already dirty BEFORE the refresh, so the rollback
+# path below only ever undoes writes this block authored. A manifest the operator
+# had already modified is theirs, not ours (P126 / RFC-006). Both the worktree
+# and the index are tested: the guard must not depend on the stash pop above
+# having normalised staged changes to unstaged.
+PKG_WAS_CLEAN=0
+LOCK_WAS_CLEAN=0
+git diff --quiet -- package.json && git diff --cached --quiet -- package.json && PKG_WAS_CLEAN=1
+git diff --quiet -- package-lock.json && git diff --cached --quiet -- package-lock.json && LOCK_WAS_CLEAN=1
+REFRESH_AUTHORED=0
+[ "$PKG_WAS_CLEAN" = "1" ] && [ "$LOCK_WAS_CLEAN" = "1" ] && REFRESH_AUTHORED=1
+if [ "$REFRESH_AUTHORED" != "1" ]; then
+  echo "  (root manifests were already modified; skipping the auto-deps refresh entirely this run)"
 fi
-rm -f package.json.backup  # --update leaves a stray package.json.backup (P095)
-if ! git diff --quiet -- package.json package-lock.json; then
-  echo "Auto-deps refresh changed root manifests; committing as chore(deps)."
-  git add package.json package-lock.json
-  git commit -m "chore(deps): refresh stale dependencies (P026)"
+
+# Gated on REFRESH_AUTHORED like every other writer in this block: on a tree
+# whose manifests the operator already modified, push:watch cannot act on the
+# result, so writing to package.json at all would dirty their work for nothing
+# and delete the backup --update leaves behind.
+if [ "$REFRESH_AUTHORED" = "1" ]; then
+  if ! npx dry-aged-deps --update --yes; then
+    echo "  (dry-aged-deps auto-update non-fatal; pre-push gate will fire if state is still stale)"
+  fi
+  rm -f package.json.backup  # --update leaves a stray package.json.backup (P095)
 fi
+
+# `--update --yes` rewrites package.json ONLY and says so in its own output
+# ("Run 'npm install' to install the updates"). Complete the write so the
+# lockfile follows; committing the pair without it is desynced by construction
+# and `npm ci` rejects it at CI's first step, which reddens master (P126 defect
+# 1). `--package-lock-only` rather than a plain `npm install`, which reintroduces
+# the unflagged nested @rollup/rollup-* duplicates of the P123 EBADPLATFORM
+# class. Wrapped non-fatally per ADR-021 confirmation criterion 2: a registry
+# blip must not abort the push here. If it does fail, the scans below see the
+# desync it left and route to rollback.
+# Gated on REFRESH_AUTHORED, not on bare dirtiness: if the operator arrived with
+# a modified package.json, `git diff --quiet` is true whether or not --update
+# touched anything, so regenerating here would rewrite a lockfile push:watch does
+# not own. Only write when every change in sight is provably this block's.
+RESOLUTION_DELTA=""
+if [ "$REFRESH_AUTHORED" = "1" ] && ! git diff --quiet -- package.json; then
+  LOCK_BEFORE="$(mktemp)"
+  cp package-lock.json "$LOCK_BEFORE"
+  if ! npm install --package-lock-only; then
+    echo "  (lockfile regeneration non-fatal; the manifest scans below decide what happens next)"
+  fi
+  # push:watch commits this pair without running lint, test or build, because
+  # ADR-034 rejected moving that flow here. That holds only while the regenerated
+  # lockfile is a pure spec-sync. If a resolved entry moved, the installed tree
+  # changed and nothing here has executed it, so decline and let fix:deps apply
+  # its CI-parity gate instead (P126 / RFC-006).
+  RESOLUTION_DELTA="$(lockfile_resolution_delta "$LOCK_BEFORE" package-lock.json)"
+  rm -f "$LOCK_BEFORE"
+fi
+
+MANIFESTS_CHANGED=0
+git diff --quiet -- package.json package-lock.json || MANIFESTS_CHANGED=1
+REFRESH_VIOLATIONS="$(
+  manifest_sync_violations package.json package-lock.json
+  lockfile_platform_flag_violations package-lock.json
+)"
+if [ -n "$RESOLUTION_DELTA" ]; then
+  echo "  Lockfile regeneration moved resolved entries, so this refresh is not a pure spec-sync:" >&2
+  printf '    %s\n' "$RESOLUTION_DELTA" >&2
+  echo "  push:watch does not commit an installed-tree change it has not executed; routing to fix:deps." >&2
+  REFRESH_VIOLATIONS="${REFRESH_VIOLATIONS}${REFRESH_VIOLATIONS:+
+}resolved entries moved; not a pure spec-sync"
+fi
+
+# This routing REPLACES the old bare `git diff --quiet` test. It must, not sit
+# beside it: on the rollback path with an operator-dirty package.json the old
+# test is still true, so keeping it would commit the desynced pair the scans just
+# caught and reintroduce the defect (P126 / RFC-006).
+case "$(manifest_refresh_route "$REFRESH_AUTHORED" "$MANIFESTS_CHANGED" "$REFRESH_VIOLATIONS")" in
+  commit)
+    echo "Auto-deps refresh changed root manifests; committing as chore(deps)."
+    git add package.json package-lock.json
+    git commit -m "chore(deps): refresh stale dependencies (P026)"
+    ;;
+  rollback)
+    # Reached only when REFRESH_AUTHORED=1, so both manifests were clean on entry
+    # and restoring them undoes this block's writes and nothing else.
+    echo "✗ Auto-deps refresh produced manifests 'npm ci' would reject:" >&2
+    printf '    %s\n' "$REFRESH_VIOLATIONS" >&2
+    echo "  Rolling this run's refresh back rather than committing it." >&2
+    git checkout -- package.json package-lock.json
+    # No exit: the stale-deps gate below sees the unrefreshed state and routes to
+    # the fix flow exactly as it does today. This block adds no halt of its own.
+    ;;
+esac
 
 # Fail fast on stale deps the inline auto-resolve could not clear (ADR-034
 # Phase 1, P072). ADR-021's `--update --yes` above handles the auto-resolvable

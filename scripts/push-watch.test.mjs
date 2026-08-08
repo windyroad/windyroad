@@ -113,6 +113,54 @@ describe('push-watch.sh: deps_gate_route (P072 / ADR-034 Phase 1 fail-fast)', ()
   });
 });
 
+describe('push-watch.sh: manifest_refresh_route (P126 / RFC-006)', () => {
+  // After ADR-021's inline auto-resolve and the lockfile regeneration that
+  // completes it, push:watch decides what to do with the refreshed pair. It
+  // commits only a coherent pair; an incoherent one is rolled back to the
+  // pre-refresh state so the flow degrades to its existing behaviour rather
+  // than committing something `npm ci` will reject (P126 defect 1).
+  // Args: <authored> <changed> <violations>. `authored` is 1 only when BOTH
+  // manifests were clean before the refresh, so every change to them is one
+  // this block made and is therefore push:watch's to commit or to undo.
+  it('routes a coherent authored refresh to commit', () => {
+    expect(probe('manifest_refresh_route 1 1 ""')).toBe('commit');
+  });
+
+  it('routes an incoherent authored refresh to rollback', () => {
+    expect(probe('manifest_refresh_route 1 1 "vitest: package.json 4.1.10 vs lock 3.2.4"')).toBe(
+      'rollback',
+    );
+  });
+
+  it('routes an unchanged tree to skip', () => {
+    expect(probe('manifest_refresh_route 1 0 ""')).toBe('skip');
+  });
+
+  // Ownership is symmetric across BOTH acting branches, not just rollback.
+  // If the operator arrived with a dirty manifest, push:watch cannot tell its
+  // own writes from theirs, so it neither commits their work as chore(deps)
+  // nor reverts it. It leaves the tree alone and lets the existing gate halt.
+  it('skips a coherent change it cannot prove it authored', () => {
+    expect(probe('manifest_refresh_route 0 1 ""')).toBe('skip');
+  });
+
+  it('skips an incoherent change it cannot prove it authored', () => {
+    expect(probe('manifest_refresh_route 0 1 "vitest: package.json 4.1.10 vs lock 3.2.4"')).toBe(
+      'skip',
+    );
+  });
+
+  it('skips when nothing changed even if the pre-existing pair is incoherent', () => {
+    expect(probe('manifest_refresh_route 1 0 "vitest: package.json 4.1.10 vs lock 3.2.4"')).toBe(
+      'skip',
+    );
+  });
+
+  it('defaults missing arguments to skip', () => {
+    expect(probe('manifest_refresh_route')).toBe('skip');
+  });
+});
+
 describe('push-watch.sh: is_sibling_amend (P092 case B)', () => {
   it('detects a sibling-amend (amended just-pushed commit shares a parent with the upstream tip)', () => {
     const out = probeInRepo(
