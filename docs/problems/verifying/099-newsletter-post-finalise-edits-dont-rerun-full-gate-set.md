@@ -161,3 +161,51 @@ sides.
 
 **Recovery**: rerun `/wr-itil:transition-problem 099 verifying` if this flip-back is
 judged wrong.
+
+## Scope hung off this ticket 2026-08-08: the stale-ledger / un-regated-final-artefact residue (from P117)
+
+Routed here during the P117 closure read rather than captured as a new ticket. A
+duplicate check across `docs/problems/` found this ticket already owns the gap exactly,
+so the evidence is recorded against it instead of minting a sibling.
+
+**The residue.** Issue 16's reviews sibling records two admissions against itself, in the
+section "Post-gate pass 3: external review rounds 2-6"
+(`src/newsletters/published/leader/2026-08-03/2026-08-03.reviews.md`):
+
+- "Six further rounds of external editorial review ran on 2026-08-03 after the gate
+  ledger above was written, so **that ledger describes a text this edition no longer
+  carries** ... the ledger's verdicts attach to superseded artefacts."
+- "**Not re-gated.** The final LinkedIn companion did not get a voice pass after the
+  second rewrite. The prior verdict was stale by then rather than favourable, and the
+  rewrite was a cut rather than an addition, but the gap is real and recorded here rather
+  than left implicit."
+
+The general shape: editing continues after the gate battery terminates, so the recorded
+verdicts attach to superseded text and the final shipped artefact can ship un-regated
+while the ledger reads as though it were gated.
+
+**Why this is this ticket and not a new one.** That is this ticket's defect statement.
+The 2026-08-08 fix (RFC-005 vehicle, ADR-047 decision) is precisely the mechanism: every
+gate verdict records a digest of the artefact version it scored, a lint names any gate
+whose verdict predates the draft being saved, and the skill re-invokes those gates
+against the current draft. Both admissions above are cases that mechanism is built to
+catch -- a LinkedIn voice verdict whose digest no longer matches the post, and a ledger
+whose verdicts as a set predate the saved body.
+
+**Timing, which matters for how this evidence counts.** The reviews file carrying these
+admissions was committed at `bbb6ca1` (2026-08-04); ADR-047 landed at `4f342a6`
+(2026-08-08). This is therefore **pre-fix** evidence. It does not falsify the shipped
+mechanism. What it does is raise the bar for the verification this ticket is already
+waiting on: the next `/wr-newsletter` run that takes post-gate edits must re-run the
+stale gates without Tom asking, **including on the LinkedIn companion after a
+late rewrite**, which is the specific case the pre-fix ledger admits was dropped.
+
+**Distinct from P113, and the distinction is directional.** P113 wants *fewer* gate
+rounds (it targets the editor's one-nit-per-pass loop cost). This wants a *final re-gate
+checkpoint at save* -- one more gate pass, on the last text, after editing stops. The two
+pull opposite ways on the same budget and both are legitimate: P113 reduces the cost per
+round so that this ticket's terminal re-run is affordable. Neither subsumes the other.
+
+**Cross-references.** P117 (closed 2026-08-08; this residue is what its counter-evidence
+read left over after the rest routed to P121, P122 and P113), P121 (prior-edition shape),
+P122 (within-edition assembly), P113 (gate-loop cost, per the paragraph above).
