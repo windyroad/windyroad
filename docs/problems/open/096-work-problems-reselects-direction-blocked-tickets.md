@@ -6,8 +6,6 @@
 **Origin**: internal
 **Effort**: M (upstream work-problems Step 3 selection change)
 **WSJF**: 3.0 = (6 x 1.0) / 2
-**JTBD**: JTBD-006
-**Persona**: plugin-developer
 
 ## Description
 
@@ -59,6 +57,8 @@ This is upstream-bound: the fix lives in `@windyroad/wr-itil` work-problems SKIL
   - P069 (`docs/problems/open/069-work-problems-orchestrator-wsjf-ranking-does-not-factor-placement-authority.md`): distinct trigger, upstream-blocked tickets keyed on `## Reported Upstream` markers.
   - P054 (`docs/problems/open/054-work-problems-skip-just-worked-known-error-pending-push.md`): distinct trigger, just-worked Known Error awaiting push.
 - Upstream-bound: candidate for /wr-itil:report-upstream against `@windyroad/wr-itil`.
+
+**Anchoring: JTBD-400 (Trust what the loop did while I was away), Internal Maintainer persona.** The header lines carried at capture, `**JTBD**: JTBD-006` and `**Persona**: plugin-developer`, have been removed. Both are upstream `agent-plugins` values that leaked in; `plugin-developer` is not one of this repo's five personas, and local JTBD-006, written here on 2026-08-09 on direction given the day before, is an Engineering Leader reader job about navigating an edition, so the citation resolved to something real and unrelated. This ticket is close to the centre of JTBD-400: it is the loop spending an iteration on a ticket it cannot advance, discovering the block, and reporting a skip, which is the job's fifth outcome, that the cost of checking is proportionate to the value returned. The job's own Evidence cites the archived briefing line about exactly this re-selection. The fix site is upstream and already filed, so [JTBD-402](../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md) governs how it lands. The persona and job are `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`, so this anchoring is provisional. Recorded in prose rather than `**JTBD**` / `**Persona**` header lines, per local convention.
 
 ## Reported Upstream
 

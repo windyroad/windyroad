@@ -6,8 +6,6 @@
 **Origin**: internal
 **Effort**: M
 **WSJF**: 3 = (6 x 1) / 2
-**JTBD**: JTBD-006
-**Persona**: plugin-developer
 
 ## Description
 
@@ -51,6 +49,10 @@ Manually write `/tmp/architect-reviewed-<sid>` for each recent candidate runtime
 - Captured via `/wr-itil:capture-problem` on 2026-06-14 during a `/wr-itil:work-problems` AFK iter working P071 (ADR-033 + ADR-035 status flips).
 - Title-only duplicate-check matches surfaced (none exact, retain for review-time merge consideration): P023 (architect-gate drift-detection rms marker without recovery), P021/P022 (architect mark/refresh hash surfaces), P085 (external-comms-gate marker hash invalidated by commit-body changes).
 - The fix should mirror `packages/itil/hooks/lib/create-gate.sh` plus the ADR-050 Option C candidate-set marker write (`get_candidate_session_ids | mark_step2_complete_candidates`) at the architect gate's marker-writing PostToolUse:Agent surface.
+
+**Third witness, 2026-08-09 (P124 iteration).** The recovery instruction picked another session's UUID again, on the same string and by the same mechanism the 2026-08-08 witness above records. Two things worth carrying forward. First, the P124 investigation found that the wrong-SID instruction and the P400 SendMessage note live in the *same* deny string, `wr-architect/0.20.0/hooks/lib/architect-gate.sh:64`, so a single upstream change can fix both and the two tickets should be filed together or in one pull request. Second, P124's own recurrence evidence from 2026-08-05 and 2026-08-08 was filed against verdict-formatting, and cannot have been: the installed 0.20.0 writes the marker on an unparseable verdict. Those blocks were this ticket. P124 now records the re-attribution and the corrected reading, that a block after a genuine PASS on 0.20.0 means the marker went somewhere nobody reads.
+
+**Anchoring: JTBD-400 (Trust what the loop did while I was away), Internal Maintainer persona.** The header lines carried at capture, `**JTBD**: JTBD-006` and `**Persona**: plugin-developer`, have been removed. Neither belonged here. They are upstream `agent-plugins` values, and `plugin-developer` is not one of this repo's five personas at all. Local JTBD-006 does now exist, written in this repo on 2026-08-09, on direction given the day before, as an Engineering Leader reader job about navigating an edition, which makes the citation actively misleading rather than merely dangling: it resolves, to something unrelated. The person this ticket is actually about is modelled in `docs/jtbd/internal-maintainer/`. It is JTBD-400's first outcome, that a surface which cannot run says so rather than producing nothing, read one level in: the gate does say something, and what it says sends the operator to the wrong session. The fix site is upstream and already filed, so [JTBD-402](../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md) governs how it lands. The persona and job are `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`, so this anchoring is provisional. Recorded in prose rather than `**JTBD**` / `**Persona**` header lines, per local convention.
 
 ## Reported Upstream
 

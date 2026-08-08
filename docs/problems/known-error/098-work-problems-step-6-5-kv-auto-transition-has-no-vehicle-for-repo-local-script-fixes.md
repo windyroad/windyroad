@@ -6,8 +6,6 @@
 **Origin**: internal
 **Effort**: M (upstream Step 6.5 release-vehicle class change)
 **WSJF**: 6.0 = (6 x 2.0) / 2
-**JTBD**: JTBD-006
-**Persona**: plugin-developer
 
 ## Description
 
@@ -69,6 +67,8 @@ Manually dispatch a transition iter (`/wr-itil:transition-problem`) to move the 
 - **P092** (`docs/problems/verifying/092-push-watch-pull-rebase-and-transient-error-robustness.md`): the Known-Error ticket whose repo-local `push-watch.sh` fix triggered this observation; manually transitioned to Verification Pending in commit 732b12a because Step 6.5 could not.
 - **P054** (`docs/problems/open/054-work-problems-skip-just-worked-known-error-pending-push.md`): adjacent work-problems Known-Error / pending-push handling; shares the work-problems post-fix-transition surface.
 - Hang-off-check note: the sub-step 2b mechanical pre-filter surfaced more than 5 candidates on the broad `work-problems` / `push-watch` signal, so the fresh-context subagent dispatch was skipped per the candidate-cap latency short-circuit. PROCEED_NEW: no existing ticket scopes the work-problems Step 6.5 release-vehicle-class gap; P092 and P054 are adjacent surfaces, not parents. Defer cluster re-evaluation to /wr-itil:review-problems.
+
+**Anchoring: JTBD-400 (Trust what the loop did while I was away), Internal Maintainer persona.** The header lines carried at capture, `**JTBD**: JTBD-006` and `**Persona**: plugin-developer`, have been removed. Both are upstream `agent-plugins` values; `plugin-developer` is not one of this repo's five personas, and local JTBD-006, written here on 2026-08-09 on direction given the day before, is an Engineering Leader reader job about navigating an edition, so the citation resolved to something real and unrelated. The person this ticket is about is modelled in `docs/jtbd/internal-maintainer/`. The fit is JTBD-400's first outcome, that a surface which cannot run says so rather than producing nothing: Step 6.5 does not report that it found no release vehicle, it simply does not fire, and a ticket whose fix has been live on master for days keeps reading as unshipped. Silence and clean are not the same reading, which is what the three manual transitions recorded above cost. The gap is upstream and already filed, so [JTBD-402](../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md) governs how it lands, and it also names the split this ticket turns on: this is a consumer repo with no npm vehicle, and the upstream assumes one. The persona and job are `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`, so this anchoring is provisional. Recorded in prose rather than `**JTBD**` / `**Persona**` header lines, per local convention.
 
 ## Reported Upstream
 
