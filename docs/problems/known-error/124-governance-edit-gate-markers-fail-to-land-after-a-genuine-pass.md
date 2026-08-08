@@ -2,18 +2,21 @@
 
 **Status**: Known Error
 **Reported**: 2026-08-05
-**Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture. Impact is 3 because no wrong output ships: the gate fails closed, so the cost is a wasted subagent round plus the confusion of a passing review that does not unblock edits. Likelihood is 3 because both causes fired in a single iteration and neither is rare: verdict formatting is agent-authored prose, and SendMessage resumption is the natural way to continue a review that needs another pass.
+**Priority**: 12 (High), Impact: 3 x Likelihood: 4 (re-rated 2026-08-09 from 9, Impact 3 x Likelihood 3). Impact is unchanged at 3: no wrong output ships, the gate fails closed, and the cost is a wasted subagent round plus the confusion of a passing review that does not unblock edits. Likelihood rises to 4 because the investigation both narrowed and widened the ticket, and the widening dominates. One of the two capture-time causes turned out not to be live on the installed version, but the surviving one is not two gates, it is all six, it fires on every `SendMessage` resume by construction, and five of the six give the operator no hint why. Third recorded occurrence in five days.
 **Origin**: internal
-**Effort**: M, derived at capture. Two distinct hook-side fixes in the upstream `wr-architect` (and sibling `wr-jtbd`) plugin: loosen the verdict anchor, and make the marker land on agent-resume. Comparable to P085 (external-comms marker hash invalidation), also rated M.
-**WSJF**: 9.0 = (9 x 2.0) / 2 (added 2026-08-08: the line was absent entirely, so the README rendered this ticket at 0.0 and ranked it last. Value is the post-transition Known Error multiplier per P125.)
-**JTBD**: JTBD-001
-**Persona**: developer
+**Effort**: M, derived at capture. Two distinct hook-side fixes in the upstream `wr-architect` (and sibling `wr-jtbd`) plugin: loosen the verdict anchor, and make the marker land on agent-resume. Comparable to P085 (external-comms marker hash invalidation), also rated M. Re-derived 2026-08-09 after the investigation below: still M, but the shape changed. Cause 1 needs no fix on the version this repo runs, and the remaining work is one sentence added to each of five sibling deny messages in four upstream plugins, mirroring a sentence one of them already ships. Multi-package, mechanically small.
+**WSJF**: 12.0 = (12 x 2.0) / 2 (recomputed 2026-08-09 from the re-rated Priority above, per the P125 discipline of recomputing at every change rather than carrying a stale value. Prior value 9.0 = (9 x 2.0) / 2, added 2026-08-08 when the line was absent entirely and the README rendered this ticket at 0.0. Status multiplier 2.0 is the Known Error value; Effort M divides by 2.)
 
 ## Description
 
 Two independent defects produce the same observable failure: a governance review agent returns a genuine PASS, the reviewing work is complete and correct, and the edit gate still denies the next Write. Each costs a full redundant subagent round to recover.
 
 **Cause 1: the verdict anchor is a literal bold line, and the hook fails closed on anything else.**
+
+> Superseded 2026-08-09, do not act on this section as written. It reasons from `wr-architect`
+> 0.20.2, which this project does not run. The installed 0.20.0 allows on an unparseable verdict, so
+> cause 1 has never been live here and the recurrences filed against it below belong to P088. See
+> Investigation findings.
 
 `architect-mark-reviewed.sh` (wr-architect 0.20.2, `hooks/architect-mark-reviewed.sh` lines 36-66) parses the agent's output with:
 
@@ -44,7 +47,9 @@ A governance review agent returns PASS, the review content is correct and comple
 
 ## Workaround
 
-Fire a fresh `Agent` tool call (not `SendMessage`) and explicitly instruct the agent to emit the verdict in the pinned literal shape, naming the anchor: `**Architecture Review: PASS**` for the architect gate. Both halves are needed: the fresh call is what fires the PostToolUse hook, and the explicit format instruction is what makes the verdict parse.
+Fire a fresh `Agent` tool call (not `SendMessage`), and dispatch it synchronously rather than in the background. That is the half that matters: it is what fires the PostToolUse hook.
+
+Asking for the pinned literal shape `**Architecture Review: PASS**` is still worth doing, but as of the 2026-08-09 investigation it is belt-and-braces on the version this repo runs, not a second necessary half. 0.20.0 writes the marker on an unparseable verdict too. Keep the instruction so the workaround stays correct if 0.20.2 ever installs here, and do not read a block as a formatting problem: on 0.20.0 a block after a genuine PASS is the session-ID mismatch (P088), and the recovery is to assert the marker across every candidate SID, not to re-review.
 
 ## Impact Assessment
 
@@ -57,10 +62,79 @@ Fire a fresh `Agent` tool call (not `SendMessage`) and explicitly instruct the a
 
 ### Investigation Tasks
 
-- [ ] Decide the right tolerance for the verdict anchor. Options: accept the heading form alongside the bold form; parse the verdict token independent of surrounding markdown emphasis; or restore 0.20.0's allow-on-unparseable and accept the weaker audit signal. The 0.20.0-vs-0.20.2 disagreement on the empty-verdict branch suggests this was already contested upstream and needs a decision rather than a patch.
-- [ ] Confirm whether `wr-jtbd`'s `jtbd-mark-reviewed.sh` carries the same anchor fragility. Its verdict path reads `/tmp/jtbd-verdict` written by the agent rather than parsing prose, so it may be immune to cause 1 while still exposed to cause 2.
-- [ ] Establish whether `SendMessage` resumption can fire `PostToolUse:Agent` at all, or whether the fix has to be caller-side (a documented "always use a fresh Agent call for a gated review" rule). If it is caller-side, the SKILLs that dispatch review agents should say so.
-- [ ] Check whether the same resume-does-not-mark gap affects the other marker-writing gates (voice-tone, style-guide, external-comms, risk-scorer commit gate).
+- [x] Decide the right tolerance for the verdict anchor. **Answered 2026-08-09, and the question turned out to be moot here: this repo does not run 0.20.2.** See "Cause 1 does not reproduce on the installed version" below. The 0.20.0-vs-0.20.2 disagreement is real and still worth an upstream decision, but it is not what has been costing rounds in this repo, so it is no longer this ticket's fix.
+- [x] Confirm whether `wr-jtbd`'s `jtbd-mark-reviewed.sh` carries the same anchor fragility. **No.** `wr-jtbd/0.13.0/hooks/jtbd-mark-reviewed.sh:36-56` reads `/tmp/jtbd-verdict` and its `*)` default branch is allow-with-marker, so a missing or unparseable verdict still writes the marker. Immune to cause 1; exposed to cause 2 like every other gate.
+- [x] Establish whether `SendMessage` resumption can fire `PostToolUse:Agent`, or whether the fix has to be caller-side. **Caller-side, on the hooks as they are written today.** Every mark hook identifies its reviewer from `tool_input.subagent_type` (`hooks/lib/gate-helpers.sh:204-213`). A `SendMessage` call carries `to` and `message` and no `subagent_type`, so widening the matcher to `Agent|SendMessage` would fire the hook and then fall straight through the `case "$SUBAGENT"` guard doing nothing. A structural fix needs agent-identity resolution the hooks do not have. The caller-side rule is the affordable one.
+- [x] Check whether the same resume-does-not-mark gap affects the other marker-writing gates. **All of them, uniformly.** See "Cause 2 is one shape across six gates" below.
+
+### Investigation findings (2026-08-09)
+
+Every claim below was read from the plugin copies this project actually loads. Active versions
+were resolved from `~/.claude/plugins/installed_plugins.json`, filtering to the `user` scope and the
+`/Users/tomhoward/Projects/windyroad` project scope: `wr-architect` 0.20.0, `wr-jtbd` 0.13.0,
+`wr-risk-scorer` 0.17.0, `wr-voice-tone` 0.7.0, `wr-style-guide` 0.5.0. Both scopes agree on every
+version, so there is no ambiguity about which copy runs.
+
+**Cause 1 does not reproduce on the installed version, and the Description's premise is wrong for
+this repo.** The Description reasons from `wr-architect` 0.20.2. That build is present in the cache
+but is not installed for this project or for the user scope. The installed 0.20.0 does the opposite
+of what the ticket says: `hooks/architect-mark-reviewed.sh:38-42` sets `VERDICT` to `PASS` only on
+the bold form and to `FAIL` only on the bold ISSUES FOUND form, and lines 51-64 route `PASS|""` to
+allow-with-marker with a comment naming the backward-compat intent. So a heading-form
+`## Architecture Review: PASS` parses to the empty string, takes the `PASS|""` branch, and **writes
+the marker**. On the version this repo runs, only a literal `**Architecture Review: ISSUES FOUND**`
+withholds it.
+
+That matters beyond bookkeeping, because it re-attributes this ticket's own recurrence evidence. The
+2026-08-05 and 2026-08-08 blocks recorded above were both filed against cause 1, and on 0.20.0 they
+cannot have been caused by verdict formatting. The Recurrence note already contains the better
+explanation and stops one step short of drawing it: markers existed for the two newest candidate
+SIDs and the Write was still denied, and asserting across every candidate SID is what unblocked it.
+That is P088, the session-ID mismatch, not a parsing bug. Those witnesses belong on P088.
+
+**Cause 2 is one shape across six gates, not two.** Every governance marker in this stack is written
+by a `PostToolUse` hook whose matcher is the literal string `Agent`, read from each plugin's
+`hooks/hooks.json`: `architect-mark-reviewed.sh`, `jtbd-mark-reviewed.sh`, `risk-score-mark.sh`,
+`voice-tone-mark-reviewed.sh`, `external-comms-mark-reviewed.sh` and `style-guide-mark-reviewed.sh`.
+A `SendMessage` resume is not an `Agent` tool call, so it fires none of them. The ticket frames this
+as an architect-and-maybe-jtbd problem; it is the single shared shape of the whole gate family, and
+it closes investigation task 4 as "yes, all of them".
+
+**It is already fixed for exactly one gate, by documentation, and that fix is the template.**
+`wr-architect/0.20.0/hooks/lib/architect-gate.sh:64` carries a P400 note in its no-marker deny
+message stating cause 2 in terms: a verdict upgrade must be a fresh `Agent` spawn because *"a
+SendMessage resume of the same architect agent does NOT fire the marker hook"*. Searching `hooks/`
+across the four sibling plugins for `SendMessage` returns nothing at all. So five of the six gates
+block on this with a deny message that gives the operator no way to work out why.
+
+The external-comms gate shows the same fix already landing for the neighbouring variant. Its deny
+message (`external-comms-gate.sh:413`, byte-identical in `wr-risk-scorer` 0.17.0 and `wr-voice-tone`
+0.7.0) tells the caller to dispatch the reviewer synchronously because *"a background-launched
+reviewer does not fire its PostToolUse mark hook"* (P402). Background-launch and SendMessage-resume
+are the same defect reached two ways, and one of them is documented at that gate while the other is
+not.
+
+**Fix shape.** Add the P400 sentence to the five sibling deny messages, worded from the architect's
+existing one and placed beside the P402 sentence where that already exists. It is prose in a hook
+string, it needs no new mechanism, and one of the four plugins has already shipped the pattern, so
+it is a clear enough shape to arrive as a pull request rather than an issue under ADR-048. The
+deeper structural fix, making a resume mark the same as a spawn, is a genuinely larger change for
+the reason recorded under Investigation Tasks and should be raised in the same pull request as a
+follow-up rather than attempted in it.
+
+**Fix site is the read-only plugin cache, so this is external-root-cause.** All six mark hooks and
+all five deny messages live under `~/.claude/plugins/cache/windyroad/`, in `windyroad/agent-plugins`.
+This project has no `packages/` tree. Nothing here can be edited durably. The ticket stays Known
+Error rather than moving to Parked, because the ADR-036 park predicate holds on all three counts but
+the un-park trigger has nothing to point at until the outbound artefact exists: park it when the
+pull request is open, not before.
+
+**Line references handed in with this iteration's evidence, checked.** The EOF-only heredoc
+extraction regex is at `external-comms-gate.sh:252` exactly, in both active copies. The claim that
+the marker key includes the surface label is true, but not where it was said to be: the key is
+computed in `hooks/lib/external-comms-key.sh:48-72` as `sha256(normalize(draft) + '\n' + surface)`
+and documented in the gate header at lines 35-36. Line 413 is the deny message. Half of that claim
+held and half did not, which is the same split the handing-over note predicted.
 
 ## Dependencies
 
@@ -75,3 +149,49 @@ Fire a fresh `Agent` tool call (not `SendMessage`) and explicitly instruct the a
 - **P074** (`docs/problems/open/074-...md`): external-comms marker hooks do not write expected marker files after subagent PASS verdicts. Likely the same underlying shape as cause 2 on a different gate; worth checking whether one fix closes both.
 - **P023** (`docs/problems/open/023-...md`): architect-gate drift detection removes the marker without offering a recovery path. Adjacent: that ticket is about losing a valid marker, this one is about never writing one.
 - Captured via `/wr-itil:capture-problem` from the `/wr-retrospective:run-retro` Step 4b Stage 1 pass on the 2026-08-05 P120 iteration. Fix is upstream in the `wr-architect` (and possibly `wr-jtbd`) plugin, not in this repository.
+
+### Evidence triage, 2026-08-09 iteration
+
+The iteration reported roughly four wasted rounds to three marker frictions and proposed an
+attribution for each. Checked against the tickets and against the hooks on disk, all three hold, and
+one of them sharpens an existing witness rather than adding a new one:
+
+- **A PASS delivered by resuming an agent via `SendMessage` never wrote its marker.** This ticket,
+  cause 2. Confirmed as the live cause here, and confirmed to be the shared shape of all six gates.
+- **The architect gate's own manual-recovery instruction selected a different session's UUID.**
+  P088, and not a new finding: P088's Symptoms already record the identical failure on 2026-08-08,
+  quoting the same instruction and naming the same wrong-newest-marker mechanism. Tonight is a
+  further witness on a recorded symptom. The instruction lives in the same deny string as the P400
+  note this ticket wants propagated, so a pull request touching that string should fix both.
+- **One phrase changed after an external-comms PASS invalidated the marker.** P085, squarely: that
+  is the ticket's original framing, widened since to key-derivation asymmetry generally.
+
+The three are easy to conflate because they surface identically, as a genuine PASS that does not
+unblock. They separate cleanly on what the marker did: never written (this ticket), written under a
+key nobody reads (P088), written under a key that then changed (P085).
+
+**Anchoring: JTBD-400 (Trust what the loop did while I was away), Internal Maintainer persona.** The
+header lines carried at capture, `**JTBD**: JTBD-001` and `**Persona**: developer`, have been
+removed. Both were upstream `agent-plugins` values that leaked in and neither resolved here as
+cited: local JTBD-001 is the Engineering Leader Awareness job, retired by ADR-041 on 2026-07-10, and
+`developer` is this repo's reader persona, a working engineer who reads Tokens Spent on LinkedIn.
+Neither has anything to do with a governance-tooling defect. `docs/jtbd/internal-maintainer/` models
+the person who actually pays for this one. The fit is JTBD-400's fifth outcome, that the cost of
+checking is proportionate to the value returned: a gate that fails closed after a genuine PASS
+charges a full subagent round for nothing and gives the operator no way to tell that from a real
+finding. The fix site is upstream, so
+[JTBD-402](../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md)
+governs how it lands. The persona and job are `human-oversight: unconfirmed` pending
+`/wr-jtbd:confirm-jobs-and-personas`, so this anchoring is provisional. Recorded in prose rather
+than `**JTBD**` / `**Persona**` header lines, per local convention.
+
+### Recommended outbound artefact
+
+A pull request against `windyroad/agent-plugins`, not an issue, per ADR-048: the fix shape is clear
+and already has a shipped template in the same codebase. Scope it to the five sibling deny messages
+(`wr-jtbd`, `wr-style-guide`, `wr-voice-tone`, `wr-risk-scorer`, and the two external-comms copies),
+worded from `wr-architect`'s existing P400 note, and raise the structural resume-marks-like-spawn
+option in the pull request body as a follow-up the maintainers decide on. Work it in the ordinary
+clone at `/Users/tomhoward/Projects/agent-plugins` per JTBD-402 outcome 5, never the cache and never
+the managed marketplace checkout. Not filed from this iteration: the iteration was scoped to this
+repository.
