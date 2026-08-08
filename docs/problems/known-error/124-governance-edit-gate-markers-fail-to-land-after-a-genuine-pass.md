@@ -4,7 +4,7 @@
 **Reported**: 2026-08-05
 **Priority**: 12 (High), Impact: 3 x Likelihood: 4 (re-rated 2026-08-09 from 9, Impact 3 x Likelihood 3). Impact is unchanged at 3: no wrong output ships, the gate fails closed, and the cost is a wasted subagent round plus the confusion of a passing review that does not unblock edits. Likelihood rises to 4 because the investigation both narrowed and widened the ticket, and the widening dominates. One of the two capture-time causes turned out not to be live on the installed version, but the surviving one is not two gates, it is all six, it fires on every `SendMessage` resume by construction, and five of the six give the operator no hint why. Third recorded occurrence in five days.
 **Origin**: internal
-**Effort**: M, derived at capture. Two distinct hook-side fixes in the upstream `wr-architect` (and sibling `wr-jtbd`) plugin: loosen the verdict anchor, and make the marker land on agent-resume. Comparable to P085 (external-comms marker hash invalidation), also rated M. Re-derived 2026-08-09 after the investigation below: still M, but the shape changed. Cause 1 needs no fix on the version this repo runs, and the remaining work is one sentence added to each of five sibling deny messages in four upstream plugins, mirroring a sentence one of them already ships. Multi-package, mechanically small.
+**Effort**: M, derived at capture. Two distinct hook-side fixes in the upstream `wr-architect` (and sibling `wr-jtbd`) plugin: loosen the verdict anchor, and make the marker land on agent-resume. Comparable to P085 (external-comms marker hash invalidation), also rated M. Re-derived 2026-08-09 after the investigation below: still M, but the shape changed twice. Cause 1 needs no fix on the version this repo runs. The diff to propose is one sentence added to each of five sibling deny messages in four upstream plugins, mirroring a sentence one of them already ships: multi-package, mechanically small. The structural half stays M rather than growing, because two of the six gates already ship the registry-and-replay mechanism it needs and the remaining work is identifying one tool event and porting existing code, not designing anything.
 **WSJF**: 12.0 = (12 x 2.0) / 2 (recomputed 2026-08-09 from the re-rated Priority above, per the P125 discipline of recomputing at every change rather than carrying a stale value. Prior value 9.0 = (9 x 2.0) / 2, added 2026-08-08 when the line was absent entirely and the README rendered this ticket at 0.0. Status multiplier 2.0 is the Known Error value; Effort M divides by 2.)
 
 ## Description
@@ -64,7 +64,7 @@ Asking for the pinned literal shape `**Architecture Review: PASS**` is still wor
 
 - [x] Decide the right tolerance for the verdict anchor. **Answered 2026-08-09, and the question turned out to be moot here: this repo does not run 0.20.2.** See "Cause 1 does not reproduce on the installed version" below. The 0.20.0-vs-0.20.2 disagreement is real and still worth an upstream decision, but it is not what has been costing rounds in this repo, so it is no longer this ticket's fix.
 - [x] Confirm whether `wr-jtbd`'s `jtbd-mark-reviewed.sh` carries the same anchor fragility. **No.** `wr-jtbd/0.13.0/hooks/jtbd-mark-reviewed.sh:36-56` reads `/tmp/jtbd-verdict` and its `*)` default branch is allow-with-marker, so a missing or unparseable verdict still writes the marker. Immune to cause 1; exposed to cause 2 like every other gate.
-- [x] Establish whether `SendMessage` resumption can fire `PostToolUse:Agent`, or whether the fix has to be caller-side. **Caller-side, on the hooks as they are written today.** Every mark hook identifies its reviewer from `tool_input.subagent_type` (`hooks/lib/gate-helpers.sh:204-213`). A `SendMessage` call carries `to` and `message` and no `subagent_type`, so widening the matcher to `Agent|SendMessage` would fire the hook and then fall straight through the `case "$SUBAGENT"` guard doing nothing. A structural fix needs agent-identity resolution the hooks do not have. The caller-side rule is the affordable one.
+- [x] Establish whether `SendMessage` resumption can fire `PostToolUse:Agent`, or whether the fix has to be caller-side. **Caller-side on the versions this repo pins, but a structural fix is already built upstream and the answer changed mid-investigation.** On the installed hooks, every mark hook identifies its reviewer from `tool_input.subagent_type` (`hooks/lib/gate-helpers.sh:204-213`), and a `SendMessage` call carries `to` and `message` and no `subagent_type`, so widening the matcher alone would fire the hook and then fall straight through the `case "$SUBAGENT"` guard doing nothing. That was the finding, and it was wrong to conclude from it that agent-identity resolution is unavailable. `wr-risk-scorer` 0.18.6 has since built exactly that resolution, described below.
 - [x] Check whether the same resume-does-not-mark gap affects the other marker-writing gates. **All of them, uniformly.** See "Cause 2 is one shape across six gates" below.
 
 ### Investigation findings (2026-08-09)
@@ -121,6 +121,46 @@ it is a clear enough shape to arrive as a pull request rather than an issue unde
 deeper structural fix, making a resume mark the same as a spawn, is a genuinely larger change for
 the reason recorded under Investigation Tasks and should be raised in the same pull request as a
 follow-up rather than attempted in it.
+
+**Upstream has already solved the hard half of this, in two sibling plugins, and that reshapes the ask.**
+Surfaced by the risk scorer while it was scoring this iteration's retro commit, then verified
+directly against the cache. `wr-risk-scorer` 0.18.6, installed for a different project on this
+machine, has collapsed its four `PostToolUse` hooks into one `risk-scorer-dispatch.sh` whose matcher
+is `Agent|Bash|Edit|Skill|Write` plus nine agent-lifecycle events (`spawn_agent`, `wait_agent`,
+`close_agent`, `collaborationinterrupt_agent`, and the `collaboration`- and `multi_agent_v1__`-
+prefixed forms). So the "six hooks, one matcher" finding above is true of the versions this repo pins
+and is already false of a newer build of one of them.
+
+The important part is not the matcher. It is `hooks/codex-agent-completion.mjs`, which answers the
+agent-identity question this ticket recorded as unavailable. At spawn, `rememberSpawn` (lines 39-47)
+reads `tool_input.agent_type` and writes the role to a state file keyed by `agent_id`. On a later
+wait or close, `markTarget` (lines 49-69) reads that role back, synthesises a payload with
+`tool_name: "Agent"` and `tool_input.subagent_type` filled in, and pipes it into `risk-score-mark.sh`
+unchanged. A spawn-time registry plus a synthetic replay: the mark hook never learns it was not
+called by an `Agent` event.
+
+**And the architect plugin already ships the same mechanism, at the exact version this ticket was
+written against.** `wr-architect` 0.20.2 carries its own `hooks/codex-agent-completion.mjs`, a
+single-role variant (`const role = "wr-architect:agent"`, state prefix `codex-architect-`) that
+replays into `architect-mark-reviewed.sh` the same way. It is wired to its own `PostToolUse` matcher
+covering six lifecycle events: `spawn_agent`, `close_agent`, `collaborationspawn_agent`,
+`collaborationinterrupt_agent` and the two `multi_agent_v1__` forms. `wr-architect` 0.20.0, which is
+what this repo runs, has no such file at all.
+
+So the version picture is the opposite of an upgrade recommendation, and this is the single most
+useful thing the investigation produced. 0.20.2 is simultaneously the version that fails closed on an
+unparseable verdict (cause 1, which 0.20.0 tolerates) and the version that adds the lifecycle
+registry (a partial cause 2 fix that 0.20.0 lacks entirely). Upgrading trades one defect for the
+other. Neither 0.20.2's six events nor 0.18.6's nine include anything that reads as a message-resume,
+so the specific gap this ticket is about plausibly survives both.
+
+That settles what the pull request should say. Not "can reviewer identity be recovered from a
+non-`Agent` event" (it demonstrably can, twice over, in their own code), and not "please widen a
+matcher". It should ask which tool event a `SendMessage` resume emits, propose adding that event to
+the registries that already exist in `wr-architect` and `wr-risk-scorer`, propose porting the same
+mechanism to the four gates that have none, and note that 0.20.2's stricter verdict parsing is a
+separate regression against 0.20.0 that a consumer cannot adopt the registry without also adopting.
+The documentation fix stays worth doing alongside, because it is cheap and helps every gate today.
 
 **Fix site is the read-only plugin cache, so this is external-root-cause.** All six mark hooks and
 all five deny messages live under `~/.claude/plugins/cache/windyroad/`, in `windyroad/agent-plugins`.
@@ -190,8 +230,13 @@ than `**JTBD**` / `**Persona**` header lines, per local convention.
 A pull request against `windyroad/agent-plugins`, not an issue, per ADR-048: the fix shape is clear
 and already has a shipped template in the same codebase. Scope it to the five sibling deny messages
 (`wr-jtbd`, `wr-style-guide`, `wr-voice-tone`, `wr-risk-scorer`, and the two external-comms copies),
-worded from `wr-architect`'s existing P400 note, and raise the structural resume-marks-like-spawn
-option in the pull request body as a follow-up the maintainers decide on. Work it in the ordinary
+worded from `wr-architect`'s existing P400 note. Then put the structural proposal in the pull request
+body rather than in the diff: identify which tool event a `SendMessage` resume emits, add it to the
+spawn-registry-and-replay hooks that `wr-architect` 0.20.2 and `wr-risk-scorer` 0.18.6 already ship,
+and port that mechanism to the four gates with none. Cite their code rather than describing the fix
+from scratch; it is already written and already theirs. Flag the 0.20.2 verdict-parsing regression in
+the same body, because as things stand a consumer cannot take the registry without also taking a
+gate that fails closed on an unparseable verdict. Work it in the ordinary
 clone at `/Users/tomhoward/Projects/agent-plugins` per JTBD-402 outcome 5, never the cache and never
 the managed marketplace checkout. Not filed from this iteration: the iteration was scoped to this
 repository.
