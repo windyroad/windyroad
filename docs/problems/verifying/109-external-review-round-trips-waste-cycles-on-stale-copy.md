@@ -207,11 +207,18 @@ six rounds read superseded text. See the P099 relationship section above.
 
 - **2026-08-09** -- Known Error -> Verification Pending
   - **Target URL**: https://github.com/windyroad/agent-plugins/issues/326
-  - **Comment URL**: queued -- see `## Queued Upstream Update`
-  - **Disclosure path**: queued-unresolvable-link
-  - **Gate verdict**: external-comms PASS + voice-tone PASS
+  - **Comment URL**: https://github.com/windyroad/agent-plugins/issues/326#issuecomment-5227652638
+  - **Disclosure path**: posted-comment (queued 2026-08-09, posted 2026-08-09 once `master` was pushed)
+  - **Gate verdict**: external-comms PASS + voice-tone PASS (re-run on the same text in the posting session; both PASSed again)
 
-## Queued Upstream Update
+## Queued Upstream Update -- RESOLVED, posted 2026-08-09
+
+**Posted**: https://github.com/windyroad/agent-plugins/issues/326#issuecomment-5227652638. The halt
+condition below is spent, not waived. `master` was pushed, `git log origin/master..master` is empty,
+and the `blob/master` URL was fetched before posting: HTTP 200, serving this ticket's own text. The
+draft posted verbatim, unchanged from the text both gates passed. Kept below rather than deleted
+because the queue-instead-of-reword decision is this ticket's own defect caught on itself, which is
+the most useful evidence it carries.
 
 - **Drafted**: 2026-08-09
 - **Transition**: Known Error -> Verification Pending
