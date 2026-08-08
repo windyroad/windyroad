@@ -1,6 +1,6 @@
 # Problem 116: Newsletter gates are all floor gates; no adversarial ceiling gate, so external review still finds substance issues every edition
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-07-14
 **Priority**: 16 (High), Impact: 4 x Likelihood: 4, derived at capture from the description
 **Origin**: internal
@@ -79,6 +79,12 @@ Delivered to master 2026-07-14 in commit `4d6a622` (ADR-042 + `wr-newsletter-ske
 In-session validation passed: the skeptic, run against a faithful reconstruction of Issue 13's pre-fix draft, independently caught the thesis overstatement, the exam/laptops causation, the promise/payoff gap, the flat human angle, and the unsourced 744B claim.
 
 **Awaiting verification**: the next real edition (Issue 14) runs `/wr-newsletter` and the skeptic fires in-pipeline at step 15.35 (brief) and 15.55 (LinkedIn), with a `## Skeptic Review` block landing in that edition's `.reviews.md`. Close on that observed evidence. The lower-frequency prompt-tightening classes are tracked separately on P117 and are not part of this verification.
+
+## Closed on published-edition evidence (2026-08-08)
+
+The fix's contract is an adversarial ceiling gate that catches what the floor gates pass. Three editions have run with it (Issues 14, 15, 16) and it returned WEAKNESSES_FOUND on every one, with findings applied rather than waved through. Issue 14: roughly twenty findings applied across prep. Issue 15: findings fixed across two rounds including a kill-switch claim. Issue 16: twelve round-1 findings including several genuine accuracy failures, one an unsupported claim, and its round-2 objection that a framing test was unfalsifiable as posed was adopted into the LinkedIn post as the skeptic's own proposed remedy. That is a ceiling gate finding things the floor gates did not, three editions running.
+
+**Recovery**: `/wr-itil:transition-problem 116 known-error` reopens this if the close was wrong.
 
 ## Dependencies
 

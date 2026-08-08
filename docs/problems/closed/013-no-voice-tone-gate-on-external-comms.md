@@ -1,6 +1,6 @@
 # Problem 013: External-facing text (GitHub comments, LinkedIn teasers, PR bodies, release notes) has no automated voice/tone gate before posting
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-18
 **Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual voice-tone invocation)
@@ -71,6 +71,12 @@ Related but separate: the `wr-voice-tone:agent` should be enhanced with a "scan-
 - The hook part remains pending P012's ship-gate landing. Once P012 ships the PreToolUse infrastructure, the same voice agent is wired into `gh issue comment` / `gh pr create` / `gh release create` / `npm publish` per the strategy in this ticket's Fix Strategy section.
 
 **Out-of-scope-for-this-ticket parts pending P012**: Investigation Tasks 2 and 4. These are bundled with the ship-gate hook surface area; addressing them piecemeal here would just duplicate work P012 will do.
+
+## Closed on published-edition evidence (2026-08-08)
+
+The fix's contract is that external-facing text gets its own voice gate rather than inheriting the brief's. Verified across the four most recent editions (2026-07-13, 07-20, 07-27, 08-03): each carries a distinct LinkedIn-post voice-gate section in its reviews sibling, separate from the brief-body voice review. Fourteen editions have published since the fix shipped and the surface has held on every one checked.
+
+**Recovery**: `/wr-itil:transition-problem 013 known-error` reopens this if the close was wrong.
 
 ## Related
 

@@ -1,6 +1,6 @@
 # Problem 035: /wr-newsletter drafter paraphrases quantitative claims away from source
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Priority**: 16 (Significant). Impact: Major (4) x Likelihood: Likely (4)
@@ -53,6 +53,12 @@ Architect: ALIGNED on the revised separate-sub-heading + sunset-condition framin
 Verification triggers on the next `/wr-newsletter` run that drafts a quantitative claim from a source article body. The drafter should now cite verbatim figures from article bodies, or qualitative phrases when bodies are unavailable, rather than rounding off the news-fetch one-sentence summary.
 
 Awaiting user verification.
+
+## Closed on published-edition evidence (2026-08-08)
+
+The fix's contract is that quantitative claims are verified against source rather than paraphrased away from it. Thirteen published editions carry claim-fidelity sections, and the mechanism is visible in Issue 16's URL Verification block, which distinguishes new-or-changed URLs this phase from prep-phase URLs carrying verdicts forward. The check runs per phase on changed claims rather than being skipped, which is the discipline the ticket asked for.
+
+**Recovery**: `/wr-itil:transition-problem 035 known-error` reopens this if the close was wrong.
 
 ## Related
 

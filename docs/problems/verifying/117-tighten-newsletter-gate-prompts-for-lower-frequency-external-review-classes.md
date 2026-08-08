@@ -56,6 +56,21 @@ Delivered to master 2026-07-15: three prompt/rubric edits to `.claude/skills/wr-
 
 **Awaiting verification**: the next real edition (Issue 14) exercises the sharpened gates in-pipeline. Verify the editor does the per-bullet ATWN sweep, the critic flags abstract so-whats, and the cross-edition gate surfaces any dropped thread in its Notes.
 
+
+## Counter-evidence from published editions (2026-08-08)
+
+**Not closed. The transcripts argue against it.**
+
+The fix's contract is that tightened gate prompts catch the lower-frequency classes internally, so external review stops finding them. Three editions have run since it shipped on 2026-07-15, and Issue 16's reviews sibling records **six further rounds of external editorial review** after the gate ledger was written (`2026-08-03.reviews.md:213-217`), which produced a thesis rewrite, an Item 1 rewrite, a CTA rewrite and an Item 4 re-scope.
+
+That is the opposite of the outcome the fix predicted. External review is still doing heavy lifting on the classes the prompts were tightened for.
+
+Two honest readings, and this ticket does not yet distinguish them:
+1. The prompt tightening did not take, and the ticket should return to Known Error with the Issue 16 rounds as evidence.
+2. The rounds found a *different* class than the ones the prompts targeted, in which case the ticket may still hold and the residue is a separate gap.
+
+Settling it needs a read of what those six rounds actually changed against the specific classes P117 named. Recorded here rather than closed on artefact-presence, which would have recorded shipped as verified.
+
 ## Dependencies
 
 - **Blocks**: (none)
