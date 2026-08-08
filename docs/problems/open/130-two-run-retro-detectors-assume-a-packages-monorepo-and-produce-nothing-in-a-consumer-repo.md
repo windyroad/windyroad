@@ -27,6 +27,8 @@ check-readme-jtbd-currency: packages dir not found: packages
 
 Its own SKILL prose says the detector "always exits 0" and is advisory, so the contract promises a clean-or-drift verdict and delivers a failure string instead. In a consumer repo there are no plugin READMEs to check, so the honest answer is a clean no-op, not an error.
 
+**Third site, found the same day.** `/wr-retrospective:analyze-context` Step 0 is a guard that runs `test -x packages/retrospective/scripts/measure-context-budget.sh` and instructs halting if the primitive is missing. In a consumer repo the test always fails, so the guard would halt the deep layer permanently. It only did not, on 2026-08-08, because Step 1 invokes the same measurement through the correct `wr-retrospective-measure-context-budget` shim, so the analysis proceeded past a guard that had already declared the tool absent. That is worse than the two sites above: a fail-open guard that is wrong in every consumer repo trains its reader to skip it. Recorded in `docs/retros/2026-08-08-context-analysis.md` under Policy Breaches.
+
 ## Symptoms
 
 - Step 3's budget pass produces no output, so the retro has no measured input for the rotation decision it is required to make.
