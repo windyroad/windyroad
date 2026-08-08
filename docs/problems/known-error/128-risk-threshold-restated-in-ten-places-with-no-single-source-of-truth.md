@@ -1,11 +1,11 @@
 # Problem 128: The risk threshold is restated in ten places with no single source of truth
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-07
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4. Impact is 2 because stale governance prose misdirects agent reasoning and burns iteration budget, but it cannot produce a wrong gate verdict: the enforcing hook reads `RISK-POLICY.md` and never the ADRs. Likelihood is 4 because two of the ten restatements are rendered into the compendium section the architect agent is documented to read first, so an agent doing routine compliance review meets the stale value by default.
 **Origin**: internal
 **Effort**: S. A superseding ADR, or amendment sections on two existing ones, plus a compendium refresh. No code.
-**WSJF**: 8.0 = (8 x 1.0) / 1
+**WSJF**: 16.0 = (8 x 2.0) / 1 (re-rated 2026-08-08: Open to Known Error auto-transition, status multiplier 1.0 to 2.0 per P125)
 
 ## Description
 

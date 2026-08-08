@@ -1,11 +1,11 @@
 # Problem 030: work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-04-26
 **Origin**: internal
 **Priority**: 4 (Low). Impact: Minor (2) x Likelihood: Unlikely (2)
 **Effort**: M
-**WSJF**: 2 = (4 x 1) / 2
+**WSJF**: 4.0 = (4 x 2.0) / 2 (re-rated 2026-08-08: Open to Known Error auto-transition, status multiplier 1.0 to 2.0 per P125)
 
 ## Description
 

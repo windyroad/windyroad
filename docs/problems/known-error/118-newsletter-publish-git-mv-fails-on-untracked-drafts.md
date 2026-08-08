@@ -1,11 +1,11 @@
 # Problem 118: Newsletter publish step uses `git mv` on untracked drafts, which fails
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-07-27
 **Priority**: 8 (Medium). Impact: Minor (2) x Likelihood: Likely (4). Derived at capture: trivial workaround, no data/reader impact, but recurs on every publish where drafts were not pre-committed (the default).
 **Origin**: internal
 **Effort**: S (one-line change to the finalise reminder, or a `git add` in the publish flow)
-**WSJF**: 8.0 = (8 x 1.0) / 1
+**WSJF**: 16.0 = (8 x 2.0) / 1 (re-rated 2026-08-08: Open to Known Error auto-transition, status multiplier 1.0 to 2.0 per P125)
 
 ## Description
 

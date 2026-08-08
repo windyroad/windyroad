@@ -1,11 +1,11 @@
 # Problem 058: architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-13
 **Origin**: internal
 **Priority**: 3 (Low). Impact: Moderate (3) x Likelihood: Rare (1)
 **Effort**: S
-**WSJF**: 3 = (3 x 1) / 1
+**WSJF**: 6.0 = (3 x 2.0) / 1 (re-rated 2026-08-08: Open to Known Error auto-transition, status multiplier 1.0 to 2.0 per P125)
 **Type**: technical
 
 ## Description

@@ -1,11 +1,11 @@
 # Problem 126: The deps refresh chain creates a manifest desync and its own recovery path cannot clear it
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-05
 **Priority**: 12 (High), Impact: 3 x Likelihood: 4, derived at capture from the description. Impact is 3 because RISK-POLICY rates a broken or delayed build as Moderate and a red `npm ci` fails at CI's first step, blocking `build` and transitively `gate-accessibility`, `deploy-test` and `release-pr`; nothing reaches readers because `netlify.toml` disables git-triggered builds. Likelihood is 4 because the trigger is not an exotic lockfile shape: it is any dependency update whose resolution changes the lockfile, which is essentially all of them. It fired on the first exercise after P123 shipped.
 **Origin**: internal
 **Effort**: S, derived at capture. One `npm install --package-lock-only` plus a sync assertion in `push-watch.sh`, and a post-checkout sync check in the `fix-deps.sh` rollback. Two small edits to existing scripts, comparable to P123 which was also rated S.
-**WSJF**: 12.0 = (12 x 1.0) / 1
+**WSJF**: 24.0 = (12 x 2.0) / 1 (re-rated 2026-08-08: Open to Known Error auto-transition, status multiplier 1.0 to 2.0 per P125)
 
 ## Description
 

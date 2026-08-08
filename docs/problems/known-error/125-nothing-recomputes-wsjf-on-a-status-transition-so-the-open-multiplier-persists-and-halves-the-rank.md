@@ -1,11 +1,11 @@
 # Problem 125: Nothing recomputes WSJF on a status transition, so the Open multiplier persists and halves the ticket's rank
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-05
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture. Impact is 2 because nothing wrong ships to a reader or visitor: the harm is a mis-ranked dev-work queue, and `/wr-itil:work-problems` Step 3 selects top-to-bottom from that queue, so a halved rank silently defers real work. Likelihood is 4 because every Open to Known Error transition is exposed, no control covers the multiplier, and the same arithmetic surface has now produced five recorded errors.
 **Origin**: internal
 **Effort**: S, derived at capture. The fix is a pre-flight checklist line in the transition path (mirroring the Effort re-rate clause already there), optionally plus an arithmetic self-check in `reconcile-readme` that recomputes WSJF from the ticket's own stated Severity, Status and Effort rather than trusting the stored value. Single-surface prose edit plus an optional check in an existing script; cf. P114, also rated S.
-**WSJF**: 8.0 = (8 x 1.0) / 1
+**WSJF**: 16.0 = (8 x 2.0) / 1 (re-rated 2026-08-08: Open to Known Error auto-transition, status multiplier 1.0 to 2.0 per P125)
 **JTBD**: JTBD-001
 **Persona**: developer
 

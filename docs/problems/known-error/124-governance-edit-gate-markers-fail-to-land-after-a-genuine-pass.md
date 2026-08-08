@@ -1,10 +1,11 @@
 # Problem 124: Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-05
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture. Impact is 3 because no wrong output ships: the gate fails closed, so the cost is a wasted subagent round plus the confusion of a passing review that does not unblock edits. Likelihood is 3 because both causes fired in a single iteration and neither is rare: verdict formatting is agent-authored prose, and SendMessage resumption is the natural way to continue a review that needs another pass.
 **Origin**: internal
 **Effort**: M, derived at capture. Two distinct hook-side fixes in the upstream `wr-architect` (and sibling `wr-jtbd`) plugin: loosen the verdict anchor, and make the marker land on agent-resume. Comparable to P085 (external-comms marker hash invalidation), also rated M.
+**WSJF**: 9.0 = (9 x 2.0) / 2 (added 2026-08-08: the line was absent entirely, so the README rendered this ticket at 0.0 and ranked it last. Value is the post-transition Known Error multiplier per P125.)
 **JTBD**: JTBD-001
 **Persona**: developer
 
