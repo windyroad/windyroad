@@ -1,6 +1,6 @@
 # Problem 099: wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-06-22
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-08-05 review, up from a deferred 6: Impact 4 per RISK-POLICY "pipeline ships poor-quality content past one of the ... gates ... indicates gate weakness" -- Issue 16's publish-morning thesis rewrite shipped without cross-edition or skeptic re-validation. Likelihood 4 because post-gate external-review edits are now routine on every edition and no hook or automated check covers the re-run, which the ticket's own Fix Strategy records as infeasible.)
 **Origin**: internal
@@ -65,6 +65,43 @@ Added `### 15.6. Post-gate edit discipline: a body edit re-enters the FULL gate 
 ## Fix Released
 
 Discipline rule shipped to `.claude/skills/wr-newsletter/SKILL.md` (§15.6 + failure-modes cross-reference) in this commit. Repo-local skill change, no npm release. Awaiting verification that the rule fires on the next edition that takes post-gate body edits.
+
+
+## Fix Released (2026-08-08)
+
+The 2026-06-22 prose rule is superseded. Shipped across four commits: RFC-005 (the
+vehicle), ADR-047 (the two calls Tom made), and the implementation.
+
+**What changed.** Every gate verdict now records a digest of the artefact version it
+scored. A new lint check names any gate whose verdict predates the draft being saved, and
+the skill re-invokes those gates against the current draft rather than reporting a list.
+Tom's direction: "I don't want it just telling me that the review hasn't been run. I want
+to actually run the missing reviews."
+
+**Verified by replaying this ticket's own event.** On the Issue 16 artefacts, appending a
+publish-morning thesis correction to the brief names exactly the brief-scored gates and
+leaves the post-scored one alone.
+
+**Awaiting Tom's verification**: the next `/wr-newsletter` run that takes post-gate edits.
+The test is whether the missing reviews re-run without him asking.
+
+**Two things to watch.**
+
+The check is tuned to over-report, per Tom's choice, so some re-runs will prove
+unnecessary. That is the accepted trade against silence on a real miss, and it spends
+agent invocations at the busiest moment of the week. If publish mornings start running
+long, ADR-047 is a contributor.
+
+The custody invariant is the weak point and is recorded as such rather than claimed as
+solved: a verdict block that was not re-scored must be copied verbatim with its digest,
+and that is a prose rule of the same enforcement class as the one this ticket records as
+having failed. The lint now catches the common breach (a carried block that lost its
+digest) but not the narrower one (a block paraphrased while its digest string is copied
+across). ADR-047 and RFC-005 both state this rather than dressing it as structural.
+
+**Second-order finding this fix produced.** ADR-046's out-of-scope declaration leans on
+this ticket's invariant as a backstop. Until a run exercises the new check, that backstop
+is intent rather than enforcement, and ADR-046 carries a caveat saying so.
 
 ## Dependencies
 
