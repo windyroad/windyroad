@@ -1,6 +1,6 @@
 # Problem 011: Visual artifacts iterated and presented without render-and-verify discipline
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-17
 **Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; render-and-verify workaround documented in BRIEFING.md)
@@ -64,6 +64,12 @@ Longer-term:
 - [x] Add a "render and verify" reminder to the Logo section of any skill that produces visual output (done 2026-04-25: discipline note added to `.claude/skills/wr-newsletter/SKILL.md` step 12; same pattern already lives in `wr-wardley:generate` step 9-10)
 - [x] Consider whether a shared helper script is warranted for SVG-to-PNG conversion (done 2026-04-25: `scripts/render-svg.mjs` wraps `sips -s format png -Z <size> in.svg --out out.png`; smoke-tested against `src/newsletters/assets/the-shift-logo.svg`)
 - [ ] Project-level convention extraction (CLAUDE.md or similar) is deferred. Effort is S only because items 1 and 2 are scoped to the newsletter skill; whether the pattern generalises to a project-wide convention is a separate design question to revisit if a third visual-output workflow appears.
+
+## Closed on session-observed evidence (2026-08-08)
+
+The fix's contract is that a visual artefact is rendered AND read back before being presented. Exercised this session on the P037 cover render: `scripts/render-cover.mjs` emitted its verify directive ("now Read <path> to verify before shipping"), the PNG was read back with the Read tool, and the render was confirmed visually before any claim was made about it. The discipline fired end to end without prompting.
+
+**Recovery**: `/wr-itil:transition-problem 011 known-error` reopens this if the close was wrong.
 
 ## Related
 

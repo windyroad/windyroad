@@ -1,6 +1,6 @@
 # Problem 123: fix:deps gates on vitest only, so a lockfile npm ci cannot install passes locally and reddens master
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-08-05
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture from the description. Impact is 3 because RISK-POLICY rates a broken or delayed build as Moderate, and a red `build` job blocks the whole delivery graph: `gate-accessibility` and `deploy-test` declare `needs: build` directly, and `release-pr` is blocked transitively through `needs: [deploy-test]`. Likelihood is 3 because the uncovered surface is not lockfile shape, it is three entire CI steps: `fix:deps` gates on `npm test` (vitest) and the commit must then survive `npm ci`, `npm run lint`, `npm run deps:check` and `npm run build`, none of which run locally. The dominant member of that class is not an exotic lockfile shape but an ordinary dependency upgrade breaking the static export or the lint config. The EBADPLATFORM instance is one draw from that population, not the population. The observed base rate is one failure in one exercise, and the workaround is operator discipline rather than an automated control.
 **Effort**: S, derived at capture. Add `npm run build` and an install-shape check to the flow's green gate at `scripts/fix-deps.sh:146`. One-line-plus change to an existing conditional.
@@ -108,6 +108,12 @@ Exercised in-session, on the pieces that can be exercised without a real depende
 **What to look for on the next `npm run fix:deps` run**: the flow should print "Running the CI-parity gate before committing" and, on green, "Lockfile shape, lint, tests and build all green". The fix is working if a dependency refresh that would have reddened master instead halts locally, naming which gate failed, with the manifests restored. It is NOT working if a `fix:deps` commit again passes locally and fails CI at `npm ci` or `npm run build`, or if the gate halts on something CI would have accepted (a false positive from the shape scan, which would show as a violation key that `npm ci` installs fine).
 
 This is also the re-armed test of ADR-034 Confirmation criterion (d). The next real dep issue is the one that says whether the flow now handles a dependency change end-to-end.
+
+## Closed on session-observed evidence (2026-08-08)
+
+The fix's contract is that a lockfile which `npm ci` cannot install is caught before commit, rather than passing a vitest-only gate. Exercised directly: sourcing `scripts/fix-deps.sh` with FIX_DEPS_LIB_ONLY=1 and running `lockfile_platform_flag_violations` against a seeded lockfile (a platform-constrained entry with os/cpu but no optional flag) returned exactly that package by name. The same helper against the live `package-lock.json` returned zero violations. Detects the seeded EBADPLATFORM shape, quiet on a healthy tree.
+
+**Recovery**: `/wr-itil:transition-problem 123 known-error` reopens this if the close was wrong.
 
 ## Dependencies
 

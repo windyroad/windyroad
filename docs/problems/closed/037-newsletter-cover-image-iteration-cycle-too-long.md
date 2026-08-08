@@ -1,6 +1,6 @@
 # Problem 037: /wr-newsletter cover-image step requires 15+ iteration rounds; brand-asset grep + font-rendering diagnostics missing
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-01
 **Origin**: internal
 **Priority**: 12 (Significant). Impact: Moderate (3) x Likelihood: Likely (4) (re-rated 2026-05-10 per ADR 027: cover-image iteration is pre-publish pipeline disruption at L3 Moderate)
@@ -74,6 +74,12 @@ A "Follow-up" line points to P044 for the full templated solution so future read
 **Confirmation criterion**: next /wr-newsletter run produces a cover image in fewer than 5 iteration rounds (vs the documented 15+ rounds in the 2026-05-01 baseline) with no brand-mark, monogram, or font-weight reverts. If the next finalise hits more than 5 rounds, this resolution is insufficient; escalate to P044.
 
 **Status transition**: Open → Known Error. P044 remains Open and tracks the full templated-skill build that would convert this from a documented procedure into a deterministic generation step.
+
+## Closed on session-observed evidence (2026-08-08)
+
+The fix's contract is that a cover renders correctly without the 15-plus iteration rounds the ticket records. Exercised once, in one pass: `node scripts/render-cover.mjs` against the shipped template produced a correct 1200px cover on the first invocation. Verified visually per P011 discipline: brand mark, wordmark, subtitle with issue number, both hook lines on one line each with no wrap or clip, week-ending stamp, site line. No font-substitution artefacts of the kind the ticket's Symptoms describe.
+
+**Recovery**: `/wr-itil:transition-problem 037 known-error` reopens this if the close was wrong.
 
 ## Related
 

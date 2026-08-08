@@ -1,6 +1,6 @@
 # Problem 012: No CI-status check on push/release; conditional-commitment verification missing
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-18
 **Origin**: internal
 **Transitioned to Known Error**: 2026-04-25 (review pass: root cause confirmed; workaround = manual Tom-in-the-loop review)
@@ -114,6 +114,12 @@ Fix scope narrowed to **CI-status check on push/release**. The conditional-commi
 Effort drops L to S (CI-status piece only); WSJF rises 6.0 to 24.0 with Known Error multiplier 2.0.
 
 Reference: 2026-04-27 retro session.
+
+## Closed on session-observed evidence (2026-08-08)
+
+The fix's contract is that a push waits for CI rather than reporting success optimistically. Exercised four times this session (`npm run push:watch` at the RFC-004, ADR, P108 and P099 landings). Each run executed its pre-steps, pushed, waited for the pipeline to complete, and surfaced the test-deploy URL only after the workflow finished. No run reported success against a stale SHA, which is the P054/P060 failure class this fix addresses.
+
+**Recovery**: `/wr-itil:transition-problem 012 known-error` reopens this if the close was wrong.
 
 ## Related
 
