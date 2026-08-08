@@ -227,10 +227,10 @@ _45 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** One parked ticket driven end to end as an upstream pull request, landed and; /wr-itil:report-upstream prefers a pull request over an issue when the; The unscored-diff surface is either closed or carries its own ticket.; ADR-036 carries both halves of the reciprocal amendment link: a bullet in
 **Related:** ADR-036, ADR-008, ADR-012, ADR-015, ADR-045
 ### ADR-049 - Risk label bands adopt the 3-5 Low shape, so a residual of 5 is called what it is
-**Status:** proposed | **Oversight:** unconfirmed
-**Decides:** Adopts the upstream 3-5 Low band shape so an admissible residual of 5 reads as Low rather than as an accepted Medium, while keeping the numeric appetite threshold and the composition constraint that excludes a 5 composed as impact 1 x likelihood 5. No pass/fail outcome changes anywhere - the commit gate compares the product against the threshold and never reads the band table.
-**Confirmation:** `RISK-POLICY.md` bands, unchanged appetite value and retained composition constraint verified by `wr-risk-scorer:policy` (PASS); gate parse of the amended file traced by `wr-risk-scorer:pipeline` before the commit landed, scoring 4 (Low); this compendium entry carries the section's derived counts, hand-corrected because the entry-writing hook does not update them; open - a pipeline assessment lands a residual of exactly 5 printed as Low with its likelihood-1 control named; open - Tom ratifies via `/wr-architect:review-decisions`
-**Related:** upstream ADR-086 (agent-plugins, precedent not authority), ADR-007, ADR-008, ADR-027
+**Status:** proposed | **Oversight:** confirmed
+**Decides:** Adopts the upstream 3-5 Low band shape so an admissible residual of 5 reads as Low rather than as an accepted Medium, keeping the numeric appetite threshold unchanged and retaining the composition constraint that excludes a 5 composed as impact 1 x likelihood 5. No pass/fail outcome changes anywhere - the commit gate compares the product against the threshold and never reads the band table.
+**Confirmation:** `RISK-POLICY.md` bands, unchanged appetite value and retained composition constraint verified by `wr-risk-scorer:policy` (PASS); gate parse of the amended file traced by `wr-risk-scorer:pipeline` before the commit landed, scoring 4 (Low); compendium entries written by the `architect-compendium-update-entry.sh` hook, with em-dashes scrubbed and the section's derived counts corrected by hand; open - a pipeline assessment lands a residual of exactly 5 printed as Low with its likelihood-1 control named; ratified by Tom in session on 2026-08-09
+**Related:** upstream ADR-086 (agent-plugins, precedent not authority), ADR-007, ADR-008, ADR-027, P128, P082
 
 ---
 

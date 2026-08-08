@@ -90,7 +90,7 @@ The benign case is the design constraint.
 
 - [x] Investigate root cause. Done: the upstream changeset-discipline hook is `packages/`-scoped and structurally inert in a consumer repo, and the existing push-watch nudge is advisory and already observed to fail. Recorded above.
 - [x] Create reproduction test. Reproduced by inspection rather than by execution, because executing it means shipping a stale site: `git ls-tree origin/publish` versus `origin/master` on the ADR-041 range, plus the always-allow branch in `changeset-detect.sh`. The durable test is the drift test specified in the Fix Strategy, which fails when a build input stops being covered.
-- [ ] Blocked, needs Tom: ratify the `internal-maintainer` persona and JTBD-400/401/402 via `/wr-jtbd:confirm-jobs-and-personas`. The JTBD reviewer will not pass the change while it reasons from an unratified persona.
+- [x] Ratify the `internal-maintainer` persona and JTBD-400/401/402. Done 2026-08-09: Tom ratified all four in session (commit `cc68d4f`), read file by file; verified on disk, each carries `human-oversight: confirmed` with `oversight-date: 2026-08-09`. The unratified-persona objection the JTBD reviewer would have raised no longer exists. See blocker 1 in the Fix Strategy.
 - [ ] Blocked, needs Tom: two jobs are missing and neither is an agent's to write. See the Fix Strategy's blocked-on section.
 
 ## Fix Strategy
@@ -198,7 +198,10 @@ tooling, which is the class ADR-036 warns about and the class ADR-028 and ADR-02
 got an ADR for. It carries a retirement clause naming what gets deleted when upstream
 path-scoping lands, modelled on ADR-028's "delete the script and the call sites", and
 ships `human-oversight: unconfirmed` on the ADR-049 precedent for Tom to drain via
-`/wr-architect:review-decisions`. It must land in the same commit as the implementation,
+`/wr-architect:review-decisions`. Note that the precedent has since been drained: Tom read
+and ratified ADR-049 in session on 2026-08-09, so as of that date no ADR on disk carries
+`human-oversight: unconfirmed`. Shipping this one unconfirmed would re-open the axis rather
+than join an existing queue, so prefer draining it in the same session it lands. It must land in the same commit as the implementation,
 or a later review fires on an ADR reference that is not yet on disk. Every cross-series
 reference in it is written as `upstream ADR-NNN (agent-plugins)`, since this repo and
 the upstream both number from 001. `docs/decisions/README.md` is regenerated and staged
@@ -211,9 +214,20 @@ changeset by its own rule, the rule would be wrong.
 
 **Blocked on, and neither is an agent's call:**
 
-1. **Ratification.** The design reasons from the `internal-maintainer` persona and
+1. ~~**Ratification.** The design reasons from the `internal-maintainer` persona and
    JTBD-400/401/402, all `human-oversight: unconfirmed`. The JTBD reviewer will not pass
-   while executable code is built on an unratified anchor. `/wr-jtbd:confirm-jobs-and-personas`.
+   while executable code is built on an unratified anchor.
+   `/wr-jtbd:confirm-jobs-and-personas`.~~
+
+   **Discharged 2026-08-09.** Tom ratified the persona and all three jobs in session that
+   day (commit `cc68d4f`); verified on disk, `docs/jtbd/internal-maintainer/persona.md` and
+   each of JTBD-400/401/402 carry `human-oversight: confirmed` with
+   `oversight-date: 2026-08-09`. **P115's fix is unblocked on this count**: the anchor is
+   ratified, so the unratified-anchor objection the JTBD reviewer would have raised no
+   longer exists and executable code may be built on it. This blocker was held open on a
+   claim that had already stopped being true.
+
+   Blocker 2 below is untouched by that and is still live, so P115 is not unblocked overall.
 2. **Two missing jobs.** The release path has no job on either side and no row in the
    Job-to-Screen Mapping. The reader side has no outcome saying the site should reflect
    what the project currently means, so the stale funnel week is legible only as "a
