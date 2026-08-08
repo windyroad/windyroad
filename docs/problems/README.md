@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-08 **P133 captured** -- the assistant composes its output for a reader at a desktop with the repo open, but Tom's interface is a phone, so ratification asks arrive unactionable: wide multi-column status tables, bare ticket IDs and file paths treated as openable, and "I'll draft it and bring it to you" with nothing attached. Three instances in one session. It is rated above ordinary format friction because of where it lands: the project's stance is that humans ratify decisions while gates carry code quality, so ratification is the one place a human is on the critical path, and an ask the reader cannot act on either stalls the loop or gets waved through unread, which hollows out the oversight marker the stance depends on. Fix direction is to deliver the artefact with `SendUserFile` AND state the decision in the message so it is actionable without opening anything, prefer prose over tables, and never assume the reader carries the session's context. Arbitrated against P107 and P061 at capture; both PROCEED_NEW on distinct fix loci (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-08-09 **P129 known error** -- sourcing `scripts/push-watch.sh` or `scripts/fix-deps.sh` to reach a pure helper ran the entire flow, because the `*_LIB_ONLY` seam is opt-in rather than fail-safe; on 2026-08-08 that stashed, rebased, auto-updated dependencies and pushed four already-committed commits to `origin/master` from a session whose instructions said not to push. All three side-effecting scripts now refuse a source, including `scripts/release-watch.sh`, which Investigation Task 4 found carries the same shape with worse consequences (`gh pr merge` plus `git push`). Each guard sits above every side-effecting line AND above `set -euo pipefail`, so a read-only probe cannot leave errexit and nounset switched on in the calling shell either; both existing seams stay verbatim as the contract the harnesses bind against. Fix committed `8ad2dba` with asserting cases in three test files, confirmed RED before the guards were written, plus a case pinning that `package.json` still invokes all three as `bash scripts/<name>.sh`, which is the only reason the guards are inert on the executed path. Held at Known Error rather than Verification Pending: wr-itil ADR-022 requires a released fix and this iteration must not push.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,6 +9,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
+| 18.0 | P129 | Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in | 9 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact | 6 | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
@@ -16,7 +17,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 10.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Open | S | 2026-08-08 | internal |
 | 9.0 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 9 | Known Error | M | 2026-07-06 | internal |
 | 9.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 9 | Known Error | M | 2026-08-05 | internal |
-| 9.0 | P129 | Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in | 9 | Open | S | 2026-08-08 | internal |
 | 8.0 | P114 | wr-newsletter step 15.5 tells the LinkedIn post to close with a windyroad.com.au sign-off, but VOICE-AND-TONE.md's auto-share carve-out forbids any manual URL in the post body | 4 | Known Error | S | 2026-07-13 | internal |
 | 8.0 | P061 | assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared | 8 | Known Error | M | 2026-05-14 | internal |
 | 8.0 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 8 | Known Error | M | 2026-06-03 | internal |

@@ -1,9 +1,10 @@
 # Problem 129: Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-08
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture from the description. Impact is 3 because the flow that runs unguarded is `scripts/push-watch.sh`, which stashes, rebases, auto-updates dependencies, and pushes: RISK-POLICY rates a broken or delayed build as Moderate, and an unintended push can publish work the session was not ready to publish. It is not higher because the push carries only already-committed work and nothing is destroyed. Likelihood is 3 because probing a pure helper is a routine thing to want, both affected scripts expose helpers worth probing, and the correct incantation is easy to omit under time pressure. Observed once on 2026-08-08.
-**Effort**: S, derived at capture. One guard clause per script plus a case in each existing test file. Comparable to P123 and P126, both rated S for edits of this size to the same two scripts.
+**Effort**: S, derived at capture, re-rated S at the Known Error transition 2026-08-09 (P047). The delivered scope was larger than the capture estimate in two ways: a third script (`scripts/release-watch.sh`) picked up the guard once Investigation Task 4 found the same shape there, and each of the three test files carries three asserting cases rather than one. It still landed inside a single iteration, so the bucket does not move; recorded so the growth is visible rather than inferred from the diff.
+**WSJF**: 18.0, recomputed at the Known Error transition 2026-08-09 (Severity 9 x Known-Error multiplier 2.0 / Effort-S divisor 1.0). It was 9.0 while the ticket was Open. The ticket carried no WSJF line before this transition, which is the P124 shape; the line is added here so the value lives on the ticket rather than only in the README cache.
 
 ## Description
 
