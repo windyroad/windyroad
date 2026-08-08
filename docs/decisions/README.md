@@ -46,8 +46,9 @@ _45 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-007 - Use impact x likelihood product for risk scoring
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **Impact x likelihood product**, because it is the simplest formula that gives both dimensions proportional influence. The 1-25 scale maps naturally to five label bands, and the commit threshold (`< 5`) cleanly separates Low ...
-**Confirmation:** RISK-POLICY.md reflects the product formula, label bands, and threshold; risk-scorer agent outputs N/25 (Label) format; Commit gate blocks at score >= 5; Prompt hook nudge triggers at score >= 5
+**Decides:** Residual risk is scored as impact x likelihood on a 1-25 scale with five label bands, replacing max(impact, likelihood), because a product lets both dimensions contribute proportionally and distinguishes high-impact/low-probability from low-impact/high-probability changes. Amended twice since: the commit threshold and the Low/Medium band boundaries both moved, and RISK-POLICY.md is the source of truth for those two values.
+**Confirmation:** RISK-POLICY.md reflects the product formula, label bands, and threshold; risk-scorer agent outputs N/25 (Label) format; commit gate and prompt hook nudge fire at the policy threshold (figures in this record are point-in-time)
+**Related:** ADR-009, ADR-049
 
 ### ADR-008 - Action-specific pipeline risk management
 **Status:** proposed | **Oversight:** confirmed
