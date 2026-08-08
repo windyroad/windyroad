@@ -4,7 +4,7 @@
 **Reported**: 2026-08-08
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description. Impact is 2 because nothing reader-facing is at stake: the evaluator is dev tooling whose verdict feeds an orchestrator or operator decision, and both observed failures were caught before anything closed. It is not 1 because the failure direction is toward loss rather than friction: the verdict is a confident CLOSE on a live ticket, phrased with cited evidence, on a surface where an operator batch-reviewing 24 candidates is invited to trust it. Likelihood is 4 because nothing automated checks the verdict, it fired on two independent surfaces on the same day through two different shapes, and one review pass surfaced 24 candidates of which none survived verification.
 **Origin**: internal
-**Effort**: S, derived at capture. Two localised predicate changes in one script (qualify shape 2's ADR match; gate shape 5 on the declared relationship) plus cases alongside the existing `packages/itil/scripts/test/evaluate-relevance.bats` fixtures. Same size class as P129 and P131, both rated S for guard-clause changes in a single script.
+**Effort**: S, derived at capture. Two localised predicate changes in one script (qualify shape 2's ADR match; gate shape 5 on the declared relationship) plus cases alongside the existing `packages/itil/scripts/test/evaluate-relevance.bats` fixtures. Same size class as P129 and P131, both rated S for guard-clause changes in a single script. Witness C (2026-08-09) adds a third predicate change, a remedy-vs-mention test on shape 2. Still S, still one script, but it is at the top of the band now rather than the middle.
 **WSJF**: 8.0 = (8 x 1.0) / 1
 
 ## Description
@@ -15,13 +15,55 @@ The wr-itil relevance evaluator (`packages/itil/scripts/evaluate-relevance.sh`, 
 
 **Shape 5 (`driver-child-ticket-closed`)** parses the `## Related` section for `P<NNN>` refs and counts any closed one as a closed "driver". It never checks whether the ticket declared that ref as a driver rather than as a "composes with ... distinct concerns" sibling, so mere co-mention in `## Related` is treated as a dependency.
 
-Two independent witnesses on 2026-08-08, through two different shapes, both failing in the expensive direction (a confident CLOSE on a ticket that must stay open).
+Three independent witnesses, all failing in the expensive direction (a confident CLOSE on a ticket that must stay open). Two on 2026-08-08 through two different shapes, and a third on 2026-08-09 where both shapes fired on one ticket at once and shape 2 failed in a second, distinct way.
 
 **Witness A**, `/wr-itil:review-problems` Step 4.6: 24 candidates surfaced, 0 survived verification, nothing closed. Reproduced by running the script directly: P055 cites upstream ADR-013/014/032 and the evaluator cited local `docs/decisions/013-no-automated-linkedin-scraping.proposed.md` and `014-wardley-mapping-as-strategic-lens.proposed.md` as the shipped evidence; P054 cites the upstream Decision-Delegation Contract ADR-044 and the evaluator cited local `044-cross-edition-shape-as-a-fresh-context-subagent-gate.proposed.md`.
 
 **Witness B**, `/wr-itil:work-problems` Step 3.6, this session: P118 returned `CLOSE-CANDIDATE-WITH-CAVEAT` citing P040/P041/P078 as closed drivers, but P118 lists those three under "Composes with ... same publish/draft-lifecycle area, distinct concerns", and P118 is a live, reproduced bug. The orchestrator overrode the verdict as a false positive.
 
-Fix direction: qualify shape 2's ADR match by repo or namespace (or drop bare-number matching entirely), and gate shape 5 on the relationship the ticket actually declares rather than on mere presence in `## Related`.
+**Witness C**, `/wr-itil:work-problems` Step 3.6, 2026-08-09, on P115. Both shapes fired on one
+ticket at once. Reproduced directly by running
+`wr-itil-evaluate-relevance docs/problems/known-error/115-site-changes-without-changeset-silently-never-release-to-production.md`,
+which exits 0 and emits a single `CLOSE-CANDIDATE-WITH-CAVEAT` line. Decomposed into its fields
+(the script prints them on one line, separated by long dashes this repo's edit gate will not accept
+verbatim):
+
+```
+verdict: CLOSE-CANDIDATE-WITH-CAVEAT
+ticket:  115-site-changes-without-changeset-silently-never-release-to-production.md
+shapes:  ADR-shipped-confirmed,driver-child-ticket-closed
+caveat:  multi-phase-mixed-progress: 0 task(s) done, 2 outstanding, confirm umbrella scope before close
+cites:   ADRs human-oversight-confirmed: ADR-041 (docs/decisions/041-retire-consulting-funnel-repurpose-as-the-shift-hub.proposed.md);
+         drivers closed: P012 (docs/problems/closed/012-no-ship-gate-on-push-publish-deploy.md)
+```
+
+The shape 5 half repeats Witness B exactly: P115 lists P012 under `**Composes with**`, and its
+`## Related` spells out the distinction in words, "P012 gates on red CI; this ticket is the distinct
+missing-changeset-authoring nudge". The evaluator reads the number and not the sentence disowning it.
+
+**The shape 2 half is a different failure mode from Witness A, and that is what makes Witness C
+worth recording.** ADR-041 is genuinely local, correctly resolved, and genuinely
+`human-oversight: confirmed`. There is no cross-repo number collision anywhere in this one. The
+verdict is still wrong, because P115 does not cite ADR-041 as its fix. It cites it as its
+**exhibit**: ADR-041's consulting-funnel retirement is the change that sat unreleased on master for
+a week, which is the concrete failure the ticket was filed to describe. Shape 2 cannot tell "the ADR
+that fixed this" from "the ADR whose release this ticket is about".
+
+The dates make the inversion exact. ADR-041 was oversight-confirmed 2026-07-14 and P115 was reported
+2026-07-14. Both entries date from the one session where Tom saw the old funnel still live and asked
+"did you release???", so the ADR was confirmed and the ticket was filed because of the same failure.
+The evidence shape 2 cites as proof of closure is the defect's own footprint.
+
+This widens the root cause below. Namespace qualification alone would not have caught Witness C:
+shape 2 also has to establish that a confirmed ADR is the citing ticket's *remedy* rather than
+merely a number present in its body. It is also direct evidence for the upstream `#306` mode (a
+genuinely local, genuinely confirmed ADR read as proof the citing ticket's work shipped), which
+strengthens the case recorded below for folding `#414` into `#306`.
+
+Fix direction: qualify shape 2's ADR match by repo or namespace, AND require the matched ADR to be
+the ticket's declared fix rather than any ADR named anywhere in its body (Witness C fails the second
+test even with the first in place); gate shape 5 on the relationship the ticket actually declares
+rather than on mere presence in `## Related`.
 
 ## Symptoms
 
@@ -44,7 +86,11 @@ Read the cited evidence back against the ticket body before acting on any CLOSE 
 
 Both shapes are string-presence tests standing in for semantic relationships.
 
-Shape 2 treats an ADR number as globally unique when it is only unique within a repo. This repo and the upstream agent-plugins repo both number ADRs from 001, and local tickets cite both, so the namespace is genuinely ambiguous in the ticket text.
+Shape 2 fails in two independent ways, and each needs its own fix.
+
+First, it treats an ADR number as globally unique when it is only unique within a repo. This repo and the upstream agent-plugins repo both number ADRs from 001, and local tickets cite both, so the namespace is genuinely ambiguous in the ticket text. That is Witness A.
+
+Second, and only visible once the first is set aside, it treats *any* ADR named in the ticket body as the ticket's remedy. A ticket names ADRs for many reasons: the decision that caused the defect, the decision the defect was found while working on, a precedent argued against. Witness C is the sharpest case, where the cited ADR is the ticket's exhibit rather than its fix, and the ADR's confirmation date and the ticket's report date are the same day because one session produced both. Correct resolution and correct namespace are not sufficient: the shape needs the ADR to be the declared fix.
 
 Shape 5 treats presence in `## Related` as a driver relationship. `## Related` is a mixed section by design, carrying drivers, siblings, supersessions, and capture provenance, so presence there carries no directional information.
 
@@ -53,6 +99,7 @@ The `A1` guard already in the script (suppress shape 5 when the child names an u
 ### Investigation Tasks
 
 - [ ] Decide shape 2's qualification: require a repo/namespace marker adjacent to the ADR reference, restrict matching to ADRs the ticket cites in a local-path form, or drop bare-number matching.
+- [ ] Decide shape 2's second gate (Witness C): require the matched ADR to be the ticket's declared remedy, not any ADR named in the body. Candidate signals are a `## Fix Strategy` / `## Fix Released` mention rather than a `## Related` one, or an explicit fix-ADR field. Namespace qualification does not cover this case.
 - [ ] Decide shape 5's gate: parse the declared relationship (`Blocked by` or driver phrasing) rather than bare presence in `## Related`, and treat `Composes with` as explicitly non-qualifying.
 - [ ] Add bats cases alongside `packages/itil/scripts/test/evaluate-relevance.bats` covering both witnesses (upstream-ADR-number collision; `Composes with` sibling closed).
 
@@ -83,6 +130,7 @@ Captured via `/wr-itil:capture-problem` during a `/wr-itil:work-problems` iterat
 - **Template used**: structured default (problem-shaped); the upstream ships `problem-report.yml` but the body was filed in the equivalent free-form shape, matching the precedent of prior reports in that repo
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes (the issue body's `## Cross-reference` section names this ticket by path and ID)
+- **Witness C added upstream**: 2026-08-09, https://github.com/windyroad/agent-plugins/issues/414#issuecomment-5227689280. External-comms PASS + voice-tone PASS. The comment also argues the fold-into-`#306` case, since Witness C is `#306`'s exact mode rather than this issue's originally reported one.
 
 Dedup search on the upstream returned three same-script issues. Two are clearly distinct (#391 on a missing evidence shape for platform-version RCA, #392 on briefing carry-over). The third, #306, reports the same shape 2 symptom on a different root cause: an ADR that is genuinely local and confirmed being read as evidence the citing ticket's own work shipped, where the defect here is that the ADR resolved is not the one the ticket referred to at all. Shape 5 is absent from #306. Filed as a new issue cross-referencing #306 and #220 rather than as a comment, following the precedent #306 itself set when it cross-referenced #220 and #284. If the maintainer prefers them merged, #414 is the one to fold.
 
