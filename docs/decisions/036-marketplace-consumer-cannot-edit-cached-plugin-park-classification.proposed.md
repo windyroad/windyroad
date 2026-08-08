@@ -8,6 +8,7 @@ decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []
 related: [009-adopt-plugin-marketplace-for-claude-tooling]
+amended-by: [048-prefer-an-upstream-pull-request-over-an-issue]
 reassessment-date: 2026-08-31
 ---
 
@@ -46,6 +47,8 @@ Without codification, every iter independently re-derives the classification ("i
 ## Decision Outcome
 
 Chosen option: **Broad codification ("fix site is in an upstream plugin cache that this project does not author").**
+
+> **Partially amended by ADR-048 (2026-08-08).** This ADR's Reassessment Criteria bullet 1 has already fired: parks reached 94% (15 of 16), past the 70% trigger. Do not re-run that count as though the question were still open. ADR-048 takes a fourth option none of (a)/(b)/(c) examined, and displaces this ADR's **Un-park trigger**, **Park-transition workflow step 3** (the default outbound artefact becomes a pull request rather than an issue) and **Reassessment Criteria bullet 1**. Everything else here still binds, in particular the **Classification predicate**, the **Boundary with architect-design parks** and the **Composition with P069**.
 
 ### Classification predicate
 
@@ -129,6 +132,7 @@ This ADR's substance is confirmed once:
 
 ## Related
 
+- ADR-048 (prefer a pull request over an issue when the upstream accepts them). Partially amends this ADR: see the pointer in Decision Outcome above. It answers this ADR's 70% reassessment trigger, which fired at 94%, with a fourth option; this ADR's classification predicate survives unchanged.
 - ADR-009 (adopt plugin marketplace for Claude tooling). ADR-009 chose the marketplace consumer posture; this ADR is a downstream consequence: classifying tickets whose fix site lives in the marketplace-cached plugins as a park reason. ADR-009 is `human-oversight: confirmed` (ratified dependency).
 - Problem lifecycle semantics (Open / Known Error / Verifying / Parked / Closed; WSJF multiplier 0 for Parked and Verifying) are documented in upstream `wr-itil` plugin SKILL.md files (`/Users/tomhoward/.claude/plugins/cache/windyroad/wr-itil/<version>/skills/manage-problem/SKILL.md` and sibling skills), not in any local ADR. This ADR's references to "Parked status" inherit the upstream lifecycle definitions verbatim. The upstream-lifecycle dependency is itself a marketplace-consumer-cannot-edit-cached-plugin instance (this ADR's own classification applies recursively): if the upstream lifecycle definition changes, this project consumes the change at the next plugin update.
 - P069 (work-problems orchestrator WSJF ranking does not factor placement-authority). Implementation work for this ADR's downstream consumption.
