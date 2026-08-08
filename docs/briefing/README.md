@@ -4,7 +4,11 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 
 ## Critical Points (Session-Start Surface)
 
-_To be populated by the next `/wr-retrospective:run-retro` Step 1.5 signal-vs-noise pass (per ADR-040)._
+- **The risk scorer is a design reviewer, not a formality.** Its STOPs have repeatedly caught genuine design defects that architect passes missed. Read a STOP as a finding, not a gate to satisfy. When its remediations would each breach a decision, look for a third close rather than choosing between them. ([what-you-need-to-know.md](./what-you-need-to-know.md))
+- **Verify a ticket's own premises before acting on them, not just its prose.** Tickets carry stale claims about repo state (a governance tier said not to exist, a path pinned at a version no longer on disk). Read the file from disk. The same applies to ADR/RFC references in subagent verdicts. ([what-you-need-to-know.md](./what-you-need-to-know.md))
+- **Sourcing a repo script to probe one helper runs the whole script** unless its `*_LIB_ONLY` variable is exported first. This has pushed to origin from a session told not to push. Use a subshell, or the existing test harness. ([what-will-surprise-you.md](./what-will-surprise-you.md))
+- **Do not run the decisions-compendium generator.** It is deprecated and clobbers the entry the PostToolUse hook already authored. After an ADR edit, let the hook write the entry, then rewrite its em-dashes to ASCII before committing. ([what-will-surprise-you.md](./what-will-surprise-you.md))
+- **A gate can be wired, ratified, and still never have run.** Wired is not verified; a dry run against real inputs settles it faster than reasoning. ([what-will-surprise-you.md](./what-will-surprise-you.md))
 
 ## Topic Index
 
