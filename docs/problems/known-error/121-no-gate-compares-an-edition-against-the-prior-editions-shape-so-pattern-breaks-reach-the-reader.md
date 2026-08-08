@@ -179,6 +179,40 @@ Three additions from the architect review of the settled direction (2026-08-07),
 
    **Not a breach of P122's forward rule.** P122 pins that any future axis justified only by "this reduces Tom's review rounds" is ungrounded and must be blocked until an author persona is ratified. Distribution and feed recognition is a different justification from review-load reduction, so the advisory class is compliant as written. The two records will read as inconsistent to a future reader unless the ADR names the distinction, so name it.
 
+   > **REVERSED IN PART, 2026-08-09. Read this before acting on the decline above.**
+   >
+   > The "No JTBD outcome is added. Explicitly declined." bullet no longer stands.
+   > Tom was asked the separate merits question this ticket queued at line 90, is a
+   > stable weekly shape a reader benefit or an editorial cage, and answered that it
+   > is a reader benefit. The job is recorded at
+   > `docs/jtbd/engineering-leader/JTBD-006-navigate-an-edition-i-already-know-my-way-around.proposed.md`.
+   >
+   > Three things that did **not** change, and the distinctions matter:
+   >
+   > - **The contamination objection is not answered by the job existing.** It is
+   >   about causal order, so filing the grounding in a new job rather than as new
+   >   outcomes on JTBD-005 is a topological move, not an evidentiary one. JTBD-006's
+   >   Notes section says so in its own words. What discharges it is ratification via
+   >   `/wr-jtbd:confirm-jobs-and-personas`, which has not happened. JTBD-006 carries
+   >   `human-oversight: unconfirmed`.
+   > - **No probe's authority changes.** The advisory class stays advisory. This
+   >   ticket's own rule holds: the licence for that class comes from having no
+   >   remediation authority, not from the rationale being strong enough, and those
+   >   are two axes. JTBD-006 moves the grounding axis only, and carries an operative
+   >   anti-outcome clause saying so. Promoting the issue-line DROP, the `Reply` DROP
+   >   or DRIFT to remediating is a separate decision for Tom. DRIFT additionally
+   >   carries the reliability limitation at line 129, which grounding does not touch.
+   > - **The length ceiling stays**, on Tom's direction, and the GCC-clause evidence
+   >   at line 21 is carried into JTBD-006 as its anti-outcome rather than dropped.
+   >   Coming in under the ceiling is not evidence the job was served; what got cut
+   >   to get there is the question.
+   >
+   > The "Why a third path is legitimate" paragraph below is now partly stale: feed
+   > recognition is a documented reader job as of JTBD-006 outcome 3, not only a
+   > distribution rationale. It becomes fully stale on ratification. It is left in
+   > place rather than rewritten, because it is the reasoning as it stood on
+   > 2026-08-07 and this ticket is the record of that.
+
 3. ~~**New:** settle the step-15.37 classification precedence (section 4) in whichever of P121 or P122 lands first.~~ **DONE 2026-08-07.** Settled as wrongness outer, grain inner, and recorded in ADR-043's `## Amendment 2026-08-07 (P121, P122)` clause 3, which covers both tickets in one section rather than two sequential patches.
 
 4. **DONE 2026-08-07: the decision record exists.** ADR-044 (Cross-edition shape as a fresh-context subagent gate) is written and substance-confirmed, and lands the joint amendment on ADR-043 plus the criterion-6 correction on ADR-020. **This ticket's remaining work is implementation**, not design: author `.claude/agents/wr-newsletter-shape.md`, wire steps 15.36 and 15.57 into SKILL.md, and add the three template-invariant checks to `check-newsletter-structure.sh` with tests. Note that last item is new work ADR-044 creates: the structure lint implements checks (a) through (g) today and none covers the `**From Tom**` opener, the `### Item N:` prefix or the per-item bold labels.
@@ -287,6 +321,7 @@ With this shipped, all three of section 3's finding classes are accounted for: L
 - **ADR-020** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): ~~reassessment criterion 6 sets the subagent invocation ceiling ADR-043 records as already breached, which is why the fix is a script rather than an agent.~~ **Both halves of that sentence are wrong, corrected 2026-08-07.** Criterion 6 sets no ceiling: it is a trigger naming two valid responses to crossing 15 invocations, and it contains no prohibitive verb. And the fix is an agent, not a script, per ADR-044. The budget was re-asserted, which is the first of the two responses the criterion authorises. ADR-020 now carries the correction adjacent to criterion 6 itself.
 - **P089** (`docs/problems/.../089-...md`): built `scripts/check-newsletter-structure.sh`, the deterministic-lint idiom this fix follows.
 - **JTBD-005** (`docs/jtbd/engineering-leader/JTBD-005-stay-ahead-of-the-shift.proposed.md`) and **JTBD-200** (`docs/jtbd/developer/JTBD-200-signal-from-noise.proposed.md`): the live persona anchors. JTBD-001 through JTBD-004 were retired by ADR-041 on 2026-07-10 and must not be cited here.
+- **JTBD-006** (`docs/jtbd/engineering-leader/JTBD-006-navigate-an-edition-i-already-know-my-way-around.proposed.md`), added 2026-08-09: the reader job this ticket's shape rationale was missing, recorded on Tom's direction. It is the foundation for the ticket's shape claim, and it is **provisional**: `human-oversight: unconfirmed`, and it reverses the 2026-08-07 decline recorded in precondition 2 above without discharging that decline's objection. Cite it as provisional grounding, never as settled. It changes no probe's remediation authority.
 - Reproduction fixture: commit `d2d674a`, `src/newsletters/drafts/leader/2026-08-03/`. The published edition at `src/newsletters/published/leader/2026-08-03/` is post-remediation and is NOT usable as a fixture.
 - **Upstream report pending** -- false positive; detection misfire. The P063 external-root-cause scan matches the word "external" in this ticket's prose, where it describes a human reviewer rather than an upstream dependency. There is no upstream dependency and nothing to report.
 - Evidence corpus: `src/newsletters/published/leader/2026-07-27/2026-07-27.linkedin.md` (1,655 chars, carries all four elements Issue 16 dropped) against `src/newsletters/published/leader/2026-08-03/2026-08-03.linkedin.md`.
