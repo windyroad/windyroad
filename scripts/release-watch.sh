@@ -4,6 +4,24 @@
 # the production URL when live. On failure: shows what failed and prompts
 # for a fix.
 
+# Fail-safe guard (P129): unlike scripts/push-watch.sh and scripts/fix-deps.sh,
+# this script has no *_LIB_ONLY seam and no pure helper worth probing, so there is
+# no probe path to preserve and the guard takes no opt-in variable. It is pure
+# accident-prevention: the body runs "gh pr merge", "git commit" and "git push",
+# so a stray source publishes a release. Sourcing is never how the flow is
+# invoked, so refuse it outright. If a helper here ever becomes worth probing,
+# add RELEASE_WATCH_LIB_ONLY in the same shape as the two sibling scripts rather
+# than inventing a third mechanism.
+#
+# Above BOTH "set -euo pipefail" and the "gh repo view" below, on purpose. Source
+# runs in the CALLER's shell, so a guard placed lower would still leave errexit
+# and nounset switched on in the probing shell and would still fire a network call.
+if [ "${BASH_SOURCE[0]:-}" != "$0" ]; then
+  echo "release-watch.sh was sourced; refusing to run the release flow." >&2
+  echo "  To run the flow: npm run release:watch" >&2
+  return 0
+fi
+
 set -euo pipefail
 
 REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)

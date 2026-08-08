@@ -33,6 +33,60 @@ function fixture(json) {
   return path;
 }
 
+// P129: the FIX_DEPS_LIB_ONLY seam is OPT-IN, so sourcing this script and
+// forgetting the variable used to run the WHOLE detect/apply/gate/commit flow.
+// A fail-safe guard now refuses the source and names the incantation. Probes run
+// from a scratch directory that is NOT a git repo, so a regression cannot commit.
+describe('fix-deps.sh: sourced-without-opt-in guard (P129)', () => {
+  const sourceFromScratch = (tail) =>
+    runBash(
+      [
+        'set +e',
+        'unset FIX_DEPS_LIB_ONLY',
+        'cd "$(mktemp -d)" || exit 9',
+        `source ${JSON.stringify(SCRIPT)}`,
+        tail,
+      ].join('\n'),
+    );
+
+  it('refuses the flow and names the correct incantation', () => {
+    const r = sourceFromScratch('echo "RC=$?"');
+    expect(r.stderr).toContain('refusing to run the deps-fix flow');
+    expect(r.stderr).toContain('npm run fix:deps');
+    expect(r.stderr).toContain('FIX_DEPS_LIB_ONLY=1');
+    expect(r.stdout).toContain('RC=0');
+  });
+
+  it('leaves the helpers undefined, so nothing below the guard ran', () => {
+    const r = sourceFromScratch(
+      'type -t fix_deps_commit_body || echo HELPER_UNDEFINED',
+    );
+    expect(r.stdout).toContain('HELPER_UNDEFINED');
+  });
+
+  // The guard sits ABOVE `set -euo pipefail` so a probe does not leave errexit
+  // and nounset switched on in the calling shell. See push-watch.test.mjs.
+  it('does not leak errexit or nounset into the probing shell', () => {
+    const r = runBash(
+      [
+        'unset FIX_DEPS_LIB_ONLY',
+        'cd "$(mktemp -d)" || exit 9',
+        `source ${JSON.stringify(SCRIPT)} 2>/dev/null`,
+        'false',
+        'echo ERREXIT_NOT_LEAKED',
+        'echo "NOUNSET_NOT_LEAKED=[${WR_P129_NEVER_SET}]"',
+      ].join('\n'),
+    );
+    expect(r.stdout).toContain('ERREXIT_NOT_LEAKED');
+    expect(r.stdout).toContain('NOUNSET_NOT_LEAKED=[]');
+  });
+
+  // The guard backstops the seam; it does not replace it.
+  it('still admits the opt-in probe path', () => {
+    expect(probe('type -t fix_deps_commit_body')).toBe('function');
+  });
+});
+
 describe('fix-deps.sh: fix_deps_commit_body', () => {
   it('lists only packages whose version actually changed', () => {
     const f = fixture([

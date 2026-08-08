@@ -38,6 +38,20 @@
 # Exit: 0 = deps already current OR updated + gate green + committed;
 #       1 = update applied but a gate failed (manifests restored; manual fix needed);
 #       2 = usage / environment error.
+
+# Fail-safe guard (P129): the FIX_DEPS_LIB_ONLY seam below is OPT-IN, so sourcing
+# this file to reach a helper and forgetting the variable used to run the WHOLE
+# detect/apply/gate/commit flow. Sourcing is never how the flow is invoked, so
+# refuse it here and name the correct incantation instead. Mirrors the guard in
+# scripts/push-watch.sh, including sitting ABOVE "set -euo pipefail" so that a
+# probe does not leave errexit and nounset switched on in the calling shell.
+if [ "${BASH_SOURCE[0]:-}" != "$0" ] && [ "${FIX_DEPS_LIB_ONLY:-0}" != "1" ]; then
+  echo "fix-deps.sh was sourced without FIX_DEPS_LIB_ONLY=1; refusing to run the deps-fix flow." >&2
+  echo "  To run the flow:   npm run fix:deps" >&2
+  echo "  To probe a helper: bash -c 'export FIX_DEPS_LIB_ONLY=1; source scripts/fix-deps.sh; fix_deps_commit_body updates.json'" >&2
+  return 0
+fi
+
 set -euo pipefail
 
 # Shared manifest-hygiene scans (P126 / RFC-006): manifest_sync_violations and

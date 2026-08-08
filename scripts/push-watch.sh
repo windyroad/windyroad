@@ -5,6 +5,25 @@
 # provides the preview URL and release PR link for human review.
 # On failure: shows which checks failed and prompts for a local hook fix.
 
+# Fail-safe guard (P129): the PUSH_WATCH_LIB_ONLY seam below is OPT-IN, so
+# sourcing this file to reach a helper and forgetting the variable used to run
+# the WHOLE flow: git stash, git pull --rebase, dry-aged-deps --update --yes, the
+# deps gate and git push. That published four already-committed commits from a
+# session instructed not to push on 2026-08-08. Sourcing is never how the flow is
+# invoked, so refuse it here and name the correct incantation instead.
+#
+# ${BASH_SOURCE[0]} equals $0 when the script is executed and differs when it is
+# sourced; "npm run push:watch" runs "bash scripts/push-watch.sh", so the executed
+# path is untouched. Deliberately ABOVE "set -euo pipefail": source runs in the
+# CALLER's shell, so setting those options first would leave errexit and nounset
+# switched on in the probing shell long after this returned.
+if [ "${BASH_SOURCE[0]:-}" != "$0" ] && [ "${PUSH_WATCH_LIB_ONLY:-0}" != "1" ]; then
+  echo "push-watch.sh was sourced without PUSH_WATCH_LIB_ONLY=1; refusing to run the push flow." >&2
+  echo "  To run the flow:   npm run push:watch" >&2
+  echo "  To probe a helper: bash -c 'export PUSH_WATCH_LIB_ONLY=1; source scripts/push-watch.sh; manifest_refresh_route 1 1 \"\"'" >&2
+  return 0
+fi
+
 set -euo pipefail
 
 SITE_ID="${NETLIFY_SITE_ID:-d00c9942-3c2a-420d-9486-0339ae54af4d}"
