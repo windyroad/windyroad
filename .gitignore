@@ -93,3 +93,10 @@ test-results/
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Scratch build area and vendored investigation trees. research/llm-review-sequences/paper/BUILD.md
+# builds into tmp/pdfs/ and copies the artefact of record out to the tracked output/pdf/paper.pdf,
+# so nothing durable is sourced from here. Also holds re-downloadable toolchain binaries and
+# vendored third-party source carrying its own .git/. Root-anchored so a nested src/**/tmp/ is
+# not silently ignored.
+/tmp/
