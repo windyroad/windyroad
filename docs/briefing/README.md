@@ -9,6 +9,7 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 - **Sourcing a repo script to probe one helper runs the whole script** unless its `*_LIB_ONLY` variable is exported first. This has pushed to origin from a session told not to push. Use a subshell, or the existing test harness. ([what-will-surprise-you.md](./what-will-surprise-you.md))
 - **The external-comms gate cannot see a body passed with `--body-file`, and edits after a PASS invalidate the marker.** Pass the body inline as `--body "$(cat <<'EOF' ... EOF)"`, dispatch the reviewer synchronously, and do not touch a word of the draft between the PASS and the call. ([what-will-surprise-you.md](./what-will-surprise-you.md))
 - **The architect can take five rounds, and the later rounds are the valuable ones.** Budget for them rather than treating the first ISSUES FOUND as the whole cost, and prefer reshaping the design over documenting a new contract when a new ADR would need a human who is not there. ([what-will-surprise-you.md](./what-will-surprise-you.md))
+- **A bare `ADR-NNN` is ambiguous: this repo and upstream `agent-plugins` both number from 001, and 014, 024, 028, 032 and 036 all collide with an unrelated real decision.** The citation reads plausibly and points at a document that exists, so the error is quiet. Write `upstream ADR-NNN` for cross-repo references, and prefer grounding a claim in the artefact on disk over the number. ([governance-iteration-friction-2026-08-08-adr-048-iter.md](./governance-iteration-friction-2026-08-08-adr-048-iter.md))
 
 ## Topic Index
 
@@ -30,6 +31,7 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 | [governance-iteration-friction-2026-08-05-p120-afk-iter.md](./governance-iteration-friction-2026-08-05-p120-afk-iter.md) | Governance-iteration friction (2026-08-05 P120 AFK iter) |
 | [governance-iteration-friction-2026-08-05-p121-afk-iter.md](./governance-iteration-friction-2026-08-05-p121-afk-iter.md) | Governance-iteration friction (2026-08-05 P121 AFK iter) |
 | [governance-iteration-friction-2026-08-05-p122-afk-iter.md](./governance-iteration-friction-2026-08-05-p122-afk-iter.md) | Governance-iteration friction (2026-08-05 P122 AFK iter) |
+| [governance-iteration-friction-2026-08-08-adr-048-iter.md](./governance-iteration-friction-2026-08-08-adr-048-iter.md) | Governance-iteration friction (2026-08-08 ADR-048 + P133 AFK iter) |
 
 ## Preamble
 
