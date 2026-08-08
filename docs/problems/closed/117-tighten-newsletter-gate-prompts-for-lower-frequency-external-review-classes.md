@@ -1,7 +1,8 @@
 # Problem 117: Tighten existing newsletter gate prompts for the lower-frequency external-review classes
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-07-14
+**Closed**: 2026-08-08, on user direction after the counter-evidence read: close for the classes that work, route the residue. Class 1 verified on Issue 16, class 3 un-contradicted, class 2's residual miss moved to P121, and the pipeline residue hung off P099. See "Counter-evidence from published editions (2026-08-08), and how it settled".
 **Priority**: 6 (Medium), Impact: 2 x Likelihood: 3, derived at capture from the description
 **Origin**: internal
 **Effort**: M, derived at capture
