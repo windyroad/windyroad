@@ -4,10 +4,10 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 
 ## Critical Points (Session-Start Surface)
 
-- **The risk scorer is a design reviewer, not a formality.** Its STOPs have repeatedly caught genuine design defects that architect passes missed. Read a STOP as a finding, not a gate to satisfy. When its remediations would each breach a decision, look for a third close rather than choosing between them. ([what-you-need-to-know.md](./what-you-need-to-know.md))
+- **The risk scorer is a design reviewer, not a formality.** Its STOPs have repeatedly caught genuine design defects that architect passes missed. Read a STOP as a finding, not a gate to satisfy. When its remediations would each breach a decision, look for a third close rather than choosing between them. ([risk-scorer-behaviour.md](./risk-scorer-behaviour.md))
 - **Verify a ticket's own premises before acting on them, not just its prose.** Tickets carry stale claims about repo state (a governance tier said not to exist, a path pinned at a version no longer on disk). Read the file from disk. The same applies to ADR/RFC references in subagent verdicts. ([what-you-need-to-know.md](./what-you-need-to-know.md))
 - **Sourcing a repo script to probe one helper runs the whole script** unless its `*_LIB_ONLY` variable is exported first. This has pushed to origin from a session told not to push. Use a subshell, or the existing test harness. ([what-will-surprise-you.md](./what-will-surprise-you.md))
-- **A gate can be wired, ratified, and still never have run.** Wired is not verified; a dry run against real inputs settles it faster than reasoning. And a gate that ran and reported nothing is weaker evidence than one you watched fire. ([what-will-surprise-you.md](./what-will-surprise-you.md))
+- **The external-comms gate cannot see a body passed with `--body-file`, and edits after a PASS invalidate the marker.** Pass the body inline as `--body "$(cat <<'EOF' ... EOF)"`, dispatch the reviewer synchronously, and do not touch a word of the draft between the PASS and the call. ([what-will-surprise-you.md](./what-will-surprise-you.md))
 - **The architect can take five rounds, and the later rounds are the valuable ones.** Budget for them rather than treating the first ISSUES FOUND as the whole cost, and prefer reshaping the design over documenting a new contract when a new ADR would need a human who is not there. ([what-will-surprise-you.md](./what-will-surprise-you.md))
 
 ## Topic Index
@@ -16,6 +16,8 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 |---|---|
 | [what-you-need-to-know.md](./what-you-need-to-know.md) | What You Need to Know |
 | [what-will-surprise-you.md](./what-will-surprise-you.md) | What Will Surprise You |
+| [risk-scorer-behaviour.md](./risk-scorer-behaviour.md) | Risk Scorer Behaviour |
+| [architect-compendium-deadlock.md](./architect-compendium-deadlock.md) | Architect Decisions Compendium |
 | [cross-project-patterns-from-86-session-insights-report-2026-.md](./cross-project-patterns-from-86-session-insights-report-2026-.md) | Cross-project patterns (from 86-session insights report, 2026-03-17 to 2026-04-16) |
 | [gate-dependency-friction-2026-06-15-afk-work-problems-sessio.md](./gate-dependency-friction-2026-06-15-afk-work-problems-sessio.md) | Gate + dependency friction (2026-06-15 AFK work-problems session) |
 | [newsletter-pipeline-gates-vs-structural-defects-2026-06-15-i.md](./newsletter-pipeline-gates-vs-structural-defects-2026-06-15-i.md) | Newsletter pipeline gates vs structural defects (2026-06-15 Issue 09 retro) |
