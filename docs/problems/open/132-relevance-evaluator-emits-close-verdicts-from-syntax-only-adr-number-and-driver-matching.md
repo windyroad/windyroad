@@ -73,3 +73,17 @@ Captured via `/wr-itil:capture-problem` during a `/wr-itil:work-problems` iterat
 **Hang-off pre-filter (capture Step 2b).** The mechanical pre-filter returned 20 candidates from `open/` and `verifying/`, over the candidate cap of 5, so the `wr-itil:hang-off-check` subagent dispatch was skipped per the skill's latency short-circuit and the candidate list is recorded here for review-time re-evaluation. The shared signals were the generic surface mentions `/wr-itil:review-problems` and `/wr-itil:work-problems`, not the evaluator itself: no candidate mentions `evaluate-relevance.sh`. Candidates: P054, P055, P056, P069, P074, P077, P088, P096, P097, P107, P127, P129, P131 (open); P050, P094, P099, P108, P120, P122, P126 (verifying). P054 and P055 are the two Witness A tickets, related as evidence rather than as parents.
 
 **Title-only duplicate grep** matched only P043 (`newsletter-three-lens-scoring-leader-relevance-is-post-filter-not-in-scoring`, closed) on the keyword "relevance", an unrelated domain and not a duplicate.
+
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/414 (2026-08-08)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/414
+- **Reported**: 2026-08-08
+- **Template used**: structured default (problem-shaped); the upstream ships `problem-report.yml` but the body was filed in the equivalent free-form shape, matching the precedent of prior reports in that repo
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes (the issue body's `## Cross-reference` section names this ticket by path and ID)
+
+Dedup search on the upstream returned three same-script issues. Two are clearly distinct (#391 on a missing evidence shape for platform-version RCA, #392 on briefing carry-over). The third, #306, reports the same shape 2 symptom on a different root cause: an ADR that is genuinely local and confirmed being read as evidence the citing ticket's own work shipped, where the defect here is that the ADR resolved is not the one the ticket referred to at all. Shape 5 is absent from #306. Filed as a new issue cross-referencing #306 and #220 rather than as a comment, following the precedent #306 itself set when it cross-referenced #220 and #284. If the maintainer prefers them merged, #414 is the one to fold.
+
+Both shapes were verified still present in the upstream HEAD copy of the script (530 lines, shape 2 at line 300, shape 5 at lines 418 to 445) before filing, not just in the locally cached 0.59.2 build.
