@@ -1,7 +1,8 @@
 ---
 status: proposed
-human-oversight: unconfirmed
-oversight-note: written 2026-08-08 on Tom's in-session direction; not yet read by him. Pending /wr-jtbd:confirm-jobs-and-personas.
+human-oversight: confirmed
+oversight-date: 2026-08-09
+oversight-note: ratified by Tom in session 2026-08-09, read file by file
 job-id: decide-from-the-phone-in-my-hand
 persona: internal-maintainer
 date-created: 2026-08-08

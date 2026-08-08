@@ -1,8 +1,9 @@
 ---
 name: internal-maintainer
 description: Tom, operating this repo's governance loop while away from it, and maintaining the tooling that loop runs on, here and upstream
-human-oversight: unconfirmed
-oversight-note: written 2026-08-08 on Tom's in-session direction ("write the persona"); he has not read it. Ratification is a separate act, pending /wr-jtbd:confirm-jobs-and-personas.
+human-oversight: confirmed
+oversight-date: 2026-08-09
+oversight-note: ratified by Tom in session 2026-08-09, read file by file
 ---
 
 # Internal Maintainer (Operator)

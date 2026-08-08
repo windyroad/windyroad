@@ -70,7 +70,7 @@ Tom, on the production side of the same artefacts. Not a reader persona. See [pu
 
 ## Internal Maintainer
 
-Tom, operating this repo's governance loop while away from it and maintaining the tooling that loop runs on, here and upstream. Not a reader persona. See [internal-maintainer/persona.md](internal-maintainer/persona.md). Added 2026-08-08 to close a gap recorded 2026-06-17 with Tom's direction to author it locally; four tickets captured on 2026-08-08 (P130, P131, P132, P133) had to record their anchoring as unconfirmed because no persona covered the person they describe. Written on direction, not yet ratified: the persona and all three jobs carry `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`.
+Tom, operating this repo's governance loop while away from it and maintaining the tooling that loop runs on, here and upstream. Not a reader persona. See [internal-maintainer/persona.md](internal-maintainer/persona.md). Added 2026-08-08 to close a gap recorded 2026-06-17 with Tom's direction to author it locally; four tickets captured on 2026-08-08 (P130, P131, P132, P133) had to record their anchoring as unconfirmed because no persona covered the person they describe. Ratified by Tom on 2026-08-09: the persona and all three jobs were sent to him one file at a time in session and approved individually, so all four carry `human-oversight: confirmed`.
 
 | ID | Job | Priority | File |
 |----|-----|----------|------|
