@@ -1084,7 +1084,15 @@ This is the same "default when in doubt: re-run" discipline the finalise `*-prim
 | LinkedIn voice gate | 15.5 | the LinkedIn post body changed | a brief-body-only edit does NOT trigger this unless the edit propagated into the post |
 | Structural lint | 16 pre-save | brief or LinkedIn body changed | (none) |
 
-The "dirty since last full-gate pass" judgement is carried in-context: the agent knows it just edited the body. No marker file or "dirty" flag is added (YAGNI); it would be machinery for a judgement the working agent already holds, mirroring the in-context `*-prime` re-run discipline above.
+**Superseded 2026-08-08 by ADR-047 (a gate whose verdict predates the current draft is re-run, and the check is tuned to over-report).** This paragraph used to read that the dirty-since-last-full-gate-pass judgement is carried in-context and that no marker or flag is added, because it would be machinery for a judgement the working agent already holds. P099 is the evidence that the judgement is NOT reliably held: Issue 16's own reviews sibling records that six external review rounds ran after the ledger was written, so "that ledger describes a text this edition no longer carries", and five of seven gates never saw the final text.
+
+**The mechanism now.** Every gate verdict written at step 16 carries a `scored-digest: sha256:<hex>` line recording the digest of the artefact version that gate actually scored. The pre-save structural lint's check (m) recomputes and compares, and names any gate whose verdict predates the current draft.
+
+**The response is to re-run, not to report** (ADR-047, Tom's direction): on a check (m) failure, re-invoke the named gates against the current artefact, then re-save. Do NOT surface the list and proceed. Handing the author a list of skipped reviews on publish morning is the moment the driving problem says he is least able to act on one.
+
+**Custody invariant, load-bearing.** A digest is written ONLY as part of writing a verdict block. A block that was not re-scored is copied VERBATIM from the prior reviews file, digest included. Composing a carried block from context instead silently refreshes its digest and defeats the check entirely, and deciding which to refresh would be a judgement by the agent that just edited the body, which is the same independence failure ADR-046 removes.
+
+**Three limits, so this re-runs the stale set and not the world.** The claim-scoped rows below keep their own triggers, so a body edit touching no URL and no thesis-bearing line does not re-invoke them. A gate whose documented skip condition holds stays skipped. And the stale set re-runs ONCE per save; a re-run that itself forces an edit re-enters this section rather than recursing.
 
 **Inner-loop exemption for step 15.37 (ADR-043).** The one exception to "every body edit re-enters the full set" is the remediation round inside step 15.37. Its edits re-invoke only the editor, the skeptic and (when it contributed a remediating finding) the shape gate; the full set runs **once**, against the final post-remediation body, at loop exit. This is a cost bound, not a weakening: the alternative is the status quo, where Tom hand-remediates the same findings and each of his edits pays a full battery cycle (P113 cause 2). The P099 invariant that no publish-bound body reaches step 16 without a full gate pass since its last edit is preserved by ADR-043's four conditions, all of which are stated at step 15.37: (a) the full pass runs on the final post-remediation body; (b) any edit that pass forces re-marks the body dirty and re-enters this table exactly as normal; (c) the remediation counter does not reset, and a look declined under ADR-046 because the artefact was unchanged still consumes it, so a forced edit gets one more editor and skeptic look and any remaining findings become residual advisories rather than another round. Note that a forced edit re-enters the FULL set, voice and content-risk included; condition (c) bounds only the editor and skeptic counter, and condition (d) bounds the outer cycle at two consecutive edit-forcing passes before the drafter stops and surfaces to Tom.
 
@@ -1105,7 +1113,19 @@ Use the `Write` tool. If a file for `<publication-date>` already exists at the p
 scripts/check-newsletter-structure.sh "<draft-folder>/<publication-date>.md"
 ```
 
-The lint auto-derives the `.linkedin.md` sibling from the brief path; pass it explicitly as a second argument only when it lives elsewhere. Exit 0 means the six structural invariants (step 11b) hold; proceed. Exit 1 prints one `FAIL [<id>] <file>:<line>: <message>` line per violation; fix the brief (or sibling) in place and re-run the lint until it exits 0 before continuing. Exit 2 is a usage / IO error (wrong path); correct the invocation. In `phase=prep` the LinkedIn sibling does not yet exist, so check (f) is skipped automatically; run the lint against the `.prep.md` brief path. The lint is deterministic and cheap; it does not replace the LLM gates (steps 13-15.5), it complements them by catching format defects those gates miss.
+**Ordering within step 16 is load-bearing, and the numbered operations below already encode it.** Check (m) reads the reviews sibling and digests the artefacts, so every artefact it compares must exist before the lint runs. The order is: write the brief, write its LinkedIn sibling, write the reviews sibling with a `scored-digest` line in every verdict block, then run the lint LAST. Where the numbered operations list the reviews file before the LinkedIn sibling, that ordering is fine because the lint still runs last; but do not run the lint between them, or check (m) hard-fails with "no artefact on disk to compare" against a post that has not been written yet.
+
+**Each verdict block carries its digest.** Compute it over the artefact that gate scored, frontmatter excluded:
+
+```bash
+scored=$(sed '1,/^---$/d' "<artefact-path>" | shasum -a 256 | awk '{print $1}')
+```
+
+and write `scored-digest: sha256:$scored` as the first line under the block's heading. A heading naming the LinkedIn post or companion is compared against the post; every other heading against the brief.
+
+**On a check (m) failure**, re-invoke each named gate against the current artefact, write its fresh verdict block with a fresh digest, and re-run the lint. Copy every block you did not re-score verbatim, digest included.
+
+The lint auto-derives the `.linkedin.md` sibling from the brief path; pass it explicitly as a second argument only when it lives elsewhere. Exit 0 means the structural invariants (step 11b) hold; proceed. Exit 1 prints one `FAIL [<id>] <file>:<line>: <message>` line per violation; fix the brief (or sibling) in place and re-run the lint until it exits 0 before continuing. Exit 2 is a usage / IO error (wrong path); correct the invocation. In `phase=prep` the LinkedIn sibling does not yet exist, so check (f) is skipped automatically; run the lint against the `.prep.md` brief path. The lint is deterministic and cheap; it does not replace the LLM gates (steps 13-15.5), it complements them by catching format defects those gates miss.
 
 Branch on phase:
 
@@ -1142,26 +1162,32 @@ phase: prep
 
 ## Voice Review
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <voice review block from step 13>
 
 ## Content Risk Review
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <content-risk block from step 14>
 
 ## Critic Review: Newsletter
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <critic block from step 15, or "N/A: content-risk returned REJECTED" if step 15 was skipped>
 
 ## Editor Review
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <editor block from step 15.25, or "N/A: newsletter-critic returned REJECTED" if step 15.25 was skipped>
 
 ## Skeptic Review
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <skeptic block from step 15.35, or "N/A: newsletter-critic returned REJECTED" if step 15.35 was skipped>
 
 ## Shape Review
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <shape block from step 15.36, or "N/A: newsletter-critic returned REJECTED" if step 15.36 was skipped. Record the full block including SHAPE_VERDICT, WINDOW, EDITIONS_REVIEWED and REMEDIATING_COUNT, every difference with its CLASS and AUTHORITY, and any `RESIDUAL (round 2, accepted)` entries. Advisory differences are recorded here even when nothing acted on them: they are the audit trail for what Tom cleared and why.>
 
 ## Editorial Remediation Loop
@@ -1170,10 +1196,12 @@ phase: prep
 
 ## Cognitive Accessibility Review
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <cog-a11y block from step 15.4, or "N/A: newsletter-critic returned REJECTED" if step 15.4 was skipped>
 
 ## Critic Review: Wardley Artifacts
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <critic block from step 9>
 
 ## Map Delta
@@ -1182,6 +1210,7 @@ phase: prep
 
 ## Cross-Edition Consistency
 
+scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
 <verdict block from step 11.4: CROSS_EDITION_CONSISTENCY_VERDICT (SUPPORTED|CONTRADICTS|NEUTRAL), window (K editions read), editions reviewed (dates), Findings block on CONTRADICTS, optional Notes. Per ADR-038.>
 
 ## URL Verification
@@ -1230,62 +1259,83 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    ## Voice Review (finalise)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <voice review block from step 13-prime>
 
    ## Voice Review (prep)
 
+   carried-from: prep
+   <!-- copy the block below VERBATIM from the prep reviews file, its scored-digest included; do NOT recompose it, or the digest silently refreshes and check (m) is defeated (ADR-047) -->
    <voice review block carried from prep .reviews.md>
 
    ## Voice Review (LinkedIn post)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <voice review block from step 15.5's LinkedIn-post voice gate (P013); this lives here, not alongside the LinkedIn post in `.linkedin.md`, so the next voice gate run does not see its prior verdict (fresh-context discipline per ADR-026)>
 
    ## Content Risk Review (finalise)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <content-risk block from step 14-prime>
 
    ## Content Risk Review (prep)
 
+   carried-from: prep
+   <!-- copy the block below VERBATIM from the prep reviews file, its scored-digest included; do NOT recompose it, or the digest silently refreshes and check (m) is defeated (ADR-047) -->
    <content-risk block carried from prep .reviews.md>
 
    ## Critic Review: Newsletter (finalise)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <critic block from step 15-prime>
 
    ## Critic Review: Newsletter (prep)
 
+   carried-from: prep
+   <!-- copy the block below VERBATIM from the prep reviews file, its scored-digest included; do NOT recompose it, or the digest silently refreshes and check (m) is defeated (ADR-047) -->
    <critic block carried from prep .reviews.md>
 
    ## Editor Review (finalise)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <editor block from step 15.25-prime, or "N/A: newsletter-critic returned REJECTED" if step 15.25-prime was skipped, or "N/A: carried from prep (no material change)" if 15.25-prime was a no-op>
 
    ## Editor Review (prep)
 
+   carried-from: prep
+   <!-- copy the block below VERBATIM from the prep reviews file, its scored-digest included; do NOT recompose it, or the digest silently refreshes and check (m) is defeated (ADR-047) -->
    <editor block carried from prep .reviews.md>
 
    ## Skeptic Review (finalise)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <skeptic block from step 15.35-prime, or "N/A: newsletter-critic returned REJECTED" if skipped, or "N/A: carried from prep (no material change)" if 15.35-prime was a no-op>
 
    ## Skeptic Review (prep)
 
+   carried-from: prep
+   <!-- copy the block below VERBATIM from the prep reviews file, its scored-digest included; do NOT recompose it, or the digest silently refreshes and check (m) is defeated (ADR-047) -->
    <skeptic block carried from prep .reviews.md>
 
    ## Skeptic Review (LinkedIn post)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <skeptic block from step 15.55 on the LinkedIn post, plus any `RESIDUAL (round 2, accepted)` entries from its inline one-round remediation per ADR-043>
 
    ## Shape Review (finalise)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <shape block from step 15.36-prime, or "N/A: newsletter-critic returned REJECTED" if skipped, or "N/A: carried from prep (no material change)" if 15.36-prime was a no-op. A deviation Tom cleared at prep carries its reason forward with residual status intact and does not re-fire.>
 
    ## Shape Review (prep)
 
+   carried-from: prep
+   <!-- copy the block below VERBATIM from the prep reviews file, its scored-digest included; do NOT recompose it, or the digest silently refreshes and check (m) is defeated (ADR-047) -->
    <shape block carried from prep .reviews.md>
 
    ## Shape Review (LinkedIn post)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <shape block from step 15.57 on the LinkedIn post, plus any `RESIDUAL (round 2, accepted)` entries from its inline one-round remediation. Skipped entirely on phase=prep.>
 
    ## Editorial Remediation Loop (finalise)
@@ -1298,14 +1348,18 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    ## Cognitive Accessibility Review (finalise)
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <cog-a11y block from step 15.4-prime, or "N/A: newsletter-critic returned REJECTED" if step 15.4-prime was skipped, or "N/A: carried from prep (no material change)" if 15.4-prime was a no-op>
 
    ## Cognitive Accessibility Review (prep)
 
+   carried-from: prep
+   <!-- copy the block below VERBATIM from the prep reviews file, its scored-digest included; do NOT recompose it, or the digest silently refreshes and check (m) is defeated (ADR-047) -->
    <cog-a11y block carried from prep .reviews.md>
 
    ## Critic Review: Wardley Artifacts
 
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
    <critic block from step 9-prime if Restructure ran, else carried from prep .reviews.md>
 
    ## Map Delta

@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, existsSync, readdirSync, mkdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -518,6 +520,184 @@ describe('check-newsletter-structure.sh', () => {
     const r = run(brief);
     expect(r.status, `unexpected usage/IO error: ${r.stderr}`).not.toBe(2);
     expect(r.stderr).not.toContain('SKIP [l]');
+  });
+
+  // --- (m) a gate verdict that predates the current draft (P099 / ADR-047) ----
+  // Detection only. The response (re-invoke the named gates) is the SKILL's, per
+  // ADR-047; a lint cannot invoke a subagent. These pin the detection.
+
+  function digestOf(text) {
+    const body = text.startsWith('---') ? text.replace(/^---[\s\S]*?\n---\n/, '') : text;
+    return createHash('sha256').update(body).digest('hex');
+  }
+
+  function withReviews(briefText, postText, blocks) {
+    const dir = mkdtempSync(join(tmpdir(), 'nl-m-'));
+    const b = join(dir, '2026-06-15.md');
+    writeFileSync(b, briefText);
+    writeFileSync(join(dir, '2026-06-15.linkedin.md'), postText);
+    writeFileSync(join(dir, '2026-06-15.reviews.md'), `# Reviews\n\n${blocks}\n`);
+    return b;
+  }
+
+  it('(m) names a gate whose verdict predates the current brief', () => {
+    const stale = '0'.repeat(64);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Critic Review: Newsletter (finalise)\nscored-digest: sha256:${stale}\nPASS.`);
+    const r = run(brief);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('[m]');
+    expect(r.stderr).toContain('Critic Review: Newsletter (finalise)');
+    expect(r.stderr).toContain('different brief');
+  });
+
+  it('(m) stays quiet when every recorded digest matches', () => {
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${d}\nPASS.`);
+    expect(run(brief).stderr).not.toContain('[m]');
+  });
+
+  it('(m) routes a LinkedIn-scored verdict to the post, not the brief', () => {
+    // The post digest against a LinkedIn heading must pass, and the same digest
+    // against a brief heading must fail. This is the per-surface split (ADR-047).
+    const dp = digestOf(VALID_LINKEDIN);
+    const ok = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Skeptic Review (LinkedIn post)\nscored-digest: sha256:${dp}\nPASS.`);
+    expect(run(ok).stderr).not.toContain('[m]');
+    const bad = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${dp}\nPASS.`);
+    expect(run(bad).stderr).toContain('[m]');
+  });
+
+  it('(m) flags every brief-scored gate after a brief edit, and no post-scored one', () => {
+    // The P099 case: an edit to the brief lands, the post is untouched.
+    const edited = `${VALID_BRIEF}\nA publish-morning thesis correction.\n`;
+    const dbOld = digestOf(VALID_BRIEF);
+    const dp = digestOf(VALID_LINKEDIN);
+    const brief = withReviews(edited, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${dbOld}\nPASS.\n\n` +
+      `## Critic Review: Newsletter (finalise)\nscored-digest: sha256:${dbOld}\nPASS.\n\n` +
+      `## Skeptic Review (LinkedIn post)\nscored-digest: sha256:${dp}\nPASS.`);
+    const r = run(brief);
+    expect(r.stderr).toContain('Editor Review (finalise)');
+    expect(r.stderr).toContain('Critic Review: Newsletter (finalise)');
+    expect(r.stderr).not.toContain('Skeptic Review (LinkedIn post)');
+  });
+
+  it('(m) skips loudly on a pre-adoption edition with no digests', () => {
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN, '## Editor Review\nPASS.');
+    const r = run(brief);
+    expect(r.stderr).toContain('SKIP [m]');
+    expect(r.stderr).not.toContain('FAIL [m]');
+  });
+
+  it('(m) skips loudly when the reviews sibling is absent', () => {
+    const brief = fixture(VALID_BRIEF, VALID_LINKEDIN);
+    const r = run(brief);
+    expect(r.stderr).toContain('SKIP [m]');
+    expect(r.stderr).toContain('no reviews sibling');
+  });
+
+  it('(m) treats a heading-marked (prep) block as carried, not stale', () => {
+    const stale = '0'.repeat(64);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (prep)\nscored-digest: sha256:${stale}\nPASS at prep.`);
+    const r = run(brief);
+    expect(r.stderr, 'a prep-carried block must not report stale').not.toContain('FAIL [m]');
+  });
+
+  it('(m) treats a carried-from: prep line as carried, not stale', () => {
+    const stale = '1'.repeat(64);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Cross-Edition Consistency\ncarried-from: prep\nscored-digest: sha256:${stale}\nSUPPORTED.`);
+    expect(run(brief).stderr).not.toContain('FAIL [m]');
+  });
+
+  it('(m) reports a verdict block carrying no digest as never-scored', () => {
+    // Partial adoption must not read green: once ANY block carries a digest the
+    // check runs, and an un-digested block would otherwise be invisible to it.
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${d}\nPASS.\n\n` +
+      `## Skeptic Review (brief, finalise)\nPASS, but nobody recorded what it read.`);
+    const r = run(brief);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('Skeptic Review (brief, finalise)');
+    expect(r.stderr).toContain('carries no scored-digest');
+    expect(r.stderr).not.toContain('Editor Review (finalise)');
+  });
+
+  it('(m) discriminates all four states in one mixed sibling', () => {
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${d}\nPASS.\n\n` +
+      `## Editor Review (prep)\nscored-digest: sha256:${'0'.repeat(64)}\nPASS at prep.\n\n` +
+      `## Skeptic Review (brief, finalise)\nPASS, no digest.\n\n` +
+      `## Critic Review: Newsletter (finalise)\nscored-digest: sha256:${'2'.repeat(64)}\nPASS, older draft.`);
+    const r = run(brief);
+    const fails = r.stderr.split('\n').filter((l) => l.includes('FAIL [m]'));
+    expect(fails.length, `expected exactly 2 firings, got: ${fails.join(' | ')}`).toBe(2);
+    expect(r.stderr).toContain('Skeptic Review (brief, finalise)');
+    expect(r.stderr).toContain('Critic Review: Newsletter (finalise)');
+  });
+
+  // R6 from the risk review: bind the step-16 templates to check (m). The earlier
+  // gap was that every (m) test used handcrafted blocks, so a template that
+  // disagreed with the classifier went undetected. These read SKILL.md itself.
+
+  const SKILL = '.claude/skills/wr-newsletter/SKILL.md';
+
+  it('(m) does not report the non-verdict sections the templates prescribe', () => {
+    // Map Delta, URL Verification and the remediation loop are records, not gate
+    // verdicts. Reporting them would block the save on something unrunnable.
+    expect(existsSync(SKILL), `skill missing: ${SKILL}`).toBe(true);
+    const blocks = ['Map Delta', 'URL Verification', 'Editorial Remediation Loop']
+      .map((h) => `## ${h}\nSome record, no digest.`)
+      .join('\n\n');
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${d}\nPASS.\n\n${blocks}`);
+    const r = run(brief);
+    expect(r.stderr, 'a non-verdict section must not be reported').not.toContain('FAIL [m]');
+  });
+
+  it('(m) exempts the Wardley critic, which scores a third artefact', () => {
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Critic Review: Wardley Artifacts\nscored-digest: sha256:${'3'.repeat(64)}\nPASS.`);
+    expect(run(brief).stderr).not.toContain('FAIL [m]');
+  });
+
+  it('(m) reports a carried block that lost its digest as a custody breach', () => {
+    // Marker present, digest absent is the signature of a block recomposed from
+    // context rather than copied verbatim, which defeats the whole check.
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${d}\nPASS.\n\n` +
+      `## Voice Review (prep)\nPASS at prep, recomposed.`);
+    const r = run(brief);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('Voice Review (prep)');
+    expect(r.stderr).toContain('custody');
+  });
+
+  it('every verdict heading in the templates classifies as the template intends', () => {
+    // Reads the real templates. A heading the classifier treats as a verdict must
+    // have a digest placeholder or a carried marker beside it in SKILL.md; one it
+    // treats as a record must not be required to.
+    const skill = readFileSync(SKILL, 'utf8').split('\n');
+    const verdictRe = /review|critic|consistency|skeptic|shape|accessibility/i;
+    const unmet = [];
+    skill.forEach((line, i) => {
+      const m = line.match(/^\s*## (.+)$/);
+      if (!m) return;
+      const head = m[1];
+      if (!verdictRe.test(head) || /wardley/i.test(head)) return;
+      if (/failure modes|out of scope|phase model|pipeline|reference/i.test(head)) return;
+      const window = skill.slice(i, i + 6).join('\n');
+      if (!/scored-digest:|carried-from: prep/.test(window)) unmet.push(`${SKILL}:${i + 1} ${head}`);
+    });
+    expect(unmet, `verdict slots with no digest placeholder or carried marker:\n${unmet.join('\n')}`).toEqual([]);
   });
 
   // P119 regression. Check (c) used to run `body_text | grep -qE '^### Also worth

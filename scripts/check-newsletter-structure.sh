@@ -29,6 +29,12 @@
 #      the windyroad.com.au closing line (bare or markdown-linked) and blanks do
 #      not count, so a "Windy Road runs ..." / "Tokens Spent helps ..." pitch is
 #      a disallowed second prose line
+#   h  the ADR-032 provenance line sits before the first item heading
+#   i  the **From Tom** author-voice opener is present
+#   j  the closing CTA carries a question, not a statement or a forward request
+#   k  no identical citation (same anchor text and URL) in two different sections
+#   l  the LinkedIn post is within 1.5x the trailing median of recent editions
+#   m  no gate verdict predates the draft being saved (P099 / ADR-047)
 #
 # Notes on determinism:
 #   Check (b) fires on a link-free line that names a news outlet which is not
@@ -417,6 +423,109 @@ if [ -f "$linkedin" ]; then
       if [ "$med" -gt 0 ] && [ "$cc" -gt "$ceiling" ]; then
         fail l "$linkedin: post body is $cc characters against a $ceiling ceiling (1.5x the $med-character median of $(basename "$(dirname "$a")") and $(basename "$(dirname "$b")")); tighten it, or say plainly why this edition earns the extra length"
       fi
+    fi
+  fi
+fi
+
+# --- (m) a gate verdict that predates the current draft (P099 / ADR-047) --------
+# Each gate verdict in the edition's .reviews.md sibling records the digest of the
+# artefact version it scored, as "scored-digest: sha256:<hex>". This check
+# recomputes the current artefact digest and names every gate whose recorded
+# digest does not match, i.e. whose verdict describes a text the edition no
+# longer carries. ADR-047 tunes it to OVER-REPORT: where uncertain, report stale.
+#
+# DETECTION ONLY HERE. The response is the SKILL's, not this script's: on a (m)
+# failure, step 16 re-invokes the named gates against the current artefact and
+# re-saves. A lint cannot invoke a subagent.
+#
+# Digest is over the BODY with frontmatter excluded, matching this file's general
+# stance (see the body= awk above): frontmatter churn at save is not a content
+# edit, so including it would produce noise rather than sensitivity.
+#
+# Skipped, loudly, when the sibling is absent or carries no digests at all, which
+# is the pre-adoption state. Never silently.
+reviews="${brief%.md}.reviews.md"
+if [ ! -f "$reviews" ]; then
+  echo "SKIP [m] $brief: no reviews sibling at $reviews; gate-freshness not checked" >&2
+else
+  ndig=$(grep -cE '^scored-digest: sha256:[0-9a-f]{64}$' "$reviews" || true)
+  if [ "$ndig" -eq 0 ]; then
+    echo "SKIP [m] $reviews: carries no scored-digest lines; gate-freshness not checked (pre-ADR-047 edition)" >&2
+  else
+    digest_of() {
+      if [ "$(head -1 "$1")" = "---" ]; then
+        sed '1,/^---$/d' "$1" | shasum -a 256 | awk '{print $1}'
+      else
+        shasum -a 256 < "$1" | awk '{print $1}'
+      fi
+    }
+    cur_brief=$(digest_of "$brief")
+    cur_post=""
+    [ -f "$linkedin" ] && cur_post=$(digest_of "$linkedin")
+    # Walk the sibling: track the most recent "## <heading>" and, per ADR-047,
+    # which artefact that heading scores. A heading naming the LinkedIn post is
+    # compared against the post digest; everything else against the brief.
+    # Four states per RFC-005, not a boolean. A boolean would report every
+    # ADR-017 prep-carried verdict stale by construction, which is the identical
+    # objection RFC-005 uses to eliminate the whole-gate-set digest.
+    #   matches-current    digest equals the artefact being saved
+    #   carried-by-design  explicitly marked carried; expected not to match, and
+    #                      not verifiable here since the prep body is replaced
+    #   never-scored       a verdict block with no digest at all
+    #   stale              anything else: the verdict predates this draft
+    # A block is carried-by-design iff its heading ends "(prep)" or it carries a
+    # "carried-from: prep" line. ADR-047 criterion 6: silence reads as stale, so
+    # an unmarked carried block is reported, not excused.
+    stale=$(awk -v cb="$cur_brief" -v cp="$cur_post" '
+      function flush() {
+        if (head == "") return;
+        if (!is_verdict) { head=""; return }
+        if (carried && !seen_digest) { printf "%s\tcustody-broken\n", head; head=""; return }
+        if (carried) { head=""; return }
+        if (!seen_digest) { printf "%s\tnever-scored\n", head; head=""; return }
+        head="";
+      }
+      /^## / {
+        flush();
+        head = substr($0, 4);
+        h = tolower(head);
+        # Only VERDICT blocks are in scope. Map Delta, URL Verification and the
+        # remediation loop are records, not gate verdicts, and reporting them
+        # never-scored would block the save on something that cannot be re-run.
+        is_verdict = (h ~ /review|critic|consistency|skeptic|shape|accessibility/) ? 1 : 0;
+        # The Wardley critic scores ai-landscape.md, a third artefact this check
+        # has no target for. Out of scope rather than permanently stale.
+        if (h ~ /wardley/) is_verdict = 0;
+        is_post = (h ~ /linkedin|companion|post\)/) ? 1 : 0;
+        carried = (h ~ /\(prep\)/) ? 1 : 0;
+        seen_digest = 0;
+        next
+      }
+      /^carried-from: *prep/ { carried = 1; next }
+      /^scored-digest: sha256:/ {
+        seen_digest = 1;
+        if (!is_verdict) next;
+        if (carried) next;
+        d = $2; sub(/^sha256:/, "", d);
+        want = is_post ? cp : cb;
+        if (want == "") { printf "%s\t(no artefact on disk to compare)\n", head; next }
+        if (d != want) printf "%s\t%s\n", head, (is_post ? "post" : "brief");
+      }
+      END { flush() }
+    ' "$reviews")
+    if [ -n "$stale" ]; then
+      while IFS="$(printf '\t')" read -r gate which; do
+        [ -n "$gate" ] || continue
+        if [ "$which" = "never-scored" ]; then
+          fail m "$brief: the verdict block \"$gate\" carries no scored-digest, so there is no way to tell which draft it scored; re-run that gate against the current draft (ADR-047)"
+        elif [ "$which" = "custody-broken" ]; then
+          fail m "$brief: the verdict block \"$gate\" is marked carried but has no scored-digest, which is the signature of a block recomposed from context rather than copied verbatim; recover the original block with its digest, or re-run that gate (ADR-047 custody invariant)"
+        else
+          fail m "$brief: the verdict for \"$gate\" was scored against a different $which than the one being saved; re-run that gate against the current draft before saving (ADR-047)"
+        fi
+      done <<EOF
+$stale
+EOF
     fi
   fi
 fi
