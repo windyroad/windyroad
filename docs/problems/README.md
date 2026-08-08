@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-09 **P134 captured** -- the session-start `git status` snapshot strips the leading space from its FIRST line only, so porcelain's unstaged ` M path` renders as the staged `M path`. The risk scorer read `M output/pdf/paper.pdf` off it during the P129 iteration, concluded Tom's in-flight paper was staged, and returned STOP on a precondition never breached; the file was never staged and nothing needed unstaging. It cost a full re-score round trip. Generalises past that one agent: read-only subagents have no Bash tool and cannot read the index at all, so a staging question routes them at the most available and most wrong source. Fix direction is a caller-side convention (paste real `git diff --cached --name-only` output into the prompt), since the snapshot is framework-injected and not fixable here. Rated 8 (Impact 2 x Likelihood 4), Effort S (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-08-09 **P129 verification pending** -- the sourced-script guards shipped. Commit `8ad2dba` is on `origin/master` and the `main-pipeline` run on the current tip `64f4107`, a descendant of it, is green, so the release upstream ADR-022 requires now exists and the hop the last iteration had to hold is unblocked. The citation is hand-written with a `<!-- no-changeset-reference -->` marker: `wr-itil-derive-release-vehicle 129` exits 2, verified by running it rather than taken from the prior iteration's note, because it derives a release only from a changeset and there is none -- the root package is `private: true` and these are repo-local dev scripts. That gap is P098, not a defect in this fix, and P092 is the sibling precedent for the same class. Awaiting user verification that `push:watch`, `deps:fix` and `release:watch` still behave exactly as before, since the guards are meant to be invisible on the executed path.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
-| 18.0 | P129 | Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in | 9 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 12.0 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact | 6 | Known Error | S | 2026-07-03 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
@@ -66,6 +65,7 @@ Fix released, awaiting verification. Sorted by Released date ascending, oldest f
 | P118 | Newsletter publish step uses `git mv` on untracked drafts, which fails | 2026-08-08, repo-local documentation across three surfaces, no changeset (nothing shippable changed) | no - not observed (verifies on the next /wr-newsletter publish) |
 | P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | 2026-08-08 across four commits, against three decisions ratified 2026-08-07 | no - not observed (verifies on the next /wr-newsletter run) |
 | P126 | The deps refresh chain creates a manifest desync and its own recovery path cannot clear it | 2026-08-08 under RFC-006, no changeset (private root package, maintainer tooling) | no - not observed live; the `f1d7b8b` reproduction replays to `rollback` and 13 new cases pass, but the end-to-end path needs a real dep update, which is what ADR-034 criterion (d) is re-armed against |
+| P129 | Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in | 2026-08-09, commit `8ad2dba` on `origin/master`, CI green, no changeset (repo-local dev scripts, private root package) | no - not observed; verifies when a normal `push:watch`, `deps:fix` or `release:watch` run behaves exactly as before, since the guards are meant to be invisible on the executed path |
 
 ## Inbound Upstream Reports
 

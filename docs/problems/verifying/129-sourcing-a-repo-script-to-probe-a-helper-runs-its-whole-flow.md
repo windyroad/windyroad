@@ -1,6 +1,6 @@
 # Problem 129: Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-08-08
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture from the description. Impact is 3 because the flow that runs unguarded is `scripts/push-watch.sh`, which stashes, rebases, auto-updates dependencies, and pushes: RISK-POLICY rates a broken or delayed build as Moderate, and an unintended push can publish work the session was not ready to publish. It is not higher because the push carries only already-committed work and nothing is destroyed. Likelihood is 3 because probing a pure helper is a routine thing to want, both affected scripts expose helpers worth probing, and the correct incantation is easy to omit under time pressure. Observed once on 2026-08-08.
 **Effort**: S, derived at capture, re-rated S at the Known Error transition 2026-08-09 (P047). The delivered scope was larger than the capture estimate in two ways: a third script (`scripts/release-watch.sh`) picked up the guard once Investigation Task 4 found the same shape there, and each of the three test files carries three asserting cases rather than one. It still landed inside a single iteration, so the bucket does not move; recorded so the growth is visible rather than inferred from the diff.
@@ -75,6 +75,20 @@ Reproduced directly in a scratch directory confirmed not to be a git repo, so no
 - Full suite green: 500 passed, 2 skipped, 30 files. `npm run lint` clean.
 
 No changeset: the root package is `private: true` and these are repo-local dev-tooling scripts with no published API contract. This matches the reasoning already recorded in `scripts/fix-deps.sh` for the same class of change.
+
+**Release vehicle**: repo-local scripts (`scripts/push-watch.sh`, `scripts/fix-deps.sh`, `scripts/release-watch.sh`) run directly from the working tree. There is no npm publish path for this change and no `.changeset/` entry, so "released" means merged to `master` and pushed to `origin`. `wr-itil-derive-release-vehicle 129` exits 2 on this ticket for that reason, which is the P098 gap rather than a defect in this fix; the citation below is the exit-2 manual fallback the transition skill documents. Sibling precedent: P092, same class, same reasoning. <!-- no-changeset-reference: repo-local-script class, release == pushed-to-origin per upstream ADR-022; derive exit 2 is P098 -->
+
+## Fix Released
+
+**Release marker**: commit `8ad2dba` (`fix(scripts): refuse to run push, deps-fix and release flows when sourced`), live on `origin/master` as of 2026-08-09. CI green: the `main-pipeline` run on `64f4107`, the current `origin/master` tip and a descendant of `8ad2dba`, completed with conclusion `success`. <!-- no-changeset-reference: repo-local-script class, release == pushed-to-origin per upstream ADR-022; derive exit 2 is P098 -->
+
+**Fix**: all three side-effecting repo scripts now refuse to run their flow when sourced without the script's own opt-in variable, so a read-only probe can no longer stash, rebase, update dependencies, push, or merge a release.
+
+**Why the citation is hand-written**: `wr-itil-derive-release-vehicle 129` exits 2. Verified against the tool on 2026-08-09 rather than assumed from the prior iteration's note: the helper derives a release only from a `.changeset/<name>.md` reference in the ticket body or a changeset co-committed with the ticket, and no changeset exists here because the root package is `private: true` and these are repo-local dev scripts. That is P098, the missing repo-local release-vehicle class, not a defect in this fix. The transition skill's exit-2 routing permits a manual citation carrying an explicit `<!-- no-changeset-reference -->` comment so a later review can audit the gap, which is what the marker above is.
+
+**Exercise evidence from the releasing session**: sourcing each of the three scripts without its opt-in variable printed the directive, returned 0, left the calling shell alive, and defined no helpers; executing `bash scripts/push-watch.sh` passed straight through the guard into the flow, proving the guard is inert on the real invocation path. Full suite green at 500 passed / 2 skipped across 30 files, `npm run lint` clean.
+
+**Awaiting user verification.** The user-side check is that a normal `npm run push:watch`, `npm run deps:fix` and `npm run release:watch` still behave exactly as before, since the guards are meant to be invisible on the executed path.
 
 ## Dependencies
 
