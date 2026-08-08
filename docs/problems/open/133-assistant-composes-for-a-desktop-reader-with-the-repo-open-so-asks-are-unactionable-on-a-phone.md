@@ -6,7 +6,6 @@
 **Origin**: internal
 **Effort**: S, derived at capture. A memory-layer discipline note plus, if the pattern recurs after that, a prose line in the skills that compose ratification asks. Same size class and same fix locus as P050, P061 and P107, all assistant-discipline corrections shipped as memory-layer levers.
 **WSJF**: 8.0 = (8 x 1.0) / 1
-**JTBD**: anchoring left explicitly unconfirmed. `docs/jtbd/` models four personas, all readers or the newsletter author; the affected party is whoever the assistant asks to ratify a decision in this repo, and no maintainer persona is modelled. Same convention as the P130, P131 and P132 notes.
 
 ## Description
 
@@ -63,6 +62,8 @@ Attach the artefact with `SendUserFile` and restate the decision in the message 
 - **Composes with**: (none)
 
 ## Related
+
+**Anchoring: JTBD-401 (Decide from the phone in my hand), Internal Maintainer persona.** The header-line anchoring left unconfirmed at capture is now settled: `docs/jtbd/internal-maintainer/` models the person the assistant asks to ratify, written 2026-08-08 on Tom's direction. This ticket is the whole warrant for that job, and Tom's screenshot quote above is quoted in both the persona's Context Constraints and the job's Evidence. The job's first three outcomes are this ticket's fix direction restated as outcomes: deliver the artefact, state the decision in the message, keep the reply to one line. The job's first anti-outcome carries this ticket's quiet failure branch, that a ratification given without a real read hollows out the oversight marker. The counterweight to P061 is recorded as the job's sixth outcome, so the two correctives do not cancel. The persona and job are `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`, so this anchoring is provisional. Recorded in prose rather than a `**JTBD**` header line, per local convention; the header line carried at capture has been removed.
 
 - P107 (open), assistant routes free-text input collection through AskUserQuestion instead of per-item copyable blocks. The nearest sibling. Arbitrated at capture via `wr-itil:hang-off-check`, verdict PROCEED_NEW: P107's scope is bounded to the input-collection mechanism for free text the user pastes back, while this ticket concerns the reader model the output is composed against. Different fix locus, so sibling rather than parent.
 - P061 (known error), assistant gates policy-authorised actions on user permission. Also arbitrated, also PROCEED_NEW. Its corrective is "stop asking and act"; this ticket's corrective is the opposite, keep asking but make the ask actionable. The observed "I'll draft it and bring it to you" line resembles P061's deferral prose on the surface only: ADR ratification is a genuine human decision, not a policy-authorised action the assistant should have taken itself.

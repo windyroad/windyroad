@@ -6,8 +6,6 @@
 **Origin**: internal
 **Effort**: S, derived at capture. One extraction branch in `external-comms-gate.sh` (read the file named by `--body-file` into `DRAFT`) plus a bats case alongside the existing extraction fixtures. Same size class as P129, also rated S for a guard clause in one script.
 **WSJF**: 6.0 = (6 x 1.0) / 1
-**JTBD**: anchoring left explicitly unconfirmed. `docs/jtbd/` models four personas, all readers or the newsletter author; the affected party is whoever files outbound prose from this repo, and no maintainer persona is modelled. Same convention as the P130 note.
-**Persona**: anchoring left explicitly unconfirmed, for the same reason.
 
 ## Description
 
@@ -66,6 +64,8 @@ Two adjacent requirements are worth stating because failing either wastes an ent
 - **Composes with**: P085, P074
 
 ## Related
+
+**Anchoring: JTBD-402 (Land the fix where the defect lives), Internal Maintainer persona.** The header-line anchoring left unconfirmed at capture is now settled: `docs/jtbd/internal-maintainer/` models the person this ticket describes, written 2026-08-08 on Tom's direction. This is a defect on the outbound contribution path, which is JTBD-402's third outcome, that the path itself works rather than costing a review round and the diagnosis time to a message naming three causes and not the real one. It also touches [JTBD-400](../../jtbd/internal-maintainer/JTBD-400-trust-what-the-loop-did-while-i-was-away.proposed.md), since the AFK orchestrator hits this block unattended when an iteration reports a ticket upstream. The persona and job are `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`, so this anchoring is provisional. Recorded in prose rather than `**JTBD**` / `**Persona**` header lines, per local convention; the header lines carried at capture have been removed.
 
 - Captured via `/wr-itil:capture-problem` during the P125 iteration retro (2026-08-08).
 - Driver evidence: the two blocked `gh issue create --body-file` attempts while filing `https://github.com/windyroad/agent-plugins/issues/413`, and the successful inline-heredoc retry immediately after.

@@ -6,8 +6,6 @@
 **Origin**: internal
 **Effort**: S, derived at capture. Two localised predicate changes in one script (qualify shape 2's ADR match; gate shape 5 on the declared relationship) plus cases alongside the existing `packages/itil/scripts/test/evaluate-relevance.bats` fixtures. Same size class as P129 and P131, both rated S for guard-clause changes in a single script.
 **WSJF**: 8.0 = (8 x 1.0) / 1
-**JTBD**: anchoring left explicitly unconfirmed. `docs/jtbd/` models four personas, all readers or the newsletter author; the affected party is whoever runs the problem-backlog loop in this repo, and no maintainer persona is modelled. Same convention as the P130 and P131 notes.
-**Persona**: anchoring left explicitly unconfirmed, for the same reason.
 
 ## Description
 
@@ -65,6 +63,8 @@ The `A1` guard already in the script (suppress shape 5 when the child names an u
 - **Composes with**: (none)
 
 ## Related
+
+**Anchoring: JTBD-400 (Trust what the loop did while I was away), Internal Maintainer persona.** The header-line anchoring left unconfirmed at capture is now settled: `docs/jtbd/internal-maintainer/` models the person who runs the problem-backlog loop, written 2026-08-08 on Tom's direction. This ticket is the sharpest evidence for that job's third outcome, that a verdict is grounded in the relationship it claims rather than in a string that resembles one, and for its fifth, that a surface whose output must be fully re-derived has negative value because it also carries the authority to be believed. Witness B is outcome 4, an override the loop absorbed silently. The fix site is upstream, so [JTBD-402](../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md) governs how it lands. The persona and job are `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`, so this anchoring is provisional. Recorded in prose rather than `**JTBD**` / `**Persona**` header lines, per local convention; the header lines carried at capture have been removed.
 
 Captured via `/wr-itil:capture-problem` during a `/wr-itil:work-problems` iteration on P118, after the orchestrator overrode the Step 3.6 verdict as a false positive.
 

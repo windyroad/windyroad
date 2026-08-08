@@ -65,6 +65,16 @@ Tom, on the production side of the same artefacts. Not a reader persona. See [pu
 |----|-----|----------|------|
 | JTBD-300 | Spend Editorial Judgement Where It Counts | Must-have | [JTBD-300-spend-editorial-judgement-where-it-counts.proposed.md](publication-author/JTBD-300-spend-editorial-judgement-where-it-counts.proposed.md) |
 
+## Internal Maintainer
+
+Tom, operating this repo's governance loop while away from it and maintaining the tooling that loop runs on, here and upstream. Not a reader persona. See [internal-maintainer/persona.md](internal-maintainer/persona.md). Added 2026-08-08 to close a gap recorded 2026-06-17 with Tom's direction to author it locally; four tickets captured on 2026-08-08 (P130, P131, P132, P133) had to record their anchoring as unconfirmed because no persona covered the person they describe. Written on direction, not yet ratified: the persona and all three jobs carry `human-oversight: unconfirmed` pending `/wr-jtbd:confirm-jobs-and-personas`.
+
+| ID | Job | Priority | File |
+|----|-----|----------|------|
+| JTBD-400 | Trust What the Loop Did While I Was Away | Must-have | [JTBD-400-trust-what-the-loop-did-while-i-was-away.proposed.md](internal-maintainer/JTBD-400-trust-what-the-loop-did-while-i-was-away.proposed.md) |
+| JTBD-401 | Decide From the Phone in My Hand | Must-have | [JTBD-401-decide-from-the-phone-in-my-hand.proposed.md](internal-maintainer/JTBD-401-decide-from-the-phone-in-my-hand.proposed.md) |
+| JTBD-402 | Land the Fix Where the Defect Lives | Must-have | [JTBD-402-land-the-fix-where-the-defect-lives.proposed.md](internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md) |
+
 ## Job-to-Screen Mapping
 
 | Route / Surface | Primary jobs served | Persona |
@@ -74,6 +84,9 @@ Tom, on the production side of the same artefacts. Not a reader persona. See [pu
 | The Shift newsletter (LinkedIn, off-site) | JTBD-005 | Engineering Leader |
 | Tokens Spent newsletter (LinkedIn, off-site) | JTBD-200 through JTBD-205 | Developer |
 | `/wr-newsletter` pipeline (prep and finalise) | JTBD-300 | Publication Author |
+| `/wr-itil:work-problems` loop, `/wr-itil:review-problems`, `/wr-retrospective:run-retro` | JTBD-400 | Internal Maintainer |
+| Ratification asks: `/wr-architect:review-decisions`, `/wr-jtbd:confirm-jobs-and-personas`, iteration summaries | JTBD-401 | Internal Maintainer |
+| `/wr-itil:report-upstream`, `/wr-itil:update-upstream`, `/wr-itil:check-upstream-responses`, `docs/problems/parked/` | JTBD-402 | Internal Maintainer |
 
 Retired per ADR-041: `/ai-quality`, `/founders`, `/vibe-code-audit` are deleted and redirect to `/`. The homepage, blog, and The Shift no longer serve the consulting jobs JTBD-001 to JTBD-004 or the Technical Founder's JTBD-100.
 
@@ -93,3 +106,4 @@ Retired per ADR-041. Windy Road no longer sells consulting engagements (Patch Fi
 - Technical Founder: 100-199
 - Developer: 200-299
 - Publication Author: 300-399
+- Internal Maintainer: 400-499
