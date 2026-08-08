@@ -87,3 +87,22 @@ The P165 hook's "ticket file staged, README must be staged" rule is correct for 
 - **Template used**: structured default body (problem-shaped per ADR-033)
 - **Disclosure path**: public issue (used BYPASS_RISK_GATE=1 because P074 hook failure prevented marker write despite both wr-risk-scorer:external-comms AND wr-voice-tone:external-comms returning PASS verdicts on review)
 - **Cross-reference confirmed**: yes (upstream body cites this ticket's GitHub path verbatim)
+
+## Session evidence (2026-08-09 P115 AFK iter)
+
+Fired on a commit whose only ticket change was appending a third witness to P132's evidence section.
+The edit moved no README column: WSJF stayed 8.0, severity 8, status Open, effort S, reported date
+unchanged. `wr-itil-reconcile-readme` returned clean with no output and exit 0, confirming there was
+no drift for a refresh to correct. The commit was denied anyway.
+
+Two things worth recording from how it was discharged. First, the honest discharge is not a no-op
+touch: the README's "Last reviewed" line is a genuine narrative surface, and writing a real entry
+about the witness turned out to be worth doing on its own merits. Second, that only holds because
+this repo's README carries that narrative line. A consumer README without one would leave no honest
+way to satisfy the gate, and the pressure would go straight to the bypass, which is the outcome the
+gate exists to prevent.
+
+That points back at option 2 of this ticket's own `### Hypothesis` section rather than at a new
+idea, so read this as a second witness for an option already on file: the gate could accept a `reconcile-readme`-clean result as evidence that no refresh
+is owed, since the reconcile script already computes exactly the drift question the gate is guessing
+at.

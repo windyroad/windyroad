@@ -93,3 +93,28 @@ The marker-hash mismatch recurred on TWO distinct external-comms surfaces in one
 2. **gh-issue-create** (filing windyroad/agent-plugins#258): both reviewers returned PASS with the correct `SURFACE: gh-issue-create` label and the verbatim `--body-file` content, yet `gh issue create` reported "gh-issue-create draft has not been reviewed". Forced `BYPASS_RISK_GATE=1`.
 
 In both cases the content was twice-reviewed-clean; the blocker was the marker-key the PostToolUse hook derives not matching what the PreToolUse gate recomputes. This widens the root cause: the marker-derivation mismatch is not tied to commit-message body changes alone (the original P085 framing); it reproduces on a fresh gh-issue-create surface where the body never changed between review and action. The fix should target the marker-key derivation symmetry across ALL external-comms surfaces (commit-message, gh-issue-create, gh-pr, changeset-author), not just the commit-message body-hash case.
+
+## Session evidence (2026-08-09 P115 AFK iter): the commit trailer is part of the hashed body
+
+Recurred twice in one iteration, on the git-commit-message surface, with a **narrower and more
+reproducible trigger than any prior witness here**. Both times the body was passed as a single
+heredoc `-m`, so none of the multi-`-m` first-match-wins shapes recorded above apply, and the body
+was not edited between the review and the commit.
+
+The trigger is the `Co-Authored-By:` trailer. The reviewer was dispatched with the message body
+inside `<draft>` but WITHOUT the trailer; the commit carried the trailer, as every commit in this
+repo does. `compute_external_comms_key` hashes `normalize(draft) + "\n" + surface` over whatever the
+PreToolUse gate scraped from the command string, which is the full heredoc including the trailer. So
+the two keys differ by exactly the trailer, and the commit re-blocks with "draft has not been
+reviewed" after a genuine PASS.
+
+Reproduced on the P109 back-write commit and again on the P132 witness commit. Cost was two extra
+reviewer dispatches, each a full round trip. The recovery is mechanical once known: put the entire
+message, trailer included, inside `<draft>`.
+
+This is a concrete instance of the widened root cause recorded above (key-derivation symmetry across
+surfaces) and is the cheapest one to fix or to document: the trailer is boilerplate appended by
+convention, so the asymmetry is systematic rather than incidental. Either the gate should strip the
+trailer before hashing, symmetric with the changeset-frontmatter strip it already performs, or the
+deny message should say that the hashed body includes trailers. Carried into the briefing at
+`docs/briefing/what-will-surprise-you.md`.
