@@ -15,7 +15,9 @@ architect edit-gate session-ID mismatch under AFK subprocess: PostToolUse:Agent 
 
 ## Symptoms
 
-(deferred to investigation)
+- The Edit is denied with "No architect review marker found for this session" after the architect genuinely ran and returned a verdict.
+- **The hook's own documented recovery instruction resolves to the wrong session (observed 2026-08-08, main-turn AFK iteration on P118, no subprocess involved).** The denial message now carries a P400 note ending: "assert the marker manually: `touch /tmp/architect-reviewed-$SID && rm -f /tmp/architect-reviewed-$SID.hash` (SID = newest `architect-plan-reviewed-*` / `architect-announced-*` basename)". Following that literally picked `32c3dce3-c247-4e65-945e-44aff031b550`, the newest announced marker on the machine, which belonged to a different session; the gate re-denied unchanged. The session's actual ID was `1df8e13d-c15c-4377-8cfc-4def452aeea3`, and asserting the marker under that cleared the gate on the next attempt. The sibling jtbd gate had written its own markers under the correct ID (`/tmp/jtbd-reviewed-1df8e13d-...` plus a `.hash`), so the correct ID was recoverable only by inspecting another plugin's markers.
+- Two things this sharpens about the ticket's existing framing. The mismatch is not confined to the AFK-subprocess case in the Description: this occurrence was a main-turn session with no subprocess. And "newest marker on the machine" is not a safe proxy for "this session" on a machine that runs concurrent sessions, so the recovery instruction inherits the same last-writer-wins defect the ADR-050 Option C candidate-SID write exists to fix.
 
 ## Workaround
 
