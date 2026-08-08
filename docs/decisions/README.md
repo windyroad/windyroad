@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 48 (44 in-force, 4 historical)
+**Total ADRs:** 49 (45 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_44 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_45 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -123,10 +123,11 @@ _44 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **1. All reviews and meta content live in sibling files. Brief contains only frontmatter + body + CTA**.
 **Confirmation:** (1) /wr-newsletter step 16 (all three phases) writes three sibling files; brief contains only frontmatter + bo...; (2) Edition 4's published <date>.md brief contains no ## Voice Review, ## Content Risk Review, ## Critic Revie...; (3) Edition 4's <date>.reviews.md, <date>.linkedin.md, <date>.capture.md siblings exist with the correct conte...; (4) Spot-check on the next critic round (sw-critic re-running on the post-edit brief): the agent's transcript ...
-
 ### ADR-027 - Encode newsletter primacy in the risk Impact rubric
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **1. Re-tier newsletter up and static site down**.
+**Decides:** Re-tier the `RISK-POLICY.md` Impact rubric so newsletter failures outrank static-site ones: content reaching LinkedIn readers at L5, caught-at-gate at L4, pre-publish pipeline disruption at L3, while static-site degradation drops to L3 (full outage L4). Codifying primacy in the rubric lets Severity and WSJF rise naturally, retiring the per-ticket "weight 2.0" folklore without forking the upstream `wr-itil:manage-problem` formula. Amended 2026-08-09: the record's `(< 5)` appetite and "label bands unchanged" clauses are stale; `RISK-POLICY.md` is the source of truth.
+**Confirmation:** Impact rubric encodes the newsletter L5/L4/L3 split; static site sits at L3/L4 and never L5 absent content/trust/security severity; per-ticket "weight 2.0" folklore annotations are deletable and dropped on next re-rate; new tickets score Severity from the new rubric; future references cite ADR-027 plus RISK-POLICY.md rather than "the 2026-05-02 direction"
+**Related:** ADR-023, ADR-049
 
 ### ADR-028 - CI-status check in push:watch and release:watch
 **Status:** proposed | **Oversight:** confirmed
@@ -224,6 +225,11 @@ _44 ADRs. These are the current rules. The architect agent reads this section fi
 **Chosen:** Chosen option: **"Prefer a pull request over an issue when the upstream accepts
 **Confirmation:** One parked ticket driven end to end as an upstream pull request, landed and; /wr-itil:report-upstream prefers a pull request over an issue when the; The unscored-diff surface is either closed or carries its own ticket.; ADR-036 carries both halves of the reciprocal amendment link: a bullet in
 **Related:** ADR-036, ADR-008, ADR-012, ADR-015, ADR-045
+### ADR-049 - Risk label bands adopt the 3-5 Low shape, so a residual of 5 is called what it is
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** Adopts the upstream 3-5 Low band shape so an admissible residual of 5 reads as Low rather than as an accepted Medium, while keeping the numeric appetite threshold and the composition constraint that excludes a 5 composed as impact 1 x likelihood 5. No pass/fail outcome changes anywhere - the commit gate compares the product against the threshold and never reads the band table.
+**Confirmation:** `RISK-POLICY.md` bands, unchanged appetite value and retained composition constraint verified by `wr-risk-scorer:policy` (PASS); gate parse of the amended file traced by `wr-risk-scorer:pipeline` before the commit landed, scoring 4 (Low); this compendium entry carries the section's derived counts, hand-corrected because the entry-writing hook does not update them; open - a pipeline assessment lands a residual of exactly 5 printed as Low with its likelihood-1 control named; open - Tom ratifies via `/wr-architect:review-decisions`
+**Related:** upstream ADR-086 (agent-plugins, precedent not authority), ADR-007, ADR-008, ADR-027
 
 ---
 

@@ -13,6 +13,8 @@ informed: []
 
 ## Context and Problem Statement
 
+> **Amended 2026-08-09.** Two scoping statements about the risk matrix in this record are now stale. The appetite moved to **5 or below** on 2026-08-07, so the `(< 5)` figures in the Decision Outcome and in the Neutral consequences are point-in-time. The label bands moved on 2026-08-09, so the Decision Outcome's clause asserting the label bands are unchanged no longer holds; its other clauses, the likelihood rubric and the product matrix, are still accurate. `RISK-POLICY.md` is the enforcement surface and the single source of truth for both moved values. This record's own decision, the Impact rubric's newsletter asymmetry, is untouched by either change. See ADR-049 and RISK-POLICY.md Amendment History.
+
 `RISK-POLICY.md` Business Context (line 15) names the LinkedIn newsletter (The Shift / Tokens Spent) as "the primary lead-generation channel". The Impact rubric did not encode this: newsletter and static-site visitor surfaces both sat at Level 4 Significant, with no asymmetry between the primary channel and the supporting reference material.
 
 Downstream, this produced two problems:
