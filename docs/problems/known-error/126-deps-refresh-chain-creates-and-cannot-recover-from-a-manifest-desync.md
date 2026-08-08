@@ -106,3 +106,9 @@ Then commit the lockfile. Do NOT use plain `npm install` in this repository: it 
 - **P111** (`docs/problems/known-error/111-publish-day-push-blocked-by-deps-hygiene-chain.md`): adjacent cost in the same chain, different cause (the gate firing correctly rather than a defective artefact).
 - Evidence: `f1d7b8b` (the desynced commit), `3d14a32` (the manual repair), CI run 30999217454 (green after repair), all on master 2026-08-05.
 - Captured via `/wr-itil:capture-problem` at the close of a four-ticket `/wr-itil:work-problems` loop, while pushing that loop's work.
+
+## RFCs
+
+| RFC | Status | Title |
+|-----|--------|-------|
+| RFC-006 | proposed | Make the deps refresh chain produce a coherent manifest pair, and make its rollback verify what it claims |
