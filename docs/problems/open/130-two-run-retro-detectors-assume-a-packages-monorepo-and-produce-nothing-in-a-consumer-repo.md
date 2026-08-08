@@ -29,6 +29,15 @@ Its own SKILL prose says the detector "always exits 0" and is advisory, so the c
 
 **Third site, found the same day.** `/wr-retrospective:analyze-context` Step 0 is a guard that runs `test -x packages/retrospective/scripts/measure-context-budget.sh` and instructs halting if the primitive is missing. In a consumer repo the test always fails, so the guard would halt the deep layer permanently. It only did not, on 2026-08-08, because Step 1 invokes the same measurement through the correct `wr-retrospective-measure-context-budget` shim, so the analysis proceeded past a guard that had already declared the tool absent. That is worse than the two sites above: a fail-open guard that is wrong in every consumer repo trains its reader to skip it. Recorded in `docs/retros/2026-08-08-context-analysis.md` under Policy Breaches.
 
+**Two further sites, found 2026-08-08 during the maintainer-persona iteration's retro.** Both are the same defect in a different shape: the SKILL names a `packages/retrospective/scripts/*.sh` path for a detector that ships no `$PATH` shim at all, so there is nothing to invoke by any route in a consumer repo.
+
+- Step 2d's R6 numeric gate instructs invoking `packages/retrospective/scripts/check-ask-hygiene.sh` to read the cross-session ask-hygiene trail and detect the "lazy count >= 2 across 3 consecutive retros" condition. No `wr-retrospective-check-ask-hygiene` shim exists.
+- Step 4b Stage 1 names `packages/retrospective/scripts/check-tickets-deferred-cause.sh` as the advisory that surfaces Tickets-Deferred rows lacking a valid `cause:`. No shim for it either.
+
+Confirmed by listing the plugin's shipped shims at `~/.claude/plugins/cache/windyroad/wr-retrospective/0.27.0/bin/`, which holds nine `wr-retrospective-*` commands: `check-autocreate-rfc-scope`, `check-internal-id-leaks`, `check-plugin-maturity-drift`, `check-readme-jtbd-currency`, `check-skill-md-budgets`, `check-tarball-shipped-shims`, `list-plugin-attribution`, `measure-context-budget`, `migrate-briefing`. Neither ask-hygiene nor tickets-deferred-cause nor briefing-budgets is among them. So the budget pass in defect (1) is not merely a site that was left behind on the shim migration; its shim was never shipped. The R6 gate was substituted by hand this retro (read the last four `docs/retros/*ask-hygiene.md` files, all lazy count 0, gate does not fire), which works only because the trail is small.
+
+This widens the Fix Strategy: the first bullet below is not a one-line path substitution, it also needs the shim to be authored and shipped, and the same is true for the two sites above.
+
 ## Symptoms
 
 - Step 3's budget pass produces no output, so the retro has no measured input for the rotation decision it is required to make.
