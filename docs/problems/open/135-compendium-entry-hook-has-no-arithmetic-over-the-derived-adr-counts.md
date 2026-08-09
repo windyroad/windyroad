@@ -47,8 +47,24 @@ Do not reach for `wr-architect-generate-decisions-compendium` to fix it. It woul
 
 - [ ] Confirm the placement proposal before acting on it. The hook lives in the `wr-architect` plugin, which this repository consumes rather than owns, so the arithmetic most likely belongs upstream next to the code that writes the entry. That is a proposal the upstream maintainers can decline, not a settled fact about where the work goes (P045). Check whether a per-entry hook is even the right place for a whole-section tally before proposing it there.
 - [ ] Decide whether this repo wants a local check regardless of the upstream outcome. A few lines that recount and compare would fail loudly on drift without waiting on anyone, and would keep working if the upstream answer is "the entry hook is deliberately entry-scoped". Weigh that against adding a check for a defect whose worst outcome is a wrong number in a header.
-- [ ] Create a reproduction: land a throwaway ADR, assert the header count goes stale, assert it again after whichever fix is chosen.
+- [x] Create a reproduction. No throwaway ADR was needed: landing ADR-050 on 2026-08-09 reproduced it exactly as this
+      ticket predicted. See the recurrence evidence below. The second half of the task, asserting the counts again
+      after whichever fix is chosen, is still owed and belongs with that fix.
 - [ ] File as a `/wr-itil:report-upstream` candidate against `@windyroad/wr-architect` if the first task confirms the upstream placement.
+
+## Recurrence evidence (2026-08-09, first predicted recurrence)
+
+This ticket's Description said the counts were right at the time of writing, 49 total as 37 `.proposed` plus 8 `.accepted` plus 4 `.superseded`, and predicted they "will be wrong the next time an ADR lands without someone thinking of it."
+
+That happened the same day. ADR-050 landed and the counts drifted by exactly one. Disk now reads 38 `.proposed` plus 8 `.accepted` plus 4 `.superseded`, so 50 total and 46 in-force, while the compendium still claimed 49 and 45. The drift also survived its own commit uncorrected, which is the part that matters: nothing in the commit path noticed.
+
+Two details worth recording for whoever fixes this.
+
+**Both stale numbers must move together.** Line 14 carries `**Total ADRs:** 49 (45 in-force, 4 historical)` and line 20 carries `_45 ADRs. These are the current rules...._`. An earlier draft of the correction touched only line 14, which would have left the file asserting 46 in-force at line 14 and 45 six lines later. That is worse than being uniformly wrong: a reader can discount a header that is consistently off by one but cannot adjudicate between two disagreeing numbers. Line 245's historical count of 4 was and remains correct.
+
+**The row was written by the hook, not the generator.** The ADR-050 entry at lines 235 to 239 was appended by `architect-compendium-update-entry.sh` firing on the ADR write. The retired generator did compute these counts, so this is a capability lost in the handover to the hook rather than a defect the hook introduced. That distinction is the reason this ticket stays separate from P087, and it survived a challenge on 2026-08-09: the proposal to fold this onto P087 as a second symptom of the same tooling was rejected on the grounds recorded in this ticket's own Related section.
+
+Corrected by hand in the same commit, per this ticket's Workaround and the stronger instruction in `docs/briefing/architect-compendium-deadlock.md` not to run the generator at all.
 
 ## Dependencies
 

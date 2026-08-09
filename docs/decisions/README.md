@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 49 (45 in-force, 4 historical)
+**Total ADRs:** 50 (46 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_45 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_46 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -233,7 +233,7 @@ _45 ADRs. These are the current rules. The architect agent reads this section fi
 **Related:** upstream ADR-086 (agent-plugins, precedent not authority), ADR-007, ADR-008, ADR-027, P128, P082
 
 ### ADR-050 - Quality gates are release ancestors, not reports
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** proposed | **Oversight:** confirmed
 **Decides:** `release-pr` now declares `needs: [deploy-test, gate-accessibility]`, generalised to the rule that every quality gate is an ancestor of `release-pr` so release blocking lives in the workflow graph rather than only in the local `ci-status-check.sh` wrapper. Chosen over branch protection (blocked today: `release-pr-preview.yml` does not report the accessibility check) and wrapper-only enforcement (bypassable via the GitHub merge UI); accepts no override valve and a flake-coupling cost measured at 25/25 recent green runs.
 **Confirmation:** `release-pr` declares `needs: [deploy-test, gate-accessibility]`; a failing accessibility gate shows `Create release PR` as failed not skipped, named by the `Require a passing accessibility gate` step; no release PR is created or updated on such a run; both guards report independently rather than the first hiding the second.
 **Related:** ADR-028, ADR-049
