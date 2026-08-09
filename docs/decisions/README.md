@@ -238,7 +238,7 @@ _47 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** `release-pr` declares `needs: [deploy-test, gate-accessibility]`; a failing accessibility gate shows `Create release PR` as failed not skipped, named by the `Require a passing accessibility gate` step; no release PR is created or updated on such a run; both guards report independently rather than the first hiding the second.
 **Related:** ADR-028, ADR-049
 ### ADR-051 - Production deploys only bytes that provably came from the release commit
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** proposed | **Oversight:** confirmed
 **Decides:** Production must deploy the preview artifact built from the exact commit being released, not whichever preview finished most recently. The preview uploads under `release-preview-build-<pr_head_sha>` and publish resolves `git rev-parse HEAD^2` to find and download that SHA-named artifact, so the name carries the identity and a wrong lookup fails closed instead of shipping the wrong bytes. Scoped to identity only: nothing yet guarantees the shipped bytes were tested.
 **Confirmation:** preview uploads under `release-preview-build-${{ github.event.inputs.pr_head_sha }}`; publish resolves `HEAD^2` and fails naming both recoverable causes when HEAD is not a merge commit; preview run selected by `headSha` match, not recency; download requests the SHA-named artifact so a wrong run yields not-found; `gh run list` retains its `GH_TOKEN` env
 **Related:** ADR-050, ADR-028

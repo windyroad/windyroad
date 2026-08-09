@@ -67,7 +67,7 @@ Surfaced by the `wr-architect:agent` review of the P143 skip fix, as an observat
 
 ## Resolution
 
-The selection defect is fixed, recorded as ADR-051 (`human-oversight: unconfirmed` pending ratification). Two of the four investigation tasks are closed; two remain open, so this ticket stays open.
+The selection defect is fixed, recorded as ADR-051 (ratified 2026-08-10). Two of the four investigation tasks are closed; two remain open, so this ticket stays open.
 
 **The mechanism.** `scripts/release-watch.sh` merges the release PR with `gh pr merge --merge`, so the commit pushed to `publish` is a merge whose second parent is the PR head the preview built from. `release-pr-preview.yml` now uploads under `release-preview-build-<pr_head_sha>`, and `publish-pipeline.yml` resolves `git rev-parse HEAD^2`, finds the preview run whose `headSha` matches that rather than the most recent one, and downloads the SHA-named artifact.
 

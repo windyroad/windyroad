@@ -1,7 +1,8 @@
 ---
 status: "proposed"
 date: 2026-08-09
-human-oversight: unconfirmed
+human-oversight: confirmed
+oversight-date: 2026-08-10
 decision-makers: [Tom Howard, Claude]
 consulted: [wr-architect:agent, wr-risk-scorer:pipeline]
 related: [050-quality-gates-are-release-ancestors-not-reports, 028-ci-status-check-in-push-and-release-watch]
