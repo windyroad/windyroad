@@ -232,6 +232,12 @@ _45 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** `RISK-POLICY.md` bands, unchanged appetite value and retained composition constraint verified by `wr-risk-scorer:policy` (PASS); gate parse of the amended file traced by `wr-risk-scorer:pipeline` before the commit landed, scoring 4 (Low); compendium entries written by the `architect-compendium-update-entry.sh` hook, with em-dashes scrubbed and the section's derived counts corrected by hand; open - a pipeline assessment lands a residual of exactly 5 printed as Low with its likelihood-1 control named; ratified by Tom in session on 2026-08-09
 **Related:** upstream ADR-086 (agent-plugins, precedent not authority), ADR-007, ADR-008, ADR-027, P128, P082
 
+### ADR-050 - Quality gates are release ancestors, not reports
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** `release-pr` now declares `needs: [deploy-test, gate-accessibility]`, generalised to the rule that every quality gate is an ancestor of `release-pr` so release blocking lives in the workflow graph rather than only in the local `ci-status-check.sh` wrapper. Chosen over branch protection (blocked today: `release-pr-preview.yml` does not report the accessibility check) and wrapper-only enforcement (bypassable via the GitHub merge UI); accepts no override valve and a flake-coupling cost measured at 25/25 recent green runs.
+**Confirmation:** `release-pr` declares `needs: [deploy-test, gate-accessibility]`; a failing accessibility gate shows `Create release PR` as failed not skipped, named by the `Require a passing accessibility gate` step; no release PR is created or updated on such a run; both guards report independently rather than the first hiding the second.
+**Related:** ADR-028, ADR-049
+
 ---
 
 ## Historical decisions

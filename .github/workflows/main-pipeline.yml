@@ -78,6 +78,14 @@ jobs:
             curl -sf http://localhost:3000 > /dev/null && break
             sleep 1
           done
+          # The loop used to fall through silently, so a server that never came
+          # up ran pa11y against a dead port and reported an accessibility
+          # failure. That mis-signal costs more now this job blocks releases.
+          curl -sf http://localhost:3000 > /dev/null || {
+            echo "serve never came up on :3000 after 30s; this is a server-startup"
+            echo "failure, not an accessibility failure."
+            exit 1
+          }
           npx pa11y-ci
 
   deploy-test:
@@ -139,7 +147,10 @@ jobs:
 
   release-pr:
     name: Create release PR
-    needs: [deploy-test]
+    # gate-accessibility is a release ancestor, not just a report (P147, ADR-050).
+    # gate-secrets already reaches here via build, so this makes every quality
+    # gate an ancestor rather than singling accessibility out.
+    needs: [deploy-test, gate-accessibility]
     # Without an `if:`, a failed deploy-test renders this job as SKIPPED, and
     # since it is the only path to production the pipeline reports the absence
     # of a release rather than a refusal to make one (P143). Any `if:` drops the
@@ -153,12 +164,31 @@ jobs:
       pull-requests: write
       actions: write
     steps:
+      # Two guards rather than one shared exit, so the run summary names WHICH
+      # precondition failed without opening logs. They have different owners:
+      # a deploy-test failure is usually infrastructural and transient, an
+      # accessibility failure is a real defect needing specialist work. Both
+      # carry `!cancelled()` so a failure in the first still lets the second
+      # report, instead of the default skip-after-failure hiding it.
       - name: Require a successful deploy and smoke test
-        if: needs.deploy-test.result != 'success'
+        if: ${{ !cancelled() && needs.deploy-test.result != 'success' }}
         run: |
           echo "deploy-test concluded '${{ needs.deploy-test.result }}', not 'success'."
           echo "No release PR will be created. Failing rather than skipping so the"
           echo "production path is visibly blocked instead of silently quiet (P143)."
+          exit 1
+
+      - name: Require a passing accessibility gate
+        if: ${{ !cancelled() && needs.gate-accessibility.result != 'success' }}
+        run: |
+          echo "gate-accessibility concluded '${{ needs.gate-accessibility.result }}', not 'success'."
+          echo "No release PR will be created. WCAG AA is non-negotiable for this"
+          echo "project, so the accessibility gate blocks the release path rather"
+          echo "than merely reporting (P147, ADR-050)."
+          echo
+          echo "Note there is no acknowledge-and-proceed valve here, unlike the"
+          echo "ci-status-check red-CI marker. Clear it by fixing the violation or"
+          echo "by re-running the job if it was infrastructural."
           exit 1
 
       - uses: actions/checkout@v6

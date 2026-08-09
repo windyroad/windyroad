@@ -18,6 +18,9 @@ The em-dash in these positions triggers project-local `no-em-dash` hooks (`.clau
 
 Forcing the agent to manually replace every em-dash before the commit can proceed (this session: 43 em-dashes scrubbed via a single Edit replace_all from a regenerated README).
 
+
+Recurred 2026-08-09 while landing ADR-050. Writing `docs/decisions/050-*.proposed.md` triggered the compendium regeneration, which appended six lines including `### ADR-050 <em-dash> Quality gates are release ancestors, not reports`. The repo's own `no-em-dash-bash.sh` PostToolUse hook then blocked the next Bash call against that file. Note the blocking message names the file but not the cause, and the file had zero em-dashes at HEAD, so the natural first reading is that you introduced it. Hand-corrected to a plain hyphen to match every other heading in the file. That is the fourth recorded instance of paying this cost by hand.
+
 ## Symptoms
 
 - After invoking `wr-architect-generate-decisions-compendium` (e.g. during `/wr-architect:review-decisions` Step 4.5 or `/wr-architect:create-adr` Step 5), the immediate `git add docs/decisions/README.md` (or subsequent Bash command) trips the no-em-dash hook.
