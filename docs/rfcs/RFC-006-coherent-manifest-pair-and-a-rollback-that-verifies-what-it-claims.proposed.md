@@ -2,7 +2,8 @@
 status: proposed
 rfc-id: coherent-manifest-pair-and-a-rollback-that-verifies-what-it-claims
 reported: 2026-08-08
-human-oversight: unconfirmed
+human-oversight: confirmed
+ratified: 2026-08-09
 decision-makers: [Tom Howard]
 problems: [P126]
 adrs: [021-auto-resolve-stale-deps-in-push-watch, 034-push-watch-fail-fast-plus-separate-deps-fix-flow-supersedes-cron-pr, 006-tdd-enforcement-via-hooks]
