@@ -38,9 +38,18 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v7
         with:
-          name: release-preview-build
+          # The SHA in the name IS the identity, and it is the load-bearing
+          # half of the P146 fix. It derives from the same pr_head_sha input
+          # that drives the checkout above, so the name cannot disagree with
+          # the bytes. publish-pipeline asks for this exact name; if it ever
+          # asked for the wrong one it gets a clean not-found rather than a
+          # wrong deploy. (Mirrors main-pipeline's static-site-<sha>.)
+          name: release-preview-build-${{ github.event.inputs.pr_head_sha }}
           path: out/
-          retention-days: 3
+          # 7 rather than 3: publish now pins to one specific run instead of
+          # taking the most recent, so expiry of THAT run is the new failure
+          # mode. Widening the window costs nothing for a static-site build.
+          retention-days: 7
 
       - name: Deploy preview to Netlify
         id: deploy

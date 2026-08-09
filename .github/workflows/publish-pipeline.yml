@@ -25,16 +25,62 @@ jobs:
 
       - run: npm ci
 
-      - name: Find release preview run
+      # Identity, not recency (P146, ADR-051). release-watch.sh merges the
+      # release PR with `gh pr merge --merge`, so the commit pushed here is a
+      # merge whose SECOND PARENT is the PR head the preview built from.
+      # Verified by asking the API for each commit's parent count: all twelve
+      # publish runs on record are merge commits. HEAD^2 also matched the
+      # preview run's headSha exactly on the three checked against preview history.
+      # `fetch-depth: 0` above is load-bearing for this; a shallow clone breaks it.
+      - name: Resolve the release commit being published
+        id: release-sha
+        run: |
+          SHA=$(git rev-parse HEAD^2 2>/dev/null) || {
+            echo "HEAD ($(git rev-parse --short HEAD)) is not a merge commit, so the"
+            echo "release PR head cannot be identified. Refusing to guess which build"
+            echo "to deploy (P146)."
+            echo
+            echo "Two known causes, both recoverable:"
+            echo "  1. The release PR was merged by squash or rebase. Re-merge with a"
+            echo "     merge commit, which is what scripts/release-watch.sh does."
+            echo "  2. This run came from the publish-ref realignment at the end of"
+            echo "     release-watch.sh rather than from a release merge. That push"
+            echo "     carries [skip ci] and should not reach here; if it did, the"
+            echo "     run is spurious and nothing needs deploying."
+            exit 1
+          }
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Publishing the build from release commit $SHA"
+
+      - name: Find the release preview run for that commit
         id: find-preview
         run: |
+          SHA="${{ steps.release-sha.outputs.sha }}"
           RUN_ID=$(gh run list \
             --workflow=release-pr-preview.yml \
             --status=success \
-            --limit=1 \
-            --json databaseId \
-            --jq '.[0].databaseId')
-          [ -n "$RUN_ID" ] && [ "$RUN_ID" != "null" ] || { echo "No successful preview run found"; exit 1; }
+            --limit 50 \
+            --json databaseId,headSha \
+            --jq '[.[] | select(.headSha=="'"$SHA"'")][0].databaseId')
+          [ -n "$RUN_ID" ] && [ "$RUN_ID" != "null" ] || {
+            echo "No successful preview run found for release commit $SHA (P146)."
+            echo "Previously this step took the most recent successful run instead,"
+            echo "which is the defect: it could deploy a build of a different release."
+            echo
+            echo "Recover by rebuilding the preview for this exact commit:"
+            echo "  gh workflow run release-pr-preview.yml \\"
+            echo "    --ref changeset-release/publish \\"
+            echo "    -f pr_head_sha=$SHA -f pr_number=<the release PR number>"
+            echo
+            echo "That only works while changeset-release/publish still points at"
+            echo "$SHA. This lookup matches the RUN's headSha, which for a dispatch"
+            echo "is the tip of --ref, not the pr_head_sha input. If master has moved"
+            echo "and updated the release PR since, the rebuild lands under the right"
+            echo "artifact name but the run's headSha no longer matches, so this step"
+            echo "will still miss. In that case find the run that already built \$SHA"
+            echo "and pass its id, or re-cut the release from the current head."
+            exit 1
+          }
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,7 +88,10 @@ jobs:
       - name: Download build from release preview
         uses: actions/download-artifact@v8
         with:
-          name: release-preview-build
+          # Keyed on the same SHA as the lookup above. If the run were ever the
+          # wrong one, this asks for an artifact that run does not have and
+          # fails, rather than deploying whatever it did have.
+          name: release-preview-build-${{ steps.release-sha.outputs.sha }}
           path: out/
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.find-preview.outputs.run_id }}
