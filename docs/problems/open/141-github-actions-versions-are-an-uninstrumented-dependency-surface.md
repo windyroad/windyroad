@@ -44,8 +44,10 @@ None in place. Stale pins surface only when GitHub itself complains, or when som
 - [ ] Decide the pinning rule: SHA for all third-party actions, major tag for first-party, or one rule for everything
 - [ ] Pin `trufflesecurity/trufflehog` to a released version instead of `@main`, checking first whether the project treats `@main` as its documented usage and whether a pinned version loses detector updates
 - [ ] Consider a top-level `permissions:` block on `main-pipeline.yml` to constrain the default token in `gate-secrets`
-- [ ] Make the silent path loud: add a step to `release-pr` that fails when `.changeset/` holds
-      real changesets but `steps.changesets.outputs.pullRequestNumber` is empty. Today an output-contract
+- [x] Make the silent path loud: add a step to `release-pr` that fails when `.changeset/` holds
+      real changesets but `steps.changesets.outputs.pullRequestNumber` is empty. **Discharged by the
+      P143 fix**, which landed the report step with the count taken before `changeset version`
+      consumes the queue. Today an output-contract
       drop on that action skips both dependent steps on a green job. ADR-028's `ci-status-check.sh`
       already blocks the release merge on red master, so making it red is enough to catch it. Narrows
       the P115 known-error shape independently of the Actions-freshness question

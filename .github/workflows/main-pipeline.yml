@@ -140,12 +140,27 @@ jobs:
   release-pr:
     name: Create release PR
     needs: [deploy-test]
+    # Without an `if:`, a failed deploy-test renders this job as SKIPPED, and
+    # since it is the only path to production the pipeline reports the absence
+    # of a release rather than a refusal to make one (P143). Any `if:` drops the
+    # implicit success() on `needs`, so the job runs and the guard below fails
+    # it loudly. `!cancelled()` rather than `always()`: a run the user cancelled
+    # should not produce a spurious red.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
       actions: write
     steps:
+      - name: Require a successful deploy and smoke test
+        if: needs.deploy-test.result != 'success'
+        run: |
+          echo "deploy-test concluded '${{ needs.deploy-test.result }}', not 'success'."
+          echo "No release PR will be created. Failing rather than skipping so the"
+          echo "production path is visibly blocked instead of silently quiet (P143)."
+          exit 1
+
       - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v6
@@ -154,6 +169,16 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
+
+      # Counted BEFORE the changesets step, which runs `changeset version` and
+      # DELETES the changeset files it consumes. Counting afterwards would read
+      # zero in the one case the report step below exists to catch, take the
+      # nothing-queued branch, and pass green.
+      - name: Count queued changesets
+        id: queued
+        run: |
+          COUNT=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')
+          echo "count=${COUNT:-0}" >> "$GITHUB_OUTPUT"
 
       - name: Create or update release PR
         id: changesets
@@ -177,6 +202,30 @@ jobs:
           branch: publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Three outcomes, all legible. Without this the no-PR case is a silent
+      # green job, indistinguishable from a working release (P143), and a
+      # dropped `pullRequestNumber` output would skip both steps below on a
+      # green job with no signal at all (P141).
+      - name: Report release-PR outcome
+        if: always() && steps.changesets.outcome == 'success'
+        run: |
+          QUEUED="${{ steps.queued.outputs.count }}"
+          PR="${{ steps.changesets.outputs.pullRequestNumber }}"
+          if [ -n "$PR" ]; then
+            echo "Release PR #$PR created or updated from $QUEUED changeset(s)."
+          elif [ "${QUEUED:-0}" -eq 0 ]; then
+            echo "No release PR created: the changeset queue was empty at the start"
+            echo "of this job, so the release path is not armed for this commit."
+            echo "If this commit changed site sources, it will not reach production"
+            echo "until a changeset lands (P115). This is not 'nothing to release'."
+          else
+            echo "$QUEUED changeset(s) were queued but changesets/action returned no"
+            echo "pullRequestNumber. Either the PR was not created, or the action's"
+            echo "output contract changed. The two steps below gate on that output"
+            echo "and would otherwise skip silently on a green job (P143 / P141)."
+            exit 1
+          fi
 
       - name: Add preview URL to release PR
         if: steps.changesets.outputs.pullRequestNumber

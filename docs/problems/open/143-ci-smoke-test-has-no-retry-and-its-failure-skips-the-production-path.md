@@ -42,7 +42,7 @@ Read a `(28)` on that step as transient. Verify the alias and production respond
 - [ ] Investigate root cause
 - [ ] Create reproduction test
 - [x] Add a bounded retry to the smoke-test curls. Landed: `--retry 3 --retry-connrefused` on all ten call sites across three workflows. `--retry-delay` deliberately omitted so curl's default exponential backoff (1s, 2s, 4s) applies.
-- [ ] Decide whether a skipped `release-pr` should be distinguishable from a `release-pr` that legitimately had nothing to do, since both currently render as `skipped`
+- [x] Decide whether a skipped `release-pr` should be distinguishable from a `release-pr` that legitimately had nothing to do. Yes, and both halves were needed: `if: ${{ !cancelled() }}` plus a first-step guard makes an upstream failure a loud red instead of a skip, and a report step makes the no-PR case explicit instead of a silent green. Three legible outcomes now.
 - [x] Check whether the same no-retry shape exists elsewhere. It did, and wider than this ticket assumed: ten call sites across three workflows, not four in one job. `publish-pipeline.yml` (production deploy verification) and `release-pr-preview.yml` carried the identical shape. All fixed together, because leaving the production instance unfixed would have kept the worst case in place.
 
 ## Dependencies
@@ -57,9 +57,9 @@ Captured via `/wr-itil:capture-problem` during the 2026-08-09 session retrospect
 
 P092 (push-watch pull-rebase and transient-error robustness, closed) covered transient-error handling on the local push wrapper. This is the CI-side sibling: the same class of transient failure, a different surface, and no retry there.
 
-## Partial resolution
+## Resolution
 
-The retry half is fixed. The skip half, which this ticket's Description calls the part worth fixing, is NOT, so this ticket stays open.
+Both halves are fixed, in two commits. The retry half landed first, the skip half second.
 
 Landed: `--retry 3 --retry-connrefused` on all ten smoke-test `curl` calls in `main-pipeline.yml`, `publish-pipeline.yml` and `release-pr-preview.yml`, each step carrying an inline comment naming this ticket and the reasoning.
 
@@ -72,4 +72,16 @@ Verified empirically against a local server before landing, because the architec
 
 `--retry-all-errors` was deliberately not used: it would retry DNS and TLS failures, which on a Netlify alias indicate a real misconfiguration rather than noise.
 
-Still open: `release-pr` reports `skipped` rather than `failure` when `deploy-test` fails. Retry reduces how often that ambiguity is reached; it does not change the ambiguity. `release-pr-preview.yml` lines 78 to 87 already carry this repo's pattern for it, an `if: always()` step posting an explicit check status, which is the shape to reuse.
+Both halves are now fixed. The skip half landed after the retry half, in a second commit.
+
+**The skip half.** Adding any `if:` to a job drops the implicit `success()` on its `needs`, so `if: ${{ !cancelled() }}` makes `release-pr` run when `deploy-test` did not succeed, and a first-step guard fails it with the upstream result named. `!cancelled()` rather than `always()` so a user-cancelled run produces no spurious red. Verified against ADR-028: there is no reachable path where this turns a `success` run into a `failure` run, because every case where the guard fires is a run already concluding `failure`, and `ci-status-check.sh` reads the run conclusion rather than any job's.
+
+**The nothing-to-release half.** A report step now distinguishes three outcomes: a PR created, the queue empty at job start, or changesets queued with no `pullRequestNumber` returned. The third exits 1, which is the P141 remediation: a dropped output would otherwise skip the two dependent steps on a green job.
+
+Two defects in the first draft of that step were caught by the architect review before anything landed.
+
+The first inverted the check it existed to perform. The count was taken after the changesets step, but `changeset version` deletes the changeset files it consumes, so in the output-dropped case the count would read zero, take the nothing-queued branch and pass green. The count is now taken in its own step before the action runs, with `${COUNT:-0}` so an empty value cannot fail the comparison under `bash -e`.
+
+The second reproduced a known error's own trap. The draft printed "no changesets queued, nothing to release", which is close to verbatim the wording P115 line 30 records as misleading: it reads as reassurance when it can mean site changes are stranded on master. The message now describes the mechanism, says the release path is not armed for this commit, and points at P115.
+
+Branch behaviour was checked before landing: a PR number present takes the PR path; queue 0 with no PR takes the not-armed path and exits 0; queue 3 with no PR takes the output-dropped path and exits 1; an empty count falls safely to the not-armed path.
