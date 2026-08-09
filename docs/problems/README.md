@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-10 **Session retro: P150 captured; four Critical Points demoted on signal score.** The deep context analyzer auto-fired because the briefing bucket grew 34.2% on the same day every topic file passed its per-file budget, which is P150: ADR-040 enforces Tier 3 per file while the context measurement reads the directory total, so a rotation reads as a fix on one surface and a regression on the other. The analysis also found the largest reclaimable surface is stale plugin-cache versions, roughly 54 MB across four plugins, with wr-itil alone holding 11 versions. Signal-vs-noise demoted four Critical Points that were not exercised in two cycles, taking the roll-up from 12 bullets and 7,096 bytes to 8 and 4,947, each verified to survive in a topic file first. New briefing topic on verification discipline, after five instances in one session of a check inheriting the same wrong assumption as the work it checked. Prior entry: 2026-08-10 **P146 fixed and recorded as ADR-051 (ratified); P149 captured** (rotated to `README-history.md`) (session retro via /wr-retrospective:run-retro)
+> Last reviewed: 2026-08-10 **P151 captured** (Prescribed newsletter gates can skip a phase entirely and nothing detects the absence) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -15,6 +15,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P140 | Lint and SKILL disagree on the prep-phase reviews sibling path | 12 | Open | M | 2026-08-09 | internal |
 | 12.0 | P141 | GitHub Actions versions are an uninstrumented dependency surface | 12 | Open | S | 2026-08-09 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
+| 12.0 | P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 12 | Open | M | 2026-08-10 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
 | 10.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Open | S | 2026-08-08 | internal |
 | 10.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |
