@@ -21,6 +21,10 @@ Forcing the agent to manually replace every em-dash before the commit can procee
 
 Recurred 2026-08-09 while landing ADR-050. Writing `docs/decisions/050-*.proposed.md` triggered the compendium regeneration, which appended six lines including `### ADR-050 <em-dash> Quality gates are release ancestors, not reports`. The repo's own `no-em-dash-bash.sh` PostToolUse hook then blocked the next Bash call against that file. Note the blocking message names the file but not the cause, and the file had zero em-dashes at HEAD, so the natural first reading is that you introduced it. Hand-corrected to a plain hyphen to match every other heading in the file. That is the fourth recorded instance of paying this cost by hand.
 
+Recurred again on 2026-08-09 with ADR-051, and this instance is worse than the four before it in a way the ticket had not recorded. The generator emitted **two** em-dashes, not one: the expected `### ADR-051 <em-dash> Production deploys...` heading, and a second inside the rendered `**Decides:**` body prose, in a clause the generator had composed by summarising the ADR. Every previously recorded instance was in a heading only.
+
+That matters for the fix. A heading em-dash is positional and could be handled by a targeted rule at the one place the generator formats headings. A body-prose em-dash means the generator is also passing through or generating prose that carries them, so any fix has to cover the summarising path too, not just the heading template.
+
 ## Symptoms
 
 - After invoking `wr-architect-generate-decisions-compendium` (e.g. during `/wr-architect:review-decisions` Step 4.5 or `/wr-architect:create-adr` Step 5), the immediate `git add docs/decisions/README.md` (or subsequent Bash command) trips the no-em-dash hook.

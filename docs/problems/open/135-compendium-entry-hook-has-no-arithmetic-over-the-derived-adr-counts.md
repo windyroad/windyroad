@@ -66,6 +66,12 @@ Two details worth recording for whoever fixes this.
 
 Corrected by hand in the same commit, per this ticket's Workaround and the stronger instruction in `docs/briefing/architect-compendium-deadlock.md` not to run the generator at all.
 
+### Second recurrence, same session (2026-08-09)
+
+ADR-051 landed roughly an hour after the ADR-050 correction above, and the counts went stale again immediately: the file claimed 50 total and 46 in-force against 51 and 47 on disk, with both lines wrong again. So the defect reproduced twice in one session, and on the second occasion the numbers had been correct for less than an hour.
+
+That is worth more than a second tally mark, because it rules out the reading that the first instance was a one-off missed by whoever landed ADR-050. The hook appends its entry and does not touch the arithmetic, every time, and the only thing standing between the compendium and permanent drift is a human noticing. Two for two on the ADRs that have landed since this ticket was written.
+
 ## Dependencies
 
 - **Blocks**: (none)

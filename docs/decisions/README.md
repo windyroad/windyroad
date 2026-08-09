@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 50 (46 in-force, 4 historical)
+**Total ADRs:** 51 (47 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_46 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_47 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -237,6 +237,11 @@ _46 ADRs. These are the current rules. The architect agent reads this section fi
 **Decides:** `release-pr` now declares `needs: [deploy-test, gate-accessibility]`, generalised to the rule that every quality gate is an ancestor of `release-pr` so release blocking lives in the workflow graph rather than only in the local `ci-status-check.sh` wrapper. Chosen over branch protection (blocked today: `release-pr-preview.yml` does not report the accessibility check) and wrapper-only enforcement (bypassable via the GitHub merge UI); accepts no override valve and a flake-coupling cost measured at 25/25 recent green runs.
 **Confirmation:** `release-pr` declares `needs: [deploy-test, gate-accessibility]`; a failing accessibility gate shows `Create release PR` as failed not skipped, named by the `Require a passing accessibility gate` step; no release PR is created or updated on such a run; both guards report independently rather than the first hiding the second.
 **Related:** ADR-028, ADR-049
+### ADR-051 - Production deploys only bytes that provably came from the release commit
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** Production must deploy the preview artifact built from the exact commit being released, not whichever preview finished most recently. The preview uploads under `release-preview-build-<pr_head_sha>` and publish resolves `git rev-parse HEAD^2` to find and download that SHA-named artifact, so the name carries the identity and a wrong lookup fails closed instead of shipping the wrong bytes. Scoped to identity only: nothing yet guarantees the shipped bytes were tested.
+**Confirmation:** preview uploads under `release-preview-build-${{ github.event.inputs.pr_head_sha }}`; publish resolves `HEAD^2` and fails naming both recoverable causes when HEAD is not a merge commit; preview run selected by `headSha` match, not recency; download requests the SHA-named artifact so a wrong run yields not-found; `gh run list` retains its `GH_TOKEN` env
+**Related:** ADR-050, ADR-028
 
 ---
 
