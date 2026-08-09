@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-09 **Session retro: three release-path and scorer-cost tickets captured (P143, P144, P145).** The CI smoke test has no retry, and its failure SKIPS the release job rather than failing it, so the only path to production goes quiet on a network blip (one `curl: (28)` in twelve runs, re-ran green). `push:watch` demands a full synchronous risk rescore after any commit; three were spent in one session. And the risk register has never been bootstrapped: 130 of 130 reports on disk carry `CATALOG_HIT_RATE: matched=0`, so every scorer run re-derives from scratch. Briefing rotated under the Tier 3 budget: three entries out of what-will-surprise-you, two dated snapshots archived, and a new governance-surface-conflicts topic added for the P140/P141/P142 pattern. Prior entry: 2026-08-09 **RFC-006 ratified, and P142 captured** (rotated to `README-history.md`) (session retro via /wr-retrospective:run-retro)
+> Last reviewed: 2026-08-09 **P143 fixed on both halves; P146 and P147 captured from the review that found them.** Smoke-test curls now retry on transient errors across all three workflows, and `release-pr` fails loudly with the upstream result named instead of rendering as a skip. Two production-path gaps surfaced during that review and were verified on disk before capture: `publish-pipeline` picks its production artifact by recency rather than identity, so a wrong-release build could reach visitors with no detector (P146, rated 8, Impact 4 x Likelihood 2); and `gate-accessibility` is a sibling of `deploy-test` rather than a dependency of `release-pr`, so a red accessibility gate does not stop the release PR, and production is protected only by a local wrapper that a UI merge bypasses (P147, rated 5: severe impact per the policy table, driven to Rare by that same control, which is the only clean way to compose it without counting the mitigation twice). Prior entry: 2026-08-09 **Session retro: three release-path and scorer-cost tickets captured (P143, P144, P145)** (rotated to `README-history.md`) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -30,6 +30,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 8.0 | P134 | Agents infer staged state from the session-start git status snapshot, which is lossy on its first line | 8 | Open | S | 2026-08-09 | internal |
 | 8.0 | P135 | The compendium entry hook has no arithmetic over the derived ADR counts, so the total drifts by one on every new ADR | 8 | Open | S | 2026-08-09 | internal |
 | 8.0 | P137 | The correction-signal hook fires on standing operational constraints, not just on genuine user corrections | 8 | Open | S | 2026-08-09 | internal |
+| 8.0 | P146 | publish-pipeline selects the production artifact by recency, not identity | 8 | Open | S | 2026-08-09 | internal |
 | 7.5 | P127 | Unverified subprocess claims propagate into decisions without reading the source | 15 | Open | M | 2026-08-07 | internal |
 | 6.0 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 | Known Error | S | 2026-05-13 | internal |
 | 6.0 | P016 | wr-newsletter filter step drops significant stories that lack a primary source without attempting corroboration | 6 | Known Error | M | 2026-04-24 | internal |
@@ -44,6 +45,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 6.0 | P107 | Assistant routes free-text input collection through AskUserQuestion instead of presenting per-item copyable blocks | 6 | Open | S | 2026-06-28 | internal |
 | 6.0 | P131 | External-comms gate cannot see a `--body-file` body, so the block becomes unclearable after a genuine PASS | 6 | Open | S | 2026-08-08 | internal |
 | 6.0 | P136 | Tier 3 briefing rotation strips entries the Critical Points still point at | 6 | Open | S | 2026-08-09 | internal |
+| 5.0 | P147 | Accessibility gate does not gate the release path | 5 | Open | S | 2026-08-09 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 | Open | M | 2026-06-01 | internal |
 | 4.0 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 | Known Error | M | 2026-04-26 | internal |
