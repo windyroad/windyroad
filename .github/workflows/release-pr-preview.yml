@@ -53,17 +53,25 @@ jobs:
 
       - name: Smoke test preview
         run: |
+          # --retry 3 covers the transient set only: timeouts and 408/429/5xx
+          # (P143, after a curl (28) connect timeout reddened master on a
+          # docs-only commit and skipped the release job). A 404 is NOT
+          # transient, so a genuinely broken page still fails on attempt one.
+          # Deliberately not retry-all-errors: that would swallow DNS and TLS
+          # failures, which on a Netlify alias mean a real misconfiguration.
+          # Delay is curl's default exponential backoff (1s, 2s, 4s); the
+          # green path costs nothing because retries only fire on error.
           URL="${{ steps.deploy.outputs.url }}"
           echo "Testing $URL"
 
-          STATUS=$(curl -sS -L -o /tmp/home.html -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/")
+          STATUS=$(curl -sS -L -o /tmp/home.html -w "%{http_code}" --retry 3 --retry-connrefused --connect-timeout 15 --max-time 30 "$URL/")
           [ "$STATUS" = "200" ] || { echo "Homepage returned $STATUS"; exit 1; }
           grep -q "Tom Howard" /tmp/home.html || { echo "Homepage missing expected content"; exit 1; }
 
-          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/blog/")
+          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --retry 3 --retry-connrefused --connect-timeout 15 --max-time 30 "$URL/blog/")
           [ "$STATUS" = "200" ] || { echo "/blog/ returned $STATUS"; exit 1; }
 
-          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$URL/vibe-code-audit/")
+          STATUS=$(curl -sS -L -o /dev/null -w "%{http_code}" --retry 3 --retry-connrefused --connect-timeout 15 --max-time 30 "$URL/vibe-code-audit/")
           [ "$STATUS" = "200" ] || { echo "/vibe-code-audit/ returned $STATUS"; exit 1; }
 
       - name: Comment preview URL on PR
