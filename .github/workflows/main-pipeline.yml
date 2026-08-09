@@ -149,7 +149,17 @@ jobs:
 
       - name: Create or update release PR
         id: changesets
-        uses: changesets/action@8eb63fb4cfc7f9643537c7d39d0b68c835012a19
+        # v1.9.0. Pin the commit SHA, not the annotated-tag-object SHA: both
+        # resolve in Actions, but commit-oriented tooling (gh api .../commits,
+        # Dependabot's action updater, pinning auditors) fails on the tag form.
+        # The prior pin was v1.5.3's tag object, which targeted Node 20.
+        #
+        # Verified at this exact ref before the bump: action.yml declares
+        # `using: "node24"`, and its `outputs:` block still declares
+        # `pullRequestNumber` (byte-identical to v1.5.3's). That output is
+        # load-bearing twice below, and if it were dropped both steps would
+        # skip silently on a green job. Re-verify it when next bumping.
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
         with:
           publish: echo "publish handled by publish-pipeline"
           version: npm run changeset:version
