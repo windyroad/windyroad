@@ -110,3 +110,5 @@ question and said it was the right one to put to Tom on the merits: is a stable 
 corpus to check a shape claim against, and the developer persona records no constraint about structural predictability. A developer-side sibling would be grounding written ahead of evidence, which is the failure this note exists to guard. Revisit when Tokens Spent has editions to compare.
 
 Related: [JTBD-005](JTBD-005-stay-ahead-of-the-shift.proposed.md), whose outcome 1 (a read short enough to finish in a few minutes) is what several outcomes here serve, and whose outcome 4 (confidence nothing actionable was missed) is what outcome 4 here protects when a section is dropped.
+
+> (JTBD-005 outcome 1 was amended 2026-08-10: the few-minute budget is retired and replaced by "a read whose length is earned by what it returns". The axis is re-grounded on proportionality; the warrant survives, the number does not.)

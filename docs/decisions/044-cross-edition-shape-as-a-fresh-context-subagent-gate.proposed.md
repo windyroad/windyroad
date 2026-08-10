@@ -136,7 +136,7 @@ Following ADR-042's convention, because this is the fourth gate to touch cross-e
 
 ### Boundary against the deterministic lints
 
-Some conventions look like precedent but are template invariants. The `**From Tom**` opener, the `### Item N:` heading prefix and the per-item bold labels are fixed in the abstract by the template or a ratified decision. The corpus shows why this matters: `**From Tom**` is absent from the editions published 2026-06-08 through 2026-07-13 and returns at 2026-07-20, so treating it as precedent would have let it lapse for six weeks unremarked.
+Some conventions look like precedent but are template invariants. The From Tom opener, the `Item N:` heading prefix and the per-item bold labels are fixed in the abstract by the template or a ratified decision. The corpus shows why this matters: `**From Tom**` is absent from the editions published 2026-06-08 through 2026-07-13 and returns at 2026-07-20, so treating it as precedent would have let it lapse for six weeks unremarked.
 
 - The single-edition structure lint owns anything the template or a ratified decision fixes in the abstract.
 - This gate owns conventions whose only record is the published corpus, and the judgement of whether departing from one costs anything.
@@ -181,7 +181,7 @@ Adding the outcome would have grounded every finding in this class and licensed 
 3. Every finding carries an explicit authority marker, remediating or advisory, machine-readable by the remediation loop.
 4. The provenance line and the brief's closing reply prompt are excluded by name in the agent prompt, and no authority level can reach them.
 5. Minimum post length appears nowhere in the agent, its prompt, or its output.
-6. `check-newsletter-structure.sh` gains checks for the `**From Tom**` opener, the `### Item N:` prefix, the per-item bold labels, and the brief's closing reply prompt (ADR-032 element 6, currently unenforced), with sibling tests. These are **new checks to be added**, not existing coverage.
+6. `check-newsletter-structure.sh` gains checks for the From Tom opener, the `Item N:` prefix, the per-item bold labels, and the brief's closing reply prompt (ADR-032 element 6, currently unenforced), with sibling tests. These are **new checks to be added**, not existing coverage.
 7. `SKILL.md` invokes the gate at **two** sites: 15.36 routing brief findings into 15.37's collect step, and 15.57 taking the inline path for the post. Each has its own skip and phase semantics.
 8. An advisory finding cannot reach an applied edit by any path through the loop.
 9. ADR-043 carries one `## Amendment 2026-08-07 (P121, P122)` section with **five** clauses: (1) widened collect sources and no-op condition, (2) the third stop-and-surface class keyed on wrongness, (3) the classification precedence, (4) who states the reason plus prep-to-finalise carry-forward, and (5) the ceiling-to-trigger correction **including an explicit discharge of its open budget question**.

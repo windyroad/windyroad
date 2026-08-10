@@ -56,10 +56,24 @@ describe("preregistered study design", () => {
     });
   });
 
-  it("keeps the permission-pending Ollama arm explicitly outcome-unauthorized", () => {
+  it("freezes the author choices and non-activated Ollama branch without authorizing outcomes", () => {
     const study = JSON.parse(readFileSync("research/llm-review-sequences/study.json", "utf8"));
 
-    expect(study.exploratory_ollama_cloud_replication.activation_decision).toBe("pending");
+    expect(study.frozen).toBe(true);
+    expect(new Date(study.frozen_at).toISOString()).toBe(study.frozen_at);
+    expect(study.authorship.authors[0]).toMatchObject({
+      name: "Tom Howard",
+      affiliation: "Independent researcher",
+      affiliation_status: "confirmed",
+    });
+    expect(study.publication_choices).toEqual({
+      registration_prose_and_released_data_license: "CC BY 4.0",
+      code_license: "MIT",
+      license_file: "LICENSE.md",
+      osf_visibility: "public-immediately",
+    });
+    expect(study.exploratory_ollama_cloud_replication.activation_decision)
+      .toBe("not-activated");
     expect(study.exploratory_ollama_cloud_replication.outcome_calls_authorized).toBe(false);
   });
 

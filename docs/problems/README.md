@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-10 **P151 captured** (Prescribed newsletter gates can skip a phase entirely and nothing detects the absence) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-10 **P152 captured** (No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -16,6 +16,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P141 | GitHub Actions versions are an uninstrumented dependency surface | 12 | Open | S | 2026-08-09 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
 | 12.0 | P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 12 | Open | M | 2026-08-10 | internal |
+| 12.0 | P152 | No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate | 12 | Open | M | 2026-08-10 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
 | 10.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Open | S | 2026-08-08 | internal |
 | 10.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |

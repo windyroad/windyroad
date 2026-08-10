@@ -28,6 +28,7 @@ const HIGH_CONFIDENCE_CREDENTIAL_PATTERNS = [
 ];
 
 export const REGISTRATION_PACKET_MEMBERS = Object.freeze([
+  Object.freeze({ path: "LICENSE.md", media_type: "text/markdown; charset=utf-8" }),
   Object.freeze({ path: "README.md", media_type: "text/markdown; charset=utf-8" }),
   Object.freeze({ path: "independent-review.md", media_type: "text/markdown; charset=utf-8" }),
   Object.freeze({ path: "osf-preregistration-v4-draft.md", media_type: "text/markdown; charset=utf-8" }),

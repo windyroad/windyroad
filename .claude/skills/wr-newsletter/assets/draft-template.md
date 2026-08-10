@@ -25,7 +25,7 @@ These seven are checked deterministically at save (step 16 runs `scripts/check-n
 
 1. **No trailing `**Source:**` block** in an item that already carries inline links. Inline-link the claim; do not also append a separate Source line. (The five LLM gates do not catch this; the lint does.)
 2. **Do not name two or more outlets on a line without linking them.** "corroborated by Reuters, FT, NYT, and WSJ" is the banned shape. If an outlet is worth naming, link it ("The Wall Street Journal reported [headline](url)"); otherwise drop the name. A single back-reference to an already-linked article ("the WSJ piece is worth reading") is fine.
-3. **Keep the `### Also worth noting` section.** It is the standalone closing coda; do not fold its content back into the items.
+3. **Keep the `## Also worth noting` section.** It is the standalone closing coda; do not fold its content back into the items.
 4. **H1 carries the `Issue NN:` prefix**, matching published editions: `# Issue 09: <POV one-liner>`, never `# <POV one-liner>` alone.
 5. **A `---` horizontal rule precedes the closing CTA block.**
 6. **Model names are consistent across the brief and the `.linkedin.md` sibling.** If the brief says "Gemma 4 12B", the LinkedIn post says "Gemma 4 12B", not "Gemma 4".
@@ -46,7 +46,7 @@ edition: 1
 
 [FIRST-EDITION ONLY: a welcome line orienting new subscribers. Example: "About The Shift: each issue covers what moved in AI engineering this week, what it means for engineering leaders, and where we think the industry is going. Opinions included. Published weekly, 4-5 stories plus shorter notes." Drop from edition 2 onwards, or replace with fresh framing; do not repeat verbatim each week.]
 
-**From Tom**
+## From Tom
 
 [TWO TO THREE SENTENCES of author voice. Required. This is the thing that earns the subscriber's weekly attention. Pick one of:
 - Something Tom saw in a client engagement this week (anonymised).
@@ -58,7 +58,7 @@ Do NOT lead with news. Lead with a perspective. The drafter should attempt this 
 
 [PROVENANCE (ADR 032 element 5): REQUIRED every edition, both personas. A short italic paragraph closing the From Tom opener, after the thesis-first intro and immediately before Item 1, stating that the edition is AI-drafted, that a different AI reviews it and never the one that wrote the draft, and who holds editorial responsibility. First person, per the element-5 carve-out to the team-voice rule (SKILL.md step 11b Voice rules). Do not call the publication "the brief". State retrospective-loop claims as intention, not accomplished fact. Do NOT assert any legal or regulatory position. See ADR 032 Amendment 2026-08-03 for the shipped wording.]
 
-### Item 1: [HEADLINE, 6 TO 10 WORDS]
+## Item 1: [HEADLINE, 6 TO 10 WORDS]
 
 **What happened:**
   - [EVENT 1: named org, named artifact, date if relevant. One line.]
@@ -73,17 +73,17 @@ Do NOT lead with news. Lead with a perspective. The drafter should attempt this 
 
 [SOURCING: inline-link each primary claim in the What-happened text above, e.g. "Anthropic [published a statement](https://...)". Do NOT append a separate `**Source:**` block; the inline links are the attribution. When you name an outlet, link it; never list two or more outlets without links (invariant 2 above).]
 
-### Item 2: [HEADLINE]
+## Item 2: [HEADLINE]
 
 (same structure)
 
-### Item 3: [HEADLINE]
+## Item 3: [HEADLINE]
 
 (same structure)
 
 [Target three deep items, each a variation on the one thesis named in the intro (ADR 032). Every other candidate that clears the filter is demoted to "Also worth noting" (below), not dropped. The soft-cap and external-review thresholds live in the formatting rule above and in ADR 032.]
 
-### Also worth noting
+## Also worth noting
 
 **[ONE-LINE HEADLINE-AS-BOLD-LEAD].** [Two or three sentences naming the event(s), the inline-linked source(s), and the Monday-actionable takeaway. No sub-bullets here; this is a compressed format for signal that matters but does not need the full what/why/human-angle frame.]
 

@@ -42,7 +42,7 @@ cmp tmp/pdfs/online/paper.pdf tmp/pdfs/offline/paper.pdf
 cp tmp/pdfs/offline/paper.pdf output/pdf/paper.pdf
 ```
 
-The 2026-07-28 build produced eight US-letter pages. The log contained no layout, citation, or reference warning. All eight pages were rendered at 150 dpi and inspected for clipping, overlap, missing text, and malformed tables. Text extraction returned 34,390 characters, the expected title and sections, and all five references. All fonts are embedded and subset with Unicode mappings. The PDF catalog contains the title, author, `en-AU` language, and 12 outline entries.
+The 2026-07-28 build produced eight US-letter pages. The log contained no layout, citation, or reference warning. All eight pages were rendered at 150 dpi and inspected for clipping, overlap, missing text, and malformed tables. Text extraction returned 31,472 characters, the expected title and sections, and all five references. All fonts are embedded and subset with Unicode mappings. The PDF catalog contains the title, author, `en-AU` language, and 12 outline entries.
 
 Render and inspect the artifact:
 
@@ -69,7 +69,7 @@ The accessible target is deliberately separate because tagged-PDF support is sti
 
 Current hashes:
 
-- `paper.tex` SHA-256: `6c21c306acf8e664b07fd2ee1c57db4badd88a1ab4416138d65dfe1d495e8d0c`.
-- `output/pdf/paper.pdf` SHA-256: `cfdc57af6328ed41b9a87abbf074350ccde6eb2b9eb9e0e269a60dd35a382ded`.
+- `paper.tex` SHA-256: `53b850b56aeb5c74fb34e286ad4d730f491e62efac6f0715543b283cb1325479`.
+- `output/pdf/paper.pdf` SHA-256: `3843abcb74ac8135b6c434c0600d2d233189eb9175edbb2912353f742b284727`.
 
 The PDF is a pre-outcome manuscript, not the final arXiv artifact. It must be rebuilt after registered outcomes, analysis, and final source revision.

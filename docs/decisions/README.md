@@ -243,6 +243,12 @@ _47 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** preview uploads under `release-preview-build-${{ github.event.inputs.pr_head_sha }}`; publish resolves `HEAD^2` and fails naming both recoverable causes when HEAD is not a merge commit; preview run selected by `headSha` match, not recency; download requests the SHA-named artifact so a wrong run yields not-found; `gh run list` retains its `GH_TOKEN` env
 **Related:** ADR-050, ADR-028
 
+### ADR-052 - Every newsletter reviewer gate blocks publication
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** Every `/wr-newsletter` reviewer - including the previously advisory critic, editor, skeptic, cross-edition shape and cognitive-accessibility gates - must return a pass before an edition publishes, because the driver is the multi-edition accumulation of deferred findings rather than any single defect, and both freshness-only and defect-only blocking preserve a deferral path.
+**Confirmation:** No edition publishes with a non-pass verdict in its `.reviews.md` (a reviewer passes when it holds no finding, against the published text, that it classified as a defect; anything the loop is forbidden to act on is cleared by the author with a stated reason); the residual-advisory section holds only author-declined findings with stated reasons and no reviewer-classified defect; findings per finalise run fall within three editions.
+**Related:** ADR-043, ADR-047, ADR-015, ADR-020, ADR-042, ADR-044
+
 ---
 
 ## Historical decisions

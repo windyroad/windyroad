@@ -1,10 +1,9 @@
 # Preregistration v2: subscription-backed LLM review of decomposed changes
 
-Status: prospective pre-registration revision. The manifest remains unfrozen, outcome calls remain unauthorized, and the Ollama arm remains conditional. No benchmark prompt has been submitted to any review system.
+Status: frozen reviewer-input candidate for the confirmatory-only study. Outcome calls remain unauthorized, OSF registration remains pending, and no benchmark prompt has been submitted to any review system.
 
 Outcome collection requires all of the following:
 
-- A final Ollama activation or non-activation decision.
 - Archived targeted AI-assisted reviews for the applicable branch.
 - Final artifact hashes reproduced from a clean checkout.
 - Registration of the applicable plan on OSF.
@@ -22,11 +21,11 @@ This study asks whether subscription-backed LLM code-review systems distinguish 
 
 ### Contributors
 
-Tom Howard is the sole author and initiating investigator. The corresponding-author email is [tom@windyroad.com.au](mailto:tom@windyroad.com.au), and the author's ORCID is [0009-0001-4714-5747](https://orcid.org/0009-0001-4714-5747). The author has not yet chosen between Independent researcher and Windy Road Technology as the affiliation. OSF administrator confirmation remains pending.
+Tom Howard is the sole author and initiating investigator, affiliated as an Independent researcher. The corresponding-author email is [tom@windyroad.com.au](mailto:tom@windyroad.com.au), and the author's ORCID is [0009-0001-4714-5747](https://orcid.org/0009-0001-4714-5747). Tom Howard will be the sole OSF administrator.
 
 ### License
 
-The license remains an author decision before phase 1. One candidate is CC BY 4.0 for the registration text and released data, with generated code separately licensed, but this draft does not select it.
+Original registration prose and released study data are licensed under CC BY 4.0. Original study code is licensed under the MIT License. Third-party material and provider correspondence are not relicensed. The exact terms are recorded in [`LICENSE.md`](./LICENSE.md).
 
 ## Hypotheses
 
@@ -57,7 +56,7 @@ This is a controlled repeated-measures experiment on synthetic code-review evide
 - Workflow: pre-merge pull request or landed commit on main that remains untrusted pending pipeline review.
 - Information boundary: current artifact only for the full base sample; current plus cumulative prior artifacts in the nested context stratum.
 - Confirmatory review system: Codex CLI through a ChatGPT subscription or Claude Code through a Claude subscription.
-- Conditional exploratory review system: Ollama Cloud through an Ollama subscription, only if every ordered pre-activation stage below is met before the first study outcome call.
+- Non-activated replication candidate: Ollama Cloud is excluded from this registration and contributes no observation.
 
 All 40 templates receive a current-boundary review. A family-stratified nested sample of 16 templates also receives cumulative prior-submission artifacts. The nested selection takes two scenario pairs per family without replacement using Fisher-Yates with xorshift32 seed `20260719`; its exact scenario identifiers are frozen in the manifest. This separates the decomposition effect under realistic current-boundary review from the information-loss mechanism tested by cumulative history. Apart from prospectively specified native artifact fields and policy text, each information boundary is held constant across workflow framings.
 
@@ -80,29 +79,11 @@ Before every collection batch, authentication checks must confirm ChatGPT login 
 
 Codex officially supports ChatGPT subscription authentication and non-interactive `codex exec`; Claude Code officially supports subscription authentication and non-interactive print mode. Product documentation is archived by access date in the study record: [Codex authentication](https://learn.chatgpt.com/docs/auth), [Codex non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode), [Claude Code subscription access](https://support.anthropic.com/en/articles/11145838-using-claude-code-with-your-max-plan), and [Claude Code CLI reference](https://docs.anthropic.com/en/docs/claude-code/cli-usage).
 
-#### Conditional exploratory Ollama Cloud stratum
+#### Non-activated Ollama Cloud candidate
 
-Ollama Cloud is prospectively declared as a separate, non-confirmatory product-replication stratum. If activated, Ollama 0.32.1 uses the signed-in local Ollama service to request the explicit tag `qwen3.5:397b-cloud` through `POST http://localhost:11434/api/chat`. The fixed body sets `stream: false`, `think: false`, omits tools and `format`, and sets `options.num_predict` to 256. Candidate availability and account entitlement are currently unverified. The [exact permission request](./provider-permission-request.md) was sent to Ollama on 2026-07-19. The archived [AI support response](./provider-ai-support-response.md), SHA-256 `fb45d2174c96c5e638905a4cb42ef08b500820d831d563cb4b388e5f43c55d5a`, could not decide the question and offered human escalation. The [human-escalation reply](./provider-permission-escalation.md) asks whether ordinary signed-in subscription/API use supplies the permission referenced by the Terms; a response is pending.
+Ollama Cloud was considered as a separate exploratory replication, and the dated terms assessment and provider correspondence are retained as outcome-blind audit history. It is not activated in this registration: no subscription purchase, preflight, implementation, queue, dispatch, observation, or analysis is authorized. Any future Ollama experiment requires a separate preregistration and cannot alter this study's two-system sample or estimands.
 
-The study applies one terms rule across all three providers: published first-party documentation that expressly supports automation on the intended authenticated product surface constitutes ordinary-use authorization for that documented use, absent a contrary provider restriction. Ollama's Terms prohibit automated access without permission but do not define permission; its pricing expressly advertises coding automation plus CLI/API access, and its Cloud documentation shows signed-in cloud calls through the local API. On that operational basis, no special research waiver appears necessary. This is not legal advice. The pending human clarification is nonblocking, but any contrary response overrides the assessment and suspends or deactivates the arm. The assessment does not itself authorize a preflight, purchase, implementation, or outcome call.
-
-The pre-activation order is fixed:
-
-1. Archive the dated Ollama Terms, pricing, Cloud/API documentation, cross-provider terms-conformance assessment, and provider correspondence. Treat the pending human response as nonblocking unless it imposes a contrary restriction. No outcome call is authorized by this assessment.
-2. After separate action-time author approval, run the no-prompt preflight. Record the account and plan, exact tag availability, client and server versions, and complete matching `/api/tags` JSON model record. Also record its RFC 8785 digest, a dated public-model-page raw-byte digest, machine-verified absence of `OLLAMA_API_KEY`, and proof that extra-usage balance is zero or disabled.
-3. Implement and test fixture-only runner and analysis routes. Generate the separate queue and ledgers offline, then freeze request, response, schedule, authorization, and artifact hashes without inference.
-4. Obtain targeted methods, reproducibility, and safety review of the exact activation candidate.
-5. Finalize activation before any outcome, register and freeze the applicable OSF plan, and explicitly authorize only the registered queues.
-
-At final OSF registration, either every pre-activation stage has passed or the arm is recorded as not activated. Non-activation permits only the separately frozen and registered two-system confirmatory queue and is fixed before any Codex, Claude, or Ollama outcome. If activated, every initial or resumed batch repeats the frozen account, plan, entitlement, client/server version, complete model-record, `OLLAMA_API_KEY`-absence, and zero-balance checks. Exact returned-model equality is checked on every response before scoring or durable acceptance. Ambiguity or drift creates a durable non-consuming suspension.
-
-The study deliberately omits Ollama's `format` field to avoid product-specific structured-output enforcement. The fixed prompt requests the same JSON contract, and the runner accepts only exact returned model identity and complete `message.content`, applying the unchanged local schema validator without repair or fence stripping. Invalid or non-JSON output is a schema-invalid abstention. If `think: false` is unsupported or any reasoning trace or tool call appears, the arm suspends and no response is scored or publicly released.
-
-The localhost endpoint brokers cloud inference, so prompts and responses leave the device. Before activation, the study archives dated first-party privacy and processing documentation and states only claims supported by that evidence; this preregistration makes no stronger claim about provider logging, training, retention, location, or infrastructure processing.
-
-The sole author keeps raw responses and raw ledgers private in access-controlled encrypted storage through publication and for 12 months afterward. Private content is then deleted while hashes and sanitized derived tables remain. Any different retention or release requires documented post-outcome privacy, dual-use, and upstream-license review plus the absence of a contrary provider restriction. Reasoning traces and sensitive metadata are never published.
-
-No purchase is authorized by this revision. The exact Ollama plan and fixed fee require action-time author approval before purchase. The runner must machine-check that `OLLAMA_API_KEY` is absent before every initial or resumed batch. A positive or enabled extra-usage balance, per-call billing, overage, fallback models, and paid overflow are prohibited. Aggregate reporting uses factual plain-text service and observed-model attribution without logos, endorsement, or branding claims. Public attempt-level material is limited to the sanitized derived attempt-event schema; raw output remains private pending post-outcome privacy, dual-use, and upstream-license review and no contrary provider restriction. Official pages were accessed on 2026-07-19 and must be archived with SHA-256 values in the activation record: [Ollama Terms](https://ollama.com/terms), [Ollama Privacy Policy](https://ollama.com/privacy), [Ollama pricing](https://ollama.com/pricing), [Ollama Cloud documentation](https://docs.ollama.com/cloud), [API introduction](https://docs.ollama.com/api/introduction), [API authentication](https://docs.ollama.com/api/authentication), [chat API](https://docs.ollama.com/api/chat), [model tags](https://docs.ollama.com/api/tags), [structured-output limitations](https://docs.ollama.com/capabilities/structured-outputs), and [thinking behavior](https://docs.ollama.com/capabilities/thinking).
+The sole author keeps raw responses and raw ledgers for the active Codex and Claude study private in access-controlled encrypted storage through publication and for 12 months afterward. Private content is then deleted while hashes and sanitized derived tables remain. Any different retention or release requires documented post-outcome privacy, dual-use, and upstream-license review plus the absence of a contrary provider restriction. Reasoning traces and sensitive metadata are never published.
 
 ### Prompt and response contract
 
@@ -124,21 +105,19 @@ Fisher-Yates shuffling with the local deterministic xorshift32 implementation an
 
 The candidate schedule SHA-256 is `80c78d846bf264fcb8a136bffd3b6d3af50c0e8dfe622383272e0d4798ab63a1`.
 
-If activated, Ollama reuses the 640 frozen base local-context boundary prompts exactly once in a separate queue shuffled with seed `20260719`. This yields 320 condition-specific sequences, 160 atomic boundaries, and 480 split boundaries. The arm has an absolute maximum of 640 physical dispatches, one dispatch per frozen call and zero retries. The complete package then contains 3,456 boundaries, but only the original 2,816 enter the two-system study. Ollama does not enter the nested context or consistency analyses. Its schedule, call-ledger, and ground-truth hashes are frozen separately; the two-system queue and hashes do not change.
-
 ### Budget and stopping
 
-The API, per-call, overage, extra-balance, and paid-fallback spending ceiling is US$0. Existing ChatGPT and Claude fixed subscription fees are disclosed. No Ollama purchase is authorized by this revision; its exact plan and fixed fee require separate action-time approval and are recorded before activation. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, the runner records a suspension at the current call. The author resumes the same fixed queue only after the same subscription window resets.
+The API, per-call, overage, extra-balance, and paid-fallback spending ceiling is US$0. Existing ChatGPT and Claude fixed subscription fees are disclosed. Subscription rate limits are scheduling constraints, not missing outcomes. When a limit is reached, the runner records a suspension at the current call. The author resumes the same fixed queue only after the same subscription window resets.
 
-Collection also suspends on a safety or provider-terms conflict, authentication change, benchmark-integrity failure, CLI version change, identity-check failure, or observable route drift. Claude requires exact singleton `modelUsage`; activated Ollama requires exact returned-model identity. Codex uses the prospectively disclosed binary, version, explicit-model, authentication, environment, reroute, and top-level-error controls because returned identity is not observable in 0.137.0 JSONL. There is no outcome-dependent stopping.
+Collection also suspends on a safety or provider-terms conflict, authentication change, benchmark-integrity failure, CLI version change, identity-check failure, or observable route drift. Claude requires exact singleton `modelUsage`. Codex uses the prospectively disclosed binary, version, explicit-model, authentication, environment, reroute, and top-level-error controls because returned identity is not observable in 0.137.0 JSONL. There is no outcome-dependent stopping.
 
-An infrastructure failure that yields no usable response suspends the current call for author diagnosis. For Codex and Claude, the same call may be retried without reordering, up to three recorded attempts; structured verdict-abstentions and schema-invalid responses are terminal and are not retried. The activated Ollama arm has zero retries: a failed physical dispatch cannot be repeated and no 641st physical dispatch is allowed. Each fsynced append-only ledger begins with exactly one immutable run-binding header; every start, completion, suspension, and result follows it, and every prior complete row is revalidated on resume.
+An infrastructure failure that yields no usable response suspends the current call for author diagnosis. For Codex and Claude, the same call may be retried without reordering, up to three recorded attempts; structured verdict-abstentions and schema-invalid responses are terminal and are not retried. Each fsynced append-only ledger begins with exactly one immutable run-binding header; every start, completion, suspension, and result follows it, and every prior complete row is revalidated on resume.
 
 Automatic resume is claimed only for a clean process interruption between fully fsynced records. A torn ledger tail, partial record, power-loss ambiguity, or other framing failure stops collection and requires documented manual recovery; it is never silently truncated or counted as a completed call.
 
 ## Sampling and sensitivity diagnostics
 
-The products and sample size are a convenience selection constrained by subscriptions available to the author rather than selected to achieve 80% power. The optional Ollama stratum is not additional independent template evidence and cannot increase confirmatory precision.
+The products and sample size are a convenience selection constrained by subscriptions available to the author rather than selected to achieve 80% power.
 
 Before outcomes, [`precision-audit.mjs`](./precision-audit.mjs) simulated the exact active design under explicit global-null, central-effect, and smaller-effect Bernoulli models. The audit found material finite-sample undercoverage for the initially proposed family-stratified percentile bootstrap, especially H4. The registered interval was therefore prospectively changed to the fixed-strata Welch/Satterthwaite interval below. Under 1,000 global-null simulations, its coverage fractions for H1 through H4 were 0.953, 0.965, 0.953, and 0.982; false-support fractions were 0.019, 0.021, 0.047, and 0.007. Under the central assumptions, support fractions were 1.000, 0.724, 0.356, and 0.073, with expected interval widths 0.143, 0.211, 0.212, and 0.480. Under smaller effects they were 1.000, 0.281, 0.120, and 0.029, with widths 0.143, 0.215, 0.213, and 0.491. These are assumption-conditional diagnostics, not guaranteed or achieved power, and the H4 result in particular is expected to be imprecise.
 
@@ -185,7 +164,7 @@ The review-system-specific complete-pair sensitivity drops a structural template
 
 No imputation model is fitted. H1 and H2 are primary; H3 and H4 are secondary. They are not combined into one multiplicity family, so no familywise error control is provided. The decomposition-by-workflow interaction and any cumulative-versus-local context main effect are exploratory and have no inferential decision. No Holm adjustment is applied, and all four support indicators must be interpreted with the reported multiplicity and low-precision limitations.
 
-If activated, the Ollama stratum is analyzed alone on the 40-template base local-context sample using the same H1 through H3 contrast definitions, fixed-strata Welch/Satterthwaite intervals, percentile-bootstrap sensitivity, missingness bounds, and complete-pair sensitivity with fixed equal family weighting. It has no cumulative-context or consistency estimate. A dedicated reporting path exposes point estimates and 95% intervals without `supported`, significance, equivalence, provider-superiority, or pooled-model fields or claims. Fabricated-response tests must prove this decision-free path and prove that missing, extra, mixed, or Ollama rows are rejected by the exact two-system path before activation. Cross-product differences remain descriptive because product surfaces, system prompts, schema enforcement, routing, and serving stacks differ.
+No Ollama observation or analysis is part of this registration. Cross-product differences between Codex and Claude remain descriptive because product surfaces, system prompts, schema enforcement, routing, and serving stacks differ.
 
 ## Quality control
 
@@ -220,14 +199,13 @@ Release artifacts receive AI-assisted dual-use review. Neutral change titles rem
 - Timing is fixed at one-minute split spacing and causal order is not permuted, so results do not estimate longer separation, reordered dependencies, or intervening neutral submissions.
 - Product framing cannot reproduce organizational incentives, reviewer fatigue, rollback pressure, or the blast radius of a real main branch.
 - AI-assisted internal review is not independent human validation.
-- The two confirmatory products and optional Ollama replication are a convenience sample determined by subscriptions available to the author and do not represent other products or base models.
-- Ollama's cloud alias may hide backend or routing changes even if its catalog digest remains stable; a successful exploratory result cannot support open- versus closed-weight or base-model claims.
+- The two confirmatory products are a convenience sample determined by subscriptions available to the author and do not represent other products or base models.
 - Inference is conditional on 40 purposively selected diagonal templates; five fixed templates per family, and only two in the nested stratum, make variance estimates coarse and H4 especially imprecise.
 - One lexical instance per template does not estimate identifier-instance variability.
 
 ## Content freeze and execution authorization
 
-Current unfrozen candidate hashes are:
+Frozen reviewer-input candidate hashes are:
 
 - Scenario cards SHA-256: `d4ea0a7197e3e8e17bf027b9466d63de427c273aa19e539a672732b80b5eae3d`.
 - Rendered prompts SHA-256: `e99d650f5f670e138b0c31047c6009a1eea99f2d2005c742971419618c86bdf0`.
@@ -239,7 +217,7 @@ The freeze has two phases so the unknown OSF identifier is not falsely represent
 
 ### Phase 1: pre-submission content freeze
 
-Before OSF submission, the author will finalize the activation or non-activation branch, confirm the study-local license, OSF visibility, affiliation and ORCID, reproduce every hash from a clean checkout, set the manifest's frozen flag and canonical UTC freeze time, and commit the exact registration content as one immutable review candidate. Frozen at this step means only that reviewer input bytes will not change. Methods, safety, and reproducibility reviewers then inspect that exact commit. Any supported correction produces a new frozen candidate and invalidates affected approvals. Each final report carries machine-readable front matter naming its role, exact commit, approving disposition, and empty unresolved-blocker list. After all three roles approve the same commit without an unresolved blocker, their detached report paths, hashes, reviewed commit, and dispositions are bound into the phase-1 attestation and mechanically cross-checked against that front matter. [`registration-packet.mjs`](./registration-packet.mjs) will make one deterministic release-safe JSON payload directly from the approved content commit. Its fixed lexicographic allowlist contains only preregistration prose, the manifest, provider request, AI-support-response, and escalation correspondence, provider terms-parity assessment, review protocol and resolution summary, response schema, and manuscript source/build record. Every member records path, media type, raw byte size, SHA-256, and canonical Base64 content; no build timestamp or filesystem metadata is included. Construction refuses an unfrozen embedded manifest, a noncanonical UTC freeze time, any unresolved `[[...]]` author placeholder, an abbreviated commit, or an existing output path.
+Before OSF submission, the author fixed the confirmatory-only branch, study-local licences, public-immediate visibility, affiliation and ORCID; reproduced every hash; and set the manifest's frozen flag and canonical UTC freeze time. The exact registration content is committed as one immutable review candidate. Frozen at this step means only that reviewer input bytes will not change. Methods, safety, and reproducibility reviewers then inspect that exact commit. Any supported correction produces a new frozen candidate and invalidates affected approvals. Each final report carries machine-readable front matter naming its role, exact commit, approving disposition, and empty unresolved-blocker list. After all three roles approve the same commit without an unresolved blocker, their detached report paths, hashes, reviewed commit, and dispositions are bound into the phase-1 attestation and mechanically cross-checked against that front matter. [`registration-packet.mjs`](./registration-packet.mjs) makes one deterministic release-safe JSON payload directly from the approved content commit. Its fixed lexicographic allowlist contains the study licence, preregistration prose, manifest, provider correspondence, provider terms-parity assessment, review protocol and resolution summary, response schema, and manuscript source/build record. Every member records path, media type, raw byte size, SHA-256, and canonical Base64 content; no build timestamp or filesystem metadata is included. Construction refuses an unfrozen embedded manifest, a noncanonical UTC freeze time, any unresolved author placeholder, an abbreviated commit, or an existing output path.
 
 The payload verifier rejects:
 
@@ -261,7 +239,7 @@ Executable benchmark cases are excluded from the OSF payload. Their provenance r
 
 Both detached state records are excluded from the payload to avoid self-referential hashing. The content-freeze record is uploaded beside the payload whose hashes it records. The later execution-authorization record does not exist in authorized form until after registration.
 
-The phase-1 record permanently keeps `outcome_calls_authorized` false. It freezes content but cannot authorize a model call. If Ollama imposes a contrary restriction or any activation preparation is incomplete, the record names the confirmatory-only branch and the manifest's machine-readable Ollama `activation_decision` is `not-activated`. `pending` is invalid at phase 1. If the documented-use terms basis remains uncontradicted and every activation gate passes, a separately implemented plan must name the confirmatory-plus-Ollama-exploratory branch, mark the reviewed activation decision, and identify both queues. The present confirmatory runner deliberately rejects that Ollama-inclusive branch; activation requires a separate fixture-tested and reviewed runner before phase 1 can name it.
+The phase-1 record permanently keeps `outcome_calls_authorized` false. It freezes content but cannot authorize a model call. It names the confirmatory-only branch, and the manifest's machine-readable Ollama `activation_decision` is `not-activated`.
 
 ### Phase 2: post-registration execution authorization
 
@@ -276,7 +254,7 @@ Tom Howard must then explicitly confirm at action time that the evidence represe
 - The exact registered-file inventory containing only the downloaded payload and phase-1 record with their raw-byte hashes.
 - The exact queues, review systems, artifact hashes, raw file hashes, and counts authorized to run.
 
-All phase timestamps use canonical UTC and are strictly ordered as freeze, registration, download verification, author confirmation, and authorization. The confirmatory runner computes the phase-1 record and payload hashes, verifies the payload membership, rehashes the named OSF evidence, and checks every cross-record binding. It accepts exactly one confirmatory-only queue, checks its systems, counts, call models, normalized artifacts, raw artifact bytes, runtime-critical files, and recomputed schedule, then returns the parsed prompts and calls from the exact buffers it hashed. Those same objects are executed after client preflight. A Claude singleton-`modelUsage` failure, an activated-Ollama returned-model failure, or a Codex binary, version, requested-model, authenticated-surface, reviewed-environment, observable-reroute, or top-level-error failure suspends before durable result acceptance. Rejection occurs before an output directory, client preflight, or model process is created. Any artifact change requires a new pre-outcome review and content freeze before registration, or a transparent dated OSF update and new execution authorization before outcomes where OSF permits the change.
+All phase timestamps use canonical UTC and are strictly ordered as freeze, registration, download verification, author confirmation, and authorization. The confirmatory runner computes the phase-1 record and payload hashes, verifies the payload membership, rehashes the named OSF evidence, and checks every cross-record binding. It accepts exactly one confirmatory-only queue, checks its systems, counts, call models, normalized artifacts, raw artifact bytes, runtime-critical files, and recomputed schedule, then returns the parsed prompts and calls from the exact buffers it hashed. Those same objects are executed after client preflight. A Claude singleton-`modelUsage` failure or a Codex binary, version, requested-model, authenticated-surface, reviewed-environment, observable-reroute, or top-level-error failure suspends before durable result acceptance. Rejection occurs before an output directory, client preflight, or model process is created. Any artifact change requires a new pre-outcome review and content freeze before registration, or a transparent dated OSF update and new execution authorization before outcomes where OSF permits the change.
 
 The attempts and results ledgers each begin with exactly one immutable run-binding header. Its derived fingerprint covers:
 
@@ -289,6 +267,6 @@ Resume validation rejects a missing, moved, duplicate, or mismatched binding. Th
 
 ## Deviations
 
-This v2 draft prospectively supersedes the uncollected API/OpenRouter design because the sole author has no research budget beyond subscription access. On 2026-07-19, before any outcome call or OSF registration, the author added the terms- and preparation-contingent Ollama Cloud replication without changing the two-system confirmatory estimand, queue, or hashes. The same day, a cross-provider parity review replaced the special-written-waiver gate with a documented-first-party-automation terms basis while retaining a fail-closed override for any contrary provider response. No LLM benchmark outcome existed when either change was made. The original preregistration-v1 and API-design history remain available in Git and in the legacy fields of [`study.json`](./study.json).
+This v2 draft prospectively supersedes the uncollected API/OpenRouter design because the sole author has no research budget beyond subscription access. On 2026-07-19, before any outcome call or OSF registration, the author documented a terms- and preparation-contingent Ollama Cloud replication without changing the two-system confirmatory estimand, queue, or hashes. On 2026-07-28, still before any outcome, the author fixed the initial study as confirmatory-only and recorded Ollama as not activated; any future Ollama experiment requires a separate preregistration. The original preregistration-v1 and API-design history remain available in Git and in the legacy fields of [`study.json`](./study.json).
 
 All later deviations are dated, justified, and classified as occurring before or after outcome access. Unregistered analyses are labelled exploratory.

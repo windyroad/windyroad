@@ -721,4 +721,63 @@ describe('check-newsletter-structure.sh', () => {
     const codes = Array.from({ length: 20 }, () => run(path).status);
     expect(new Set(codes), `unstable exit codes: ${codes.join(' ')}`).toEqual(new Set([0]));
   }, 30_000);
+
+  // --- H2 section headings + heading-form opener --------------------------
+  // The lint used to pin sections at H3 and the opener at literal `**From Tom**`.
+  // That left the document with an H1 and no H2, which is a real WCAG 1.3.1 /
+  // 2.4.10 defect, and it meant the cognitive-accessibility gate could not act
+  // on its own finding: the deterministic check refused the fix. Both forms are
+  // now accepted, so the corpus's sixteen H3 editions keep passing while new
+  // editions can carry a valid outline. H4 and deeper stay invisible to section
+  // accounting, which is why the matchers are `^###? ` and not `^##+ `.
+  const H2_BRIEF = VALID_BRIEF
+    .replace('**From Tom**', '## From Tom')
+    .replaceAll('### ', '## ');
+
+  it('accepts H2 section headings and a heading-form From Tom opener', () => {
+    const r = run(fixture(H2_BRIEF, VALID_LINKEDIN));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('still accepts the legacy H3 + bold-opener shape', () => {
+    const r = run(fixture(VALID_BRIEF, VALID_LINKEDIN));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('(c) fires when the Also-worth-noting coda is missing from an H2 brief', () => {
+    const r = run(fixture(H2_BRIEF.replace('## Also worth noting', '## Something else'), VALID_LINKEDIN));
+    expect(r.stderr).toContain('[c]');
+  });
+
+  it('(h) fires when the provenance line is missing from an H2 brief', () => {
+    const noProv = H2_BRIEF.replace(
+      '*This edition is drafted by AI and reviewed by a different AI, never the one that wrote the draft. I hold editorial responsibility for what follows.*\n\n',
+      '',
+    );
+    const r = run(fixture(noProv, VALID_LINKEDIN));
+    expect(r.stderr).toContain('[h]');
+  });
+
+  it('(i) fires when neither opener form is present', () => {
+    const r = run(fixture(H2_BRIEF.replace('## From Tom', '## Opening'), VALID_LINKEDIN));
+    expect(r.stderr).toContain('[i]');
+  });
+
+  it('(k) sees duplicate citations across H2 section boundaries', () => {
+    const dup = H2_BRIEF.replace(
+      'Both [Anthropic](https://www.anthropic.com/news/y) and [OpenAI](https://openai.com/z) filed draft S-1s.',
+      'Anthropic [published a statement](https://www.anthropic.com/news/x) again.',
+    );
+    const r = run(fixture(dup, VALID_LINKEDIN));
+    expect(r.stderr).toContain('[k]');
+  });
+
+  it('does not treat H4 sub-headings as section boundaries', () => {
+    const withH4 = H2_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      '#### A sub-point\n\n**Why it matters to your team.** Portability is the cheapest hedge.',
+    );
+    const r = run(fixture(withH4, VALID_LINKEDIN));
+    expect(r.status, r.stderr).toBe(0);
+  });
 });

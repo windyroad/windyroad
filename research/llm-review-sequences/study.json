@@ -1,16 +1,16 @@
 {
   "study_id": "llm-review-sequences-v0",
-  "status": "subscription-v2-pre-registration-correction-in-progress; objective-scope-and-two-phase-review-findings-open; unfrozen-and-unauthorized; Ollama-documented-automation-terms-basis-established-human-clarification-pending-nonblocking; OSF-registration-pending; preregistration-v1-preserved",
-  "frozen": false,
-  "frozen_at": null,
-  "freeze_scope": "The manifest frozen flag first creates immutable exact-commit reviewer input after every author choice and branch decision. Detached phase 1 then attests the three exact-commit review approvals, verified allowlisted registration payload and member manifest, branch, normalized and raw artifacts, runtime files, and exact queues before OSF submission while outcome calls remain unauthorized. Phase 2 separately binds untouched OSF-origin evidence, its derived summary, and explicit author confirmation after registration. Neither phase is complete.",
+  "status": "subscription-v2-frozen-review-candidate; confirmatory-only; outcome-blind; exact-commit-methods-reproducibility-and-safety-review-pending; OSF-registration-pending; unauthorized; preregistration-v1-preserved",
+  "frozen": true,
+  "frozen_at": "2026-07-28T07:29:51.000Z",
+  "freeze_scope": "The manifest frozen flag creates immutable exact-commit reviewer input after every author choice and branch decision. Detached phase 1 then attests the three exact-commit review approvals, verified allowlisted registration payload and member manifest, branch, normalized and raw artifacts, runtime files, and exact queues before OSF submission while outcome calls remain unauthorized. Phase 2 separately binds untouched OSF-origin evidence, its derived summary, and explicit author confirmation after registration. The reviewer-input candidate is frozen; detached phases 1 and 2 remain incomplete.",
   "confirmatory_outcomes_collected": false,
   "authorship": {
     "authors": [
       {
         "name": "Tom Howard",
-        "affiliation": null,
-        "affiliation_status": "author-decision-pending-between-independent-researcher-and-windy-road-technology",
+        "affiliation": "Independent researcher",
+        "affiliation_status": "confirmed",
         "email": "tom@windyroad.com.au",
         "orcid": "0009-0001-4714-5747"
       }
@@ -18,10 +18,16 @@
     "contributor_order_confirmed": true,
     "sole_author": true
   },
+  "publication_choices": {
+    "registration_prose_and_released_data_license": "CC BY 4.0",
+    "code_license": "MIT",
+    "license_file": "LICENSE.md",
+    "osf_visibility": "public-immediately"
+  },
   "primary_endpoint": "blocked_by_activation",
   "active_subscription_design": {
-    "status": "prospective two-system candidate; repeated-context correction in progress; exact-commit review pending",
-    "scope": "confirmatory-only; excludes the conditional Ollama stratum",
+    "status": "frozen two-system review candidate; exact-commit review pending",
+    "scope": "confirmatory-only; Ollama is not activated and is excluded",
     "supersedes": "The uncollected OpenRouter candidates below are retained as design history only.",
     "reason": "The sole author authorized the existing ChatGPT/Codex and Claude Max subscriptions. API, per-call, overage, extra-balance, and paid-fallback spend remain prohibited; any new fixed subscription requires separate action-time authorization.",
     "confirmatory_outcomes_collected": false,
@@ -177,13 +183,13 @@
     }
   },
   "exploratory_ollama_cloud_replication": {
-    "status": "prospective-contingency; documented-first-party-automation-terms-basis-established; human-clarification-pending-nonblocking; no-automated-Ollama-access-authorized",
-    "activation_decision": "pending",
+    "status": "not-activated; excluded from this registration and initial study; any future use requires a separately preregistered replication",
+    "activation_decision": "not-activated",
     "confirmatory": false,
     "outcomes_collected": false,
     "automated_access_authorized": false,
     "outcome_calls_authorized": false,
-    "purpose": "A separately reported product-replication stratum that cannot enter or alter the two-system confirmatory estimand.",
+    "purpose": "A documented but non-activated replication candidate that cannot enter or alter this registration, queue, or two-system confirmatory estimand. Any future Ollama study requires a separate preregistration.",
     "terms_conformance_assessment": {
       "status": "operational-basis-established-from-first-party-documentation; human-clarification-pending-nonblocking",
       "assessed_at": "2026-07-19",
@@ -253,7 +259,7 @@
       "6. Before every initial or resumed Ollama batch, repeat and compare the frozen account, plan, entitlement, client/server version, complete model-record, OLLAMA_API_KEY-absence, and zero-balance checks. On every response, compare the returned model before scoring or durable acceptance. Any ambiguity or drift creates a durable non-consuming suspension."
     ],
     "non_activation_branch": "If Ollama denies or narrows the documented-use interpretation, the required plan controls cannot be verified, or the pre-activation package is incomplete when the author finalizes OSF registration, set activation_decision to not-activated before any study outcome. Make no Ollama outcome call and register, freeze, and authorize only the unchanged two-system confirmatory package.",
-    "activation_branch": "Only after stages 1 through 5 pass may the arm become activated. Preflight, fixture-only implementation, and offline artifact generation are preparations, not activation or outcome collection.",
+    "activation_branch": "Not available within this frozen study. Any future Ollama activation requires a separately preregistered replication after its preparation and review gates pass.",
     "planned_design_if_activated": {
       "structural_templates": 40,
       "condition_specific_sequences": 320,
@@ -298,6 +304,8 @@
     "frozen",
     "frozen_at",
     "freeze_scope",
+    "authorship",
+    "publication_choices",
     "ecological_layer",
     "deterministic_baseline",
     "excluded_semgrep_feasibility_probe",
@@ -570,8 +578,8 @@
     "ground_truth_sha256": "34ec31cb8ef59e28f31981fb5b76cd896bf984f0bb62943f081e5e2ff57aadbd"
   },
   "ecological_layer": {
-    "status": "two-system candidate; repeated-context correction in progress; exact-commit review pending",
-    "scope": "confirmatory-only; excludes the conditional Ollama stratum",
+    "status": "frozen two-system review candidate; exact-commit review pending",
+    "scope": "confirmatory-only; Ollama is not activated and is excluded",
     "generator": "ecological.mjs",
     "confirmatory": true,
     "confirmatory_outcomes_collected": false,
@@ -661,7 +669,7 @@
     "reason": "The Semgrep Rules License v1.0 prohibits redistribution, so the exact rules snapshot cannot be included in the public reproducibility package. The observed zero-finding feasibility result is disclosed but excluded from study analyses."
   },
   "preregistration_v2_draft": {
-    "status": "subscription-v2-pre-registration-correction-in-progress; unfrozen-and-unauthorized; latest-methods-reproducibility-and-safety-findings-require-exact-commit-review; Ollama-documented-automation-terms-basis-established-human-clarification-pending-nonblocking; OSF-registration-pending",
+    "status": "subscription-v2-frozen-review-candidate; confirmatory-only; exact-commit-methods-reproducibility-and-safety-review-pending; unauthorized; OSF-registration-pending",
     "template": "OSF Preregistration",
     "template_schema_version": 4,
     "template_schema_id": "697b72f611a8e98484c6139b",
@@ -673,11 +681,9 @@
     "registration_payload_format": "canonical allowlisted JSON envelope with embedded raw member bytes, member metadata, whole-payload SHA-256, and member-manifest SHA-256",
     "confirmatory_outcomes_collected": false,
     "submission_blockers": [
-      "archive the dated cross-provider terms-conformance basis and apply any contrary Ollama human response before phase 1",
-      "finalize the Ollama activation or non-activation branch before any outcome",
       "resolve the latest methods, reproducibility, and safety findings and obtain all three approvals on one exact frozen-input commit",
-      "confirm the study-local license, OSF visibility, and author affiliation choices",
-      "freeze the exact content commit and verified deterministic registration payload with outcome calls still unauthorized",
+      "build and verify the deterministic registration payload from the exact approved content commit",
+      "populate and verify the detached phase-1 content-freeze record with outcome calls still unauthorized",
       "create the OSF registration with Tom Howard as sole administrator and ORCID 0009-0001-4714-5747",
       "download and reverify the registered packet and raw OSF evidence, then record explicit action-time author confirmation before creating the separate execution authorization"
     ]

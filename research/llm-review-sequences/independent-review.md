@@ -22,6 +22,7 @@ unresolved_blockers: []
 
 The exact-commit review packet contains every file allowed into the OSF registration payload:
 
+- [`LICENSE.md`](./LICENSE.md)
 - [`README.md`](./README.md)
 - [`independent-review.md`](./independent-review.md)
 - [`osf-preregistration-v4-draft.md`](./osf-preregistration-v4-draft.md)
@@ -36,7 +37,7 @@ The exact-commit review packet contains every file allowed into the OSF registra
 - [`reviews/resolution.md`](./reviews/resolution.md)
 - [`study.json`](./study.json)
 
-This is the complete 13-member registration allowlist. The AI-support response is a privacy-preserving visible-content transcription, not a raw RFC 822 message, permission, denial, or execution authority.
+This is the complete 14-member registration allowlist. The AI-support response is a privacy-preserving visible-content transcription, not a raw RFC 822 message, permission, denial, or execution authority.
 
 It also contains the payload builder/verifier, all code that generates or validates the registered design and execution, both detached state templates, and every directly associated test:
 
@@ -142,9 +143,9 @@ Inspect reproducibility and subscription-only execution:
 - Any “crash-safe” claim is limited to a cleanly observed interruption and does not imply recovery from a torn JSONL tail, abrupt power loss, concurrent writers, or a check-to-spawn race.
 - Public release contains only sanitized derived attempt-event data; raw ledgers, provider output, absolute paths, account/authentication state, and environment metadata remain private pending post-outcome review.
 
-## Conditional Ollama revision rubric
+## Future separate Ollama replication rubric
 
-Every targeted review of the conditional Ollama stratum must also verify this ordered sequence:
+This rubric is not applicable to the current confirmatory-only registration, which records Ollama as `not-activated`. Any future separately preregistered Ollama study must verify this ordered sequence:
 
 1. A dated provider-neutral terms-conformance record showing the published first-party terms and product documentation that support automation on the intended authenticated surface, with any direct contrary or narrower provider reply applied before proceeding. This is an operational conformance basis, not provider approval or legal advice.
 2. Separately action-time-authorized no-prompt preflight.
@@ -212,9 +213,9 @@ The author archives every raw report verbatim, then records for each finding:
 
 The author may not convert a subagent approval into a claim of independent validation. Disagreement among reviewers remains visible.
 
-## Current precommit rejection and resolution status
+## Current frozen-candidate review status
 
-The current outcome-blind worktree review has not produced an approving exact-commit report. Its reproducibility disposition remains `do not approve`; the package is unfrozen, unregistered, and unauthorized. The findings are being corrected in place and must be independently rechecked on one immutable successor commit. No provider or model call, OSF action, benchmark outcome, or freeze is implied by this worktree activity.
+The earlier outcome-blind worktree review did not produce an approving exact-commit report. Its findings were corrected before the current reviewer-input candidate was frozen. The package remains unregistered and outcome-unauthorized, and all three roles must now independently inspect the same exact frozen commit. No provider or model outcome call, OSF action, or benchmark outcome is implied by the manifest freeze.
 
 The current reproducibility findings include:
 
@@ -226,7 +227,7 @@ The current reproducibility findings include:
 - Public-release wording was broader than the reviewed data boundary, the AI-support response was absent from the packet, and the manuscript source and rendered PDF were out of sync. The response is now a required 13th member. The corrective pre-outcome source and current eight-page PDF are now synchronized and reproducibly verified, but this worktree build is not exact-commit approval and must be repeated after registered outcomes and final revision.
 - A targeted runner test reached 166 passing tests but ended with an unhandled Vitest worker RPC timeout, so that run is not clean verification evidence.
 
-Corrections in progress include exact terminal-result enforcement, common failure semantics, provider-specific identity evidence, exact executable pinning, the 640-dispatch/no-retry Ollama rule, equal-family complete-pair estimands, and the sanitized-derived-data release boundary. These worktree corrections do not close any finding until tests pass cleanly and all three roles review the same exact successor commit.
+Corrections include exact terminal-result enforcement, common failure semantics, provider-specific identity evidence, exact executable pinning, equal-family complete-pair estimands, and the sanitized-derived-data release boundary. They do not close any finding until tests pass cleanly and all three roles review the same exact frozen commit. Ollama is not activated in this candidate.
 
 The safety review also requires one historical-policy reconciliation: earlier documents treated a provider-specific written assurance as necessary, whereas the current provider-neutral rule relies on published first-party terms and documented automation surfaces unless a direct provider reply imposes a contrary or narrower condition. The archived AI-support response is neither an assurance nor a denial. The resolution must preserve that history without presenting the new operational rule as retroactive permission or approval.
 
@@ -234,12 +235,12 @@ The safety review also requires one historical-policy reconciliation: earlier do
 
 Phase 1 uses a non-self-referential sequence:
 
-1. Resolve the author metadata, visibility, license, and activation branch. Record the Ollama `activation_decision` as `not-activated` for the confirmatory-only branch; `pending` cannot pass phase 1. Reproduce every generated hash and complete the no-prompt subscription checks.
-2. Set the manifest to `frozen: true`, record its canonical UTC freeze time, and commit the complete registration content as one candidate. Here, frozen means that reviewers receive immutable bytes. It does not mean that review, OSF registration, or execution authorization has succeeded.
+1. Verify that the fixed author metadata, visibility, licences, confirmatory-only branch, and machine-readable Ollama `not-activated` decision agree across the exact commit.
+2. Verify the canonical UTC manifest freeze time and reproduce every generated hash. Here, frozen means only that reviewers receive immutable bytes; it is not approval, OSF registration, or execution authorization.
 3. Have all three AI-assisted reviewers inspect that exact frozen commit. Any accepted content correction creates a new frozen candidate commit and invalidates the earlier approvals.
 4. After all three roles approve the same commit with no unresolved blocker, create the detached phase-1 attestation. It binds the exact report files and hashes, reviewed commit, dispositions, payload, branch, queues, systems, artifacts, counts, and runtime files while permanently keeping `outcome_calls_authorized` false.
 
-The final generated hashes must reproduce from a clean checkout. Subscription-only authentication and the US$0 usage-based spending guard are verified without sending a benchmark prompt. These permitted preparatory checks may contact a provider's authentication service but may not invoke inference. Any new fixed subscription has separate action-time authorization, and any activated Ollama arm has a dated first-party documented-automation terms basis, no contrary provider restriction, and proof that extra-usage balance is zero or disabled.
+The final generated hashes must reproduce from a clean checkout. Subscription-only authentication and the US$0 usage-based spending guard are verified without sending a benchmark prompt. These permitted preparatory checks may contact a provider's authentication service but may not invoke inference. No Ollama access is part of this registration.
 
 The deterministic registration payload is rebuilt from the exact reviewed content commit using the fixed allowlist, canonical object and member order, media types, raw byte sizes, SHA-256 values, and Base64 encoding defined by `registration-packet.mjs`. Its verifier rejects missing, extra, duplicate, reordered, path-traversal, absolute-path, malformed, executable-case, detached-record, credential, account-state, attempt, result, raw-output, and named reasoning-trace members; disables Git replacement/configuration redirection; and compares every member byte and mode with the exact commit. Because content scanning cannot prove the semantic safety of arbitrary prose, the exact-commit safety approval remains mandatory.
 

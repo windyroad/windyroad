@@ -24,8 +24,9 @@
 \title{Detecting Strategically Decomposed Malicious Code Changes\\
 with Subscription-Backed LLM Reviewers}
 \author{Tom Howard\\
+\emph{Independent researcher}\\
 \href{mailto:tom@windyroad.com.au}{tom@windyroad.com.au}}
-\date{19 July 2026}
+\date{28 July 2026}
 
 \begin{document}
 \maketitle
@@ -47,8 +48,8 @@ framing across two confirmatory subscription-backed systems: Codex CLI and
 Claude Code. A prospectively selected 16-template nested stratum adds
 cumulative-history context and a second trial. The full two-system schedule
 contains 2,816 review boundaries, including the 1,280-boundary base stratum used
-for H1--H3. A separately reported, terms- and preparation-contingent Ollama Cloud stratum
-would reuse only 640 base boundaries and cannot enter the two-system estimands.
+for H1--H3. A considered Ollama Cloud replication was not activated and
+contributes no observation or analysis to this registration.
 The primary endpoint is \code{blocked\_by\_activation}; paired intent
 discrimination is the H1 contrast over that endpoint.
 Workflow framing and the decomposition-by-context interaction are prespecified
@@ -76,8 +77,9 @@ workflows differ in policy, but empirical comparisons often also change the
 evidence shown to the reviewer.
 
 We study whether two confirmatory subscription-backed LLM review products
-recognise a composition before its activation boundary. A conditional Ollama
-Cloud replication is declared separately and cannot alter confirmatory results.
+recognise a composition before its activation boundary. A considered Ollama
+Cloud replication was not activated; any future test requires a separate
+preregistration and cannot alter these confirmatory results.
 The benchmark represents harm as an abstract policy assertion: an unprivileged
 synthetic actor receives a protected synthetic capability. It neither implements
 an exploit nor interacts with a real target. The contribution is a reproducible,
@@ -199,10 +201,7 @@ frozen prompt but start fresh processes.
 The three split submissions retain fixed causal order and one-minute spacing;
 the atomic submission is timestamped at the split activation time. Timing and
 order are matched controls rather than estimated factors. Calls are globally
-shuffled with a seeded Fisher--Yates algorithm. If activated, the separate
-Ollama queue reuses only the 640 base local-context boundary prompts, once each,
-as 320 sequences, 160 atomic boundaries, and 480 split boundaries. It receives
-neither cumulative context nor repeated trials. No outcome-dependent stopping,
+shuffled with a seeded Fisher--Yates algorithm. No outcome-dependent stopping,
 template replacement, or prompt tuning is permitted.
 
 \subsection{Review systems}
@@ -215,7 +214,7 @@ deviation.
 
 \begin{table}[ht]
 \centering
-\caption{Confirmatory and conditional review systems.}
+\caption{Confirmatory review systems.}
 \label{tab:systems}
 \ifdefined\EnableTaggedPDF\tagpdfsetup{table/header-rows={1}}\fi
 \begin{tabular}{@{}lll@{}}
@@ -224,7 +223,6 @@ System & Client version & Requested model \\
 \midrule
 Codex CLI & 0.137.0; ChatGPT login & \code{gpt-5.5} \\
 Claude Code & 2.1.211; Claude Max login & \code{sonnet} \\
-Ollama (conditional) & 0.32.1; not activated & \code{qwen3.5:397b-cloud} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -248,27 +246,11 @@ status that the requested pinned client showed no observable reroute. A
 model-rerouted error event is rejected. This is an observability limitation,
 not returned-model verification.
 
-No automated Ollama access or purchase is currently authorised. A cross-provider
-assessment applies one provider-neutral operational rule: published first-party
-terms and product documentation expressly supporting automation on the intended
-authenticated product surface supply the basis for that documented use. This is
-not legal advice or provider approval, and any direct contrary or narrower
-provider reply overrides it prospectively. The archived AI-support response
-neither granted nor denied permission. On the current published basis, no
-exceptional research waiver appears necessary. The remaining fixed order is
-action-time approval for a no-prompt
-entitlement and identity preflight, fixture-only implementation and offline
-artifact generation, targeted review, an outcome-blind activation decision, a pre-submission content freeze,
-and OSF registration followed by a separately bound execution authorisation.
-If activated, the arm permits exactly 640 physical inference dispatches and zero
-retries. Requests set \code{stream=false} and \code{think=false}, omit tools,
-deliberately omit \code{format}, and pass through the common frozen local response
-validator. Exact \code{response.model} identity as
-\code{qwen3.5:397b-cloud} is required. Invalid or schema-invalid output is a
-terminal abstention; any reasoning trace or tool call suspends the arm. The
-localhost service brokers cloud inference, so prompts leave the device. A new
-fixed subscription requires action-time approval, and extra-usage balance,
-per-call billing, overage, and fallback are prohibited.
+Ollama Cloud was considered as a separate exploratory replication. The dated
+terms assessment and provider correspondence remain audit history, but the
+frozen decision is \code{not-activated}. This registration authorises no Ollama
+purchase, preflight, implementation, queue, dispatch, observation, or analysis.
+Any future Ollama experiment requires a separate preregistration.
 
 All reviews receive one fixed security-review task and a JSON response contract.
 Requests ask for \code{allow}, \code{block}, or \code{abstain}; a maliciousness
@@ -369,21 +351,12 @@ changing the estimand or variance method. No imputation model is fitted. The fou
 claims are not combined into a multiplicity procedure, so no familywise error
 control is claimed; every estimate, interval, bound, and decision is reported.
 
-If activated, Ollama is analysed alone using the 40-template base local sample,
-H1--H3 contrasts, fixed-strata Welch intervals, percentile-bootstrap
-sensitivity, missingness bounds, and complete-template sensitivity. It has no
-H4 or consistency estimate. Its dedicated reporting path
-emits estimates, intervals, and bounds without hypothesis-support,
-robustness, significance, equivalence, superiority, or pooled-model decisions.
-Fabricated-response tests must prove both this decision-free path and rejection of
-Ollama, missing, extra, or mixed rows from the confirmatory path before activation.
-Confirmatory analysis also rejects a ledger unless every frozen authorized call
-has exactly one terminal result.
+No Ollama observation or analysis is part of this registration. Confirmatory
+analysis rejects Ollama, missing, extra, or mixed rows and also rejects a ledger
+unless every frozen authorized call has exactly one terminal result.
 
 The products and sample are a convenience selection determined by subscriptions
-available to the author, not an 80\% power target. The optional Ollama stratum
-reuses the same 40 templates and adds no independent template evidence or
-confirmatory power. An earlier 20,000-replication single-system
+available to the author, not an 80\% power target. An earlier 20,000-replication single-system
 normal-approximation audit did not match the final design. A subsequent
 outcome-free audit simulated the exact base and nested strata and found material
 undercoverage for the initially proposed percentile bootstrap. The interval was
@@ -402,16 +375,13 @@ No benchmark prompt has been submitted to any review system. The two-system
 confirmatory generator, prompts, schedule, ledgers, scoring, estimands, and tests
 were implemented with deterministic checks and fabricated plumbing responses
 only. No LLM outcome has been collected or inspected. No Ollama runner, queue,
-ledger, or output artifact has been implemented or generated. An earlier
+ledger, or output artifact has been implemented or generated, and the frozen
+decision excludes Ollama from this study. An earlier
 no-prompt confirmatory preparation check passed for the pinned Codex and Claude
 clients without inference; the hardened sandbox, identity, and ledger checks
-require successor revalidation before freeze. Ollama's AI support agent replied that it could not grant
-written permission or determine whether the specific design was permitted, and
-offered escalation to a human agent. The author then requested human escalation
-and asked whether ordinary signed-in subscription/API use already supplies the
-permission referenced by the Terms. A human response is pending as a nonblocking
-clarification; any contrary restriction overrides the terms assessment. Automated
-preflight, subscription purchase, runtime support, and activation remain absent.
+require exact-commit revalidation before registration. Ollama's AI support agent
+did not grant or deny permission and offered human escalation; that exchange is
+retained as audit history and cannot activate Ollama within this frozen study.
 
 The deterministic baseline ran ESLint 9.39.3 over all 2,400 final-state files in
 the full 800-case generator output. It emitted no warnings or errors: zero
@@ -437,7 +407,7 @@ subscription reset windows, creating calendar-time and platform-drift risk
 despite the fixed randomised queue.
 
 \textbf{External validity.} Forty purposively selected templates, eight policy
-families, two confirmatory products, an optional exploratory product, and compact
+families, two confirmatory products, and compact
 JavaScript repositories do not represent all
 languages, organisations, vulnerabilities, or attack strategies. The design
 tests one three-submission decomposition and does not estimate an optimal
@@ -460,10 +430,7 @@ This is defensive research into review reliability. The benchmark cannot access
 external systems or data, and its only harmful state is a deterministic in-memory
 assertion over synthetic names. No real repository or person is tested.
 
-For the conditional cloud arm, prompts leave the device even though the local
-service is used. The study makes no independent claim about provider logging,
-training, or retention beyond the dated first-party materials and archived
-correspondence. Public research data are limited to sanitized derived
+Public research data are limited to sanitized derived
 attempt-event data and aggregate analysis. Raw ledgers, provider output, absolute
 paths, account and authentication state, and environment metadata remain private
 unless a post-outcome safety, upstream-license, privacy, and terms review approves
@@ -482,19 +449,14 @@ composition patterns retain disclosed dual-use value. The packet contains no
 real target, external capability, credential, deployment path, or complete exploit.
 Targeted non-isolated reviews of commit \code{70963a2} rejected its release-packet
 and execution-authorization mechanics. Their reports and accepted findings are
-archived. A later outcome-blind worktree review also retains a \code{do not
+archived. A later outcome-blind worktree review also retained a \code{do not
 approve} reproducibility disposition while authorization-schema, terminal-result,
 identity-evidence, executable-pinning, writer-exclusion, and release-boundary
-corrections remain in progress. The safety record additionally requires the
-historical provider-specific request for written assurance to be reconciled with
-the current provider-neutral published-terms rule: neither the AI-support response
-nor silence is approval, and a direct contrary provider reply controls. The
-present correction remains unfrozen and unauthorized. All
-author choices and the study branch must first be fixed in one immutable
-successor commit whose frozen marker identifies exact reviewer input bytes. All
-three review roles must then approve that same commit before the detached
-phase-one attestation and OSF submission. The marker cannot itself represent
-approval or authorize an outcome call.
+corrections were incorporated before this reviewer-input candidate was frozen.
+Later outcome-blind worktree reviews found no blocker, but they are not
+phase-one approval. All three review roles must approve the same exact frozen
+commit before the detached phase-one attestation and OSF submission. The marker
+cannot itself represent approval or authorize an outcome call.
 
 \section{Reproducibility}
 
@@ -505,7 +467,7 @@ freeze records. Each durable ledger begins with one immutable run-binding header
 The analysis requires the exact binding schema, recomputes its fingerprint, and
 verifies the raw ground-truth-ledger digest before joining outcomes. It excludes
 the metadata row from outcomes and carries the verified binding into its report.
-Current unfrozen hashes are:
+Frozen reviewer-input hashes are:
 
 \begin{itemize}[leftmargin=1.5em]
   \item scenario cards:
@@ -521,7 +483,7 @@ Current unfrozen hashes are:
 \end{itemize}
 
 The first phase builds a canonical JSON payload from an exact Git commit using a
-fixed 13-member release-safe allowlist. It includes the privacy-preserving
+fixed 14-member release-safe allowlist. It includes the study-local licence and the privacy-preserving
 AI-support-response transcription with its required SHA-256 recorded in the
 manifest.
 Each member records path, media type, raw byte size,
@@ -533,8 +495,8 @@ normalized artifacts, raw artifact bytes, and runtime files before OSF
 submission, while explicitly leaving outcome calls unauthorised. Each detached
 review report carries machine-readable role, exact-commit, disposition, and
 blocker metadata that must match its report hash and phase-one attestation. The
-confirmatory-only branch also requires a machine-readable non-activation decision
-for the conditional Ollama arm and false pre-outcome state flags.
+confirmatory-only branch also requires the machine-readable Ollama
+\code{not-activated} decision and false pre-outcome state flags.
 
 After registration, a separate execution record binds untouched raw OSF-origin
 registration JSON, its structurally derived summary, the exact downloaded

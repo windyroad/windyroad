@@ -19,7 +19,7 @@ The critic owns analytical quality: does the argument hold; is specificity prese
 
 ## Headline craft
 
-Headlines (the H1 and every `### Item N:` heading) are the most load-bearing editorial surface and the place Issue 07 failed (P075). The sibling voice and cognitive-accessibility gates operate at body-copy granularity and structurally do not audit headings, so heading craft is the critic's to own as editorial quality. Read every heading separately and surface a weakness when any of these hold:
+Headlines (the H1 and every `Item N:` section heading) are the most load-bearing editorial surface and the place Issue 07 failed (P075). The sibling voice and cognitive-accessibility gates operate at body-copy granularity and structurally do not audit headings, so heading craft is the critic's to own as editorial quality. Read every heading separately and surface a weakness when any of these hold:
 
 - **Headline clarity.** Run the `docs/VOICE-AND-TONE.md` "competent CTO from a non-AI-native company" standalone-readability test on the H1 and on each Item heading separately. Flag any heading the test reader cannot parse without first reading the body. (Issue 07: the H1 leaned on "substrate provider" with no gloss.)
 - **Headline jargon density.** Flag any single heading whose specialist-noun density defeats the standalone-readability test: two or more in-group specialist terms carried without a gloss. (Issue 07 headings: bare "Starlette" with no category gloss, "services-arm", a stacked "tier-1" plus "eval-governance" plus "eval harness", "sandboxing patterns".)

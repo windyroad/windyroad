@@ -27,6 +27,7 @@ const STUDY_DIRECTORY = "research/llm-review-sequences";
 const STUDY_ID = "llm-review-sequences-test";
 const CLI_PATH = join(import.meta.dirname, "registration-packet.mjs");
 const EXPECTED_MEMBERS = [
+  ["LICENSE.md", "text/markdown; charset=utf-8"],
   ["README.md", "text/markdown; charset=utf-8"],
   ["independent-review.md", "text/markdown; charset=utf-8"],
   ["osf-preregistration-v4-draft.md", "text/markdown; charset=utf-8"],
@@ -69,6 +70,7 @@ function committedFixture() {
   git(repositoryRoot, ["config", "user.email", "registration@example.invalid"]);
 
   const contents = new Map([
+    ["LICENSE.md", Buffer.from("# Study licences\n\nCode: MIT. Prose and data: CC BY 4.0.\n")],
     ["README.md", Buffer.from("# Reproducible study package\n")],
     ["independent-review.md", Buffer.from("# Independent review\n\nNo outcome data were reviewed.\n")],
     ["osf-preregistration-v4-draft.md", Buffer.from("# OSF Preregistration v4\n\nField-complete answer packet.\n")],
@@ -169,7 +171,7 @@ describe("release-safe OSF registration packet", () => {
     });
     expect(Object.keys(packet)).toEqual(["schema_version", "study_id", "content_commit", "members"]);
     expect(packet).not.toHaveProperty("generated_at");
-    expect(packet.members).toHaveLength(13);
+    expect(packet.members).toHaveLength(14);
     expect(packet.members.map(({ path }) => path)).toEqual(EXPECTED_MEMBERS.map(([path]) => path));
 
     for (const [path, mediaType] of EXPECTED_MEMBERS) {
@@ -186,8 +188,10 @@ describe("release-safe OSF registration packet", () => {
         content_base64: content.toString("base64"),
       });
     }
-    expect(Buffer.from(packet.members[0].content_base64, "base64").toString("utf8"))
-      .toBe("# Reproducible study package\n");
+    expect(Buffer.from(
+      packet.members.find(({ path }) => path === "README.md").content_base64,
+      "base64",
+    ).toString("utf8")).toBe("# Reproducible study package\n");
   });
 
   it("exports the exact fixed allowlist and verifies the canonical member inventory", () => {

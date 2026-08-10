@@ -4,6 +4,11 @@ Prospective, subscription-only study of whether LLM code-review systems detect a
 
 No LLM benchmark outcome has been collected.
 
+Tom Howard is the sole author, affiliated as an Independent researcher. Original
+registration prose and released study data use CC BY 4.0; original study code
+uses MIT; see [`LICENSE.md`](./LICENSE.md). The intended OSF visibility is public
+immediately.
+
 ## Active design
 
 The active preregistration-v2 candidate uses:
@@ -23,23 +28,15 @@ H1 and H2 are primary. H1 tests malicious-versus-benign discrimination, equally 
 
 The earlier 115,200-call OpenRouter design was superseded before outcome collection. It remains in Git history and the explicitly enumerated `legacy_api_design_fields` of [`study.json`](./study.json) for auditability. OSF exports, runners, and analysis tooling must use the manifest's separate lists of authoritative current-design and current operational-control fields and must not interpret the enumerated legacy fields as active.
 
-### Conditional Ollama replication
+### Non-activated Ollama replication candidate
 
-An Ollama Cloud `qwen3.5:397b-cloud` arm is prospectively declared as a separate exploratory replication. It is not a third confirmatory system and cannot alter the 2,816-boundary two-system queue or its analysis. The [exact permission request](./provider-permission-request.md) was sent to Ollama on 2026-07-19. The archived [AI-support response](./provider-ai-support-response.md), SHA-256 `fb45d2174c96c5e638905a4cb42ef08b500820d831d563cb4b388e5f43c55d5a`, neither granted nor denied permission and offered human escalation. The [human-escalation reply](./provider-permission-escalation.md) asks whether ordinary signed-in subscription/API use supplies the permission referenced by the Terms; a response is pending. The study applies one provider-neutral operational rule: published first-party terms and product documentation expressly supporting automation on the intended authenticated surface supply the basis for that documented use. This is not legal advice or provider approval. Any direct provider reply imposing a contrary or narrower rule overrides the assessment prospectively. On the current published basis, no exceptional Ollama research waiver appears necessary, but no Ollama preflight, purchase, implementation, or outcome call is authorized while the remaining study gates are incomplete.
-
-The Ollama activation order is fixed:
-
-1. Archive the dated Ollama Terms, pricing, Cloud/API documentation, terms-conformance assessment, and correspondence; apply any contrary provider restriction before proceeding.
-2. After separate action-time author approval, complete the no-prompt entitlement, identity, plan, version, model-record, and zero-balance checks.
-3. Implement the fixture-only route and generate the separate 320-sequence and 640-boundary artifacts offline.
-4. Complete targeted review.
-5. Fix the activation or non-activation decision before any outcome and register the applicable plan on OSF.
-
-If Ollama imposes a contrary restriction or preparation is incomplete at registration, Ollama is recorded as not activated and only the unchanged confirmatory package runs.
-
-If activated, the arm has a hard ceiling of 640 physical inference dispatches: one dispatch for each base local-context boundary in a separately shuffled queue with seed `20260719`, with zero retries. It does not enter the nested context or consistency analyses. Each request fixes `stream: false`, `think: false`, no tools, and a 256-token output ceiling. The `format` field is deliberately omitted so Ollama responses pass through the same frozen local response validator as the confirmatory products. Exact `response.model === "qwen3.5:397b-cloud"` is required before durable acceptance; invalid or schema-invalid output is a terminal abstention, while a reasoning trace, tool call, or identity drift suspends the arm. No API key, paid overage, positive or enabled extra-usage balance, or fallback model is allowed. A new fixed subscription requires separate action-time approval. See the dated [Ollama Terms](https://ollama.com/terms), [Ollama Privacy Policy](https://ollama.com/privacy), [Ollama pricing](https://ollama.com/pricing), [Ollama Cloud documentation](https://docs.ollama.com/cloud), [API introduction](https://docs.ollama.com/api/introduction), [API authentication](https://docs.ollama.com/api/authentication), [structured-output limitations](https://docs.ollama.com/capabilities/structured-outputs), and [thinking behavior](https://docs.ollama.com/capabilities/thinking).
-
-The localhost route brokers cloud inference, so prompts leave the device. The study makes no independent claim about provider logging, training, or retention beyond the dated first-party materials and archived correspondence. The public research release is limited to sanitized derived attempt-event data and aggregate analysis. Raw durable ledgers, raw provider output, absolute executable or filesystem paths, account and authentication state, and environment metadata remain private unless a post-outcome safety, upstream-license, privacy, and terms review explicitly approves a narrower release. Aggregate reporting uses factual plain-text attribution without logos or endorsement claims.
+Ollama Cloud was considered as a separate exploratory replication. Its dated
+terms assessment and [provider correspondence](./provider-ai-support-response.md)
+remain outcome-blind audit history. The frozen decision is `not-activated`: this
+registration contains no Ollama purchase, preflight, implementation, queue,
+dispatch, observation, or analysis. Any future Ollama experiment requires a
+separate preregistration and cannot alter this study's two-system sample or
+estimands.
 
 ## Safety boundary
 
@@ -87,11 +84,11 @@ Registration uses two records with different authority:
 1. [`registration-content-freeze.json`](./registration-content-freeze.json) is completed before OSF submission. It identifies the study, exact content commit, selected study branch, deterministic release-safe payload and member-manifest hashes, exact queue shape and counts, systems, normalized artifact hashes, raw artifact-file hashes, and runtime-critical file hashes. It always keeps `outcome_calls_authorized` false.
 2. [`execution-authorization.json`](./execution-authorization.json) is completed only after OSF registration and download verification. It records the canonical OSF identity, ordered UTC timestamps, downloaded evidence, and explicit action-time author confirmation. It also binds the raw phase-1 record, content commit, branch, payload, member manifest, and exact queues.
 
-Both detached state records are excluded from the payload. The content-freeze record is an outer envelope uploaded beside the payload whose hashes it records; the authorized execution record is created only after registration. The runner verifies the payload's allowlisted members, runtime files, normalized artifact hashes, raw artifact bytes, recomputed schedule, queue identity and counts, call models, OSF evidence, author identity, timestamp order, and every cross-record binding before creating output or starting client preflight. The exact prompt and call buffers that pass verification are the buffers executed. The current templates are unfrozen and unauthorized.
+Both detached state records are excluded from the payload. The content-freeze record is an outer envelope uploaded beside the payload whose hashes it records; the authorized execution record is created only after registration. The runner verifies the payload's allowlisted members, runtime files, normalized artifact hashes, raw artifact bytes, recomputed schedule, queue identity and counts, call models, OSF evidence, author identity, timestamp order, and every cross-record binding before creating output or starting client preflight. The exact prompt and call buffers that pass verification are the buffers executed. The reviewer-input manifest is frozen; both detached records remain unauthorized.
 
 ### Deterministic release-safe registration payload
 
-[`registration-packet.mjs`](./registration-packet.mjs) constructs one canonical JSON envelope directly from an exact Git content commit. Its fixed, lexicographically ordered 13-member allowlist contains only preregistration prose, the machine-readable manifest, the provider request, AI-support response, and escalation correspondence, the provider terms-parity assessment, the review protocol and resolution summary, the response schema, and manuscript source/build record. The AI-support-response member must have SHA-256 `fb45d2174c96c5e638905a4cb42ef08b500820d831d563cb4b388e5f43c55d5a`. Every member records its relative path, media type, raw byte size, SHA-256, and canonical Base64 content. No build time or filesystem metadata is included.
+[`registration-packet.mjs`](./registration-packet.mjs) constructs one canonical JSON envelope directly from an exact Git content commit. Its fixed, lexicographically ordered 14-member allowlist contains only the study licence, preregistration prose, the machine-readable manifest, provider correspondence, the provider terms-parity assessment, the review protocol and resolution summary, the response schema, and manuscript source/build record. The AI-support-response member must have SHA-256 `fb45d2174c96c5e638905a4cb42ef08b500820d831d563cb4b388e5f43c55d5a`. Every member records its relative path, media type, raw byte size, SHA-256, and canonical Base64 content. No build time or filesystem metadata is included.
 
 The verifier requires the exact allowlist. It rejects:
 
@@ -103,7 +100,7 @@ It compares every member byte and Git mode with the exact content commit while d
 
 The content scanner is defense in depth, not a semantic proof that arbitrary prose contains no dual-use detail. The small fixed allowlist and an exact-commit safety review remain the semantic release controls; the verifier guarantees that the reviewed bytes, and no other members, are uploaded.
 
-After setting the manifest to frozen, resolving every `[[...]]` author placeholder, committing the exact content, and obtaining approval of that commit, build and independently verify the payload:
+After setting the manifest to frozen, resolving every author placeholder, committing the exact content, and obtaining approval of that commit, build and independently verify the payload:
 
 ```sh
 repo="$(git rev-parse --show-toplevel)"
@@ -166,7 +163,7 @@ Primary estimates are:
 1. H1: malicious minus benign block-rate risk difference, equally averaged over decomposition, workflow, and both confirmatory products within template.
 2. H2: split minus atomic malicious block-rate risk difference, equally averaged over workflow and both confirmatory products within template.
 
-The prespecified secondary estimates are H3, the malicious trunk-minus-pull-request contrast equally averaged over atomic and split conditions and both confirmatory products, and H4, the malicious-only nested interaction `[(split cumulative - atomic cumulative) - (split local - atomic local)]` equally averaged over pull-request and trunk after averaging two trials and both products within template. The decomposition-by-workflow interaction and cumulative-context main effect are exploratory. The nested repeated cells also estimate verdict agreement and malicious-probability intraclass correlation. If activated, Ollama receives only the base local analysis separately, with descriptive intervals and no hypothesis-support, equivalence, provider-superiority, or pooled-model claim.
+The prespecified secondary estimates are H3, the malicious trunk-minus-pull-request contrast equally averaged over atomic and split conditions and both confirmatory products, and H4, the malicious-only nested interaction `[(split cumulative - atomic cumulative) - (split local - atomic local)]` equally averaged over pull-request and trunk after averaging two trials and both products within template. The decomposition-by-workflow interaction and cumulative-context main effect are exploratory. The nested repeated cells also estimate verdict agreement and malicious-probability intraclass correlation. No Ollama observation or analysis is part of this registration.
 
 Registered support intervals use fixed-strata Welch/Satterthwaite t intervals over template-level contrasts, with the eight fixed policy families equally weighted. If all contributing template contrasts have zero variance, the registered Welch interval, degrees of freedom, and support decision are unavailable; the point estimate and standard error 0 remain reported, and only the percentile sensitivity interval is shown. A 10,000-replicate family-stratified percentile bootstrap is otherwise retained as a sensitivity interval; nested consistency uses template-bootstrap intervals without a support decision. Missingness is exposed with estimand-specific bounds for all four hypotheses, assigning zero or one to missing cells in the opposing directions of each contrast. Product-specific complete-pair estimates for H1 through H4 retain the same equal-family weighting; if exclusion leaves fewer than two complete templates in any fixed family, the corresponding registered interval is unavailable rather than silently changing the estimand or variance method. No imputation model is fitted.
 
@@ -188,16 +185,17 @@ Three isolated subagents initially reviewed commit `6b607f6` for:
 - Statistical methods and claims.
 - Reproducibility and subscription-only execution.
 
-All three returned `do not approve`; their [raw reports](./reviews/) are archived verbatim. Correction addenda inspect the combined resolution log and are therefore not isolated. Later exact-commit reviews and current outcome-blind precommit audits found further release, authorization, runtime, and analysis blockers. The current reproducibility disposition remains `do not approve`, and resolution is in progress. The safety record also requires the documents to distinguish historical requests for a provider-specific written assurance from the current provider-neutral published-terms rule; neither the archived AI-support response nor silence is approval, and a direct contrary reply controls. These reviews are described as AI-assisted internal review, not independent human peer review, ethics approval, or arXiv endorsement.
+All three returned `do not approve`; their [raw reports](./reviews/) are archived verbatim. The findings were corrected before this frozen reviewer-input candidate. Later outcome-blind worktree reviews returned approval with documented limitations and no blockers, but they are not phase-1 approval: methods, safety, and reproducibility must still inspect and approve the same exact frozen commit. These reviews are AI-assisted internal review, not independent human peer review, ethics approval, or arXiv endorsement.
 
 See [`independent-review.md`](./independent-review.md) for the review rubric. The filename is retained for history; the protocol itself must use the accurate AI-assisted terminology.
 
 ## Publication status
 
-Current, unfrozen artifacts include:
+Current frozen reviewer-input artifacts include:
 
-- The active [`preregistration-v2.md`](./preregistration-v2.md) draft.
-- The field-by-field [`osf-preregistration-v4-draft.md`](./osf-preregistration-v4-draft.md) answer packet, with genuine author choices left unresolved.
+- The active [`preregistration-v2.md`](./preregistration-v2.md) candidate.
+- The field-by-field [`osf-preregistration-v4-draft.md`](./osf-preregistration-v4-draft.md) answer packet with author choices resolved.
+- The study-local [`LICENSE.md`](./LICENSE.md).
 - The machine-readable [`study.json`](./study.json) manifest.
 - Benchmark, prompt, collection, scoring, and analysis code with tests.
 - A synchronized pre-results [`paper/paper.tex`](./paper/paper.tex) manuscript source and [`../../output/pdf/paper.pdf`](../../output/pdf/paper.pdf) rendering. The current eight-page PDF was rebuilt and verified after the corrective source stabilized; it remains pre-outcome and must be rebuilt again after registered outcomes and final source revision.
@@ -206,14 +204,12 @@ Before collection, perform these steps in order.
 
 ### Phase 1: freeze before OSF submission
 
-1. Confirm the study-local license, OSF visibility, author affiliation, and ORCID record.
-2. Finalize the Ollama activation or non-activation branch before every study outcome. If Ollama imposes a contrary restriction or preparation remains incomplete, choose non-activation and set the machine-readable Ollama `activation_decision` to `not-activated`.
-3. Reproduce the benchmark, queue, normalized hashes, raw file hashes, counts, tests, and manuscript source from a clean checkout; render and verify the PDF only after the successor source candidate stabilizes.
-4. Set the manifest's frozen flag and canonical UTC freeze time, then commit the complete registration content as one immutable candidate. This flag freezes reviewer input; it does not authorize outcomes.
-5. Have methods, safety, and reproducibility reviewers inspect that exact commit. Apply supported corrections only in a new candidate commit and repeat every affected review until the same commit has no unresolved blocker.
-6. Build and verify the deterministic release-safe registration payload from the approved content commit.
-7. Populate and verify the detached phase-1 attestation. Bind all three exact-commit review reports and keep outcome calls unauthorized.
-8. Submit exactly the payload and outer phase-1 attestation to the applicable OSF Preregistration v4 form.
+1. The author choices, confirmatory-only branch, and manifest freeze are fixed in this candidate.
+2. Reproduce the benchmark, queue, normalized hashes, raw file hashes, counts, tests, manuscript, and PDF from the exact commit.
+3. Have methods, safety, and reproducibility reviewers inspect that exact commit. Apply supported corrections only in a new candidate commit and repeat every affected review until the same commit has no unresolved blocker.
+4. Build and verify the deterministic release-safe registration payload from the approved content commit.
+5. Populate and verify the detached phase-1 attestation. Bind all three exact-commit review reports and keep outcome calls unauthorized.
+6. Submit exactly the payload and outer phase-1 attestation to the applicable OSF Preregistration v4 form.
 
 ### Phase 2: authorize after OSF registration
 
@@ -222,6 +218,6 @@ Before collection, perform these steps in order.
 3. Obtain Tom Howard's explicit action-time confirmation that the registration, branch, payload, and queues are the intended frozen package.
 4. Populate the detached execution-authorization record with strict UTC timestamp order and exact phase-1 and queue bindings.
 5. Rerun the authorization-only tests and default fail-closed check before the first call and every resume.
-6. Run only the queues named by the authorization record. The current confirmatory runner rejects an Ollama-inclusive branch; that branch needs its own reviewed implementation.
+6. Run only the confirmatory queue named by the authorization record; the runner rejects any Ollama-inclusive branch.
 
 After the fixed schedule completes, the prespecified analysis and paper revision can proceed. arXiv submission occurs only after the results, permitted artifacts, and final manuscript are verified.

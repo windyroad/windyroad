@@ -20,7 +20,7 @@
 #      inline markdown link (the redundant trailing-source defect)
 #   b  no link-free line naming a news outlet that is not linked elsewhere in the
 #      same item (the name-without-link defect; one bare outlet is enough)
-#   c  a "### Also worth noting" section is present (the closing coda)
+#   c  an "Also worth noting" section is present (the closing coda), H2 or H3
 #   d  the H1 matches "^# Issue NN: " (the published-edition title prefix)
 #   e  a "---" horizontal rule appears after the last section, before the CTA
 #   f  model-name strings are consistent between the brief and the .linkedin.md
@@ -38,7 +38,7 @@
 #
 # Notes on determinism:
 #   Check (b) fires on a link-free line that names a news outlet which is not
-#   linked anywhere in the same item (an item is "### "-heading delimited). This
+#   linked anywhere in the same item (an item is H2/H3-heading delimited). This
 #   catches both the "corroborated by Reuters, FT, NYT, and WSJ" unlinked-list
 #   defect AND a single bare outlet ("Bloomberg reported the loss" with no link),
 #   per Tom's pipeline rule: do not name a news site without linking it (P093).
@@ -92,7 +92,7 @@ body_text() { printf '%s\n' "$body" | cut -f2-; }
 # Check (a) is line-level streaming. Check (b) is per-item (P093): it buffers
 # every link-free line of an item, builds the item's set of linked outlets from
 # its link-bearing lines (by outlet name on a link line, and by canonical /
-# syndication URL domain), then flushes at each "### " boundary and at EOF,
+# syndication URL domain), then flushes at each H2/H3 boundary and at EOF,
 # flagging any link-free line that names an outlet NOT linked in that item.
 while IFS=$'\t' read -r code ln msg; do
   [ -n "${code:-}" ] || continue
@@ -148,7 +148,7 @@ done < <(printf '%s\n' "$body" | awk -F'\t' -v full="$OUTLETS_FULL" '
 
   {
     ln = $1; line = $2;
-    if (line ~ /^### /) { flush_item(); item_has_link = 0; }
+    if (line ~ /^###? /) { flush_item(); item_has_link = 0; }
     has_link = (line ~ /\]\(/);
     if (has_link) item_has_link = 1;
 
@@ -169,13 +169,13 @@ done < <(printf '%s\n' "$body" | awk -F'\t' -v full="$OUTLETS_FULL" '
   END { flush_item(); }
 ')
 
-# --- (c) "### Also worth noting" section present ------------------------------
+# --- (c) "Also worth noting" section present (H2 or H3) -----------------------
 # Capture first, then test. `grep -q` closing the pipe early makes the upstream
 # printf/cut take SIGPIPE (141), which `pipefail` turns into a spurious FAIL on
 # long bodies. Command substitution plus `|| true` swallows it, same as (d). P119.
-atwn=$(body_text | grep -m1 -E '^### Also worth noting' || true)
+atwn=$(body_text | grep -m1 -E '^###? Also worth noting' || true)
 if [ -z "$atwn" ]; then
-  fail c "$brief: missing '### Also worth noting' section"
+  fail c "$brief: missing 'Also worth noting' section (H2 or H3)"
 fi
 
 # --- (d) H1 carries the "Issue NN:" prefix -----------------------------------
@@ -185,7 +185,7 @@ if ! printf '%s' "$h1" | grep -qE '^# Issue [0-9]+: '; then
 fi
 
 # --- (e) a "---" rule after the last section, before the CTA -----------------
-last_heading_ln=$(printf '%s\n' "$body" | awk -F'\t' '$2 ~ /^### / { ln = $1 } END { print ln + 0 }')
+last_heading_ln=$(printf '%s\n' "$body" | awk -F'\t' '$2 ~ /^###? / { ln = $1 } END { print ln + 0 }')
 hr_after=$(printf '%s\n' "$body" | awk -F'\t' -v h="$last_heading_ln" '$2 == "---" && $1 + 0 > h { print $1 }' | tail -1)
 if [ -z "$hr_after" ]; then
   fail e "$brief: missing '---' horizontal rule between the last section and the closing CTA"
@@ -250,13 +250,13 @@ fi
 # ADR-043; this is the overdue other half. The line is remediation-invariant, so
 # a gate may flag it but never rewrite it, which is exactly why a deterministic
 # check has to own its presence.
-first_item_ln=$(printf '%s\n' "$body" | awk -F'\t' '$2 ~ /^### Item / { print $1; exit }')
+first_item_ln=$(printf '%s\n' "$body" | awk -F'\t' '$2 ~ /^###? Item / { print $1; exit }')
 if [ -z "${first_item_ln:-}" ]; then
-  # No `### Item ` heading at all. Do NOT silently skip: a brief with no items is
-  # not a brief that needs no provenance line, and the `### Item N:` prefix check
+  # No `Item ` section heading at all. Do NOT silently skip: a brief with no items
+  # is not a brief that needs no provenance line, and the `Item N:` prefix check
   # that would have caught the bare-heading shape was deliberately not built (see
   # P121). Skipping here would make (h) unenforceable on exactly those briefs.
-  fail h "$brief: no '### Item ' heading found, so the provenance line's required position cannot be checked; briefs must carry '### Item N:' headings per draft-template.md"
+  fail h "$brief: no 'Item ' section heading (H2 or H3) found, so the provenance line's required position cannot be checked; briefs must carry '## Item N:' headings per draft-template.md"
 else
   # `AI` is matched uppercase-anchored rather than as a case-insensitive substring:
   # /[Aa][Ii]/ matches inside detail, available, again, maintain, email, so an
@@ -265,17 +265,30 @@ else
     $1 + 0 < h && $2 ~ /^\*/ && $2 ~ /(^|[^A-Za-z])AI([^A-Za-z]|$)/ && $2 ~ /draft|writ|review/ { c++ }
     END { print c + 0 }')
   if [ "${prov:-0}" -eq 0 ]; then
-    fail h "$brief: missing the provenance line before the first '### Item' heading; ADR-032 element 5 requires it every edition, both personas"
+    fail h "$brief: missing the provenance line before the first 'Item' section heading; ADR-032 element 5 requires it every edition, both personas"
   fi
 fi
 
-# --- (i) "**From Tom**" opener present ----------------------------------------
+# --- (i) "From Tom" opener present --------------------------------------------
 # A template invariant, not corpus precedent: the cross-edition shape gate
 # (ADR-044) deliberately does NOT own this, because the opener was absent from
 # the editions published 2026-06-08 through 2026-07-13 and returned 2026-07-20.
 # A precedent test would have let it lapse for six weeks unremarked; a template
 # invariant catches it the first week.
-from_tom=$(body_text | grep -m1 -E '^\*\*From Tom\*\*' || true)
+#
+# Both the bold form and the heading form satisfy it. The literal-bold-only
+# predicate was what blocked the cognitive-accessibility gate from acting on a
+# real WCAG 1.3.1 finding: a 420-word opener with no heading is invisible to
+# heading navigation, and the gate's fix was refused by this check rather than
+# by any editorial judgement. What the invariant is FOR is that the opener
+# exists and is attributable, not which markup carries it.
+#
+# The heading arm is H2 only, deliberately. Accepting `### From Tom` too would
+# pin nothing, and ADR-053 makes H2 the series shape from Issue 17. A template
+# invariant needs a deterministic owner or the cross-edition shape gate reports
+# the corpus fork as a fresh deviation every week. The bold arm stays forever:
+# sixteen published editions carry it and are not being migrated.
+from_tom=$(body_text | grep -m1 -E '^(\*\*From Tom\*\*|## From Tom)' || true)
 if [ -z "$from_tom" ]; then
   fail i "$brief: missing the '**From Tom**' author-voice opener (draft-template.md Structure block)"
 fi
@@ -305,7 +318,7 @@ fi
 
 # --- (k) duplicate citation across sections (P122 / RFC-004 item 5) ------------
 # The SAME link (identical anchor text AND identical URL) appearing in two
-# different `### `-delimited sections is a mechanical defect: the reader meets
+# different section-heading-delimited sections is a mechanical defect: the reader meets
 # the same citation twice. ADR-042 assigns structural hygiene here, and the
 # ADR-020 P122 amendment keeps only the near-full-length-retelling judgement
 # with the editor's edition-internal-consistency axis.
@@ -325,11 +338,11 @@ fi
 # strictest mechanical proxy that has ZERO false positives on the corpus.
 #
 # Exemption: windyroad.com.au, which recurs legitimately in the CTA and closing.
-# The region before the first `### ` heading is its own section, reported as
+# The region before the first section heading is its own section, reported as
 # "opener".
 dup_hits=$(body_text | awk '
   BEGIN { sec_name = "opener" }
-  /^### / { sec++; sec_name = $0; sub(/^### +/, "", sec_name); next }
+  /^###? / { sec++; sec_name = $0; sub(/^#+ +/, "", sec_name); next }
   {
     rest = $0;
     while (match(rest, /\[[^]]*\]\(https?:\/\/[^) ]+\)/)) {

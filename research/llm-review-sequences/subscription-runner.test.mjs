@@ -1504,7 +1504,7 @@ describe("subscription collection runner", () => {
     const executionAuthorization = JSON.parse(readFileSync(
       join(import.meta.dirname, "execution-authorization.json"), "utf8",
     ));
-    expect(study.frozen).toBe(false);
+    expect(study.frozen).toBe(true);
     expect(contentFreeze).toMatchObject({
       schema_version: 3,
       status: "unfrozen",
@@ -2740,6 +2740,7 @@ function authorizedArtifactFixture() {
   const study = studyRecord(generated.artifacts);
   writeFileSync(join(recordsRoot, "study.json"), `${JSON.stringify(study, null, 2)}\n`);
   for (const [name, value] of Object.entries({
+    "LICENSE.md": "# Study licences\n",
     "README.md": "# Study package\n",
     "independent-review.md": "# Review protocol\n",
     "osf-preregistration-v4-draft.md": "# OSF preregistration field draft\n",
