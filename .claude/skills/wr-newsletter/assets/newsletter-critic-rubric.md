@@ -49,7 +49,7 @@ Per ADR 016 and ADR 035 the verdict surface is:
 
 - `PASS`: no weaknesses surfaced this round.
 - `WEAKNESSES_FOUND`: one or more weaknesses returned; drafter responds in next round.
-- `PASS_WITH_AUTHOR_OVERRIDES`: editorial-judgement override; the drafter accepts a critic-flagged weakness as an intentional editorial choice. Reserved for cases where the critic's call is reasonable but the drafter has a defensible editorial reason to keep the artifact as-is. The override is named verbatim in the saved review block.
+- `PASS_WITH_AUTHOR_OVERRIDES`: **not a pass under ADR-052 rider 3, ratified 2026-08-10.** Editorial-judgement override; the drafter accepts a critic-flagged weakness as an intentional editorial choice. Because the drafter wrote the passage, that is self-certification, so this verdict no longer clears publication: the weaknesses are carried to step 15.37 item 5 for Tom to fix or decline on the record. Reserved for cases where the critic's call is reasonable but the drafter has a defensible editorial reason to keep the artifact as-is. The override is named verbatim in the saved review block.
 - `REJECTED` with `REJECTED_REASON: critic-loop-exhausted`: after round 3, weaknesses remain unresolved AND are not editorial-judgement overrides. Save the block; do not publish without rework.
 
 ## Round-specific exit criteria

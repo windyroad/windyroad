@@ -772,6 +772,103 @@ describe('check-newsletter-structure.sh', () => {
     expect(r.stderr).toContain('[k]');
   });
 
+  // --- (n) ADR-052 verdict bookkeeping ------------------------------------
+  // ADR-052 makes every reviewer gate block publication. Check (n) asserts the
+  // bookkeeping that makes an author-cleared finding a decision rather than a
+  // default: a BLOCKING tag must not still be standing at save, a CLEARED or
+  // DECLINED tag must carry a reason, and the retired RESIDUAL tag is rejected.
+  // Each case below is written so it FAILS against a script without check (n),
+  // which is the falsification direction that matters.
+  function withVerdictReviews(reviewsBody) {
+    const dir = mkdtempSync(join(tmpdir(), 'nl-lint-n-'));
+    const briefPath = join(dir, '2026-06-15.md');
+    writeFileSync(briefPath, H2_BRIEF);
+    writeFileSync(join(dir, '2026-06-15.linkedin.md'), VALID_LINKEDIN);
+    writeFileSync(join(dir, '2026-06-15.reviews.md'), reviewsBody);
+    return briefPath;
+  }
+
+  it('(n) fires when a BLOCKING finding is still standing', () => {
+    const r = run(withVerdictReviews('## Editor Review\n\n- BLOCKING (survived round 2): the close does not collect Item 3.\n'));
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[n]');
+    expect(r.stderr).toMatch(/still standing/);
+  });
+
+  it('(n) fires when a CLEARED finding carries no reason', () => {
+    const r = run(withVerdictReviews('## Shape Review\n\n- CLEARED (forbidden to remediate)\n\n## Voice Review\n\nPASS\n'));
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[n]');
+    expect(r.stderr).toMatch(/no stated reason/);
+  });
+
+  it('(n) accepts a CLEARED finding whose reason is on the same line', () => {
+    const r = run(withVerdictReviews('## Shape Review\n\n- CLEARED (forbidden to remediate): the sign-off link is a deliberate change and the bare form was never ratified.\n'));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('(n) accepts a CLEARED finding whose reason is on the following line', () => {
+    const r = run(withVerdictReviews('## Shape Review\n\n- CLEARED (forbidden to remediate)\n  Tom: the issue line sits deeper because the opener carries the series identity instead.\n'));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('(n) accepts a DECLINED finding with a reason', () => {
+    const r = run(withVerdictReviews('## Skeptic Review\n\n- DECLINED: the critic judged the same line acceptable compression and Tom arbitrated in its favour.\n'));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('(n) rejects the retired RESIDUAL tag', () => {
+    const r = run(withVerdictReviews('## Editor Review\n\n- RESIDUAL (round 2, accepted): item placement, Item 2 should lead.\n'));
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[n]');
+    expect(r.stderr).toMatch(/retired/);
+  });
+
+  it('(n) stays silent on a reviews sibling with no verdict tags at all', () => {
+    const r = run(withVerdictReviews('## Voice Review\n\nPASS. No findings.\n'));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  it('(n) fires when the reason slot holds structured finding metadata, not a reason', () => {
+    // The authoring order step 15.37 item 5 prescribes is tag, then the finding's
+    // own fields. Without the metadata exclusion this passes silently with no
+    // reason anywhere in it, which is the shape SKILL.md calls an unrecorded
+    // blocker wearing a cleared tag. This is check (n)'s worst false negative.
+    const r = run(withVerdictReviews(
+      '## Editor Review\n\n- CLEARED (forbidden to remediate)\n  Passage: "the sign-off line became a markdown link"\n  Suggested fix: restore the bare-domain form\n',
+    ));
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[n]');
+    expect(r.stderr).toMatch(/no stated reason/);
+  });
+
+  it('(n) does not trip on a reviews sibling that documents the retired tag in prose', () => {
+    const r = run(withVerdictReviews(
+      '## Notes\n\nADR-052 retired the RESIDUAL (round 2, accepted) tag, so nothing here uses it.\n',
+    ));
+    expect(r.status, r.stderr).toBe(0);
+  });
+
+  // Binds check (n)'s literal tag strings to the template that produces them.
+  // Modelled on the check-(m) binding test above: (m) was fixed for exactly this
+  // gap, where every test used a handcrafted block so a template that disagreed
+  // with the classifier went undetected. Check (n) would otherwise reproduce it.
+  it('(n) matches every ADR-052 tag string SKILL.md prescribes', () => {
+    const skill = readFileSync(SKILL, 'utf8');
+    const script = readFileSync(join(process.cwd(), 'scripts/check-newsletter-structure.sh'), 'utf8');
+    const prescribed = [...skill.matchAll(/`(CLEARED \(forbidden to remediate\)|BLOCKING \(survived round 2\)|DECLINED|RESIDUAL \(round 2, accepted\))`/g)]
+      .map((m) => m[1]);
+    expect(prescribed.length, 'SKILL.md should prescribe ADR-052 verdict tags').toBeGreaterThan(0);
+    for (const tag of new Set(prescribed)) {
+      // The script escapes the parens for grep/awk; compare on the escaped form.
+      const escaped = tag.replace(/[()]/g, (c) => `\\${c}`);
+      expect(
+        script.includes(escaped),
+        `check (n) does not match the tag SKILL.md prescribes: ${tag}`,
+      ).toBe(true);
+    }
+  });
+
   it('does not treat H4 sub-headings as section boundaries', () => {
     const withH4 = H2_BRIEF.replace(
       '**Why it matters to your team.** Portability is the cheapest hedge.',

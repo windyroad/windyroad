@@ -21,6 +21,8 @@
 #   b  no link-free line naming a news outlet that is not linked elsewhere in the
 #      same item (the name-without-link defect; one bare outlet is enough)
 #   c  an "Also worth noting" section is present (the closing coda), H2 or H3
+#   n  every non-pass verdict in the reviews sibling is remediated or cleared with
+#      a stated author reason (ADR-052); the retired RESIDUAL tag is rejected
 #   d  the H1 matches "^# Issue NN: " (the published-edition title prefix)
 #   e  a "---" horizontal rule appears after the last section, before the CTA
 #   f  model-name strings are consistent between the brief and the .linkedin.md
@@ -540,6 +542,72 @@ else
 $stale
 EOF
     fi
+  fi
+fi
+
+# --- (n) every non-pass verdict is remediated or cleared with a reason (ADR-052) -
+# ADR-052 makes every reviewer gate block publication. Its confirmation criteria
+# name this check by hand, and name why it is deterministic rather than prose:
+# P099 shipped a prose rule at this exact surface and its own Effort line records
+# that the rule did not hold. So does the evidence that produced ADR-052 in the
+# first place, where a stale advisory verdict was recorded honestly in the reviews
+# sibling and the edition was called ready anyway.
+#
+# What this asserts is deliberately narrow, because the alternative is a verdict
+# vocabulary this script would have to keep in sync with seven agents. It does NOT
+# try to decide whether a gate passed. It asserts the bookkeeping ADR-052 requires:
+# any block tagged BLOCKING must not still be standing at save, and any block
+# tagged CLEARED or DECLINED must carry a stated reason. The reason is what makes
+# an author-cleared finding a decision rather than a default, and a CLEARED entry
+# with no reason is the exact shape of the deferral this decision closes.
+#
+# The retired RESIDUAL tag is also caught here. It was the accepted-residual
+# publication path, so a new edition carrying it is describing the superseded
+# regime; editions published before 2026-08-10 keep theirs and are not linted.
+if [ -f "$reviews" ]; then
+  n_blocking=$(grep -cE '^[^a-zA-Z0-9]*BLOCKING \(survived round 2\)' "$reviews" || true)
+  if [ "$n_blocking" -gt 0 ]; then
+    fail n "$reviews: $n_blocking finding(s) tagged BLOCKING are still standing; ADR-052 holds the edition until each is fixed, or declined by the author with a stated reason (retag DECLINED plus the reason)"
+  fi
+
+  # A CLEARED / DECLINED entry must carry a reason. The reason may sit on the same
+  # line after a colon, or on the following non-blank line; both shapes appear in
+  # hand-written reviews siblings, so accept either rather than pinning one.
+  noreason=$(awk '
+    /^[^a-zA-Z0-9]*(CLEARED \(forbidden to remediate\)|DECLINED)/ {
+      line = $0; ln = NR;
+      sub(/^[^a-zA-Z0-9]*(CLEARED \(forbidden to remediate\)|DECLINED)[:.]?/, "", line);
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", line);
+      if (length(line) >= 12) next;
+      pending = ln; next;
+    }
+    pending && /^[[:space:]]*$/ { next }
+    pending {
+      probe = $0; gsub(/^[[:space:]>*-]+/, "", probe);
+      # A heading, or another verdict tag, starts new content rather than
+      # continuing the cleared entry, so it cannot be the reason for it.
+      # A heading, another verdict tag, or one of the structured finding fields
+      # step 15.37 item 5 prescribes alongside the tag, all start new content
+      # rather than giving a reason. Without this the documented authoring
+      # order (tag, then Passage:, then Suggested fix:) passes with no reason.
+      if (probe ~ /^#/ || probe ~ /^(CLEARED|DECLINED|BLOCKING|RESIDUAL)/) probe = "";
+      if (probe ~ /^(Passage|Issue|Axis|Gate|Suggested fix|Originating gate|Quoted passage)[[:space:]]*:/) probe = "";
+      if (length(probe) < 12) printf "%d\n", pending;
+      pending = 0; next;
+    }
+    END { if (pending) printf "%d\n", pending }
+  ' "$reviews")
+  if [ -n "$noreason" ]; then
+    while read -r ln; do
+      [ -n "$ln" ] || continue
+      fail n "$reviews:$ln: a CLEARED or DECLINED finding carries no stated reason; ADR-052 clears a finding on the author's recorded reason, and an entry without one is a deferral wearing a tag"
+    done <<EOF
+$noreason
+EOF
+  fi
+
+  if grep -qE '^[^a-zA-Z0-9]*RESIDUAL \(round 2, accepted\)' "$reviews"; then
+    fail n "$reviews: carries the retired 'RESIDUAL (round 2, accepted)' tag; ADR-052 removed the accepted-residual publication path. Use CLEARED (forbidden to remediate) with the author's reason, or BLOCKING (survived round 2)"
   fi
 fi
 
