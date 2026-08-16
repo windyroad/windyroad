@@ -1,8 +1,9 @@
 ---
 status: proposed
-human-oversight: unconfirmed
+human-oversight: confirmed
+oversight-date: 2026-08-10
 prior-oversight-date: 2026-07-12
-oversight-invalidated: 2026-08-10 (outcome 1 retired and replaced; see the amendment below)
+oversight-invalidated: 2026-08-10 (outcome 1 retired and replaced; re-ratified same day, see the amendment below)
 job-id: stay-ahead-of-the-shift
 persona: engineering-leader
 date-created: 2026-07-10
@@ -49,7 +50,7 @@ Outcome 1 read "A weekly read short enough to finish in a few minutes" until 202
 
 **Reciprocal changes.** `.claude/agents/wr-newsletter-editor.md` lines 52 and 80, ADR-020 lines 152, 185 and 186, and ADR-043 lines 121 and 156 all quote or calibrate against the retired wording and are updated to match. The editor agent's line 79 is the developer arm citing JTBD-200's under-ten-minutes budget and is deliberately untouched: that is a different job and its own ratification.
 
-Human oversight: unconfirmed. Tom directed the retirement in-session; ratify via `/wr-jtbd:confirm-jobs-and-personas`.
+Human oversight: confirmed 2026-08-10. Tom directed the retirement in-session and ratified this text the same day. The prior 2026-07-12 sign-off was invalidated by the amendment and is recorded in the frontmatter rather than overwritten, so the change is legible to a later reader.
 
 ## Notes
 

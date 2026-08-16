@@ -1,7 +1,8 @@
 ---
-status: "proposed"
+status: "accepted"
 date: 2026-08-10
-human-oversight: unconfirmed
+human-oversight: confirmed
+oversight-date: 2026-08-10
 decision-makers: [Tom Howard]
 consulted: []
 informed: []
@@ -11,7 +12,7 @@ related: [032-newsletter-editorial-discipline-policy, 039-per-date-subdir-layout
 
 # The Shift adopts an H2-rooted section outline from Issue 17, and the archive is left alone
 
-> Captured via /wr-architect:capture-adr (foreground-lightweight aside-invocation per ADR-032). Section content was derived by the capturing agent from the in-session decision context; human-oversight: unconfirmed until ratified at the /wr-architect:review-decisions drain. The chosen option was selected by Tom on 2026-08-10 from four options put to him with the architect's lean stated.
+> Captured via /wr-architect:capture-adr (foreground-lightweight aside-invocation per ADR-032). Section content was derived by the capturing agent from the in-session decision context; The chosen option was selected by Tom on 2026-08-10 from four options put to him with the architect's lean stated, and ratified by him the same day on the text as committed at e1d8900, including its correction of the false claim that the corpus was uniformly H3.
 
 ## Context and Problem Statement
 

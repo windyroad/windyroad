@@ -1,7 +1,8 @@
 ---
-status: "proposed"
+status: "accepted"
 date: 2026-08-10
-human-oversight: unconfirmed
+human-oversight: confirmed
+oversight-date: 2026-08-10
 decision-makers: [Tom Howard]
 consulted: []
 informed: []
@@ -12,7 +13,7 @@ related: [047-stale-gate-verdicts-are-re-run-and-the-check-over-reports, 053-the
 
 # Every newsletter reviewer gate blocks publication
 
-> Captured via /wr-architect:capture-adr (foreground-lightweight aside-invocation per ADR-032, derived-substance amendment 2026-07-06 / RFC-045). Section content was derived by the capturing agent from the in-session decision context; human-oversight: unconfirmed until ratified at the /wr-architect:review-decisions drain.
+> Captured via /wr-architect:capture-adr (foreground-lightweight aside-invocation per ADR-032, derived-substance amendment 2026-07-06 / RFC-045). Section content was derived by the capturing agent from the in-session decision context; Ratified by Tom on 2026-08-10 on the text as committed at e1d8900, with the eval's two non-discriminating fixtures and the uncovered provenance limb recorded in it rather than resolved first.
 
 ## Context and Problem Statement
 

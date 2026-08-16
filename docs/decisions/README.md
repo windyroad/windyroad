@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 51 (47 in-force, 4 historical)
+**Total ADRs:** 53 (49 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_47 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_49 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -244,12 +244,18 @@ _47 ADRs. These are the current rules. The architect agent reads this section fi
 **Related:** ADR-050, ADR-028
 
 ### ADR-052 - Every newsletter reviewer gate blocks publication
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** accepted | **Oversight:** confirmed 2026-08-10
 **Decides:** Every `/wr-newsletter` reviewer - including the previously advisory critic, editor, skeptic, cross-edition shape and cognitive-accessibility gates - must return a pass before an edition publishes, because the driver is the multi-edition accumulation of deferred findings rather than any single defect, and both freshness-only and defect-only blocking preserve a deferral path.
 **Confirmation:** No edition publishes with a non-pass verdict in its `.reviews.md` (a reviewer passes when it holds no finding, against the published text, that it classified as a defect; anything the loop is forbidden to act on is cleared by the author with a stated reason); the residual-advisory section holds only author-declined findings with stated reasons and no reviewer-classified defect; findings per finalise run fall within three editions.
 **Related:** ADR-043, ADR-047, ADR-015, ADR-020, ADR-042, ADR-044
 
 ---
+
+### ADR-053 - The Shift adopts an H2-rooted section outline from Issue 17
+**Status:** accepted | **Oversight:** confirmed 2026-08-10
+**Decides:** The Shift's section headings sit at H2 and the From Tom opener becomes a heading from Issue 17 onward, and the earlier published editions are left as they shipped, because the cognitive-accessibility gate's WCAG 1.3.1 finding was real and the thing refusing it was this repository's own structure lint rather than precedent. A count of the corpus, as against a recollection of it, showed three editions already mixing H2 and H3 and one already shipping the adopted shape including the opener heading.
+**Confirmation:** Check (i) in scripts/check-newsletter-structure.sh accepts the H2 heading form or the legacy bold form and not the H3 heading form, so the template invariant has a deterministic owner; the lint passes on both shapes with negative cases and an H4-is-not-a-section case; the existing corpus regression over every published leader edition still passes; draft-template.md specifies the new shape; Issues 17 and 18 both ship it and no earlier edition is modified; the shape agent's non-ownership list names heading level so the fork is not reported as a fresh deviation each week.
+**Related:** ADR-032, ADR-039, ADR-044, ADR-052
 
 ## Historical decisions
 
