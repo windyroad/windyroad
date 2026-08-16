@@ -1,0 +1,270 @@
+# Behavioural eval for the wr-newsletter SKILL's ADR-052 two-class sort.
+#
+# ADR-052 records two known gaps in its own implementation. This closes the
+# first and larger one: the sort at step 15.37 item 4, which decides whether a
+# surviving reviewer finding blocks publication, is prose an LLM applies and
+# nothing verifies the classification. A drafter that puts a remediable defect
+# into the forbidden-to-remediate class gets it cleared by the author on a
+# plausible reason, and the edition ships the defect with a clean audit trail.
+# The deterministic check (n) in scripts/check-newsletter-structure.sh cannot
+# see this: it verifies that a reason EXISTS, never that the class was right.
+#
+# The over-classify direction is the one that matters. Putting a blocker in the
+# forbidden class ships a defect; putting a forbidden finding in the blocking
+# class only costs a round. So the fixtures are weighted toward the first.
+#
+# Two tiers, mirroring the sibling plugin repo (windyroad-claude-plugin,
+# packages/*/skills/*/eval/):
+#   - Tier A: deterministic `icontains` on the class token.
+#   - Tier B: `llm-rubric` for anything with a negation in it. A not-regex on
+#     "CLEARED" false-fails the correct answer "this is NOT cleared", which is
+#     the lesson the sibling repo records as the not-regex trap.
+#
+# FIXTURE DESIGN, learned the hard way on 2026-08-10. The first version of
+# these prompts asked the model to "sort this finding into its ADR-052 class"
+# and one of them added "note that CLASS and AUTHORITY are different axes".
+# That handed the model the structure under test. Falsified against the
+# pre-implementation SKILL.md, four of the five tests still passed, because
+# the prompt carried the answer rather than the skill. The prompts are now
+# neutral: they describe the situation operationally and ask what happens
+# next and whether the edition can publish. Do not reintroduce the class
+# vocabulary into a prompt. The falsification run is the check, and it is
+# wired: `npm run eval:newsletter:falsify` swaps in the pre-ADR-052 SKILL.md,
+# runs these fixtures against it, and fails unless ALL of them go red.
+#
+# WHY npx AND NOT A devDependency (R5, 2026-08-10). The version is pinned
+# exactly, not caret-ranged: `^0.120.19` on a 0.x package resolves to any newer
+# patch, so `npx --yes` would silently fetch and execute an unreviewed artefact
+# in a session holding repo write access and a logged-in claude subscription.
+# Pinned, each run executes a known artefact.
+#
+# The reason for npx over a devDependency is NOT "keeping it out of the
+# website's dependency tree", which was the reason first given and is wrong:
+# dev dependencies never ship to the site, and this repo already carries
+# playwright, netlify-cli and pa11y-ci. The real reasons are that promptfoo's
+# transitive tree would enter package-lock.json and slow `npm ci` on every
+# Netlify build for a tool run occasionally by hand, and that it would join the
+# dry-aged-deps upgrade queue and generate recurring churn on something with no
+# runtime exposure.
+#
+# Run from the repo root:
+#   npm run eval:newsletter
+#
+# Auth is the developer's logged-in claude subscription: no API key.
+
+description: |
+  wr-newsletter step 15.37 item 4: does a surviving reviewer finding land in
+  the right ADR-052 class? Covers each limb of the forbidden-to-remediate
+  enumeration plus the over-classify guard that protects publication.
+
+providers:
+  - id: 'exec:bash ./run-skill-eval.sh'
+
+defaultTest:
+  options:
+    provider:
+      id: 'exec:bash ./grade-llm-rubric.sh'
+
+prompts:
+  - '{{prompt}}'
+
+# R4: the harness is non-deterministic. Two runs of an unchanged config against
+# the same skill disagreed by one test during authoring. Repeating each fixture
+# turns a boolean into a pass fraction, so an intermittent failure is visible
+# as flakiness rather than read as a clean green on the lucky run.
+repeat: 3
+
+tests:
+  # --- the over-classify guard: the failure that ships a defect -------------
+  - description: A remediable editor defect BLOCKS; it is not forbidden-to-remediate
+    vars:
+      prompt: |
+        Apply step 15.37 item 4 of the wr-newsletter skill. The remediation
+        round has ended. One finding survives:
+
+        Gate: wr-newsletter-editor
+        Axis: edition-internal-consistency
+        Class: defect
+        Passage: "That threshold is yours to set, and none of these
+        measurements was taken on your pipeline."
+        Issue: this sentence repeats the opener almost verbatim. Remediation
+        is to shorten this instance; it stays inside the one paragraph.
+
+        What happens to this finding now the round has ended, and can the
+        edition publish with it outstanding? Answer in two sentences.
+    assert:
+      - type: icontains
+        value: 'BLOCKING'
+      - type: llm-rubric
+        value: |
+          The output classifies this finding as BLOCKING (survived round 2),
+          NOT as CLEARED (forbidden to remediate). The remediation is a
+          reword inside a single paragraph, so it crosses no item or section
+          boundary and matches none of the five forbidden-to-remediate limbs.
+          FAIL if the output tags it CLEARED, or says the author may clear it
+          with a stated reason, or otherwise treats it as publishable.
+
+  # --- limb 1: shape-gate deviation ----------------------------------------
+  - description: A shape-gate deviation is forbidden-to-remediate, cleared by the author
+    vars:
+      prompt: |
+        Apply step 15.37 item 4 of the wr-newsletter skill. One finding
+        survives the round:
+
+        Gate: wr-newsletter-shape
+        CLASS: deviation
+        AUTHORITY: advisory
+        Difference: the closing site line became a markdown link where both
+        prior editions used the bare domain.
+
+        What happens to this finding now the round has ended? Say who, if
+        anyone, has to act before the edition can publish.
+    assert:
+      - type: icontains
+        value: 'CLEARED'
+      - type: llm-rubric
+        value: |
+          Two conditions, BOTH required. (1) The finding is classified as
+          forbidden-to-remediate / CLEARED rather than BLOCKING. (2) The
+          output states that the author (Tom) must supply a stated reason,
+          and that the loop may not clear it by editing. Mentioning that
+          ADR-044 forbids an advisory finding from becoming an applied edit
+          strengthens the answer but is not required. FAIL if the output
+          tags it BLOCKING, or if it says the drafter may clear or remediate
+          it without the author's reason.
+          The discriminating requirement, graded hardest: the output must make
+          the edition's publication CONDITIONAL on the author supplying a
+          stated reason for this finding. FAIL if the output says the finding
+          is simply recorded, accepted, noted or surfaced and the edition
+          proceeds, or calls it an accepted residual advisory. Recording it is
+          not enough: a reason has to be given before the edition publishes.
+
+  # --- limb 2: the subtle one. CLASS is read, not inferred from AUTHORITY ---
+  - description: A shape-gate defect carrying advisory authority is still forbidden-to-remediate
+    vars:
+      prompt: |
+        Apply step 15.37 item 4 of the wr-newsletter skill. One finding
+        survives the round:
+
+        Gate: wr-newsletter-shape
+        CLASS: defect
+        AUTHORITY: advisory
+        Difference: the forward-deadline section lost the per-entry bolding
+        both prior editions used, so four threads now arrive as one block.
+        Grounding: no ratified job outcome establishes a scannability
+        standard for this slot.
+
+        What happens to this finding now the round has ended, and can the
+        edition publish with it outstanding? Answer in two sentences.
+    assert:
+      - type: llm-rubric
+        value: |
+          The output treats this as forbidden-to-remediate / CLEARED, on the
+          grounds that its AUTHORITY is advisory, even though its CLASS is
+          defect. The two axes are independent: an advisory-authority finding
+          cannot become an applied edit regardless of its class, so it is the
+          author's to clear with a stated reason. PASS if the output reaches
+          the forbidden-to-remediate / CLEARED outcome and shows it read the
+          AUTHORITY line rather than only the CLASS line. FAIL if it tags the
+          finding BLOCKING purely because CLASS says defect.
+          The discriminating requirement, graded hardest: the output must make
+          the edition's publication CONDITIONAL on the author supplying a
+          stated reason for this finding. FAIL if the output says the finding
+          is simply recorded, accepted, noted or surfaced and the edition
+          proceeds, or calls it an accepted residual advisory. Recording it is
+          not enough: a reason has to be given before the edition publishes.
+
+  # --- limb 4: skeptic finding needing new sourcing -------------------------
+  - description: A skeptic finding needing new sourcing is stop-and-surface, not a blocker to fix in-loop
+    vars:
+      prompt: |
+        Apply step 15.37 item 4 of the wr-newsletter skill. One finding
+        survives the round:
+
+        Gate: wr-newsletter-skeptic
+        Axis: claim-evidence
+        Passage: "Claude Code can already export tool decisions and
+        permission-mode changes to your security monitoring."
+        Issue: nothing establishes that this capability is new. Resolving it
+        needs the capability's release date, which neither artefact carries.
+
+        What happens to this finding now the round has ended? Say whether
+        the loop should attempt a fix, and what the available moves are.
+    assert:
+      - type: llm-rubric
+        value: |
+          Two conditions, BOTH required. (1) The output classifies this as
+          forbidden-to-remediate / CLEARED, because remediating it would
+          require new sourcing the artefacts do not carry. (2) The output
+          says the loop must NOT attempt a fix that adds evidence or
+          strengthens the claim; the reduce-only differential means the
+          available moves are to narrow scope, downgrade certainty, or drop
+          the claim, and anything needing new sourcing is stop-and-surface.
+          FAIL if the output directs the loop to go and find a source, or
+          tags it BLOCKING with an instruction to add evidence.
+          The discriminating requirement, graded hardest: the output must make
+          the edition's publication CONDITIONAL on the author supplying a
+          stated reason for this finding. FAIL if the output says the finding
+          is simply recorded, accepted, noted or surfaced and the edition
+          proceeds, or calls it an accepted residual advisory. Recording it is
+          not enough: a reason has to be given before the edition publishes.
+
+  # --- limb 5: the ONLY open-judgement limb, and the one that most needs this -
+  # ADR-052's own reasoning says four of the five limbs are marker lookups and
+  # only the boundary-crossing one is judgement. Coverage was inversely
+  # correlated with where the ADR says the risk sits until this fixture landed.
+  - description: A finding whose only fix crosses a section boundary is forbidden-to-remediate
+    vars:
+      prompt: |
+        Apply step 15.37 item 4 of the wr-newsletter skill. One finding
+        survives the round:
+
+        Gate: wr-newsletter-editor
+        Axis: item-placement
+        Class: defect
+        Issue: the edition's own close names Item 2 as the single thing to do
+        this week, and Item 2 carries the only dated trigger, but it runs
+        second behind a lab-governance story. The remediation is to reorder
+        the items so Item 2 leads.
+
+        What happens to this finding now the round has ended? Say whether the
+        loop should apply the reorder itself.
+    assert:
+      - type: llm-rubric
+        value: |
+          Two conditions, BOTH required. (1) The output says the remediation
+          loop must NOT apply the reorder, because moving an item crosses an
+          ADR-032 item or section boundary and the loop is bounded to
+          remediation inside the passage. (2) The output treats the finding as
+          forbidden-to-remediate / stop-and-surface rather than as something
+          the drafter fixes.
+          The discriminating requirement, graded hardest: the output must make
+          the edition's publication CONDITIONAL on the author supplying a
+          stated reason for this finding. FAIL if the output says the finding
+          is simply recorded, accepted, noted or surfaced and the edition
+          proceeds, or calls it an accepted residual advisory. Recording it is
+          not enough: a reason has to be given before the edition publishes.
+
+  # --- ADR-052 rider 3: the demoted critic verdict --------------------------
+  - description: PASS_WITH_AUTHOR_OVERRIDES does not clear publication
+    vars:
+      prompt: |
+        The wr-newsletter critic loop has reached round 3 on the brief and
+        returned `VERDICT: PASS_WITH_AUTHOR_OVERRIDES` with two overridden
+        weaknesses listed in its OVERRIDDEN block.
+
+        Under the skill's current rules, may the edition publish on the
+        strength of that verdict? Answer yes or no and give one sentence of
+        reasoning, then say what happens to the two weaknesses.
+    assert:
+      - type: llm-rubric
+        value: |
+          The output says the edition may NOT publish on the strength of
+          this verdict: PASS_WITH_AUTHOR_OVERRIDES is not a pass under
+          ADR-052 rider 3, because the overrides are named by the drafter,
+          who wrote the passage, which is self-certification. It should also
+          say the two weaknesses are carried forward for the author to fix
+          or decline on the record (step 15.37 item 5). PASS if it reaches
+          the not-publish-ready conclusion. FAIL if it calls the verdict
+          publish-ready, or treats the drafter's overrides as clearing the
+          weaknesses.
