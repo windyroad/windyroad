@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-16 **P153 captured** (An operator-authored dependency refresh reaches a commit with no lockfile install-shape check) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-17 **P154 captured** (Newsletter remediation edits are never independently verified, so a fix can introduce a defect) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -17,6 +17,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
 | 12.0 | P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 12 | Open | M | 2026-08-10 | internal |
 | 12.0 | P152 | No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate | 12 | Open | M | 2026-08-10 | internal |
+| 12.0 | P154 | Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery | 12 | Open | M | 2026-08-17 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
 | 10.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Open | S | 2026-08-08 | internal |
 | 10.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |
