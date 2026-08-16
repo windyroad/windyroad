@@ -7,6 +7,7 @@ oversight-date: 2026-05-30
 decision-makers: [Tom Howard, Claude]
 consulted: [wr-architect agent]
 informed: []
+amended-by: [035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 052-every-newsletter-reviewer-gate-blocks-publication]
 ---
 
 # PASS_WITH_AUTHOR_OVERRIDES verdict for sw-critic round-3 exhaustion

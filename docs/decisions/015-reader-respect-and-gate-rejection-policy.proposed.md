@@ -9,6 +9,7 @@ consulted: []
 informed: []
 related: [010-team-voice-positioning, 012-ai-generated-content-review-gates]
 reassessment-date: 2026-07-17
+amended-by: [052-every-newsletter-reviewer-gate-blocks-publication]
 ---
 
 # Reader-respect clause and gate-rejection policy for AI-generated content

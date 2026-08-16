@@ -9,7 +9,7 @@ consulted: [wr-architect agent]
 informed: []
 related: [012-ai-generated-content-review-gates, 015-reader-respect-and-gate-rejection-policy, 020-newsletter-editor-subagent, 025-pass-with-author-overrides-verdict-for-sw-critic, 033-domain-specific-critic-agents-supersede-parameterised-sw-critic, 035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate]
 reassessment-date: 2026-10-14
-amended-by: [043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates]
+amended-by: [043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates, 052-every-newsletter-reviewer-gate-blocks-publication]
 ---
 
 # Add an adversarial skeptic gate to the newsletter pipeline

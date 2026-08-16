@@ -8,7 +8,7 @@ decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []
 related: [012-ai-generated-content-review-gates, 015-reader-respect-and-gate-rejection-policy, 016-sw-critic-subagents-and-iteration-loop, 017-ai-brief-prep-and-finalise-phases, 018-content-risk-subagent]
-amended-by: [043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates, 044-cross-edition-shape-as-a-fresh-context-subagent-gate]
+amended-by: [043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates, 044-cross-edition-shape-as-a-fresh-context-subagent-gate, 052-every-newsletter-reviewer-gate-blocks-publication]
 reassessment-date: 2026-10-05
 ---
 

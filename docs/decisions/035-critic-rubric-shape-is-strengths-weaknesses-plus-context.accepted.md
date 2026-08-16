@@ -10,6 +10,7 @@ amends: [016-sw-critic-subagents-and-iteration-loop, 025-pass-with-author-overri
 composes-with: 033-domain-specific-critic-agents-supersede-parameterised-sw-critic
 related: [012-ai-generated-content-review-gates, 015-reader-respect-and-gate-rejection-policy]
 reassessment-date: 2026-08-31
+amended-by: [052-every-newsletter-reviewer-gate-blocks-publication]
 ---
 
 # Critic rubric shape is strengths + weaknesses + optional relevant context (no structured numbered-check rubrics)

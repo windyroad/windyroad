@@ -7,6 +7,7 @@ oversight-date: 2026-05-30
 decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []
+supersedes: 003-split-wip-checks-local-and-remote
 ---
 
 # Action-specific pipeline risk management

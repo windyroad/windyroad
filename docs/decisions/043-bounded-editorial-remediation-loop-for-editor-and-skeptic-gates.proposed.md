@@ -9,7 +9,7 @@ consulted: [wr-architect:agent, wr-jtbd:agent, wr-voice-tone:agent]
 informed: []
 reassessment-date: 2026-10-05
 amends: [020-newsletter-editor-subagent, 042-newsletter-adversarial-skeptic-gate]
-amended-by: [044-cross-edition-shape-as-a-fresh-context-subagent-gate, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged, 047-stale-gate-verdicts-are-re-run-and-the-check-over-reports]
+amended-by: [044-cross-edition-shape-as-a-fresh-context-subagent-gate, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged, 047-stale-gate-verdicts-are-re-run-and-the-check-over-reports, 052-every-newsletter-reviewer-gate-blocks-publication]
 composes-with: [015-reader-respect-and-gate-rejection-policy, 017-ai-brief-prep-and-finalise-phases, 032-newsletter-editorial-discipline-policy]
 related: [012-ai-generated-content-review-gates, 024-url-verification-gate-in-wr-newsletter, 025-pass-with-author-overrides-verdict-for-sw-critic, 026-reviews-and-meta-content-to-sibling-files, 035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate, 041-retire-consulting-funnel-repurpose-as-the-shift-hub]
 ---

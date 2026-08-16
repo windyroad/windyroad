@@ -11,6 +11,7 @@ reassessment-date: 2026-11-07
 amends: [020-newsletter-editor-subagent, 043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates]
 composes-with: [032-newsletter-editorial-discipline-policy, 038-cross-edition-thesis-consistency-check-as-fresh-context-subagent-gate, 042-newsletter-adversarial-skeptic-gate, 043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates]
 related: [016-sw-critic-subagents-and-iteration-loop, 017-ai-brief-prep-and-finalise-phases, 020-newsletter-editor-subagent, 030-shift-the-shift-publication-day-to-monday-aest, 033-domain-specific-critic-agents-supersede-parameterised-sw-critic, 035-critic-rubric-shape-is-strengths-weaknesses-plus-context, 037-compose-newsletter-theme-anchor-before-body, 039-per-date-subdir-layout-for-published-newsletter-editions, 041-retire-consulting-funnel-repurpose-as-the-shift-hub]
+amended-by: [052-every-newsletter-reviewer-gate-blocks-publication]
 ---
 
 # Cross-edition shape as a fresh-context subagent gate

@@ -8,6 +8,7 @@ decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []
 reassessment-date: 2026-07-17
+amended-by: [052-every-newsletter-reviewer-gate-blocks-publication]
 ---
 
 # Mandatory voice and risk review gates for AI-generated content

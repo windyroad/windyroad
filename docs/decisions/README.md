@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 53 (49 in-force, 4 historical)
+**Total ADRs:** 54 (50 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_49 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_50 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -256,6 +256,12 @@ _49 ADRs. These are the current rules. The architect agent reads this section fi
 **Decides:** The Shift's section headings sit at H2 and the From Tom opener becomes a heading from Issue 17 onward, and the earlier published editions are left as they shipped, because the cognitive-accessibility gate's WCAG 1.3.1 finding was real and the thing refusing it was this repository's own structure lint rather than precedent. A count of the corpus, as against a recollection of it, showed three editions already mixing H2 and H3, and one (2026-06-08) already carrying a From Tom heading and H2 section headings in the reader-facing outline, though with H3 items, so a partial precedent rather than the adopted shape.
 **Confirmation:** Check (i) in scripts/check-newsletter-structure.sh accepts the H2 heading form or the legacy bold form and not the H3 heading form, so the template invariant has a deterministic owner; the lint passes on both shapes with negative cases and an H4-is-not-a-section case; the existing corpus regression over every published leader edition still passes; draft-template.md specifies the new shape; Issues 17 and 18 both ship it and no earlier edition is modified; the shape agent's non-ownership list names heading level so the fork is not reported as a fresh deviation each week.
 **Related:** ADR-032, ADR-039, ADR-044, ADR-052
+
+### ADR-054 - A decision is changed by a new decision, never by editing the old one
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** An overtaken decision is never edited in its body; the change lands as a new decision and the redirect lives in frontmatter, so a reader meets it before the superseded prose. `supersedes` retires a decision whole; `amends` overtakes part of one while the rest still governs, and the amending record names the clause specifically enough to locate it. Both directions of a relationship are required. Amendment sections are retired as a practice: the six that exist stay, because retrofitting them would be the act this decision forbids.
+**Confirmation:** `scripts/decisions-supersession.test.mjs` passes: every slug in a relationship resolves to a decision on disk and every claim is reciprocal; no decision gains an `## Amendment` section beyond the six grandfathered records, enforced by allowlist rather than by date so an amendment appended to an old record is caught too.
+**Related:** ADR-052
 
 ## Historical decisions
 

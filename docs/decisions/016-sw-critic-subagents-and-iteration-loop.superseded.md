@@ -10,6 +10,7 @@ consulted: []
 informed: []
 related: [009-adopt-plugin-marketplace-for-claude-tooling, 011-ai-brief-orchestration-via-claude-code, 012-ai-generated-content-review-gates, 014-wardley-mapping-as-strategic-lens, 015-reader-respect-and-gate-rejection-policy]
 reassessment-date: 2026-07-17
+amended-by: [035-critic-rubric-shape-is-strengths-weaknesses-plus-context]
 ---
 
 # Strengths/weaknesses critic subagent and 3-round iteration loop for AI-generated artifacts

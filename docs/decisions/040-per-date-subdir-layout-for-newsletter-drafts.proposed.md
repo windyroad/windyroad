@@ -8,6 +8,7 @@ informed: []
 reassessment-date: 2026-09-27
 human-oversight: confirmed
 oversight-date: 2026-06-27
+amends: [019-capture-transcript-artifact]
 ---
 
 # Per-date sub-directory layout for newsletter drafts

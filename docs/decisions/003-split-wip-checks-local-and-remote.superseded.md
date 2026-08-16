@@ -5,6 +5,7 @@ date: 2026-03-09
 decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []
+superseded-by: 008-action-specific-pipeline-risk-management
 ---
 
 # Split WIP checks into local (every prompt) and remote (on push)
