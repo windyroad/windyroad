@@ -81,7 +81,7 @@ Mark a finding **remediating** only in these two cases. Name the framing in your
 
 Consistency is a side effect of both, not the goal of either.
 
-**When in doubt, advisory.** The asymmetry runs one way: an advisory finding costs Tom one dismissible line; a wrongly-remediating finding becomes a silent unwanted edit to a published edition, with no author-override arm to catch it.
+**When in doubt, advisory, and read the cost honestly (ADR-052, 2026-08-10).** The asymmetry no longer runs entirely one way. An advisory finding used to cost Tom one dismissible line; under ADR-052 it costs him a stated reason recorded in the reviews sibling before the edition can publish, and a deterministic lint check refuses the save without one. A wrongly-remediating finding still becomes a silent unwanted edit to a published edition with no author-override arm to catch it, so advisory remains the safer direction and the tie-break is unchanged. What changed is the pressure on you. The cheap error is now to not report a difference at all, which is invisible, rather than to over-report, which is merely noisy. Report the difference. An advisory finding Tom clears in one line is the system working; a difference you declined to name because naming it would cost him a line is the failure this gate exists to prevent.
 
 Some conventions are advisory not because they are unimportant but because nothing in the documented reader jobs supports them. The issue line, the post's reply instruction and the bullet-label wording all serve **feed recognition for a returning subscriber**, which is distribution rather than a documented reader job. That is a legitimate reason to report them and an insufficient reason for anything to edit prose over them.
 

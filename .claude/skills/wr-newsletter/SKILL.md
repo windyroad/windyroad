@@ -594,7 +594,7 @@ The subagent returns a structured block beginning with `CROSS_EDITION_CONSISTENC
 - `question`: name the count of contradictions and the prior-edition dates involved (for example, "1 contradiction found vs Issue 06 (2026-05-25). Resolve?"). Include the first contradiction's current-draft and prior-edition quoted passages inline for at-a-glance context.
 - Options:
   1. **Rewrite** (Recommended on a contradiction Tom did not intend) - the drafter re-runs on the conflicting passages with the prior-edition quoted context attached; 11.4 gate re-runs after rewrite.
-  2. **Override with reason** - Tom records a one-line reason via "Other" free-text; gate passes with `PASS_WITH_AUTHOR_OVERRIDES`-equivalent verdict (per ADR-025); reason is logged to `.reviews.md ## Cross-Edition Consistency`.
+  2. **Override with reason** - Tom records a one-line reason via "Other" free-text; gate passes on Tom's recorded reason (ADR-052 rider 1, cleared under ADR-043 clause 4; this is NOT the retired ADR-025 publish-ready semantic, and the reason is what clears it); reason is logged to `.reviews.md ## Cross-Edition Consistency`.
   3. **Accept as deliberate evolution** - Tom records a one-line reason naming the position-shift via "Other" free-text (for example, "Q2 evidence changes the capacity argument; intentional position update"); gate passes; reason is logged. The next-edition drafter should reference this evolution in the new edition's framing.
 
 When Rewrite is chosen, the drafter loop runs once more on the affected items only (not a full 11b re-draft); the gate re-fires after the rewrite. When Override or Accept-as-evolution is chosen, the gate passes immediately.
