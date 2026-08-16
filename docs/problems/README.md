@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-10 **P152 captured** (No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-16 **P153 captured** (An operator-authored dependency refresh reaches a commit with no lockfile install-shape check) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -23,6 +23,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Open | S | 2026-08-09 | internal |
 | 9.0 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 9 | Known Error | M | 2026-07-06 | internal |
 | 9.0 | P143 | CI smoke test has no retry, and its failure skips the production path | 9 | Open | S | 2026-08-09 | internal |
+| 9.0 | P153 | An operator-authored dependency refresh reaches a commit with no lockfile install-shape check | 9 | Open | S | 2026-08-16 | internal |
 | 8.0 | P114 | wr-newsletter step 15.5 tells the LinkedIn post to close with a windyroad.com.au sign-off, but VOICE-AND-TONE.md's auto-share carve-out forbids any manual URL in the post body | 4 | Known Error | S | 2026-07-13 | internal |
 | 8.0 | P061 | assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared | 8 | Known Error | M | 2026-05-14 | internal |
 | 8.0 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 8 | Known Error | M | 2026-06-03 | internal |
