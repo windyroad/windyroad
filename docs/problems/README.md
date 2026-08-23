@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-23 **P160 captured** (No deterministic check reads the LinkedIn companion body for a manual URL, so the auto-share carve-out rests on an LLM gate that passed the violation five times) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-24 **P161 captured** (No check compares a brief against its own companion post for agreement, so a claim corrected in one survives in the other) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,6 +10,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
+| 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
