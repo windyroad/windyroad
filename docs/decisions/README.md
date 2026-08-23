@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 55 (51 in-force, 4 historical)
+**Total ADRs:** 56 (52 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_51 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_52 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -259,6 +259,11 @@ _51 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** unconfirmed
 **Chosen:** Chosen option: **pin form by owner, plus a CI lint**, with the staleness question explicitly left open.
 **Related:** ADR-034, ADR-022, ADR-050, ADR-028, ADR-051, ADR-021
+### ADR-056 - The risk register is a curated index of risk classes, not a dump of findings
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** `docs/risks/` stays unarmed and the 91-record hint queue stays undrained until a register entry can name a *class* of risk with a slug specific enough not to wildcard-match ordinary diffs. 71 of the 72 queued finding-shaped slugs match a single commit, so draining as-is would trade an honest `matched=0` for a meaningless near-total hit rate and destroy the metric in the act of taking it. Six rules follow: slug shape is an admission criterion; the drain is the ongoing feed, not a one-shot backfill; arming needs both the rule met and a named curator; a catalog baseline is context and never replaces the per-action residual; auto-scaffolded entries are non-authoritative; and curation is not Tom's queue.
+**Confirmation:** `docs/risks/` stays absent and the queue keeps its records until rule 3 is met; any change that arms the register cites this record and reports its slugs' match rate against the last 20 commits on `master`, with no slug above 25%; that change names the curator; `RISK-POLICY.md` gains a `## Risk Catalog` section before any entry is authoritative; this record appears in `docs/decisions/README.md`.
+**Related:** ADR-007, ADR-008, ADR-036, ADR-048, ADR-049, ADR-054
 
 ---
 

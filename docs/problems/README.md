@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-23 **P159 captured** (A self-produced measurement is trusted without checking, so a broken measurement can kill a correct fix) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-23 **P145 transitioned to Known Error** (Risk register is empty, so every scorer run regenerates from scratch; root cause confirmed, register deliberately left unarmed per ADR-056, effort re-rated S to M) (via /wr-itil:manage-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,9 +13,9 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
+| 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Known Error | M | 2026-08-09 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
 | 10.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Open | S | 2026-08-08 | internal |
-| 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Open | S | 2026-08-09 | internal |
 | 10.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |
 | 9.0 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 9 | Known Error | M | 2026-07-06 | internal |
 | 9.0 | P143 | CI smoke test has no retry, and its failure skips the production path | 9 | Open | S | 2026-08-09 | internal |
