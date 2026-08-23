@@ -869,6 +869,61 @@ describe('check-newsletter-structure.sh', () => {
     }
   });
 
+  // --- P140: a prep-phase brief carries a ".prep" infix its siblings do not ---
+  // Sibling artefacts are named for the publication date in every phase (ADR-026),
+  // so deriving them as "${brief%.md}.<kind>.md" names a file that never exists
+  // during prep. Checks (m) and (n) both read the reviews sibling, so both were
+  // dead for the whole prep phase: (m) skipped loudly, (n) silently. Each case
+  // below fails against a script without the infix strip.
+  function prepFixture(reviewsBody) {
+    const dir = mkdtempSync(join(tmpdir(), 'nl-prep-'));
+    const briefPath = join(dir, '2026-06-15.prep.md');
+    writeFileSync(briefPath, H2_BRIEF);
+    if (reviewsBody !== null) writeFileSync(join(dir, '2026-06-15.reviews.md'), reviewsBody);
+    return briefPath;
+  }
+
+  it('(m) reaches the reviews sibling of a prep-phase brief', () => {
+    const stale = '0'.repeat(64);
+    const brief = prepFixture(`# Reviews\n\n## Editor Review\nscored-digest: sha256:${stale}\nPASS.\n`);
+    const r = run(brief);
+    expect(r.stderr, 'the prep sibling exists and must not be skipped').not.toContain('SKIP [m]');
+    expect(r.stderr).toContain('FAIL [m]');
+    expect(r.stderr).toContain('Editor Review');
+  });
+
+  it('(n) fires on a prep-phase brief whose reviews sibling holds a standing BLOCKING finding', () => {
+    const brief = prepFixture('## Editor Review\n\n- BLOCKING (survived round 2): the close does not collect Item 3.\n');
+    const r = run(brief);
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[n]');
+    expect(r.stderr).toMatch(/still standing/);
+  });
+
+  it('(n) skips loudly when the reviews sibling is absent', () => {
+    // Check (m) says so out loud on the same condition; (n) used to say nothing,
+    // which is the one degradation mode this file's own stance forbids.
+    const r = run(prepFixture(null));
+    expect(r.stderr).toContain('SKIP [n]');
+    expect(r.stderr).toContain('no reviews sibling');
+  });
+
+  it('an explicit third argument overrides the derived reviews path', () => {
+    // ADR-047 dimension 4: derive by default, with an explicit override. The
+    // override is what resolves a brief whose name carries a "-2" collision
+    // suffix its sibling does not.
+    const dir = mkdtempSync(join(tmpdir(), 'nl-override-'));
+    const brief = join(dir, '2026-06-15-2.md');
+    const reviews = join(dir, '2026-06-15.reviews.md');
+    writeFileSync(brief, H2_BRIEF);
+    writeFileSync(dir + '/2026-06-15-2.linkedin.md', VALID_LINKEDIN);
+    writeFileSync(reviews, '## Editor Review\n\n- BLOCKING (survived round 2): the close does not collect Item 3.\n');
+    expect(run(brief).stderr, 'derivation alone must miss it').toContain('SKIP [n]');
+    const r = run(brief, dir + '/2026-06-15-2.linkedin.md', reviews);
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[n]');
+  });
+
   it('does not treat H4 sub-headings as section boundaries', () => {
     const withH4 = H2_BRIEF.replace(
       '**Why it matters to your team.** Portability is the cheapest hedge.',

@@ -343,3 +343,4 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 
 > Last reviewed: 2026-08-17 **P154 captured** (Newsletter remediation edits are never independently verified, so a fix can introduce a defect) (lightweight aside via /wr-itil:capture-problem)
 > Last reviewed: 2026-08-23 **P155 captured** (A governance subagent's recommended action can be wrong in a way only the enforcement it would break reveals) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-23 **P141 partially fixed** (trufflehog pinned to an immutable SHA, least-privilege permissions declared, scripts/check-action-pins.sh enforces the rule in CI, ADR-055 records it; staleness detection stays open pending a maintainer decision. Effort S to M, WSJF 12.0 to 6.0)

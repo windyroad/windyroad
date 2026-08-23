@@ -7,11 +7,14 @@
 # only, no em-dashes (this repo enforces a no-em-dash rule; a lint that emitted
 # em-dashes in its own messages would be self-contradictory).
 #
-# Usage: check-newsletter-structure.sh <brief.md> [<linkedin.md>]
+# Usage: check-newsletter-structure.sh <brief.md> [<linkedin.md>] [<reviews.md>]
 #   <brief.md>     path to the newsletter brief
-#   <linkedin.md>  optional path to the LinkedIn sibling; auto-derived as
-#                  "<brief-without-.md>.linkedin.md" when omitted. Check (f) is
-#                  skipped (not failed) when no sibling file exists.
+#   <linkedin.md>  optional path to the LinkedIn sibling; auto-derived from the
+#                  brief path with any ".prep" phase infix stripped, because
+#                  sibling artefacts are named for the publication date (ADR-026).
+#                  Check (f) is skipped (not failed) when no sibling file exists.
+#   <reviews.md>   optional path to the reviews sibling; auto-derived the same way.
+#                  Checks (m) and (n) skip loudly when it does not exist.
 #
 # Exit codes: 0 = clean, 1 = one or more violations, 2 = usage / IO error.
 #
@@ -60,7 +63,7 @@ set -uo pipefail
 OUTLETS_FULL='reuters|financial times|new york times|wall street journal|bloomberg|axios|politico'
 
 usage() {
-  echo "usage: check-newsletter-structure.sh <brief.md> [<linkedin.md>]" >&2
+  echo "usage: check-newsletter-structure.sh <brief.md> [<linkedin.md>] [<reviews.md>]" >&2
   exit 2
 }
 
@@ -68,9 +71,25 @@ brief="${1:-}"
 [ -n "$brief" ] || usage
 [ -f "$brief" ] || { echo "error: brief not found: $brief" >&2; exit 2; }
 
+# Sibling artefacts are named for the publication date, not the phase (ADR-026):
+# a prep-phase brief is "<date>.prep.md" but its siblings are still
+# "<date>.reviews.md" and "<date>.linkedin.md". Strip the ".prep" infix so the
+# derivations below name the file that actually exists during prep. Without it,
+# check (m) skipped for the whole prep phase and check (n) went silent (P140).
+# An explicit path overrides the derivation either way, which is ADR-047's
+# derive-with-override plumbing and the escape hatch for a brief whose name
+# carries a "-2" collision suffix its sibling does not.
+sibling_base="${brief%.md}"
+sibling_base="${sibling_base%.prep}"
+
 linkedin="${2:-}"
 if [ -z "$linkedin" ]; then
-  linkedin="${brief%.md}.linkedin.md"
+  linkedin="${sibling_base}.linkedin.md"
+fi
+
+reviews="${3:-}"
+if [ -z "$reviews" ]; then
+  reviews="${sibling_base}.reviews.md"
 fi
 
 violations=0
@@ -459,7 +478,9 @@ fi
 #
 # Skipped, loudly, when the sibling is absent or carries no digests at all, which
 # is the pre-adoption state. Never silently.
-reviews="${brief%.md}.reviews.md"
+#
+# $reviews is resolved once at the top of the file, from the brief path with the
+# ".prep" phase infix stripped, or from the optional third argument.
 if [ ! -f "$reviews" ]; then
   echo "SKIP [m] $brief: no reviews sibling at $reviews; gate-freshness not checked" >&2
 else
@@ -609,6 +630,8 @@ EOF
   if grep -qE '^[^a-zA-Z0-9]*RESIDUAL \(round 2, accepted\)' "$reviews"; then
     fail n "$reviews: carries the retired 'RESIDUAL (round 2, accepted)' tag; ADR-052 removed the accepted-residual publication path. Use CLEARED (forbidden to remediate) with the author's reason, or BLOCKING (survived round 2)"
   fi
+else
+  echo "SKIP [n] $brief: no reviews sibling at $reviews; standing-verdict bookkeeping not checked" >&2
 fi
 
 # --- verdict ------------------------------------------------------------------

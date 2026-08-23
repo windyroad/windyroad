@@ -1122,7 +1122,11 @@ Use the `Write` tool. If a file for `<publication-date>` already exists at the p
 **Pre-save structural lint (P089).** After writing the brief `.md` (and, in `phase=finalise` / `phase=full`, its `.linkedin.md` sibling), run the deterministic structural lint and block the save on any violation:
 
 ```bash
+# phase=finalise, phase=full
 scripts/check-newsletter-structure.sh "<draft-folder>/<publication-date>.md"
+
+# phase=prep: the brief carries the .prep infix, its siblings do not
+scripts/check-newsletter-structure.sh "<draft-folder>/<publication-date>.prep.md"
 ```
 
 **Ordering within step 16 is load-bearing, and the numbered operations below already encode it.** Check (m) reads the reviews sibling and digests the artefacts, so every artefact it compares must exist before the lint runs. The order is: write the brief, write its LinkedIn sibling, write the reviews sibling with a `scored-digest` line in every verdict block, then run the lint LAST. Where the numbered operations list the reviews file before the LinkedIn sibling, that ordering is fine because the lint still runs last; but do not run the lint between them, or check (m) hard-fails with "no artefact on disk to compare" against a post that has not been written yet.
@@ -1137,7 +1141,7 @@ and write `scored-digest: sha256:$scored` as the first line under the block's he
 
 **On a check (m) failure**, re-invoke each named gate against the current artefact, write its fresh verdict block with a fresh digest, and re-run the lint. Copy every block you did not re-score verbatim, digest included.
 
-The lint auto-derives the `.linkedin.md` sibling from the brief path; pass it explicitly as a second argument only when it lives elsewhere. Exit 0 means the structural invariants (step 11b) hold; proceed. Exit 1 prints one `FAIL [<id>] <file>:<line>: <message>` line per violation; fix the brief (or sibling) in place and re-run the lint until it exits 0 before continuing. Exit 2 is a usage / IO error (wrong path); correct the invocation. In `phase=prep` the LinkedIn sibling does not yet exist, so check (f) is skipped automatically; run the lint against the `.prep.md` brief path. The lint is deterministic and cheap; it does not replace the LLM gates (steps 13-15.5), it complements them by catching format defects those gates miss.
+The lint auto-derives both the `.linkedin.md` and `.reviews.md` siblings from the brief path; pass them explicitly as second and third arguments only when they live elsewhere. Sibling artefacts are named for the publication date in every phase, so a prep-phase brief at `<publication-date>.prep.md` sits beside `<publication-date>.reviews.md` with no phase infix; the lint strips the `.prep` infix when deriving, which means one invocation works in both phases (P140). Checks (m) and (n) therefore run at prep: a `BLOCKING (survived round 2)` finding still standing in the prep reviews sibling fails the lint and holds the prep save until it is fixed, or retagged `DECLINED` with the author's stated reason (ADR-052). Exit 0 means the structural invariants (step 11b) hold; proceed. Exit 1 prints one `FAIL [<id>] <file>:<line>: <message>` line per violation; fix the brief (or sibling) in place and re-run the lint until it exits 0 before continuing. Exit 2 is a usage / IO error (wrong path); correct the invocation. In `phase=prep` the LinkedIn sibling does not yet exist, so check (f) is skipped automatically; run the lint against the `.prep.md` brief path. The lint is deterministic and cheap; it does not replace the LLM gates (steps 13-15.5), it complements them by catching format defects those gates miss.
 
 Branch on phase:
 
@@ -1356,7 +1360,7 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    ## Editorial Remediation Loop (prep)
 
-   <block carried from prep .reviews.md. Prep-time survivors carry forward WITH their class intact even when 15.25-prime and 15.35-prime are no-ops, and they still appear in the finalise Tom-summary. A prep-time `BLOCKING` finding is still blocking at finalise; it does not decay into a pass by crossing the phase boundary, which is the accumulation ADR-052 exists to stop.>
+   <block carried from prep .reviews.md. Prep-time survivors carry forward WITH their class intact even when 15.25-prime and 15.35-prime are no-ops, and they still appear in the finalise Tom-summary. A prep-time `BLOCKING` finding is still blocking at finalise; it does not decay into a pass by crossing the phase boundary, which is the accumulation ADR-052 exists to stop. Since P140 fixed the lint's sibling derivation, check (n) also fails the prep save on a standing `BLOCKING` finding, so this carry-forward is the backstop for editions saved before that fix and for hand-edited siblings, not a sanctioned path for shipping one forward.>
 
    ## Cognitive Accessibility Review (finalise)
 

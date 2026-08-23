@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-23 **P141 partially fixed** (trufflehog pinned to an immutable SHA, least-privilege permissions declared, scripts/check-action-pins.sh enforces the rule in CI, ADR-055 records it; staleness detection stays open pending a maintainer decision. Effort S to M, WSJF 12.0 to 6.0)
+> Last reviewed: 2026-08-23 **P140 fix released** (the newsletter structure lint now strips the `.prep` phase infix when deriving its sibling paths, so checks (m) and (n) reach the reviews sibling during prep instead of skipping loudly and silently; reviews path gains an explicit override argument. Open to Verification Pending, effort M to S)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -12,7 +12,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
-| 12.0 | P140 | Lint and SKILL disagree on the prep-phase reviews sibling path | 12 | Open | M | 2026-08-09 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
 | 12.0 | P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 12 | Open | M | 2026-08-10 | internal |
 | 12.0 | P152 | No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate | 12 | Open | M | 2026-08-10 | internal |
@@ -87,6 +86,7 @@ Fix released, awaiting verification. Sorted by Released date ascending, oldest f
 | P126 | The deps refresh chain creates a manifest desync and its own recovery path cannot clear it | 2026-08-08 under RFC-006, no changeset (private root package, maintainer tooling) | no - not observed live; the `f1d7b8b` reproduction replays to `rollback` and 13 new cases pass, but the end-to-end path needs a real dep update, which is what ADR-034 criterion (d) is re-armed against |
 | P129 | Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in | 2026-08-09, commit `8ad2dba` on `origin/master`, CI green, no changeset (repo-local dev scripts, private root package) | no - not observed; verifies when a normal `push:watch`, `deps:fix` or `release:watch` run behaves exactly as before, since the guards are meant to be invisible on the executed path |
 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact | 2026-08-09, repo-local skill prose plus an out-of-repo memory note, no changeset (nothing shippable changed) | no - not observed; verifies on the next edition that goes out for external editorial review, and the thing to watch is whether the artefact is handed over with its checksum at all, not just whether a stale round is diagnosed faster |
+| P140 | Lint and SKILL disagree on the prep-phase reviews sibling path | 2026-08-23, repo-local dev lint plus skill prose, no changeset (private root package, nothing shippable changed) | no - not observed; verifies on the next `/wr-newsletter phase=prep` run, which is where checks (m) and (n) first execute against a live prep artefact |
 
 ## Inbound Upstream Reports
 
