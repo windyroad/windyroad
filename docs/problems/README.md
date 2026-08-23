@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-17 **P154 captured** (Newsletter remediation edits are never independently verified, so a fix can introduce a defect) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-23 **P155 captured** (A governance subagent's recommended action can be wrong in a way only the enforcement it would break reveals) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -55,6 +55,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 5.0 | P147 | Accessibility gate does not gate the release path | 5 | Open | S | 2026-08-09 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 | Open | M | 2026-06-01 | internal |
+| 4.5 | P155 | A governance subagent's recommended action can be wrong in a way only the enforcement it would break reveals | 9 | Open | M | 2026-08-23 | internal |
 | 4.0 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 | Known Error | M | 2026-04-26 | internal |
 | 4.0 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading, tripping adopter no-em-dash hooks every Step-0d pass | 4 | Open | S | 2026-06-17 | internal |
 | 4.0 | P138 | Nothing gates or reports on the human-oversight axis at promotion time, so an ADR can reach accepted without ever having been read | 4 | Open | S | 2026-08-09 | internal |

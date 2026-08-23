@@ -338,3 +338,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-08-16 **P153 captured** (An operator-authored dependency refresh reaches a commit with no lockfile install-shape check) (lightweight aside via /wr-itil:capture-problem)
 
 > Last reviewed: 2026-08-10 **P152 captured** (No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate) (lightweight aside via /wr-itil:capture-problem)
+
+## 2026-08-23
+
+> Last reviewed: 2026-08-17 **P154 captured** (Newsletter remediation edits are never independently verified, so a fix can introduce a defect) (lightweight aside via /wr-itil:capture-problem)
