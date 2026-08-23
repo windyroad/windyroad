@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-23 **P114 transitioned to Verification Pending** (wr-newsletter step 15.5 told the LinkedIn share post to close with a windyroad.com.au sign-off that the VOICE-AND-TONE auto-share carve-out forbids; both the step 15.5 shape and the step 16 save template now state the post body carries no manual URL, and the brief body keeps its closing line) (via /wr-itil:transition-problem)
+> Last reviewed: 2026-08-23 **P160 captured** (No deterministic check reads the LinkedIn companion body for a manual URL, so the auto-share carve-out rests on an LLM gate that passed the violation five times) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -66,6 +66,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P056 | manage-problem SKILL.md misattributes ADR-014 to "single-commit governance" in 6+ blocks | 3 | Open | M | 2026-05-13 | internal |
 | 1.5 | P069 | work-problems orchestrator WSJF ranking does not factor placement-authority | 3 | Open | M | 2026-05-16 | internal |
+| 2.0 | P160 | No deterministic check reads the LinkedIn companion body for a manual URL | 2 | Open | S | 2026-08-23 | internal |
 
 ## Verification Queue
 
