@@ -12,6 +12,13 @@ on:
         required: true
         type: string
 
+# Least privilege by default (ADR-055). The single job below declares its own
+# block, which REPLACES this one rather than merging with it, so this changes
+# no behaviour today. It is here so a second job added later inherits a
+# read-only default rather than the repository's.
+permissions:
+  contents: read
+
 jobs:
   preview:
     name: Deploy preview + smoke test

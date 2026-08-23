@@ -90,6 +90,7 @@ Tom, operating this repo's governance loop while away from it and maintaining th
 | `/wr-itil:work-problems` loop, `/wr-itil:review-problems`, `/wr-retrospective:run-retro` | JTBD-400 | Internal Maintainer |
 | Ratification asks: `/wr-architect:review-decisions`, `/wr-jtbd:confirm-jobs-and-personas`, iteration summaries | JTBD-401 | Internal Maintainer |
 | `/wr-itil:report-upstream`, `/wr-itil:update-upstream`, `/wr-itil:check-upstream-responses`, `docs/problems/parked/` | JTBD-402 | Internal Maintainer |
+| `.github/workflows/` (CI gates and the release path) | JTBD-400 | Internal Maintainer |
 
 Retired per ADR-041: `/ai-quality`, `/founders`, `/vibe-code-audit` are deleted and redirect to `/`. The homepage, blog, and The Shift no longer serve the consulting jobs JTBD-001 to JTBD-004 or the Technical Founder's JTBD-100.
 

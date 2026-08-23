@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-23 **P155 captured** (A governance subagent's recommended action can be wrong in a way only the enforcement it would break reveals) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-23 **P141 partially fixed** (trufflehog pinned to an immutable SHA, least-privilege permissions declared, scripts/check-action-pins.sh enforces the rule in CI, ADR-055 records it; staleness detection stays open pending a maintainer decision. Effort S to M, WSJF 12.0 to 6.0)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,15 +13,14 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
 | 12.0 | P140 | Lint and SKILL disagree on the prep-phase reviews sibling path | 12 | Open | M | 2026-08-09 | internal |
-| 12.0 | P141 | GitHub Actions versions are an uninstrumented dependency surface | 12 | Open | S | 2026-08-09 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
 | 12.0 | P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 12 | Open | M | 2026-08-10 | internal |
 | 12.0 | P152 | No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate | 12 | Open | M | 2026-08-10 | internal |
 | 12.0 | P154 | Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery | 12 | Open | M | 2026-08-17 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
 | 10.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Open | S | 2026-08-08 | internal |
-| 10.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |
 | 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Open | S | 2026-08-09 | internal |
+| 10.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |
 | 9.0 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 9 | Known Error | M | 2026-07-06 | internal |
 | 9.0 | P143 | CI smoke test has no retry, and its failure skips the production path | 9 | Open | S | 2026-08-09 | internal |
 | 9.0 | P153 | An operator-authored dependency refresh reaches a commit with no lockfile install-shape check | 9 | Open | S | 2026-08-16 | internal |
@@ -52,6 +51,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 6.0 | P136 | Tier 3 briefing rotation strips entries the Critical Points still point at | 6 | Open | S | 2026-08-09 | internal |
 | 6.0 | P148 | serve is undeclared, so npx fetches an unpinned major on the release-blocking path | 6 | Open | S | 2026-08-09 | internal |
 | 6.0 | P150 | Briefing has a per-file budget and no aggregate one, so rotation grows the total | 6 | Open | S | 2026-08-10 | internal |
+| 6.0 | P141 | GitHub Actions versions are an uninstrumented dependency surface | 12 | Open | M | 2026-08-09 | internal |
 | 5.0 | P147 | Accessibility gate does not gate the release path | 5 | Open | S | 2026-08-09 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 | Open | M | 2026-06-01 | internal |

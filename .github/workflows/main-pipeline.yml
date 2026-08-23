@@ -4,6 +4,12 @@ on:
   push:
     branches: [master]
 
+# Least privilege by default (ADR-055). Every job below inherits contents: read
+# unless it declares its own block, and a job-level block REPLACES this one
+# rather than merging with it, so release-pr's wider grant is unaffected.
+permissions:
+  contents: read
+
 jobs:
   gate-secrets:
     name: Secrets scan
@@ -13,8 +19,30 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Runs BEFORE the scan below, not after. The scenario the pin exists to
+      # prevent is a third-party action reverted to a branch ref; if this ran
+      # afterwards, that code would already have executed against the
+      # full-history checkout above and the lint would only report it.
+      - name: Check action pin form
+        run: bash ./scripts/check-action-pins.sh
+
+      # Pinned to the v3.97.0 release commit, not the moving `main` branch. This
+      # step runs first, on a full-history checkout, so whatever it executes sees
+      # every commit in the repository. On a branch ref that code can change
+      # between two runs with no diff here and no notification.
+      #
+      # Verified at this exact ref before pinning: action.yml is byte-identical to
+      # main@3ab759fe, so the pin changes no behaviour today. Re-diff it against
+      # main when next bumping, and keep the trailing version comment in step with
+      # the SHA.
+      #
+      # Residual, deliberately accepted: the action's `version` input defaults to
+      # "latest", which resolves ghcr.io/trufflesecurity/trufflehog:latest at run
+      # time. This pin freezes the workflow code, not the scanner image. Freezing
+      # the image would trade detector freshness for provenance on a secret
+      # scanner, which is the wrong trade. See ADR-055.
       - name: Scan for secrets
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@bcfcf73aaf4759d4dadc2783177c245a02792318 # v3.97.0
         with:
           extra_args: --only-verified
 
@@ -212,7 +240,7 @@ jobs:
 
       - name: Create or update release PR
         id: changesets
-        # v1.9.0. Pin the commit SHA, not the annotated-tag-object SHA: both
+        # Pin the commit SHA, not the annotated-tag-object SHA: both
         # resolve in Actions, but commit-oriented tooling (gh api .../commits,
         # Dependabot's action updater, pinning auditors) fails on the tag form.
         # The prior pin was v1.5.3's tag object, which targeted Node 20.
@@ -222,7 +250,7 @@ jobs:
         # `pullRequestNumber` (byte-identical to v1.5.3's). That output is
         # load-bearing twice below, and if it were dropped both steps would
         # skip silently on a green job. Re-verify it when next bumping.
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           publish: echo "publish handled by publish-pipeline"
           version: npm run changeset:version
