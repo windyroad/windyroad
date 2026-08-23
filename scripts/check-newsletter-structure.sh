@@ -8,6 +8,8 @@
 # em-dashes in its own messages would be self-contradictory).
 #
 # Usage: check-newsletter-structure.sh <brief.md> [<linkedin.md>] [<reviews.md>]
+#   Env: VOICE_AND_TONE_MD overrides the voice-guide path check (p) parses;
+#        NEWSLETTER_SKILL_MD overrides the SKILL path check (o) reads.
 #   <brief.md>     path to the newsletter brief
 #   <linkedin.md>  optional path to the LinkedIn sibling; auto-derived from the
 #                  brief path with any ".prep" phase infix stripped, because
@@ -42,6 +44,12 @@
 #   m  no gate verdict predates the draft being saved (P099 / ADR-047)
 #   o  every block the SKILL prescribes for this phase is present in the reviews
 #      sibling (P151); absence, not just staleness
+#   p  no word the voice guide lists under "Word list > Avoid" appears in the
+#      brief body (P154); the list is parsed from docs/VOICE-AND-TONE.md at run
+#      time, not restated here, and quoted spans and link URLs are out of scope
+#   q  no markdown hard break (two or more trailing spaces) on a body line (P154)
+#   r  no two prose lines with no blank line between them, which render as one
+#      joined paragraph (P154); brief body only
 #
 # Notes on determinism:
 #   Check (b) fires on a link-free line that names a news outlet which is not
@@ -463,6 +471,181 @@ if [ -f "$linkedin" ]; then
   fi
 fi
 
+# --- (p) a word the voice guide lists under Avoid (P154) -----------------------
+# The editorial remediation loop at SKILL.md step 15.37 had no verification of
+# its own: a fix for one gate's finding could introduce a new defect that
+# nothing read until the next full gate battery. The 2026-08-17 reviews sibling
+# records "actually", a word the guide bans, introduced four separate times by
+# remediation edits. Three of the four were caught by a gate a full battery
+# later; the fourth was caught by exactly this grep, run by hand, at no cost.
+#
+# The list is PARSED FROM THE GUIDE AT RUN TIME and is deliberately not restated
+# here. A second copy is the two-surfaces-disagree defect P140 and P151 both
+# closed on this file, and the guide is the surface Tom edits.
+#
+# Parsing rules, each load-bearing:
+#   - Anchor on the "### Avoid" heading, take column 1 only (the "Why" column
+#     quotes words: 'Say "audit" or "review"').
+#   - Start collecting only AFTER the "|---|---|" delimiter row. The header cell
+#     is "Word/phrase"; splitting slash-alternates before skipping the header
+#     would ban "word" and "phrase" outright.
+#   - Stop at the blank line or rule that ends the table. The next table down has
+#     a "Finance / legal idioms" cell that an unbounded read would split into
+#     "finance" and "legal idioms".
+#   - Split remaining slash-alternates ("solution/solutions" is one cell, two
+#     words).
+#
+# Matching is WHOLE-WORD, case-insensitive, on the brief body only, and skips
+# fenced code blocks. Quoted spans and markdown link targets are stripped from a
+# line before matching: the guide's list was written for landing-page copy, and
+# in a news brief "leverage" (a market story) and "solutions" (a vendor URL, or
+# the mathematical sense) are words the brief is quoting rather than choosing.
+# That is a genre scope rule, not a per-word carve-out. If a word on the list
+# should be allowed in our own voice, add a genre-scoped carve-out to the GUIDE,
+# on the model of its existing "Carve-out for auto-share posts" and "Carve-out
+# for recurring-newsletter cadence anchors". Do not add an exception here, and
+# do not loosen the Avoid row itself: that row governs site copy too.
+#
+# Under-matching is accepted: "leveraging", "game-changing" and "reaching out"
+# all pass, and so does any avoided word inside quotation marks or a markdown
+# link target. Our own parenthetical glosses are NOT exempt. The complement is
+# the LLM voice gate at step 13, which reads context. This check is the
+# deterministic second reader on a rule that already blocks.
+guide_md="${VOICE_AND_TONE_MD:-}"
+if [ -z "$guide_md" ]; then
+  _p_script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+  guide_md="$_p_script_dir/../docs/VOICE-AND-TONE.md"
+fi
+
+if [ ! -f "$guide_md" ]; then
+  echo "SKIP [p] $brief: no voice guide at $guide_md; the Word list > Avoid entries are not checked" >&2
+else
+  # word<TAB>why, one per Avoid row, slash-alternates already split.
+  avoid=$(awk '
+    /^###[[:space:]]+Avoid[[:space:]]*$/ { in_sec = 1; next }
+    !in_sec { next }
+    /^#/ { exit }
+    /^---/ { if (past_delim) exit; next }
+    /^\|[-:| \t]+\|[ \t]*$/ { past_delim = 1; next }
+    !past_delim { next }
+    /^[[:space:]]*$/ { exit }
+    /^\|/ {
+      n = split($0, cell, "|");
+      if (n < 3) next;
+      word = cell[2]; why = cell[3];
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", word);
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", why);
+      sub(/\.$/, "", why);
+      if (word == "") next;
+      m = split(word, alts, "/");
+      for (i = 1; i <= m; i++) {
+        a = alts[i];
+        gsub(/^[[:space:]]+|[[:space:]]+$/, "", a);
+        if (a != "") printf "%s\t%s\n", a, why;
+      }
+    }
+  ' "$guide_md")
+
+  n_avoid=$(printf '%s' "$avoid" | grep -c . || true)
+  if [ "$n_avoid" -lt 5 ]; then
+    # Present but unreadable is a broken contract, not an absent one. Drift here
+    # is silent in the direction that stops checking, which is the hazard check
+    # (o)'s header names, so this fails rather than skipping.
+    fail p "$guide_md: no readable \"Word list > Avoid\" table (parsed $n_avoid entries, expected at least 5); the voice word list cannot be checked, so restore the table or point VOICE_AND_TONE_MD at the guide"
+  else
+    while IFS=$'\t' read -r ln word why; do
+      [ -n "${ln:-}" ] || continue
+      fail p "$brief:$ln: \"$word\" is listed under Word list > Avoid in $guide_md: $why. Cut it, or rewrite the sentence so it does not need it"
+    # The list travels in the environment, not through -v: awk rejects a
+    # newline inside a -v assignment, and the list is one entry per line.
+    done < <(printf '%s\n' "$body" | AVOID_ROWS="$avoid" awk -F'\t' '
+      BEGIN {
+        n = split(ENVIRON["AVOID_ROWS"], rows, "\n");
+        for (i = 1; i <= n; i++) {
+          if (rows[i] == "") continue;
+          j = index(rows[i], "\t");
+          w = substr(rows[i], 1, j - 1);
+          why[w] = substr(rows[i], j + 1);
+          words[++nw] = w;
+        }
+      }
+      {
+        ln = $1; line = $2;
+        if (line ~ /^[[:space:]]*```/) { fence = !fence; next }
+        if (fence) next;
+        probe = tolower(line);
+        # Quoted spans are the source speaking, not us. A markdown link target
+        # is a vendor path, not our prose. Both are stripped before matching.
+        # The link strip is anchored on "](" so it takes link targets only: a
+        # parenthetical gloss is our own voice and stays in scope, which is what
+        # the gloss-on-first-use rule in the guide tells writers to produce.
+        gsub(/"[^"]*"/, " ", probe);
+        gsub(/\]\([^)]*\)/, " ", probe);
+        for (i = 1; i <= nw; i++) {
+          # The cell is Tom-edited copy, so escape it rather than trusting it:
+          # an entry containing "." or "(" would otherwise over-match silently.
+          w = tolower(words[i]);
+          gsub(/[][().+*?^$|\\{}]/, "\\\\&", w);
+          if (probe ~ ("(^|[^a-z0-9-])" w "([^a-z0-9-]|$)"))
+            printf "%d\t%s\t%s\n", ln, words[i], why[words[i]];
+        }
+      }
+    ')
+  fi
+fi
+
+# --- (q) a markdown hard break left on a body line (P154) ----------------------
+# Two or more trailing spaces are a markdown hard break, which renders as a line
+# break the reader sees and no brief in the archive uses. It is the shape an
+# edit leaves behind when a sentence is split and rejoined, and it is invisible
+# in a diff. A single trailing space or tab renders as nothing and is not
+# flagged: the finding and the reason given for it have to cover the same thing.
+#
+# Zero hits across all 18 published brief bodies, and unlike check (r) below, no
+# instance is on record: the 2026-08-17 round closes ran this by hand and it
+# never fired. The warrant is the reader-visible render plus zero cost, not
+# observed recurrence. Re-price it on that basis rather than on a phantom one.
+while IFS=$'\t' read -r ln _rest; do
+  [ -n "${ln:-}" ] || continue
+  fail q "$brief:$ln: two or more trailing spaces are a markdown hard break, which briefs do not use; strip the trailing whitespace, and use a blank line for a paragraph break"
+done < <(printf '%s\n' "$body" | awk -F'\t' '$2 ~ /[^ ]  +$/ { print $1 "\t" }')
+
+# --- (r) two prose lines with no blank line between them (P154) ----------------
+# A single newline between two prose lines renders as one joined paragraph, so
+# the sentence the drafter split is silently rejoined for the reader. The
+# 2026-08-17 reviews sibling records this defect introduced twice by remediation
+# edits in one edition, the second time immediately after a check was written
+# for the first.
+#
+# Prose means: not blank, not a list item (at any indent), not a heading, not a
+# blockquote, not a table row, not a horizontal rule, not a standalone image,
+# and not inside a fenced code block. The indent tolerance is load-bearing: the
+# first version of this predicate treated "  - nested item" as prose and fired
+# 43 times across the archive. With it, the archive is clean: zero hits on all
+# 18 published brief bodies. Brief only. The LinkedIn siblings use an arrow-
+# bullet convention this predicate would flag, and that convention is theirs.
+while IFS=$'\t' read -r ln _rest; do
+  [ -n "${ln:-}" ] || continue
+  fail r "$brief:$ln: this line runs on from the prose line above it with no blank line between, so the two render as one paragraph; add a blank line above this one, or merge the two into a single line"
+done < <(printf '%s\n' "$body" | awk -F'\t' '
+  {
+    ln = $1; t = $2;
+    sub(/^[ \t]+/, "", t);
+    if (t ~ /^```/) { fence = !fence; prev = 0; next }
+    if (fence) next;
+    isprose = (t != "" \
+      && t !~ /^[-*+][ \t]/ \
+      && t !~ /^[0-9]+[.)][ \t]/ \
+      && t !~ /^#/ \
+      && t !~ /^>/ \
+      && t !~ /^\|/ \
+      && t !~ /^-{3,}[ \t]*$/ \
+      && t !~ /^!\[/);
+    if (isprose && prev) print ln "\t";
+    prev = isprose;
+  }
+')
+
 # --- (m) a gate verdict that predates the current draft (P099 / ADR-047) --------
 # Each gate verdict in the edition's .reviews.md sibling records the digest of the
 # artefact version it scored, as "scored-digest: sha256:<hex>". This check
@@ -614,7 +797,7 @@ if [ -f "$reviews" ]; then
       # rather than giving a reason. Without this the documented authoring
       # order (tag, then Passage:, then Suggested fix:) passes with no reason.
       if (probe ~ /^#/ || probe ~ /^(CLEARED|DECLINED|BLOCKING|RESIDUAL)/) probe = "";
-      if (probe ~ /^(Passage|Issue|Axis|Gate|Suggested fix|Originating gate|Quoted passage)[[:space:]]*:/) probe = "";
+      if (probe ~ /^(Passage|Issue|Axis|Gate|Suggested fix|Originating gate|Quoted passage|Verified against)[[:space:]]*:/) probe = "";
       if (length(probe) < 12) printf "%d\n", pending;
       pending = 0; next;
     }

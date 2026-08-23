@@ -1150,4 +1150,267 @@ describe('check-newsletter-structure.sh', () => {
     expect(fired.length).toBe(ROSTER_SIZE.prep);
   });
 
+
+  // --- (p) avoided word, (q) markdown hard break, (r) joined paragraph (P154) ---
+  //
+  // These three are the deterministic half of P154: the editorial remediation
+  // loop had no verification of its own, so a fix for one gate's finding could
+  // introduce a new defect that nothing read until the next full gate battery.
+  // Each check below has a named witness in the 2026-08-17 reviews sibling.
+
+  const GUIDE = `## Word list
+
+### Prefer
+
+| Use | Instead of |
+|-----|-----------|
+| works | actually works |
+
+### Avoid
+
+| Word/phrase | Why |
+|-------------|-----|
+| actually | Almost always defensive filler |
+| leverage | Corporate jargon |
+| solution/solutions | Vague. Name the thing. |
+| deep dive | Overused. Say "audit" or "review" |
+
+---
+
+## Idioms Tom rejects
+
+| Class | Phrases to avoid | Note |
+|-------|-----------------|------|
+| Finance / legal idioms | "came due", "on the table" | Tom does not talk like that. |
+`;
+
+  // Run the lint with the avoided-word table pointed at a fixture guide.
+  function runWithGuide(brief, guide) {
+    const dir = mkdtempSync(join(tmpdir(), 'nl-guide-'));
+    const path = join(dir, 'VOICE-AND-TONE.md');
+    writeFileSync(path, guide === undefined ? GUIDE : guide);
+    return spawnSync('bash', [SCRIPT, brief], {
+      encoding: 'utf8',
+      env: { ...process.env, VOICE_AND_TONE_MD: path },
+    });
+  }
+
+  // Splice a line into the valid brief's body, just before the closing rule.
+  function briefWithLine(line) {
+    return VALID_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      `**Why it matters to your team.** ${line}`,
+    );
+  }
+
+  it('(p) flags a word the guide lists under Avoid', () => {
+    const r = runWithGuide(
+      fixture(briefWithLine('Portability is what teams actually hedge with.'), VALID_LINKEDIN),
+      undefined,
+    );
+    expect(r.stderr).toContain('FAIL [p]');
+    expect(r.stderr).toContain('actually');
+  });
+
+  it('(p) matches whole words, so "resolution" is not a hit on "solution"', () => {
+    // Witness: 2026-04-24 line 53 carries "time to resolution", which a
+    // substring match would flag and a whole-word match does not.
+    const r = runWithGuide(
+      fixture(briefWithLine('Time to resolution fell by a third.'), VALID_LINKEDIN),
+      undefined,
+    );
+    expect(r.stderr).not.toContain('[p]');
+  });
+
+  it('(p) still fires inside our own parenthetical gloss', () => {
+    // The strip is anchored on "](" so it takes link targets only. The guide's
+    // gloss-on-first-use rule tells writers to put in-group terms in a
+    // parenthetical, so exempting every parenthetical would exempt the one
+    // construction the guide asks for.
+    const r = runWithGuide(
+      fixture(briefWithLine('Portability (actually the cheapest hedge) is the move.'), VALID_LINKEDIN),
+      undefined,
+    );
+    expect(r.stderr).toContain('FAIL [p]');
+  });
+
+  it('(p) does not fire inside a quoted span or a link URL', () => {
+    // The guide's list was written for landing-page copy. In a news brief
+    // "leverage" and "solutions" have legitimate domain senses, and the brief
+    // quotes sources verbatim, so quoted spans and URLs are out of scope.
+    const r = runWithGuide(
+      fixture(
+        briefWithLine(
+          'The filing called it "leverage plus a short squeeze", per [the report](https://example.com/solutions/x).',
+        ),
+        VALID_LINKEDIN,
+      ),
+      undefined,
+    );
+    expect(r.stderr).not.toContain('[p]');
+  });
+
+  it('(p) does not harvest the table header row as banned words', () => {
+    // The header cell is "Word/phrase". Splitting slash-alternates before
+    // skipping the header would ban "word" and "phrase" outright.
+    const r = runWithGuide(
+      fixture(briefWithLine('The word on every phrase here is portability.'), VALID_LINKEDIN),
+      undefined,
+    );
+    expect(r.stderr).not.toContain('[p]');
+  });
+
+  it('(p) stops reading at the end of the Avoid table', () => {
+    // The next table down has a Class cell "Finance / legal idioms"; an
+    // unbounded read would slash-split it into "finance" and "legal idioms".
+    const r = runWithGuide(
+      fixture(briefWithLine('Finance teams are the ones asking.'), VALID_LINKEDIN),
+      undefined,
+    );
+    expect(r.stderr).not.toContain('[p]');
+  });
+
+  it('(p) skips loudly when the guide file is absent', () => {
+    const r = spawnSync('bash', [SCRIPT, fixture(VALID_BRIEF, VALID_LINKEDIN)], {
+      encoding: 'utf8',
+      env: { ...process.env, VOICE_AND_TONE_MD: '/nonexistent/VOICE-AND-TONE.md' },
+    });
+    expect(r.stderr).toContain('SKIP [p]');
+    expect(r.stderr).not.toContain('FAIL [p]');
+  });
+
+  it('(p) fails, rather than skipping, when the guide has no readable Avoid table', () => {
+    // Drift is silent in the direction that stops checking: a guide present but
+    // unparseable is a broken contract, not an absent one.
+    const r = runWithGuide(
+      fixture(VALID_BRIEF, VALID_LINKEDIN),
+      '## Word list\n\nNo table here any more.\n',
+    );
+    expect(r.stderr).toContain('FAIL [p]');
+    expect(r.stderr).toContain('Avoid');
+  });
+
+  it('(p) parses the real guide on disk and finds a usable list', () => {
+    // Size guard, matching check (o)'s roster-size pin: a parse that breaks
+    // returns few or no entries, which is indistinguishable from a clean run.
+    const r = run(
+      fixture(
+        briefWithLine('Portability is what teams actually hedge with.'),
+        VALID_LINKEDIN,
+      ),
+    );
+    expect(r.stderr, 'the real guide must still yield the "actually" entry').toContain(
+      'FAIL [p]',
+    );
+  });
+
+  it('(q) flags a markdown hard break left by an edit', () => {
+    const r = run(fixture(briefWithLine('Portability is the cheapest hedge.  '), VALID_LINKEDIN));
+    expect(r.stderr).toContain('FAIL [q]');
+  });
+
+  it('(q) leaves a single trailing space alone', () => {
+    // A hard break needs two or more trailing spaces. The finding and the
+    // reason given for it have to cover the same thing.
+    const r = run(fixture(briefWithLine('Portability is the cheapest hedge. '), VALID_LINKEDIN));
+    expect(r.stderr).not.toContain('[q]');
+  });
+
+  it('(r) flags two prose lines with no blank line between them', () => {
+    // Witness: the 2026-08-17 ledger records this defect introduced twice by
+    // remediation edits, the second time straight after a check was written
+    // for the first.
+    const r = run(
+      fixture(
+        briefWithLine('Portability is the cheapest hedge.\nSo is a second supplier.'),
+        VALID_LINKEDIN,
+      ),
+    );
+    expect(r.stderr).toContain('FAIL [r]');
+  });
+
+  it('(r) leaves list items, indented list items and table rows alone', () => {
+    const r = run(
+      fixture(
+        briefWithLine(
+          'Two hedges:\n\n- a second supplier\n- an open-weight fallback\n  - both of which cost money\n  - and neither of which is free\n\n| Hedge | Cost |\n|---|---|\n| Second supplier | High |\n| Open weights | Low |',
+        ),
+        VALID_LINKEDIN,
+      ),
+    );
+    expect(r.stderr).not.toContain('[r]');
+  });
+
+  it('(q) and (r) stay clean across every published brief body, and (p) fires once', () => {
+    // Measured before the checks shipped. The pin covers all three, because the
+    // one lesson of this ticket is a measurement that rotted: the first version
+    // of (r)'s predicate treated an indented list item as prose and appeared to
+    // fire 43 times, which nearly killed the check.
+    const roots = ['src/newsletters/published/leader', 'src/newsletters/published/developer'];
+    let checked = 0;
+    const pHits = [];
+    for (const root of roots) {
+      if (!existsSync(root)) continue;
+      for (const date of readdirSync(root)) {
+        const body = join(process.cwd(), root, date, `${date}.md`);
+        if (!existsSync(body)) continue;
+        checked += 1;
+        const { stderr } = run(body);
+        expect(stderr, `check (q) fired on ${body}`).not.toContain('[q]');
+        expect(stderr, `check (r) fired on ${body}`).not.toContain('[r]');
+        for (const line of stderr.split('\n')) {
+          if (line.includes('FAIL [p]')) pHits.push(line);
+        }
+      }
+    }
+    expect(checked, 'no published briefs were found to check').toBeGreaterThan(10);
+    // One genuine hit, 2026-05-01: "the distribution your business actually
+    // needs". More than one means the parse widened; none means it broke.
+    expect(pHits.length, `check (p) hits:\n${pHits.join('\n')}`).toBe(1);
+    expect(pHits[0]).toContain('2026-05-01');
+  });
+
+  it('(p) reads the why column without doubling its full stop', () => {
+    // Against the fixture guide, not the real one: the guide is a surface Tom
+    // edits freely, and a suite that goes red on a reworded why cell would
+    // report a parser bug for an ordinary edit. Real-guide coverage is the
+    // corpus pin above.
+    const r = runWithGuide(
+      fixture(briefWithLine('We shipped a real solution here.'), VALID_LINKEDIN),
+      undefined,
+    );
+    expect(r.stderr).toContain('Vague. Name the thing. Cut it');
+  });
+
+  it('(p) escapes a guide entry that carries a regex metacharacter', () => {
+    // The cell is Tom-edited copy. Unescaped, "a.b" would match "axb".
+    const r = runWithGuide(
+      fixture(briefWithLine('The axb figure is the one to watch.'), VALID_LINKEDIN),
+      GUIDE.replace('| leverage | Corporate jargon |', '| a.b | Made up |'),
+    );
+    expect(r.stderr).not.toContain('[p]');
+  });
+
+  it('(n) does not accept the (C) provenance line as an author reason', () => {
+    // P154 adds a "Verified against:" line under a finding. Check (n) accepts
+    // any following line of 12+ characters as the stated reason, so without an
+    // exclusion the provenance line would discharge ADR-052's reason invariant.
+    const dir = mkdtempSync(join(tmpdir(), 'nl-p154-n-'));
+    const brief = join(dir, '2026-06-15.md');
+    writeFileSync(brief, VALID_BRIEF);
+    writeFileSync(
+      join(dir, '2026-06-15.reviews.md'),
+      [
+        '# Reviews',
+        '',
+        '## Editor Review',
+        '',
+        '- CLEARED (forbidden to remediate)',
+        '  Verified against: src/newsletters/published/leader/2026-06-22/2026-06-22.md',
+        '',
+      ].join('\n'),
+    );
+    expect(run(brief).stderr).toContain('FAIL [n]');
+  });
+
 });

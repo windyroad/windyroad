@@ -472,9 +472,9 @@ These patterns have been identified and removed from the site. Don't reintroduce
 | leverage | Corporate jargon |
 | solution/solutions | Vague. Name the thing. |
 | best-in-class | Unverifiable superlative |
-| cutting-edge | Same |
-| game-changer | Same |
-| synergy | No |
+| cutting-edge | Unverifiable superlative |
+| game-changer | Unverifiable superlative |
+| synergy | Empty corporate jargon |
 | deep dive | Overused. Say "audit" or "review" |
 | reach out | Say "call," "email," or "book" |
 
