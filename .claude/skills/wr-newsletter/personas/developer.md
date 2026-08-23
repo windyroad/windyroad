@@ -56,7 +56,7 @@ The variants below are a fallback well for when no edition-tied question present
 - "Which tool did you try and abandon, and why?"
 - "What are you shipping with this week?"
 
-Closing line: `windyroad.com.au` (no consulting-booking link in body; this is the brand-and-community surface, not the funnel.)
+Closing line in the brief body: `windyroad.com.au` (no consulting-booking link in body; this is the brand-and-community surface, not the funnel). The LinkedIn share post carries no manual URL and therefore no closing line, per the auto-share carve-out in `docs/VOICE-AND-TONE.md` (P114).
 
 ## Welcome line (first edition only)
 

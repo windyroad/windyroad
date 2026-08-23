@@ -56,7 +56,7 @@ The variants below are a fallback well for when no edition-tied question present
 - "What prediction are you willing to be wrong about?"
 - "What conversation are you having with your CTO this week?"
 
-Closing line: `windyroad.com.au`
+Closing line in the brief body: `windyroad.com.au`. The LinkedIn share post carries no manual URL and therefore no closing line, per the auto-share carve-out in `docs/VOICE-AND-TONE.md` (P114).
 
 ## Welcome line (first edition only)
 

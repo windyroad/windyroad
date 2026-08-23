@@ -352,3 +352,4 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-08-23 **P158 captured** (The newsletter eval harness reports misconfiguration as results, so a broken run looks like a real one) (lightweight aside via /wr-itil:capture-problem)
 
 > Last reviewed: 2026-08-23 **P154 fix released** (the editorial remediation loop now closes each round on the deterministic lint, and a fact a gate supplies inside a suggested fix is verified before it goes in the body) (AFK iteration via /wr-itil:manage-problem)
+> Last reviewed: 2026-08-23 **P145 transitioned to Known Error** (Risk register is empty, so every scorer run regenerates from scratch; root cause confirmed, register deliberately left unarmed per ADR-056, effort re-rated S to M) (via /wr-itil:manage-problem)

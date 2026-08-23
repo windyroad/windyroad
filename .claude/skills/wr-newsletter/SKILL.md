@@ -1043,7 +1043,7 @@ For `phase=finalise` and `phase=full`, draft a LinkedIn post that:
 - Carries the headline H1 from step 11a / 11a-prime.
 - Includes 2-3 bullet items (the strongest items from the brief), each one sentence.
 - Carries the compressed provenance variant (ADR 032 element 5), placed after the item bullets and immediately before the CTA invitation: AI-drafted, a different AI reviews and never the drafting agent, asserts editorial responsibility in first person. First person, per the element-5 carve-out to the team-voice rule. Do not assert a legal or regulatory position.
-- Closes with the rotating CTA invitation (a substance-tied question, e.g. "Reply with the conversation you are having with your CTO this week."), then the `windyroad.com.au` brand sign-off line. Do NOT add a manual "Read the full issue" / "Full edition link in the first comment" line: The Shift publishes via LinkedIn Newsletter auto-share, which auto-injects the article URL card on publish (docs/VOICE-AND-TONE.md auto-share carve-out; P079).
+- Closes with the rotating CTA invitation (a substance-tied question, e.g. "Reply with the conversation you are having with your CTO this week."). The post body carries NO manual URL, and that includes the `windyroad.com.au` brand sign-off line. The Shift publishes via LinkedIn Newsletter auto-share, which auto-injects the article URL card on publish, and `docs/VOICE-AND-TONE.md`'s auto-share carve-out reads "Do NOT include a manual URL in the body of an auto-share post" with no exemption for a brand line (P079; P114). Do NOT add a manual "Read the full issue" or "Full edition link in the first comment" line either. **Note the asymmetry**: the brief BODY keeps its `windyroad.com.au` closing line per the step 11 CTA rule, because the brief is not an auto-share post. Only the share post omits it.
 - Is no longer than the LinkedIn 3000-character limit.
 
 The published edition's cover image is auto-attached by LinkedIn Newsletter auto-share as the article hero; the LinkedIn post body does NOT carry a separate image attachment or alt-text block (P079).
@@ -1470,7 +1470,7 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
    companion-to: <publication-date>.md
    ---
 
-   <LinkedIn post body from step 15.5: bold hook line, body, 2-3 bullets, the rotating CTA invitation, and the `windyroad.com.au` brand sign-off line>
+   <LinkedIn post body from step 15.5: bold hook line, body, 2-3 bullets, and the rotating CTA invitation. No `windyroad.com.au` sign-off and no manual URL of any kind, per the auto-share carve-out (P114)>
    ```
 
 4. Delete the `.prep.md` file. The audit trail lives in the carried-forward prep review blocks inside `<publication-date>.reviews.md` plus the git history of the `.prep.md`.
