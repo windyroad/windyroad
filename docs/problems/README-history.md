@@ -350,3 +350,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-08-23 **P157 captured** (The test suite is not gated anywhere, so 561 tests run only when an operator remembers) (lightweight aside via /wr-itil:capture-problem)
 > Last reviewed: 2026-08-23 **P152 verification pending** (parse-on-first-pass comprehension assigned to the cognitive-accessibility gate; the editor, critic and rubric now hand comprehension findings there instead of dropping them; every scope-and-hand-off statement across the skill, the editor, the critic and the critic rubric, plus a discriminating editor fixture)
 > Last reviewed: 2026-08-23 **P158 captured** (The newsletter eval harness reports misconfiguration as results, so a broken run looks like a real one) (lightweight aside via /wr-itil:capture-problem)
+
+> Last reviewed: 2026-08-23 **P154 fix released** (the editorial remediation loop now closes each round on the deterministic lint, and a fact a gate supplies inside a suggested fix is verified before it goes in the body) (AFK iteration via /wr-itil:manage-problem)
