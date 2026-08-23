@@ -24,6 +24,7 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 | [what-will-surprise-you-archive.md](./what-will-surprise-you-archive.md) | What Will Surprise You (archive) |
 | [what-will-surprise-you-archive-early.md](./what-will-surprise-you-archive-early.md) | What Will Surprise You (early archive) |
 | [governance-surface-conflicts.md](./governance-surface-conflicts.md) | Governance surface conflicts |
+| [how-decisions-change.md](./how-decisions-change.md) | How a decision is changed: new record, frontmatter relationship keys, never a body edit |
 | [verification-discipline.md](./verification-discipline.md) | Verification discipline |
 | [risk-scorer-behaviour.md](./risk-scorer-behaviour.md) | Risk Scorer Behaviour |
 | [architect-compendium-deadlock.md](./architect-compendium-deadlock.md) | Architect Decisions Compendium |
@@ -36,6 +37,7 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 | [newsletter-publish-deps-ci-friction-2026-07-06-issue-12-retr.md](./newsletter-publish-deps-ci-friction-2026-07-06-issue-12-retr.md) | Newsletter publish + deps/CI friction (2026-07-06 Issue 12 retro) |
 | [site-repurpose-deploy-gate-friction-2026-07-12-the-shift-hub.md](./site-repurpose-deploy-gate-friction-2026-07-12-the-shift-hub.md) | Site repurpose + deploy-gate friction (2026-07-12 The Shift hub retro) |
 | [newsletter-pipeline-why-external-review-is-still-needed-2026.md](./newsletter-pipeline-why-external-review-is-still-needed-2026.md) | Newsletter pipeline: why external review is still needed (2026-08-04 Issue 16 retro) |
+| [newsletter-pipeline-why-external-review-is-still-needed-2026-archive.md](./newsletter-pipeline-why-external-review-is-still-needed-2026-archive.md) | Archive: entries rotated out of the file above on 2026-08-23 under the Tier 3 budget |
 | [governance-iteration-friction-2026-08-05-p120-afk-iter.md](./governance-iteration-friction-2026-08-05-p120-afk-iter.md) | Governance-iteration friction (2026-08-05 P120 AFK iter) |
 | [governance-iteration-friction-2026-08-05-p121-afk-iter.md](./governance-iteration-friction-2026-08-05-p121-afk-iter.md) | Governance-iteration friction (2026-08-05 P121 AFK iter) |
 | [governance-iteration-friction-2026-08-05-p122-afk-iter.md](./governance-iteration-friction-2026-08-05-p122-afk-iter.md) | Governance-iteration friction (2026-08-05 P122 AFK iter) |
