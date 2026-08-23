@@ -18,6 +18,16 @@ The practical consequence is that a rotation reads as a fix on the enforced surf
 
 Worth noting what is not being claimed: the aggregate growth is not obviously bad. Archives are cheaper to hold than live entries because they are not in the session-start surface, and the 2026-08-10 growth came from a legitimate rotation plus a new topic file. The gap is that nobody decided what the aggregate should be, so there is no basis on which to say whether 137 KB is fine.
 
+Reproduced again on 2026-08-23 during the P141 iteration retro, with the numbers this time.
+
+The briefing directory measured 137,758 bytes on 2026-08-10 and 147,277 on 2026-08-23, up 6.9% with no aggregate check anywhere in the loop. The Tier 3 pass then did exactly what it is written to do and made the total slightly worse: three entries rotated out of the live topic files landed in `what-you-need-to-know-archive.md` and `what-will-surprise-you-archive.md`, taking them from 10,738 to 11,966 and from 19,564 to 22,087 bytes (two arrivals there, one in the other). Both live files came in under the 5,120-byte ceiling and both archives moved further past twice it.
+
+The follow-on is the part worth deciding. Branch A of the rotation pass says a file at or above 2x the ceiling MUST split, and three files now qualify: `what-will-surprise-you-archive.md` at 22,087, `governance-iteration-friction-archive.md` at 14,952, and `what-you-need-to-know-archive.md` at 11,966. Applying it would mint a third archive generation behind the `-archive-early` siblings that already exist, and those siblings are themselves over the ceiling at 8,499 and 9,379 bytes. Nothing reads an archive at session start, so each split costs churn and returns nothing. The rotation rule reads as though it was written for live topic files, where the ceiling protects a surface somebody actually loads, and then applied to the archive tail by path glob rather than by intent.
+
+`docs/briefing/README.md` at 9,589 bytes has the same shape from the other direction. It is the index and the Critical Points roll-up, so it IS the loaded surface, and split-by-date is the wrong instrument for it; its size is governed by the Step 1.5 promote and demote mechanism, not by rotation.
+
+A fix probably needs to say which files the ceiling is protecting, rather than which files match `docs/briefing/*.md`.
+
 ## Symptoms
 
 - `check-briefing-budgets.sh` returns clean while the directory total grows sharply.
