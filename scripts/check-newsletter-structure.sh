@@ -40,6 +40,8 @@
 #   k  no identical citation (same anchor text and URL) in two different sections
 #   l  the LinkedIn post is within 1.5x the trailing median of recent editions
 #   m  no gate verdict predates the draft being saved (P099 / ADR-047)
+#   o  every block the SKILL prescribes for this phase is present in the reviews
+#      sibling (P151); absence, not just staleness
 #
 # Notes on determinism:
 #   Check (b) fires on a link-free line that names a news outlet which is not
@@ -632,6 +634,176 @@ EOF
   fi
 else
   echo "SKIP [n] $brief: no reviews sibling at $reviews; standing-verdict bookkeeping not checked" >&2
+fi
+
+# --- (o) a gate the SKILL prescribes for this phase wrote no block (P151) ------
+# Check (m) is comparison-based by construction: it classifies only the "## "
+# headings physically present in the reviews sibling. A gate that never ran
+# writes no heading, so it produces no row to classify. Staleness was detected;
+# absence was not, and the only thing that caught the 2026-08-09 prep run
+# skipping three prescribed gates was a note a drafter chose to write.
+#
+# The roster of prescribed blocks is DERIVED from the SKILL's own step-16 save
+# templates, never restated here. A second copy in this file is exactly the
+# two-surfaces-disagree defect P140 closed on this script a day earlier: the
+# copy drifts, and the drift is silent in the direction that stops checking.
+#
+# Grain is the GATE, not the heading. A finalise template splits one gate across
+# "(finalise)" and "(prep)" blocks, which are two passes of the same gate, so
+# those qualifiers collapse. "(LinkedIn post)" does not collapse: it names a
+# different artefact, and letting the post's voice block satisfy the brief's
+# would be the same absence hole one heading over.
+#
+# The collapse gives something up, and it is named here rather than left for a
+# reader to discover: a carried prep block satisfies a finalise slot on its own,
+# so a finalise pass that re-runs nothing still reads clean. That is bounded, not
+# open. ADR-046 sanctions skipping the re-invocation when the artefact did not
+# change, which is when the carry is legitimate; the artefact-changed case
+# belongs to P099, not to this check.
+#
+# Matching tolerates naming drift that still names the gate. A heading whose
+# significant words are a superset of the prescribed heading's satisfies it, so
+# "Adversarial Skeptic Review" counts as the skeptic gate and "Cross-Edition
+# Consistency Review" as the cross-edition gate (both are on disk in the
+# 2026-08-17 sibling). The stopword "review" is dropped so it cannot carry a
+# match on its own. No prescribed word-set is a subset of another, so this
+# cannot cross-satisfy; the roster-size test pins that.
+#
+# A block recorded "N/A: <reason>" DOES satisfy the check, which is the
+# answer to whether a deliberate skip is permitted: it is, on the record. But
+# the reason must be one the SKILL prescribes as a skip condition, per ADR-047
+# limit 2 (a sanctioned skip is one whose DOCUMENTED skip condition holds).
+# A free-hand reason would discharge every gate with one typed line, which is
+# this defect relocated one level up.
+skill_md="${NEWSLETTER_SKILL_MD:-}"
+if [ -z "$skill_md" ]; then
+  _o_script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+  skill_md="$_o_script_dir/../.claude/skills/wr-newsletter/SKILL.md"
+fi
+
+if [ ! -f "$reviews" ]; then
+  echo "SKIP [o] $brief: no reviews sibling at $reviews; gate presence not checked" >&2
+elif [ ! -f "$skill_md" ]; then
+  echo "SKIP [o] $brief: no wr-newsletter SKILL at $skill_md; cannot tell which gates this phase prescribes, so gate presence is not checked" >&2
+else
+  # Phase comes from the brief's frontmatter, which all three save templates
+  # prescribe. The ".prep" filename infix is the fallback, then full (the
+  # SKILL's own default when no phase argument is passed).
+  phase=$(awk '
+    NR==1 && $0!="---" { exit }
+    NR==1 { next }
+    /^---$/ { exit }
+    /^phase:[[:space:]]*(prep|finalise|full)[[:space:]]*$/ { print $2; exit }
+  ' "$brief")
+  if [ -z "$phase" ]; then
+    case "$brief" in
+      *.prep.md) phase=prep ;;
+      *)         phase=full ;;
+    esac
+  fi
+
+  missing=$(awk -v ph="$phase" -v skill="$skill_md" -v rev="$reviews" '
+    # " tok tok " so a subset test is a padded index() lookup.
+    function toks(s,   t, n, a, i, o) {
+      t = tolower(s); gsub(/[^a-z0-9]+/, " ", t)
+      n = split(t, a, " "); o = " "
+      for (i = 1; i <= n; i++) if (a[i] != "review" && a[i] != "reviews") o = o a[i] " "
+      return o
+    }
+    function flat(s,   t) {
+      t = tolower(s); gsub(/[^a-z0-9]+/, " ", t)
+      gsub(/^ +| +$/, "", t); return t
+    }
+    # Splits a heading into G_stem (significant words) and G_post (artefact flag),
+    # collapsing the (prep) / (finalise) pass qualifiers.
+    function split_head(h,   qual, stem) {
+      qual = ""; stem = h
+      if (match(h, /\([^)]*\)[ \t]*$/)) {
+        qual = flat(substr(h, RSTART + 1, RLENGTH - 2))
+        stem = substr(h, 1, RSTART - 1)
+      }
+      sub(/[ \t]+$/, "", stem)
+      G_stem = toks(stem)
+      G_post = (qual ~ /linkedin|companion|post/) ? 1 : 0
+      G_name = stem (G_post ? " (LinkedIn post)" : "")
+    }
+    function satisfies(want, got,   n, a, i) {
+      n = split(want, a, " ")
+      for (i = 1; i <= n; i++) if (a[i] != "" && index(got, " " a[i] " ") == 0) return 0
+      return 1
+    }
+    FILENAME == skill {
+      # Sanctioned skip reasons, read ONLY from the SKILL block the anchor
+      # comment marks. Scraping every "N/A:" run out of the prose instead would
+      # let punctuation decide what counts as sanctioned, and one stray line
+      # ending "N/A:." would harvest a key that prefixes every reason and quietly
+      # sanction all of them.
+      if ($0 ~ /SANCTIONED-SKIP-REASONS:/) { insk = 1; next }
+      if (insk) {
+        if ($0 ~ /^[ \t]*N\/A:/) { sub(/^[ \t]+/, "", $0); sk[flat($0)] = 1; nsk++; next }
+        if (nsk > 0 && $0 ~ /^[ \t]*```[ \t]*$/) insk = 0
+      }
+      if ($0 ~ /^#### phase=/) { sect = (index($0, "#### phase=" ph ":") == 1); next }
+      if ($0 ~ /^### /) { sect = 0; next }
+      if (sect && $0 ~ /^[ \t]*## /) {
+        h = $0; sub(/^[ \t]*## /, "", h); sub(/[ \t]+$/, "", h)
+        split_head(h)
+        key = G_stem "|" G_post
+        if (!(key in seen)) { seen[key] = 1; rn++; rstem[rn] = G_stem; rpost[rn] = G_post; rname[rn] = G_name }
+      }
+      next
+    }
+    FILENAME == rev {
+      if ($0 ~ /^## /) {
+        h = $0; sub(/^## /, "", h); sub(/[ \t]+$/, "", h)
+        split_head(h)
+        pn++; pstem[pn] = G_stem; ppost[pn] = G_post; phead[pn] = h; pline[pn] = FNR; pna[pn] = ""
+        want_body = 1
+        next
+      }
+      # First real content line under a heading decides whether it is an N/A entry.
+      if (want_body && pn > 0) {
+        if ($0 ~ /^[ \t]*$/) next
+        if ($0 ~ /^(scored-digest:|carried-from:|<!--)/) next
+        probe = $0; gsub(/^[ \t>*-]+/, "", probe)
+        if (probe ~ /^[Nn]\/[Aa]/) pna[pn] = probe
+        want_body = 0
+      }
+      next
+    }
+    END {
+      if (rn == 0) { print "ROSTER-EMPTY"; exit }
+      for (i = 1; i <= rn; i++) {
+        hit = 0
+        for (j = 1; j <= pn; j++) {
+          if (ppost[j] != rpost[i]) continue
+          if (!satisfies(rstem[i], pstem[j])) continue
+          hit = j; break
+        }
+        if (!hit) { printf "absent\t%s\t\t\n", rname[i]; continue }
+        if (pna[hit] != "" && !(flat(pna[hit]) in sk)) {
+          ok = 0
+          for (r in sk) if (index(flat(pna[hit]), r) == 1) { ok = 1; break }
+          if (!ok) printf "unsanctioned\t%s\t%s\t%d\n", rname[i], phead[hit], pline[hit]
+        }
+      }
+    }
+  ' "$skill_md" "$reviews")
+
+  if [ "$missing" = "ROSTER-EMPTY" ]; then
+    echo "SKIP [o] $brief: the SKILL at $skill_md prescribes no blocks for phase=$phase; gate presence not checked" >&2
+  elif [ -n "$missing" ]; then
+    while IFS="$(printf '\t')" read -r kind gate head ln; do
+      [ -n "${kind:-}" ] || continue
+      if [ "$kind" = "absent" ]; then
+        fail o "$brief: the reviews sibling records no block for \"$gate\", which phase=$phase prescribes; run that gate and record its block, or record the block with a reason it did not run that the SKILL prescribes as a skip condition (P151)"
+      else
+        fail o "$reviews:$ln: the block \"$head\" is recorded N/A for a reason the SKILL does not prescribe as a skip condition; a gate stays skipped only where its documented skip condition holds (ADR-047), so run it, or record one of the prescribed reasons (P151)"
+      fi
+    done <<EOF
+$missing
+EOF
+  fi
 fi
 
 # --- verdict ------------------------------------------------------------------

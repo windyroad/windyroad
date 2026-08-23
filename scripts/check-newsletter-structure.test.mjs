@@ -804,17 +804,17 @@ describe('check-newsletter-structure.sh', () => {
 
   it('(n) accepts a CLEARED finding whose reason is on the same line', () => {
     const r = run(withVerdictReviews('## Shape Review\n\n- CLEARED (forbidden to remediate): the sign-off link is a deliberate change and the bare form was never ratified.\n'));
-    expect(r.status, r.stderr).toBe(0);
+    expect(r.stderr, 'check (n) must stay quiet here').not.toContain('[n]');
   });
 
   it('(n) accepts a CLEARED finding whose reason is on the following line', () => {
     const r = run(withVerdictReviews('## Shape Review\n\n- CLEARED (forbidden to remediate)\n  Tom: the issue line sits deeper because the opener carries the series identity instead.\n'));
-    expect(r.status, r.stderr).toBe(0);
+    expect(r.stderr, 'check (n) must stay quiet here').not.toContain('[n]');
   });
 
   it('(n) accepts a DECLINED finding with a reason', () => {
     const r = run(withVerdictReviews('## Skeptic Review\n\n- DECLINED: the critic judged the same line acceptable compression and Tom arbitrated in its favour.\n'));
-    expect(r.status, r.stderr).toBe(0);
+    expect(r.stderr, 'check (n) must stay quiet here').not.toContain('[n]');
   });
 
   it('(n) rejects the retired RESIDUAL tag', () => {
@@ -826,7 +826,7 @@ describe('check-newsletter-structure.sh', () => {
 
   it('(n) stays silent on a reviews sibling with no verdict tags at all', () => {
     const r = run(withVerdictReviews('## Voice Review\n\nPASS. No findings.\n'));
-    expect(r.status, r.stderr).toBe(0);
+    expect(r.stderr, 'check (n) must stay quiet here').not.toContain('[n]');
   });
 
   it('(n) fires when the reason slot holds structured finding metadata, not a reason', () => {
@@ -846,7 +846,7 @@ describe('check-newsletter-structure.sh', () => {
     const r = run(withVerdictReviews(
       '## Notes\n\nADR-052 retired the RESIDUAL (round 2, accepted) tag, so nothing here uses it.\n',
     ));
-    expect(r.status, r.stderr).toBe(0);
+    expect(r.stderr, 'check (n) must stay quiet here').not.toContain('[n]');
   });
 
   // Binds check (n)'s literal tag strings to the template that produces them.
@@ -932,4 +932,222 @@ describe('check-newsletter-structure.sh', () => {
     const r = run(fixture(withH4, VALID_LINKEDIN));
     expect(r.status, r.stderr).toBe(0);
   });
+
+  // --- (o) a prescribed gate that produced no block at all (P151) ------------
+  // Check (m) is comparison-based: it classifies only the "## " headings
+  // physically present in the reviews sibling, so a gate that never ran writes
+  // no heading and produces no row to classify. Staleness was detected;
+  // absence was not. Check (o) derives the roster of blocks the wr-newsletter
+  // SKILL prescribes for the run's phase and fails on any that is missing.
+  // The roster is DERIVED, never a second copy: a hard-coded list here would
+  // recreate the two-surfaces-disagree defect P140 just closed on this script.
+
+  const SKILL_MD = join(process.cwd(), '.claude/skills/wr-newsletter/SKILL.md');
+
+  // Every "## " heading the SKILL's phase=prep reviews template prescribes,
+  // read the same way the script reads it. Used to build a COMPLETE sibling
+  // so the negative cases below isolate one missing gate at a time.
+  function prescribedHeadings(phase) {
+    const skill = readFileSync(SKILL_MD, 'utf8').split('\n');
+    const out = [];
+    let inSection = false;
+    for (const line of skill) {
+      if (line.startsWith('#### phase=')) {
+        inSection = line.startsWith(`#### phase=${phase}:`);
+        continue;
+      }
+      if (line.startsWith('### ')) {
+        inSection = false;
+        continue;
+      }
+      const m = inSection && /^ *## (.+?)\s*$/.exec(line);
+      if (m) out.push(m[1]);
+    }
+    return out;
+  }
+
+  function reviewsFor(headings) {
+    return (
+      '---\ncompanion-to: 2026-06-15.md\n---\n\n' +
+      headings.map((h) => `## ${h}\n\nPASS. No findings.\n`).join('\n')
+    );
+  }
+
+  // A brief + reviews sibling pair with an explicit frontmatter phase.
+  function phaseFixture(phase, reviewsBody, briefName = '2026-06-15.md') {
+    const dir = mkdtempSync(join(tmpdir(), 'nl-roster-'));
+    const briefPath = join(dir, briefName);
+    writeFileSync(briefPath, H2_BRIEF.replace('phase: full', `phase: ${phase}`));
+    writeFileSync(join(dir, '2026-06-15.linkedin.md'), VALID_LINKEDIN);
+    if (reviewsBody !== null) writeFileSync(join(dir, '2026-06-15.reviews.md'), reviewsBody);
+    return briefPath;
+  }
+
+  function firedGates(stderr) {
+    return [...stderr.matchAll(/FAIL \[o\] .*?records no block for "([^"]+)"/g)].map(
+      (m) => m[1],
+    );
+  }
+
+  it('(o) stays quiet when every block the phase prescribes is present', () => {
+    const r = run(phaseFixture('prep', reviewsFor(prescribedHeadings('prep'))));
+    expect(r.stderr, 'a complete prep ledger must not fire (o)').not.toContain('[o]');
+  });
+
+  it('(o) fires on a prescribed gate with no block in the reviews sibling', () => {
+    const kept = prescribedHeadings('prep').filter((h) => h !== 'Shape Review');
+    const r = run(phaseFixture('prep', reviewsFor(kept)));
+    expect(r.status, r.stderr).toBe(1);
+    expect(firedGates(r.stderr)).toContain('Shape Review');
+  });
+
+  it('(o) catches the Wardley critic, which check (m) excludes by construction', () => {
+    // (m) sets is_verdict=0 on a wardley heading because that gate scores
+    // ai-landscape.md, a third artefact this lint has no digest target for.
+    // Absence is (o)'s to catch; freshness stays out of scope.
+    const kept = prescribedHeadings('prep').filter(
+      (h) => !/wardley/i.test(h),
+    );
+    const r = run(phaseFixture('prep', reviewsFor(kept)));
+    expect(firedGates(r.stderr).join(' ')).toMatch(/Wardley/);
+  });
+
+  it('(o) tolerates naming drift that still names the gate', () => {
+    // Both drifted forms are on disk in the 2026-08-17 reviews sibling. A gate
+    // written as "Adversarial Skeptic Review" ran; it is not a skipped gate.
+    const drifted = prescribedHeadings('prep')
+      .map((h) => (h === 'Skeptic Review' ? 'Adversarial Skeptic Review' : h))
+      .map((h) => (h === 'Cross-Edition Consistency' ? 'Cross-Edition Consistency Review' : h));
+    const r = run(phaseFixture('prep', reviewsFor(drifted)));
+    expect(r.stderr, 'drifted-but-named gates must not fire (o)').not.toContain('[o]');
+  });
+
+  it('(o) does not let a LinkedIn-post block satisfy the brief-side gate', () => {
+    const swapped = prescribedHeadings('prep').map((h) =>
+      h === 'Voice Review' ? 'Voice Review (LinkedIn post)' : h,
+    );
+    const r = run(phaseFixture('prep', reviewsFor(swapped)));
+    expect(firedGates(r.stderr)).toContain('Voice Review');
+  });
+
+  // The sanctioned set is DECLARED, in one anchored block in the SKILL. It used
+  // to be scraped from every "N/A:" run in the prose, which let punctuation
+  // decide what counted: one of the four reasons was sanctioned only because a
+  // step-17 bullet happened to quote it, and a stray line ending "N/A:." would
+  // have harvested a key prefixing every reason and quietly sanctioned all of
+  // them. These pin every declared reason, not just one.
+  function sanctionedReasons() {
+    const skill = readFileSync(SKILL_MD, 'utf8').split('\n');
+    const at = skill.findIndex((l) => l.includes('SANCTIONED-SKIP-REASONS:'));
+    expect(at, 'the SKILL must declare the sanctioned skip reasons by anchor').toBeGreaterThan(-1);
+    const out = [];
+    for (const line of skill.slice(at + 1)) {
+      if (/^\s*N\/A:/.test(line)) out.push(line.trim());
+      else if (out.length && /^\s*```\s*$/.test(line)) break;
+    }
+    return out;
+  }
+
+  it('(o) accepts every skip reason the SKILL declares, and only those', () => {
+    const reasons = sanctionedReasons();
+    expect(reasons.length, 'the declared list must not be empty').toBeGreaterThan(0);
+    for (const reason of reasons) {
+      const body = reviewsFor(prescribedHeadings('prep')).replace(
+        '## Editor Review\n\nPASS. No findings.',
+        `## Editor Review\n\n${reason}`,
+      );
+      const r = run(phaseFixture('prep', body));
+      expect(r.stderr, `declared reason rejected: ${reason}`).not.toContain('[o]');
+    }
+  });
+
+  it('(o) accepts a block recorded N/A for a skip condition the SKILL prescribes', () => {
+    const body = reviewsFor(prescribedHeadings('prep')).replace(
+      '## Editor Review\n\nPASS. No findings.',
+      '## Editor Review\n\nN/A: newsletter-critic returned REJECTED',
+    );
+    const r = run(phaseFixture('prep', body));
+    expect(r.stderr, 'a sanctioned skip is a ledger entry, not a violation').not.toContain(
+      '[o]',
+    );
+  });
+
+  it('(o) rejects a block recorded N/A for a reason the SKILL does not prescribe', () => {
+    // ADR-047 limit 2: a sanctioned skip is one whose DOCUMENTED skip condition
+    // holds. A free-hand reason would discharge every gate with one typed line,
+    // which is P151 relocated one level up.
+    const body = reviewsFor(prescribedHeadings('prep')).replace(
+      '## Editor Review\n\nPASS. No findings.',
+      '## Editor Review\n\nN/A: ran out of time before the publish window',
+    );
+    const r = run(phaseFixture('prep', body));
+    expect(r.status, r.stderr).toBe(1);
+    expect(r.stderr).toContain('[o]');
+    expect(r.stderr).toMatch(/the SKILL does not prescribe/);
+  });
+
+  // The roster is derived at runtime, so the drift that matters is PARTIAL: a
+  // heading dropped from a SKILL template shrinks the roster and (o) quietly
+  // stops asking for that gate. Pinning the cardinality turns a silent shrink
+  // into a red test. Counting the fires against an empty ledger reads the
+  // roster without giving the script a debug flag nothing else needs.
+  const ROSTER_SIZE = { prep: 12, finalise: 15, full: 15 };
+  const TEMPLATE_HEADINGS = { prep: 12, finalise: 24, full: 15 };
+  const CANARY = {
+    prep: 'Cross-Edition Consistency',
+    finalise: 'Cross-Edition Consistency',
+    full: 'Cross-Edition Consistency',
+  };
+
+  it('the SKILL still prescribes the reviews blocks the roster is read from', () => {
+    // Pins the RAW template, upstream of the collapse below. A heading dropped
+    // from a template shrinks the roster silently and (o) quietly stops asking
+    // for that gate: P151 relocated into the roster. A count turns that red.
+    for (const [phase, n] of Object.entries(TEMPLATE_HEADINGS)) {
+      const got = prescribedHeadings(phase);
+      expect(got.length, `phase=${phase} template: ${got.join(', ')}`).toBe(n);
+      expect(got.join('|'), `phase=${phase} lost its cross-edition slot`).toMatch(
+        /Cross-Edition Consistency/,
+      );
+    }
+  });
+
+  for (const [phase, size] of Object.entries(ROSTER_SIZE)) {
+    it(`(o) derives ${size} prescribed blocks for phase=${phase}`, () => {
+      const r = run(phaseFixture(phase, '---\ncompanion-to: 2026-06-15.md\n---\n'));
+      const fired = firedGates(r.stderr);
+      expect(
+        fired.length,
+        `roster for phase=${phase} changed; fired: ${fired.join(', ')}`,
+      ).toBe(size);
+      expect(fired).toContain(CANARY[phase]);
+    });
+  }
+
+  it('(o) skips loudly when the SKILL cannot be read', () => {
+    const brief = phaseFixture('prep', reviewsFor(['Voice Review']));
+    const r = spawnSync('bash', [SCRIPT, brief], {
+      encoding: 'utf8',
+      env: { ...process.env, NEWSLETTER_SKILL_MD: '/nonexistent/SKILL.md' },
+    });
+    expect(r.stderr).toContain('SKIP [o]');
+    expect(r.stderr).toContain('which gates this phase prescribes');
+    expect(r.stderr).not.toContain('FAIL [o]');
+  });
+
+  it('(o) skips loudly when the reviews sibling is absent', () => {
+    const r = run(phaseFixture('prep', null));
+    expect(r.stderr).toContain('SKIP [o]');
+    expect(r.stderr).toContain('no reviews sibling');
+  });
+
+  it('(o) falls back to the .prep filename infix when the brief names no phase', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'nl-roster-fb-'));
+    const brief = join(dir, '2026-06-15.prep.md');
+    writeFileSync(brief, H2_BRIEF.replace('phase: full\n', ''));
+    writeFileSync(join(dir, '2026-06-15.reviews.md'), '---\n---\n');
+    const fired = firedGates(run(brief).stderr);
+    expect(fired.length).toBe(ROSTER_SIZE.prep);
+  });
+
 });

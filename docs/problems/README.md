@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-23 **P156 captured** (Briefing absence claims are never re-verified, so a stale one loads into every session) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-23 **P151 released to verifying** (Prescribed newsletter gates can skip a phase entirely and nothing detects the absence) - check (o) in the newsletter structure lint derives the roster of blocks each phase prescribes from the SKILL's own save templates and fails a save on any that is missing
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,7 +13,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
-| 12.0 | P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 12 | Open | M | 2026-08-10 | internal |
 | 12.0 | P152 | No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate | 12 | Open | M | 2026-08-10 | internal |
 | 12.0 | P154 | Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery | 12 | Open | M | 2026-08-17 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
@@ -88,6 +87,7 @@ Fix released, awaiting verification. Sorted by Released date ascending, oldest f
 | P129 | Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in | 2026-08-09, commit `8ad2dba` on `origin/master`, CI green, no changeset (repo-local dev scripts, private root package) | no - not observed; verifies when a normal `push:watch`, `deps:fix` or `release:watch` run behaves exactly as before, since the guards are meant to be invisible on the executed path |
 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact | 2026-08-09, repo-local skill prose plus an out-of-repo memory note, no changeset (nothing shippable changed) | no - not observed; verifies on the next edition that goes out for external editorial review, and the thing to watch is whether the artefact is handed over with its checksum at all, not just whether a stale round is diagnosed faster |
 | P140 | Lint and SKILL disagree on the prep-phase reviews sibling path | 2026-08-23, repo-local dev lint plus skill prose, no changeset (private root package, nothing shippable changed) | no - not observed; verifies on the next `/wr-newsletter phase=prep` run, which is where checks (m) and (n) first execute against a live prep artefact |
+| P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 2026-08-23, repo-local dev lint plus skill prose and tests, no changeset (private root package, nothing shippable changed) | no - not observed; verifies on the next `/wr-newsletter` run, and the thing to watch is whether check (o) holds a save on a ledger missing a prescribed block, since all sixteen published editions carrying a reviews sibling fire it today, the archive predating the check |
 
 ## Inbound Upstream Reports
 

@@ -1141,7 +1141,24 @@ and write `scored-digest: sha256:$scored` as the first line under the block's he
 
 **On a check (m) failure**, re-invoke each named gate against the current artefact, write its fresh verdict block with a fresh digest, and re-run the lint. Copy every block you did not re-score verbatim, digest included.
 
-The lint auto-derives both the `.linkedin.md` and `.reviews.md` siblings from the brief path; pass them explicitly as second and third arguments only when they live elsewhere. Sibling artefacts are named for the publication date in every phase, so a prep-phase brief at `<publication-date>.prep.md` sits beside `<publication-date>.reviews.md` with no phase infix; the lint strips the `.prep` infix when deriving, which means one invocation works in both phases (P140). Checks (m) and (n) therefore run at prep: a `BLOCKING (survived round 2)` finding still standing in the prep reviews sibling fails the lint and holds the prep save until it is fixed, or retagged `DECLINED` with the author's stated reason (ADR-052). Exit 0 means the structural invariants (step 11b) hold; proceed. Exit 1 prints one `FAIL [<id>] <file>:<line>: <message>` line per violation; fix the brief (or sibling) in place and re-run the lint until it exits 0 before continuing. Exit 2 is a usage / IO error (wrong path); correct the invocation. In `phase=prep` the LinkedIn sibling does not yet exist, so check (f) is skipped automatically; run the lint against the `.prep.md` brief path. The lint is deterministic and cheap; it does not replace the LLM gates (steps 13-15.5), it complements them by catching format defects those gates miss.
+**On a check (o) failure**, a block this phase prescribes is missing from the reviews sibling entirely, so a gate the pipeline requires produced no verdict (P151). Check (m) cannot see this: it classifies only the headings physically present, so a gate that never ran leaves nothing to classify. The response has the same shape as (m)'s, and it belongs to the SKILL rather than the script: run the named gate against the current artefact and record its block. If it genuinely did not run, record the block anyway, with one of the skip reasons declared below. The lint refuses a free-hand reason: a skip holds only where its documented condition holds, not because someone asserted it (ADR-047 limit 2). Every recorded skip is named in the step-17 summary, so it reaches Tom as a decision rather than sitting in a companion file nobody reads.
+
+**The sanctioned skip reasons, in full.** This block is the only declaration of them. Check (o) reads it by the anchor comment; do not restate the list elsewhere in this file, and do not rely on a reason stated only in prose.
+
+<!-- SANCTIONED-SKIP-REASONS: check (o) in scripts/check-newsletter-structure.sh reads the N/A lines in the block below and refuses any other recorded reason. Add a reason here to sanction it. -->
+
+```
+N/A: content-risk returned REJECTED
+N/A: newsletter-critic returned REJECTED
+N/A: carried from prep (no material change)
+N/A: upstream REJECTED
+```
+
+The roster the check compares against is read from the phase templates below at run time, not restated in the script. Adding a block to a template adds it to the roster; removing one removes it. That is deliberate, and the reason the roster's size is pinned in `scripts/check-newsletter-structure.test.mjs`: a heading quietly dropped from a template would shrink the roster and stop the check asking for that gate, which is this defect relocated one surface up.
+
+**What the check gives up, so nobody reads it as covering more than it does.** Check (o) works at the grain of the gate, not the heading, so a finalise template's `(finalise)` and `(prep)` blocks share one roster slot. A carried prep block therefore satisfies the slot on its own, and nine of the fifteen finalise slots have a prep twin. That is bounded rather than open: ADR-046 sanctions not re-invoking a gate on an unchanged artefact, which is exactly when the carry is legitimate, and the case where the artefact DID change and the gate was not re-run is P099's, not this check's.
+
+The lint auto-derives both the `.linkedin.md` and `.reviews.md` siblings from the brief path; pass them explicitly as second and third arguments only when they live elsewhere. Sibling artefacts are named for the publication date in every phase, so a prep-phase brief at `<publication-date>.prep.md` sits beside `<publication-date>.reviews.md` with no phase infix; the lint strips the `.prep` infix when deriving, which means one invocation works in both phases (P140). Checks (m), (n) and (o) therefore run at prep: a `BLOCKING (survived round 2)` finding still standing in the prep reviews sibling fails the lint and holds the prep save until it is fixed, or retagged `DECLINED` with the author's stated reason (ADR-052). Exit 0 means the structural invariants (step 11b) hold; proceed. Exit 1 prints one `FAIL [<id>] <file>:<line>: <message>` line per violation; fix the brief (or sibling) in place and re-run the lint until it exits 0 before continuing. Exit 2 is a usage / IO error (wrong path); correct the invocation. In `phase=prep` the LinkedIn sibling does not yet exist, so check (f) is skipped automatically; run the lint against the `.prep.md` brief path. The lint is deterministic and cheap; it does not replace the LLM gates (steps 13-15.5), it complements them by catching format defects those gates miss.
 
 Branch on phase:
 
@@ -1382,6 +1399,11 @@ The finalise-time output replaces the prep-time `.prep.md` and refreshes the rev
 
    <prep-time map delta line, plus "+ <one-sentence finalise re-mutation summary>" if step 5-prime restructured, else prep delta unchanged>
 
+   ## Cross-Edition Consistency
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <verdict block from step 11.4-prime. ONE unqualified section, not a (prep) / (finalise) pair: step 11.4 and 11.4-prime both append to `.reviews.md ## Cross-Edition Consistency`, so a split here would put the lint and step 11.4 in disagreement about where the verdict lives. When 11.4-prime carries the prep verdict forward instead of re-running, append "(carried from prep)" to the entry, put a `carried-from: prep` line ABOVE the digest, and copy the prep `scored-digest` VERBATIM; check (m) fails a block that is marked carried but carries no digest (ADR-047).>
+
    ## URL Verification (finalise)
 
    <per-URL verdict table from step 11.5-prime: URL | Transport | Semantic verdict | Note. Carry-forward rows tagged "(carried from prep)" per step 11.5-prime rules.>
@@ -1429,9 +1451,86 @@ Single-pass equivalent of the prep + finalise pair. Three operations:
    <draft body from step 11b>
    ```
 
-2. Write reviews to `<draft-folder>/<publication-date>.reviews.md` with the same block structure as the prep variant above (Voice Review, Content Risk Review, Critic Review (Newsletter), Editor Review, Skeptic Review, Shape Review, Editorial Remediation Loop, Cognitive Accessibility Review, Critic Review (Wardley Artifacts), Map Delta, URL Verification), plus a `## Voice Review (LinkedIn post)` block that captures the step-15.5 LinkedIn-post voice gate verdict (P013) and a `## Skeptic Review (LinkedIn post)` block that captures the step-15.55 LinkedIn-post skeptic verdict (ADR-042). No prep / finalise distinction in the section headings (single-pass).
+2. Write reviews to `<draft-folder>/<publication-date>.reviews.md`. Single-pass, so no prep / finalise distinction in the section headings. Each block carries the same content the prep variant above prescribes for it; the three `(LinkedIn post)` sections have no prep equivalent because prep drafts no post, and a phase=full run executes 15.5, 15.55 and 15.57, so without them that output has no home and the evidence surface ADR-044 confirmation criterion 13 pre-registers for the first live run is lost.
 
-   Plus the three post-specific sections this phase produces, which the prep variant has no equivalent for because prep drafts no post: `## Voice Review (LinkedIn post)`, `## Skeptic Review (LinkedIn post)`, and `## Shape Review (LinkedIn post)` carrying step 15.57's block and any `CLEARED` or `BLOCKING` entries. A phase=full run executes 15.57, so without this section its output has no home and the evidence surface ADR-044 confirmation criterion 13 pre-registers for the first live run is lost.
+   ```
+   ---
+   companion-to: <publication-date>.md
+   phase: full
+   ---
+
+   ## Voice Review
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <voice review block from step 13>
+
+   ## Content Risk Review
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <content-risk block from step 14>
+
+   ## Critic Review: Newsletter
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <critic block from step 15>
+
+   ## Editor Review
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <editor block from step 15.25>
+
+   ## Skeptic Review
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <skeptic block from step 15.35>
+
+   ## Shape Review
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <shape block from step 15.36, recorded in full per the prep variant above>
+
+   ## Editorial Remediation Loop
+
+   <rounds spent plus the sorted survivors from step 15.37, per the prep variant above>
+
+   ## Cognitive Accessibility Review
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <cog-a11y block from step 15.4>
+
+   ## Critic Review: Wardley Artifacts
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <critic block from step 9>
+
+   ## Map Delta
+
+   <one-sentence summary of what moved in ai-landscape.owm this run>
+
+   ## Cross-Edition Consistency
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <verdict block from step 11.4>
+
+   ## URL Verification
+
+   <per-URL verdict table from step 11.5: URL | Transport | Semantic verdict | Note>
+
+   ## Voice Review (LinkedIn post)
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <voice review block from step 15.5's LinkedIn-post voice gate (P013)>
+
+   ## Skeptic Review (LinkedIn post)
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <skeptic block from step 15.55 on the LinkedIn post>
+
+   ## Shape Review (LinkedIn post)
+
+   scored-digest: sha256:<digest of the artefact this gate scored, frontmatter excluded>
+   <shape block from step 15.57 on the LinkedIn post, plus any `CLEARED` or `BLOCKING` entries from its inline one-round remediation>
+   ```
 
 3. Write LinkedIn post to `<draft-folder>/<publication-date>.linkedin.md` with the same shape as the finalise variant above (frontmatter + post body only; no heading wrapper, no image block, no posting-notes block, no manual link line; no voice review block) per P079.
 
@@ -1459,6 +1558,7 @@ Report back in chat:
 - **Publication status, ADR-052, first line of the summary and before anything else.** Under ADR-052 every reviewer gate blocks. State plainly whether the edition can publish. It can when no gate holds a finding it classified as a defect against the current text, with forbidden-to-remediate findings cleared by Tom's stated reason. It cannot otherwise. Do not report a verdict-by-verdict list and leave Tom to compute the answer; compute it and say it. Name the gates that scored a superseded digest, because a gate whose verdict predates the current body has not passed the current body (ADR-047).
 - **Editorial remediation loop (step 15.37, ADR-043 and ADR-052): lead the gate detail with this.** Report the rounds spent, whether the cap bound, a one-line summary of what was remediated, and then every surviving finding in full: originating gate, axis, quoted passage, Suggested fix, and its class. Lead with the `BLOCKING` set, because those are the ones stopping publication, then the `CLEARED` set with Tom's reasons. Carry prep-time survivors into the finalise summary with their class intact, even when 15.25-prime and 15.35-prime were no-ops; a prep-time blocker is still blocking. If a skeptic finding was stop-and-surface because remediating it would have required new sourcing, say so explicitly: that one needs Tom, not another round. Note "No-op: editor and skeptic both PASSed" when the loop did not fire, and "N/A: upstream REJECTED" when it was skipped.
 - **Cross-edition shape (steps 15.36 and 15.57, ADR-044): report advisory differences in full, because they are the ones that need Tom.** For each surface give the verdict, the window actually read, and the remediating count. Then list every ADVISORY difference with its CLASS, what changed against which prior edition, the precedent strength, and the stated basis, since each one is waiting on Tom for a reason and the drafter may not supply it. **For every remediating difference the loop actually applied, at 15.37 and at 15.57, quote the passage before and after.** Not a one-line note of what was fixed. Tom is reading his own prose and cannot see which passage a loop rewrote, so a summary leaves him reviewing text he assumes he wrote. A before-and-after pair turns that read into a diff review, which is the only thing that makes the manual publish step a real check on a wrongly-remediated finding. Record the same pairs in the reviews sibling under the originating Shape Review section. Report the shape gate's Strengths too: a departure from precedent that served this edition is the most useful signal it produces, and burying it would leave only the negatives visible.
+- **Every gate recorded as skipped.** Name each `N/A:` block in the reviews sibling with its recorded reason, and give the count. Skipping a prescribed gate is a judgement call, so it reaches Tom as one; the 2026-08-09 prep run is the worked failure, where three skipped gates were recorded only as prose in a companion file and the cost landed on publish morning (P151). Say "No gates skipped" when there are none.
 - Wardley critic verdict and round count.
 - Map delta (one sentence; for finalise, include any re-mutation delta).
 - URL verification (step 11.5 / 11.5-prime): per-URL verdict summary as a one-line headline (e.g. "URL verification: 9 SUPPORTED, 1 INDIRECT_CONFIRMED, 0 REFUTED, 0 NOT MENTIONED across 10 URLs"). Surface any save-gate interventions inline: REFUTED fixes (with old URL and replacement URL), 404 replacements, NOT MENTIONED escalations to Tom (with the eventual disposition: dropped, swapped, or author-approved). Full per-URL table lives in `<publication-date>.reviews.md` under `## URL Verification`. Per ADR-024 confirmation criterion 4.
