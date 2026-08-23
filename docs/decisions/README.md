@@ -251,16 +251,18 @@ _52 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** Check (i) in scripts/check-newsletter-structure.sh is tightened to accept the H2 heading form and the legacy b...; The lint passes on both an H2-rooted and a legacy H3-rooted brief, with negative cases for checks (c), (h), (i...; The lint's existing corpus regression, which walks every published leader edition on disk and asserts check (k...; draft-template.md specifies ## From Tom and ## Item N:.; Issues 17 and 18 both ship H2-rooted, and no published edition before Issue 17 is modified.
 
 ### ADR-054 - A decision is changed by a new decision, never by editing the old one
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"A new decision changes an old one; the old one is never edited except in frontmatter"**, stated by Tom on 2026-08-16.
 **Confirmation:** scripts/decisions-supersession.test.mjs passes: every slug in an amends: or supersedes: list resolves to a dec...; No decision gains an ## Amendment section after 2026-08-16. The test carries the six known files as an allowli...; A decision that overtakes part of another names the clause specifically enough to locate it, rather than namin...
 
 ### ADR-055 - GitHub Actions are pinned by owner, and permissions are declared per workflow
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **pin form by owner, plus a CI lint**, with the staleness question explicitly left open.
+**Confirmation:** scripts/check-action-pins.sh exits 0 against .github/workflows/ and exits 1 naming file, line and offe...; The lint runs in CI on every push to master, positioned before the secret scan.; No uses: in .github/workflows/ resolves to a branch ref, covering the action ref only per the rule 1 carve-out.; Every workflow declares a top-level permissions block and none grants write-all.
 **Related:** ADR-034, ADR-022, ADR-050, ADR-028, ADR-051, ADR-021
+
 ### ADR-056 - The risk register is a curated index of risk classes, not a dump of findings
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** proposed | **Oversight:** confirmed
 **Decides:** `docs/risks/` stays unarmed and the 91-record hint queue stays undrained until a register entry can name a *class* of risk with a slug specific enough not to wildcard-match ordinary diffs. 71 of the 72 queued finding-shaped slugs match a single commit, so draining as-is would trade an honest `matched=0` for a meaningless near-total hit rate and destroy the metric in the act of taking it. Six rules follow: slug shape is an admission criterion; the drain is the ongoing feed, not a one-shot backfill; arming needs both the rule met and a named curator; a catalog baseline is context and never replaces the per-action residual; auto-scaffolded entries are non-authoritative; and curation is not Tom's queue.
 **Confirmation:** `docs/risks/` stays absent and the queue keeps its records until rule 3 is met; any change that arms the register cites this record and reports its slugs' match rate against the last 20 commits on `master`, with no slug above 25%; that change names the curator; `RISK-POLICY.md` gains a `## Risk Catalog` section before any entry is authoritative; this record appears in `docs/decisions/README.md`.
 **Related:** ADR-007, ADR-008, ADR-036, ADR-048, ADR-049, ADR-054

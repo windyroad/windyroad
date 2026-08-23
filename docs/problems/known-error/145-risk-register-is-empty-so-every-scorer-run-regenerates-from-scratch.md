@@ -93,9 +93,9 @@ Not resolved. This iteration recorded the decision that governs the fix; it did 
 
 **Stated plainly so the ADR is not misread as a fix: no scorer run gets cheaper as a result of this iteration.** The per-invocation re-derivation cost this ticket exists to record is still being paid in full. What the iteration bought is that the next automated iteration cannot complete the flood unreviewed, that the queue's three months of evidence is preserved rather than truncated, and that whoever populates the register next has a rule to populate it against.
 
-ADR-056 (The risk register is a curated index of risk classes, not a dump of findings) carries the six rules. It ships `human-oversight: unconfirmed`.
+ADR-056 (The risk register is a curated index of risk classes, not a dump of findings) carries the six rules. It was ratified by Tom on 2026-08-23.
 
-**Ratification dependency.** `scripts/post-release.d/stamp-and-promote-decisions.sh` selects on `*.proposed.md` and never inspects `human-oversight`, so ADR-056 will flip to `accepted` fourteen days after it first ships whether or not Tom has ratified it. The deferral of the `RISK-POLICY.md` section rests on the substance being his to set, so that clock is worth watching.
+**Ratification dependency.** `scripts/post-release.d/stamp-and-promote-decisions.sh` selects on `*.proposed.md` and never inspects `human-oversight`, so ADR-056 will flip to `accepted` fourteen days after it first ships now that Tom has ratified it. The deferral of the `RISK-POLICY.md` section rests on the substance being his to set, so that clock is worth watching.
 
 ## Dependencies
 
@@ -121,3 +121,11 @@ Recorded per ADR-036 (this repo cannot edit the cached plugin) and ADR-048 (pref
 - `drain-register-queue.sh` appends register rows with eight columns to a table `extract-risks-from-reports.sh` generates with five. Verified present at both 0.18.6 and 0.18.15, so a version bump does not resolve it.
 - The same script derives its cross-clone numbering baseline from `git ls-tree origin/main docs/risks/`. This repository's branch is `master`, so the lookup silently returns nothing and the baseline falls back to the local maximum. Safe in a single clone, wrong in principle.
 - A third item is upstream judgement rather than a defect: the slug-token-match filter counts any single token hit as a match, which is what lets sentence-shaped slugs behave as wildcards.
+
+## Maintainer decision, 2026-08-23
+
+For the em-dash collision recorded in this ticket's outstanding questions, Tom chose to exempt the docs/risks/ path in both no-em-dash hooks and to file the sentinel upstream. This follows the architect's lean. Explicitly rejected: whitelisting the sentinel lines (P060 already rejected that shape as band-aid debt), stripping the characters after each run, and parking it upstream-blocked. P060 and P073 are the same collision already parked and should be revisited against this decision. The separate Risk Catalog section for RISK-POLICY.md is still outstanding and should land in one pass with RFC-001.
+
+**Constraint on the fix, from the architect review of the decision commit (2026-08-23).** The upstream filing for the em-dash sentinel should be a pull request rather than an issue. ADR-048's preference is conditional, and one of its exceptions is live here: it still allows an issue when the fix needs a design decision that is the maintainers' to make, and sibling ticket P087 carries exactly that as an open task, choosing between an ASCII default and an adopter-policy-aware shape. A pull request is still the better call, because we hold ADMIN on windyroad/agent-plugins and ADR-048's point is that a park is a staging state, not a resting place. P087 was filed as an issue in June, before that decision, so do not default to an issue by imitating it. Also note that exempting docs/risks/ is a change to two project-wide quality gates and is therefore direction rather than mechanics, so the fix commit needs its own new ADR rather than an edit to ADR-056.
+
+**Known stale prose inside ADR-056, deliberately left.** Its body still says ADR-054 is `human-oversight: unconfirmed`, and its Ratification dependency paragraph still worries about a promotion clock running before Tom reads it. Both stopped being true on 2026-08-23 when he ratified ADR-054, ADR-055 and ADR-056 together. The sentences are left exactly as they stand, because editing a ratified body is the act ADR-054 forbids, and ADR-054's own Neutral consequence pre-accepts this residue: an overtaken record keeps prose that reads wrong in isolation. Settle it against the frontmatter rather than rediscovering it. Recorded here so the next reader does not spend the trip.
