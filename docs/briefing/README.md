@@ -36,6 +36,7 @@ Migrated from legacy `docs/BRIEFING.md` via `/wr-retrospective:migrate-briefing`
 | [pipeline-friction-2026-06-17-p079-adr-026-amend-iter.md](./pipeline-friction-2026-06-17-p079-adr-026-amend-iter.md) | Pipeline friction (2026-06-17 P079 ADR-026 amend iter) |
 | [newsletter-pipeline-tooling-friction-2026-06-22-issue-10-ret.md](./newsletter-pipeline-tooling-friction-2026-06-22-issue-10-ret.md) | Newsletter pipeline + tooling friction (2026-06-22 Issue 10 retro) |
 | [newsletter-publish-deps-ci-friction-2026-07-06-issue-12-retr.md](./newsletter-publish-deps-ci-friction-2026-07-06-issue-12-retr.md) | Newsletter publish + deps/CI friction (2026-07-06 Issue 12 retro) |
+| [newsletter-gate-coverage-and-eval-falsification-2026-.md](./newsletter-gate-coverage-and-eval-falsification-2026-.md) | Newsletter gate coverage + eval falsification (2026-08-23 P152 iter) |
 | [site-repurpose-deploy-gate-friction-2026-07-12-the-shift-hub.md](./site-repurpose-deploy-gate-friction-2026-07-12-the-shift-hub.md) | Site repurpose + deploy-gate friction (2026-07-12 The Shift hub retro) |
 | [newsletter-pipeline-why-external-review-is-still-needed-2026.md](./newsletter-pipeline-why-external-review-is-still-needed-2026.md) | Newsletter pipeline: why external review is still needed (2026-08-04 Issue 16 retro) |
 | [newsletter-pipeline-why-external-review-is-still-needed-2026-archive.md](./newsletter-pipeline-why-external-review-is-still-needed-2026-archive.md) | Archive: entries rotated out of the file above on 2026-08-23 under the Tier 3 budget |
