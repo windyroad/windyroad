@@ -62,6 +62,26 @@ The boundary: **describe the situation and the external world in direct language
 
 Not: "Your team's build, review, and testing assumptions probably trailed 4.6 by weeks, so they trail 4.7 by more."
 
+### Fair to named third parties
+
+The brief names real people and real organisations: researchers, maintainers, students who end up in a story by accident, labs, vendors, regulators. Report what the sources establish. Do not impute motive, and do not rank one named party's diligence against another's.
+
+The reason is the rule above it. Our reader is an engineering leader, so in most incident stories the person they map onto is not the hero. It is the maintainer, the reviewer, the one who did not catch it first. A comparative judgement about an identifiable third party fires the same mechanism as judging the reader's own team, aimed at a target the guide does not otherwise name.
+
+One standard for everyone. A vendor's chief executive speaking for the vendor gets the same treatment as a student who posted a warning on a public repository. How much attention a party is worth is an editorial judgement; whether we may invent their reasons is not.
+
+**In scope (don't write):** imputed motive, comparative diligence between identifiable parties, and characterisations no source supports. Both of these were cut from Issue 19 before publication: "He was on GitHub to look employable." "He read a pull request more carefully than the project's owner did." For organisations the same shape applies: "OpenAI is more careful than Anthropic about this" ranks two named parties on evidence we do not have.
+
+**Out of scope (fine to write):** sourced facts including unflattering ones, a party's own words quoted fairly in context, and what an organisation did or said in its own name. "He had been turned down for more than twenty internships that summer." "I didn't think that an AI could be capable of lying to real developers." "Anthropic told Reuters the testing ran under deliberately permissive conditions." "OpenAI paused two weeks of reinforcement-learning training."
+
+Quoting a party's own words against their interest is allowed and often the point. The rule bites on our characterisation around the quote, not on the quote. Do not truncate a quote in a way that changes what it meant.
+
+The boundary: **report what a source establishes about a named party; do not infer why they did it, and do not rank them against anyone else.**
+
+> "Demir posted a public warning, held his position, and the project's owner rejected the change."
+
+Not: "Demir read the change more carefully than the project's owner did."
+
 ---
 
 ## Tone
@@ -195,7 +215,9 @@ Test: read the title as a standalone sentence. Does it make the reader think "th
 
 **No promotional closers.** The article should end when the content ends. Don't pivot to a sales pitch in the final paragraph. If an article is tagged with a relevant service tag (e.g., `ai coding`), the blog template handles the CTA automatically. Don't duplicate it in the article body.
 
-**Inline CTAs in articles.** If an article covers a topic directly related to the consulting service, a single contextual mention is fine: "This is the kind of thing I set up for clients." Keep it to one sentence, placed where it's relevant, not bolted on at the end. Don't repeat it.
+**Inline CTAs in articles.** If an article covers a topic directly related to something we build or sell, a single contextual mention is fine: "This is the kind of thing I set up for clients." Keep the claim to one sentence, placed where it's relevant, not bolted on at the end. Don't repeat it.
+
+The one-sentence cap governs the claim only. A statement that the thing is ours, and any caveat that cuts the claim down, do not count against it and should not be dropped to comply. Cutting an interested recommendation back to its bare claim makes it more of a pitch, not less. Issue 19 is the worked example: one sentence naming the tool, then four saying it is ours, that it would not have caught the story's own incident, and that we have never tested it the way we are telling readers to test theirs.
 
 Guidelines:
 - Centre the system, not the author ("this system blocks," "the hook checks," "the gate fires"). First person is fine for context ("I adapted it," "I found") but avoid "I built" framing in intros
