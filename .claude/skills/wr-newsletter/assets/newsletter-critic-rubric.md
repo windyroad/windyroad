@@ -11,7 +11,7 @@ The critic reviews one draft file. It may cross-reference `docs/ai-engineering-b
 These axes are owned by sibling gates, NOT by the critic:
 
 - Voice and tone, em-dash use, hype words, word-list compliance, owned by `wr-voice-tone:agent`.
-- Cognitive accessibility, plain-language readability, reading-level, owned by the cognitive-accessibility subagent (SKILL.md step 15.4).
+- Cognitive accessibility, plain-language readability, reading-level, and parse-on-first-pass comprehension, owned by the cognitive-accessibility subagent (SKILL.md step 15.4). That gate is the only owner of comprehension (P152): a passage you cannot restate after one read is handed there, not dropped.
 - Content risk: factual, reputational, claims, attribution, reader-respect, owned by `wr-risk-scorer:external-comms` (ADR 012, ADR 015, ADR 018).
 - LinkedIn rendering, sentence length, structural mechanics, owned by `wr-newsletter-editor` (ADR 020).
 

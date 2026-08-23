@@ -19,8 +19,8 @@
 set -euo pipefail
 
 BASELINE_REF="${BASELINE_REF:-e37c782^}"
-SKILL_PATH=".claude/skills/wr-newsletter/SKILL.md"
-CONFIG=".claude/skills/wr-newsletter/eval/promptfooconfig.yaml"
+SKILL_PATH="${SKILL_PATH:-.claude/skills/wr-newsletter/SKILL.md}"
+CONFIG="${CONFIG:-.claude/skills/wr-newsletter/eval/promptfooconfig.yaml}"
 
 cd "$(git rev-parse --show-toplevel)"
 
@@ -33,7 +33,7 @@ fi
 restore() { git checkout -- "$SKILL_PATH"; }
 trap restore EXIT
 
-echo "falsify.sh: swapping in $SKILL_PATH from $BASELINE_REF (pre-ADR-052)"
+echo "falsify.sh: swapping in $SKILL_PATH from $BASELINE_REF (the pre-change baseline)"
 git show "${BASELINE_REF}:${SKILL_PATH}" > "$SKILL_PATH"
 
 set +e
@@ -56,15 +56,15 @@ fi
 
 if [[ "$passed" -ne 0 ]]; then
   echo >&2
-  echo "falsify.sh: FAIL. $passed test instance(s) still passed against the pre-ADR-052 skill." >&2
+  echo "falsify.sh: FAIL. $passed test instance(s) still passed against the baseline $SKILL_PATH." >&2
   echo "  (divide by the config repeat count to get fixtures)" >&2
-  echo "Those fixtures do not discriminate: they pass whether or not the skill" >&2
-  echo "implements the two-class sort, so they guard nothing. The usual cause is a" >&2
-  echo "prompt that names the classification scheme, or a rubric that does not" >&2
-  echo "require publication to be conditional on the author's stated reason." >&2
+  echo "Those fixtures do not discriminate: they pass whether or not the artefact" >&2
+  echo "under test carries the change, so they guard nothing. The usual cause is a" >&2
+  echo "prompt that names the structure under test, or a rubric loose enough that" >&2
+  echo "the pre-change artefact clears it too." >&2
   exit 1
 fi
 
 echo
-echo "falsify.sh: OK. 0 test instances passed against the pre-ADR-052 skill, which is the"
-echo "expected result. Run 'npm run eval:newsletter' for the other direction."
+echo "falsify.sh: OK. 0 test instances passed against the baseline, which is the"
+echo "expected result. Run the matching forward eval for the other direction."

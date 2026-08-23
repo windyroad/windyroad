@@ -1,0 +1,143 @@
+# Behavioural eval for the P152 comprehension hand-off, over the EDITOR agent.
+#
+# THE DEFECT THESE FIXTURES GUARD. P152: a sentence can satisfy every reviewer
+# gate and still be unreadable. The witness reached a publish-bound draft on
+# 2026-08-10 and cleared voice and content risk:
+#
+#   "Of the policy, the record and the number, our answer is the record, and
+#    not because it is the most valuable of the three."
+#
+# It is short, plainly worded and scores Grade 7. No reading formula can find
+# it. The seam was not that cognitive accessibility lacked the authority: it
+# had held "your blocking authority is over comprehension" since ADR-052
+# shipped. The seam was that the surrounding gates were each told to DROP
+# anything that looked like readability, and none of them was told to hand it
+# anywhere. The editor's boundary bullet said "drop it; that is the cog-a11y
+# gate's job". The critic's said "Ignore." So the axis fell between them.
+#
+# WHY THE FIXTURES POINT AT THE EDITOR AND NOT AT STEP 15.4. A first version of
+# this config did point at 15.4, asking whether the cognitive-accessibility gate
+# catches the witness sentence. Both fixtures went GREEN under falsification
+# against the pre-change skill, so they guarded nothing, and they were deleted
+# rather than shipped. The reason is the one above: 15.4's behaviour was already
+# reachable, and a capable model reading the old prompt finds the sentence
+# unaided. What P152 actually changed is the ROUTING at the gates upstream, and
+# that is what these fixtures exercise. The falsification record is in P152.
+#
+# THE FIXTURE GRADES THE REAL OUTPUT BLOCK, not free prose. An earlier cut asked
+# the editor "what do you do with this observation" and graded the answer. That
+# verified the model could STATE the right destination in an ad-hoc prompt; it
+# did not verify the hand-off survives the EDITOR_REVIEW block the real
+# invocation must emit, which is exactly where the hand-off can die. ADR-020
+# closes the axis vocabulary and Step 6 forbids output outside the block, so a
+# stated intention with no field to travel in is worth nothing. The prompt now
+# demands the block and the rubric grades the carrier: `axis: other` under
+# EDITORIAL_CRAFT, with a `Suggested fix:` line marking it stop-and-surface and
+# naming step 15.4.
+#
+# PROMPT NEUTRALITY, inherited from the sibling config's authoring lesson. The
+# prompt must not use the words "hand off", "hand over", "route", "carrier",
+# "stop-and-surface", or name the owning gate or the axis it should ride. It
+# describes what the reviewer is looking at and asks for its normal output.
+# Reintroducing that vocabulary hands the model the structure under test and
+# falsification will catch it as green.
+#
+# WHY THERE IS ONLY ONE FIXTURE HERE. A second one was written and deleted.
+# It gave the editor three findings at once (an em-dash, an unbounded vendor
+# claim, and an ambiguous referent) and asked it to dispose of each, to check
+# that the comprehension hand-off had not become a licence to re-import the
+# voice and content-risk gates' territory. It PASSED against the pre-change
+# editor under falsification, so it guarded nothing: the old editor already
+# split those three correctly. The over-fire bound it was meant to protect now
+# rests on prose alone, in the 15.4 criterion ("technical depth is not a defect
+# here") and in the editor's own boundary bullet. If over-fire is ever
+# observed, that is the gap to close first, and a fixture built from the
+# observed instance will discriminate where a hypothetical one did not.
+#
+# Run from the repo root:
+#   npm run eval:newsletter:comprehension
+#   npm run eval:newsletter:comprehension:falsify
+
+description: |
+  wr-newsletter P152: when a reviewer gate that does not own comprehension
+  meets a passage it cannot parse, does it pass the finding on rather than
+  discard it as out of scope?
+
+providers:
+  - id: 'exec:bash ./run-agent-eval.sh .claude/agents/wr-newsletter-editor.md'
+
+defaultTest:
+  options:
+    provider:
+      id: 'exec:bash ./grade-llm-rubric.sh'
+
+prompts:
+  - '{{prompt}}'
+
+# No `repeat:` key. The sibling config carries `repeat: 3` and falsify.sh's
+# comment reads its counts as test INSTANCES on that basis, but on promptfoo
+# 0.120.19 the config-level key is inert: two fixtures produced two results,
+# not six, on every run during authoring. Rather than ship a setting that does
+# nothing, this config omits it. `--repeat 3` on the command line is the
+# working form if flake detection is wanted on a given run.
+
+tests:
+  # --- the seam: does the hand-off survive the fixed output contract? -------
+  - description: An unparseable passage leaves the editor inside its own output block, marked for another gate
+    vars:
+      prompt: |
+        Review the brief body below at SKILL step 15.25 for The Shift
+        (persona=leader, edition 17), and emit your review block.
+
+        Assume the three reader-experience questions all answer yes: the
+        opener earns attention, the read holds, and a subscriber would
+        forward it. Assume the cadence is clean throughout, with short
+        sentences and varied rhythm, and that Flesch-Kincaid scores the
+        whole body Grade 7.
+
+        ---
+        ## The week in one line
+
+        Three things came loose this week. A regulator moved a deadline, a
+        vendor published a disclosure log, and a benchmark changed hands.
+
+        ## What we would do
+
+        Of the policy, the record and the number, our answer is the record,
+        and not because it is the most valuable of the three. Watch what
+        your own suppliers publish next month.
+        ---
+
+        One of those sentences reads perfectly smoothly and still cannot be
+        understood on a single pass. Emit your block.
+    assert:
+      - type: llm-rubric
+        value: |
+          Grade on three conditions. ALL THREE are required to pass.
+
+          (1) IN CONTRACT. The output is an EDITOR_REVIEW block. The
+          observation about the unreadable sentence appears INSIDE that
+          block, in a field the block already has. FAIL if the observation
+          appears only as prose before or after the block, as a preamble, as
+          a closing remark, or as a newly invented field or axis name.
+
+          (2) CARRIED, NOT SCORED AS ITS OWN. The observation is recorded
+          under EDITORIAL_CRAFT on the axis `other`. FAIL if it is filed
+          under `sentence-rhythm`: the prompt states the cadence is clean,
+          and rhythm asks whether a passage drags while this asks whether
+          its claim can be restated. FAIL if it is filed under any other
+          named craft axis, or if a new axis name is invented for it.
+
+          (3) MARKED FOR SOMEONE ELSE, AND FENCED OFF FROM THE LOOP. The
+          entry's Suggested fix line must do BOTH of the following: name
+          the cognitive-accessibility gate, or step 15.4, as where this
+          belongs; AND mark the finding as one the remediation loop should
+          not attempt to fix itself (wording such as stop-and-surface, do
+          not remediate, or not for this loop). FAIL if the Suggested fix
+          instead tells the drafter how to rewrite the sentence, since that
+          is the drafter fixing a defect on an axis no gate has scored.
+
+          The sentence in question is "Of the policy, the record and the
+          number, our answer is the record, and not because it is the most
+          valuable of the three." An output that never identifies this
+          sentence fails regardless of the three conditions above.

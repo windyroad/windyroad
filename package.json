@@ -19,7 +19,9 @@
     "release:watch": "bash scripts/release-watch.sh",
     "fetch:newsroom": "node scripts/fetchers/playwright-newsroom.mjs",
     "eval:newsletter": "npx --yes promptfoo@0.120.19 eval -c .claude/skills/wr-newsletter/eval/promptfooconfig.yaml",
-    "eval:newsletter:falsify": "bash .claude/skills/wr-newsletter/eval/falsify.sh"
+    "eval:newsletter:falsify": "bash .claude/skills/wr-newsletter/eval/falsify.sh",
+    "eval:newsletter:comprehension": "npx --yes promptfoo@0.120.19 eval -c .claude/skills/wr-newsletter/eval/comprehension.promptfooconfig.yaml",
+    "eval:newsletter:comprehension:falsify": "CONFIG=.claude/skills/wr-newsletter/eval/comprehension.promptfooconfig.yaml SKILL_PATH=.claude/agents/wr-newsletter-editor.md BASELINE_REF=acb3d234 bash .claude/skills/wr-newsletter/eval/falsify.sh"
   },
   "dependencies": {
     "@microsoft/clarity": "^1.0.2",
