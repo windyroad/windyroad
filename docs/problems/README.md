@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-23 **P140 fix released** (the newsletter structure lint now strips the `.prep` phase infix when deriving its sibling paths, so checks (m) and (n) reach the reviews sibling during prep instead of skipping loudly and silently; reviews path gains an explicit override argument. Open to Verification Pending, effort M to S)
+> Last reviewed: 2026-08-23 **P156 captured** (Briefing absence claims are never re-verified, so a stale one loads into every session) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -59,6 +59,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 4.0 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading, tripping adopter no-em-dash hooks every Step-0d pass | 4 | Open | S | 2026-06-17 | internal |
 | 4.0 | P138 | Nothing gates or reports on the human-oversight axis at promotion time, so an ADR can reach accepted without ever having been read | 4 | Open | S | 2026-08-09 | internal |
 | 4.0 | P139 | Ratification flips frontmatter but nothing sweeps the prose asserting the prior unconfirmed state | 8 | Open | M | 2026-08-09 | internal |
+| 4.0 | P156 | Briefing absence claims are never re-verified, so a stale one loads into every session | 8 | Open | M | 2026-08-23 | internal |
 | 3.0 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create / commit gates re-fire indefinitely, forcing BYPASS_RISK_GATE=1 workaround | 6 | Open | M | 2026-05-31 | internal |
 | 3.0 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 | Open | M | 2026-06-14 | internal |
 | 3.0 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers | 6 | Open | M | 2026-06-17 | internal |
