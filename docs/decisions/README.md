@@ -267,6 +267,12 @@ _52 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** `docs/risks/` stays absent and the queue keeps its records until rule 3 is met; any change that arms the register cites this record and reports its slugs' match rate against the last 20 commits on `master`, with no slug above 25%; that change names the curator; `RISK-POLICY.md` gains a `## Risk Catalog` section before any entry is authoritative; this record appears in `docs/decisions/README.md`.
 **Related:** ADR-007, ADR-008, ADR-036, ADR-048, ADR-049, ADR-054
 
+### ADR-057: Newsletter voice sorts on who is answerable, not on subject matter
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** Newsletter voice is chosen by answerability, so "we" for anything the team or publication did or holds, "I" for Tom's own judgement, track record and editorial responsibility. It extends ADR-010 (which sorts on subject matter and gives no answer for reportage-plus-consequence items) for The Shift brief and its LinkedIn companion only. The gate blocks only on location ("I" in "What happened" bullets or the move list); elsewhere a violation is a reviewer finding Tom clears, and all seven contradicting rule statements across five files must cite this record rather than restate the rule.
+**Confirmation:** all seven enforcement surfaces cite this record and none restates the rule; an edition publishes with first person in an item body and the voice gate does not flag it; a draft with first person in a "What happened" bullet is blocked; the next external reviewer voice finding is a new one
+**Related:** ADR-010, ADR-032, ADR-052, ADR-054
+
 ---
 
 ## Historical decisions

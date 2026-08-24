@@ -8,6 +8,7 @@ oversight-date: 2026-05-30
 decision-makers: Tom Howard
 consulted: Voice/tone review agent
 informed: n/a
+amended-by: [057-newsletter-voice-sorts-on-who-is-answerable-not-on-subject-matter]
 ---
 
 # 10. Team voice positioning

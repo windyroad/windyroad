@@ -8,7 +8,7 @@ decision-makers: [Tom Howard, Claude]
 consulted: []
 informed: []
 reassessment-date: 2026-08-30
-amended-by: [037-compose-newsletter-theme-anchor-before-body]
+amended-by: [037-compose-newsletter-theme-anchor-before-body, 057-newsletter-voice-sorts-on-who-is-answerable-not-on-subject-matter]
 ---
 
 # Newsletter editorial-discipline policy: thesis-coherence plus three-deep-items shape
