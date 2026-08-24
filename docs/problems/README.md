@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-24 **P162 captured** (A claim corrected at one site survives at its sibling sites, and no check enumerates the sites) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-24 **P163 captured** (Risk scorer report persistence writes empty files, so no scoring pass since 2026-08-23 has left a re-readable artefact) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -35,6 +35,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 8.0 | P149 | Em-dash gate is blind to the index, so staged-then-corrected content commits unchecked | 8 | Open | S | 2026-08-10 | internal |
 | 8.0 | P158 | The newsletter eval harness reports misconfiguration as results, so a broken run looks like a real one | 8 | Open | S | 2026-08-23 | internal |
 | 8.0 | P162 | A claim corrected at one site survives at its sibling sites | 16 | Open | M | 2026-08-24 | internal |
+| 4.0 | P163 | Risk scorer report persistence writes empty files | 8 | Open | M | 2026-08-24 | internal |
 | 7.5 | P127 | Unverified subprocess claims propagate into decisions without reading the source | 15 | Open | M | 2026-08-07 | internal |
 | 6.0 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 | Known Error | S | 2026-05-13 | internal |
 | 6.0 | P016 | wr-newsletter filter step drops significant stories that lack a primary source without attempting corroboration | 6 | Known Error | M | 2026-04-24 | internal |
