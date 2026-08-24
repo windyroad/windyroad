@@ -16,7 +16,7 @@ Voice is the constant. It doesn't change between pages or audiences. Windy Road 
 
 Say the thing. Short sentences. No preamble, no hedging, no throat-clearing. If a sentence works without its first clause, cut the first clause.
 
-> "Tell me what's breaking."
+> "Tell us what's breaking."
 
 Not: "If you're experiencing issues with your application, I'd love to chat about how I might be able to help."
 
@@ -81,6 +81,26 @@ The boundary: **report what a source establishes about a named party; do not inf
 > "Demir posted a public warning, held his position, and the project's owner rejected the change."
 
 Not: "Demir read the change more carefully than the project's owner did."
+
+### Who is speaking, "I" or "we"
+
+**Scope.** This section governs the publication's reporting and its author-voice sections: the newsletter brief and its companion post, plus outbound copy that speaks for the team. It does not disturb the practitioner "I" that ADR-010 preserves for blog articles and social posts, where the author sharing personal experience writes as "I" whether or not a colleague could have done the same work. The carve-out reaches practitioner-experience writing only. It never reaches the publication's own reporting, and it never reaches the newsletter companion post, which is in scope here despite being a LinkedIn post.
+
+Inside that scope, the default is "we", because the work is a team's. "I" is for the things only Tom can be the subject of.
+
+Use **"we"** for anything the team or the publication did or holds: what we build, what we shipped, what we published, what we checked, what we could not confirm, what we would recommend. "We have published a number for people ourselves." "We have seen no measurement of how often that goes the other way." "Every change to the software we build goes through an automated check before it lands."
+
+Use **"I"** for Tom's judgement, his individual track record, and his editorial responsibility: the call he made, the position he holds, what he wants, what he will not claim. "I keep being told the opposite." "That is the work I want people doing." "I set the argument and hold editorial responsibility." "I have built pipeline controls at Greater Bank."
+
+**The test**, which governs the publication's reporting and author voice, the newsletter brief and its companion post included, and which never overrides the practitioner-experience carve-out that blog articles and social posts keep. Could another person on the team have done it or said it, and would it still be true? Then it is "we". Is it a judgement Tom is personally answerable for, or a thing only he did? Then it is "I".
+
+The LinkedIn guideline below reads "first person plural for service content, first person singular acceptable for personal observations", which sorts on subject matter rather than on who is answerable. For newsletter reporting, which is neither service content nor personal observation, this section is the one to follow.
+
+Do not mix the two inside one sentence about one act. Different sections using different persons is not drift: an author-voice opener that runs on "I" sitting above items that run on "we" is the rule working, because the opener carries judgement and the items carry the publication's reporting.
+
+The two are not interchangeable for softening. "We think" as a hedge on a call Tom actually made is worse than "I think", because it spreads a judgement across people who did not make it. And "I" on the team's work claims credit that is not one person's.
+
+The basis is ADR-010, which decides team-plural voice with Tom as named founder and nominates this guide as where its registers land, together with the banned-patterns row on naming the artefact instead of speaking as the team. This was written down on 2026-08-24 after an external reviewer read Issue 19 and reported the voice drifting between the two. On checking, it was not drifting: the author-voice section ran on "I", the reporting ran on "we", and every instance was already on the right side of this rule. The rule is recorded so the same finding does not have to be argued from scratch every edition. Keep checking it per edition until it has been ratified.
 
 ---
 
@@ -215,7 +235,7 @@ Test: read the title as a standalone sentence. Does it make the reader think "th
 
 **No promotional closers.** The article should end when the content ends. Don't pivot to a sales pitch in the final paragraph. If an article is tagged with a relevant service tag (e.g., `ai coding`), the blog template handles the CTA automatically. Don't duplicate it in the article body.
 
-**Inline CTAs in articles.** If an article covers a topic directly related to something we build or sell, a single contextual mention is fine: "This is the kind of thing I set up for clients." Keep the claim to one sentence, placed where it's relevant, not bolted on at the end. Don't repeat it.
+**Inline CTAs in articles.** If an article covers a topic directly related to something we build or sell, a single contextual mention is fine: "This is the kind of thing we set up for clients." It takes "we" because it is a service reference rather than practitioner experience, which is the line ADR-010 draws inside blog articles. Keep the claim to one sentence, placed where it's relevant, not bolted on at the end. Don't repeat it.
 
 The one-sentence cap governs the claim only. A statement that the thing is ours, and any caveat that cuts the claim down, do not count against it and should not be dropped to comply. Cutting an interested recommendation back to its bare claim makes it more of a pitch, not less. Issue 19 is the worked example: one sentence naming the tool, then four saying it is ours, that it would not have caught the story's own incident, and that we have never tested it the way we are telling readers to test theirs.
 
@@ -293,7 +313,7 @@ Carve-out for recurring-newsletter cadence anchors: the banned pattern is one-of
 Carve-out for substantive content-tied questions: a one-line CTA tied to a specific item's editorial thread is legitimate. "What does your team's AI-usage metric reward today?" is a substantive question grounded in one of the post's threads. It invites discussion of the content, not engagement-for-engagement's-sake. The test: the question only makes sense if the reader has engaged with one of the post's items. Generic prompts ("thoughts?") fail the test; substance-led prompts pass.
 
 Guidelines:
-- First person plural ("we") for service content, first person singular ("I") acceptable for personal observations
+- First person plural ("we") for service content, first person singular ("I") acceptable for personal observations. This sorts on subject matter. For newsletter editions and their companion posts, follow "Who is speaking" under Voice instead, which sorts on who is answerable.
 - Short paragraphs: one to three sentences each
 - Numbered or bulleted lists work well for specifics that would otherwise blur together in a feed
 - No em-dashes (same constraint as all other copy)
