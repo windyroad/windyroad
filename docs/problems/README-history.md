@@ -358,3 +358,4 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-08-24
 
 > Last reviewed: 2026-08-23 **P160 captured** (No deterministic check reads the LinkedIn companion body for a manual URL, so the auto-share carve-out rests on an LLM gate that passed the violation five times) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-24 **P161 captured** (No check compares a brief against its own companion post for agreement, so a claim corrected in one survives in the other) (lightweight aside via /wr-itil:capture-problem)
