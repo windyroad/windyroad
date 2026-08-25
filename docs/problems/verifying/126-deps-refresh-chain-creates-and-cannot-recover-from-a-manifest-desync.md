@@ -101,6 +101,18 @@ Committed to `master` on 2026-08-08 under RFC-006. Both defects are closed: `pus
 
 **Residual accepted, and how it was bounded.** The risk scorer twice flagged that push:watch commits and pushes a regenerated lockfile with no lint, test or build between the regeneration and the push. Adding those is the option ADR-034 rejected on direct instruction, so instead the refresh is now bounded to what it can safely commit: `lockfile_resolution_delta` compares the lockfile before and after regeneration, and push:watch commits only a pure spec-sync, where the change is confined to the root `packages[""]` block and cannot alter what npm installs. Any regeneration that moves a resolved entry is declined and routed to `npm run fix:deps`, whose CI-parity gate runs the shape scan, lint, tests and build before committing. That is ADR-034's separation of concerns being used rather than worked around.
 
+## The live exercise arrived, 2026-08-25
+
+The Fix Released section stated what was missing: "the end-to-end path has not run for real: that needs a live dependency update to arrive and drive `push:watch` through the refresh". It arrived, unprompted, on a routine push.
+
+What the run did, in order. The auto-deps refresh regenerated the lockfile. `lockfile_resolution_delta` compared it against the pre-regeneration state and found a moved resolved entry, `node_modules/dry-aged-deps`, so the change was not confined to the root spec block. The router returned rollback rather than commit, with the reason stated in its own words: "push:watch does not commit an installed-tree change it has not executed; routing to fix:deps." It rolled the refresh back, declined the push, and printed the two-command recovery.
+
+That is the whole fix working on an input nobody constructed. The releasing session's evidence was a replayed reproduction of the exact shape commit `f1d7b8b` had committed, which is a fixture. This one was a real dependency drifting on its own schedule, and the boundary held in the direction the fix was built for: an impure regeneration was refused rather than committed and pushed.
+
+It exercises the bounded-refresh half specifically, which is the residual ADR-034 declined to close by adding lint and tests inside push:watch. The alternative it routes to, `npm run fix:deps`, is the path whose CI-parity gate runs the shape scan, lint, tests and build before committing. So the separation of concerns ADR-034 chose was used rather than worked around, which is the thing that was previously only argued.
+
+Not closed on this alone. The push:watch half ran; `fix:deps` was invoked in the same session and its own outcome belongs in the close, and the second defect this ticket covers, the rollback that verifies and repairs the pair it restored rather than asserting a postcondition it never checked, was not the branch this run took. A rollback fired here, but it was the refresh rollback in push:watch rather than `fix-deps.sh`'s restore path.
+
 ## Fix Strategy
 
 Landed as **RFC-006** (`docs/rfcs/RFC-006-coherent-manifest-pair-and-a-rollback-that-verifies-what-it-claims.proposed.md`), which carries the full scope. In short: `scripts/lib/manifest-sync.sh` holds the two shared jq scans; `push-watch.sh` completes its own manifest write with `npm install --package-lock-only` and routes the result through a pure `manifest_refresh_route` helper that commits a coherent pair, rolls back an incoherent one, and adds no halt of its own; `fix-deps.sh` regenerates on the way in, gates on the sync scan, and verifies what its rollback restored on the way out. ADR-034 criterion (d) and ADR-021's Robustness shape are amended to match.

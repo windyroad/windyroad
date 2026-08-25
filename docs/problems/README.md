@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164, P165 and P166 captured** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)
+> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164, P165, P166 and P167 captured** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -24,6 +24,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 9.0 | P153 | An operator-authored dependency refresh reaches a commit with no lockfile install-shape check | 9 | Open | S | 2026-08-16 | internal |
 | 9.0 | P157 | The test suite is not gated anywhere, so 561 tests run only when an operator remembers | 9 | Open | S | 2026-08-23 | internal |
 | 9.0 | P159 | A self-produced measurement is trusted without checking, so a broken measurement can kill a correct fix | 9 | Open | S | 2026-08-23 | internal |
+| 8.0 | P167 | The recovery path for a blocked push cannot run unattended and reports the stall as a judgement call | 8 | Open | S | 2026-08-25 | internal |
 | 8.0 | P061 | assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared | 8 | Known Error | M | 2026-05-14 | internal |
 | 8.0 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 8 | Known Error | M | 2026-06-03 | internal |
 | 8.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and section 15.6 re-runs all gates per edit | 8 | Known Error | M | 2026-07-13 | internal |
