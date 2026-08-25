@@ -118,3 +118,47 @@ lockfile_platform_flag_violations() {
     | .key
   ' "$lockfile" 2>/dev/null || true
 }
+
+# ── Installed-tree coherence (P168) ───────────────────────────────────────────
+# The two scans above compare the two TRACKED manifests. This one compares the
+# lockfile against what is actually installed, which is the pair nothing else
+# checks and the one that deadlocks the push path.
+#
+# Why it is needed: `dry-aged-deps --check`, the gate push-watch.sh consults,
+# reports the INSTALLED version as current. fix-deps.sh completes its manifest
+# pair with `npm install --package-lock-only`, chosen deliberately over a plain
+# `npm install` because the latter reintroduced the P123 EBADPLATFORM class, and
+# that flag never touches node_modules. So a fix:deps run can update both
+# manifests, pass lint, tests and build, commit, and leave the gate blocking on
+# the same package forever: the value it reads lives in a gitignored directory
+# that no step in the flow writes. Observed 2026-08-25 holding three commits.
+#
+# Compares TOP-LEVEL installs only. A nested `node_modules/a/node_modules/b`
+# entry is npm resolving a version conflict, not staleness, and no reinstall
+# collapses it. A locked package absent from disk is not a desync either: it is
+# an optional or platform-specific dependency that was never installed here, and
+# reporting it would make the scan fire on every healthy tree.
+#
+# Emits `<name>: locked <x> vs installed <y>` per desynced package; silent when
+# the tree agrees, when nothing is installed, and when the directory is absent.
+installed_tree_desync() {
+  local lockfile="${1:?usage: installed_tree_desync <package-lock.json> [node_modules_dir]}"
+  local tree="${2:-node_modules}"
+  [ -d "$tree" ] || return 0
+  jq -r '
+    (.packages // {})
+    | to_entries[]
+    | select(.key | startswith("node_modules/"))
+    | select((.key | split("node_modules/") | length) == 2)
+    | select(.value.version != null)
+    | "\(.key | sub("^node_modules/"; ""))\t\(.value.version)"
+  ' "$lockfile" 2>/dev/null | while IFS=$'\t' read -r name locked; do
+    [ -n "$name" ] || continue
+    local manifest="$tree/$name/package.json"
+    [ -f "$manifest" ] || continue
+    local got
+    got=$(jq -r '.version // empty' "$manifest" 2>/dev/null) || continue
+    [ -n "$got" ] || continue
+    [ "$got" = "$locked" ] || echo "$name: locked $locked vs installed $got"
+  done
+}

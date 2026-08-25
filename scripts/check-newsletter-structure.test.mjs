@@ -1368,7 +1368,17 @@ describe('check-newsletter-structure.sh', () => {
     // needs". More than one means the parse widened; none means it broke.
     expect(pHits.length, `check (p) hits:\n${pHits.join('\n')}`).toBe(1);
     expect(pHits[0]).toContain('2026-05-01');
-  });
+    // Explicit timeout because this case's runtime is the only one in the file
+    // that grows with the corpus: it spawns the lint once per published edition,
+    // and a new edition lands every week. At 20 editions it sits right on
+    // vitest's 5000ms default, which it crossed on 2026-08-25 and had passed an
+    // hour earlier on the same corpus. A timeout is the worst failure shape
+    // available here, because it reads as flake rather than as "the corpus
+    // grew", and it reddens the CI-parity gate inside `npm run fix:deps` for a
+    // reason that has nothing to do with dependencies. Budgeted at 500ms per
+    // edition against a measured ~250ms, which buys roughly two years of weekly
+    // editions before it needs looking at again.
+  }, 30000);
 
   it('(p) reads the why column without doubling its full stop', () => {
     // Against the fixture guide, not the real one: the guide is a surface Tom

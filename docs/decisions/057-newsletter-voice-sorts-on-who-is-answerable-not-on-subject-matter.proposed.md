@@ -1,7 +1,8 @@
 ---
 status: "proposed"
 date: 2026-08-24
-human-oversight: unconfirmed
+human-oversight: confirmed
+oversight-date: 2026-08-25
 decision-makers: [Tom Howard]
 consulted: [wr-jtbd:agent, wr-risk-scorer:pipeline, wr-voice-tone:agent]
 informed: []

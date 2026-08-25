@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -168,5 +168,103 @@ describe('manifest-sync.sh: lockfile_platform_flag_violations (relocated from fi
   it('is defined by the library and passes this repository\'s lockfile', () => {
     expect(probe('type -t lockfile_platform_flag_violations')).toBe('function');
     expect(probe('lockfile_platform_flag_violations package-lock.json')).toBe('');
+  });
+});
+
+// ── P168: installed_tree_desync ───────────────────────────────────────────────
+// The freshness checker (dry-aged-deps --check) reports the INSTALLED version as
+// current, while fix-deps.sh completes its manifest pair with
+// `npm install --package-lock-only`, which never touches node_modules. So a
+// fully successful fix:deps can leave the push gate blocking on the package it
+// just updated, with nothing in any tracked file showing why. This scan is the
+// missing comparison: what the lockfile pins against what is actually on disk.
+function installed(lock, tree) {
+  const dir = mkdtempSync(join(tmpdir(), 'installed-desync-'));
+  const lockPath = join(dir, 'package-lock.json');
+  writeFileSync(lockPath, JSON.stringify(lock));
+  const nm = join(dir, 'node_modules');
+  mkdirSync(nm, { recursive: true });
+  for (const [name, version] of Object.entries(tree)) {
+    const pkgDir = join(nm, ...name.split('/'));
+    mkdirSync(pkgDir, { recursive: true });
+    writeFileSync(join(pkgDir, 'package.json'), JSON.stringify({ name, version }));
+  }
+  return { lockPath, nm };
+}
+
+describe('manifest-sync.sh: installed_tree_desync (P168)', () => {
+  // Guard the negative cases below. A scan that does not exist also prints
+  // nothing, so every `toBe('')` here passes trivially against an absent
+  // function. This case is what makes the silence mean something, and it is
+  // the lesson P162 and the briefing's verification-discipline entry record:
+  // write the check against the requirement, not against what you just wrote.
+  it('is defined by the library', () => {
+    expect(probe('type -t installed_tree_desync')).toBe('function');
+  });
+
+  it('reports the package whose installed copy is behind the lockfile', () => {
+    // The exact observed shape: lockfile and package.json both committed at
+    // 2.17.1, node_modules still carrying 2.14.0, freshness gate never clears.
+    const { lockPath, nm } = installed(
+      { packages: { '': {}, 'node_modules/dry-aged-deps': { version: '2.17.1' } } },
+      { 'dry-aged-deps': '2.14.0' },
+    );
+    expect(probe(`installed_tree_desync ${lockPath} ${nm}`))
+      .toBe('dry-aged-deps: locked 2.17.1 vs installed 2.14.0');
+  });
+
+  it('is silent when the installed tree matches the lockfile', () => {
+    const { lockPath, nm } = installed(
+      { packages: { '': {}, 'node_modules/dry-aged-deps': { version: '2.17.1' } } },
+      { 'dry-aged-deps': '2.17.1' },
+    );
+    expect(probe(`installed_tree_desync ${lockPath} ${nm}`)).toBe('');
+  });
+
+  it('ignores a locked package that is not installed at all', () => {
+    // An absent optional or platform-specific dependency is not a desync: it was
+    // never installed on this platform, so there is no stale copy to clear.
+    // Reporting it would make the scan fire constantly on a healthy tree.
+    const { lockPath, nm } = installed(
+      { packages: { '': {}, 'node_modules/only-on-linux': { version: '1.0.0' } } },
+      {},
+    );
+    expect(probe(`installed_tree_desync ${lockPath} ${nm}`)).toBe('');
+  });
+
+  it('ignores nested entries and reads only top-level installs', () => {
+    // A nested node_modules/a/node_modules/b copy is npm resolving a conflict,
+    // not staleness. Comparing it against the top-level tree would report a
+    // desync that no reinstall can fix.
+    const { lockPath, nm } = installed(
+      { packages: { '': {}, 'node_modules/a/node_modules/b': { version: '9.9.9' } } },
+      { a: '1.0.0' },
+    );
+    expect(probe(`installed_tree_desync ${lockPath} ${nm}`)).toBe('');
+  });
+
+  it('handles a scoped package', () => {
+    const { lockPath, nm } = installed(
+      { packages: { '': {}, 'node_modules/@scope/pkg': { version: '2.0.0' } } },
+      { '@scope/pkg': '1.0.0' },
+    );
+    expect(probe(`installed_tree_desync ${lockPath} ${nm}`))
+      .toBe('@scope/pkg: locked 2.0.0 vs installed 1.0.0');
+  });
+
+  it('reports every desynced package, not just the first', () => {
+    const { lockPath, nm } = installed(
+      { packages: { '': {}, 'node_modules/a': { version: '2.0.0' }, 'node_modules/b': { version: '3.0.0' } } },
+      { a: '1.0.0', b: '1.0.0' },
+    );
+    expect(probe(`installed_tree_desync ${lockPath} ${nm}`).split('\n').sort())
+      .toEqual(['a: locked 2.0.0 vs installed 1.0.0', 'b: locked 3.0.0 vs installed 1.0.0']);
+  });
+
+  it('is silent when the node_modules directory does not exist', () => {
+    // Nothing installed is a fresh clone, not a stale tree. `npm ci` is the
+    // answer there and it is not this scan's job to say so.
+    const { lockPath } = installed({ packages: { '': {}, 'node_modules/a': { version: '1.0.0' } } }, {});
+    expect(probe(`installed_tree_desync ${lockPath} /nonexistent-tree-${process.pid}`)).toBe('');
   });
 });

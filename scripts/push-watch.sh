@@ -304,6 +304,25 @@ deps_check_rc=0
 npx --no-install dry-aged-deps --check >/dev/null 2>&1 || deps_check_rc=$?
 if [ "$(deps_gate_route "$deps_check_rc")" = "halt" ]; then
   echo ""
+  # Before routing to fix:deps, rule out the one case fix:deps cannot fix (P168).
+  # The freshness check reads INSTALLED versions. If the installed tree is behind
+  # the committed lockfile, fix:deps will find both manifests already correct,
+  # change nothing, report success, and this gate will block again on the same
+  # package. Naming it here is what turns a silent loop into a message.
+  DESYNC_INSTALLED="$(installed_tree_desync package-lock.json node_modules)"
+  if [ -n "$DESYNC_INSTALLED" ]; then
+    echo "✗ The installed tree is behind the committed lockfile:" >&2
+    printf '    %s\n' "$DESYNC_INSTALLED" >&2
+    echo "" >&2
+    echo "  The freshness check reads installed versions, so it reports these as stale" >&2
+    echo "  even though the committed manifests are correct. 'npm run fix:deps' cannot" >&2
+    echo "  clear it: it would find both manifests already updated and change nothing." >&2
+    echo "" >&2
+    echo "    npm install        # sync the installed tree to the committed lockfile" >&2
+    echo "    npm run push:watch" >&2
+    exit 1
+  fi
+
   echo "✗ Stale dependencies remain that auto-resolve could not clear." >&2
   echo "  Run the separate fix flow, then re-run push:watch:" >&2
   echo "" >&2

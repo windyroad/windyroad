@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164 through P168 captured** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)
+> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164 through P168 captured, P168 fixed same-day** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,7 +11,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
-| 12.0 | P168 | The freshness gate reads the installed tree and its fix flow only writes the manifests, so the gate never clears | 12 | Open | S | 2026-08-25 | internal |
 | 12.0 | P166 | A governance surface that silently degrades to a subset of its specification reads as a clean run | 12 | Open | S | 2026-08-25 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
@@ -82,6 +81,7 @@ Fix released, awaiting verification. Sorted by Released date ascending, oldest f
 
 | ID | Title | Released | Likely verified? |
 |----|-------|----------|------------------|
+| P168 | The freshness gate reads the installed tree and its fix flow only writes the manifests, so the gate never clears | 2026-08-25, repo-local maintainer scripts plus 8 behavioural tests, no changeset (private root package, nothing shippable changed) | no - not observed; verifies on the next dependency that matures, and the test is whether fix:deps commits and the following push:watch proceeds rather than blocking on the package it just updated |
 | P015 | wr-newsletter drafter paraphrases per-item AskUserQuestion "Adjust" text into abstract commentary, losing Tom-voice fidelity | 2026-04-25 | no - not observed |
 | P050 | Assistant scope-creeps on user-flagged corrections, changing more than asked | 2026-05-12 AFK iter 3 (memory layer, no project-tree commit) | no - not observed |
 | P094 | extend the domain-specific critic supersede to wr-blog (retire wr-sw-critic entirely) | 2026-06-27, repo-local agents and skills, no changeset | no - not observed |

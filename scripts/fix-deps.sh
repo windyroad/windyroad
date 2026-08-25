@@ -244,8 +244,39 @@ if [ -z "$FAILED_GATE" ]; then
   git add package.json package-lock.json
   BODY="$(fix_deps_commit_body "$UPDATES_JSON")"
   git commit -m "chore(deps): fix stale dependencies via fix:deps flow (P072)" -m "$BODY"
+
+  # ── 4b. Sync the installed tree, or the gate this flow exists to clear
+  # cannot clear (P168) ───────────────────────────────────────────────────────
+  # `dry-aged-deps --check` reads the INSTALLED version as current, and the
+  # `--package-lock-only` regeneration above deliberately never touches
+  # node_modules. Without this step the commit above is correct, both tracked
+  # manifests carry the new version, and the next push:watch blocks on the same
+  # package with nothing in the repository showing why. Observed 2026-08-25.
   echo ""
-  echo "✓ Dependency fix committed. Re-run: npm run push:watch"
+  echo "Syncing the installed tree so the freshness gate can read what was committed..."
+  if ! npm install --no-audit --no-fund; then
+    echo "  (npm install failed; the commit stands but the freshness gate will still block." >&2
+    echo "   Run 'npm install' by hand before re-running push:watch.)" >&2
+  fi
+
+  # npm install records packages present in node_modules but not required by the
+  # tree as "extraneous" lockfile entries. That is bookkeeping about the local
+  # directory, not a dependency change, and the CI-parity gate above never saw
+  # it. The committed pair is the verified one, so keep it.
+  git checkout -- package-lock.json 2>/dev/null || true
+
+  REMAINING="$(installed_tree_desync package-lock.json node_modules)"
+  if [ -n "$REMAINING" ]; then
+    echo "" >&2
+    echo "✗ The installed tree still disagrees with the committed lockfile:" >&2
+    printf '    %s\n' "$REMAINING" >&2
+    echo "  push:watch reads installed versions, so it will block on these (P168)." >&2
+    echo "  The commit is sound; the local node_modules is not." >&2
+    exit 1
+  fi
+
+  echo ""
+  echo "✓ Dependency fix committed and the installed tree matches it. Re-run: npm run push:watch"
   exit 0
 else
   # ── 4b. Red: restore the manifests, VERIFY the restore, then HALT ───────────

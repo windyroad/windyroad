@@ -1,6 +1,6 @@
 # Problem 168: The freshness gate reads the installed tree and its fix flow only writes the manifests, so the gate never clears
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-08-25
 **Priority**: 12 (High), Impact: 3 x Likelihood: 4, derived at capture. Impact is 3 because the push path deadlocks: the gate blocks, the prescribed recovery succeeds and commits, and the gate blocks again on the same package with no state that any step in the loop can change. Work sits committed and unpushed until someone steps outside the documented flow. Likelihood is 4 because it follows deterministically from two design choices that are both currently in place, and nothing detects it.
 
@@ -55,10 +55,10 @@ The underlying disagreement is about what "current" means. The checker means ins
 
 ### Investigation Tasks
 
-- [ ] Confirm whether `dry-aged-deps --check` can be told to read declared rather than installed versions, or whether its installed-tree reading is the point of the tool.
-- [ ] Decide the fix site: an `npm install` after the CI-parity gate passes in `fix-deps.sh`, or a changed reader in the check.
-- [ ] If the answer is `npm install`, establish whether it re-introduces the P123 nested-duplicate class that `--package-lock-only` exists to avoid, and what the lockfile looks like afterwards. The observed 346 extraneous lines say this needs checking rather than assuming.
-- [ ] Create a reproduction: manifests at Y, installed tree at X, and assert the gate clears. Confirm it fails against the current scripts before shipping.
+- [x] Confirm whether `dry-aged-deps --check` can be told to read declared rather than installed versions, or whether its installed-tree reading is the point of the tool.
+- [x] Decide the fix site: an `npm install` after the CI-parity gate passes in `fix-deps.sh`, or a changed reader in the check.
+- [x] If the answer is `npm install`, establish whether it re-introduces the P123 nested-duplicate class that `--package-lock-only` exists to avoid, and what the lockfile looks like afterwards. The observed 346 extraneous lines say this needs checking rather than assuming.
+- [x] Create a reproduction: manifests at Y, installed tree at X, and assert the gate clears. Confirm it fails against the current scripts before shipping.
 
 ## Fix Strategy
 
@@ -69,6 +69,30 @@ Adding `npm install` after the CI-parity gate is the smaller change and it is th
 Whichever lands, add the loop detector regardless: if `push:watch` is about to apply an update that the committed manifests already carry, that is this defect and it should say so rather than routing to a recovery that cannot help. That check costs one comparison and it is the thing that turns a silent loop into a message.
 
 Write the reproduction before the fix. The current scripts exit 0 on this path, so a test asserting exit 0 passes against the defect.
+
+## Fix Released
+
+Shipped 2026-08-25 in this repository. No changeset: the root package is `private: true` and these are maintainer scripts with no published API contract, matching every prior commit to this pair. <!-- no-changeset-reference -->
+
+**The missing comparison, as a pure helper.** `installed_tree_desync` in `scripts/lib/manifest-sync.sh`, alongside the two scans that compare the tracked manifests to each other. This one compares the lockfile to what is on disk, which is the pair nothing checked. It compares top-level installs only, because a nested `node_modules/a/node_modules/b` entry is npm resolving a conflict rather than staleness and no reinstall collapses it, and it stays silent on a locked package absent from disk, because that is an optional or platform-specific dependency that was never installed here rather than a stale copy.
+
+**`fix-deps.sh` now leaves the tree agreeing with what it committed.** After the commit it runs `npm install`, then restores `package-lock.json` and asserts the scan is clear, exiting non-zero with the offending packages named if it is not. The restore is deliberate: `npm install` records packages present in `node_modules` but not required by the tree as `"extraneous"` lockfile entries, which on the observed run was 346 lines. That is bookkeeping about one local directory, the CI-parity gate never saw it, and the committed pair is the verified one.
+
+`--package-lock-only` stays where it is. It was chosen over a plain `npm install` to avoid P123's EBADPLATFORM class, and the fix adds a step after the gate rather than changing the regeneration the gate depends on.
+
+**`push-watch.sh` now names the loop instead of routing into it.** Before printing the fix:deps recovery it runs the scan, and when the installed tree is behind the committed lockfile it says so, names the packages, and tells the operator to run `npm install`, because fix:deps would find both manifests already correct and change nothing. That is the check the Fix Strategy asked for regardless of which shape the main fix took.
+
+**Tests: 8 behavioural cases, confirmed red before the implementation.** In `scripts/lib/manifest-sync.test.mjs`. The first case is the observed 2026-08-25 shape exactly, a lockfile at 2.17.1 against an installed 2.14.0, asserting the line the scan emits.
+
+One case exists because of a near miss worth recording. Four of the eight assert silence, and a function that does not exist also prints nothing, so on the first run only three of eight went red while four passed against an absent implementation. A `type -t installed_tree_desync` case was added to make the silence mean something. That is the briefing's own verification-discipline entry firing on this ticket's own test file: write the check against the requirement, not against the implementation you are about to write.
+
+**Exercised against the live repository.** The scan is silent on the current tree, and against a fixture reproducing the observed state it emits `dry-aged-deps: locked 2.17.1 vs installed 2.14.0`, which is the line that would have ended the deadlock in one read. Full suite 586 passed and 2 skipped across 32 files; `npm run lint` clean; both scripts pass `bash -n`.
+
+**One unrelated defect fixed in the same change, because the suite could not go green without it.** The newsletter lint's corpus regression case spawns the lint once per published edition and carried vitest's default 5000ms timeout. At 20 editions it crossed that line, having passed an hour earlier on the same corpus. It now carries an explicit 30000ms budget with the reasoning recorded inline. A timeout is the worst failure shape available there: it reads as flake rather than as corpus growth, and it reddens the CI-parity gate inside `fix:deps` for a reason that has nothing to do with dependencies.
+
+**Awaiting verification**: the next dependency that matures. The test is whether `fix:deps` commits and the following `push:watch` proceeds rather than blocking on the package just updated. The 2026-08-25 occurrence is the exact scenario, and it is not re-runnable, so this waits for the next one.
+
+**Not claimed.** The loop detector in `push-watch.sh` has not been seen firing against a real desync, only against the unit fixtures. Its red case is cheap to construct and was not constructed, because doing so means deliberately desyncing the working tree.
 
 ## Dependencies
 
