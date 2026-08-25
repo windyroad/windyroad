@@ -1341,14 +1341,22 @@ describe('check-newsletter-structure.sh', () => {
     expect(r.stderr).not.toContain('[r]');
   });
 
-  it('(q) and (r) stay clean across every published brief body, and (p) fires once', () => {
-    // Measured before the checks shipped. The pin covers all three, because the
-    // one lesson of this ticket is a measurement that rotted: the first version
-    // of (r)'s predicate treated an indented list item as prose and appeared to
-    // fire 43 times, which nearly killed the check.
+  it('holds every corpus-wide pin in one sweep over the published editions', () => {
+    // ONE spawn per edition, not one per property. Each of (p), (q), (r), (s)
+    // and (m) carries a corpus-wide pin, and running a sweep each would spawn
+    // the lint five times over every published brief. That was measured: three
+    // sweeps took this file from roughly 47s to 191s and pushed a sibling test
+    // past its own timeout under full-suite concurrency, which reddens the
+    // CI-parity gate inside `npm run fix:deps` for a reason unrelated to
+    // dependencies. Same coverage, a fifth of the spawns.
+    //
+    // Pins are measured, never assumed, and two of them corrected the tickets
+    // that motivated them.
     const roots = ['src/newsletters/published/leader', 'src/newsletters/published/developer'];
     let checked = 0;
     const pHits = [];
+    const sHits = [];
+    const nonAdoption = [];
     for (const root of roots) {
       if (!existsSync(root)) continue;
       for (const date of readdirSync(root)) {
@@ -1360,25 +1368,37 @@ describe('check-newsletter-structure.sh', () => {
         expect(stderr, `check (r) fired on ${body}`).not.toContain('[r]');
         for (const line of stderr.split('\n')) {
           if (line.includes('FAIL [p]')) pHits.push(line);
+          if (line.includes('[s]')) sHits.push(`${date}: ${line}`);
+          if (line.includes('this is non-adoption rather than pre-adoption')) nonAdoption.push(date);
         }
       }
     }
     expect(checked, 'no published briefs were found to check').toBeGreaterThan(10);
-    // One genuine hit, 2026-05-01: "the distribution your business actually
-    // needs". More than one means the parse widened; none means it broke.
+
+    // (p): one genuine hit, 2026-05-01, "the distribution your business
+    // actually needs". More than one means the parse widened; none means it
+    // broke. The first version of (r)'s predicate treated an indented list item
+    // as prose and appeared to fire 43 times, which nearly killed the check, so
+    // all of these are pinned together rather than one at a time.
     expect(pHits.length, `check (p) hits:\n${pHits.join('\n')}`).toBe(1);
     expect(pHits[0]).toContain('2026-05-01');
-    // Explicit timeout because this case's runtime is the only one in the file
-    // that grows with the corpus: it spawns the lint once per published edition,
-    // and a new edition lands every week. At 20 editions it sits right on
-    // vitest's 5000ms default, which it crossed on 2026-08-25 and had passed an
-    // hour earlier on the same corpus. A timeout is the worst failure shape
-    // available here, because it reads as flake rather than as "the corpus
-    // grew", and it reddens the CI-parity gate inside `npm run fix:deps` for a
-    // reason that has nothing to do with dependencies. Budgeted at 500ms per
-    // edition against a measured ~250ms, which buys roughly two years of weekly
-    // editions before it needs looking at again.
-  }, 30000);
+
+    // (s): ADR-057's first-person hard fail. Measured at zero before the check
+    // shipped, against one false positive with a naive word-boundary predicate:
+    // "Landgericht Munchen I" in the 2026-08-03 edition, where the I is a
+    // numeral in a court's name. A check that fires on a published edition gets
+    // switched off.
+    expect(sHits, `check (s) fired on published editions:\n${sHits.join('\n')}`).toEqual([]);
+
+    // (m) non-adoption: digest counts are 2026-08-10 zero, 2026-08-17 five,
+    // 2026-08-24 zero, so adoption is intermittent rather than a regression at a
+    // point in time and TWO editions breached. P165's first draft said the
+    // pipeline "stopped writing the digests"; the compliant edition between the
+    // two breaches refutes it. Pinned on this branch's own message rather than
+    // on any [m] failure, because 2026-08-17 fails [m] for the unrelated
+    // pre-existing reason that its five digests no longer match its text.
+    expect(nonAdoption).toEqual(['2026-08-10', '2026-08-24']);
+  }, 60000);
 
   it('(p) reads the why column without doubling its full stop', () => {
     // Against the fixture guide, not the real one: the guide is a surface Tom
@@ -1513,26 +1533,6 @@ describe('check-newsletter-structure.sh: (s) first person in What happened (ADR-
     ))).toContain('FAIL [s]');
   });
 
-  it('stays clean across every published brief body', () => {
-    // Measured before the check shipped: zero hits across all 20 editions with
-    // the refined predicate, against one false positive with a naive one.
-    const roots = ['src/newsletters/published/leader', 'src/newsletters/published/developer'];
-    let checked = 0;
-    const hits = [];
-    for (const root of roots) {
-      if (!existsSync(root)) continue;
-      for (const date of readdirSync(root)) {
-        const body = join(process.cwd(), root, date, `${date}.md`);
-        if (!existsSync(body)) continue;
-        checked += 1;
-        for (const line of run(body).stderr.split('\n')) {
-          if (line.includes('[s]')) hits.push(`${date}: ${line}`);
-        }
-      }
-    }
-    expect(checked, 'no published briefs were found to check').toBeGreaterThan(10);
-    expect(hits, `check (s) fired on published editions:\n${hits.join('\n')}`).toEqual([]);
-  }, 30000);
 });
 
 // ── (m): zero digests is non-adoption on a current edition, not pre-adoption
@@ -1609,26 +1609,4 @@ describe('check-newsletter-structure.sh: (m) non-adoption vs pre-adoption (P165)
     expect(r.stderr).toContain('different brief');
   });
 
-  it('names exactly the published editions that adopted nothing', () => {
-    // Measured on disk rather than assumed, and the measurement corrected the
-    // ticket. Digest counts: 2026-08-10 zero, 2026-08-17 five, 2026-08-24 zero.
-    // So adoption is INTERMITTENT, not a regression at a point in time: the
-    // edition between the two breaches complied. P165's first draft said the
-    // pipeline "stopped writing the digests", which the third edition refutes.
-    //
-    // Pinned on this branch's own message rather than on any [m] failure,
-    // because 2026-08-17 fails [m] for the unrelated pre-existing reason that
-    // its five recorded digests no longer match the published text. Pinning the
-    // broader set would have conflated a stale verdict with a missing one.
-    const breached = [];
-    const root = 'src/newsletters/published/leader';
-    for (const date of readdirSync(root)) {
-      const body = join(process.cwd(), root, date, `${date}.md`);
-      if (!existsSync(body)) continue;
-      if (run(body).stderr.includes('this is non-adoption rather than pre-adoption')) {
-        breached.push(date);
-      }
-    }
-    expect(breached).toEqual(['2026-08-10', '2026-08-24']);
-  }, 30000);
 });
