@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture. Impact is 2 because nothing reaches a reader or a visitor; the exposure is to the governance audit trail and to the dev-side tooling that consumes it. Likelihood is 4 because no check reads the written file back, which satisfies the likelihood-4 clause "no hooks or automated checks cover this area", and because the failure has already fired sixteen consecutive times without anything surfacing it.
 **Origin**: internal
 **Effort**: M, re-rated at the pre-commit scoring. Capture assumed S on the belief that the fix site was local. It is not: the write lives in the `wr-risk-scorer` plugin cache, so the write half is an upstream report plus a wait for release. The read-back half is locally implementable and is the part worth doing first.
+**WSJF**: 4.0 = (8 x 1.0) / 2
 
 ## Description
 

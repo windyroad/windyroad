@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description per Step 4a. Impact 2 because the blast radius is dev tooling: nothing here reaches the site or a reader, but the harness is the instrument that decides whether a change to a publication-blocking gate is actually tested, so a false green there lets an untested gate change ship believing it was covered. Likelihood 4 because item (a) is present in the shipped config right now and permanent until edited, and items (b) and (c) are on the path every future fixture author walks.
 **Origin**: internal
 **Effort**: S, derived at capture: drop or correct one inert key in one config, correct one operator comment in `falsify.sh`, and write the two remaining gotchas down where the next fixture author reads them. Sizing is close to P140 (two surfaces disagree on one derivation), also an S on the same newsletter tooling.
+**WSJF**: 8.0 = (8 x 1.0) / 1
 
 ## Description
 

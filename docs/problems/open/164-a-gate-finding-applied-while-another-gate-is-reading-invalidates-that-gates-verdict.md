@@ -6,6 +6,7 @@
 
 **Origin**: internal
 **Effort**: S, derived at capture. One paragraph in the remediation loop's step, plus the round-close instruction that already exists for freezing.
+**WSJF**: 6.0 = (6 x 1.0) / 1
 
 ## Description
 

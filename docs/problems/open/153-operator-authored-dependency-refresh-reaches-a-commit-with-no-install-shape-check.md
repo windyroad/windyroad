@@ -5,6 +5,7 @@
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture from the description per Step 4a. Impact 3 because RISK-POLICY rates a broken or delayed build as Moderate and a red `npm ci` fails at CI's first step, blocking `build` and transitively the accessibility gate, the smoke test and the release path; nothing reaches readers. Likelihood 3 rather than P126's 4 because the trigger is narrower: not any dependency update, only one a human applies by hand outside the refresh flow, cf. P126.
 **Origin**: internal
 **Effort**: S, derived at capture: split reporting from acting in one router in `push-watch.sh`, plus a decision about the second locus in `fix-deps.sh`. Comparable to P123 and P126, both rated S.
+**WSJF**: 9.0 = (9 x 1.0) / 1
 
 ## Description
 

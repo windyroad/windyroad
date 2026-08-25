@@ -5,6 +5,7 @@
 **Priority**: 12 (High). Impact: 3 x Likelihood: 4, derived at capture from the description per Step 4a
 **Origin**: internal
 **Effort**: M, derived at capture per Step 4a
+**WSJF**: 6.0 = (12 x 1.0) / 2
 
 ## Description
 

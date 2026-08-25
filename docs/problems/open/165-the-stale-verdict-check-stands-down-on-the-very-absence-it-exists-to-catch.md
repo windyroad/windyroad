@@ -6,6 +6,7 @@
 
 **Origin**: internal
 **Effort**: S, derived at capture. One branch in the lint and one root cause in the drafting skill. Both surfaces are local.
+**WSJF**: 16.0 = (16 x 1.0) / 1
 
 ## Description
 

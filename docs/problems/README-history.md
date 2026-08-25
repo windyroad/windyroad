@@ -364,3 +364,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-08-25
 
 > Last reviewed: 2026-08-24 **P163 captured** (Risk scorer report persistence writes empty files, so no scoring pass since 2026-08-23 has left a re-readable artefact) (lightweight aside via /wr-itil:capture-problem)
+
+> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164 through P168 captured, P168 fixed same-day** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)

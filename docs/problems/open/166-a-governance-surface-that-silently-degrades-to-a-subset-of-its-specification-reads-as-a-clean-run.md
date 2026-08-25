@@ -6,6 +6,7 @@
 
 **Origin**: internal
 **Effort**: S, derived at capture. One coverage declaration emitted by the skill that already knows what it prescribed.
+**WSJF**: 12.0 = (12 x 1.0) / 1
 
 ## Description
 

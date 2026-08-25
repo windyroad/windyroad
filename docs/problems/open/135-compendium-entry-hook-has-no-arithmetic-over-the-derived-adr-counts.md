@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description. Impact is 2 because `RISK-POLICY.md` rates a defect confined to dev tooling with no visitor or reader effect at Minor, and this one is confined to a metadata line in a governance document that no gate parses. Likelihood is 4 rather than 5: the drift trigger is certain, since the hook fires on every ADR write and has no count arithmetic at all, but the harm needs the drift to survive uncorrected, and on the one observed occasion it was corrected by hand in the same commit. It is not lower because that correction depended on someone remembering, which is the condition this ticket exists to remove.
 **Origin**: internal
 **Effort**: S. Either the count arithmetic is added upstream where the entry is written, or this repo gains a cheap check that fails when the header disagrees with the file count. No product code either way.
+**WSJF**: 8.0 = (8 x 1.0) / 1
 
 ## Description
 

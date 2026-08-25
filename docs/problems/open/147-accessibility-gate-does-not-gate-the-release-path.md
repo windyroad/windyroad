@@ -5,6 +5,7 @@
 **Priority**: 5 (Low). Impact: 5 x Likelihood: 1, derived at capture from the description per Step 4a. Composed per RISK-POLICY.md's constraint on a residual of exactly 5: the severe impact is driven to Rare by a named control, `scripts/ci-status-check.sh`, which blocks `release:watch` on a red run conclusion.
 **Origin**: internal
 **Effort**: S, derived at capture per Step 4a
+**WSJF**: 5.0 = (5 x 1.0) / 1
 
 ## Description
 

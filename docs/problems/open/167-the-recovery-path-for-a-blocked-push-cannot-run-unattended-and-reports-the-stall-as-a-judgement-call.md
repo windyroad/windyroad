@@ -6,6 +6,7 @@
 
 **Origin**: internal
 **Effort**: S, derived at capture. One flag on one line, plus narrowing a message that asserts a cause it did not test.
+**WSJF**: 8.0 = (8 x 1.0) / 1
 
 ## Description
 

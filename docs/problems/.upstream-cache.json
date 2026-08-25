@@ -1,12 +1,12 @@
 {
-  "last_checked": "2026-08-08T03:37:55Z",
+  "last_checked": "2026-08-25T10:22:38Z",
   "ttl_seconds": 86400,
   "channels": [
     {
       "type": "github-issues",
       "repo": "windyroad/windyroad",
       "label": null,
-      "fetched_at": "2026-08-08T03:37:55Z",
+      "fetched_at": "2026-08-25T10:22:38Z",
       "reports": []
     }
   ]

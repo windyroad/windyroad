@@ -33,3 +33,10 @@ Audit trail for the inbound-discovery + assessment-pipeline pass run by `/wr-iti
   - Upstream issues closed: none.
   - Audit-flagged reporter handles: none.
 - **Cache refresh**: `docs/problems/.upstream-cache.json` rewritten at `last_checked: 2026-08-08T03:37:55Z`.
+
+## 2026-08-25T10:22:38Z - Discovery pass
+
+- Channels polled: 1 (`github-issues` on `windyroad/windyroad`, no label filter, all open issues). Cache age exceeded the 86400s TTL (prior poll 2026-08-08T03:37:55Z), so this was a TTL-expiry auto-recheck rather than a flag-forced one.
+- Reports: 0 new, 0 unchanged. Zero open issues on the channel, so the six-step assessment pipeline did not run.
+- Pipeline outcomes: none. No local tickets created, no upstream issues closed, no reporter handles audit-flagged.
+- Cache refreshed: `docs/problems/.upstream-cache.json` rewritten at `last_checked: 2026-08-25T10:22:38Z`.

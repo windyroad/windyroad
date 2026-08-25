@@ -5,6 +5,7 @@
 **Priority**: 12 (High). Impact: 3 x Likelihood: 4, derived at capture from the description per Step 4a
 **Origin**: internal
 **Effort**: M, re-rated 2026-08-23. S covered pinning one action; the remaining scope is a maintainer decision between three detector shapes plus its implementation, and option B (a narrow pull_request trigger) is not a single-file change. WSJF 12.0 to 6.0
+**WSJF**: 6.0 = (12 x 1.0) / 2
 
 ## Description
 

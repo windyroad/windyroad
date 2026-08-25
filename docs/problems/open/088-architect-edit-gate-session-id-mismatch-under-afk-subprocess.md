@@ -5,7 +5,7 @@
 **Priority**: 6 (Medium). Impact: Minor (2) x Likelihood: Possible (3) (re-rated 2026-06-15)
 **Origin**: internal
 **Effort**: M
-**WSJF**: 3 = (6 x 1) / 2
+**WSJF**: 3.0 = (6 x 1.0) / 2
 
 ## Description
 

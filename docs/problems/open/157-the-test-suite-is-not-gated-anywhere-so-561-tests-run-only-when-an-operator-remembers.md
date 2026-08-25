@@ -5,6 +5,7 @@
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture from the description per Step 4a. Impact 3 because the suite covers `src/` alongside the dev scripts, so a regression it would have caught can reach master and the published site, which is pipeline disruption rather than dev-tooling-only. Likelihood 3 because operators do run the suite by habit (it was run twice during the P151 iteration) but nothing makes it unmissable, and the exposure is permanent.
 **Origin**: internal
 **Effort**: S, derived at capture: one job block in an existing workflow, with care about where it sits relative to the release-blocking steps. Sizing is close to P143 (CI smoke test has no retry), also an S on the same workflow.
+**WSJF**: 9.0 = (9 x 1.0) / 1
 
 ## Description
 

@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium). Impact: 2 x Likelihood: 4, derived at capture per Step 4a
 **Origin**: internal
 **Effort**: M, derived at capture per Step 4a
+**WSJF**: 4.0 = (8 x 1.0) / 2
 **JTBD**: JTBD-400
 **Persona**: internal-maintainer
 

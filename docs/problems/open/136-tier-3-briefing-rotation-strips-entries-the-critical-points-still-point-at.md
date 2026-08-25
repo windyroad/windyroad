@@ -5,6 +5,7 @@
 **Priority**: 6 (Medium), Impact: 2 x Likelihood: 3, derived at capture. Impact is 2 because `RISK-POLICY.md` rates a defect confined to dev tooling with no visitor or reader effect at Minor, and the damage is to the briefing surface a session reads at start rather than to anything published. It is not 1 because the broken pointer lands on the one surface designed to orient a session that has no other context, and a Critical Point that names a fact then links to a file not containing it is worse than no bullet at all. Likelihood is 3: rotation only fires when a topic file is over budget, which is currently four files, and only bites when a rotated entry is one of the roughly ten promoted to Critical Points. Observed once, on the first mechanical application.
 **Origin**: internal
 **Effort**: S. Either the rotation re-points the roll-up as it moves an entry, or it refuses to move a promoted entry. Both are local edits to the rotation step.
+**WSJF**: 6.0 = (6 x 1.0) / 1
 
 ## Description
 

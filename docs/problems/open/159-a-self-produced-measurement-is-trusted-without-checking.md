@@ -5,6 +5,7 @@
 **Priority**: 9 (Medium), Impact: 3 x Likelihood: 3, derived at capture from the description per Step 4a. Impact 3 on the calibration P152 and P154 set for defects that reach artefacts and decisions rather than break a running system: the output is a wrong design call, and in the observed case it would have dropped a check the evidence named. Likelihood 3 because a measurement is produced in most design iterations and nothing checks any of them, but only one instance is on record so far.
 **Origin**: internal
 **Effort**: S, derived at capture: the fix is a discipline statement in the existing verify-before-asserting surfaces, which already exist and already carry four sibling rules. Comparable to the P032 and P103 fixes, both of which were prose edits to those same surfaces.
+**WSJF**: 9.0 = (9 x 1.0) / 1
 
 ## Description
 

@@ -5,6 +5,7 @@
 **Priority**: 10 (High). Impact: 2 x Likelihood: 5, derived at capture from the description per Step 4a
 **Origin**: internal
 **Effort**: M (re-rated 2026-08-23 from S). Reason for the bucket change: at capture the fix was believed to be "run the bootstrap", which is S. Investigation showed the bootstrap is the wrong fix (see finding 3), and the actual remaining work is to derive a small set of admissible class-shaped slugs from 72 finding-shaped ones and name a curator. WSJF recalculates to (10 x 2.0) / 2 = 10.0, unchanged in rank because the Known Error multiplier offsets the effort increase.
+**WSJF**: 10.0 = (10 x 2.0) / 2
 
 ## Description
 

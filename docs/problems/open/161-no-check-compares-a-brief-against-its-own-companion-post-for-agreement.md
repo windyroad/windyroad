@@ -5,6 +5,7 @@
 **Priority**: 15 (High), Impact: 5 x Likelihood: 3, re-rated at capture-review on the risk scorer's correction
 **Origin**: internal
 **Effort**: S, derived at capture per Step 4a
+**WSJF**: 15.0 = (15 x 1.0) / 1
 
 ## Description
 
