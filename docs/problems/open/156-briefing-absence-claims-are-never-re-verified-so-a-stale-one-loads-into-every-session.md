@@ -23,6 +23,18 @@ Two properties make the blast radius wider than the others:
 - The briefing is loaded automatically at session start, so a false claim reaches every session rather than the one session that happens to read the artefact.
 - An absence claim is the specific shape that causes an agent to route around a working tool, so acting on it produces a worse outcome than acting on most other kinds of stale prose. Two intervening retros (2026-08-09, and the 2026-08-23 P141 iteration) re-scored the entry as signal without ever re-running the command.
 
+**Second observation, 2026-08-25, and it runs the other way.** The 2026-08-23 evidence above is an absence claim falsified by an upgrade. The same three shims have now falsified a presence claim by a rollback, which the ticket's stated remedy of periodic re-verification covers but its framing does not.
+
+The 2026-08-23 correction was written into `docs/briefing/what-you-need-to-know.md` as "the Tier-3 budget pass is no longer in that boat: invoked by its shim name it runs and emits `OVER <file> bytes=<N> threshold=<N>` (confirmed 2026-08-23)". On 2026-08-25 `command -v wr-retrospective-check-briefing-budgets` found nothing, and neither did `command -v` for `wr-retrospective-check-ask-hygiene` or `wr-retrospective-check-tickets-deferred-cause`.
+
+Nothing was uninstalled. Five versions sit in the cache: 0.18.1, 0.25.0, 0.27.0, 0.27.3 and 0.27.4. Version 0.27.4 ships all three shims. `command -v wr-retrospective-measure-context-budget` resolves to the 0.27.0 path, and 0.27.0 ships none of the three. So PATH moved backwards between 2026-08-23 and 2026-08-25 with nothing local to notice, exactly as it moved forwards between 2026-08-08 and 2026-08-23.
+
+Three consequences the original ticket does not carry:
+
+1. The re-verification the fix strategy proposes has to run in both directions. A rule that only re-checks absence claims would have left this entry standing.
+2. The check has to resolve the version, not just the name. `command -v <shim>` prints the versioned path, and comparing it against `ls ~/.claude/plugins/cache/windyroad/<plugin>/*/bin/` distinguishes a missing feature from a stale PATH. Name-only presence testing cannot tell those apart, and they have different fixes.
+3. The retro is where this surfaces, and the retro is degraded by it. Three of the detectors the run-retro SKILL prescribes are the three that vanished, so the Tier 3 budget pass, the ask-hygiene trail and the tickets-deferred-cause check all had to be computed by hand or skipped in the 2026-08-25 retro. The failure is self-concealing in the surface designed to catch it.
+
 ## Symptoms
 
 - `docs/briefing/what-you-need-to-know.md` carried a false absence claim about `wr-retrospective-check-briefing-budgets` from 2026-08-08 to 2026-08-23. Corrected in the P140 iteration's retro commit.

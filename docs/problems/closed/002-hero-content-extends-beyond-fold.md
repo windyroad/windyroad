@@ -1,6 +1,6 @@
 # Problem 002: Hero content extends beyond the fold
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-04-14
 **Origin**: internal
 **Known Error since**: 2026-04-25
@@ -81,3 +81,23 @@ Close after the interactive verification holds with no regression observed for o
 - `src/app/page.module.scss` (hero layout styles, line 17)
 - `src/app/page.tsx` (hero section structure, line 152)
 - `src/components-next/Countdown/` (countdown and slider component)
+
+## Verified
+
+Closed 2026-08-25. Exercised in Chrome against the dev server, measured from the live DOM rather than read off a screenshot, at six viewport sizes plus three reflow widths.
+
+The four named conditions, in order.
+
+**Desktop fold.** At 1920x1080 the hero resolves `min-height` to 1080px and the lowest content sits at 1056, so everything is above the fold with 24px to spare. Same shape at 1280x720: 720px, lowest content at 696.
+
+**Mobile with browser chrome present.** At 390x664, an iPhone 14 viewport after Safari's chrome is subtracted, `min-height` resolves to 664px and content ends at 640. At 412x730, an Android viewport, 730px and 706. The `svh` unit is doing what it was changed to do: the hero fills the visible area rather than the area the URL bar is covering.
+
+**Zoom and the short-viewport guard.** Simulated as effective viewport size, which is what page zoom actually produces: 1280x720 at 200% is a 640x360 viewport, at 400% a 320x180 one. At both, and at an iPhone SE landscape-ish 375x553, `min-height` resolves to 0px rather than to the viewport height, so the `@media (max-height: 600px)` guard fires and the hero takes its natural height instead. Content then extends past the fold, which is the intended outcome of that guard rather than a regression: the alternative is forcing 100svh into a 180px-tall viewport and overlapping the scroll cue with the buttons. The scroll cue does not overlap either call to action at any of the six sizes measured.
+
+Reflow at 320px width, the WCAG 1.4.10 threshold, produces no horizontal overflow: `scrollWidth` equals `clientWidth` at 320, 375 and 390.
+
+**Vertical balance.** At the desktop size the gap between the header and the headline is 181px and the gap below the buttons is 180px. Balanced, which is the asymmetric-padding correction working: `padding-top: calc(var(--header-height) + 4rem)` against `padding-bottom: 4rem` makes the two visible gaps equal even though the padding values are not.
+
+One correction to this ticket's own premise, recorded rather than quietly worked around. The verification list names "headline, sub, both CTAs, countdown, slider, attribution" as the hero content to fit above the fold. The countdown, slider and attribution no longer exist: neither `src/app/page.tsx` nor `src/app/page.module.scss` contains either word, and the rendered hero carries a headline, a two-line sub, two buttons and the scroll cue. So the fold test was exercised against less content than the ticket assumed, which makes it an easier test than the one written. It passes with the content that is actually there, and the elements that would have made it harder were removed by other work rather than by this fix.
+
+A measurement trap worth recording, because it nearly produced a false finding. A first pass asked whether the scroll cue overlaps any `<a>` inside the hero and got "yes" at every size. The cue is itself an anchor, so it was overlapping itself. Excluding the cue from the list it is being compared against gives the real answer, which is no overlap anywhere. A self-comparison reads exactly like a real hit.

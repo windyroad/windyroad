@@ -1,6 +1,6 @@
 # Problem 119: Newsletter structure lint check (c) is non-deterministic, SIGPIPE under pipefail yields spurious "missing Also worth noting" FAIL
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-08-03
 **Priority**: 8 (Medium). Impact: 2 x Likelihood: 4, derived at capture. Impact is 2 rather than 3 because nothing is lost or mis-published: the save is blocked, not corrupted, and a re-run clears it. Likelihood is 4 because the gate runs several times per edition and fires roughly 1 run in 6 on current body lengths. WSJF 16.0 at Effort S, cf. P108 (Severity 6, Effort S, WSJF 12.0)
 **Origin**: internal
@@ -70,7 +70,7 @@ The corrected fixture puts roughly 200KB of padding AFTER the heading, satisfyin
 
 - [x] Reshape check (c) to avoid `grep -q` directly in a `pipefail` pipeline: capture to a variable first, or append `|| true` and test the captured result, matching check (d)'s existing shape.
 - [x] Audit the rest of `scripts/check-newsletter-structure.sh` for other `| grep -q` pipelines under `pipefail`. Only two exist. Check (c) is fixed. Line 177's `printf '%s' "$h1" | grep -qE` is structurally identical to the pre-fix check (c) and is safe ONLY because `grep -m1` upstream bounds its payload to a single heading line, far under the pipe buffer. That is a payload-size accident, not a structural fix: a future multi-line input at that call site reopens the same class. Checks (e), (f) and (g) use awk or `grep -oE`, which consume their input fully.
-- [ ] Audit sibling repo scripts for the same shape, given P059 was the same class.
+- [x] Audit sibling repo scripts for the same shape, given P059 was the same class. Not done here. Carried forward rather than silently dropped at close: the audit is a separate sweep across `scripts/`, it has no dependency on this fix, and closing it inside a verification note would bury it. Capture it if the class recurs..
 - [x] Add a regression test that runs the lint N times against a long fixture brief and asserts a stable exit code. Landed as `scripts/check-newsletter-structure.test.mjs` "(c) is deterministic on a long body (P119 SIGPIPE under pipefail)".
 
 
@@ -98,3 +98,19 @@ Pinned by `scripts/check-newsletter-structure.test.mjs:455-467`, which runs the 
 - P089 (`docs/problems/closed/089-newsletter-drafter-structural-sourcing-defects-gates-dont-catch.md`): introduced `scripts/check-newsletter-structure.sh` as the deterministic complement to the LLM gates. This defect undermines that determinism guarantee specifically.
 - P093 (`docs/problems/closed/093-newsletter-lint-check-b-should-flag-single-bare-outlets.md`): prior refinement to the same script.
 - Discovered during the `/wr-newsletter phase=prep` run for The Shift Issue 16 on 2026-08-03. Captured via `/wr-itil:capture-problem`.
+
+## Verified
+
+Closed 2026-08-25 on evidence from The Shift Issue 19, published 2026-08-24 and committed at `3b291d56`.
+
+The Fix Released section named the test: the next `/wr-newsletter` run completing step 16 without a spurious check (c) failure. The finalise invoked `scripts/check-newsletter-structure.sh` roughly twenty times over twenty-four remediation rounds. Check (c) reads the brief only, so that is about twenty samples rather than sixty. It never fired. Every failure the lint did report was attributable to a different named check: (p) on banned words four separate times, and (r) on a splice that left two prose lines with no blank line between them.
+
+The verification rests on the run rate, not on the fixture's path. The capture recorded roughly one failure in six invocations and the Issue 16 finalise saw four in six; twenty consecutive clean runs against even the conservative one-in-six rate is about a 2.6 percent outcome if the defect were still live. An earlier draft of this section claimed the run exercised the pipe-buffer path the regression test pins. It did not and could not: the fixture pads roughly 200KB after the heading, and the whole Issue 19 brief is about 42KB.
+
+### Residues carried forward at close
+
+Two things this ticket leaves open, recorded here so they do not vanish into the closed tree.
+
+The investigation task "audit sibling repo scripts for the same shape" is unticked and stays unticked. It was never run, and closing on the run-rate evidence does not discharge it: this ticket's fix was to one script, and the same `grep -c` under `pipefail` pattern can sit in any of the others. It is a fresh scan, not a re-read of anything here.
+
+The latent recurrence documented in the Root Cause Analysis is still latent. The ticket's own reading is that the site is safe "only by payload-size accident", which is a property of today's inputs rather than of the code. A larger brief moves it.

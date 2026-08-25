@@ -1,6 +1,6 @@
 # Problem 151: Prescribed newsletter gates can skip a phase entirely and nothing detects the absence
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-08-10
 **Priority**: 12 (Medium), Impact: 3 x Likelihood: 4, derived at capture from the description per Step 4a. Impact 3 because the failure ships unreviewed reader-facing claims rather than breaking a system; Likelihood 4 because it already occurred on the most recent prep run and no mechanism prevents a repeat.
 **Origin**: internal
@@ -111,3 +111,15 @@ The CI-gating work is therefore not owed by this commit, and two things argue ag
 Architect returned ISSUES FOUND twice. First pass, four findings, all adopted: bind the `N/A` reasons to the SKILL's documented skip conditions rather than accepting free-form ones; fix the `phase=full` prose omission rather than papering over it in the derivation; reconcile the finalise Cross-Edition Consistency block with step 11.4-prime's unqualified wording; and pin the roster cardinality against silent partial drift. It also corrected two claims in the ticket's own prose, both fixed above. The JTBD reviewer independently reached the first two of those, and added the step-17 surfacing requirement so a skip reaches Tom under JTBD-300 outcome 2. Second pass on the diff found two more. The sanctioned skip reasons were being scraped out of the SKILL's prose, so punctuation decided what counted and one stray line could have sanctioned everything; they are now declared once in an anchored block the script reads, with every declared reason pinned by test. And the `(prep)` / `(finalise)` collapse was presented as a lossless matching nicety when it is a real coverage limit, now disclosed in the ticket, the SKILL and the script comment. Voice and tone returned two rewrites on the SKIP strings and six more over the new prose, all adopted. Style guide: PASS, nothing in scope.
 
 The risk scorer returned STOP at 10/25, and it was right: the corpus figure above was false on disk and had already propagated into the README's verification watch-line before anyone re-read the corpus. That is P032 and P103 recurring at the ticket-evidence surface, in a Resolution section arguing for its own carefulness. Both places are corrected, and the test count was stale by one for the same reason. It also caught the ADR-052 overstatement.
+
+## Verified
+
+Closed 2026-08-25 on evidence from The Shift Issue 19, the first edition produced after check (o) landed.
+
+The Resolution section named the test: whether check (o) holds a save on a ledger missing a prescribed block. The measurement it recorded was that all sixteen published editions carrying a reviews sibling fire between three and fifteen `[o]` violations, the archive predating the check.
+
+Run against Issue 19's published edition on 2026-08-25, the lint reports zero `[o]` violations and exits 0. That sibling carries twenty-three `## ` blocks. So the check discriminates in both directions on live artefacts: fifteen on the narrative sibling that carries none of the prescribed headings, nine on the 2026-08-17 edition whose own prose admits five gates have no verdict, and none on an edition whose ledger is complete. A check that only ever fires is not evidence it is measuring the right thing; the clean run is what closes that.
+
+One residual is carried forward rather than closed, because this edition did not exercise it. The Resolution discloses that the `(prep)` / `(finalise)` collapse lets a carried prep block satisfy a finalise slot on its own, and that nine of the fifteen finalise slots have a prep twin. Issue 19 ran a prep phase (its capture transcript records `phase-written: prep`), so the collapse was in play and a finalise pass re-running nothing would still have read clean here. Nothing about this run tests that hole. It stays disclosed in the Resolution, in the SKILL and in the script comment, and the artefact-changed case belongs to P099.
+
+The other standing residual, that nothing runs the cardinality pin automatically because no CI workflow runs the suite, is unchanged and remains queued for the maintainer. It is a repo-wide exposure shared by all tests, not owed by this ticket.

@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-24 **P163 captured** (Risk scorer report persistence writes empty files, so no scoring pass since 2026-08-23 has left a re-readable artefact) (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164, P165 and P166 captured** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,11 +11,12 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
+| 12.0 | P166 | A governance surface that silently degrades to a subset of its specification reads as a clean run | 12 | Open | S | 2026-08-25 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
 | 12.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
-| 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Known Error | M | 2026-08-09 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
+| 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Known Error | M | 2026-08-09 | internal |
 | 10.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Open | S | 2026-08-08 | internal |
 | 10.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |
 | 9.0 | P111 | Publish-day push blocked by deps-hygiene tooling chain (lock desync + local-vs-CI freshness divergence) | 9 | Known Error | M | 2026-07-06 | internal |
@@ -34,8 +35,8 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 8.0 | P146 | publish-pipeline selects the production artifact by recency, not identity | 8 | Open | S | 2026-08-09 | internal |
 | 8.0 | P149 | Em-dash gate is blind to the index, so staged-then-corrected content commits unchecked | 8 | Open | S | 2026-08-10 | internal |
 | 8.0 | P158 | The newsletter eval harness reports misconfiguration as results, so a broken run looks like a real one | 8 | Open | S | 2026-08-23 | internal |
+| 8.0 | P165 | The stale-verdict check stands down on the very absence it exists to catch | 16 | Open | S | 2026-08-25 | internal |
 | 8.0 | P162 | A claim corrected at one site survives at its sibling sites | 16 | Open | M | 2026-08-24 | internal |
-| 4.0 | P163 | Risk scorer report persistence writes empty files | 8 | Open | M | 2026-08-24 | internal |
 | 7.5 | P127 | Unverified subprocess claims propagate into decisions without reading the source | 15 | Open | M | 2026-08-07 | internal |
 | 6.0 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 | Known Error | S | 2026-05-13 | internal |
 | 6.0 | P016 | wr-newsletter filter step drops significant stories that lack a primary source without attempting corroboration | 6 | Known Error | M | 2026-04-24 | internal |
@@ -52,6 +53,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 6.0 | P136 | Tier 3 briefing rotation strips entries the Critical Points still point at | 6 | Open | S | 2026-08-09 | internal |
 | 6.0 | P148 | serve is undeclared, so npx fetches an unpinned major on the release-blocking path | 6 | Open | S | 2026-08-09 | internal |
 | 6.0 | P150 | Briefing has a per-file budget and no aggregate one, so rotation grows the total | 6 | Open | S | 2026-08-10 | internal |
+| 6.0 | P164 | A gate finding applied while another gate is reading invalidates that gate's verdict | 6 | Open | S | 2026-08-25 | internal |
 | 6.0 | P141 | GitHub Actions versions are an uninstrumented dependency surface | 12 | Open | M | 2026-08-09 | internal |
 | 5.0 | P147 | Accessibility gate does not gate the release path | 5 | Open | S | 2026-08-09 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 | Open | M | 2026-04-26 | internal |
@@ -62,14 +64,15 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 4.0 | P138 | Nothing gates or reports on the human-oversight axis at promotion time, so an ADR can reach accepted without ever having been read | 4 | Open | S | 2026-08-09 | internal |
 | 4.0 | P139 | Ratification flips frontmatter but nothing sweeps the prose asserting the prior unconfirmed state | 8 | Open | M | 2026-08-09 | internal |
 | 4.0 | P156 | Briefing absence claims are never re-verified, so a stale one loads into every session | 8 | Open | M | 2026-08-23 | internal |
+| 4.0 | P163 | Risk scorer report persistence writes empty files | 8 | Open | M | 2026-08-24 | internal |
 | 3.0 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create / commit gates re-fire indefinitely, forcing BYPASS_RISK_GATE=1 workaround | 6 | Open | M | 2026-05-31 | internal |
 | 3.0 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 | Open | M | 2026-06-14 | internal |
 | 3.0 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers | 6 | Open | M | 2026-06-17 | internal |
+| 2.0 | P160 | No deterministic check reads the LinkedIn companion body for a manual URL | 2 | Open | S | 2026-08-23 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P056 | manage-problem SKILL.md misattributes ADR-014 to "single-commit governance" in 6+ blocks | 3 | Open | M | 2026-05-13 | internal |
 | 1.5 | P069 | work-problems orchestrator WSJF ranking does not factor placement-authority | 3 | Open | M | 2026-05-16 | internal |
-| 2.0 | P160 | No deterministic check reads the LinkedIn companion body for a manual URL | 2 | Open | S | 2026-08-23 | internal |
 
 ## Verification Queue
 
@@ -77,24 +80,16 @@ Fix released, awaiting verification. Sorted by Released date ascending, oldest f
 
 | ID | Title | Released | Likely verified? |
 |----|-------|----------|------------------|
-| P002 | Hero content extends beyond the fold | 2026-04-25, commit `72c3c2b` | no - not observed |
 | P015 | wr-newsletter drafter paraphrases per-item AskUserQuestion "Adjust" text into abstract commentary, losing Tom-voice fidelity | 2026-04-25 | no - not observed |
 | P050 | Assistant scope-creeps on user-flagged corrections, changing more than asked | 2026-05-12 AFK iter 3 (memory layer, no project-tree commit) | no - not observed |
 | P094 | extend the domain-specific critic supersede to wr-blog (retire wr-sw-critic entirely) | 2026-06-27, repo-local agents and skills, no changeset | no - not observed |
-| P119 | Newsletter structure lint check (c) is non-deterministic under pipefail | 2026-08-03, commit `bbb6ca1`, pinned by a 20-run determinism test | no - not observed (verifies on the next /wr-newsletter run) |
-| P120 | Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden | 2026-08-05, ADR-043 plus SKILL and agent wiring | no - not observed |
-| P099 | wr-newsletter has no rule that a post-gate body edit re-runs the FULL gate set | 2026-08-08, gate verdicts record a digest; stale gates re-run at save | no - not observed (verifies on the next /wr-newsletter run with post-gate edits) |
-| P108 | wr-newsletter step 7 hard-codes the wardley converter at a pinned plugin version | 2026-08-08, de-pinned to highest-version-wins per ADR-080, smoke-tested byte-identical | no - not observed (verifies on the next /wr-newsletter run) |
-| P118 | Newsletter publish step uses `git mv` on untracked drafts, which fails | 2026-08-08, repo-local documentation across three surfaces, no changeset (nothing shippable changed) | no - not observed (verifies on the next /wr-newsletter publish) |
-| P122 | No gate owns within-edition structural mechanics, so assembly defects reach the reader | 2026-08-08 across four commits, against three decisions ratified 2026-08-07 | no - not observed (verifies on the next /wr-newsletter run) |
+| P120 | Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden | 2026-08-05, ADR-043 plus SKILL and agent wiring | yes - observed 2026-08-24, and it SPLITS: the remediating half worked (editor and skeptic findings acted on in the body, three residuals, all cross-boundary placement calls Tom ruled on) while the round count met the ticket's own not-working condition at 24 rounds against a criterion of one per body pass |
+| P099 | wr-newsletter has no rule that a post-gate body edit re-runs the FULL gate set | 2026-08-08, gate verdicts record a digest; stale gates re-run at save | yes - observed 2026-08-25, and it BLOCKS: the Issue 19 finalise took post-gate edits across 24 rounds, but ADR-047's recording half never fired (zero scored-digest lines against Issue 18's five) and check (m) skipped calling it a pre-ADR-047 edition. Cannot verify until P165 is fixed (verifies on the next /wr-newsletter run with post-gate edits) |
+| P118 | Newsletter publish step uses `git mv` on untracked drafts, which fails | 2026-08-08, repo-local documentation across three surfaces, no changeset (nothing shippable changed) | no - not observed; Issue 19 reached published/ as a single commit rather than through the guarded promotion chain, so the command the fix rewrote was not the one exercised (verifies on the next /wr-newsletter publish) |
 | P126 | The deps refresh chain creates a manifest desync and its own recovery path cannot clear it | 2026-08-08 under RFC-006, no changeset (private root package, maintainer tooling) | no - not observed live; the `f1d7b8b` reproduction replays to `rollback` and 13 new cases pass, but the end-to-end path needs a real dep update, which is what ADR-034 criterion (d) is re-armed against |
-| P129 | Sourcing a repo script to probe a helper runs its whole flow, because the LIB_ONLY seam is opt-in | 2026-08-09, commit `8ad2dba` on `origin/master`, CI green, no changeset (repo-local dev scripts, private root package) | no - not observed; verifies when a normal `push:watch`, `deps:fix` or `release:watch` run behaves exactly as before, since the guards are meant to be invisible on the executed path |
 | P109 | External-review round-trips waste cycles when the reviewer sees a stale copy of a repo artifact | 2026-08-09, repo-local skill prose plus an out-of-repo memory note, no changeset (nothing shippable changed) | no - not observed; verifies on the next edition that goes out for external editorial review, and the thing to watch is whether the artefact is handed over with its checksum at all, not just whether a stale round is diagnosed faster |
-| P114 | wr-newsletter step 15.5 tells the LinkedIn post to close with a windyroad.com.au sign-off, but VOICE-AND-TONE.md's auto-share carve-out forbids any manual URL in the post body | 2026-08-23, repo-local skill prose, no changeset (not a build input, nothing shippable changed) | no - not observed; verifies on the 2026-08-24 finalise run, and the signal is the LinkedIn-post voice gate passing on its first draft, since it FAILed on this carve-out during Issue 13 and would have FAILed every edition until now |
-| P140 | Lint and SKILL disagree on the prep-phase reviews sibling path | 2026-08-23, repo-local dev lint plus skill prose, no changeset (private root package, nothing shippable changed) | no - not observed; verifies on the next `/wr-newsletter phase=prep` run, which is where checks (m) and (n) first execute against a live prep artefact |
-| P151 | Prescribed newsletter gates can skip a phase entirely and nothing detects the absence | 2026-08-23, repo-local dev lint plus skill prose and tests, no changeset (private root package, nothing shippable changed) | no - not observed; verifies on the next `/wr-newsletter` run, and the thing to watch is whether check (o) holds a save on a ledger missing a prescribed block, since all sixteen published editions carrying a reviews sibling fire it today, the archive predating the check |
-| P152 | No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate | 2026-08-23 | no - not observed |
-| P154 | Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery | 2026-08-23, repo-local dev lint plus skill prose and tests, no changeset (private root package, nothing shippable changed) | no - not observed; verifies on the next `/wr-newsletter` run, and the thing to watch is the `## Editorial Remediation Loop` block, which should now report what the round-close lint caught with a before-and-after pair for each fix, or say plainly that it caught nothing |
+| P140 | Lint and SKILL disagree on the prep-phase reviews sibling path | 2026-08-23, repo-local dev lint plus skill prose, no changeset (private root package, nothing shippable changed) | no - not observed; Issue 19 ran a prep phase (its capture records phase-written: prep) but the prep-time lint invocation is not recorded, so the previously-dead checks are still unwitnessed against a live prep artefact; verifies on the next `/wr-newsletter phase=prep` run, which is where checks (m) and (n) first execute against a live prep artefact |
+| P154 | Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery | 2026-08-23, repo-local dev lint plus skill prose and tests, no changeset (private root package, nothing shippable changed) | yes - observed 2026-08-24, and the disclosure half did NOT ship: checks (p) and (r) fired on Issue 19, but the Editorial Remediation Loop block carries no round-close lint report, no before-and-after pairs and no Verified-against lines, which Fix Strategy change 2 requires; verifies on the next `/wr-newsletter` run, and the thing to watch is the `## Editorial Remediation Loop` block, which should now report what the round-close lint caught with a before-and-after pair for each fix, or say plainly that it caught nothing |
 
 ## Inbound Upstream Reports
 

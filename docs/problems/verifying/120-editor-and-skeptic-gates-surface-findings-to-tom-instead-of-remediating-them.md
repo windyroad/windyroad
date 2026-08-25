@@ -102,6 +102,18 @@ Shipped 2026-08-05 as ADR-043 plus the SKILL and agent wiring above. Awaiting us
 - **Blocked by**: (none)
 - **Composes with**: P113, P116, P117, P099
 
+## Observed 2026-08-25: the stated failure test fired
+
+The Fix Released section names both directions. It is working if editor and skeptic findings show as remediated in the body with only genuinely hard cases surfacing as residuals. It is "NOT working if Tom's external review still re-derives a class the gates named, or if the loop runs more than one round per body pass."
+
+The remediating half worked. Editor and skeptic findings were acted on in the body across the Issue 19 finalise rather than arriving as Tom-summary items, and exactly three findings surfaced as residuals, all of them cross-boundary placement calls Tom ruled on.
+
+The round count did not. That edition's record opens "the finalise pass ran to twenty-four", against a criterion of one round per body pass. That is the ticket's own not-working condition, met by a factor of twenty-four.
+
+Two things stop this being a simple regression. The rounds were run under a standing instruction to keep going until the gates stopped finding defects, which is not the loop's default behaviour. And the late rounds kept earning their cost: round 15 caught a factual inversion that would have published, and rounds 22 to 24 caught a fairness problem, a broken contrast and an over-claim, so the rounds were not churn.
+
+What that means for the criterion is the open question. Either one-round-per-body-pass is the wrong measure of this fix, in which case the criterion needs replacing rather than the fix reopening, or the loop genuinely does not converge and P113's round economics is the ticket that owns it. Left in Verification Pending pending that call; the round count is recorded here so the next verification attempt does not have to re-derive it.
+
 ## Related
 
 - **P113** (`docs/problems/known-error/113-newsletter-review-gate-loop-editor-one-nit-per-pass.md`): sibling on the same knob, opposite bound. P113 wants a STOP rule because the editor treadmills; this wants a START rule because its findings are not acted on. P113 already records the same non-blocking fact ("it surfaces to Tom; it does not block the save, but the skill gives no guidance on when to accept residual advisories and stop"). The `wr-itil:hang-off-check` arbitration (2026-08-04) returned PROCEED_NEW and recommended the next `/wr-itil:review-problems` cluster pass consider promoting a common parent for the loop contract.

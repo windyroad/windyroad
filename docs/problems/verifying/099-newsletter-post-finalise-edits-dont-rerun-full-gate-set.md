@@ -209,3 +209,15 @@ round so that this ticket's terminal re-run is affordable. Neither subsumes the 
 **Cross-references.** P117 (closed 2026-08-08; this residue is what its counter-evidence
 read left over after the rest routed to P121, P122 and P113), P121 (prior-edition shape),
 P122 (within-edition assembly), P113 (gate-loop cost, per the paragraph above).
+
+## Observed 2026-08-25: the verifying run happened and the recording half did not fire
+
+The Fix Released section names the test as the next `/wr-newsletter` run that takes post-gate edits, and whether the missing reviews re-run without Tom asking. The Shift Issue 19 was that run. It took post-gate edits repeatedly across twenty-four remediation rounds, so the condition to be detected was present in abundance.
+
+It cannot be scored, and the reason is worse than an unmet condition. ADR-047's recording contract did not run at all. That edition's reviews sibling carries zero `scored-digest:` lines; its immediate predecessor, published a week earlier, carries five. Every verdict block is prose. The edition's own record explains what happened instead: the brief was frozen under an md5 each round and the checksum passed into every gate prompt, which is the discipline running by hand on a different algorithm rather than the custody contract this fix shipped.
+
+The detector was silent for the same reason. Check (m) skips when the sibling carries no digest lines, and prints a fixed message attributing the absence to a pre-ADR-047 edition. Issue 19 postdates ADR-047 by sixteen days. That defect is captured as P165.
+
+This is the falsification of what the Fix Released section already flagged as its weak point. It called the custody invariant "a prose rule of the same enforcement class as the one this ticket records as having failed", and declined to dress it as structural. One edition later the prose rule did not hold, and the lint could not tell.
+
+So this ticket stays in Verification Pending and is now blocked rather than merely unverified: the mechanism it shipped is not running on the live pipeline, and it cannot be verified until the digests are emitted again and check (m) can distinguish a legacy edition from a current one. P165 owns both halves.

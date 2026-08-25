@@ -1,6 +1,6 @@
 # Problem 122: No gate owns within-edition structural mechanics, so assembly defects reach the reader
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-08-05
 **Priority**: 12 (High), Impact: 3 x Likelihood: 4, derived at capture from the description. Impact is 3 because assembly defects degrade the read for every reader (an item run that fights its own thesis, a close that does not discharge the headline) without shipping anything factually wrong. Likelihood is 4 because every edition is assembled fresh and no gate reads for assembly, so the defects are detected only if a human happens to notice. Unchanged at the Known Error transition: investigation confirmed the mechanism rather than resizing it.
 **Origin**: internal
@@ -280,3 +280,23 @@ The four axes have never fired in anger. Their definitions, boundaries and exemp
 | RFC | Status | Title |
 |-----|--------|-------|
 | RFC-004 | proposed | Within-edition assembly sweep as a third editor read, with four craft axes and an ADR-043 remediation contract |
+
+## Verified
+
+Closed 2026-08-25 on evidence from The Shift Issue 19, published 2026-08-24 and committed at `3b291d56`.
+
+The Fix Released section named the test: whether the editor's Step 4.6 surfaces assembly findings of the Issue 16 class before Tom reads the draft. It did, repeatedly, across two independent invocations in one finalise.
+
+Findings the editor surfaced pre-read, all of them assembly rather than passage-level: a close that swapped protagonists, landing on the maintainer when the section was built on the unrostered volunteer; an orientation line inserted between the thesis and the sentence that turns against it, so "the opposite" reached back across a contents list; two dangling back-references, Item 1 citing "the reason this edition exists" at a proposition the opener no longer made and Item 3 scoping itself against "the argument at the top of this edition" when the opener set no scope; an item-placement finding that Item 1's self-declared strongest paragraph sat fifth in a run of nine and was followed by three longer qualification paragraphs; and a demoted-tier bullet whose whole function was to redirect to the promoted tier.
+
+Also recorded in that sibling: the second half of the named test, which is the durable part. The Editorial Remediation Loop block shows three findings routed out of the loop to Tom because the minimal remediation crossed a section boundary, the OpenAI-pause tiering, the Torvalds placement and Item 3's tier. Those are placement findings, and routing them rather than forcing them inside the one-round cap is the classification behaviour the fix built.
+
+What this does not show, and the ticket's own style is to say so. Assembly-class defects still reached Tom and the external reviewer in the same edition after the gates had run: Tom found the author-voice section long-winded at round 22, the external reviewer found a broken contrast at round 24, and that edition's record concludes plainly that both human catches were things the seven-gate battery read past. The axes fired and caught real defects. They did not catch everything.
+
+Worth recording because the ticket's own Fix Released flagged the opposite: a hang-off arbiter reading it on 2026-08-24 noted that the four axes "have never fired in anger". In this edition they fired repeatedly, caught defects a passage-level read could not see, and every one was acted on before publication.
+
+### Amended 2026-08-25: the second condition, and what the record cannot show
+
+The Fix Released section names two conditions, and the section above answered only the first. The second is whether the classification routes cross-boundary findings to stop-and-surface rather than attempting them inside the one-round cap. It is answerable, and it is met: the Issue 19 reviews sibling's Editorial Remediation Loop block records three findings routed out of the loop on the ground that the minimal remediation crossed a section boundary. Those three reached Tom as placement calls and he ruled on each. That is the routing behaving as designed, and it is better evidence than what was originally written here.
+
+One limit on the first condition, stated plainly rather than left for a reader to discover. The enumerated findings above are not reconstructible from the persisted record. The Editor Review block carries the round-14 terminal verdict and a summary, not the round-by-round findings, and it never names the four new axes. The axis labels are the load-bearing detail, because a finding emitted under the pre-existing through-line axis is the old sweep firing rather than the new one. The round traffic was not persisted at axis granularity, so what survives on disk supports the claim that assembly findings surfaced and does not independently confirm which axis emitted each.

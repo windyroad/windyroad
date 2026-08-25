@@ -1,6 +1,6 @@
 # Problem 108: wr-newsletter step 7 hard-codes the wr-wardley owm-to-svg converter at a pinned plugin version, breaking the map render on plugin update
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-07-03
 **Priority**: 6 (Medium) -- Impact: Moderate (3) x Likelihood: Unlikely (2) (re-rated 2026-07-15 review: breaks the mid-run map render on every wr-wardley version bump; occasional but deterministic when it fires)
 **Origin**: internal
@@ -85,3 +85,13 @@ One behavioural note for the next run: `0.1.7` emits a PNG alongside the SVG. St
 - **Template used**: structured default (problem-shaped)
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes
+
+## Verified
+
+Closed 2026-08-25 on evidence from The Shift Issue 19.
+
+The Fix Released section named the test: the next `/wr-newsletter` run completing step 7 with a rendered map. That run happened. The weekly map mutation for the week ending 2026-08-23 committed at `da42358b`, so step 7 resolved a converter and produced a map rather than failing on the missing `0.1.0` path.
+
+The confirming detail is the side-effect this ticket predicted. It recorded that the newer converter emits a PNG alongside the SVG, and that step 7's contract names only the SVG, so the PNG would appear as an unclaimed output. Both `ai-landscape.svg` and `ai-landscape.png` show in that commit. A run against the old pinned path could not have produced either file, and a run against a hand-substituted path would not have produced the PNG. The prediction discriminates.
+
+The sibling-path sweep was already discharged at fix time on a repo-wide grep returning zero matches.

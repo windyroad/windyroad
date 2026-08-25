@@ -1,6 +1,6 @@
 # Problem 152: No newsletter gate owns parse-on-first-pass comprehension, so an unreadable sentence passes every gate
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-08-10
 **Priority**: 12 (Medium), Impact: 3 x Likelihood: 4, derived at capture from the description per Step 4a. Impact 3 because the failure ships reader-facing prose the reader cannot parse rather than breaking a system, matching P151's calibration for reader-facing newsletter defects; Likelihood 4 because it occurred three times in a single edition and no mechanism prevents recurrence.
 **Origin**: internal
@@ -129,3 +129,15 @@ Suggested for the next `/wr-itil:review-problems` cluster pass: a common parent 
 Gate reviews: architect ISSUES FOUND then addressed (many more enumeration sites than the two this ticket named; the ADR-043 counter interaction restated; the flat "structure wins" arbitration rule withdrawn in favour of the recorded predicate-widening precedent; the fixture design warned as likely non-discriminating, which it proved to be). JTBD PASS against JTBD-300 with four carried conditions, all applied. Style guide PASS, nothing in scope. Voice and tone ISSUES FOUND with six items, all applied, including that the first draft of the comprehension criterion failed its own restatement test.
 
 I13 propose-fix trace gate returned exit 3: this repository holds no story maps at all, so no release row could be drawn. Queued for the maintainer rather than auto-created, per the gate's own instruction.
+
+## Verified
+
+Closed 2026-08-25 on evidence from The Shift Issue 19, published 2026-08-24 and committed at `3b291d56`.
+
+The Fix Released section named the test: whether a comprehension finding raised by the editor or the critic actually reaches the cognitive-accessibility gate. It was observed twice in one finalise, from both agents the fix targeted. The two ran as separate invocations; whether either saw the other's output is not recorded and is not claimed here.
+
+The evidence is written into that edition's reviews sibling under "Cross-gate routing observed, recorded for verification", because it existed only in a session transcript when this ticket was first closed. The critic routed rather than dropped, and cited this ticket by number as the reason: "handing to cognitive-accessibility at SKILL step 15.4 rather than dropping them (P152)". It named two passages it could not restate after one read. The editor, in an independent invocation, emitted the same routing on the same passage, using the prescribed stop-and-surface wording.
+
+The gate then acted on comprehension as its own blocking axis and returned two defects that held the edition: a move-list divider referring to "the condition" where each of six moves has a different one, and a sentence stranding a verb phrase across a full stop. Both were corrected before publication.
+
+That is the whole route the fix built, exercised end to end by two independent agents in one run. Before the fix, the editor and critic were told to drop anything resembling readability and were given no destination.

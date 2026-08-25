@@ -129,6 +129,16 @@ Tests: 17 behavioural cases in `scripts/check-newsletter-structure.test.mjs`, 10
 - **Blocked by**: (none)
 - **Composes with**: P113, P151, P152, P099
 
+## Re-pricing trigger fired, 2026-08-25
+
+The ticket defers the expensive diff-scoped agent read and states its own trigger: "if instances keep arriving that neither half catches, that is the trigger to price it against P113's round economics." Issue 19 supplied those instances, so the trigger has fired and the deferral should now be re-costed rather than left standing.
+
+The instances, all from that edition's record. The opener was rewritten four times and each of the first three rewrites introduced a new error the skeptic then caught. Rounds 18 and 19 produced what the record calls "a remediation that is itself a regression": a sentence cut back to remove an over-claim, where the cut removed the head noun that made the referent resolve, so the claim got safer and the sentence got harder. Six of the edition's nine recorded occurrences of the sibling-site defect were introduced by a fix rather than found by one.
+
+The record then reaches this ticket's own conclusion independently: the gate that caught the regression was the one measuring comprehension, not the one that had asked for the reduction, "which is the argument for running both after an edit rather than only the gate that raised the finding."
+
+Not closed, and the reason is stricter than the instances above. The stated verification is the reviews sibling showing a round-close lint report with before-and-after pairs. That block exists in the Issue 19 sibling but records stop-and-surface routing instead; no lint report, no pairs, no `Verified against:` lines. The disclosure half of this fix is warranted on JTBD-300's outcome that a pipeline rewriting Tom's prose shows him the sentence rather than a summary, so a fix whose disclosure obligation never fired is not verified because its detection half worked.
+
 ## Related
 
 Captured via `/wr-itil:capture-problem`.

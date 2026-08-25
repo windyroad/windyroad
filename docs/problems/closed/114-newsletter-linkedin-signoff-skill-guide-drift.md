@@ -1,6 +1,6 @@
 # Problem 114: wr-newsletter step 15.5 tells the LinkedIn post to close with a windyroad.com.au sign-off, but VOICE-AND-TONE.md's auto-share carve-out forbids any manual URL in the post body
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-07-13
 **Priority**: 4 (Low), Impact: 1 x Likelihood: 4, derived at capture from the description
 **Origin**: internal
@@ -83,3 +83,17 @@ Do NOT rely on the voice gate passing on its first draft. The gate is non-determ
 The corpus measurement is five escapes across seventeen leader editions, taken with `grep -qE '^windyroad\.com\.au[[:space:]]*$'` over `src/newsletters/published/leader/*/*.linkedin.md`. Recorded with its method per P159, because a first pass at this count was wrong: `grep -c` prints `0` and exits 1, so a `|| echo 0` fallback fired alongside it and every edition appeared to match. So a first-draft PASS is consistent with both a working fix and a lucky draft, and only the grep discriminates.
 
 All five escapes are cited here so a later auditor grepping the corpus finds them already accounted for rather than reading this ticket as incomplete.
+
+## Verified
+
+Closed 2026-08-25 on evidence from The Shift Issue 19.
+
+The condition is that the LinkedIn post body carries no manual URL, the brand line included. The published companion carries no URL of any kind: no `https://`, no `www.`, no bare domain, checked across the whole file.
+
+The stronger half is that this was caught before publication rather than after. The Fix Released section is explicit that a check pointed at the published copy detects rather than prevents, and is worth no credit as a control. The post's own voice gate returned PASS at the round-3 close-out, reading the companion as a separate artefact, and its verdict names the grep it ran: "No manual URL in the body, confirmed by grep across the whole file." That is recorded in the edition's reviews sibling. The gate ran against the draft at step 15.5, before the edition went out.
+
+Two things this does not establish, recorded so a later reader does not take the close as broader than it is.
+
+The Fix Released section warns against reading a first-draft voice PASS as proof, because the gate is non-deterministic on this finding and five editions shipped the bare domain after it FAILed Issue 13 on the same carve-out. The verification queue cell for this ticket named that first-draft PASS as the signal, which contradicts the ticket body. The body is right and the cell was wrong. What closes this is the SKILL prose no longer instructing the drafter to add the line, plus a gate that confirmed the absence by grep rather than by impression, not the PASS on its own.
+
+The draft directory was promoted to `published/` for this edition, so the draft-scoped grep the ticket prescribes cannot be re-run against it. The evidence above stands on the gate's pre-publication grep, which reads the same bytes at the same point in the pipeline.

@@ -85,3 +85,21 @@ Verification trigger: next `/wr-newsletter` run where Tom supplies Adjust text. 
 - `src/newsletters/drafts/developer/2026-04-19.md` (the passing-but-shallow edition that triggered this ticket)
 - Memory: `feedback_per_item_interactive_voice.md` (the decision to use AskUserQuestion-based per-item capture); `feedback_each_review_is_separate_subagent.md` (gates run as separate subagents, relevant to whether the critic can reasonably take a second input artifact)
 - ADR 016 (SW-critic subagents and iteration loop; any new critic check must fit the 3-round exit criteria)
+
+## Comparison run 2026-08-25, and it splits
+
+The verification named Tom's external review comparing a rendered item against the capture transcript. That comparison has now been run against The Shift Issue 19, which carried two items with his input. The result is not a clean pass either way, so it is recorded rather than acted on.
+
+Part 2, the transcript artifact, works. `src/newsletters/published/leader/2026-08-24/2026-08-24.capture.md` exists, carries all twelve items with their theme role and outcome, quotes his words inside a blockquote under an explicit "verbatim" label on the two items where he gave any, records the reframe he accepted on one of them, and carries a drafter note naming two things not to do. It survived the promotion into the published folder rather than being dropped at the boundary.
+
+Part 1, verbatim preservation in the rendered item, is met on one of the two and missed on the other.
+
+Item 7 is clean. His instruction was placement: keep it, but it is not that relevant, maybe for the also-worth-noting section. The published brief has it in "Also worth noting". Instruction honoured exactly.
+
+Item 6 is the miss, and it is the interesting one. His words were "I don't agree with human verification. I've spoken about this many times before. Human on the loop, not in the loop." The published item holds the position with real fidelity: it takes Willison's observation and explicitly declines his conclusion, argues that evidence rather than a person should decide what ships, places human judgement on which gates exist rather than on individual changes, and never softens into a both-sides formulation. Both of the drafter note's prohibitions held across a twenty-four-round finalise.
+
+What did not survive is the phrase. "On the loop, not in the loop" appears nowhere in the brief; a grep for it and for "in the loop" returns three lines, none of them using it. That is the specific thing this ticket's Part 1 rule asks for, which is preserving load-bearing noun-phrases verbatim and paraphrasing only connective tissue. His formulation is load-bearing by his own account, since he says he has made the point many times, and it was paraphrased into an argument rather than carried.
+
+So the honest reading is that the fix preserved the position and lost the words, on the one item that had words to lose. Whether that is a defect is Tom's call rather than a lint's: an argument that expands his phrase into four numbered consequences may serve the reader better than the phrase would. What is not in doubt is that the rule as written was not followed, and the sample is one item.
+
+Not closed. The evidence above is what a next verification attempt would otherwise have to re-derive.
