@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164, P165, P166 and P167 captured** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)
+> Last reviewed: 2026-08-25 **eight closed (P152, P122, P119, P108, P151, P114, P129, P002); P164 through P168 captured** (newsletter-gate, script-guard and hero-fold fixes verified against The Shift Issue 19 and a live browser pass; two controls found reporting nothing-to-check where the honest report is could-not-check) (session retro via /wr-retrospective:run-retro)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,6 +11,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
+| 12.0 | P168 | The freshness gate reads the installed tree and its fix flow only writes the manifests, so the gate never clears | 12 | Open | S | 2026-08-25 | internal |
 | 12.0 | P166 | A governance surface that silently degrades to a subset of its specification reads as a clean run | 12 | Open | S | 2026-08-25 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
