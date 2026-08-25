@@ -95,7 +95,7 @@ The hard fail in item three needs a deterministic owner rather than prose, becau
 
 ### Confirmation
 
-1. All seven surfaces above cite this record and none restates the rule.
+1. All nine surfaces above cite this record and none restates the rule.
 2. An edition publishes with first person in an item body and the voice gate does not flag it.
 3. A draft with first person in a "What happened" bullet is blocked by the gate.
 4. An external reviewer's next voice finding is a new one, not this one.
