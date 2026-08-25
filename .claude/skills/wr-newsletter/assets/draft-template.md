@@ -4,7 +4,7 @@ Use this structure when drafting a brief. Fill every placeholder in square brack
 
 ## Voice reminders
 
-- Team voice: "we", not "I" (ADR 010).
+- Person is decided by ADR-057, not restated here: "we" for the team's and the publication's work, "I" for Tom's judgement, track record and editorial responsibility. See `docs/VOICE-AND-TONE.md` under "Who is speaking". The gate hard-fails only on "I" inside the factual "What happened" bullets or the move list.
 - Direct, specific, confident.
 - No em-dashes. Use commas, periods, colons, or parentheses.
 - Each bullet: one sentence, under ~25 words. Split at the natural clause boundary when longer.

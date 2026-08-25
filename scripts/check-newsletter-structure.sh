@@ -50,6 +50,10 @@
 #   q  no markdown hard break (two or more trailing spaces) on a body line (P154)
 #   r  no two prose lines with no blank line between them, which render as one
 #      joined paragraph (P154); brief body only
+#   s  no first person in the factual "What happened" block (ADR-057); brief
+#      body only. Owns the "What happened" half of ADR-057's location rule; the
+#      move-list half is not checkable until the draft template defines that
+#      section, which ADR-057 records rather than fixes.
 #
 # Notes on determinism:
 #   Check (b) fires on a link-free line that names a news outlet which is not
@@ -988,6 +992,60 @@ $missing
 EOF
   fi
 fi
+
+# --- (s) first person in the factual "What happened" bullets (ADR-057) --------
+# ADR-057 sorts voice on who is answerable and blocks on LOCATION rather than on
+# the test: "I" inside the factual "What happened" bullets or the move list is a
+# hard fail; anywhere else a wrong-person call is a finding the author clears
+# under ADR-043 clause 4. This check owns the first half. The move-list half is
+# not checkable yet, because ADR-057 records that assets/draft-template.md does
+# not define that section, so there is nothing stable to anchor on. Recorded
+# here rather than silently half-implemented.
+#
+# Anchors on the "**What happened" label, not on heading level, because ADR-053
+# moved the outline to H2 at Issue 17 and left the archive at H3. Anchoring on
+# the heading would go blind on one era or the other, which is drift in the
+# direction that stops checking.
+#
+# The predicate requires "I" to be a sentence subject ("I " plus a lowercase
+# word) or a contraction. A bare word-boundary \bI\b was measured against the
+# corpus first and produced one false positive: the 2026-08-03 edition's
+# "Landgericht Munchen I, Germany's Munich Regional Court I", where the I is a
+# numeral in a court's name. A check that fires on a published edition gets
+# switched off, so the narrower predicate is the one that ships. Quoted spans
+# are stripped before matching: a quote is the source speaking, not the
+# publication, and ADR-057 governs who the publication speaks as.
+#
+# Measured at zero hits across all 20 published brief bodies.
+while IFS=$'\t' read -r ln hit; do
+  [ -n "${ln:-}" ] || continue
+  fail s "$brief:$ln: first person in the factual \"What happened\" block ($hit); ADR-057 hard-fails on \"I\" here because these bullets report rather than judge, so rewrite as the publication's reporting, and put the judgement in the analysis below where first person is permitted"
+done < <(printf '%s\n' "$body" | awk -F'\t' '
+  {
+    ln = $1; t = $2;
+    if (t ~ /^```/) { fence = !fence; next }
+    if (fence) next;
+    if (t ~ /^\*\*What happened[.:]?\*\*/) { inblk = 1 }
+    else if (t ~ /^\*\*[A-Z]/ || t ~ /^#/ || t ~ /^-{3,}[ \t]*$/) { inblk = 0 }
+    if (!inblk) next;
+
+    # Strip inline code, link targets and double-quoted spans before matching.
+    line = t;
+    gsub(/`[^`]*`/, "", line);
+    gsub(/\]\([^)]*\)/, "]", line);
+    gsub(/"[^"]*"/, "", line);
+
+    if (match(line, /(^|[^[:alnum:]])I ([a-z])/)) {
+      printf "%s\tI %s\n", ln, substr(line, RSTART + RLENGTH - 1, 12); next
+    }
+    if (match(line, /(^|[^[:alnum:]])I'"'"'(m|ve|d|ll)([^[:alnum:]]|$)/)) {
+      printf "%s\t%s\n", ln, substr(line, RSTART, RLENGTH); next
+    }
+    if (match(line, /(^|[^[:alnum:]])(my|me)([^[:alnum:]]|$)/)) {
+      printf "%s\t%s\n", ln, substr(line, RSTART, RLENGTH); next
+    }
+  }
+')
 
 # --- verdict ------------------------------------------------------------------
 if [ "$violations" -gt 0 ]; then

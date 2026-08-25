@@ -437,7 +437,7 @@ Compose the theme anchor (text only at 11a; cover image render stays at step 12 
 
 Voice rules at 11a (subset of step-13 voice gate, applied to the anchor only):
 
-- Team voice ("we"), not "I" (ADR 010). The H1 + theme statement carry the editorial position; the "From Tom" opener is at 11b.
+- Person is decided by ADR-057 and not restated here. Applied to this surface it gives "we": the anchor is the publication's own reporting, not a judgement Tom is personally answerable for. The anchor is not one of the two places the gate hard-fails on. The H1 + theme statement carry the editorial position; the "From Tom" opener is at 11b.
 - Direct, specific, confident. Name the constraint, name the variation.
 - No em-dashes. Use commas, periods, colons, or parentheses.
 - No hype words.
@@ -476,7 +476,7 @@ Using the approved H1, hook lines, and theme statement from 11a, produce the ful
 The step-15 critic's "Headline craft" rubric section is the catch-it-in-review backstop; this drafter discipline prevents producing the failure in the first place.
 
 Voice rules (enforced by step 13 voice gate):
-- Person is decided by ADR-057, not restated here: "we" for the team's and the publication's work, "I" for Tom's judgement, track record and editorial responsibility. See `docs/VOICE-AND-TONE.md` under "Who is speaking" for the rule and its test. The gate hard-fails only on "I" inside the factual "What happened" bullets or the move list. One carve-out stands independently: the standing provenance line (ADR 032 element 5) is first person on BOTH surfaces, including the LinkedIn companion, which has no From Tom opener. The reason is specific to that paragraph: "we still read every line" sitting immediately after "a different AI reviews it" leaves "we" ambiguous about whether it includes the machines, which is unaffordable in the one paragraph whose job is naming who is accountable.
+- Person is decided by ADR-057, not restated here: "we" for the team's and the publication's work, "I" for Tom's judgement, track record and editorial responsibility. See `docs/VOICE-AND-TONE.md` under "Who is speaking" for the rule and its test. The gate hard-fails only on "I" inside the factual "What happened" bullets or the move list, and the "What happened" half of that is enforced deterministically at save by `check-newsletter-structure.sh` check (s) rather than resting on the reviewer noticing. The move-list half is prose only, because `assets/draft-template.md` does not define that section. One carve-out stands independently: the standing provenance line (ADR 032 element 5) is first person on BOTH surfaces, including the LinkedIn companion, which has no From Tom opener. The reason is specific to that paragraph: "we still read every line" sitting immediately after "a different AI reviews it" leaves "we" ambiguous about whether it includes the machines, which is unaffordable in the one paragraph whose job is naming who is accountable.
 - Direct, specific, confident. Name the org, name the artifact, name the date.
 - No em-dashes. Use commas, periods, colons, or parentheses.
 - No hype words.
@@ -714,7 +714,9 @@ If the image generation tooling fails or returns an unbranded result, do not blo
 
 ```
 Agent subagent_type: wr-voice-tone:agent
-prompt: "Review the following AI Engineering Brief draft against docs/VOICE-AND-TONE.md. Pay particular attention to em-dashes, word list, hype words, team voice (ADR 010), and the 'Respectful of the reader's team' clause (ADR 015). Return PASS or FAIL plus specific findings.
+prompt: "Review the following AI Engineering Brief draft against docs/VOICE-AND-TONE.md. Pay particular attention to em-dashes, word list, hype words, and the 'Respectful of the reader's team' clause (ADR 015).
+
+On person, the standard is the 'Who is speaking' section of that guide, which is ADR-057 and NOT ADR-010: voice sorts on who is answerable, not on subject matter. 'we' for anything the team or the publication did or holds; 'I' for Tom's judgement, his individual track record and his editorial responsibility. First person in an item body is not a finding on its own. Hard-fail ONLY on 'I' inside the factual 'What happened' bullets or the move list. Anywhere else, report a wrong-person call as a finding for the author to clear rather than as a block. Return PASS or FAIL plus specific findings.
 
 <paste the full draft here>"
 ```
@@ -1052,7 +1054,9 @@ The published edition's cover image is auto-attached by LinkedIn Newsletter auto
 
 ```
 Agent subagent_type: wr-voice-tone:agent
-prompt: "Review the following LinkedIn post for The Shift / Tokens Spent against docs/VOICE-AND-TONE.md. Pay particular attention to em-dashes, word list, hype words, team voice (ADR 010), and the 'Respectful of the reader's team' clause (ADR 015). The audience is LinkedIn subscribers reading a one-screen teaser. Return PASS or FAIL plus specific findings.
+prompt: "Review the following LinkedIn post for The Shift / Tokens Spent against docs/VOICE-AND-TONE.md. Pay particular attention to em-dashes, word list, hype words, and the 'Respectful of the reader's team' clause (ADR 015).
+
+On person, the standard is the 'Who is speaking' section of that guide, which is ADR-057 and NOT ADR-010: voice sorts on who is answerable, not on subject matter. The companion post is in scope for that section despite being a LinkedIn post, so the LinkedIn guideline sorting on subject matter does not govern here. 'we' for anything the team or the publication did or holds; 'I' for Tom's judgement, his individual track record and his editorial responsibility. First person is not a finding on its own. This artefact has no 'What happened' bullets or move list, so there is no hard-fail location in it: report a wrong-person call as a finding for the author to clear. The audience is LinkedIn subscribers reading a one-screen teaser. Return PASS or FAIL plus specific findings.
 
 <paste the full LinkedIn post text here>"
 ```

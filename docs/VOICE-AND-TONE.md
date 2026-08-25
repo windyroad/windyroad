@@ -84,7 +84,7 @@ Not: "Demir read the change more carefully than the project's owner did."
 
 ### Who is speaking, "I" or "we"
 
-**Scope.** This section governs the publication's reporting and its author-voice sections: the newsletter brief and its companion post, plus outbound copy that speaks for the team. It does not disturb the practitioner "I" that ADR-010 preserves for blog articles and social posts, where the author sharing personal experience writes as "I" whether or not a colleague could have done the same work. The carve-out reaches practitioner-experience writing only. It never reaches the publication's own reporting, and it never reaches the newsletter companion post, which is in scope here despite being a LinkedIn post.
+**Scope.** This section governs the publication's reporting and its author-voice sections: The Shift brief and its LinkedIn companion post. It reaches the leader persona only; Tokens Spent keeps the narrower rule in its own persona config until somebody has a reason to change it, and the voice gate prompt is persona-parameterised, so the qualification is load-bearing rather than decorative. It does not disturb the practitioner "I" that ADR-010 preserves for blog articles and social posts, where the author sharing personal experience writes as "I" whether or not a colleague could have done the same work. The carve-out reaches practitioner-experience writing only. It never reaches the publication's own reporting, and it never reaches the newsletter companion post, which is in scope here despite being a LinkedIn post.
 
 Inside that scope, the default is "we", because the work is a team's. "I" is for the things only Tom can be the subject of.
 
@@ -100,7 +100,7 @@ Do not mix the two inside one sentence about one act. Different sections using d
 
 The two are not interchangeable for softening. "We think" as a hedge on a call Tom actually made is worse than "I think", because it spreads a judgement across people who did not make it. And "I" on the team's work claims credit that is not one person's.
 
-The basis is ADR-010, which decides team-plural voice with Tom as named founder and nominates this guide as where its registers land, together with the banned-patterns row on naming the artefact instead of speaking as the team. This was written down on 2026-08-24 after an external reviewer read Issue 19 and reported the voice drifting between the two. On checking, it was not drifting: the author-voice section ran on "I", the reporting ran on "we", and every instance was already on the right side of this rule. The rule is recorded so the same finding does not have to be argued from scratch every edition. Keep checking it per edition until it has been ratified.
+The basis is ADR-057, which decides that voice sorts on who is answerable rather than on subject matter, and which is the record to cite rather than restate. ADR-010 remains the source of team-plural voice with Tom as named founder and nominates this guide as where its registers land, but it sorts on subject matter and returns no answer for an item that reports what a vendor did and then draws a consequence for the reader, which is the largest category of text this publication produces. Reading the answerability axis back into ADR-010 is the mis-attribution ADR-057 exists to remove. See also the banned-patterns row on naming the artefact instead of speaking as the team. This was written down on 2026-08-24 after an external reviewer read Issue 19 and reported the voice drifting between the two. On checking, it was not drifting: the author-voice section ran on "I", the reporting ran on "we", and every instance was already on the right side of this rule. The rule is recorded so the same finding does not have to be argued from scratch every edition. Ratified 2026-08-25.
 
 ---
 
@@ -313,7 +313,7 @@ Carve-out for recurring-newsletter cadence anchors: the banned pattern is one-of
 Carve-out for substantive content-tied questions: a one-line CTA tied to a specific item's editorial thread is legitimate. "What does your team's AI-usage metric reward today?" is a substantive question grounded in one of the post's threads. It invites discussion of the content, not engagement-for-engagement's-sake. The test: the question only makes sense if the reader has engaged with one of the post's items. Generic prompts ("thoughts?") fail the test; substance-led prompts pass.
 
 Guidelines:
-- First person plural ("we") for service content, first person singular ("I") acceptable for personal observations. This sorts on subject matter. For newsletter editions and their companion posts, follow "Who is speaking" under Voice instead, which sorts on who is answerable.
+- First person plural ("we") for service content, first person singular ("I") acceptable for personal observations. This sorts on subject matter, and it is ADR-010's rule. For The Shift and its companion posts, follow "Who is speaking" under Voice instead, which sorts on who is answerable; ADR-057 gives it precedence over this line for those two artefacts and leaves it intact everywhere else.
 - Short paragraphs: one to three sentences each
 - Numbered or bulleted lists work well for specifics that would otherwise blur together in a feed
 - No em-dashes (same constraint as all other copy)

@@ -1424,3 +1424,113 @@ describe('check-newsletter-structure.sh', () => {
   });
 
 });
+
+// ── (s): ADR-057's hard fail, first person in the factual "What happened"
+// bullets ────────────────────────────────────────────────────────────────────
+// ADR-057 sorts voice on who is answerable and blocks on LOCATION rather than on
+// the test: "I" inside the factual "What happened" bullets or the move list is a
+// hard fail, and anywhere else a wrong-person call is a finding the author
+// clears. That hard fail needs a deterministic owner, because ADR-052's own
+// confirmation records a prose rule at this exact surface failing to hold.
+//
+// This check owns the "What happened" half only. The move-list half is not
+// checkable yet: ADR-057 records that assets/draft-template.md does not define
+// that section, so there is nothing stable to anchor on.
+describe('check-newsletter-structure.sh: (s) first person in What happened (ADR-057)', () => {
+  const withBlock = (block) => VALID_BRIEF.replace(
+    '**What happened.** Anthropic [published a statement](https://www.anthropic.com/news/x) (Jun 12). The Wall Street Journal reported [the trigger](https://www.wsj.com/x) (Jun 13). Google shipped [Gemma 4 12B](https://blog.google/x) (Jun 11).',
+    block,
+  );
+  const lint = (brief) => {
+    const dir = mkdtempSync(join(tmpdir(), 'check-s-'));
+    const p = join(dir, '2026-06-15.md');
+    writeFileSync(p, brief);
+    return run(p).stderr;
+  };
+
+  it('fires on "I" used as a sentence subject in the block', () => {
+    expect(lint(withBlock('**What happened.** I checked every source on 12 June.')))
+      .toContain('FAIL [s]');
+  });
+
+  it('fires on a first-person contraction in the block', () => {
+    expect(lint(withBlock("**What happened.** I've read the filing in full.")))
+      .toContain('FAIL [s]');
+  });
+
+  it('fires on a sub-bullet under the block, not only the label line', () => {
+    // The block is a label plus whatever hangs off it. Checking the label line
+    // alone would miss the shape the corpus actually uses.
+    expect(lint(withBlock('**What happened.** Two things.\n\n- Anthropic shipped it.\n- I confirmed the date myself.')))
+      .toContain('FAIL [s]');
+  });
+
+  it('stays quiet on a Roman numeral that is not a pronoun', () => {
+    // The one corpus hit a naive \bI\b predicate produced: the 2026-08-03
+    // edition's "Landgericht Munchen I, Germany's Munich Regional Court I".
+    // A check that fires on a published edition would be switched off.
+    expect(lint(withBlock("**What happened.** The Landgericht Munchen I, Germany's Munich Regional Court I, ruled on 31 July.")))
+      .not.toContain('[s]');
+  });
+
+  it('stays quiet on "AI"', () => {
+    expect(lint(withBlock('**What happened.** An AI agent opened the pull request on 12 June.')))
+      .not.toContain('[s]');
+  });
+
+  it('stays quiet on first person inside a quoted span', () => {
+    // A quote is the source speaking, not the publication. ADR-057 is about who
+    // the publication speaks as, so a quoted "I" is not a voice violation.
+    expect(lint(withBlock('**What happened.** Torvalds wrote that "I kept being told it was impossible" on 12 June.')))
+      .not.toContain('[s]');
+  });
+
+  it('stays quiet on first person OUTSIDE the block', () => {
+    // The load-bearing negative. ADR-057 permits "I" in item analysis, and a
+    // check that blocked it there would enforce the superseded whitelist that
+    // two published editions had already broken.
+    expect(lint(VALID_BRIEF.replace(
+      '**Why it matters to your team.** Portability is the cheapest hedge.',
+      '**Why it matters to your team.** I think portability is the cheapest hedge.',
+    ))).not.toContain('[s]');
+  });
+
+  it('reads both the colon and the full-stop label form', () => {
+    // The corpus carries "**What happened:**"; the fixture above carries
+    // "**What happened.**". Both are live and the check must not pick a side.
+    expect(lint(withBlock('**What happened:** I checked every source on 12 June.')))
+      .toContain('FAIL [s]');
+  });
+
+  it('reads the legacy H3 outline as well as the H2-rooted one', () => {
+    // ADR-053 moved the outline to H2 from Issue 17 and left the archive at H3,
+    // so a check anchored on heading level would go blind on one era or the
+    // other. This one anchors on the label, and this case pins that.
+    const h2 = VALID_BRIEF.replace('### Item 1:', '## Item 1:');
+    expect(lint(h2.replace(
+      '**What happened.** Anthropic [published a statement](https://www.anthropic.com/news/x) (Jun 12). The Wall Street Journal reported [the trigger](https://www.wsj.com/x) (Jun 13). Google shipped [Gemma 4 12B](https://blog.google/x) (Jun 11).',
+      '**What happened.** I checked every source on 12 June.',
+    ))).toContain('FAIL [s]');
+  });
+
+  it('stays clean across every published brief body', () => {
+    // Measured before the check shipped: zero hits across all 20 editions with
+    // the refined predicate, against one false positive with a naive one.
+    const roots = ['src/newsletters/published/leader', 'src/newsletters/published/developer'];
+    let checked = 0;
+    const hits = [];
+    for (const root of roots) {
+      if (!existsSync(root)) continue;
+      for (const date of readdirSync(root)) {
+        const body = join(process.cwd(), root, date, `${date}.md`);
+        if (!existsSync(body)) continue;
+        checked += 1;
+        for (const line of run(body).stderr.split('\n')) {
+          if (line.includes('[s]')) hits.push(`${date}: ${line}`);
+        }
+      }
+    }
+    expect(checked, 'no published briefs were found to check').toBeGreaterThan(10);
+    expect(hits, `check (s) fired on published editions:\n${hits.join('\n')}`).toEqual([]);
+  }, 30000);
+});
