@@ -49,7 +49,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "6.0.2",
-    "dry-aged-deps": "2.14.0",
+    "dry-aged-deps": "2.17.1",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
     "eslint-plugin-react": "^7.37.5",
