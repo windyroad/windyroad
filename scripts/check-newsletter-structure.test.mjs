@@ -1534,3 +1534,101 @@ describe('check-newsletter-structure.sh: (s) first person in What happened (ADR-
     expect(hits, `check (s) fired on published editions:\n${hits.join('\n')}`).toEqual([]);
   }, 30000);
 });
+
+// ── (m): zero digests is non-adoption on a current edition, not pre-adoption
+// (P165) ─────────────────────────────────────────────────────────────────────
+// The zero-digest branch used to skip unconditionally and print "(pre-ADR-047
+// edition)", a cause its predicate never tested. Issue 19 was written sixteen
+// days after ADR-047 landed and its immediate predecessor complied, so the one
+// guard against a stale gate verdict stood down because of exactly the omission
+// that should have alarmed it, on every one of roughly twenty lint runs.
+//
+// The neighbouring checks already state the principle this restores. (h): "Do
+// NOT silently skip". (p) and (o): "drift here is silent in the direction that
+// stops checking, so this fails rather than skipping."
+describe('check-newsletter-structure.sh: (m) non-adoption vs pre-adoption (P165)', () => {
+  function datedReviews(date, blocks) {
+    const dir = mkdtempSync(join(tmpdir(), 'nl-m165-'));
+    const b = join(dir, `${date}.md`);
+    writeFileSync(b, VALID_BRIEF);
+    writeFileSync(join(dir, `${date}.linkedin.md`), VALID_LINKEDIN);
+    writeFileSync(join(dir, `${date}.reviews.md`), `# Reviews\n\n${blocks}\n`);
+    return b;
+  }
+
+  it('fails a current edition whose reviews sibling carries no digests', () => {
+    // The observed 2026-08-24 state. ADR-047 landed 2026-08-08.
+    const r = run(datedReviews('2026-08-24', '## Editor Review\nPASS.'));
+    expect(r.stderr).toContain('FAIL [m]');
+    expect(r.status).toBe(1);
+  });
+
+  it('treats ADR-047\'s own date as in scope', () => {
+    // The boundary is the decision's date, so an edition published that day is
+    // governed by it. Off-by-one here would exempt the first compliant edition.
+    expect(run(datedReviews('2026-08-08', '## Editor Review\nPASS.')).stderr)
+      .toContain('FAIL [m]');
+  });
+
+  it('still skips a genuine pre-adoption edition, loudly', () => {
+    const r = run(datedReviews('2026-08-07', '## Editor Review\nPASS.'));
+    expect(r.stderr).toContain('SKIP [m]');
+    expect(r.stderr).not.toContain('FAIL [m]');
+  });
+
+  it('never claims pre-adoption for an edition it did not date-check', () => {
+    // The defect itself: the message asserted a cause the predicate could not
+    // distinguish, and hardcoded the benign reading of it. A skip may only state
+    // what was actually tested.
+    const current = run(datedReviews('2026-08-24', '## Editor Review\nPASS.')).stderr;
+    expect(current).not.toContain('pre-ADR-047 edition');
+  });
+
+  it('skips with an honest reason when the filename carries no date', () => {
+    // Not every caller passes a date-named brief. Absent a derivable date the
+    // check cannot tell the two populations apart, and saying so is the honest
+    // report; claiming pre-adoption again would be this defect one layer down.
+    const dir = mkdtempSync(join(tmpdir(), 'nl-m165-nodate-'));
+    const b = join(dir, 'draft.md');
+    writeFileSync(b, VALID_BRIEF);
+    writeFileSync(join(dir, 'draft.linkedin.md'), VALID_LINKEDIN);
+    writeFileSync(join(dir, 'draft.reviews.md'), '# Reviews\n\n## Editor Review\nPASS.\n');
+    const r = run(b);
+    expect(r.stderr).toContain('SKIP [m]');
+    expect(r.stderr).not.toContain('pre-ADR-047 edition');
+    expect(r.stderr).toContain('no edition date');
+  });
+
+  it('a current edition WITH digests is unaffected by the scope test', () => {
+    // The scope test gates the zero-digest branch only. An edition that records
+    // its digests must still be compared, not waved through by being current.
+    const stale = '0'.repeat(64);
+    const r = run(datedReviews('2026-08-24',
+      `## Editor Review (finalise)\nscored-digest: sha256:${stale}\nPASS.`));
+    expect(r.stderr).toContain('FAIL [m]');
+    expect(r.stderr).toContain('different brief');
+  });
+
+  it('names exactly the published editions that adopted nothing', () => {
+    // Measured on disk rather than assumed, and the measurement corrected the
+    // ticket. Digest counts: 2026-08-10 zero, 2026-08-17 five, 2026-08-24 zero.
+    // So adoption is INTERMITTENT, not a regression at a point in time: the
+    // edition between the two breaches complied. P165's first draft said the
+    // pipeline "stopped writing the digests", which the third edition refutes.
+    //
+    // Pinned on this branch's own message rather than on any [m] failure,
+    // because 2026-08-17 fails [m] for the unrelated pre-existing reason that
+    // its five recorded digests no longer match the published text. Pinning the
+    // broader set would have conflated a stale verdict with a missing one.
+    const breached = [];
+    const root = 'src/newsletters/published/leader';
+    for (const date of readdirSync(root)) {
+      const body = join(process.cwd(), root, date, `${date}.md`);
+      if (!existsSync(body)) continue;
+      if (run(body).stderr.includes('this is non-adoption rather than pre-adoption')) {
+        breached.push(date);
+      }
+    }
+    expect(breached).toEqual(['2026-08-10', '2026-08-24']);
+  }, 30000);
+});

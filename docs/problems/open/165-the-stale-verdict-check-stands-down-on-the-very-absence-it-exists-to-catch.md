@@ -23,12 +23,16 @@ The predicate tests one thing: this file has zero digest lines. The message asse
 
 Verified on disk 2026-08-25. `docs/decisions/047-stale-gate-verdicts-are-re-run-and-the-check-over-reports.proposed.md` carries `date: 2026-08-08`. Issue 18's reviews sibling, published 2026-08-17, carries five `scored-digest: sha256:` lines. Issue 19's, published 2026-08-24, carries zero. Issue 19 postdates ADR-047 by sixteen days and its immediate predecessor complied.
 
-So Issue 19 is not a legacy edition. It is a current edition whose pipeline stopped writing the digests, and the check that exists to catch stale gate verdicts stood down because of exactly the omission that should have alarmed it. Every lint run across twenty-four remediation rounds printed the SKIP line, and it read as expected behaviour.
+So Issue 19 is not a legacy edition. It is a current edition that recorded no digests, and the check that exists to catch stale gate verdicts stood down because of exactly the omission that should have alarmed it. Every lint run across twenty-four remediation rounds printed the SKIP line, and it read as expected behaviour.
+
+**Correction, 2026-08-25, from measuring the corpus while building the fix.** An earlier version of this paragraph said Issue 19 was "a current edition whose pipeline stopped writing the digests". That is refuted by the edition before the one it compares against. Counts across the three in-scope editions: 2026-08-10 zero, 2026-08-17 five, 2026-08-24 zero. Adoption is intermittent rather than a regression at a point in time, and the edition between the two breaches complied. Two published editions breached the contract, not one.
+
+The correction matters for the second defect below, because it changes what the investigation is looking for. A regression has a commit; an intermittent omission has a reason the drafter sometimes reaches the emitting step and sometimes does not. The SKILL prescribes the digest lines at length, with templates at nine save-time blocks and a verbatim-copy instruction for prep-carried ones, so this is not a missing instruction. It is an instruction nothing enforced, which is the same sentence as defect one.
 
 Two defects, kept in one ticket because the second is what exposed the first and they are fixed together.
 
 1. Check (m) cannot tell a legacy edition from a current one whose digests went missing, and resolves the ambiguity toward the outcome that stops checking.
-2. The Issue 19 pipeline emitted no scored-digest lines at all. That is a regression against Issue 18 and needs its own root cause in the drafting skill.
+2. Two of the three in-scope editions emitted no scored-digest lines at all, with a compliant one between them. That intermittency needs its own root cause in the drafting skill, and defect one is why nobody saw it: the detector treated each omission as licence to stop looking.
 
 ## Symptoms
 
@@ -43,7 +47,7 @@ Compare the reviews sibling's digest count against the preceding edition's befor
 ## Impact Assessment
 
 - **Who is affected**: the newsletter finalise, on the publication's primary channel. No reader is known to have been affected, because the Issue 19 gates were re-run manually against fresh freezes and the freeze discipline was in force by hand.
-- **Frequency**: every lint run of the Issue 19 finalise, roughly twenty. Continues on every future edition until the digests are re-emitted.
+- **Frequency**: every lint run of the Issue 19 finalise, roughly twenty, and every run against the 2026-08-10 edition before it. Continues on every future edition that skips the emission.
 - **Severity**: ADR-047's enforcement is unarmed. The failure it was written to prevent, a gate verdict scoring text that has since changed, is exactly what happened twice by hand in the same edition and is recorded as P164.
 - **Analytics**: not instrumented.
 
@@ -59,10 +63,10 @@ The second defect is unexamined. Issue 18 wrote the digests and Issue 19 did not
 
 ### Investigation Tasks
 
-- [ ] Find why Issue 19 emitted no digests when Issue 18 did. Diff the two runs' paths through the save step.
-- [ ] Decide how check (m) derives the legacy distinction: edition date against ADR-047's, presence of the ADR-052 tagging conventions, or an explicit frontmatter marker.
-- [ ] Create a reproduction test with both populations, a genuine legacy sibling and a current sibling with digests stripped.
-- [ ] Confirm the fix fails red against the Issue 19 sibling as it stands before shipping it.
+- [ ] Find why 2026-08-10 and 2026-08-24 emitted no digests when 2026-08-17 did. The compliant edition sits between the two breaches, so this is not a bisect: look for what makes the drafter reach the emitting step on some runs and not others.
+- [x] Decide how check (m) derives the legacy distinction: edition date against ADR-047's, presence of the ADR-052 tagging conventions, or an explicit frontmatter marker.
+- [x] Create a reproduction test with both populations, a genuine legacy sibling and a current sibling with digests stripped.
+- [x] Confirm the fix fails red against the Issue 19 sibling as it stands before shipping it.
 
 ## Fix Strategy
 
@@ -71,6 +75,20 @@ Apply the fail-not-skip principle the neighbouring checks already state. Check (
 Fix the emission separately and first, because the check cannot be tested green until something writes digests again.
 
 Write the check against the requirement rather than against the current corpus, and confirm it goes red against the Issue 19 sibling before shipping. This ticket exists because a check was written that could not fail on the case it was for, and shipping a second one on the same reasoning would be the same error twice.
+
+## Defect one shipped 2026-08-25; defect two is now guarded rather than solved
+
+**The check no longer guesses.** `check-newsletter-structure.sh` check (m) derives whether ADR-047 governs the edition instead of inferring it from the absence it is testing for. The edition date comes from the brief filename, which ADR-026 fixes as the publication date and which the sibling derivation in the same script already depends on, so this adds no new coupling. On or after 2026-08-08, zero digests is a contract breach and fails. Before it, the edition is genuinely exempt and skips. Undateable, and the check reports that it could not tell, which is the only honest answer left and is deliberately not the benign one.
+
+The frontmatter-marker alternative the Fix Strategy preferred was rejected on inspection. It means editing eighteen published editions to record a fact already derivable from their filenames, and it fails closed on an unmarked new file for want of bookkeeping rather than for a real breach.
+
+**7 behavioural cases, 5 confirmed red first.** Including the boundary, where ADR-047's own date is in scope, and the case pinning that a current edition with digests is still compared rather than waved through by being current.
+
+**Defect two is not fixed and is now unmissable.** The emission is prose in the SKILL, at nine save-time templates plus a verbatim-copy instruction for prep-carried blocks, and nothing enforced it. That is unchanged. What has changed is that an edition which skips the emission is now blocked at save rather than waved past with a reassuring message, so the next occurrence announces itself instead of accumulating. Whether the intermittency needs a root cause beyond that is worth deciding after one edition runs under the new check: a rule nobody could break silently may simply stop being broken.
+
+**Two published editions carry the breach and neither can be repaired.** 2026-08-10 and 2026-08-24 fail the new branch. Backfilling their digests is not available and should not be attempted: computing a digest now, over the final text, would assert that each gate scored that text, which is the custody breach ADR-047 exists to prevent. The lint reporting them is the correct state, the corpus test pins exactly that pair, and a third would show up as a change to the pinned set rather than as one more line nobody reads.
+
+**Note for P099.** That ticket cannot verify while this is open, and defect one is the half that blocked it. Its mechanism now runs; its verification still needs an edition that takes post-gate edits with digests recorded, which is the next edition rather than a re-read of Issue 19.
 
 ## Dependencies
 

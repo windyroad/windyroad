@@ -41,7 +41,9 @@
 #   j  the closing CTA carries a question, not a statement or a forward request
 #   k  no identical citation (same anchor text and URL) in two different sections
 #   l  the LinkedIn post is within 1.5x the trailing median of recent editions
-#   m  no gate verdict predates the draft being saved (P099 / ADR-047)
+#   m  no gate verdict predates the draft being saved (P099 / ADR-047), and an
+#      edition dated on or after ADR-047 records a digest per verdict at all
+#      (P165); zero digests is exempt only for the back catalogue
 #   o  every block the SKILL prescribes for this phase is present in the reviews
 #      sibling (P151); absence, not just staleness
 #   p  no word the voice guide lists under "Word list > Avoid" appears in the
@@ -665,8 +667,29 @@ done < <(printf '%s\n' "$body" | awk -F'\t' '
 # stance (see the body= awk above): frontmatter churn at save is not a content
 # edit, so including it would produce noise rather than sensitivity.
 #
-# Skipped, loudly, when the sibling is absent or carries no digests at all, which
-# is the pre-adoption state. Never silently.
+# Skipped, loudly, when the sibling is absent. Never silently.
+#
+# Zero digests is NOT automatically pre-adoption, and treating it as such was
+# P165. The predicate "this file has no digest lines" cannot tell a genuinely
+# exempt back-catalogue edition from a current one whose pipeline stopped
+# emitting them, and the branch used to resolve that ambiguity in prose, toward
+# the outcome that stops checking. Issue 19 was written sixteen days after
+# ADR-047 landed and its immediate predecessor recorded five digests; the one
+# guard against a stale gate verdict stood down on roughly twenty consecutive
+# lint runs because of exactly the omission that should have alarmed it.
+#
+# So the scope question is DERIVED rather than inferred from the absence being
+# tested for: the edition date comes from the filename, which ADR-026 fixes as
+# the publication date and which the sibling derivation above already depends
+# on, so this adds no new coupling. An edition dated on or after ADR-047 is
+# governed by it, and zero digests is then a contract breach that fails. Before
+# that date it is genuinely exempt and skips. Undateable, and the check says it
+# could not tell, which is the one honest report left.
+#
+# The alternative considered was a frontmatter marker on the back catalogue.
+# Rejected: it means editing eighteen published editions to record a fact
+# already derivable from their filenames, and an unmarked new file would then
+# fail closed for want of bookkeeping rather than for a real breach.
 #
 # $reviews is resolved once at the top of the file, from the brief path with the
 # ".prep" phase infix stripped, or from the optional third argument.
@@ -674,8 +697,18 @@ if [ ! -f "$reviews" ]; then
   echo "SKIP [m] $brief: no reviews sibling at $reviews; gate-freshness not checked" >&2
 else
   ndig=$(grep -cE '^scored-digest: sha256:[0-9a-f]{64}$' "$reviews" || true)
+  # ADR-047's date. An edition published on or after it is in scope for the
+  # custody contract; the back catalogue predates it and is exempt.
+  adr_047_date="2026-08-08"
+  edition_date=$(basename "$sibling_base" | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
   if [ "$ndig" -eq 0 ]; then
-    echo "SKIP [m] $reviews: carries no scored-digest lines; gate-freshness not checked (pre-ADR-047 edition)" >&2
+    if [ -z "$edition_date" ]; then
+      echo "SKIP [m] $reviews: carries no scored-digest lines, and no edition date could be read from the brief filename, so whether ADR-047 governs this edition cannot be derived; gate-freshness not checked" >&2
+    elif [ "$edition_date" \< "$adr_047_date" ]; then
+      echo "SKIP [m] $reviews: carries no scored-digest lines and the edition date $edition_date precedes ADR-047 ($adr_047_date), so the custody contract does not reach it; gate-freshness not checked" >&2
+    else
+      fail m "$reviews: carries no scored-digest lines, but the edition date $edition_date is on or after ADR-047 ($adr_047_date), so every gate verdict here owes one; this is non-adoption rather than pre-adoption, and gate-freshness cannot be checked at all without them (P165). Record a scored-digest line in each verdict block at step 16"
+    fi
   else
     digest_of() {
       if [ "$(head -1 "$1")" = "---" ]; then
