@@ -65,6 +65,24 @@ the ticket's declared fix rather than any ADR named anywhere in its body (Witnes
 test even with the first in place); gate shape 5 on the relationship the ticket actually declares
 rather than on mere presence in `## Related`.
 
+## Recurrence 2026-08-26, at scale, with a mode the ticket does not yet describe
+
+A `/wr-itil:review-problems` pre-flight ran the Step 4.6 evaluator across the whole backlog and flagged **44 of 65 tickets, 68 percent, as no-longer-relevant**, including tickets captured that same day. Nothing was closed; the pass read its own verdict set, judged it unsound, and declined.
+
+Two of this ticket's recorded shapes reproduced word for word. P055 cites upstream ADR-013, ADR-014 and ADR-032 and was reported superseded by the local decisions carrying those numbers, which are about LinkedIn scraping and Wardley mapping. The co-mention shape fired too, on tickets whose `## Related` section explicitly files the co-mentioned ticket under composes-with-distinct-concerns.
+
+The tell is that **the evaluator flagged this ticket as a close candidate**, via the syntax-only ADR match this ticket was written about.
+
+**A third mode, not previously recorded here: cited evidence that is not in the ticket at all.** Run against P128 the same day, the verdict emitted `CLOSE-CANDIDATE ... shapes: ADR-shipped-confirmed` and listed fifteen ADRs as human-oversight-confirmed evidence. Checked against P128's actual text on 2026-08-26, the ticket references ADR-007 twenty-six times, ADR-049 twenty-one, ADR-027 fourteen, ADR-054 thirteen and ADR-008 eleven, plus single mentions of ADR-041, ADR-042 and ADR-043 and two of ADR-052. It does not mention ADR-018, ADR-019, ADR-020, ADR-026 or ADR-032 anywhere.
+
+Five of the fifteen cited ADRs appear nowhere in the ticket they are offered as evidence about. That is not a number collision between namespaces, which is what this ticket currently describes: a collision still requires the number to be present in the ticket. Where those five came from is unknown and worth finding, because the two modes need different fixes. A namespace check repairs the collision mode and does nothing for this one.
+
+The heavily-cited ADRs are the second half of the problem. ADR-007, ADR-049, ADR-027, ADR-054 and ADR-008 are genuinely local and genuinely relevant to P128, and they are genuinely ratified. Their being confirmed is the ticket's context, not evidence its fix shipped: P128 is about a threshold restated in ten places, and those decisions being ratified is precisely why it still needs doing. So even the correctly-resolved citations are being read as close evidence when they are nothing of the kind.
+
+**What this changes for the priority.** The Impact 2 rating rests on "both observed failures were caught before anything closed", which still holds: three passes, three declines. But the Likelihood-4 reasoning that nothing automated checks the verdict is now joined by a scale figure. At 68 percent flag rate an operator batch-reviewing is not spot-checking a few candidates, they are being asked to overturn a two-thirds majority, and the one surface that consumes this verdict without a human is `/wr-itil:work-problems` Step 3.6, which routes a clean CLOSE-CANDIDATE into an AFK sweep that closes silently. Re-rating is a review-time decision, not one to make inside this note, but the evidence for it is recorded here.
+
+**One thing that did work, worth keeping.** Every one of the three passes declined to act. Two were subagents that reached the judgement independently, and the ticket's own presence in the flagged set is what made the unsoundness obvious rather than arguable.
+
 ## Symptoms
 
 - `evaluate-relevance.sh` returns exit 0 with `CLOSE-CANDIDATE` or `CLOSE-CANDIDATE-WITH-CAVEAT` on tickets whose defect is live and reproducible.

@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-25 **WSJF arithmetic corrected on three rows and 25 tickets given a WSJF line they never had** (P165 was ranked 8.0 against a computed 16.0 and moves to joint-top; P142 and P144 were both overstated by a factor of two. The Step 4.6 relevance pass returned CLOSE-CANDIDATE for 44 of 65 tickets and none were acted on: it reproduces P132's witnesses A and C exactly, resolving upstream ADR numbers against unrelated local ADRs of the same number) (review via /wr-itil:review-problems)
+> Last reviewed: 2026-08-26 **P169 and P170 captured; P132 recurrence recorded at scale** (the AFK loop's backlog scan reports an empty queue under zsh, and a verification cell can close a ticket its own evidence says is broken) (session retro via /wr-itil:work-problems preflight)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,7 +11,9 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 16.0 | P165 | The stale-verdict check stands down on the very absence it exists to catch | 16 | Open | S | 2026-08-25 | internal |
+| 15.0 | P169 | The AFK orchestrator's shell snippets assume bash, so under zsh the backlog scan reports zero against a full queue | 15 | Open | S | 2026-08-26 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
+| 12.0 | P170 | A verification cell can assert verified while its own evidence text says the fix failed | 12 | Open | S | 2026-08-26 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
 | 12.0 | P166 | A governance surface that silently degrades to a subset of its specification reads as a clean run | 12 | Open | S | 2026-08-25 | internal |
