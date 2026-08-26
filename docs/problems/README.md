@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-26 **P169 and P170 captured; P132 recurrence recorded at scale** (the AFK loop's backlog scan reports an empty queue under zsh, and a verification cell can close a ticket its own evidence says is broken) (session retro via /wr-itil:work-problems preflight)
+> Last reviewed: 2026-08-26 **P171 captured** (an interrupted AFK loop leaves its iter subprocess running with full repository write access and every verification surface detached) (session retro via /wr-itil:work-problems)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,6 +13,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 16.0 | P165 | The stale-verdict check stands down on the very absence it exists to catch | 16 | Open | S | 2026-08-25 | internal |
 | 15.0 | P169 | The AFK orchestrator's shell snippets assume bash, so under zsh the backlog scan reports zero against a full queue | 15 | Open | S | 2026-08-26 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
+| 12.0 | P171 | Killing the orchestrator wrapper orphans the iter subprocess, which keeps write access with no supervisor | 12 | Open | S | 2026-08-26 | internal |
 | 12.0 | P170 | A verification cell can assert verified while its own evidence text says the fix failed | 12 | Open | S | 2026-08-26 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
