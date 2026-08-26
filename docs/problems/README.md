@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-26 **P171 captured** (an interrupted AFK loop leaves its iter subprocess running with full repository write access and every verification surface detached) (session retro via /wr-itil:work-problems)
+> Last reviewed: 2026-08-26 **P172 captured** (the deprecated full-file compendium generator still runs and clobbers hook-authored compendium entries) (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -69,6 +69,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 4.0 | P139 | Ratification flips frontmatter but nothing sweeps the prose asserting the prior unconfirmed state | 8 | Open | M | 2026-08-09 | internal |
 | 4.0 | P156 | Briefing absence claims are never re-verified, so a stale one loads into every session | 8 | Open | M | 2026-08-23 | internal |
 | 4.0 | P163 | Risk scorer report persistence writes empty files | 8 | Open | M | 2026-08-24 | internal |
+| 4.0 | P172 | The deprecated full-file compendium generator still runs and clobbers hook-authored entries | 8 | Open | M | 2026-08-26 | internal |
 | 3.0 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create / commit gates re-fire indefinitely, forcing BYPASS_RISK_GATE=1 workaround | 6 | Open | M | 2026-05-31 | internal |
 | 3.0 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 | Open | M | 2026-06-14 | internal |
 | 3.0 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers | 6 | Open | M | 2026-06-17 | internal |

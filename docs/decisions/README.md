@@ -46,8 +46,9 @@ _52 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-007 - Use impact x likelihood product for risk scoring
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **Impact x likelihood product**, because it is the simplest formula that gives both dimensions proportional influence. The 1-25 scale maps naturally to five label bands, and the commit threshold (`< 5`) cleanly separates Low ...
-**Confirmation:** RISK-POLICY.md reflects the product formula, label bands, and threshold; risk-scorer agent outputs N/25 (Label) format; Commit gate blocks at score >= 5; Prompt hook nudge triggers at score >= 5
+**Decides:** Residual risk is scored as impact x likelihood on a 1-25 scale with five label bands, replacing max(impact, likelihood), because a product lets both dimensions contribute proportionally and distinguishes high-impact/low-probability from low-impact/high-probability changes. Amended twice since: the commit threshold and the Low/Medium band boundaries both moved, and RISK-POLICY.md is the source of truth for those two values.
+**Confirmation:** RISK-POLICY.md reflects the product formula, label bands, and threshold; risk-scorer agent outputs N/25 (Label) format; commit gate and prompt hook nudge fire at the policy threshold (figures in this record are point-in-time)
+**Related:** ADR-009, ADR-049
 
 ### ADR-008 - Action-specific pipeline risk management
 **Status:** proposed | **Oversight:** confirmed | **Supersedes:** 003-split-wip-checks-local-and-remote
@@ -126,7 +127,9 @@ _52 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-027 - Encode newsletter primacy in the risk Impact rubric
 **Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **1. Re-tier newsletter up and static site down**.
+**Decides:** Re-tier the `RISK-POLICY.md` Impact rubric so newsletter failures outrank static-site ones: content reaching LinkedIn readers at L5, caught-at-gate at L4, pre-publish pipeline disruption at L3, while static-site degradation drops to L3 (full outage L4). Codifying primacy in the rubric lets Severity and WSJF rise naturally, retiring the per-ticket "weight 2.0" folklore without forking the upstream `wr-itil:manage-problem` formula. Amended 2026-08-09: the record's `(< 5)` appetite and "label bands unchanged" clauses are stale; `RISK-POLICY.md` is the source of truth.
+**Confirmation:** Impact rubric encodes the newsletter L5/L4/L3 split; static site sits at L3/L4 and never L5 absent content/trust/security severity; per-ticket "weight 2.0" folklore annotations are deletable and dropped on next re-rate; new tickets score Severity from the new rubric; future references cite ADR-027 plus RISK-POLICY.md rather than "the 2026-05-02 direction"
+**Related:** ADR-023, ADR-049
 
 ### ADR-028 - CI-status check in push:watch and release:watch
 **Status:** proposed | **Oversight:** confirmed
