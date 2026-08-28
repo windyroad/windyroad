@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P158 investigated and re-rated**: the dead `repeat:` key is settled from promptfoo's own config schema, which turns out not to carry that key at all, rather than by counting results, two capture-time figures are withdrawn as unreproducible, and the fix is blocked at the propose-fix trace gate because the repository holds no story maps, so it is queued for the maintainer (WSJF 16.0 to 8.0, Effort S to M, because correcting ADR-052's claim now needs a new decision record).
+> Last reviewed: 2026-08-29 **P176 captured**: promptfoo aborts during database migration with a missing better-sqlite3 binding on both Node versions installed here, so the newsletter eval harness cannot be run locally and changes to it have to be argued from source rather than observed (whether the .nvmrc pin explains it is recorded as inference, not fact; lightweight aside via /wr-itil:capture-problem, from the P158 iteration retrospective).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -42,6 +42,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 8.0 | P149 | Em-dash gate is blind to the index, so staged-then-corrected content commits unchecked | 8 | Open | S | 2026-08-10 | internal |
 | 8.0 | P167 | The recovery path for a blocked push cannot run unattended and reports the stall as a judgement call | 8 | Open | S | 2026-08-25 | internal |
 | 8.0 | P175 | AFK orchestrator's external-root-cause instruction still encodes the pre-ADR-048 park posture | 8 | Open | S | 2026-08-29 | internal |
+| 8.0 | P176 | The newsletter eval harness cannot run on this machine, so no change to it can be verified by running it | 8 | Open | S | 2026-08-29 | internal |
 | 8.0 | P162 | A claim corrected at one site survives at its sibling sites | 16 | Open | M | 2026-08-24 | internal |
 | 7.5 | P127 | Unverified subprocess claims propagate into decisions without reading the source | 15 | Open | M | 2026-08-07 | internal |
 | 6.0 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 | Known Error | S | 2026-05-13 | internal |
