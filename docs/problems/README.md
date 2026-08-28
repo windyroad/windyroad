@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P165 known error**: the remaining investigation task is answered against the corpus, the two breaching editions turn out to have substituted their own custody records rather than skipping the step, and a third defect found in the same check, where a gate skip check (o) sanctions was hard-failed by check (m) for carrying no digest, is fixed with five behavioural cases beside it (WSJF 16.0 to 32.0 on the Known Error multiplier, Effort held at S).
+> Last reviewed: 2026-08-29 **P177 captured**: the style-guide and voice-tone reviewers are told to write a verdict file with a tool they are not given, and the hooks that read it treat a missing file as permission, so both gates open on a FAIL (lightweight aside via /wr-itil:capture-problem, from the P165 iteration retrospective).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -15,6 +15,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 16.0 | P132 | Relevance evaluator emits CLOSE verdicts from syntax-only ADR-number and driver matching | 8 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P134 | Agents infer staged state from the session-start git status snapshot, which is lossy on its first line | 8 | Known Error | S | 2026-08-09 | internal |
 | 16.0 | P099 | wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set | 16 | Known Error | M | 2026-06-22 | internal |
+| 16.0 | P177 | Two governance gates cannot block, because their reviewer cannot write the verdict they are judged by | 16 | Open | S | 2026-08-29 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
 | 12.0 | P136 | Tier 3 briefing rotation strips entries the Critical Points still point at, because nothing re-points the roll-up | 6 | Known Error | S | 2026-08-09 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |
