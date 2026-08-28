@@ -61,6 +61,74 @@ Captured via /wr-itil:capture-problem during the Issue 13 finalise retro (2026-0
 
 This ticket is NOT transitioned on the back of that work. The fix is authored but unexercised: no edition has run through the loop yet, and this ticket's own symptom (a treadmill measured in rounds per edition) can only be verified against a live `/wr-newsletter` run. Re-rate and transition after the next edition, using the `## Editorial Remediation Loop` block in that edition's `.reviews.md` as the evidence: rounds spent should be at most 1 per body pass, and the editor's findings should arrive batched rather than one per verdict.
 
+**2026-08-29: the live-run measurement this ticket was waiting for.** The note above left
+this ticket at Known Error because the fix was authored but unexercised, and named the
+evidence to use once an edition ran: rounds spent at most one per body pass, and editor
+findings arriving batched. (P120 records the same wait in its own words, as a live-run
+measurement of rounds per edition.) The Shift Issue 19 (prep 2026-08-23, finalise
+2026-08-24) supplies both, from
+`src/newsletters/published/leader/2026-08-24/2026-08-24.reviews.md`.
+
+- **Loop rounds per body pass: not measured.** The file records only that the loop was "Run
+  per ADR-043 after every round of both passes". That says when it ran, not how many rounds
+  it ran inside each pass, so the first piece of evidence this ticket named for itself is
+  not in the record. The count that is there, twenty-four, counts full-battery
+  passes.
+- **Editor batching: holding.** Across two editor invocations the file records five distinct
+  findings: a close that swapped protagonists, an orientation line inserted between the
+  thesis and the sentence that turns against it, two dangling back-references, an
+  item-placement call, and a bullet whose only function was to redirect to another tier. It
+  does not say how the five split between the two invocations, so the claim is about
+  density: two and a half findings per invocation, against the roughly eight consecutive
+  single-nit verdicts this ticket was opened on.
+- **Rounds per edition: up, not down.** Issue 13 ran about 15 rounds across prep, finalise
+  and three external-review passes. Issue 19 ran three in prep and twenty-four in finalise,
+  the latter including two external reviews. Same unit, so the comparison holds: rounds per
+  edition went up while both of this ticket's fix items were working.
+
+Two things changed underneath the measurement, and both push the count up. ADR-052 (Every
+newsletter reviewer gate blocks publication), ratified 2026-08-10, retired the exit that let
+a finding be accepted as a residual and the edition ship anyway, which is the form fix item
+(b) shipped as this ticket's stop rule. A surviving finding now holds the edition until it
+is fixed or Tom declines it on the record, and every fix re-enters the full gate set as a
+further body pass. And Issue 19's rounds ran on Tom's standing instruction to keep going
+until the gates stopped finding defects.
+
+**The outer bound was set aside twice, on consecutive editions.** ADR-043 condition (d)
+stops the outer cycle after two consecutive loop-exit passes that each force an edit. Issue
+18 (week ending 2026-08-16) ran nine full batteries plus freshness re-runs, its reviews file
+recording "ADR-043 budgets one round. This edition ran nine full batteries plus freshness
+re-runs, on Tom's explicit instruction that there was no round cap." Issue 19 ran twenty-four
+on the same kind of instruction. Neither is the bound holding and proving to be the wrong
+number, which is what ADR-043's reassessment criterion asks about ("if editions keep hitting
+the (d) bound, either the minimal-remediation rule is not holding or two passes is the wrong
+number"). It is the bound not being applied at all. Either way the outer cycle ran unbounded
+on two consecutive editions, and that is a rounds-per-edition question, so it is recorded
+here rather than on P120.
+
+So this ticket's stop rule no longer exists in the form it shipped, and the bound that
+replaced it was set aside on both editions measured. The rounds were not churn. Round 15
+caught a factual inversion that would have published, and the late rounds caught a fairness
+problem, a broken contrast and an over-claim. But the critic recorded that both of the last
+two rounds "closed the findings raised and introduced new ones at the joints where the
+closures were stitched in", and Issue 18 before it recorded that "roughly a third of each
+round's findings were defects introduced by the previous round's remediation rather than
+pre-existing ones". Read strictly, that is not yet ADR-052's reassessment criterion 1, which
+fires when "a remediation round introduces as many reviewer-classified defects as it clears".
+A third is short of as-many-as-cleared, and Issue 19's record gives a direction without a
+ratio. So the criterion is approached on two consecutive editions rather than met on either.
+Defects introduced by the remediation itself are not this ticket's to carry in any case. P154
+(Newsletter remediation edits are never independently verified, so a fix can introduce a
+defect that survives until the next full battery) owns it, and Issue 18's reviews file
+already carries seven recorded items as a transcription note against that ticket. This note
+names the ratio only because it bears on whether more rounds are buying anything, which is
+the question this ticket asks.
+
+Routed here from P120 (Editor and skeptic gates surface findings to Tom instead of
+remediating them), whose 2026-08-25 verification note had read the same twenty-four against a
+criterion counting loop rounds inside a body pass. Effort and WSJF are left as they stand:
+the next step is a second edition's measurement, not a re-rate on one.
+
 ## Fix Strategy
 
 - **Kind**: improve

@@ -92,7 +92,7 @@ Shipped 2026-08-05 as ADR-043 plus the SKILL and agent wiring above. Awaiting us
 
 **Release vehicle**: the fix commit itself. This repository is `private: true` with no published package, so there is no `.changeset/` entry and no npm release to point at. The transition ran Open to Known Error to Verification Pending in a single commit per ADR-014, because the root cause was already documented at capture and the fix shipped in the same change.
 
-**What to look for on the next `/wr-newsletter` run**: the edition's `.reviews.md` carries an `## Editorial Remediation Loop` section recording rounds spent and any residual advisories. The fix is working if editor and skeptic findings that would previously have arrived as Tom-summary items instead show as remediated in the body, with only genuinely hard cases (chiefly skeptic findings that need new sourcing) surfacing as residuals. It is NOT working if Tom's external review still re-derives a class the gates named, or if the loop runs more than one round per body pass.
+**What to look for on the next `/wr-newsletter` run**: the edition's `.reviews.md` carries an `## Editorial Remediation Loop` section recording rounds spent and any residual advisories. The fix is working if editor and skeptic findings that would previously have arrived as Tom-summary items instead show as remediated in the body, with only genuinely hard cases (chiefly skeptic findings that need new sourcing) surfacing as residuals. It is NOT working if Tom's external review re-derives a class the gates named (a gate wrote the finding down and the pipeline discarded it), or if the remediation loop at step 15.37 runs more than one round inside a single body pass. Neither clause counts body passes. How many of those an edition takes is bounded by ADR-043 condition (d), made more expensive by ADR-052, and measured on P113; see `## Resolved 2026-08-29` for the reading that separated them.
 
 **Not exercised in this session.** No edition ran through the loop; this is authored-and-reviewed, not observed. The verification is a live run, and it is shared with P113, whose own symptom (rounds per edition) is measured from the same block.
 
@@ -104,6 +104,10 @@ Shipped 2026-08-05 as ADR-043 plus the SKILL and agent wiring above. Awaiting us
 
 ## Observed 2026-08-25: the stated failure test fired
 
+> **Superseded 2026-08-29.** The round count below was read against the wrong unit. See
+> `## Resolved 2026-08-29` further down; this section's body is left verbatim as the audit
+> trail.
+
 The Fix Released section names both directions. It is working if editor and skeptic findings show as remediated in the body with only genuinely hard cases surfacing as residuals. It is "NOT working if Tom's external review still re-derives a class the gates named, or if the loop runs more than one round per body pass."
 
 The remediating half worked. Editor and skeptic findings were acted on in the body across the Issue 19 finalise rather than arriving as Tom-summary items, and exactly three findings surfaced as residuals, all of them cross-boundary placement calls Tom ruled on.
@@ -114,11 +118,97 @@ Two things stop this being a simple regression. The rounds were run under a stan
 
 What that means for the criterion is the open question. Either one-round-per-body-pass is the wrong measure of this fix, in which case the criterion needs replacing rather than the fix reopening, or the loop genuinely does not converge and P113's round economics is the ticket that owns it. Left in Verification Pending pending that call; the round count is recorded here so the next verification attempt does not have to re-derive it.
 
+## Resolved 2026-08-29: the round count was read against the wrong unit
+
+The section above concluded this ticket's fix had regressed. It read Issue 19's finalise
+round count against this ticket's own criterion, and the two do not count the same thing.
+
+**What the criterion measures.** "It is NOT working if ... the loop runs more than one
+round per body pass." The subject is the remediation loop at step 15.37 of the
+wr-newsletter flow, and the unit is a round inside one body pass. ADR-043 (Bounded
+editorial remediation loop for editor and skeptic gates) condition (c) is the matching
+bound: the counter is per body pass and does not reset, so a body pass gets one remediation
+round, and, if the full gate set then forces an edit, one further look from both gates. The
+one-round cap itself is stated separately in that ADR's Decision Outcome.
+
+**What the twenty-four counts.** Issue 19's reviews file
+(`src/newsletters/published/leader/2026-08-24/2026-08-24.reviews.md`) numbers its rounds as
+full-battery passes over the body: rounds 3 and 7 are voice FAILs, round 12 is the critic's
+first PASS, rounds 22 and 24 are the two external reviews. Against the loop it records only
+that it was "Run per ADR-043 after every round of both passes". That says when the loop ran,
+not how many rounds it ran inside each pass, and the file states no per-pass round count. So the twenty-four is not evidence that this ticket's criterion was breached. It is
+a count of something else.
+
+**A different bound was not held, and it is not this one.** ADR-043 also carries condition
+(d), which stops the outer cycle after two consecutive loop-exit passes that each force an
+edit. Issue 19 ran twenty-four. The reviews file records why. The rounds ran on Tom's
+standing instruction to keep going until the gates stopped finding defects, which is the
+case condition (d) leaves to a human. That is the outer bound on how many times the whole
+battery runs, not a question about whether gate findings are being turned into edits. This
+ticket owns whether findings become edits.
+
+**What ADR-052 changed.** ADR-052 (Every newsletter reviewer gate blocks publication),
+ratified 2026-08-10, removed the exit that let a finding be accepted as a residual and the
+edition ship anyway. A surviving finding now holds the edition until it is fixed or Tom
+declines it on the record, and each fix re-enters the full gate set at section 15.6 as a
+further body pass. That makes more body passes per edition expected, and it changes what a
+body-pass count means against a criterion written on 2026-08-05, five days earlier. It does
+not sanction an unbounded count. ADR-052 records "no built-in convergence guarantee when
+remediation introduces new findings" as a known cost and pre-registers non-convergence as
+its own reassessment criterion. Issue 19 supplies one data point toward that criterion: its
+critic recorded that both of the last two rounds "closed the findings raised and introduced
+new ones at the joints where the closures were stitched in".
+
+**The other clause of the criterion.** "NOT working if Tom's external review still
+re-derives a class the gates named" describes the routing failure this ticket opened
+against. A gate names a defect, the pipeline discards it, a human finds it again. Issue 19's
+human catches are not that case. Of round 24's, the reviews file says "both of the human
+catches in it, the working example the edition denied having and the floating second person,
+were things the full seven-gate battery read past", and records the reviewer's broken
+contrast separately as "a regression the reviewer caught and the gates did not". No gate
+named any of the three, which makes them detection misses, and detection misses belong to
+P117 (Tighten newsletter gate prompts for lower-frequency external-review classes), which is
+closed. So is P122 and so is P152, named below. If misses of these kinds keep arriving, the
+classes have no open owner, and that is worth Tom's attention separately from this ticket. Tom's round-22
+finding that the author-voice section ran long was put to the editor directly, and the editor
+said the section should not be cut again and diagnosed allocation rather than volume. That is
+a disagreement on the record, not a discarded finding.
+
+That reading is narrower than the reviews file's own summary paragraph, which says
+"Assembly-class and comprehension-class defects also reached Tom and the external reviewer
+in this same edition, after the gates had run": errors in how the edition was put together,
+and sentences that could not be parsed on one read. The paragraph is qualifying evidence
+recorded in that file for two other tickets, P122 (No gate owns within-edition structural
+mechanics, so assembly defects reach the reader) and P152 (No newsletter gate owns
+parse-on-first-pass comprehension, so an unreadable sentence passes every gate). The
+instances it points at are two of the above: Tom's round-22 length finding and the reviewer's round-24 broken contrast.
+Neither is a finding a gate wrote down and the pipeline threw away, which is what this clause
+tests.
+
+**What is positively evidenced.** The reviews file records the loop running after every
+round of both passes with findings acted on in the body, and exactly three survivors routed
+out to Tom because minimal remediation crossed a section boundary: the OpenAI-pause tiering,
+the Torvalds placement, and Item 3's tier, all ruled on 2026-08-24. That is the escalation
+path working as ADR-043 and ADR-052 prescribe, not the dead end this ticket opened against,
+where a finding reaches Tom instead of being fixed.
+
+**Where the round count belongs.** P113 (wr-newsletter review-gate loop runs many rounds)
+measures rounds per edition in exactly this unit, and its baseline is "about 15 rounds for
+Issue 13 across prep, finalise, and three external-review passes". Issue 19's twenty-four is
+the live-run measurement P113 was waiting for. It is recorded there.
+
+**Status: awaiting Tom's call, not further work.** The 2026-08-28 flip-back from
+Verification Pending was made on Tom's confirmation, on the premise that this ticket's own
+evidence recorded a failed fix. Correcting the unit removes that premise, but the flip-back
+is his, and reversing it is not ours to do. Both the transition back to Verification Pending
+and the close itself are queued for him. Until he rules, nothing further is outstanding here:
+a later pass that re-derives the round count is repeating work already done.
+
 ## Related
 
 - **P113** (`docs/problems/known-error/113-newsletter-review-gate-loop-editor-one-nit-per-pass.md`): sibling on the same knob, opposite bound. P113 wants a STOP rule because the editor treadmills; this wants a START rule because its findings are not acted on. P113 already records the same non-blocking fact ("it surfaces to Tom; it does not block the save, but the skill gives no guidance on when to accept residual advisories and stop"). The `wr-itil:hang-off-check` arbitration (2026-08-04) returned PROCEED_NEW and recommended the next `/wr-itil:review-problems` cluster pass consider promoting a common parent for the loop contract.
-- **P116** (`docs/problems/verifying/116-newsletter-gates-lack-adversarial-ceiling-gate-external-review-still-finds-substance-issues.md`): built the adversarial skeptic gate under ADR-042. Its root cause was capability absence ("no gate owns thesis-truth"); this ticket is post-delivery discovery that the shipped gate's non-blocking contract prevents its findings being acted on. **This session is material to P116's verification**: the gate shipped and the external-review burden did not drop, because a gate that surfaces findings to Tom relocates his review load rather than reducing it.
-- **P117** (`docs/problems/verifying/117-tighten-newsletter-gate-prompts-for-lower-frequency-external-review-classes.md`): inverts the failure mode on a shared signal. P117's premise was that the editor's `atwn-thesis-fit` axis MISSES through-line drift; the Issue 16 evidence is that P117's delivered per-bullet ATWN sweep CAUGHT the two off-thesis entries and the pipeline discarded the finding. Detection half verified; remediation half is this ticket.
+- **P116** (`docs/problems/closed/116-newsletter-gates-lack-adversarial-ceiling-gate-external-review-still-finds-substance-issues.md`): built the adversarial skeptic gate under ADR-042. Its root cause was capability absence ("no gate owns thesis-truth"); this ticket is post-delivery discovery that the shipped gate's non-blocking contract prevents its findings being acted on. **This session is material to P116's verification**: the gate shipped and the external-review burden did not drop, because a gate that surfaces findings to Tom relocates his review load rather than reducing it.
+- **P117** (`docs/problems/closed/117-tighten-newsletter-gate-prompts-for-lower-frequency-external-review-classes.md`): inverts the failure mode on a shared signal. P117's premise was that the editor's `atwn-thesis-fit` axis MISSES through-line drift; the Issue 16 evidence is that P117's delivered per-bullet ATWN sweep CAUGHT the two off-thesis entries and the pipeline discarded the finding. Detection half verified; remediation half is this ticket.
 - **P099** (`docs/problems/known-error/099-newsletter-post-finalise-edits-dont-rerun-full-gate-set.md`, path corrected 2026-08-05; the capture-time reference said `verifying/`): orthogonal grain. Section 15.6 governs re-gating after an edit is made; this governs whether a gate finding produces an edit at all.
 - **ADR-020** (`docs/decisions/020-newsletter-editor-subagent.proposed.md`): line 41 carries the Option-4 rejection and the "follow-up ADR can lift the loop" pre-registration verbatim (verified on disk 2026-08-04).
 - **ADR-042** (`docs/decisions/042-newsletter-adversarial-skeptic-gate.proposed.md`): inherits the non-blocking semantics.
