@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P173 captured**: a ticket's verification criterion is never re-checked against decisions ratified after it was written (lightweight aside via /wr-itil:capture-problem, from the P120 iteration retrospective).
+> Last reviewed: 2026-08-29 **P130 parked, reported upstream**: three of its five sites were already fixed in wr-retrospective 0.27.3; the two that survive live in files this repo does not hold, so they went up as windyroad/agent-plugins issue 453 and the ticket is parked on it.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,7 +10,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 5.0 | P120 | Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden | 20 | Known Error | XL | 2026-08-04 | internal |
-| 20.0 | P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo | 10 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 16.0 | P132 | Relevance evaluator emits CLOSE verdicts from syntax-only ADR-number and driver matching | 8 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P134 | Agents infer staged state from the session-start git status snapshot, which is lossy on its first line | 8 | Known Error | S | 2026-08-09 | internal |
@@ -127,3 +126,4 @@ Inbound reports discovered by the Step 4.5 pass, rendered off `docs/problems/.up
 | P068 | Newsletter URL discovery via Google News RSS strips canonical to outlet root; misses real article URL |
 | P073 | P186 evidence-first cell canonical shape uses U+2014 separator that no-em-dash hook blocks during README render |
 | P125 | Nothing recomputes WSJF on a status transition, so the Open multiplier persists and halves the ticket's rank |
+| P130 | Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo |

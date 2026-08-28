@@ -1,11 +1,11 @@
 # Problem 130: Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo
 
-**Status**: Known Error
+**Status**: Parked
 **Reported**: 2026-08-08
 **Priority**: 10 (High), Impact: 2 x Likelihood: 5, derived at capture from the description. Impact is 2 because the failures are advisory surfaces, not reader-facing or release-path: no visitor, no subscriber, no build. It is not 1 because one of the two (the Tier-3 budget pass) is load-bearing for a rotation decision the retro has to make, and its absence is silent. Likelihood is 5 because both fire deterministically on every retro run in this repo, which is a consumer repo by construction; observed 2026-08-08.
 **Origin**: internal
 **Effort**: S, derived at capture. One path substitution in a SKILL body and one guard clause in a detector script, each with an existing test sibling. Same size class as P129, also rated S for a guard clause in one script.
-**WSJF**: 20.0 = (10 x 2.0) / 1 (re-rated 2026-08-28 review: Open -> Known Error auto-transition, status multiplier 1.0 -> 2.0)
+**WSJF**: excluded while Parked (status multiplier 0). Last ranked value was 20.0 = (10 x 2.0) / 1, set at the 2026-08-28 review when the ticket auto-transitioned Open to Known Error and the multiplier went 1.0 to 2.0. Re-rate on un-park rather than restoring that number: three of the five sites are now fixed upstream, so both Effort and Severity need a fresh read.
 
 ## Description
 
@@ -69,18 +69,33 @@ The README-currency detector has no workaround and needs none in a consumer repo
 
 Both defects share one cause: the plugin was authored in its own monorepo, where `packages/` exists and the repo-relative path resolves, so neither failure is visible to its authors. ADR-049 and the `$PATH` shim convention are the existing answer; defect (1) is a site that never migrated, and defect (2) is a shim that migrated its invocation surface but not its internals.
 
+### Verification against the installed plugin, 2026-08-29
+
+Every site named above was re-exercised in this repo against the highest cached plugin version, 0.27.5, which is what the shims resolve to under the highest-version-wins wrapper. Three of the five sites have been fixed upstream since capture; two survive.
+
+**Fixed upstream (0.27.3 through 0.27.5).**
+
+- The briefing-budget pass. The SKILL now invokes `wr-retrospective-check-briefing-budgets`, and that shim ships from 0.27.3 onward. Run here it exits 0 with no output, which is the correct answer rather than a silent failure: the two largest topic files in scope, `what-you-need-to-know.md` at 5,080 bytes and `risk-scorer-behaviour.md` at 5,061, both sit just under the 5,120 ceiling, and the eight over-budget files counted by hand on 2026-08-09 were archives, which 0.27.5 excludes deliberately as rotation sinks.
+- The ask-hygiene gate. The SKILL invokes the shim, the shim ships, and it returned real per-retro rows here.
+- The tickets-deferred-cause advisory. Its shim ships and runs clean, exit 0. The SKILL still spells the repo-relative script path at two places, but both are descriptions of what surfaces a violation rather than instructions to run it, so nothing is broken by them.
+
+**Still broken.**
+
+- The README-currency detector, unchanged. Invoked bare, the way the retro SKILL's Step 2b invokes it, it exits **2** and prints `check-readme-jtbd-currency: packages dir not found: packages`. Handed an explicit project directory it exits 0 and prints nothing. Neither is the documented behaviour: the script's own header and the SKILL prose both say the detector is advisory and its count is signal rather than failure, and in a repo that consumes the plugin the honest answer to "which plugin READMEs have drifted" is none, not an error.
+- The analyze-context Step 0 guard, unchanged. It still runs `test -x packages/retrospective/scripts/measure-context-budget.sh` and instructs the reader to halt when that fails, which it always does here. The deep layer only survives it because Step 1 measures through the correct shim moments later, so the guard is wrong and inert at the same time.
+
 ### Investigation Tasks
 
-- [ ] Confirm on the installed plugin that the budget-pass path is the only remaining repo-relative invocation in the retrospective SKILL (grep the SKILL for `packages/` in command position).
-- [ ] Confirm the readme-currency detector's `packages` glob is the only monorepo assumption in its body.
-- [ ] Report upstream against `wr-retrospective` (this is not a windyroad-local fix; see Fix Strategy).
+- [x] Confirm on the installed plugin that the budget-pass path is the only remaining repo-relative invocation in the retrospective SKILL. It is not, and was never the only one: `analyze-context` Step 0 carries a second, and the budget pass itself has since been fixed.
+- [x] Confirm the readme-currency detector's `packages` glob is the only monorepo assumption in its body. Confirmed for that script.
+- [x] Report upstream against `wr-retrospective`. Filed 2026-08-29 as windyroad/agent-plugins issue 453.
 
 ## Fix Strategy
 
-Two bounded upstream edits, neither of which this repo can make locally:
+Two bounded upstream edits remain, neither of which this repo can make locally. The original first bullet, the briefing-budget shim, shipped upstream in 0.27.3 and is struck.
 
-1. Replace the repo-relative `packages/retrospective/scripts/check-briefing-budgets.sh` invocation in the retrospective SKILL's Step 3 with the `$PATH` shim name, matching its three siblings in the same file, and ship the shim if one does not exist yet.
-2. Make the readme-currency detector no-op cleanly when no `packages/` directory is present: emit `TOTAL packages=0 drift_instances=0` and exit 0, honouring the always-exits-0 advisory contract its own SKILL prose states.
+1. Make the README-currency detector no-op cleanly when no `packages/` directory is present: emit `TOTAL packages=0 drift_instances=0` and exit 0, honouring the advisory contract both its own header and its SKILL prose state. A consumer repo has no plugin READMEs to check, so "nothing to check" is the correct verdict, not a parse error.
+2. Replace the `analyze-context` Step 0 guard's repo-relative `test -x packages/retrospective/scripts/measure-context-budget.sh` with a `command -v wr-retrospective-measure-context-budget` check, matching the shim Step 1 already uses.
 
 Both live in the upstream `wr-retrospective` plugin, so this ticket is a report-upstream candidate rather than a local fix. Per the verify-before-propagating discipline, that placement claim is a proposal to the maintainers, not a settled fact: the domain fit is clear (the defective files are plugin-owned and this repo has no copy of them), but the maintainers can reject it.
 
@@ -92,8 +107,26 @@ Both live in the upstream `wr-retrospective` plugin, so this ticket is a report-
 
 ## Related
 
+- **Reported upstream**: https://github.com/windyroad/agent-plugins/issues/453 (2026-08-29)
+
 Captured via `/wr-itil:capture-problem` during the retro of the P117 close iteration (2026-08-08).
 
 **Anchoring: JTBD-400 (Trust what the loop did while I was away), Internal Maintainer persona.** The elicitation queued at capture was answered on 2026-08-08: Tom directed that the missing persona be written, and `docs/jtbd/internal-maintainer/` now models the person who operates the governance loop. This ticket is direct evidence for that job's first two outcomes, that a surface which cannot run says so rather than producing nothing, and that an advisory surface honours its stated contract. The fix site is upstream, so [JTBD-402](../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md) governs how it lands; JTBD-400 is why it matters. The persona and job are `human-oversight: unconfirmed`: Tom directed that they be written and has not yet read them, so this anchoring is provisional until `/wr-jtbd:confirm-jobs-and-personas` ratifies it. Per local convention the anchoring is recorded in prose here rather than as `**JTBD**` / `**Persona**` header lines.
 
 **Duplicate check.** Title-only keyword grep on `retro`, `detector`, `packages` returned two files, neither a match on substance: P058 (architect and jtbd edit-enforce hooks should exclude `docs/retros`) and P029 (work-problems iteration boundary leaves run-retro briefing edits uncommitted). The hang-off-check signal pre-filter over `open/` and `verifying/` bodies for `ADR-049`, `wr-retrospective` and `run-retro` returned zero candidates, so the subagent dispatch short-circuited on an empty candidate set and this captured as a new ticket.
+
+## Parked
+
+- **Reason**: upstream-blocked. Both remaining defects live in files this repo does not hold. There is no `packages/` tree here, so neither `scripts/check-readme-jtbd-currency.sh` nor `skills/analyze-context/SKILL.md` can be edited locally, and a fix has to ship in a `wr-retrospective` release.
+- **Un-park trigger**: windyroad/agent-plugins issue 453 is resolved, or a `wr-retrospective` release lands in the plugin cache whose `check-readme-jtbd-currency` exits 0 on a bare invocation here and whose `analyze-context` Step 0 no longer names a repo-relative path. `/wr-itil:check-upstream-responses` polls the issue for the first of those.
+- **Parked**: 2026-08-29
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/453
+- **Reported**: 2026-08-29
+- **Template used**: structured default (problem-shaped, per ADR-033); the upstream's `problem-report.yml` section headings were mirrored in the body
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes (the issue body names this repo and P130)
+- **Artefact choice**: issue rather than pull request. ADR-117 prefers a pull request and the upstream accepts them, but the AFK branch of the report-upstream contract degrades to the issue path: an unattended session does not push code into another repository under our name. The issue carries the concrete two-line fix for both sites, so an interactive session can open the pull request from it without re-deriving anything.
+- **Prior art**: issue 362 on the same repo reported the three missing `bin/` shims from a different downstream project and is still open. Those shims ship from 0.27.3, so 453 deliberately covers only what survives that fix.
