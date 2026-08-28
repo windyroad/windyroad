@@ -382,3 +382,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-08-29 **P173 captured**: a ticket's verification criterion is never re-checked against decisions ratified after it was written (lightweight aside via /wr-itil:capture-problem, from the P120 iteration retrospective).
 
 > Last reviewed: 2026-08-29 **P130 parked, reported upstream**: three of its five sites were already fixed in wr-retrospective 0.27.3; the two that survive live in files this repo does not hold, so they went up as windyroad/agent-plugins issue 453 and the ticket is parked on it.
+
+> Last reviewed: 2026-08-29 **P174 captured**: briefing rotation scores how often an entry is used and never what rediscovering it costs, so a live trap decays into an unloaded archive and is re-hit at full price (lightweight aside via /wr-itil:capture-problem, from the P130 iteration retrospective).

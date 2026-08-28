@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P174 captured**: briefing rotation scores how often an entry is used and never what rediscovering it costs, so a live trap decays into an unloaded archive and is re-hit at full price (lightweight aside via /wr-itil:capture-problem, from the P130 iteration retrospective).
+> Last reviewed: 2026-08-29 **P175 captured**: the AFK orchestrator still tells every upstream-rooted iteration to report and park, which ADR-048 superseded on 2026-08-08 (lightweight aside via /wr-itil:capture-problem, from the P132 iteration retrospective).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -41,6 +41,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 8.0 | P146 | publish-pipeline selects the production artifact by recency, not identity | 8 | Open | S | 2026-08-09 | internal |
 | 8.0 | P149 | Em-dash gate is blind to the index, so staged-then-corrected content commits unchecked | 8 | Open | S | 2026-08-10 | internal |
 | 8.0 | P167 | The recovery path for a blocked push cannot run unattended and reports the stall as a judgement call | 8 | Open | S | 2026-08-25 | internal |
+| 8.0 | P175 | AFK orchestrator's external-root-cause instruction still encodes the pre-ADR-048 park posture | 8 | Open | S | 2026-08-29 | internal |
 | 8.0 | P162 | A claim corrected at one site survives at its sibling sites | 16 | Open | M | 2026-08-24 | internal |
 | 7.5 | P127 | Unverified subprocess claims propagate into decisions without reading the source | 15 | Open | M | 2026-08-07 | internal |
 | 6.0 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 | Known Error | S | 2026-05-13 | internal |
