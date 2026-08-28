@@ -386,3 +386,5 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 > Last reviewed: 2026-08-29 **P174 captured**: briefing rotation scores how often an entry is used and never what rediscovering it costs, so a live trap decays into an unloaded archive and is re-hit at full price (lightweight aside via /wr-itil:capture-problem, from the P130 iteration retrospective).
 
 > Last reviewed: 2026-08-29 **P175 captured**: the AFK orchestrator still tells every upstream-rooted iteration to report and park, which ADR-048 superseded on 2026-08-08 (lightweight aside via /wr-itil:capture-problem, from the P132 iteration retrospective).
+
+> Last reviewed: 2026-08-29 **P134 investigated**: three of its four investigation tasks are answered against disk, the fix site is confirmed upstream in two plugin prompts with a pull request as the landing path per ADR-048, and the ticket holds at Known Error because ADR-036 wants the outbound artefact before the transition (rank unchanged at WSJF 16.0, Effort S).

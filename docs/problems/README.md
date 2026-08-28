@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P134 investigated**: three of its four investigation tasks are answered against disk, the fix site is confirmed upstream in two plugin prompts with a pull request as the landing path per ADR-048, and the ticket holds at Known Error because ADR-036 wants the outbound artefact before the transition (rank unchanged at WSJF 16.0, Effort S).
+> Last reviewed: 2026-08-29 **P158 investigated and re-rated**: the dead `repeat:` key is settled from promptfoo's own config schema, which turns out not to carry that key at all, rather than by counting results, two capture-time figures are withdrawn as unreproducible, and the fix is blocked at the propose-fix trace gate because the repository holds no story maps, so it is queued for the maintainer (WSJF 16.0 to 8.0, Effort S to M, because correcting ADR-052's claim now needs a new decision record).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,7 +13,6 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 16.0 | P132 | Relevance evaluator emits CLOSE verdicts from syntax-only ADR-number and driver matching | 8 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P134 | Agents infer staged state from the session-start git status snapshot, which is lossy on its first line | 8 | Known Error | S | 2026-08-09 | internal |
-| 16.0 | P158 | The newsletter eval harness reports misconfiguration as results, so a broken run looks like a real one | 8 | Known Error | S | 2026-08-23 | internal |
 | 16.0 | P099 | wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set | 16 | Known Error | M | 2026-06-22 | internal |
 | 16.0 | P165 | The stale-verdict check stands down on the very absence it exists to catch | 16 | Open | S | 2026-08-25 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
@@ -35,6 +34,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 8.0 | P061 | assistant gates policy-authorised actions (push, release-watch) on user permission when risk-scorer has already cleared | 8 | Known Error | M | 2026-05-14 | internal |
 | 8.0 | P085 | External-comms gate marker hash invalidated by commit-message body changes, forcing re-review on every retry | 8 | Known Error | M | 2026-06-03 | internal |
 | 8.0 | P113 | wr-newsletter review-gate loop runs many rounds; editor surfaces one rhythm nit per pass and section 15.6 re-runs all gates per edit | 8 | Known Error | M | 2026-07-13 | internal |
+| 8.0 | P158 | The newsletter eval harness reports misconfiguration as results, so a broken run looks like a real one | 8 | Known Error | M | 2026-08-23 | internal |
 | 8.0 | P133 | Assistant composes for a desktop reader with the repo open, so asks are unactionable on a phone | 8 | Open | S | 2026-08-08 | internal |
 | 8.0 | P135 | The compendium entry hook has no arithmetic over the derived ADR counts, so the total drifts by one on every new ADR | 8 | Open | S | 2026-08-09 | internal |
 | 8.0 | P137 | The correction-signal hook fires on standing operational constraints, not just on genuine user corrections | 8 | Open | S | 2026-08-09 | internal |
