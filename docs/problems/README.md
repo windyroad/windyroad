@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P130 parked, reported upstream**: three of its five sites were already fixed in wr-retrospective 0.27.3; the two that survive live in files this repo does not hold, so they went up as windyroad/agent-plugins issue 453 and the ticket is parked on it.
+> Last reviewed: 2026-08-29 **P174 captured**: briefing rotation scores how often an entry is used and never what rediscovering it costs, so a live trap decays into an unloaded archive and is re-hit at full price (lightweight aside via /wr-itil:capture-problem, from the P130 iteration retrospective).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -77,6 +77,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 3.0 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 | Open | M | 2026-06-14 | internal |
 | 3.0 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers | 6 | Open | M | 2026-06-17 | internal |
 | 3.0 | P173 | A ticket's verification criterion is never re-checked against decisions ratified after it was written | 6 | Open | M | 2026-08-29 | internal |
+| 3.0 | P174 | Briefing rotation scores how often an entry is used, never what rediscovering it costs | 6 | Open | M | 2026-08-29 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P056 | manage-problem SKILL.md misattributes ADR-014 to "single-commit governance" in 6+ blocks | 3 | Open | M | 2026-05-13 | internal |
