@@ -41,7 +41,8 @@
 #   j  the closing CTA carries a question, not a statement or a forward request
 #   k  no identical citation (same anchor text and URL) in two different sections
 #   l  the LinkedIn post is within 1.5x the trailing median of recent editions
-#   m  no gate verdict predates the draft being saved (P099 / ADR-047), and an
+#   m  no gate verdict predates the draft being saved (P099 / ADR-047), no block
+#      marked carried from prep holds the digest of that same draft, and an
 #      edition dated on or after ADR-047 records a digest per verdict at all
 #      (P165); zero digests is exempt only for the back catalogue
 #   o  every block the SKILL prescribes for this phase is present in the reviews
@@ -727,8 +728,13 @@ else
     # ADR-017 prep-carried verdict stale by construction, which is the identical
     # objection RFC-005 uses to eliminate the whole-gate-set digest.
     #   matches-current    digest equals the artefact being saved
-    #   carried-by-design  explicitly marked carried; expected not to match, and
-    #                      not verifiable here since the prep body is replaced
+    #   carried-by-design  explicitly marked carried; expected not to match. The
+    #                      INEQUALITY stays unverifiable here, because the prep
+    #                      body is replaced and there is nothing to recompute.
+    #                      The EQUALITY does not: a carried block scored an
+    #                      earlier artefact by construction, so holding the
+    #                      digest of the draft being saved is a positive signal
+    #                      that it was recomputed at save rather than copied.
     #   never-scored       a verdict block with no digest at all
     #   stale              anything else: the verdict predates this draft
     # A block is carried-by-design iff its heading ends "(prep)" or it carries a
@@ -763,10 +769,21 @@ else
       /^scored-digest: sha256:/ {
         seen_digest = 1;
         if (!is_verdict) next;
-        if (carried) next;
         d = $2; sub(/^sha256:/, "", d);
         want = is_post ? cp : cb;
-        if (want == "") { printf "%s\t(no artefact on disk to compare)\n", head; next }
+        if (want == "") { printf "%s\tno-artefact\n", head; next }
+        if (carried) {
+          # A carried block scored an earlier artefact by construction, so it
+          # cannot honestly hold the digest of the draft being saved. Equality
+          # means the digest was recomputed at save instead of copied across,
+          # which is the one way to defeat this comparison and the hole P099
+          # named against its own fix. The false positive is a prep body
+          # byte-identical to the current draft; step 16 renames the .prep.md
+          # and finalise absorbs late changes, so it is rare, and it costs one
+          # gate invocation, which is the direction ADR-047 fixes failure in.
+          if (d == want) printf "%s\tcarried-refreshed\n", head;
+          next
+        }
         if (d != want) printf "%s\t%s\n", head, (is_post ? "post" : "brief");
       }
       END { flush() }
@@ -778,6 +795,10 @@ else
           fail m "$brief: the verdict block \"$gate\" carries no scored-digest, so there is no way to tell which draft it scored; re-run that gate against the current draft (ADR-047)"
         elif [ "$which" = "custody-broken" ]; then
           fail m "$brief: the verdict block \"$gate\" is marked carried but has no scored-digest, which is the signature of a block recomposed from context rather than copied verbatim; recover the original block with its digest, or re-run that gate (ADR-047 custody invariant)"
+        elif [ "$which" = "carried-refreshed" ]; then
+          fail m "$brief: the verdict block \"$gate\" is marked carried from prep but holds the digest of the draft being saved, which is the signature of a digest recomputed at save rather than copied across; a carried verdict scored an earlier artefact by construction. Recover the original block from the prep commit with its digest, or, only where that digest is unrecoverable or equal to this one, re-run that gate and drop both the carried-from line and the (prep) heading suffix (ADR-047 custody invariant)"
+        elif [ "$which" = "no-artefact" ]; then
+          fail m "$brief: the verdict block \"$gate\" names an artefact that is not written yet, so there is no artefact on disk to compare its digest against; that is a save-ordering fault rather than a stale gate, so write the brief and its LinkedIn sibling first, then run the lint again (SKILL.md step 16 ordering)"
         else
           fail m "$brief: the verdict for \"$gate\" was scored against a different $which than the one being saved; re-run that gate against the current draft before saving (ADR-047)"
         fi

@@ -6,7 +6,7 @@ human-oversight: unconfirmed
 decision-makers: [Tom Howard]
 problems: [P099]
 adrs: [047-stale-gate-verdicts-are-re-run-and-the-check-over-reports, 017-ai-brief-prep-and-finalise-phases, 026-reviews-and-meta-content-to-sibling-files, 043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates, 046-skip-the-agent-re-invocation-when-the-artefact-is-unchanged]
-jtbd: [JTBD-005, JTBD-200]
+jtbd: [JTBD-005, JTBD-200, JTBD-300]
 stories: []
 ---
 
@@ -16,7 +16,7 @@ stories: []
 **Reported**: 2026-08-08
 **Problems**: P099
 **ADRs**: ADR-017 (prep and finalise phases), ADR-026 (reviews to sibling files), ADR-043 (bounded editorial remediation loop), ADR-046 (skip the agent re-invocation when the artefact is unchanged)
-**JTBD**: JTBD-005, JTBD-200
+**JTBD**: JTBD-005, JTBD-200, JTBD-300
 
 > **ID namespaces.** Bare `ADR-0NN` means a **local** decision in `docs/decisions/` (017, 026, 032, 039, 040, 043, 045, 046). **ADR-060, ADR-073, ADR-074, ADR-077** are **upstream `@windyroad` plugin** IDs, marked upstream at each mention. Local ADR-046 collides with a different upstream ADR-046. Same note ADR-043:19, ADR-046:18 and RFC-004:21 carry.
 
@@ -65,6 +65,8 @@ So: on a subsequent save, a gate that did **not** re-run keeps the digest it ori
 **This is a behaviour change, not a formalisation.** The template at SKILL.md:1237-1309 prescribes carried-from-prep blocks, but neither recent edition follows it. Issue 16's reviews file contains **zero** `(prep)` sections: the slots were replaced by a summary table plus a git pointer at `:8` ("Prep-phase review blocks are preserved verbatim in git at commit `1cf2691` ... This file records the finalise-phase verdicts and **summarises** the prep-phase outcomes"). Issue 15 does carry `(prep)` sections, but as one-line summaries composed at finalise (`:45`, `:58`, `:74`), not copied blocks. On both editions the orchestrator **composed** rather than copied, which is exactly what would silently refresh a digest.
 
 Two consequences. The `:1261-1301` slots are surfaces the implementation must **rewrite**, not merely read. And this remains a **prose rule enforced by orchestrator adherence**, the same enforcement class as step 15.6, which P099 records as having not held. Its failure mode is a **silent false negative**: a refreshed digest is indistinguishable from a legitimate re-score, and `:1223`'s replace leaves no prior copy in the working tree. What can honestly be claimed is that it is **better-conditioned** than 15.6's, because "am I writing a block or copying one?" is a within-step question rather than a memory of body state across unbounded edit rounds.
+
+> **Narrowed 2026-08-29 (P099).** The paragraph above is now too pessimistic on one limb, and marked rather than rewritten so the original reasoning stays readable. A refreshed digest on a block **marked carried** is no longer indistinguishable: a carried block scored an earlier artefact by construction, so a carried digest equal to the draft being saved is a positive signal that the digest was recomputed at save. Check (m) previously skipped carried blocks from comparison entirely (`if (carried) next`) and now reports that equality. What remains a silent false negative is the unmarked case: dropping both carried markers without actually re-running the gate produces a block indistinguishable from a legitimate fresh finalise verdict, and no deterministic check can see it. The ordered remedies at `SKILL.md`'s check (m) response are prose mitigation of that remainder, which is the same enforcement class this paragraph names. The class is narrowed, not closed.
 
 ### Four states, not a boolean
 

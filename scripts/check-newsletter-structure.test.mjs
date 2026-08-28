@@ -681,6 +681,88 @@ describe('check-newsletter-structure.sh', () => {
     expect(r.stderr).toContain('custody');
   });
 
+  // The other half of the custody invariant. Losing the digest is the loud
+  // breach and is covered above; refreshing it is the quiet one, and it was the
+  // hole P099 named against its own fix. A carried block scored an earlier
+  // artefact by construction, so a carried digest equal to the draft being
+  // saved is a digest recomputed at save rather than copied across.
+
+  it('(m) reports a carried block whose digest was refreshed to the current brief', () => {
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${d}\nPASS.\n\n` +
+      `## Voice Review (prep)\nscored-digest: sha256:${d}\nPASS at prep.`);
+    const r = run(brief);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('Voice Review (prep)');
+    expect(r.stderr).toContain('custody');
+  });
+
+  it('(m) reports a refreshed digest on a carried-from: prep block too', () => {
+    // The marker form, not the heading form. Both set carried independently, so
+    // both must be reached; pinning only one would leave half the surface open.
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Cross-Edition Consistency\ncarried-from: prep\nscored-digest: sha256:${d}\nSUPPORTED.`);
+    const r = run(brief);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('Cross-Edition Consistency');
+    expect(r.stderr).toContain('custody');
+  });
+
+  it('(m) routes a carried LinkedIn verdict against the post, not the brief', () => {
+    // A carried post-scored block holding the current POST digest is the breach;
+    // holding the current BRIEF digest is not, because that is not the artefact
+    // it claims to have scored. Without the per-surface split this arm would
+    // both miss the real case and invent a false one.
+    const db = digestOf(VALID_BRIEF);
+    const dp = digestOf(VALID_LINKEDIN);
+    const bad = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Voice Review (LinkedIn post)\ncarried-from: prep\nscored-digest: sha256:${dp}\nPASS.`);
+    expect(run(bad).stderr).toContain('custody');
+    const ok = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Voice Review (LinkedIn post)\ncarried-from: prep\nscored-digest: sha256:${db}\nPASS.`);
+    expect(run(ok).stderr).not.toContain('FAIL [m]');
+  });
+
+  it('(m) leaves a genuinely carried digest alone', () => {
+    // The regression guard on the arm above: the legitimate carry is the common
+    // case at every finalise save, and firing on it would make the check noise.
+    const stale = '4'.repeat(64);
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Editor Review (finalise)\nscored-digest: sha256:${d}\nPASS.\n\n` +
+      `## Editor Review (prep)\nscored-digest: sha256:${stale}\nPASS at prep.`);
+    expect(run(brief).stderr).not.toContain('FAIL [m]');
+  });
+
+  it('(m) clears a refreshed carried block once it is recorded as finalise', () => {
+    // The remedy has to terminate, or the check blocks the save with nothing the
+    // author can do. Re-running the gate against the current draft means the
+    // block is no longer carried, and the digest it holds is then the right one.
+    // Same bytes, both carried markers gone, check quiet.
+    const d = digestOf(VALID_BRIEF);
+    const brief = withReviews(VALID_BRIEF, VALID_LINKEDIN,
+      `## Voice Review (finalise)\nscored-digest: sha256:${d}\nPASS.`);
+    expect(run(brief).stderr).not.toContain('FAIL [m]');
+  });
+
+  it('(m) names save ordering, not a stale gate, when the artefact is unwritten', () => {
+    // A verdict scoring an artefact that has not been written yet cannot be
+    // compared. The cause is step-16 ordering and the remedy is to write the
+    // artefacts first; the old catch-all told the author to re-run the gate,
+    // which spends an invocation on something a file write solves.
+    const dir = mkdtempSync(join(tmpdir(), 'nl-m-noart-'));
+    const b = join(dir, '2026-06-15.md');
+    writeFileSync(b, VALID_BRIEF);
+    writeFileSync(join(dir, '2026-06-15.reviews.md'),
+      `# Reviews\n\n## Skeptic Review (LinkedIn post)\nscored-digest: sha256:${'5'.repeat(64)}\nPASS.\n`);
+    const r = run(b);
+    expect(r.stderr).toContain('no artefact on disk to compare');
+    expect(r.stderr).toContain('ordering');
+    expect(r.stderr).not.toContain('was scored against a different');
+  });
+
   it('every verdict heading in the templates classifies as the template intends', () => {
     // Reads the real templates. A heading the classifier treats as a verdict must
     // have a digest placeholder or a carried marker beside it in SKILL.md; one it

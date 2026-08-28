@@ -52,6 +52,8 @@ Added `### 15.6. Post-gate edit discipline: a body edit re-enters the FULL gate 
 
 **Gate reviews:** wr-architect:agent ALIGNED (no ADR conflict; reinforces ADR-012/018/020 mandatory-per-pass intent; no new ADR needed). wr-jtbd:agent PASS (serves JTBD-003 Evaluation for the Engineering Leader persona; removes the author's manual gate-policing backstop). style-guide / voice-tone gates N/A: the edit is internal pipeline-process prose in a `.claude/skills/*.md` file, outside both hooks' scope (CSS / user-facing component copy).
 
+> **Correction 2026-08-29.** That JTBD anchor is retired. JTBD-001 through JTBD-004 were retired by ADR-041, dated 2026-07-10, so the 2026-06-22 gate review above anchors to a retired job. Stated with its provenance because the retirement is not where you would look for it: ADR-041 does not name JTBD-003, and the retirement is recorded in ADR-020's own correction section. `docs/jtbd/README.md` still lists JTBD-003 and the job file is still on disk, so the index is stale rather than the claim wrong. The correct anchor is **JTBD-300 (Spend Editorial Judgement Where It Counts)** for the Publication Author persona, `oversight-date: 2026-08-07`, which is the job the JTBD README's Job-to-Screen Mapping assigns to the `/wr-newsletter` pipeline. The re-anchoring matters beyond bookkeeping: this ticket's whole argument is author-side, and JTBD-003 was a reader-side job. Marked rather than overwritten, matching the correction shape this ticket already uses above.
+
 **I13 RFC-trace gate:** the `wr-itil-check-fix-rfc-trace` predicate fired `no-rfc-trace: P099` directing an RFC auto-create. This is the known P104 false positive: the windyroad website is a Phase-1 adopter with no `docs/rfcs/` tier and zero RFC history in git.
 
 > **Correction 2026-08-08.** That premise is now stale and the conclusion with it. `docs/rfcs/` exists and carries RFC-001 through RFC-005; this ticket traces to **RFC-005** (Make a post-gate body edit detectable at save), recorded in the `## RFCs` section above. When the I13 gate fired again on 2026-08-08 it was legitimate, not a P104 false positive, and was handled as sub-case (b) no-vehicle: none of the four existing RFCs has this ticket's fix as its task set. Marked here rather than silently overwritten because leaving the stale claim beside the new trace would have this ticket asserting both "there is no RFC tier" and "this traces to RFC-005", which is the exact shape RFC-005 exists to detect. Verified the premise (`docs/rfcs/` absent, zero RFC commits) and fell back to the legacy direct-implementation path per the P070 / P103 precedent, carrying the fix-design trace on this ticket rather than bootstrapping an RFC tier.
@@ -114,8 +116,10 @@ is intent rather than enforcement, and ADR-046 carries a caveat saying so.
 
 
 - **Blocks**: (none)
-- **Blocked by**: (none)
+- **Blocked by**: P165
 - **Composes with**: P089 (structural lint); the five-gate sequence.
+
+**Why P165 blocks (added 2026-08-29).** Verification of this ticket needs an edition whose gates recorded digests, and P165 defect two is the reason two of the last three editions recorded none. Its own note says the same thing from the other side: "That ticket cannot verify while this is open." P165 is Effort S, so under the transitive-effort rule this ticket's effort is unchanged at M.
 
 ## Related
 
@@ -221,3 +225,82 @@ The detector was silent for the same reason. Check (m) skips when the sibling ca
 This is the falsification of what the Fix Released section already flagged as its weak point. It called the custody invariant "a prose rule of the same enforcement class as the one this ticket records as having failed", and declined to dress it as structural. One edition later the prose rule did not hold, and the lint could not tell.
 
 So this ticket was flipped back to Known Error on 2026-08-28 rather than left reading as merely unverified: the mechanism it shipped is not running on the live pipeline, and it cannot be verified until the digests are emitted again and check (m) can distinguish a legacy edition from a current one. P165 owns both halves.
+
+## Worked 2026-08-29: the custody hole this ticket named against its own fix is now closed
+
+This ticket stays at **Known Error**. The 2026-08-28 flip-back set its own un-park
+condition, and half of that condition is still outstanding, so nothing here reclassifies
+it. What changed is that the ticket's own named weak point is no longer prose.
+
+**The flip-back's evidence was re-verified on disk before anything was built on it.**
+The count it rests on holds: `2026-08-24.reviews.md` carries zero `scored-digest:` lines
+and `2026-08-17.reviews.md` carries five. Both files exist, so the zero is a real absence
+rather than a missing sibling. The conclusion drawn from it needs splitting, though. It
+reads "P165 owns both halves", and P165 shipped the first half on 2026-08-25, three days
+before this flip-back was written: check (m) now derives whether ADR-047 governs an
+edition from its date instead of inferring exemption from the absence it is testing for.
+Only the second half is outstanding, and it needs an edition run, not a code change.
+
+**The hole that was still open, and is this ticket's rather than P165's.** The Fix
+Released section above says the lint "catches the common breach (a carried block that
+lost its digest) but not the narrower one (a block paraphrased while its digest string is
+copied across)". Reading the code, the gap was wider than that sentence: check (m) read
+`if (carried) next` and skipped every carried block from digest comparison entirely. So
+the whole carried-with-a-digest state was unexamined, and a carried block whose digest
+had been recomputed at save read as legitimate. That is how a gate that never saw the
+final text passes silently, which is this ticket's defect statement.
+
+**What closes it.** A carried block scored an earlier artefact by construction, which
+RFC-005 already states. Check (m) now reports a carried block holding the digest of the
+draft being saved, because that equality is a positive signal the digest was recomputed
+rather than copied across. It is one arm in the awk already walking the file: no git, no
+baseline, no prose comparison, no new state, and the lint stays a pure function of the
+brief, the post and the reviews sibling.
+
+Two designs were rejected on gate review before this one. Comparing each verdict block
+against its last committed version would have made the lint depend on repo state, and
+would have failed exactly the edit check (n) requires when an author adds a stated reason
+to a CLEARED finding. Minting a separate check letter would have forked check (m)'s
+heading classifier. The arm also lands one branch from its own sibling, `custody-broken`,
+which is the same invariant with the other signature.
+
+**Also fixed, found while editing that dispatcher.** A verdict naming an artefact not yet
+written fell through to the catch-all and printed "was scored against a different (no
+artefact on disk to compare) than the one being saved; re-run that gate". Ungrammatical,
+and it prescribed a gate invocation for what step 16 records as a save-ordering fault. It
+now names the ordering remedy.
+
+**Six behavioural tests**, four confirmed red first. They pin the refreshed digest on both
+carried markers (the `(prep)` heading suffix and the `carried-from:` line set `carried`
+independently), the per-surface split, the legitimate carry staying quiet, and the
+ordering message. Full suite 127 passing.
+
+**The remedies are ordered, and the order is the load-bearing part.** Recover the original
+block from the prep commit verbatim where the prep digest differs; only where it is
+unrecoverable or equal, re-run the gate and drop both carried markers. Presenting those as
+equals would have been worse than saying nothing, because the second is the cheaper exit
+and on a genuinely recomposed block it converts the recomposition into an assertion that
+the gate scored the current body.
+
+**What is still not mechanised, stated rather than dressed.** Dropping both carried markers
+without actually re-running the gate produces a block no deterministic check can tell from
+a legitimate fresh finalise verdict. The prep body is gone, so nothing can compare against
+it. "Do not reach for that first" is prose mitigation of the same enforcement class this
+ticket exists because of. The class is narrowed, not closed, and RFC-005 now records that
+narrowing at its custody-invariant section rather than reading as though the whole failure
+mode were still open.
+
+**What remains before this can be verified.** Nothing further to build here. An edition has
+to run that both records digests and takes post-gate edits, and the digests depend on P165
+defect two. Gate reviews this round: architect PASS, jtbd PASS, style-guide PASS, voice and
+tone PASS.
+
+**Substance guard, recorded because the answer is not obvious from the file.** RFC-005's
+own frontmatter reads `human-oversight: unconfirmed`, which looks at first glance like
+building on an unratified decision. It is not: the RFC tier carries no decision substance
+here, and RFC-005's stated precondition is that implementation waits on the keying ADR
+rather than on itself. `wr-architect-is-decision-unconfirmed` returns confirmed for all
+five ADRs it declares (047, 017, 026, 043, 046), so every decision this change rests on
+is ratified. The risk scorer caught the same frontmatter and read it as an unsupported
+ratification claim, which is a fair read of the RFC's framing and is noted here so the
+next person does not have to re-derive it.
