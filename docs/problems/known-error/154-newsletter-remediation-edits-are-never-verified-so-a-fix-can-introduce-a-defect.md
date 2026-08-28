@@ -1,10 +1,12 @@
 # Problem 154: Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-08-17
 **Priority**: 12 (Medium), Impact: 3 x Likelihood: 4, derived at capture from the description per Step 4a. Impact 3 because the failure ships reader-facing prose defects and factual errors into publish-bound drafts rather than breaking a system, matching the calibration P151 and P152 set for reader-facing newsletter defects. Likelihood 4 on the same basis P152 used: it recurred repeatedly inside a single edition and no mechanism prevents recurrence. Five instances in one edition is at the top of that band rather than outside it.
 **Origin**: internal
 **Effort**: M, derived at capture: a contract change to the step 15.37 loop plus a cheap deterministic re-check at round close, and a decision about whether the expensive diff-scoped read is worth its invocation. Comparable to P152, also rated M.
+
+**WSJF**: 12.0 = (12 x 2.0) / 2 (re-rated 2026-08-28 review: Verification Pending -> Known Error flip-back on observed regression, user-confirmed; status multiplier 0 -> 2.0)
 
 ## Description
 

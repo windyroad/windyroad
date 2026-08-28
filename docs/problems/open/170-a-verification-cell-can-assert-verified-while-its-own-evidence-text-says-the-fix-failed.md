@@ -2,10 +2,12 @@
 
 **Status**: Open
 **Reported**: 2026-08-26
-**Priority**: 12 (High), Impact: 4 x Likelihood: 3, derived at capture. Impact is 4 because the failure closes tickets whose fixes are known not to work, and it closes them silently: the evidence-backed bucket closes without asking, so the wrong close is not surfaced to anyone. A closed ticket stops being worked, so the defect it names stays live with nothing tracking it. Not 5 because the close is recoverable from git and no reader is reached. Likelihood is 3 because writing the contradiction takes a specific operator error, but nothing detects it once written, and it has happened.
+**Priority**: 6 (Medium), Impact: 2 x Likelihood: 3. Re-rated 2026-08-28 review from 12 (Impact was 4): RISK-POLICY.md reserves Impact 4 for a newsletter content-quality failure caught at a gate or the site fully offline. A wrongly-closed problem ticket is neither; the blast radius is problem-management tooling, which the policy rates Impact 2. Sibling precedent: P132 rates the near-identical act (an automation emitting wrong CLOSE verdicts from a bad predicate) at Impact 2. Likelihood stays 3. Original capture rationale: Impact is 4 because the failure closes tickets whose fixes are known not to work, and it closes them silently: the evidence-backed bucket closes without asking, so the wrong close is not surfaced to anyone. A closed ticket stops being worked, so the defect it names stays live with nothing tracking it. Not 5 because the close is recoverable from git and no reader is reached. Likelihood is 3 because writing the contradiction takes a specific operator error, but nothing detects it once written, and it has happened.
 
 **Origin**: internal
 **Effort**: S, derived at capture. One predicate over a column that is already parsed.
+
+**WSJF**: 6.0 = (6 x 1.0) / 1 (re-rated 2026-08-28 review from 12.0; Priority re-rate, Effort unchanged)
 
 ## Description
 

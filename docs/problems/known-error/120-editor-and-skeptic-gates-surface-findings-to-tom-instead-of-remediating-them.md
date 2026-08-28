@@ -1,11 +1,11 @@
 # Problem 120: Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-08-04
 **Priority**: 20 (Very High), Impact: 4 x Likelihood: 5, derived at capture from the description. Impact is 4 rather than 5 because no wrong output reaches readers (external review catches it) but the cost lands on the newsletter, which ADR-027 rates as the primary business surface. Likelihood is 5 because this fires on every edition by contract rather than by chance: the gates are non-blocking by design, so every finding they produce is routed to Tom.
 **Origin**: internal
-**Effort**: XL as delivered (re-rated 2026-08-05; captured as L). The capture estimate anticipated one new ADR plus loop wiring at two SKILL steps. Delivered scope ran to a new ADR plus amendment sections inside both amended ADRs, a new SKILL step plus routing changes at four call sites, a section 15.6 exemption, a phase-table and reference-list drift sweep that also closed ADR-042's outstanding confirmation criterion, edits to both gate agents, a full leader-persona re-grounding surfaced by the JTBD gate, a fix-time RFC, and a compendium refresh. The re-rate is recorded for audit only: the ticket is Verification Pending, so the WSJF status multiplier is 0 and it is excluded from dev-work ranking either way.
-**WSJF**: n/a (Verification Pending, multiplier 0). At capture: 5.0 = (20 x 1.0) / 4.
+**Effort**: XL as delivered (re-rated 2026-08-05; captured as L). The capture estimate anticipated one new ADR plus loop wiring at two SKILL steps. Delivered scope ran to a new ADR plus amendment sections inside both amended ADRs, a new SKILL step plus routing changes at four call sites, a section 15.6 exemption, a phase-table and reference-list drift sweep that also closed ADR-042's outstanding confirmation criterion, edits to both gate agents, a full leader-persona re-grounding surfaced by the JTBD gate, a fix-time RFC, and a compendium refresh. The re-rate was recorded for audit only while the ticket sat in Verification Pending at a status multiplier of 0. Since the 2026-08-28 flip-back to Known Error the multiplier is 2.0, so the XL divisor of 8 is now load-bearing: it puts WSJF at 5.0, and the ticket ranks at the top of the queue only because Severity 20 is Very High and takes the Tier 0 critical bypass.
+**WSJF**: 5.0 = (20 x 2.0) / 8 (re-rated 2026-08-28 review: Verification Pending -> Known Error flip-back on observed regression, user-confirmed; status multiplier 0 -> 2.0)
 
 ## Description
 

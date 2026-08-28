@@ -1,11 +1,11 @@
 # Problem 160: No deterministic check reads the LinkedIn companion body for a manual URL
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-23
 **Priority**: 2 (Very Low), Impact: 1 x Likelihood: 2, derived at capture. Impact is 1 because the failure is a redundant brand line sitting beside an auto-injected article card: no reader loses anything, and the same rating is already carried by P114. Likelihood is 2 rather than 4 because P114 removed the instruction that caused it from both the SKILL and both persona configs, so a drafter now has no prompt to write the URL. What remains is the absence of a net, not a live pull toward the defect.
 **Origin**: internal
 **Effort**: S. One companion-scoped check in an existing script plus cases alongside the existing fixtures, the same size class as the check (o) work that shipped for P151.
-**WSJF**: 2.0 = (2 x 1.0) / 1
+**WSJF**: 4.0 = (2 x 2.0) / 1 (re-rated 2026-08-28 review: Open -> Known Error auto-transition, status multiplier 1.0 -> 2.0)
 **JTBD**: JTBD-300
 **Persona**: publication-author
 

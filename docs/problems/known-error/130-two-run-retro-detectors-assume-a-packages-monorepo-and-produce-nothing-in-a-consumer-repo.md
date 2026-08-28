@@ -1,11 +1,11 @@
 # Problem 130: Two run-retro detectors assume a packages/ monorepo and produce nothing in a consumer repo
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-08
 **Priority**: 10 (High), Impact: 2 x Likelihood: 5, derived at capture from the description. Impact is 2 because the failures are advisory surfaces, not reader-facing or release-path: no visitor, no subscriber, no build. It is not 1 because one of the two (the Tier-3 budget pass) is load-bearing for a rotation decision the retro has to make, and its absence is silent. Likelihood is 5 because both fire deterministically on every retro run in this repo, which is a consumer repo by construction; observed 2026-08-08.
 **Origin**: internal
 **Effort**: S, derived at capture. One path substitution in a SKILL body and one guard clause in a detector script, each with an existing test sibling. Same size class as P129, also rated S for a guard clause in one script.
-**WSJF**: 10.0 = (10 x 1.0) / 1
+**WSJF**: 20.0 = (10 x 2.0) / 1 (re-rated 2026-08-28 review: Open -> Known Error auto-transition, status multiplier 1.0 -> 2.0)
 
 ## Description
 

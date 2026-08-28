@@ -2,10 +2,12 @@
 
 **Status**: Open
 **Reported**: 2026-08-26
-**Priority**: 12 (High), Impact: 4 x Likelihood: 3, derived at capture. Impact is 4 because an orphan holds full write access to the repository with every verification surface detached: it can commit, and no orchestrator remains to read its ITERATION_SUMMARY, run the Step 6.75 dirty-tree check, or run the P335 over-claim verifier. A commit that lands this way is unattributable to any session. Not 5 because the commit is recoverable from git and nothing reaches a reader. Likelihood is 3 because it needs an interrupted loop, but interruption is ordinary (a user changing their mind mid-loop) and it fired twice in one session.
+**Priority**: 9 (Medium), Impact: 3 x Likelihood: 3. Re-rated 2026-08-28 review from 12 (Impact was 4): RISK-POLICY.md reserves Impact 4 for a newsletter gate failure or the site fully offline, and an orphan commit is neither. Impact 3 is the honest read rather than 2, because master deploys and the policy places "Netlify build broken or delayed" at Impact 3, so an unsupervised commit has a real path to the published surface with no gate in between. Likelihood stays 3. Original capture rationale: Impact is 4 because an orphan holds full write access to the repository with every verification surface detached: it can commit, and no orchestrator remains to read its ITERATION_SUMMARY, run the Step 6.75 dirty-tree check, or run the P335 over-claim verifier. A commit that lands this way is unattributable to any session. Not 5 because the commit is recoverable from git and nothing reaches a reader. Likelihood is 3 because it needs an interrupted loop, but interruption is ordinary (a user changing their mind mid-loop) and it fired twice in one session.
 
 **Origin**: internal
 **Effort**: S, derived at capture. A trap in the dispatch wrapper, or a documented cleanup step. The fix site is the `wr-itil` plugin.
+
+**WSJF**: 9.0 = (9 x 1.0) / 1 (re-rated 2026-08-28 review from 12.0; Priority re-rate, Effort unchanged)
 
 ## Description
 

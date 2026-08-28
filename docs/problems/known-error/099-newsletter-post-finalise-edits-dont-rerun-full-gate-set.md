@@ -1,11 +1,11 @@
 # Problem 099: wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-06-22
 **Priority**: 16 (High). Impact: Significant (4) x Likelihood: Likely (4) (re-rated 2026-08-05 review, up from a deferred 6: Impact 4 per RISK-POLICY "pipeline ships poor-quality content past one of the ... gates ... indicates gate weakness" -- Issue 16's publish-morning thesis rewrite shipped without cross-edition or skeptic re-validation. Likelihood 4 because post-gate external-review edits are now routine on every edition and no hook or automated check covers the re-run, which the ticket's own Fix Strategy records as infeasible.)
 **Origin**: internal
 **Effort**: M (re-rated 2026-08-05 review, up from S: the S bucket covered authoring the §15.6 prose rule, which shipped and did not hold. The remaining work is a stronger enforcement mechanism -- the marker file the Fix Strategy rejected as YAGNI, or a dirty-body check at save -- designed alongside P113's gate-loop cost and P120's remediation loop, since those determine whether re-running the heavy gates is affordable at all.)
-**WSJF**: 16.0 = (16 x 2.0) / 2
+**WSJF**: 16.0 = (16 x 2.0) / 2 (re-rated 2026-08-28 review: Verification Pending -> Known Error flip-back on observed regression, user-confirmed; status multiplier 0 -> 2.0)
 **Type**: technical
 
 ## Description
@@ -220,4 +220,4 @@ The detector was silent for the same reason. Check (m) skips when the sibling ca
 
 This is the falsification of what the Fix Released section already flagged as its weak point. It called the custody invariant "a prose rule of the same enforcement class as the one this ticket records as having failed", and declined to dress it as structural. One edition later the prose rule did not hold, and the lint could not tell.
 
-So this ticket stays in Verification Pending and is now blocked rather than merely unverified: the mechanism it shipped is not running on the live pipeline, and it cannot be verified until the digests are emitted again and check (m) can distinguish a legacy edition from a current one. P165 owns both halves.
+So this ticket was flipped back to Known Error on 2026-08-28 rather than left reading as merely unverified: the mechanism it shipped is not running on the live pipeline, and it cannot be verified until the digests are emitted again and check (m) can distinguish a legacy edition from a current one. P165 owns both halves.

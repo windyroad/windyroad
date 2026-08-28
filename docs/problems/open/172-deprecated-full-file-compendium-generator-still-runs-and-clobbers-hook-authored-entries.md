@@ -6,6 +6,8 @@
 **Origin**: internal
 **Effort**: M - a guard on the generator plus a test. The generator is upstream in `wr-architect`, so the local work is a proposal, not a change (see Fix Strategy).
 
+**WSJF**: 4.0 = (8 x 1.0) / 2 (first computed 2026-08-28 review; Priority and Effort unchanged from capture)
+
 ## Description
 
 `scripts/generate-decisions-compendium.sh` in the installed `wr-architect` plugin declares itself deprecated on every invocation and then runs to completion anyway. It re-derives every entry in `docs/decisions/README.md` from the ADR bodies, so any annotation that exists only in the compendium is destroyed. There is no guard, no confirmation, and no diff against what it is about to overwrite.

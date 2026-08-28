@@ -1,11 +1,11 @@
 # Problem 155: A governance subagent's recommended action can be wrong in a way only the enforcement it would break reveals
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-23
 **Priority**: 9 (Medium) - Impact: 3 x Likelihood: 3. Impact is 3 because adopting a wrong recommendation lands broken work (in the observed case, a red test) rather than reaching a reader; it is pipeline disruption, caught by CI or by the next run. Likelihood is 3 because governance subagents recommend actions on most iterations and many of those actions touch a surface something else enforces, though a recommendation wrong enough to break that enforcement has been observed once.
 **Origin**: internal
 **Effort**: M. A consumer-side discipline addition across the governance-skill surfaces that adopt subagent recommendations, plus a briefing entry. No new agent, no new hook.
-**WSJF**: 4.5 = (9 x 1.0) / 2
+**WSJF**: 9.0 = (9 x 2.0) / 2 (re-rated 2026-08-28 review: Open -> Known Error auto-transition, status multiplier 1.0 -> 2.0)
 
 ## Description
 

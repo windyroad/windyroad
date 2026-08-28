@@ -1,11 +1,11 @@
 # Problem 132: Relevance evaluator emits CLOSE verdicts from syntax-only ADR-number and driver matching
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-08
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description. Impact is 2 because nothing reader-facing is at stake: the evaluator is dev tooling whose verdict feeds an orchestrator or operator decision, and both observed failures were caught before anything closed. It is not 1 because the failure direction is toward loss rather than friction: the verdict is a confident CLOSE on a live ticket, phrased with cited evidence, on a surface where an operator batch-reviewing 24 candidates is invited to trust it. Likelihood is 4 because nothing automated checks the verdict, it fired on two independent surfaces on the same day through two different shapes, and one review pass surfaced 24 candidates of which none survived verification.
 **Origin**: internal
 **Effort**: S, derived at capture. Two localised predicate changes in one script (qualify shape 2's ADR match; gate shape 5 on the declared relationship) plus cases alongside the existing `packages/itil/scripts/test/evaluate-relevance.bats` fixtures. Same size class as P129 and P131, both rated S for guard-clause changes in a single script. Witness C (2026-08-09) adds a third predicate change, a remedy-vs-mention test on shape 2. Still S, still one script, but it is at the top of the band now rather than the middle.
-**WSJF**: 8.0 = (8 x 1.0) / 1
+**WSJF**: 16.0 = (8 x 2.0) / 1 (re-rated 2026-08-28 review: Open -> Known Error auto-transition, status multiplier 1.0 -> 2.0)
 
 ## Description
 

@@ -370,3 +370,7 @@ Forward-chronological archive of `docs/problems/README.md` line-3 fragments rota
 ## 2026-08-26
 
 > Last reviewed: 2026-08-26 **P171 captured** (an interrupted AFK loop leaves its iter subprocess running with full repository write access and every verification surface detached) (session retro via /wr-itil:work-problems)
+
+## 2026-08-28
+
+> Last reviewed: 2026-08-26 **P172 captured** (the deprecated full-file compendium generator still runs and clobbers hook-authored compendium entries) (lightweight aside via /wr-itil:capture-problem)

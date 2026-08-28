@@ -1,11 +1,11 @@
 # Problem 134: Agents infer staged state from the session-start git status snapshot, which is lossy on its first line
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-08-09
 **Origin**: internal
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description. Impact is 2 because the harm is dev-tooling friction and audit-trail noise, not a visitor or reader surface: a re-score round trip, plus a risk report that names a Medium risk item which does not exist. It is not 1 because the second-order effect is a real control: an orchestrator that learns to wave away the scorer's staged-set finding has stopped reading the one check that would catch in-flight work genuinely being swept into a commit. Likelihood is 4 because the snapshot is handed to every session, the first listed path is modified in most dirty worktrees, and any question of the form "is X staged" routes an agent straight at it. Observed once on 2026-08-09, but the trigger is present at the start of every session.
 **Effort**: S, derived at capture. A convention line in the orchestrator's prompt shape plus a briefing entry; no code change is available in this repo because the snapshot is framework-injected. Comparable to P129 and P133, both rated S.
-**WSJF**: 8.0 = (8 x 1.0) / 1
+**WSJF**: 16.0 = (8 x 2.0) / 1 (re-rated 2026-08-28 review: Open -> Known Error auto-transition, status multiplier 1.0 -> 2.0)
 
 ## Description
 

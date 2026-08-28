@@ -2,10 +2,12 @@
 
 **Status**: Open
 **Reported**: 2026-08-26
-**Priority**: 15 (High), Impact: 3 x Likelihood: 5, derived at capture. Impact is 3 because the AFK loop is the mechanism for unattended backlog progress and it stops before doing any: nothing reaches a reader, and no data is lost, but an operator who leaves it running returns to a loop that reported success and did nothing. Likelihood is 5 because it is not conditional on anything: zsh is the macOS default login shell since Catalina, both defects are present in every cached version, and one of them reproduces on every single invocation.
+**Priority**: 10 (High), Impact: 2 x Likelihood: 5. Re-rated 2026-08-28 review from 15 (Impact was 3): the AFK orchestrator is dev tooling, which RISK-POLICY.md rates Impact 2 ("dev tooling, hooks, or local build affected, but the published site and newsletter pipeline are unaffected"). Nothing here reaches a visitor or a reader. Sibling precedent: P130 rates the same class (a governance detector that silently produces nothing in this repo) at Impact 2. Likelihood stays 5. Original capture rationale: Impact is 3 because the AFK loop is the mechanism for unattended backlog progress and it stops before doing any: nothing reaches a reader, and no data is lost, but an operator who leaves it running returns to a loop that reported success and did nothing. Likelihood is 5 because it is not conditional on anything: zsh is the macOS default login shell since Catalina, both defects are present in every cached version, and one of them reproduces on every single invocation.
 
 **Origin**: internal
 **Effort**: S, derived at capture. Two lines in one SKILL. The fix site is the `wr-itil` plugin, so the local half is a report and the change lands upstream.
+
+**WSJF**: 10.0 = (10 x 1.0) / 1 (re-rated 2026-08-28 review from 15.0; Priority re-rate, Effort unchanged)
 
 ## Description
 
