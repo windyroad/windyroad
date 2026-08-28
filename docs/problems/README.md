@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-28 **ten tickets moved to Known Error, three re-rated down, zero relevance-closes** (seven Open tickets had a confirmed root cause and a real workaround; three Verification Pending tickets whose own evidence recorded a failed fix were flipped back on Tom's call; the relevance evaluator flagged 44 of 69 and every sample was a P132 syntax-only false positive) (/wr-itil:review-problems)
+> Last reviewed: 2026-08-29 **P173 captured**: a ticket's verification criterion is never re-checked against decisions ratified after it was written (lightweight aside via /wr-itil:capture-problem, from the P120 iteration retrospective).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -77,6 +77,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 3.0 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create / commit gates re-fire indefinitely, forcing BYPASS_RISK_GATE=1 workaround | 6 | Open | M | 2026-05-31 | internal |
 | 3.0 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 | Open | M | 2026-06-14 | internal |
 | 3.0 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers | 6 | Open | M | 2026-06-17 | internal |
+| 3.0 | P173 | A ticket's verification criterion is never re-checked against decisions ratified after it was written | 6 | Open | M | 2026-08-29 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P056 | manage-problem SKILL.md misattributes ADR-014 to "single-commit governance" in 6+ blocks | 3 | Open | M | 2026-05-13 | internal |
