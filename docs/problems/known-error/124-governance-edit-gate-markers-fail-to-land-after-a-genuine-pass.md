@@ -176,6 +176,33 @@ computed in `hooks/lib/external-comms-key.sh:48-72` as `sha256(normalize(draft) 
 and documented in the gate header at lines 35-36. Line 413 is the deny message. Half of that claim
 held and half did not, which is the same split the handing-over note predicted.
 
+## Fourth witness, 2026-08-29 (P099 iteration)
+
+Cause 2 again, on both gates in one iteration, and worth recording because the shape
+was not ignorance of this ticket: the Critical Points roll-up carries the mechanism and
+was in context at session start.
+
+The pull that defeated it is the one this ticket's Workaround does not name. Both the
+architect and the JTBD reviewer returned ISSUES FOUND with substantive, correct findings,
+and both sets were resolved by `SendMessage` to the same agent. That is the better review
+move on the merits, because the reviewer keeps the context that produced its findings and
+can check whether the resolution actually answers them, which it did: the architect's
+second round caught that the proposed remedy was mechanically wrong, and the JTBD
+reviewer's caught that it did not terminate. Both upgraded to PASS. Neither marker landed,
+because `SendMessage` fires no `PostToolUse:Agent` hook.
+
+Recovery was two fresh synchronous `Agent` spawns re-covering ground already passed,
+roughly 94K subagent tokens. The JTBD gate blocked first, and its deny string carries no
+dispatch-shape hint, so the cause had to be inferred from this ticket rather than read off
+the block. The architect's deny string, hit next, names it outright.
+
+**What the Workaround is missing.** "Fire a fresh `Agent` tool call (not `SendMessage`)"
+reads as a prohibition on resuming, which costs the review quality that resuming buys. The
+shape that keeps both: iterate by `SendMessage` freely, then make the FINAL pass a fresh
+synchronous `Agent` call carrying the settled design. The final spawn re-reads the artefact
+from disk and is the one that writes the marker, so it is not wasted ceremony.
+
+
 ## Dependencies
 
 - **Blocks**: (none)
