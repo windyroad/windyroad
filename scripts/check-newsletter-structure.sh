@@ -653,6 +653,16 @@ done < <(printf '%s\n' "$body" | awk -F'\t' '
   }
 ')
 
+# $skill_md is resolved here rather than at check (o) because both need it:
+# (o) reads the phase roster and the sanctioned skip reasons, (m) reads the
+# sanctioned reasons alone. One resolution, so the two cannot disagree about
+# which SKILL they are reading.
+skill_md="${NEWSLETTER_SKILL_MD:-}"
+if [ -z "$skill_md" ]; then
+  _o_script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+  skill_md="$_o_script_dir/../.claude/skills/wr-newsletter/SKILL.md"
+fi
+
 # --- (m) a gate verdict that predates the current draft (P099 / ADR-047) --------
 # Each gate verdict in the edition's .reviews.md sibling records the digest of the
 # artefact version it scored, as "scored-digest: sha256:<hex>". This check
@@ -694,6 +704,22 @@ done < <(printf '%s\n' "$body" | awk -F'\t' '
 #
 # $reviews is resolved once at the top of the file, from the brief path with the
 # ".prep" phase infix stripped, or from the optional third argument.
+# The sanctioned skip reasons, read from the one anchored block in the SKILL
+# that declares them, exactly as check (o) reads them. (m) reads the list itself
+# rather than leaning on (o) having run: (o) skips loudly when the SKILL cannot
+# be found or the roster is empty, and a waiver granted on sanctioning nobody
+# performed would discharge presence and custody together on one typed line.
+# An unreadable SKILL yields an empty list, so nothing is waived, which is the
+# failure direction ADR-047 fixes.
+sanctioned_skips=""
+if [ -f "$skill_md" ]; then
+  sanctioned_skips=$(awk '
+    /SANCTIONED-SKIP-REASONS:/ { insk = 1; next }
+    insk && /^[ \t]*N\/A:/ { sub(/^[ \t]+/, "", $0); print; nsk++; next }
+    insk && nsk > 0 && /^[ \t]*```[ \t]*$/ { insk = 0 }
+  ' "$skill_md")
+fi
+
 if [ ! -f "$reviews" ]; then
   echo "SKIP [m] $brief: no reviews sibling at $reviews; gate-freshness not checked" >&2
 else
@@ -740,10 +766,36 @@ else
     # A block is carried-by-design iff its heading ends "(prep)" or it carries a
     # "carried-from: prep" line. ADR-047 criterion 6: silence reads as stale, so
     # an unmarked carried block is reported, not excused.
-    stale=$(awk -v cb="$cur_brief" -v cp="$cur_post" '
+    # The reason list travels in the environment, not through -v: awk -v runs
+    # escape processing over its value and chokes on the embedded newlines.
+    stale=$(SANCTIONED_SKIPS="$sanctioned_skips" awk -v cb="$cur_brief" -v cp="$cur_post" '
+      function flat(s,   x) {
+        x = tolower(s); gsub(/[^a-z0-9]+/, " ", x)
+        gsub(/^ +| +$/, "", x); return x
+      }
+      # Sanctioned iff the recorded reason IS a declared one or begins with one,
+      # which is the same admission rule check (o) applies, so the two checks
+      # cannot disagree about what a legitimate skip looks like.
+      function sanctioned(reason,   f, r) {
+        f = flat(reason)
+        if (f in sk) return 1
+        for (r in sk) if (index(f, r) == 1) return 1
+        return 0
+      }
+      BEGIN {
+        n = split(ENVIRON["SANCTIONED_SKIPS"], sk_lines, "\n")
+        for (i = 1; i <= n; i++) if (sk_lines[i] != "") sk[flat(sk_lines[i])] = 1
+      }
       function flush() {
         if (head == "") return;
         if (!is_verdict) { head=""; return }
+        # A gate that did not run produced no verdict, so there is no custody to
+        # hold and no digest is owed. Bounded three ways: the reason must be one
+        # the SKILL declares, the N/A must be the block\x27s first content line,
+        # and the block must not be marked carried. A carried block DOES hold a
+        # verdict, produced at prep, and the arm below is the only thing checking
+        # it was copied across rather than recomposed at save.
+        if (na != "" && !carried && sanctioned(na)) { head=""; return }
         if (carried && !seen_digest) { printf "%s\tcustody-broken\n", head; head=""; return }
         if (carried) { head=""; return }
         if (!seen_digest) { printf "%s\tnever-scored\n", head; head=""; return }
@@ -763,6 +815,7 @@ else
         is_post = (h ~ /linkedin|companion|post\)/) ? 1 : 0;
         carried = (h ~ /\(prep\)/) ? 1 : 0;
         seen_digest = 0;
+        na = ""; want_body = 1;
         next
       }
       /^carried-from: *prep/ { carried = 1; next }
@@ -785,6 +838,26 @@ else
           next
         }
         if (d != want) printf "%s\t%s\n", head, (is_post ? "post" : "brief");
+      }
+      # Whether the block records a skip is decided by its FIRST content line,
+      # skipping exactly what check (o) skips. Two predicates for one question
+      # drift apart, and this one would drift silent in the direction that stops
+      # checking, which is the defect this whole check is being fixed for.
+      {
+        if (!want_body) next
+        if ($0 ~ /^[ \t]*$/) next
+        if ($0 ~ /^(scored-digest:|carried-from:|<!--)/) next
+        probe = $0; gsub(/^[ \t>*-]+/, "", probe)
+        if (probe ~ /^[Nn]\/[Aa]/) {
+          na = probe
+          # A reason that claims carriage marks the block carried, whatever the
+          # heading says. Otherwise the one declared reason asserting a verdict
+          # exists could buy the waiver on its own text, and ADR-047 criterion 6
+          # (an unmarked carried block is reported, not excused) would be
+          # defeated through a new door.
+          if (probe ~ /[Cc]arried/) carried = 1
+        }
+        want_body = 0
       }
       END { flush() }
     ' "$reviews")
@@ -916,12 +989,6 @@ fi
 # limit 2 (a sanctioned skip is one whose DOCUMENTED skip condition holds).
 # A free-hand reason would discharge every gate with one typed line, which is
 # this defect relocated one level up.
-skill_md="${NEWSLETTER_SKILL_MD:-}"
-if [ -z "$skill_md" ]; then
-  _o_script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-  skill_md="$_o_script_dir/../.claude/skills/wr-newsletter/SKILL.md"
-fi
-
 if [ ! -f "$reviews" ]; then
   echo "SKIP [o] $brief: no reviews sibling at $reviews; gate presence not checked" >&2
 elif [ ! -f "$skill_md" ]; then

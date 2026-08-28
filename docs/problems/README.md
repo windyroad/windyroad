@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P176 captured**: promptfoo aborts during database migration with a missing better-sqlite3 binding on both Node versions installed here, so the newsletter eval harness cannot be run locally and changes to it have to be argued from source rather than observed (whether the .nvmrc pin explains it is recorded as inference, not fact; lightweight aside via /wr-itil:capture-problem, from the P158 iteration retrospective).
+> Last reviewed: 2026-08-29 **P165 known error**: the remaining investigation task is answered against the corpus, the two breaching editions turn out to have substituted their own custody records rather than skipping the step, and a third defect found in the same check, where a gate skip check (o) sanctions was hard-failed by check (m) for carrying no digest, is fixed with five behavioural cases beside it (WSJF 16.0 to 32.0 on the Known Error multiplier, Effort held at S).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,11 +10,11 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 5.0 | P120 | Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden | 20 | Known Error | XL | 2026-08-04 | internal |
+| 32.0 | P165 | The stale-verdict check stands down on the very absence it exists to catch | 16 | Known Error | S | 2026-08-25 | internal |
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 16.0 | P132 | Relevance evaluator emits CLOSE verdicts from syntax-only ADR-number and driver matching | 8 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P134 | Agents infer staged state from the session-start git status snapshot, which is lossy on its first line | 8 | Known Error | S | 2026-08-09 | internal |
 | 16.0 | P099 | wr-newsletter has no rule that a post-gate / post-finalise body edit must re-run the FULL gate set | 16 | Known Error | M | 2026-06-22 | internal |
-| 16.0 | P165 | The stale-verdict check stands down on the very absence it exists to catch | 16 | Open | S | 2026-08-25 | internal |
 | 15.0 | P161 | No check compares a brief against its own companion post for agreement | 15 | Open | S | 2026-08-24 | internal |
 | 12.0 | P136 | Tier 3 briefing rotation strips entries the Critical Points still point at, because nothing re-points the roll-up | 6 | Known Error | S | 2026-08-09 | internal |
 | 12.0 | P115 | Site changes land on master without a changeset and silently never release to production | 12 | Known Error | M | 2026-07-14 | internal |

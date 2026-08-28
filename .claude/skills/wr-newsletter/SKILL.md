@@ -1203,9 +1203,9 @@ Do not reach for 2 first. It is the cheaper exit, and on a genuinely recomposed 
 
 **On a check (o) failure**, a block this phase prescribes is missing from the reviews sibling entirely, so a gate the pipeline requires produced no verdict (P151). Check (m) cannot see this: it classifies only the headings physically present, so a gate that never ran leaves nothing to classify. The response has the same shape as (m)'s, and it belongs to the SKILL rather than the script: run the named gate against the current artefact and record its block. If it genuinely did not run, record the block anyway, with one of the skip reasons declared below. The lint refuses a free-hand reason: a skip holds only where its documented condition holds, not because someone asserted it (ADR-047 limit 2). Every recorded skip is named in the step-17 summary, so it reaches Tom as a decision rather than sitting in a companion file nobody reads.
 
-**The sanctioned skip reasons, in full.** This block is the only declaration of them. Check (o) reads it by the anchor comment; do not restate the list elsewhere in this file, and do not rely on a reason stated only in prose.
+**The sanctioned skip reasons, in full.** This block is the only declaration of them. Checks (o) and (m) both read it by the anchor comment, (o) to decide whether a recorded skip is legitimate and (m) to decide whether a block owes a digest; do not restate the list elsewhere in this file, and do not rely on a reason stated only in prose.
 
-<!-- SANCTIONED-SKIP-REASONS: check (o) in scripts/check-newsletter-structure.sh reads the N/A lines in the block below and refuses any other recorded reason. Add a reason here to sanction it. -->
+<!-- SANCTIONED-SKIP-REASONS: checks (o) and (m) in scripts/check-newsletter-structure.sh read the N/A lines in the block below; (o) refuses any other recorded reason, (m) waives the digest requirement for a block recording one of these and for no other. Add a reason here to sanction it. -->
 
 ```
 N/A: content-risk returned REJECTED

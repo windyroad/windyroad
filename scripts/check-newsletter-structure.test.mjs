@@ -1681,6 +1681,80 @@ describe('check-newsletter-structure.sh: (m) non-adoption vs pre-adoption (P165)
     expect(r.stderr).toContain('no edition date');
   });
 
+  // --- a sanctioned skip is not a verdict, and owes no digest (P165 defect 3) --
+  //
+  // Check (o) (P151) lets a gate record a documented skip as an "N/A: <reason>"
+  // block, and refuses any reason the SKILL does not declare. Check (m) read
+  // every roster heading as a verdict, so a sanctioned skip carried no digest,
+  // was reported never-scored, and the save was blocked. Satisfying both would
+  // have meant writing a digest for a gate that never ran, which asserts the
+  // custody ADR-047 exists to protect. The two populations are distinguishable,
+  // so (m) derives which one it is rather than assuming the block holds a
+  // verdict: the same fix as the zero-digest branch above, one grain down.
+  //
+  // The waiver is bounded in three ways, one test each below: the reason must
+  // be one the SKILL declares, the block must not be marked carried, and the
+  // N/A must be the block's first content line rather than a phrase anywhere
+  // in its prose.
+
+  function skDigest() {
+    return createHash('sha256').update(VALID_BRIEF.replace(/^---[\s\S]*?\n---\n/, ''))
+      .digest('hex');
+  }
+
+  // One real verdict so the zero-digest branch does not fire; the block under
+  // test sits beside it. An edition with no digests at all is the branch above.
+  function withSkip(block) {
+    return `## Voice Review\nscored-digest: sha256:${skDigest()}\nPASS.\n\n${block}`;
+  }
+
+  it('does not fire on a block recorded N/A for a reason the SKILL declares', () => {
+    const r = run(datedReviews('2026-08-24',
+      withSkip('## Editor Review\n\nN/A: newsletter-critic returned REJECTED')));
+    expect(r.stderr, 'a sanctioned skip has no verdict to hold custody of')
+      .not.toContain('FAIL [m]');
+  });
+
+  it('still fires on a block recorded N/A for a reason the SKILL does not declare', () => {
+    // (m) reads the SKILL's declared list itself rather than trusting (o) to
+    // have run: (o) skips loudly when the SKILL is unreadable, and a waiver
+    // granted on sanctioning nobody performed is P151 relocated one check over.
+    const r = run(datedReviews('2026-08-24',
+      withSkip('## Editor Review\n\nN/A: ran out of time before the publish window')));
+    expect(r.stderr).toContain('FAIL [m]');
+  });
+
+  it('still fires on a carried block recorded N/A for the carried-from-prep reason', () => {
+    // A carried block DOES have a verdict, produced at prep, and (m)'s carried
+    // arm is the only thing checking it was copied rather than recomposed. The
+    // SKILL says this in terms: check (o) keys on whether a block is present,
+    // this arm keys on whether its digest was copied or recomputed.
+    const r = run(datedReviews('2026-08-24',
+      withSkip('## Editor Review (prep)\n\nN/A: carried from prep (no material change)')));
+    expect(r.stderr).toContain('FAIL [m]');
+    expect(r.stderr).toContain('custody');
+  });
+
+  it('still fires on an UNMARKED block whose N/A reason claims carriage', () => {
+    // The one declared reason that asserts a verdict exists must not buy the
+    // waiver on its own text. ADR-047 criterion 6: an unmarked carried block is
+    // reported, not excused, so the reason marks the block carried and the
+    // custody arm keeps it.
+    const r = run(datedReviews('2026-08-24',
+      withSkip('## Editor Review\n\nN/A: carried from prep (no material change)')));
+    expect(r.stderr).toContain('FAIL [m]');
+    expect(r.stderr).toContain('custody');
+  });
+
+  it('reads only the block\'s first content line, as check (o) does', () => {
+    // A live verdict whose prose happens to say "N/A:" somewhere must keep
+    // owing its digest. Two predicates for one question drift apart, and the
+    // drift would be silent in the direction that stops checking.
+    const r = run(datedReviews('2026-08-24',
+      withSkip('## Editor Review\n\nPASS. Item 3 sourcing: N/A: no second outlet.')));
+    expect(r.stderr).toContain('FAIL [m]');
+  });
+
   it('a current edition WITH digests is unaffected by the scope test', () => {
     // The scope test gates the zero-digest branch only. An edition that records
     // its digests must still be compared, not waved through by being current.
