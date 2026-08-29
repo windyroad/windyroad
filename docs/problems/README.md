@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-30 **P179, P180, P181 and P182 captured during the story-map salvage** -- a promotion path that accepts an unratified decision on age alone (fixed in the same commit), two upstream story-map renderer defects, and the intermittent research/llm-review-sequences failure. P178 was captured earlier the same day from the P120 close retrospective. Later the same day the salvage retro added evidence to **P131**: the same missing-extractor-branch defect also hits `git commit -F`, and on that surface it fails open rather than closed, so an unreviewed commit message reached this public repo before the next commit was blocked for the review the first one was never asked for.
+> Last reviewed: 2026-08-30 **P183 and P184 captured during the dependency refresh** -- the freshness gate exits 0 on the operator machine and 1 on CI for the same tree, so the local gate cannot see what blocks the release path, and netlify-cli cannot move to any version because a peer conflict between @netlify/build and vitest rejects every resolution, which also blocks the blanket lockfile refresh the fix:deps flow depends on. (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -64,10 +64,12 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 6.0 | P170 | A verification cell can assert verified while its own evidence text says the fix failed | 6 | Open | S | 2026-08-26 | internal |
 | 6.0 | P141 | GitHub Actions versions are an uninstrumented dependency surface | 12 | Open | M | 2026-08-09 | internal |
 | 6.0 | P142 | RFC lifecycle cannot advance past proposed because a gate blocks a ratified local deviation | 12 | Open | M | 2026-08-09 | internal |
+| 6.0 | P184 | netlify-cli cannot be updated at all because a peer conflict rejects every resolution | 12 | Open | M | 2026-08-30 | internal |
 | 5.0 | P147 | Accessibility gate does not gate the release path | 5 | Open | S | 2026-08-09 | internal |
 | 5.0 | P144 | push:watch forces a full risk rescore after every commit | 10 | Open | M | 2026-08-09 | internal |
 | 4.5 | P023 | architect-gate drift detection rm's marker without offering recovery path | 9 | Open | M | 2026-04-26 | internal |
 | 4.5 | P077 | Voice and tone gate misses Tom-specific idioms not codified in the guide | 9 | Open | M | 2026-06-01 | internal |
+| 4.5 | P183 | The dependency-freshness gate exits 0 locally and 1 on CI for the same tree | 9 | Open | M | 2026-08-30 | internal |
 | 4.0 | P160 | No deterministic check reads the LinkedIn companion body for a manual URL | 2 | Known Error | S | 2026-08-23 | internal |
 | 4.0 | P030 | work-problems SKILL.md marker wording uses em-dash, forces whitelist in PostToolUse:Bash em-dash hook | 4 | Known Error | M | 2026-04-26 | internal |
 | 4.0 | P097 | upstream wr-itil check-upstream-responses.sh writes a U+2014 em-dash into the audit-log heading, tripping adopter no-em-dash hooks every Step-0d pass | 4 | Open | S | 2026-06-17 | internal |
