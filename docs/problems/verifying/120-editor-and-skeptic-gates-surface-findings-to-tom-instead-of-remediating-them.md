@@ -1,11 +1,11 @@
 # Problem 120: Editor and skeptic gates surface findings to Tom instead of remediating them, so their output becomes his review burden
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-08-04
 **Priority**: 20 (Very High), Impact: 4 x Likelihood: 5, derived at capture from the description. Impact is 4 rather than 5 because no wrong output reaches readers (external review catches it) but the cost lands on the newsletter, which ADR-027 rates as the primary business surface. Likelihood is 5 because this fires on every edition by contract rather than by chance: the gates are non-blocking by design, so every finding they produce is routed to Tom.
 **Origin**: internal
-**Effort**: XL as delivered (re-rated 2026-08-05; captured as L). The capture estimate anticipated one new ADR plus loop wiring at two SKILL steps. Delivered scope ran to a new ADR plus amendment sections inside both amended ADRs, a new SKILL step plus routing changes at four call sites, a section 15.6 exemption, a phase-table and reference-list drift sweep that also closed ADR-042's outstanding confirmation criterion, edits to both gate agents, a full leader-persona re-grounding surfaced by the JTBD gate, a fix-time RFC, and a compendium refresh. The re-rate was recorded for audit only while the ticket sat in Verification Pending at a status multiplier of 0. Since the 2026-08-28 flip-back to Known Error the multiplier is 2.0, so the XL divisor of 8 is now load-bearing: it puts WSJF at 5.0, and the ticket ranks at the top of the queue only because Severity 20 is Very High and takes the Tier 0 critical bypass.
-**WSJF**: 5.0 = (20 x 2.0) / 8 (re-rated 2026-08-28 review: Verification Pending -> Known Error flip-back on observed regression, user-confirmed; status multiplier 0 -> 2.0)
+**Effort**: XL as delivered (re-rated 2026-08-05; captured as L). The capture estimate anticipated one new ADR plus loop wiring at two SKILL steps. Delivered scope ran to a new ADR plus amendment sections inside both amended ADRs, a new SKILL step plus routing changes at four call sites, a section 15.6 exemption, a phase-table and reference-list drift sweep that also closed ADR-042's outstanding confirmation criterion, edits to both gate agents, a full leader-persona re-grounding surfaced by the JTBD gate, a fix-time RFC, and a compendium refresh. The re-rate is recorded for audit only: the ticket is back in Verification Pending at a status multiplier of 0, so the XL divisor of 8 is not load-bearing. It was load-bearing only between the 2026-08-28 flip-back, which put WSJF at 5.0 and made this the queue's only Tier 0 row, and the reversal of that flip-back on 2026-08-29.
+**WSJF**: 0 = (20 x 0) / 8 (Verification Pending carries a status multiplier of 0 per ADR-022. The 2026-08-28 flip-back that put this at 5.0 was reversed on 2026-08-29 on Tom's instruction; see `## Resolved 2026-08-29`.)
 
 ## Description
 
@@ -90,7 +90,7 @@ Tom reads the gate output in the reviews file and manually re-issues the finding
 
 Shipped 2026-08-05 as ADR-043 plus the SKILL and agent wiring above. Awaiting user verification.
 
-**Release vehicle**: the fix commit itself. This repository is `private: true` with no published package, so there is no `.changeset/` entry and no npm release to point at. The transition ran Open to Known Error to Verification Pending in a single commit per ADR-014, because the root cause was already documented at capture and the fix shipped in the same change.
+**Release vehicle**: <!-- no-changeset-reference --> the fix commit itself. This repository is `private: true` with no published package, so there is no `.changeset/` entry and no npm release to point at. The transition ran Open to Known Error to Verification Pending in a single commit per ADR-014, because the root cause was already documented at capture and the fix shipped in the same change.
 
 **What to look for on the next `/wr-newsletter` run**: the edition's `.reviews.md` carries an `## Editorial Remediation Loop` section recording rounds spent and any residual advisories. The fix is working if editor and skeptic findings that would previously have arrived as Tom-summary items instead show as remediated in the body, with only genuinely hard cases (chiefly skeptic findings that need new sourcing) surfacing as residuals. It is NOT working if Tom's external review re-derives a class the gates named (a gate wrote the finding down and the pipeline discarded it), or if the remediation loop at step 15.37 runs more than one round inside a single body pass. Neither clause counts body passes. How many of those an edition takes is bounded by ADR-043 condition (d), made more expensive by ADR-052, and measured on P113; see `## Resolved 2026-08-29` for the reading that separated them.
 
@@ -197,12 +197,21 @@ measures rounds per edition in exactly this unit, and its baseline is "about 15 
 Issue 13 across prep, finalise, and three external-review passes". Issue 19's twenty-four is
 the live-run measurement P113 was waiting for. It is recorded there.
 
-**Status: awaiting Tom's call, not further work.** The 2026-08-28 flip-back from
-Verification Pending was made on Tom's confirmation, on the premise that this ticket's own
-evidence recorded a failed fix. Correcting the unit removes that premise, but the flip-back
-is his, and reversing it is not ours to do. Both the transition back to Verification Pending
-and the close itself are queued for him. Until he rules, nothing further is outstanding here:
-a later pass that re-derives the round count is repeating work already done.
+**Tom ruled on 2026-08-29: move back and close.** The 2026-08-28 flip-back was made on his
+confirmation, on the premise that this ticket's own evidence recorded a failed fix. Correcting
+the unit removes that premise, so the flip-back is reversed: the ticket returns to Verification
+Pending and then closes.
+
+The unit correction was re-verified against disk before this transition rather than taken from
+the prose above. `src/newsletters/published/leader/2026-08-24/2026-08-24.reviews.md` reads, across
+lines 6 and 7, "The prep pass closed at three rounds. The finalise pass ran to twenty-four". Those
+are rounds over the body, and not all of them are full-battery: round 20 is a voice round, and the
+"Rounds 22 and 23" heading singles out round 23 as "what a full gate round found under it". That
+file's `## Editorial Remediation Loop` section records only that the loop was "Run per ADR-043
+after every round of both passes"; it states no per-pass round count at all. ADR-043 condition (c), the bound this ticket's criterion is written against, caps rounds
+inside one body pass. Condition (d), the two-consecutive-edit-forcing-passes rule, is the
+separate outer bound that the twenty-four bears on. So the twenty-four cannot breach this
+ticket's criterion, because it does not measure the thing the criterion caps.
 
 ## Related
 
