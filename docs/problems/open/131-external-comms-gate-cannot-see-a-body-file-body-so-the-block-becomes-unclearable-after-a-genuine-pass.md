@@ -54,8 +54,24 @@ Two adjacent requirements are worth stating because failing either wastes an ent
 
 - [ ] Confirm the extraction branch is the whole story, or whether the surface-detection half also mis-handles `--body-file`. Read `external-comms-gate.sh` around the `DRAFT=$(...)` python extractor and the `COMMAND` matcher that assigns `SURFACE`.
 - [ ] Decide the fix shape. Reading the file named by `--body-file` into `DRAFT` is the direct fix and makes the two keys agree. Alternatively the gate could refuse to compute a key from an empty draft and say so, which at least makes the failure legible instead of silent. The two compose.
-- [ ] Check whether the same blind spot reaches the other extraction-dependent surfaces: `npm publish`, `gh api .../security-advisories --input`, and the editor flow the comment says is "already filtered".
+- [x] Check whether the same blind spot reaches the other extraction-dependent surfaces: `npm publish`, `gh api .../security-advisories --input`, and the editor flow the comment says is "already filtered". Partly answered 2026-08-30, see the fail-open variant below: `git commit -F` is a fourth affected form and it fails OPEN rather than closed. The remaining forms named here are still unchecked.
 - [ ] Create a reproduction test alongside the existing extraction fixtures.
+
+## Fail-open variant on the git-commit-message surface (2026-08-30)
+
+The same missing-branch defect has a second manifestation on a different surface, and this one fails OPEN rather than closed. It is the more serious of the two.
+
+Neither `git commit -F <file>` nor `git commit -F -` appears in the extractor's flag list, exactly as the body-file form does not. But on the `git-commit-message` surface the miss happens one step earlier, in surface and message detection rather than in draft extraction: with no `-m` or `--message` present the gate takes an early `exit 0` instead of reaching the `DRAFT=` extractor at all. That ordering is what makes the flag list beside the point here. The heredoc branch keys on body shape rather than on a flag, so for the `-F -` plus quoted-heredoc form actually observed it would have matched had control ever reached it; the early exit means it never does. So where the body-file form produces an unmatchable key and an unclearable block, `-F` produces no gate at all. The review is skipped silently.
+
+That matters here because the gate's own P365 repo-visibility precondition is satisfied: `windyroad` is a public repo, so by the gate's own rule commit messages on it are external-facing prose in scope for review.
+
+Observed 2026-08-30 during the story-map salvage iteration. Commit `89da2a0` was authored with `git commit -F -` and a quoted heredoc, and no gate fired. The very next commit in the same session used `-m` and was blocked immediately, demanding the review the previous commit had never been asked for. The two commits went to the same repo, minutes apart, and only the second was gated. Verified against `external-comms-gate.sh` at cached version `0.18.17`: the extraction chain is heredoc-inside-`-m`, then `--body` and `--field`, then `-m` and `--message`, and `-F` and `--file` appear in none of them.
+
+Fix shape, composing with the two already recorded above. Reading the file named by `-F` into `DRAFT` is the direct fix and is the same branch-addition as the body-file fix. `-F -` reads the body from stdin, which a PreToolUse hook may not be able to recover; where the body cannot be reconstructed the safer shape on this surface is to fail closed on an unparseable message form rather than `exit 0`, since a silent skip on a public repo is worse than a block the operator can clear by switching form. That inverts the current comment's stance that an empty `DRAFT` is acceptable.
+
+This variant widens the ticket's severity beyond the original dev-tooling-friction framing: the body-file half ships nothing wrong, but the `-F` half lets unreviewed prose reach a public repo. Whoever re-rates this should treat the two halves separately, and it is a reasonable call to split the fail-open half into its own ticket if the fix shapes diverge.
+
+A second, milder finding from the same session, recorded here because it is the same extractor: the surface detector matches on command text alone, so a purely local edit whose command line merely quotes an outbound-surface path is misread as that outbound call. Editing this very ticket was blocked as an advisory-API submission because the command quoted one of the surface strings named in the task list above. Harmless but the same root: the gate reasons about the command string rather than about what the command does.
 
 ## Dependencies
 

@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-30 **P179, P180, P181 and P182 captured during the story-map salvage** -- a promotion path that accepts an unratified decision on age alone (fixed in the same commit), two upstream story-map renderer defects, and the intermittent research/llm-review-sequences failure. P178 was captured earlier the same day from the P120 close retrospective.
+> Last reviewed: 2026-08-30 **P179, P180, P181 and P182 captured during the story-map salvage** -- a promotion path that accepts an unratified decision on age alone (fixed in the same commit), two upstream story-map renderer defects, and the intermittent research/llm-review-sequences failure. P178 was captured earlier the same day from the P120 close retrospective. Later the same day the salvage retro added evidence to **P131**: the same missing-extractor-branch defect also hits `git commit -F`, and on that surface it fails open rather than closed, so an unreviewed commit message reached this public repo before the next commit was blocked for the review the first one was never asked for.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
