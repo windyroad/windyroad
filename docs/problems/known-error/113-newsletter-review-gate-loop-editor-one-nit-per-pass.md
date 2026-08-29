@@ -72,8 +72,9 @@ measurement of rounds per edition.) The Shift Issue 19 (prep 2026-08-23, finalis
 - **Loop rounds per body pass: not measured.** The file records only that the loop was "Run
   per ADR-043 after every round of both passes". That says when it ran, not how many rounds
   it ran inside each pass, so the first piece of evidence this ticket named for itself is
-  not in the record. The count that is there, twenty-four, counts full-battery
-  passes.
+  not in the record. The count that is there, twenty-four, counts rounds over the
+  body, most but not all of them full-battery: rounds 22 and 24 are external reviews rather
+  than gate batteries.
 - **Editor batching: holding.** Across two editor invocations the file records five distinct
   findings: a close that swapped protagonists, an orientation line inserted between the
   thesis and the sentence that turns against it, two dangling back-references, an
@@ -137,3 +138,18 @@ the next step is a second edition's measurement, not a re-rate on one.
 - **Observed flaw**: editor returns one rhythm nit per pass; skill has no stop-rule for non-blocking advisory churn.
 - **Edit summary**: (a) editor agent prompt returns the full set of rhythm findings; (b) section 15.6 gains an explicit clause to accept non-blocking editor and cog-a11y advisories once critic, voice, and content-risk are terminal-green after N rounds.
 - **Evidence**: about 8 consecutive single-nit editor verdicts in the Issue 13 session 2026-07-13.
+
+## Added 2026-08-29: this ticket also owns the per-body-pass round count
+
+Handed over from P120 at its close. ADR-043 confirmation criterion 11 asks the edition's
+`.reviews.md` to record the remediation loop's rounds and any residual advisories. Issue 19
+(`src/newsletters/published/leader/2026-08-24/2026-08-24.reviews.md`) records the residuals but
+not the rounds: its `## Editorial Remediation Loop` section says only that the loop was "Run per
+ADR-043 after every round of both passes", and states no per-pass count anywhere. So criterion 11
+is not discharged, and it cannot be discharged until the reviews file captures that number.
+
+This lands here because the number is the per-body-pass breakdown of the rounds-per-edition figure
+this ticket already measures, and because Issue 19's twenty-four is recorded on this ticket as the
+live-run measurement it was waiting for. The work is a change to what the reviews file captures,
+which is pipeline work. ADR-043 is ratified, and ADR-054 forbids writing this into a ratified body,
+so the record lives on this ticket and on the closed P120.
