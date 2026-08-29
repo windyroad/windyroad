@@ -60,3 +60,10 @@ These would satisfy a naive reading of "unblock the parked backlog" and fail the
 ## Current Solutions
 
 Filing an issue upstream and parking the ticket, then rediscovering the park as a finding on the next loop. `/wr-itil:report-upstream` currently ends at `gh issue create`; the change that makes it prefer a pull request is itself an upstream change, which ADR-048 names as the first exercise of the decision.
+
+
+## Story Maps
+
+| ID | Title | Status |
+|----|-------|--------|
+| STORY-MAP-002 | STORY-MAP-002: Working the backlog unattended | draft |

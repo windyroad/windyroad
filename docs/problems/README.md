@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-30 **P178 captured** -- a reviewer states a read extent that is wrong, and the false absence it grounds looks verified (lightweight aside via /wr-itil:capture-problem, from the P120 close retrospective).
+> Last reviewed: 2026-08-30 **P179, P180, P181 and P182 captured during the story-map salvage** -- a promotion path that accepts an unratified decision on age alone (fixed in the same commit), two upstream story-map renderer defects, and the intermittent research/llm-review-sequences failure. P178 was captured earlier the same day from the P120 close retrospective.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -76,11 +76,14 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 4.0 | P156 | Briefing absence claims are never re-verified, so a stale one loads into every session | 8 | Open | M | 2026-08-23 | internal |
 | 4.0 | P163 | Risk scorer report persistence writes empty files | 8 | Open | M | 2026-08-24 | internal |
 | 4.0 | P172 | The deprecated full-file compendium generator still runs and clobbers hook-authored entries | 8 | Open | M | 2026-08-26 | internal |
+| 4.0 | P181 | Test suites fail intermittently under parallel load, most often research/llm-review-sequences | 8 | Open | M | 2026-08-30 | internal |
 | 3.0 | P074 | External-comms marker hooks do not write expected marker files after subagent PASS verdicts; gh issue create / commit gates re-fire indefinitely, forcing BYPASS_RISK_GATE=1 workaround | 6 | Open | M | 2026-05-31 | internal |
 | 3.0 | P088 | architect edit-gate session-ID mismatch under AFK subprocess forces manual marker reconciliation | 6 | Open | M | 2026-06-14 | internal |
 | 3.0 | P096 | work-problems orchestrator re-selects direction-blocked tickets as highest-WSJF every loop, producing no-op skips until the user answers | 6 | Open | M | 2026-06-17 | internal |
 | 3.0 | P173 | A ticket's verification criterion is never re-checked against decisions ratified after it was written | 6 | Open | M | 2026-08-29 | internal |
 | 3.0 | P174 | Briefing rotation scores how often an entry is used, never what rediscovering it costs | 6 | Open | M | 2026-08-29 | internal |
+| 3.0 | P180 | Story-map renderer emits em-dashes and the repo takes a local workaround without reporting upstream | 6 | Open | M | 2026-08-30 | internal |
+| 3.0 | P182 | Story-map renderer hard-codes accessibility strings so adopters cannot fix them | 6 | Open | M | 2026-08-30 | internal |
 | 1.5 | P054 | work-problems Step 1 ranking does not exclude just-worked Known Error tickets awaiting orchestrator-owned push and transition | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P055 | AFK iter subprocess `Stream idle timeout` API errors recur at high rate | 3 | Open | M | 2026-05-12 | internal |
 | 1.5 | P056 | manage-problem SKILL.md misattributes ADR-014 to "single-commit governance" in 6+ blocks | 3 | Open | M | 2026-05-13 | internal |
@@ -90,10 +93,11 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 
 Fix released, awaiting verification. Sorted by Released date ascending, oldest first; same-day releases tiebreak by ID ascending. <!-- VQ-SORT-DIRECTION: oldest-first per ADR-022 --> <!-- LIKELY-VERIFIED-CELL-SHAPE: evidence-based per P186 -->
 
-All eight rows read `no - not observed` and all eight stay. The 2026-08-29 review was an AFK pass, so no fix in this queue was exercised and no new evidence was produced; under the evidence-first cell there is nothing to close on. The rows needing Tom's out-of-band knowledge, which is every row here, are held for the next interactive review rather than auto-closed. P120 passed through this queue on 2026-08-29 and closed the same day, user-confirmed on Tom's instruction after Issue 19 exercised its fix.
+All nine rows read `no - not observed` and all nine stay. Eight of them were the 2026-08-29 review's scope; that was an AFK pass, so no fix in this queue was exercised and no new evidence was produced, and under the evidence-first cell there was nothing to close on. The ninth, P179, joined on 2026-08-30 and was never in that review: its guard is covered by tests, but the release path it guards has not run since. The rows needing Tom's out-of-band knowledge, which is every row here, are held for the next interactive review rather than auto-closed. P120 passed through this queue on 2026-08-29 and closed the same day, user-confirmed on Tom's instruction after Issue 19 exercised its fix.
 
 | ID | Title | Released | Likely verified? |
 |----|-------|----------|------------------|
+| P179 | Age-based decision promotion never reads human-oversight, so an unratified ADR self-accepts | 2026-08-30, repo-local script and test, no changeset | no - not observed; verifies when ADR-058 passes 14 days still unconfirmed and a post-release run leaves it proposed |
 | P015 | wr-newsletter drafter paraphrases per-item AskUserQuestion "Adjust" text into abstract commentary, losing Tom-voice fidelity | 2026-04-25 | no - not observed |
 | P050 | Assistant scope-creeps on user-flagged corrections, changing more than asked | 2026-05-12 AFK iter 3 (memory layer, no project-tree commit) | no - not observed |
 | P094 | extend the domain-specific critic supersede to wr-blog (retire wr-sw-critic entirely) | 2026-06-27, repo-local agents and skills, no changeset | no - not observed |

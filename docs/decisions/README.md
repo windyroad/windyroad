@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive - creating, evolving, ratifying, or contesting a decision - open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view - they live in the per-ADR body.
 
-**Total ADRs:** 56 (52 in-force, 4 historical)
+**Total ADRs:** 58 (53 in-force, 5 historical)
 
 ---
 
 ## In-force decisions
 
-_52 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_53 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-001 - Use rehype-highlight for syntax highlighting
 **Status:** accepted | **Oversight:** confirmed
@@ -210,10 +210,6 @@ _52 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"A new fresh-context subagent gate for cross-edition shape"**, because deciding whether a change from precedent is a loss or a choice is a judgement, and because the failure modes in this class are not knowable in advance, ...
 
-### ADR-045 - RFCs in this project carry no stories until a story tier exists
-**Status:** proposed | **Oversight:** confirmed
-**Related:** ADR-089, ADR-060, ADR-073
-
 ### ADR-046 - Skip the agent re-invocation when the artefact is unchanged
 **Status:** proposed | **Oversight:** confirmed
 **Related:** ADR-043, ADR-044, ADR-020, ADR-042
@@ -276,11 +272,22 @@ _52 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** all nine enforcement surfaces cite this record and none restates the rule; an edition publishes with first person in an item body and the voice gate does not flag it; a draft with first person in a "What happened" bullet is blocked; the next external reviewer voice finding is a new one
 **Related:** ADR-010, ADR-032, ADR-052, ADR-054
 
+### ADR-058 - This repository stands up a story-map tier
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** `docs/story-maps/` exists, holding two draft maps: STORY-MAP-001 (producing the weekly edition, publication-author, JTBD-300) and STORY-MAP-002 (working the backlog unattended, internal-maintainer, JTBD-400/401/402). Both are born unconfirmed for Tom to ratify. Supersedes ADR-045 by its own reassessment criterion 1, and carries its warrant forward: while `docs/stories/` does not exist, an RFC here carries `stories: []`. Leaves the legacy-RFC question OPEN for Tom to pin at ratification, recording all three options and noting that option 1 would foreclose his P142 direction that RFC-002, RFC-004 and RFC-005 advance past proposed. Standing up the tier does not by itself propose a fix for the 28 remaining known errors; each still needs its own row and a story card.
+**Confirmation:** both maps land in `docs/story-maps/draft/` and `wr-itil-detect-unratified-stories-maps` lists them; neither carries an agent-written `confirmed` marker; the propose-fix predicate returns exit 3 for none of the 29 known-error tickets; ADR-045 is renamed `.superseded.md` and the supersession test passes; each of the RFC documents citing ADR-045 for its empty `stories:` list is repointed to this record when next edited
+**Related:** ADR-045, ADR-054, ADR-036, ADR-048
+
 ---
 
 ## Historical decisions
 
-_4 ADRs. These were tried and superseded, rejected, or deprecated. Read them as direction for what NOT to do, or to understand the lineage of an in-force decision. Do not enforce them as current rules._
+_5 ADRs. These were tried and superseded, rejected, or deprecated. Read them as direction for what NOT to do, or to understand the lineage of an in-force decision. Do not enforce them as current rules._
+
+### ADR-045 - RFCs in this project carry no stories until a story tier exists
+**Status:** superseded | **Oversight:** confirmed
+**Superseded by:** ADR-058 (this repository stands up a story-map tier), by ADR-045's own reassessment criterion 1.
+**Related:** upstream ADR-089, ADR-060 and ADR-073. These are upstream framework records, not entries in this corpus, which tops out at ADR-058.
 
 ### ADR-003 - Split WIP checks into local (every prompt) and remote (on push)
 **Status:** superseded

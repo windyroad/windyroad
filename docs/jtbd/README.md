@@ -78,6 +78,17 @@ Tom, operating this repo's governance loop while away from it and maintaining th
 | JTBD-401 | Decide From the Phone in My Hand | Must-have | [JTBD-401-decide-from-the-phone-in-my-hand.proposed.md](internal-maintainer/JTBD-401-decide-from-the-phone-in-my-hand.proposed.md) |
 | JTBD-402 | Land the Fix Where the Defect Lives | Must-have | [JTBD-402-land-the-fix-where-the-defect-lives.proposed.md](internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md) |
 
+## Story Maps
+
+`docs/story-maps/` holds the journey maps this corpus traces to, stood up 2026-08-30 under ADR-058. A map states one persona's journey as a row of activities, with release rows drawn across it. Each map names the jobs it serves in its own `<meta name="jtbd">` tag, and each job file carries a Story Maps table listing the maps that name it. Both directions are generated, not hand-maintained.
+
+| ID | Map | Persona | Jobs traced | Status |
+|----|-----|---------|-------------|--------|
+| STORY-MAP-001 | [Producing the weekly edition](../story-maps/draft/STORY-MAP-001-producing-the-weekly-edition.html) | Publication Author | JTBD-300 | draft, awaiting ratification |
+| STORY-MAP-002 | [Working the backlog unattended](../story-maps/draft/STORY-MAP-002-working-the-backlog-unattended.html) | Internal Maintainer | JTBD-400, JTBD-401, JTBD-402 | draft, awaiting ratification |
+
+Both maps are drafts drawn for Tom to read and ratify or correct. Neither carries a confirmed oversight marker, and `wr-itil-detect-unratified-stories-maps` lists both until he agrees them. Drawing a map decides what a journey is, which is why the drafting is delegated and the agreeing is not.
+
 ## Job-to-Screen Mapping
 
 | Route / Surface | Primary jobs served | Persona |
@@ -91,6 +102,9 @@ Tom, operating this repo's governance loop while away from it and maintaining th
 | Ratification asks: `/wr-architect:review-decisions`, `/wr-jtbd:confirm-jobs-and-personas`, iteration summaries | JTBD-401 | Internal Maintainer |
 | `/wr-itil:report-upstream`, `/wr-itil:update-upstream`, `/wr-itil:check-upstream-responses`, `docs/problems/parked/` | JTBD-402 | Internal Maintainer |
 | `.github/workflows/` (CI gates and the release path) | JTBD-400 | Internal Maintainer |
+| `scripts/push-watch.sh` (local pre-push gate chain) | JTBD-400 | Internal Maintainer |
+| `RISK-POLICY.md`, `docs/risks/`, the risk-scorer surfaces | JTBD-400 | Internal Maintainer |
+| `docs/story-maps/` (journey maps and their ratification) | JTBD-300, JTBD-400, JTBD-401, JTBD-402 | Publication Author, Internal Maintainer |
 
 Retired per ADR-041: `/ai-quality`, `/founders`, `/vibe-code-audit` are deleted and redirect to `/`. The homepage, blog, and The Shift no longer serve the consulting jobs JTBD-001 to JTBD-004 or the Technical Founder's JTBD-100.
 

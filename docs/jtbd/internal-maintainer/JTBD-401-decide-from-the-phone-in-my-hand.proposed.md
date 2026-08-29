@@ -58,3 +58,10 @@ These would satisfy a naive reading of "reduce the friction of asking Tom" and f
 ## Current Solutions
 
 Attaching the artefact with `SendUserFile` and restating the decision in the message body, replacing tables with prose, and expanding every identifier on first mention. All three are the documented workaround on P133, and all three currently depend on the assistant remembering.
+
+
+## Story Maps
+
+| ID | Title | Status |
+|----|-------|--------|
+| STORY-MAP-002 | STORY-MAP-002: Working the backlog unattended | draft |

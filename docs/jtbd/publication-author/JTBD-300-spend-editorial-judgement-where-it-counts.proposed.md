@@ -49,3 +49,10 @@ These would satisfy a naive reading of "less feedback from Tom" and fail the job
 ## Notes
 
 This is the job P122's forward rule was waiting on. That rule blocks any gate axis whose only justification is "this reduces Tom's review rounds" until an author persona is ratified. With this job ratified, such an axis becomes groundable, but the grounding runs through the outcomes above rather than through review-count alone: outcome 1 grounds automatic remediation of gate-nameable defects, and outcome 3 grounds the requirement that applied edits be shown as before-and-after pairs. Neither grounds an edit on a weak warrant, which is what anti-outcome 3 exists to prevent.
+
+
+## Story Maps
+
+| ID | Title | Status |
+|----|-------|--------|
+| STORY-MAP-001 | STORY-MAP-001: Producing the weekly edition | draft |

@@ -3,7 +3,14 @@
 #
 # Pass 1 (stamp): Add first-released date to proposed decisions included in this release.
 # Pass 2 (promote): Promote proposed decisions whose first-released date exceeds the
-#                    promotion threshold to accepted status.
+#                    promotion threshold AND that a human has ratified.
+#
+# Age is necessary for promotion, never sufficient. A decision is only promoted
+# when its frontmatter carries `human-oversight: confirmed`. Without that guard
+# an unratified record silently rewrites itself to `accepted` on the promotion
+# threshold, presenting a decision nobody approved as a validated one. Absence
+# of the field is NOT confirmation: the guard fails closed, so a record that
+# predates the marker stays proposed until someone ratifies it. (P179.)
 #
 # Input modes:
 #   With file list on stdin (normal post-release run): stamps only decisions in the release.
@@ -87,6 +94,15 @@ for file in "$DECISIONS_DIR"/*.proposed.md; do
 
   # Only promote if stamped
   if ! has_field "$file" "first-released"; then
+    continue
+  fi
+
+  # Ratification guard: age alone must never promote (P179). Fails closed on a
+  # missing marker, so absence of the field reads as "not ratified".
+  # `|| true` because a record with no marker at all must reach the guard as an
+  # empty string, not abort the run under `set -e -o pipefail`.
+  OVERSIGHT=$(grep "^human-oversight:" "$file" | head -1 | awk '{print $2}' | tr -d '"' || true)
+  if [ "$OVERSIGHT" != "confirmed" ]; then
     continue
   fi
 

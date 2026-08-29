@@ -140,3 +140,4 @@ Landed as **RFC-006** (`docs/rfcs/RFC-006-coherent-manifest-pair-and-a-rollback-
 | RFC | Status | Title |
 |-----|--------|-------|
 | RFC-006 | proposed | Make the deps refresh chain produce a coherent manifest pair, and make its rollback verify what it claims |
+

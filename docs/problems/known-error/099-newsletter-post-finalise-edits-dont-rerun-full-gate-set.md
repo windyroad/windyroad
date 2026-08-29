@@ -68,7 +68,6 @@ Added `### 15.6. Post-gate edit discipline: a body edit re-enters the FULL gate 
 
 Discipline rule shipped to `.claude/skills/wr-newsletter/SKILL.md` (§15.6 + failure-modes cross-reference) in this commit. Repo-local skill change, no npm release. Awaiting verification that the rule fires on the next edition that takes post-gate body edits.
 
-
 ## Fix Released (2026-08-08)
 
 The 2026-06-22 prose rule is superseded. Shipped across four commits: RFC-005 (the
@@ -112,8 +111,6 @@ is intent rather than enforcement, and ADR-046 carries a caveat saying so.
 > **A second decision now leans on the invariant this ticket says does not hold.** ADR-046 (Skip the agent re-invocation when the artefact is unchanged) declares the loop-exit full pass out of scope for its skip, on the ground that condition (a)'s full pass is the guarantee no publish-bound body reaches step 16 ungated. ADR-046 carries a caveat recording that this ticket contradicts that reading. The skip fails safe independently, so ADR-046 is not at risk; but the two now share a worst case, and fixing this ticket strengthens both.
 >
 > **The design input this ticket was waiting on has landed.** The Effort note says the enforcement mechanism should be designed alongside P113's gate-loop cost and P120's remediation loop, "since those determine whether re-running the heavy gates is affordable". P120's loop shipped (ADR-043, plus the ADR-044 and ADR-046 amendments), and ADR-046's own digest-at-collect mechanism is a working precedent for the dirty-body check this ticket names as one of its two options. This ticket is designable now.
-
-
 
 - **Blocks**: (none)
 - **Blocked by**: P165
@@ -304,3 +301,4 @@ five ADRs it declares (047, 017, 026, 043, 046), so every decision this change r
 is ratified. The risk scorer caught the same frontmatter and read it as an unsupported
 ratification claim, which is a fair read of the RFC's framing and is noted here so the
 next person does not have to re-derive it.
+

@@ -53,3 +53,10 @@ These would satisfy a naive reading of "make the loop's output trustworthy" and 
 ## Current Solutions
 
 Reading the cited evidence back against the ticket body before acting on any CLOSE verdict, and substituting a hand-run `wc -c` loop over `docs/briefing/*.md` for the budget pass that will not run. Both are documented workarounds on the tickets, and both require the operator to already suspect the surface.
+
+
+## Story Maps
+
+| ID | Title | Status |
+|----|-------|--------|
+| STORY-MAP-002 | STORY-MAP-002: Working the backlog unattended | draft |

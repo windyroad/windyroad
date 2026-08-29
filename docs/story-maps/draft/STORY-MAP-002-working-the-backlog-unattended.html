@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>STORY-MAP-002: Working the backlog unattended</title>
+  <meta name="story-map-id" content="STORY-MAP-002">
+  <meta name="status" content="draft">
+  <meta name="persona" content="internal-maintainer">
+  <meta name="problems" content="">
+  <meta name="rfcs" content="RFC-006">
+  <meta name="jtbd" content="JTBD-400,JTBD-401,JTBD-402">
+  <meta name="reported" content="2026-08-30">
+  <meta name="decision-makers" content="Tom Howard">
+  <meta name="human-oversight" content="unconfirmed">
+  <link rel="stylesheet" href="../story-map.css">
+</head>
+<body>
+  <main>
+    <h1 id="story-map-title">Working the backlog unattended</h1>
+    <p class="orient"><strong>Draft, not yet agreed.</strong> 1 release, 1 story, one release per row.</p>
+    <p class="orient">Read the release names down the left. Say yes to agree it, or name the row that is wrong or missing. The detail inside the cards is there if you want it, not because you have to read it.</p>
+    <div id="story-map"><div class="scroll" tabindex="0" role="region" aria-label="Story map grid"><table class="map"><caption>Working the backlog unattended: 7 steps, 1 release.</caption><thead><tr><td class="corner"></td><th class="act" scope="col">A: Capture what went wrong <span class="jtbd">We record a defect without stopping the work in hand.</span></th><th class="act" scope="col">B: Rank what to work on next <span class="jtbd">We re-score the queue and pick the next ticket with nobody in the room.</span></th><th class="act" scope="col">C: Work the ticket unattended <span class="jtbd">The loop works the ticket on its own and queues the calls it cannot make itself.</span></th><th class="act" scope="col">D: Get the change past the gates <span class="jtbd">Five gates read it: architecture, jobs, voice, risk and accessibility.</span></th><th class="act" scope="col">E: Land the fix where the defect lives <span class="jtbd">The defect often lives in an upstream plugin, so landing the fix means contributing there, not here.</span></th><th class="act" scope="col">F: Release it and close the ticket <span class="jtbd">The change reaches the people running the plugin. The ticket closes when the defect is gone, not when the fix is described.</span></th><th class="act" scope="col">G: Read back and ratify <span class="jtbd">You get the file itself, not a description, and the decision restated in the message. Yes or no fits one line. Prose, never a wide table. The thing named before its number, because you are on a phone.</span></th></tr></thead><tbody><tr><th class="slice" scope="row"><span class="badge b-next"><span class="b-glyph" aria-hidden="true">→</span>RFC-006</span> <span class="s-name">Proposed, a dependency refresh either installs cleanly or rolls back and says why</span> <span class="s-note">Driven by P126, still verifying.</span></th><td class="cell empty"><span class="vh">No stories for A: Capture what went wrong in Proposed, a dependency refresh either installs cleanly or rolls back and says why.</span></td><td class="cell empty"><span class="vh">No stories for B: Rank what to work on next in Proposed, a dependency refresh either installs cleanly or rolls back and says why.</span></td><td class="cell empty"><span class="vh">No stories for C: Work the ticket unattended in Proposed, a dependency refresh either installs cleanly or rolls back and says why.</span></td><td class="cell empty"><span class="vh">No stories for D: Get the change past the gates in Proposed, a dependency refresh either installs cleanly or rolls back and says why.</span></td><td class="cell empty"><span class="vh">No stories for E: Land the fix where the defect lives in Proposed, a dependency refresh either installs cleanly or rolls back and says why.</span></td><td class="cell"><ul class="tasks" role="list"><li><div class="task" data-rfc="RFC-006" data-jtbd="JTBD-400"><span class="t-title">Refresh dependencies and return a matching package file and lockfile that install cleanly, or roll back and report why it failed</span><div class="t-ref">Traces: <a href="../../problems/verifying/126-deps-refresh-chain-creates-and-cannot-recover-from-a-manifest-desync.md" class="ref-link">P126</a>, the deps refresh chain creates a manifest desync it cannot recover from</div></div></li></ul></td><td class="cell empty"><span class="vh">No stories for G: Read back and ratify in Proposed, a dependency refresh either installs cleanly or rolls back and says why.</span></td></tr></tbody></table></div></div>
+<p class="traces" id="story-map-traces"><span class="tr-group"><strong>Jobs:</strong> <a href="../../jtbd/internal-maintainer/JTBD-400-trust-what-the-loop-did-while-i-was-away.proposed.md" class="ref-link">JTBD-400</a>, <a href="../../jtbd/internal-maintainer/JTBD-401-decide-from-the-phone-in-my-hand.proposed.md" class="ref-link">JTBD-401</a>, <a href="../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md" class="ref-link">JTBD-402</a></span></p>
+  </main>
+
+
+  <script id="story-map-data" type="application/json">
+{
+  "storyMapId": "STORY-MAP-002",
+  "title": "Working the backlog unattended",
+  "status": "draft",
+  "persona": "internal-maintainer",
+  "reported": "2026-08-30",
+  "decisionMakers": "Tom Howard",
+  "traces": {
+    "jtbd": [
+      "JTBD-400",
+      "JTBD-401",
+      "JTBD-402"
+    ]
+  },
+  "backbone": [
+    {
+      "id": "capture",
+      "title": "A: Capture what went wrong",
+      "note": "We record a defect without stopping the work in hand."
+    },
+    {
+      "id": "rank",
+      "title": "B: Rank what to work on next",
+      "note": "We re-score the queue and pick the next ticket with nobody in the room."
+    },
+    {
+      "id": "work",
+      "title": "C: Work the ticket unattended",
+      "note": "The loop works the ticket on its own and queues the calls it cannot make itself."
+    },
+    {
+      "id": "gates",
+      "title": "D: Get the change past the gates",
+      "note": "Five gates read it: architecture, jobs, voice, risk and accessibility."
+    },
+    {
+      "id": "land",
+      "title": "E: Land the fix where the defect lives",
+      "note": "The defect often lives in an upstream plugin, so landing the fix means contributing there, not here."
+    },
+    {
+      "id": "release",
+      "title": "F: Release it and close the ticket",
+      "note": "The change reaches the people running the plugin. The ticket closes when the defect is gone, not when the fix is described."
+    },
+    {
+      "id": "readback",
+      "title": "G: Read back and ratify",
+      "note": "You get the file itself, not a description, and the decision restated in the message. Yes or no fits one line. Prose, never a wide table. The thing named before its number, because you are on a phone."
+    }
+  ],
+  "releases": [
+    {
+      "id": "rfc-006",
+      "name": "Proposed, a dependency refresh either installs cleanly or rolls back and says why",
+      "rfc": "RFC-006",
+      "note": "Driven by P126, still verifying."
+    }
+  ],
+  "tasks": [
+    {
+      "activity": "release",
+      "release": "rfc-006",
+      "title": "Refresh dependencies and return a matching package file and lockfile that install cleanly, or roll back and report why it failed",
+      "rfc": "RFC-006",
+      "jtbd": "JTBD-400",
+      "ref": "P126, the deps refresh chain creates a manifest desync it cannot recover from"
+    }
+  ],
+  "caption": "Working the backlog unattended: 7 steps, 1 release."
+}
+  </script>
+  <script id="story-map-status" type="application/json">
+{
+  "rows": {
+    "rfc-006": "proposed"
+  },
+  "hrefs": {
+    "JTBD-400": "../../jtbd/internal-maintainer/JTBD-400-trust-what-the-loop-did-while-i-was-away.proposed.md",
+    "P126": "../../problems/verifying/126-deps-refresh-chain-creates-and-cannot-recover-from-a-manifest-desync.md",
+    "JTBD-401": "../../jtbd/internal-maintainer/JTBD-401-decide-from-the-phone-in-my-hand.proposed.md",
+    "JTBD-402": "../../jtbd/internal-maintainer/JTBD-402-land-the-fix-where-the-defect-lives.proposed.md"
+  }
+}
+  </script>
+
+</body>
+</html>

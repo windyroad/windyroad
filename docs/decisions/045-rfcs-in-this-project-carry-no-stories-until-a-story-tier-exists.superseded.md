@@ -1,7 +1,8 @@
 ---
-status: "proposed"
+status: "superseded"
 first-released:
 date: 2026-08-07
+superseded-by: 058-this-repository-stands-up-a-story-map-tier
 human-oversight: confirmed
 oversight-date: 2026-08-07
 decision-makers: [Tom Howard, Claude]
