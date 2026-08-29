@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P120 closed**: Tom's instruction was "Move back and close", so the 2026-08-28 flip-back to Known Error was reversed and the ticket closed in the same pass. The flip-back rested on Issue 19's twenty-four rounds breaching a one-round criterion, and the two count different things -- the twenty-four counts rounds over the body, while the criterion and ADR-043 condition (c) cap remediation rounds inside a single body pass, a number the reviews file never states. The backlog has no Tier 0 row and the Verification Queue is back to eight.
+> Last reviewed: 2026-08-30 **P178 captured** -- a reviewer states a read extent that is wrong, and the false absence it grounds looks verified (lightweight aside via /wr-itil:capture-problem, from the P120 close retrospective).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -21,6 +21,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P124 | Governance edit-gate markers fail to land after a genuine PASS, costing a redundant review round | 12 | Known Error | M | 2026-08-05 | internal |
 | 12.0 | P154 | Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery | 12 | Known Error | M | 2026-08-17 | internal |
 | 12.0 | P166 | A governance surface that silently degrades to a subset of its specification reads as a clean run | 12 | Open | S | 2026-08-25 | internal |
+| 12.0 | P178 | A reviewer states a read extent that is wrong, and the false absence it grounds looks verified | 12 | Open | S | 2026-08-30 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
 | 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Known Error | M | 2026-08-09 | internal |
 | 10.0 | P169 | The AFK orchestrator's shell snippets assume bash, so under zsh the backlog scan reports zero against a full queue | 10 | Open | S | 2026-08-26 | internal |
