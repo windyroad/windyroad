@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description. Impact is 2 because nothing reader-facing is at stake and the harness is dev tooling, but it is not 1 because this harness is the instrument that certifies changes to publication-blocking gates, and while it cannot run locally, every claim about it has to be reasoned from source instead of observed. Likelihood is 4 because the blocker is a missing native binding for the Node versions installed here, which is a property of the machine rather than of any particular run, so it recurs on every local invocation until the environment changes.
 **Origin**: internal
 **Effort**: S, derived at capture. The likely fix is installing the Node version CI already uses, or adding an `engines` field to `package.json` so the mismatch fails at install with a readable message. Both are single-surface changes. Sized alongside P169 (an AFK shell-assumption defect, also S) rather than alongside a dependency migration, because moving off the native binding is the fallback rather than the expected route.
+**WSJF**: 8.0 = (8 x 1.0) / 1 (first computed at the 2026-08-29 review; the capture skeleton wrote Priority and Effort but no WSJF line)
 
 ## Description
 

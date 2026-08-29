@@ -5,6 +5,7 @@
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description. Impact is 2 because nothing reader-facing is at stake and both observed cases were caught before a wrong disposition was written; it is not 1 because the failure direction is toward a decision the project has already ruled against, taken confidently and recorded in a ticket. Likelihood is 4 because the instruction fires on every upstream-rooted selection and two iterations hit it on a single day.
 **Origin**: internal
 **Effort**: S, derived at capture. One classifier row plus the standing per-iteration constraint prose. Same size class as P132, rated S for localised predicate changes in a single file. The edit site is the orchestrator instruction rather than a script, which does not change the size.
+**WSJF**: 8.0 = (8 x 1.0) / 1 (first computed at the 2026-08-29 review; the capture skeleton wrote Priority and Effort but no WSJF line)
 
 ## Description
 

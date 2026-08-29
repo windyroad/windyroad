@@ -47,3 +47,11 @@ Audit trail for the inbound-discovery + assessment-pipeline pass run by `/wr-iti
 - Trigger: TTL-expiry auto-recheck. Cache age exceeded `ttl_seconds` 86400 against a `last_checked` of 2026-08-25T10:22:38Z.
 - Pipeline outcomes: none. No unmatched inbound reports, so the six-step assessment pipeline did not run. No local tickets created, no upstream issues closed, no reporter handles audit-flagged.
 - Cache refresh confirmed: `docs/problems/.upstream-cache.json` rewritten at `last_checked: 2026-08-28T00:00:00Z`.
+
+## 2026-08-29T13:09:34Z - Discovery pass
+
+- Channels polled: 1 (`github-issues` on `windyroad/windyroad`, no label filter, all open issues). Reports: 0 new, 0 unchanged.
+- Trigger: TTL-expiry auto-recheck. Cache age was 133583s against `ttl_seconds` 86400 and a `last_checked` of 2026-08-28T00:00:00Z; no `--force-upstream-recheck` flag was passed.
+- Poll validity: `gh repo view` confirms issues are enabled on the channel repo and `gh issue list --state all` returns zero, so the empty result is a real absence rather than a filtered or failed query.
+- Pipeline outcomes: none. No unmatched inbound reports, so the six-step assessment pipeline did not run. No local tickets created, no upstream issues closed, no reporter handles audit-flagged.
+- Cache refresh confirmed: `docs/problems/.upstream-cache.json` rewritten at `last_checked: 2026-08-29T13:09:34Z`.

@@ -4,7 +4,7 @@
 **Reported**: 2026-08-08
 **Priority**: 8 (Medium), Impact: 2 x Likelihood: 4, derived at capture from the description. Impact is 2 because nothing reader-facing is at stake: the evaluator is dev tooling whose verdict feeds an orchestrator or operator decision, and both observed failures were caught before anything closed. It is not 1 because the failure direction is toward loss rather than friction: the verdict is a confident CLOSE on a live ticket, phrased with cited evidence, on a surface where an operator batch-reviewing 24 candidates is invited to trust it. Likelihood is 4 because nothing automated checks the verdict, it fired on two independent surfaces on the same day through two different shapes, and one review pass surfaced 24 candidates of which none survived verification.
 **Origin**: internal
-**Effort**: S, derived at capture. Two localised predicate changes in one script (qualify shape 2's ADR match; gate shape 5 on the declared relationship) plus cases alongside the existing `packages/itil/scripts/test/evaluate-relevance.bats` fixtures. Same size class as P129 and P131, both rated S for guard-clause changes in a single script. Witness C (2026-08-09) adds a third predicate change, a remedy-vs-mention test on shape 2. Still S, still one script, but it is at the top of the band now rather than the middle.
+**Effort**: S, derived at capture. Two localised predicate changes in one script (qualify shape 2's ADR match; gate shape 5 on the declared relationship) plus cases alongside the existing `packages/itil/scripts/test/evaluate-relevance.bats` fixtures. Same size class as P129 and P131, both rated S for guard-clause changes in a single script. Witness C (2026-08-09) adds a third predicate change, a remedy-vs-mention test on shape 2. Still S, still one script, but it is at the top of the band now rather than the middle. Witness D (2026-08-29) adds a fourth predicate change, an ellipsis-rejection guard on shape 1's candidate extractor. The bucket does not move: four guard clauses in one script is still under an hour, and the bats fixture file is the same one. The band is now full, so a fifth witness would push this to M.
 **WSJF**: 16.0 = (8 x 2.0) / 1 (re-rated 2026-08-28 review: Open -> Known Error auto-transition, status multiplier 1.0 -> 2.0)
 
 ## Description
@@ -144,6 +144,38 @@ The `A1` guard already in the script (suppress shape 5 when the child names an u
 - [ ] Add bats cases alongside `packages/itil/scripts/test/evaluate-relevance.bats` covering both witnesses (upstream-ADR-number collision; `Composes with` sibling closed) and the singleton-mention case from the 2026-08-26 P128 verdict.
 - [ ] Draw a story map covering this work, so a release row can carry the fix. `wr-itil-check-fix-rfc-trace` exits 3 until one exists, and it gates the upstream pull request as much as any local change.
 - [ ] Raise the fix as an upstream pull request from the working clone at `~/Projects/agent-plugins` per ADR-048, rather than adding a further round of evidence to issue 414.
+
+## Witness D, 2026-08-29: shape 1 fires on an elided path in prose
+
+The `/wr-itil:review-problems` pass of 2026-08-29 ran the Step 4.6 evaluator across all 76 open and
+known-error tickets. It returned 5 clean `CLOSE-CANDIDATE` verdicts and 40
+`CLOSE-CANDIDATE-WITH-CAVEAT`. All 5 clean verdicts were verified against the tickets and all 5 were
+false. Nothing was closed, which repeats Witness A's outcome at a larger sample.
+
+Four of the five are modes this ticket already records. P036 cites ADR-019 as precedent for its own
+interim discipline pattern and as a source of a requirement, never as its remedy, which is Witness
+C's shape. P128 draws fifteen confirmed ADRs because the ticket's whole subject is enumerating the
+places the threshold is restated, and its own body written the same morning says the fix is not
+landed and names a third live blocker. P120 and P154 both carry a `## Fix Released` heading and both
+sit in Known Error because their fixes regressed, which the user confirmed on 2026-08-28; shape 4
+reads the heading and not the flip-back.
+
+**P124 is a new mode, in shape 1 rather than shape 2 or 5.** The verdict was
+`CLOSE-CANDIDATE ... shapes: file-no-longer-exists,ADR-shipped-confirmed ... all 1 file paths
+absent: docs/decisions/043-...proposed.md`. That string is not a path. It is the author's elided
+reference inside a backticked span in a narrative sentence, and the `...` is an ellipsis standing in
+for the rest of the slug. The real record,
+`docs/decisions/043-bounded-editorial-remediation-loop-for-editor-and-skeptic-gates.proposed.md`,
+is present on disk. Every path-like string in P124 is elided the same way, five of them, so the
+ticket contains no extractable real path at all, and shape 1's own guard, that it fires only when
+all extracted candidates are absent and at least one was extracted, is satisfied at full strength by
+a candidate set of one non-path.
+
+This is a distinct fix from the three already recorded, all of which sit in shapes 2 and 5. Shape 1
+needs to reject candidates that cannot be paths before it counts them absent; an extracted candidate
+containing an ellipsis is the concrete case. Without that, a ticket whose prose abbreviates its file
+references reads as a ticket whose files are gone.
+
 
 ## Dependencies
 

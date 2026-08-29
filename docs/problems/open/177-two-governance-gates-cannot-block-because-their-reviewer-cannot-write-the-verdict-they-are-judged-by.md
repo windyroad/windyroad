@@ -5,6 +5,7 @@
 **Priority**: 16 (High), Impact: 4 x Likelihood: 4, derived at capture. Impact is 4 because two of the six governance edit gates cannot withhold their marker on a FAIL: the hook reads a verdict file the reviewer has no tool to write, and its no-file branch allows. That is the same shape this project rated 4 on P165 when ADR-047's only enforcement was disarmed. Not 5 because the reviewer's findings still reach the caller inline, so the failure is lost enforcement rather than lost information. Likelihood is 4 because the disarming is structural and holds on every invocation, while the harm needs a FAIL verdict to be the thing that was suppressed, which is common rather than universal.
 **Origin**: internal
 **Effort**: S, derived at capture. The fix is one line in each of two agent definitions, adding the `Bash` the sibling jtbd agent already declares. The sizing is for authoring the change, not for landing it. Landing is upstream and is not this loop's to do.
+**WSJF**: 16.0 = (16 x 1.0) / 1 (first computed at the 2026-08-29 review; the capture skeleton wrote Priority and Effort but no WSJF line)
 
 ## Description
 

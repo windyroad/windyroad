@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-29 **P177 captured**: the style-guide and voice-tone reviewers are told to write a verdict file with a tool they are not given, and the hooks that read it treat a missing file as permission, so both gates open on a FAIL (lightweight aside via /wr-itil:capture-problem, from the P165 iteration retrospective).
+> Last reviewed: 2026-08-29 **inbound-discovery cache refreshed and the relevance evaluator audited**: the upstream poll had aged 37 hours against a 24-hour TTL, so it re-ran on the auto-recheck branch, finding the one configured channel still empty; the Step 4.6 evaluator returned 5 clean close candidates across 76 tickets and all 5 were verified false, including a new failure mode where an elided path in a ticket's prose is counted as a missing file, now recorded on P132 as Witness D (no ranking changed; P175, P176 and P177 gained the WSJF lines their capture skeletons omitted).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -90,7 +90,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 
 Fix released, awaiting verification. Sorted by Released date ascending, oldest first; same-day releases tiebreak by ID ascending. <!-- VQ-SORT-DIRECTION: oldest-first per ADR-022 --> <!-- LIKELY-VERIFIED-CELL-SHAPE: evidence-based per P186 -->
 
-Three rows left this queue on 2026-08-28: P099, P120 and P154 each carried `no - observed regression` and were flipped back to Known Error on Tom's confirmation, so they now rank in the dev-work queue rather than sitting here reading as awaiting-verification. Every remaining row is `no - not observed`. P015, P050 and P094 were put to Tom this pass and came back unsure rather than verified, so they stay.
+All eight rows read `no - not observed` and all eight stay. The 2026-08-29 review was an AFK pass, so no fix in this queue was exercised and no new evidence was produced; under the evidence-first cell there is nothing to close on. The rows needing Tom's out-of-band knowledge, which is every row here, are held for the next interactive review rather than auto-closed.
 
 | ID | Title | Released | Likely verified? |
 |----|-------|----------|------------------|
@@ -105,7 +105,7 @@ Three rows left this queue on 2026-08-28: P099, P120 and P154 each carried `no -
 
 ## Inbound Upstream Reports
 
-Inbound reports discovered by the Step 4.5 pass, rendered off `docs/problems/.upstream-cache.json`. Polled 2026-08-28: one channel (`github-issues` on `windyroad/windyroad`), zero open issues, nothing awaiting triage.
+Inbound reports discovered by the Step 4.5 pass, rendered off `docs/problems/.upstream-cache.json`. Polled 2026-08-29 on the TTL-expiry auto-recheck branch, the cache having aged 133583s against an 86400s TTL: one channel (`github-issues` on `windyroad/windyroad`), zero open issues, nothing awaiting triage. The repository has issues enabled and has never had one, so the empty result is a real absence rather than a filtered query.
 
 | # | Source | Title | Author | Created | Classification | Matched local ticket |
 |---|--------|-------|--------|---------|----------------|----------------------|
