@@ -23,6 +23,14 @@ The cost is not just wall-clock. Each rescore is a fresh-context subagent that r
 
 Worth noting what is NOT being proposed: weakening the gate. This is intentional hygiene of the same family as the dependency-freshness gate, and engineering around it would be the wrong fix. The question is whether the drift predicate can be made proportionate.
 
+### Mechanism identified 2026-08-30
+
+The drift check is not comparing "has the tree changed since the score" in the loose sense. `risk-gate.sh` compares a stored `state-hash` against `pipeline-state.sh --hash-inputs`, and those inputs are the `git diff HEAD --raw` lines, which carry the INDEX blob hash per path. Staging a file therefore changes its raw line (the worktree-only sentinel `000000` becomes the real blob hash) even though no byte of content changed. So `git add` ALONE invalidates a score.
+
+Observed at the commit surface, not push, in the 2026-08-30 deps-remediation iteration: a scoring pass ran against a tree, then `git add` of one already-modified file was enough to produce `Pipeline state drift: working tree changed since the last commit risk assessment` and force a full rescore. The correct sequence is stage everything first, score second, commit immediately, touching nothing in between. That ordering is not stated on any of the gate's four suggested remediations, all of which say "stage files with git add, then delegate to the scorer" without noting that a later `git add` re-invalidates.
+
+A second, more expensive instance of the same class in that session: the gate's marker is only written by a FRESH `Agent` spawn of `wr-risk-scorer:pipeline`. Resuming an existing scorer via `SendMessage` returns a complete analysis with a `RISK_SCORES` line and a `RISK_BYPASS` directive in its text, but writes no `.risk-reports/` file and updates no marker, so the gate keeps reading the stale score. Three consecutive resumed passes produced correct analysis and zero gate movement before a fresh `Agent` call was tried. This is the same fresh-synchronous-Agent constraint the briefing already records for the six `PostToolUse` governance markers; the risk gate belongs on that list.
+
 ## Symptoms
 
 - `npm run push:watch` exits with `Pipeline state drift: working tree changed since the last push risk assessment` after any commit, including one whose content the prior assessment covered.
@@ -43,7 +51,7 @@ Batch commits and push once at the end, where the ADR-014 commit grain allows it
 
 ### Investigation Tasks
 
-- [ ] Investigate root cause, including exactly what the drift predicate hashes or compares
+- [x] ~~Investigate root cause, including exactly what the drift predicate hashes or compares~~ Answered 2026-08-30: it hashes the `git diff HEAD --raw` lines, which carry the index blob hash per path, so staging alone changes the hash. Status stays Open rather than moving to Known Error because the mechanism is identified but no fix is chosen: the drift check is correct to notice a staging change, and whether the right answer is a narrower hash input, a documented stage-then-score ordering, or nothing at all has not been decided. The transition is `/wr-itil:review-problems`'s call, not this retro's.
 - [ ] Create reproduction test
 - [ ] Decide whether the predicate can be made proportionate without weakening the guarantee. Candidates: scope the comparison to paths the prior assessment actually read; treat a commit whose diff is a subset of the scored state as covered; carry the prior score forward with an explicit delta assessment rather than a full rescore
 - [ ] Check whether the rescore prompt can be shortened when the delta is small, rather than re-deriving the whole pipeline report

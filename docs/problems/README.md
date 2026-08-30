@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-30 **P183 and P184 captured during the dependency refresh** -- the freshness gate exits 0 on the operator machine and 1 on CI for the same tree, so the local gate cannot see what blocks the release path, and netlify-cli cannot move to any version because a peer conflict between @netlify/build and vitest rejects every resolution, which also blocks the blanket lockfile refresh the fix:deps flow depends on. (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-30 **P185 captured during the deps-remediation retro** -- the dependency-freshness exclude map silences the gate for a named package permanently while nothing ever re-checks the prose condition that justified the hold, and the typescript entry is 99 days past the verification date written in its own reason string. (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -44,6 +44,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 8.0 | P167 | The recovery path for a blocked push cannot run unattended and reports the stall as a judgement call | 8 | Open | S | 2026-08-25 | internal |
 | 8.0 | P175 | AFK orchestrator's external-root-cause instruction still encodes the pre-ADR-048 park posture | 8 | Open | S | 2026-08-29 | internal |
 | 8.0 | P176 | The newsletter eval harness cannot run on this machine, so no change to it can be verified by running it | 8 | Open | S | 2026-08-29 | internal |
+| 8.0 | P185 | Dependency-freshness exclude entries have no expiry and nothing re-checks them | 8 | Open | S | 2026-08-30 | internal |
 | 8.0 | P162 | A claim corrected at one site survives at its sibling sites | 16 | Open | M | 2026-08-24 | internal |
 | 7.5 | P127 | Unverified subprocess claims propagate into decisions without reading the source | 15 | Open | M | 2026-08-07 | internal |
 | 6.0 | P058 | architect-enforce-edit + jtbd-enforce-edit hooks should add docs/retros/ to the exclusion list | 3 | Known Error | S | 2026-05-13 | internal |
