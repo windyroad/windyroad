@@ -3,6 +3,7 @@
   "prod": { "minAge": 14 },
   "exclude": {
     "@eslint/js": "Must upgrade together with eslint when eslint v10 peer deps are resolved",
+    "jsdom": "Held at 29.x until the Node toolchain moves off 20.19.0. jsdom 30.x declares engines ^22.22.2 || ^24.15.0 || >=26.0.0, which excludes the Node version .nvmrc declares and all six setup-node job paths resolve. 30.0.1 was installed on 2026-08-30 in 307e8bff and reverted the same day: the freshness gate never asked for it (CI run 33280232542 named only @types/react and playwright), and it silently required a Node two majors above the declared toolchain, disarming the npm test gate inside fix:deps for anyone actually on it. Revisit when the Node line moves.",
     "typescript": "TS 6.0.x breaks CSS/SCSS side-effect imports (TS2882 in src/app/blog/[slug]/page.tsx and src/app/layout.tsx) and surfaces a vitest/rolldown vs vite peer-type mismatch in vitest.config.ts (rolldownVersion missing in PluginContextMeta). Hold at TS 5.9.x until Next.js + vitest ship TS-6-compatible types. Verified 2026-05-23."
   }
 }
