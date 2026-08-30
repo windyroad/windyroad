@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-08-30 **P185 captured during the deps-remediation retro** -- the dependency-freshness exclude map silences the gate for a named package permanently while nothing ever re-checks the prose condition that justified the hold, and the typescript entry is 99 days past the verification date written in its own reason string. (lightweight aside via /wr-itil:capture-problem)
+> Last reviewed: 2026-08-30 **P186 and P187 captured during The Shift Issue 20 prep** - a reviewer gate's suggested fix can itself violate another gate's rule (twice in one run, caught by the round-close lint), and the voice guide scores constructions per instance so it has no rule for the aggregate cadence two gates independently flagged. (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,6 +10,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | WSJF | ID | Title | Severity | Status | Effort | Reported | Origin |
 |------|-----|-------|----------|--------|--------|----------|--------|
 | 32.0 | P165 | The stale-verdict check stands down on the very absence it exists to catch | 16 | Known Error | S | 2026-08-25 | internal |
+| 18.0 | P186 | A reviewer gate's suggested fix can itself violate another gate's rule | 9 | Open | S | 2026-08-30 | internal |
 | 16.0 | P128 | The risk threshold is restated in ten places with no single source of truth | 8 | Known Error | S | 2026-08-07 | internal |
 | 16.0 | P132 | Relevance evaluator emits CLOSE verdicts from syntax-only ADR-number and driver matching | 8 | Known Error | S | 2026-08-08 | internal |
 | 16.0 | P134 | Agents infer staged state from the session-start git status snapshot, which is lossy on its first line | 8 | Known Error | S | 2026-08-09 | internal |
@@ -22,6 +23,7 @@ Dev-work queue only. Verification Pending and Parked tickets are excluded per AD
 | 12.0 | P154 | Newsletter remediation edits are never independently verified, so a fix can introduce a defect that survives until the next full battery | 12 | Known Error | M | 2026-08-17 | internal |
 | 12.0 | P166 | A governance surface that silently degrades to a subset of its specification reads as a clean run | 12 | Open | S | 2026-08-25 | internal |
 | 12.0 | P178 | A reviewer states a read extent that is wrong, and the false absence it grounds looks verified | 12 | Open | S | 2026-08-30 | internal |
+| 12.0 | P187 | The voice guide has no rule for aggregate cadence, so a legal construction becomes a tic | 6 | Open | S | 2026-08-30 | internal |
 | 10.0 | P087 | wr-architect-generate-decisions-compendium emits em-dashes that violate adopter no-em-dash policies | 10 | Known Error | M | 2026-06-03 | internal |
 | 10.0 | P145 | Risk register is empty, so every scorer run regenerates from scratch | 10 | Known Error | M | 2026-08-09 | internal |
 | 10.0 | P169 | The AFK orchestrator's shell snippets assume bash, so under zsh the backlog scan reports zero against a full queue | 10 | Open | S | 2026-08-26 | internal |
