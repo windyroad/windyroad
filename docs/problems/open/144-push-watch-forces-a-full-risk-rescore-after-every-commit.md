@@ -23,13 +23,47 @@ The cost is not just wall-clock. Each rescore is a fresh-context subagent that r
 
 Worth noting what is NOT being proposed: weakening the gate. This is intentional hygiene of the same family as the dependency-freshness gate, and engineering around it would be the wrong fix. The question is whether the drift predicate can be made proportionate.
 
-### Mechanism identified 2026-08-30
+### Mechanism claim of 2026-08-30 RETRACTED, and what the source actually shows
 
-The drift check is not comparing "has the tree changed since the score" in the loose sense. `risk-gate.sh` compares a stored `state-hash` against `pipeline-state.sh --hash-inputs`, and those inputs are the `git diff HEAD --raw` lines, which carry the INDEX blob hash per path. Staging a file therefore changes its raw line (the worktree-only sentinel `000000` becomes the real blob hash) even though no byte of content changed. So `git add` ALONE invalidates a score.
+An earlier version of this section, committed in `c394143`, asserted that the drift check hashes `git diff HEAD --raw` lines carrying the index blob hash per path, and concluded that `git add` alone invalidates a score. **That is false.** It was written from session observation without reading the hook, caught by the risk scorer on the next pass, and is retracted here rather than quietly edited.
 
-Observed at the commit surface, not push, in the 2026-08-30 deps-remediation iteration: a scoring pass ran against a tree, then `git add` of one already-modified file was enough to produce `Pipeline state drift: working tree changed since the last commit risk assessment` and force a full rescore. The correct sequence is stage everything first, score second, commit immediately, touching nothing in between. That ordering is not stated on any of the gate's four suggested remediations, all of which say "stage files with git add, then delegate to the scorer" without noting that a later `git add` re-invalidates.
+What `pipeline-state.sh --hash-inputs` actually does, identical across all five versions cached on this machine (0.9.0, 0.13.5, 0.17.0, 0.18.17, 0.18.19), verified by hashing lines 35 to 75 of each: all five give the same digest:
 
-A second, more expensive instance of the same class in that session: the gate's marker is only written by a FRESH `Agent` spawn of `wr-risk-scorer:pipeline`. Resuming an existing scorer via `SendMessage` returns a complete analysis with a `RISK_SCORES` line and a `RISK_BYPASS` directive in its text, but writes no `.risk-reports/` file and updates no marker, so the gate keeps reading the stale score. Three consecutive resumed passes produced correct analysis and zero gate movement before a fresh `Agent` call was tried. This is the same fresh-synchronous-Agent constraint the briefing already records for the six `PostToolUse` governance markers; the risk gate belongs on that list.
+```bash
+STASH_COMMIT=$(git stash create 2>/dev/null || true)
+CONCEPTUAL_TREE=$(git rev-parse "${STASH_COMMIT}^{tree}" ...)
+eval "git diff --raw 4b825dc642cb6eb9a060e54bf8d69288fbee4904 $CONCEPTUAL_TREE -- $EXCL"
+```
+
+Three consequences, each of which contradicts the retracted claim:
+
+1. The inputs are a diff of git's empty tree (`4b825dc...`) against a conceptual tree built by `git stash create`, which already folds index and working tree together. The SHAs listed are content blobs of that tree, not index-state sentinels, and nothing is diffed against HEAD at all.
+2. Staging an already-tracked, already-modified file therefore does NOT move the hash: its content was in the conceptual tree before the `git add`. The one staging case that does move it is a previously UNTRACKED file, because `git stash create` without `-u` omits untracked files.
+3. `_doc_exclusions` in `gate-helpers.sh` returns `:!docs/ :!.risk-reports/ :!.changeset/ :!governance/ :!.claude/plans/ :!CLAUDE.md :!AGENTS.md :!PRINCIPLES.md :!DECISION-MANAGEMENT.md :!AGENTIC_RISK_REGISTER.md :!PROBLEM-MANAGEMENT.md`, so editing or staging anything under `docs/` cannot move the hash through the tree diff.
+
+There is a SECOND input, and an earlier draft of this retraction missed it by stopping the read a few lines short, which is the same one-screen-early failure this section exists to correct. Lines 68 to 73 emit a changeset count after the tree diff:
+
+```bash
+    # Changeset count (affects release/changeset risk - tracked separately
+    # because .changeset/ is in the doc-exclusions list and therefore not
+    # reflected in the tree listing above).
+    if [ -d ".changeset" ]; then
+        find .changeset -name '*.md' -not -name 'README.md' 2>/dev/null | wc -l | tr -d ' '
+    fi
+```
+
+So `.changeset/` is excluded from the tree diff and then deliberately re-admitted through this count. Adding or removing a changeset file DOES move the hash, exclusion notwithstanding.
+
+The retracted claim also carried a "stage everything first, score second" prescription. That is superseded by a hook that already exists and is wired: `risk-hash-refresh.sh` is registered as `PostToolUse:Bash` through `risk-scorer-dispatch.sh` line 92, and its own header says it "eliminates the 'stage before prompt' protocol" by rewriting `state-hash` after any `git add|commit|stash|reset|checkout|restore`.
+
+So the drift remains unexplained. Note what this ticket does and does not record: the three reproductions written up above are from 2026-08-09, with commit SHAs. The 2026-08-30 recurrences that prompted this retraction were observed but not captured in the detail those carry, so an investigator should work from the 2026-08-09 set. Four candidates below, none tested, and the list is NOT claimed to be exhaustive: it comes from reading one function, and one draft of this very section already proved that an incomplete read reads exactly like a complete one.
+
+- Staging a previously untracked file, the one genuinely staging-sensitive case. Test it with a path OUTSIDE `docs/`: the exclusion applies before the untracked question arises, so a docs file would falsify the candidate for the wrong reason.
+- A `git -C <path> add`, piped, or subshell invocation that `risk-hash-refresh.sh`'s command regex `(^|;|&&|\|\|)\s*git (add|...)` does not match, so no refresh fires.
+- A genuine content change to a non-`docs/` path between the score and the commit.
+- A `.changeset/*.md` file added or removed between the score and the commit, which moves the count input above. Worth testing early: a changeset is normally created with Write, and the dispatcher routes `Edit|Write` to `wip-risk-mark.sh` (line 96) rather than to `risk-hash-refresh.sh`, so no refresh fires for it.
+
+The second observation from that session stands and was verified independently: only a FRESH synchronous `Agent` spawn writes the report and the marker. `risk-score-mark.sh` guards on `[ "$TOOL_NAME" = "Agent" ] || exit 0` and its header calls itself the only place score files are written, and the dispatcher routes only `tool_name == Agent` to it. A `SendMessage` resume returns a complete analysis carrying `RISK_SCORES` and a `RISK_BYPASS` directive in its text while writing nothing, so the gate keeps reading the stale score. Three consecutive resumes produced good analysis and zero gate movement before a fresh spawn was tried. This is not new to this ticket though: `docs/briefing/README.md` already carries this. Its Critical Point beginning "A genuine PASS can still leave the edit blocked at any of six gates" lists `risk-score` among the six `PostToolUse` markers that only a literal `Agent` tool call fires. Cited by its opening words rather than by position, because the Critical Points are an unnumbered and growing list and an ordinal into it drifts; an earlier draft of this line said "Critical Point 7" when the bullet is the eighth.
 
 ## Symptoms
 
@@ -51,7 +85,7 @@ Batch commits and push once at the end, where the ADR-014 commit grain allows it
 
 ### Investigation Tasks
 
-- [x] ~~Investigate root cause, including exactly what the drift predicate hashes or compares~~ Answered 2026-08-30: it hashes the `git diff HEAD --raw` lines, which carry the index blob hash per path, so staging alone changes the hash. Status stays Open rather than moving to Known Error because the mechanism is identified but no fix is chosen: the drift check is correct to notice a staging change, and whether the right answer is a narrower hash input, a documented stage-then-score ordering, or nothing at all has not been decided. The transition is `/wr-itil:review-problems`'s call, not this retro's.
+- [ ] Investigate root cause. Partially answered 2026-08-30 and then RETRACTED: the predicate hashes a `git stash create` conceptual tree against the empty tree with `docs/` excluded, which rules out the index-blob explanation this ticket briefly carried, but does not explain the drift actually observed. The four untested candidates are listed in the retraction subsection of the Description, above the Root Cause heading. Re-opened deliberately rather than left ticked.
 - [ ] Create reproduction test
 - [ ] Decide whether the predicate can be made proportionate without weakening the guarantee. Candidates: scope the comparison to paths the prior assessment actually read; treat a commit whose diff is a subset of the scored state as covered; carry the prior score forward with an explicit delta assessment rather than a full rescore
 - [ ] Check whether the rescore prompt can be shortened when the delta is small, rather than re-deriving the whole pipeline report
