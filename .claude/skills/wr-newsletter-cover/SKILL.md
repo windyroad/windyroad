@@ -104,7 +104,7 @@ Read <draft-folder>/<publication-date>.cover.png
 
 The harness displays the PNG inline. Visually compare against:
 
-1. The prior edition's cover (highest-dated `src/newsletters/published/<persona>/*.cover.png`). Layout, hook scale, monogram scale, accent stripe geometry should match.
+1. The prior edition's cover (highest-dated `src/newsletters/published/<persona>/*/*.cover.png`). Layout, hook scale, monogram scale, accent stripe geometry should match.
 2. The canonical brand SVG (`src/newsletters/assets/the-shift-logo.svg`). Palette, font conventions, brand mark identical.
 3. The supplied hook lines. Both fit on one rendered line each, no overlap with the rules above or below.
 

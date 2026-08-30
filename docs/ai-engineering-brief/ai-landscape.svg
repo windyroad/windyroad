@@ -14,7 +14,7 @@
   .evolve-label { font-size: 11px; fill: #c44; }
 </style>
 <rect width="1200" height="800" fill="white"/>
-<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-08-23)</text>
+<text x="80" y="35" class="title">AI Engineering Landscape (Week ending 2026-08-30)</text>
 <line x1="80" y1="60" x2="80" y2="720" stroke="#333" stroke-width="1.5"/>
 <line x1="80" y1="720" x2="1140" y2="720" stroke="#333" stroke-width="1.5"/>
 <polygon points="1140,720 1132,716 1132,724" fill="#333"/>
@@ -52,6 +52,8 @@
 <line x1="419.2" y1="178.8" x2="239" y2="205.2" stroke="#aaa" stroke-width="1.5"/>
 <line x1="843.1999999999999" y1="508.79999999999995" x2="949.1999999999999" y2="654" stroke="#aaa" stroke-width="1.5"/>
 <line x1="822" y1="574.8000000000001" x2="949.1999999999999" y2="654" stroke="#aaa" stroke-width="1.5"/>
+<line x1="822" y1="574.8000000000001" x2="885.6" y2="614.4" stroke="#aaa" stroke-width="1.5"/>
+<line x1="207.2" y1="535.2" x2="906.8000000000001" y2="390" stroke="#aaa" stroke-width="1.5"/>
 <line x1="724" y1="310.8" x2="968.4" y2="310.8" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
 <circle cx="970.4" cy="310.8" r="5" fill="none" stroke="#c44" stroke-width="1.5" stroke-dasharray="3,2"/>
 <line x1="554.4" y1="356.99999999999994" x2="756.4" y2="356.99999999999994" stroke="#c44" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#evolve-arrow)"/>
@@ -91,6 +93,8 @@
 <text x="853.1999999999999" y="498.79999999999995" class="comp-label">Foundation Models</text>
 <circle cx="822" cy="574.8000000000001" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="832" y="564.8000000000001" class="comp-label">Model Hosting and Inference</text>
+<circle cx="885.6" cy="614.4" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
+<text x="895.6" y="604.4" class="comp-label">Model Distribution Hubs</text>
 <circle cx="440.40000000000003" cy="324" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
 <text x="450.40000000000003" y="314" class="comp-label">AI Regulation and Compliance</text>
 <circle cx="949.1999999999999" cy="654" r="6" fill="white" stroke="#333" stroke-width="1.5"/>
