@@ -5,7 +5,7 @@
   ignore = "exit 0"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "24.22.1"
 
 [[redirects]]
   from = "/ai-teams"
