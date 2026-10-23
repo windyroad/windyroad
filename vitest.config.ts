@@ -8,6 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react()],
   test: {
+    testTimeout: 30000,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     // tests/*.spec.mjs are standalone Playwright e2e scripts, run via
