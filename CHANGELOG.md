@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.13.6
+
+### Patch Changes
+
+- 40b0dff: Update Node.js to the patched 24.22.1 release and refresh dependencies with available security fixes. Increase the default test timeout to 30 seconds.
+
 ## 2.13.5
 
 ### Patch Changes
