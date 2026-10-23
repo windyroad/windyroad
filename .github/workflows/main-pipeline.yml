@@ -141,7 +141,7 @@ jobs:
       - name: Deploy draft to Netlify
         id: deploy
         run: |
-          OUTPUT=$(npx netlify deploy --dir=out --json --message "main-${{ github.sha }}" --alias main-test)
+          OUTPUT=$(npx netlify deploy --no-build --dir=out --json --message "main-${{ github.sha }}" --alias main-test)
           echo "url=$(echo "$OUTPUT" | jq -r '.deploy_url')" >> "$GITHUB_OUTPUT"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
