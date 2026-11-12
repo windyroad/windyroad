@@ -178,3 +178,14 @@ Chrome displayed the revised body and all three SVGs loaded. The page had no hor
 Reviewed article SHA-256: `d30d57c4604f49c06169e6c01476016c01d8ca98065c88dea46790db8f2e3dc9`.
 
 Delivery check: an isolated checkout based on current remote trunk also passed the production build and application/library lint under Node 24.22.1. The required dependency check failed on existing freshness and vulnerability findings. No dependency files were changed and no push was attempted. The article remains excluded from the production export.
+
+
+## Later performance results (2026-11-13)
+
+Added the recorded follow-up after context reuse: further transaction-cost simplification, application page tuning to 64 events, and browser REST-page comparisons at 256, 512, 1,024 and 2,048 events. The table separates complete replay time from the median longest main-thread pause. The ending now reports Tom's direct observation of substantially faster production account loading. No production speedup percentage is inferred from synthetic timings.
+
+The existing benchmark records were used as requested; no performance experiments were rerun. The approved opening, formula, three figures and draft flag are unchanged. The final method now explicitly chooses operating sizes after reducing overhead.
+
+Architecture and JTBD reviews passed before editing. The independent technical/performance editor passed and clarified the 1,024-event comparison baseline. Final voice and content-risk reviews passed. Chrome displayed the new server results, all four browser rows and the production observation correctly. The local preview is running using Next.js's supported Webpack option after its Turbopack font loader failed; no site configuration was changed.
+
+Reviewed article SHA-256: `52ec37e21ddf16a15572e4a068ccba2b89e6d5251124ea0be2794cc4e8069b20`.

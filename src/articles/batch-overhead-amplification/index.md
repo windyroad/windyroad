@@ -105,7 +105,32 @@ We then ran 12 baseline/candidate pairs at each page size, alternating their ord
 
 The table shows median elapsed times. The candidate was faster in 11 of 12 pairs at page size 4 and all 12 pairs at page size 256. All 48 rebuilds passed the complete-output and progress checks. We retained the change.
 
-The two page sizes answered different parts of the investigation. Small pages exposed boundary costs. Comparing counters across page sizes also showed which costs persisted regardless of those boundaries. Source inspection identified avoidable construction within that second group, and the complete-rebuild comparison demonstrated a benefit at both the diagnostic and normal application page sizes.
+The two page sizes answered different parts of the investigation. Small pages exposed boundary costs. Comparing counters across page sizes also showed which costs persisted regardless of those boundaries. Source inspection identified avoidable construction within that second group, and the complete-rebuild comparison demonstrated a benefit at both the diagnostic size and the 256-event setting used at that stage.
+
+## Tune the page size after reducing overhead
+
+Context reuse was one of several reductions in transaction costs. We also simplified identity-hashing work, favouring simpler code when timings were comparable. Copies that protected data isolation stayed in place.
+
+Only then did we tune the application page size. In the later local, synthetic 50,000-event server benchmark, 64-event pages took a median **4.92 seconds**, about **10,160 events per second**, compared with 5.07 seconds at 256. The difference was small enough to be uncertain. We selected 64 with a one-line configuration change.
+
+That sequence matters. Increasing the page size earlier could have hidden repeated setup work. Once we had reduced the overhead, we could choose a page size for the implementation we intended to run.
+
+### Browser pages introduce a responsiveness trade-off
+
+REST pages were another boundary to tune. For these, we measured the full 50,000-event synthetic replay through browser projection and the dashboard. Completion time alone would miss the effect of longer main-thread pauses on responsiveness.
+
+| REST page size (events) | Median rebuild time (seconds) | Median longest main-thread pause (milliseconds) |
+| ---: | ---: | ---: |
+| 256 | 6.42 | 51 |
+| 512 | 6.28 | 87 |
+| 1,024 | 6.24 | 158 |
+| 2,048 | 6.07 | 276 |
+
+Moving from 1,024 to 2,048 saved about 0.17 seconds, while the median longest pause rose from 158 to 276 milliseconds. The smaller sizes offered a useful alternative: 512 nearly matched the completion time at 1,024 with shorter pauses, and 256 shortened pauses further for about 0.18 seconds more than 1,024-event pages.
+
+We kept REST pages at 1,024 in that iteration. The comparison made the trade-off explicit: the fastest complete rebuild could also interrupt the browser for longer. The operating choice depends on how much those interruptions matter to the experience.
+
+We also observed substantially faster account loading in production after the optimisation work. The improvement was visible in everyday use.
 
 ## Use page size to choose the next experiment
 
@@ -115,6 +140,7 @@ The method is useful when a workload is already batched and you need to decide w
 2. **Measure what changes and what stays stable.** Record complete-operation time alongside counts for suspected costs. Rising query or lookup counts point towards page-sensitive work. Stable counts direct attention elsewhere.
 3. **Trace the measured work to an implementation decision.** Establish why a query is reopened, a key is retrieved or an object is reconstructed. The counter tells you where to look; the code tells you what could change.
 4. **Test one repair against the complete operation.** Keep the small diagnostic pages, then repeat at the normal size and with larger workloads. Compare required outputs as well as timings. Keep regressions and timeouts in the result.
+5. **Choose the operating size after reducing overhead.** Compare throughput and responsiveness at the layer you are tuning. Application pages, database transport batches and browser REST pages need not share a size.
 
 Use a controlled environment for the deliberately inefficient setting, since extra queries and lookups consume capacity. Reduce the page size far enough to distinguish the costs you are investigating; reaching the smallest possible size is unnecessary.
 
