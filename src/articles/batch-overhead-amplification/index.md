@@ -4,7 +4,7 @@ title: 'Batch Overhead Amplification'
 subtitle: 'How smaller batches uncover performance bottlenecks in event sourcing'
 author: 'Tom Howard'
 tags: ['performance', 'lean', 'batch size', 'software delivery']
-draft: true
+draft: false
 ---
 
 To find out where a banking app spent its time rebuilding a balance, we deliberately made the rebuild slower. We split the same 469 events across 30 pages, making the server repeat work that was easy to miss when the history fitted on one page.

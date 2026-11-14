@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { format, parse } from 'date-fns';
+import slugify from 'slugify';
 import { getAllSlugs, getPostBySlug } from '@/src/lib/markdown';
 import { notFound } from 'next/navigation';
 import NewsletterButton from '@/src/components-next/NewsletterButton';
@@ -81,11 +82,20 @@ export default async function BlogPost({
             <h1 className={styles.postTitle}>
               <Link href={`/blog/${slug}`}>{frontmatter.title}</Link>
             </h1>
+            {frontmatter.subtitle?.trim() && (
+              <p className={styles.postSubtitle}>{frontmatter.subtitle}</p>
+            )}
             <div className={styles.postMeta}>
               by {frontmatter.author}, {formattedDate}
               <div className={styles.tags}>
                 {frontmatter.tags?.map((tag) => (
-                  <span key={tag}>#{tag}</span>
+                  <Link
+                    key={tag}
+                    href={`/blog/tag/${slugify(tag, { lower: true })}`}
+                    aria-label={`Posts tagged ${tag}`}
+                  >
+                    #{tag}
+                  </Link>
                 ))}
               </div>
             </div>

@@ -40,6 +40,8 @@ This guide documents the visual design system for windyroad.com.au. The `wr-styl
 | `--color-white` | #FFFFFF | Pure white |
 | `--color-border` | rgba(255, 255, 255, 0.12) | Subtle border on dark backgrounds |
 | `--color-border-light` | rgba(0, 0, 0, 0.1) | Subtle border on light backgrounds |
+| `--color-tag-bg` | rgba(255, 255, 255, 0.03) | Article tag background on dark surfaces |
+| `--color-tag-bg-hover` | rgba(255, 255, 255, 0.04) | Article tag hover background on dark surfaces |
 
 ### Spacing
 
@@ -157,6 +159,12 @@ Sizes: default (0.75rem 2rem padding) and large (1rem 2.5rem padding).
 - Border: 1px solid context-appropriate border token
 - Padding: 1.5rem to 2rem
 - Background: context-appropriate (see dark/light rules above)
+
+### Article headers and formulas
+
+- Optional subtitles sit directly beneath the H1, with no gap after the title: 1.25rem, weight 400, line-height 1.2, `--color-accent-on-dark`, and 1rem bottom margin.
+- Tag links wrap with a 0.5rem gap. Use 0.2em 0.6em padding, a 4px radius, a 1.75rem minimum height, and the tag background tokens above. Underline on hover and show a 2px `--color-accent-on-dark` focus outline with a 2px offset.
+- Display formulas are centred when they fit. Wider formulas scroll horizontally within their container without shrinking the formula or widening the page.
 
 ### Lists
 

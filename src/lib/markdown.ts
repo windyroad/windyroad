@@ -138,6 +138,7 @@ const articlesDirectory = path.join(process.cwd(), 'src/articles');
 export interface PostFrontmatter {
   date: string;
   title: string;
+  subtitle?: string;
   author: string;
   tags: string[];
   image?: string;

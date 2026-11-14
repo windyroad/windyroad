@@ -1,6 +1,6 @@
 # Batch Overhead Amplification: editorial review
 
-Status: draft for Tom Howard's editorial review. Website publication is disabled by `draft: true`.
+Status: prepared for release preview. Production publication is held until Tom approves the release.
 Review date: 2026-11-03.
 Article SHA-256: `376e59388ebb975f89e9128e8bd89a750a347c502d58568fc2f6fb5ce2938858`.
 
@@ -189,3 +189,9 @@ The existing benchmark records were used as requested; no performance experiment
 Architecture and JTBD reviews passed before editing. The independent technical/performance editor passed and clarified the 1,024-event comparison baseline. Final voice and content-risk reviews passed. Chrome displayed the new server results, all four browser rows and the production observation correctly. The local preview is running using Next.js's supported Webpack option after its Turbopack font loader failed; no site configuration was changed.
 
 Reviewed article SHA-256: `52ec37e21ddf16a15572e4a068ccba2b89e6d5251124ea0be2794cc4e8069b20`.
+
+## Release-preview preparation (2026-11-15)
+
+Tom requested a phone-accessible release preview with the production release held. The article is now eligible for the static build; publication remains controlled by the unmerged release PR into `publish`. Article prose is unchanged. The approved subtitle, linked tags and formula presentation accompany the preview.
+
+Article SHA-256: `feaf9dcb9a37bedf7658f13a306c0751883a8ef4966a525e9ec9912fd0749159`. Historical reviews above retain their original scope and digests.
