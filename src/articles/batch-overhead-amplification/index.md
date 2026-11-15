@@ -1,7 +1,7 @@
 ---
 date: '2026-11-03'
 title: 'Batch Overhead Amplification'
-subtitle: 'How smaller batches uncover performance bottlenecks in event sourcing'
+subtitle: 'How smaller batches uncover performance bottlenecks'
 author: 'Tom Howard'
 tags: ['performance', 'lean', 'batch size', 'software delivery']
 draft: false
@@ -17,6 +17,7 @@ With a limit of 1,024 events per page, the rebuild took 1.055 seconds, or about 
 
 We call this diagnostic **Batch Overhead Amplification**. It draws on Taiichi Ohno’s analogy of lowering the water to expose the rocks. In Ohno’s example, reducing inventory exposes problems on the production line. In this experiment, smaller pages expose the work the server repeats for each page. [Lean Enterprise Institute on Ohno’s analogy](https://www.lean.org/the-lean-post/articles/once-again-heres-why-jit-matters/).
 
+The same diagnostic can be used with database reads, API requests, file imports or message processing: hold the workload fixed and shrink the batches to expose costs paid once per batch. The banking example uses pages of events as its batches.
 
 ## What the slowdown told us
 
@@ -42,7 +43,7 @@ Together, the timings and counts directed attention to key retrieval and the dat
 
 ## Make page overhead visible
 
-The diagnostic rests on a simple model:
+For this example, the diagnostic rests on a simple model:
 
 <p tabindex="0"><math display="block">
   <mtext>Total work</mtext><mo>≈</mo><mtext>event count</mtext><mo>×</mo>
@@ -132,16 +133,16 @@ We kept REST pages at 1,024 in that iteration. The comparison made the trade-off
 
 We also observed substantially faster account loading in production after the optimisation work. The improvement was visible in everyday use.
 
-## Use page size to choose the next experiment
+## Use batch size to choose the next experiment
 
 The method is useful when a workload is already batched and you need to decide where to investigate performance. The critical control is doing the same useful work in both runs.
 
-1. **Fix the workload and change one page size.** Keep the events, order and required outputs the same. Identify the layer you are changing; an application page and a database transport batch can be different controls.
-2. **Measure what changes and what stays stable.** Record complete-operation time alongside counts for suspected costs. Rising query or lookup counts point towards page-sensitive work. Stable counts direct attention elsewhere.
+1. **Fix the workload and change one batch size.** Keep the items, order and required outputs the same. Identify the layer you are changing; an application batch and a database transport batch can be different controls.
+2. **Measure what changes and what stays stable.** Record complete-operation time alongside counts for suspected costs. Rising query or lookup counts point towards work repeated per batch. Stable counts direct attention elsewhere.
 3. **Trace the measured work to an implementation decision.** Establish why a query is reopened, a key is retrieved or an object is reconstructed. The counter tells you where to look; the code tells you what could change.
-4. **Test one repair against the complete operation.** Keep the small diagnostic pages, then repeat at the normal size and with larger workloads. Compare required outputs as well as timings. Keep regressions and timeouts in the result.
-5. **Choose the operating size after reducing overhead.** Compare throughput and responsiveness at the layer you are tuning. Application pages, database transport batches and browser REST pages need not share a size.
+4. **Test one repair against the complete operation.** Keep the small diagnostic batches, then repeat at the normal size and with larger workloads. Compare required outputs as well as timings. Keep regressions and timeouts in the result.
+5. **Choose the operating size after reducing overhead.** Compare throughput and responsiveness at the layer you are tuning. Separate layers can need different batch sizes.
 
-Use a controlled environment for the deliberately inefficient setting, since extra queries and lookups consume capacity. Reduce the page size far enough to distinguish the costs you are investigating; reaching the smallest possible size is unnecessary.
+Use a controlled environment for the deliberately inefficient setting, since extra queries and lookups consume capacity. Reduce the batch size far enough to distinguish the costs you are investigating; reaching the smallest possible size is unnecessary.
 
-In these experiments, changing page size helped us decide what to optimise and whether a proposed repair was worth keeping. That is the purpose of Batch Overhead Amplification: make a cost easier to investigate, then let the complete workload decide whether the change helped.
+Changing batch size helps identify what to optimise and whether a proposed repair is worth keeping. That is the purpose of Batch Overhead Amplification: make a cost easier to investigate, then let the complete workload decide whether the change helped.

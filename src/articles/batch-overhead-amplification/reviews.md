@@ -195,3 +195,13 @@ Reviewed article SHA-256: `52ec37e21ddf16a15572e4a068ccba2b89e6d5251124ea0be2794
 Tom requested a phone-accessible release preview with the production release held. The article is now eligible for the static build; publication remains controlled by the unmerged release PR into `publish`. Article prose is unchanged. The approved subtitle, linked tags and formula presentation accompany the preview.
 
 Article SHA-256: `feaf9dcb9a37bedf7658f13a306c0751883a8ef4966a525e9ec9912fd0749159`. Historical reviews above retain their original scope and digests.
+
+## General applicability correction (2026-11-15)
+
+Removed the event-sourcing restriction from the subtitle. A short bridge explains how the diagnostic applies to batched database reads, API requests, imports and message processing; the closing method now uses general batch terminology. The banking investigation remains the worked example. Its approved opening, measurements, figures, formula and attribution are unchanged; the formula's lead now explicitly scopes it to the example.
+
+Architecture and JTBD reviews passed before editing. Voice review passed the exact proposed copy. A scoped accessibility review passed comprehension and heading/link clarity. The independent content-risk review passed all five axes: factual, reputational, claims, attribution and reader-respect. The broader examples make no additional benchmark claims.
+
+The static build passed, and the exported HTML contains the revised subtitle, applicability paragraph and closing heading. The pipeline assessment scored commit, push and release-preview risk at 5/25, within the current policy. Production publication remains held. Historical review receipts above retain their original scope.
+
+Reviewed article SHA-256: `12db6d7c461c5b70dea7b3f7b6ee9d7a74c8bedda93e790aedbd5532cf179847`.
