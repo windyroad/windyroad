@@ -225,3 +225,9 @@ Replaced the repeated water-and-rocks explanation with an explicit statement tha
 Architecture, JTBD, exact-sentence voice and scoped accessibility reviews passed. A fresh cold reader found the contributions clearly distinguished and no material attribution or concision issue. Independent content-risk review passed all five axes; pipeline risk was 5/25 for commit, push and preview delivery. The static build passed. This is a one-sentence correction; earlier full-article reviews retain their scope and production remains held.
 
 Reviewed article SHA-256: `f330adc89d75ecd7d40dbd178fd3419a4b05424986295404ca6fe0db026ab5f6`.
+
+## Remove redundant attribution (2026-11-17)
+
+Removed the Jason Yip sentence at Tom's request. The earlier Ohno attribution and the Goldratt setup-cost example remain; no new historical claim is introduced. Architecture, JTBD and exact-deletion voice reviews passed. Independent content-risk review passed all five axes for the bounded deletion. The static build passed, and the exported article retains Ohno and Goldratt without the removed sentence. Historical reviews retain their original scope; production publication remains held.
+
+Reviewed article SHA-256: `d86e23e7b32d12c6e13d19ace2feb2b0d81a85285329abb13284affd9b92c8ee`.
