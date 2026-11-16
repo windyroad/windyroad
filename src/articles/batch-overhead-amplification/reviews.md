@@ -217,3 +217,11 @@ All seven final critics returned READY. The second cold reader and brevity criti
 Architecture and JTBD reviews passed the editorial scope before revision. Final voice and scoped source-accessibility reviews passed the exact article below. An independent content-risk review passed all five axes (factual, reputational, claims, attribution and reader-respect), and pipeline risk scored 5/25 for commit, push and preview delivery. The static build passed. Historical receipts retain their original scope; production publication remains held.
 
 Reviewed article SHA-256: `d070003b6dad188b7ae770327a95e7959fdbedee7fa2621fe7f30066487ad6bf`.
+
+## Ohno and Yip attribution clarification (2026-11-16)
+
+Replaced the repeated water-and-rocks explanation with an explicit statement that Yip applies Ohno's analogy to batch size and transaction costs. The opening Ohno attribution, existing source links and established-idea framing remain unchanged. Yip's slide 32 was checked directly.
+
+Architecture, JTBD, exact-sentence voice and scoped accessibility reviews passed. A fresh cold reader found the contributions clearly distinguished and no material attribution or concision issue. Independent content-risk review passed all five axes; pipeline risk was 5/25 for commit, push and preview delivery. The static build passed. This is a one-sentence correction; earlier full-article reviews retain their scope and production remains held.
+
+Reviewed article SHA-256: `f330adc89d75ecd7d40dbd178fd3419a4b05424986295404ca6fe0db026ab5f6`.

@@ -53,7 +53,7 @@ This approximation assumes many mostly full pages and roughly constant overhead 
 
 Count the suspected work: query starts, key lookups or processor setup. Elapsed time alone cannot identify the cause, because page size can also change caching, concurrency and memory behaviour.
 
-Jason Yip gives this idea a useful expression in [*Agile as doctrine*, slide 32](https://www.slideshare.net/slideshow/frugagile-2021-agile-as-doctrine-and-thats-a-good-thing/250446669): batch size is the water level and transaction costs are the rocks. Goldratt describes small production batches exposing expensive setups in [*Standing on the shoulders of giants*](https://doi.org/10.1590/S0104-530X2009000300002). Batch Overhead Amplification names our application of that established idea to a performance investigation.
+Jason Yip applies Ohno’s analogy to batch size and transaction costs in [*Agile as doctrine*, slide 32](https://www.slideshare.net/slideshow/frugagile-2021-agile-as-doctrine-and-thats-a-good-thing/250446669). Goldratt describes small production batches exposing expensive setups in [*Standing on the shoulders of giants*](https://doi.org/10.1590/S0104-530X2009000300002). Batch Overhead Amplification names our application of that established idea to a performance investigation.
 
 The diagnostic batch size serves a different purpose from the operating size. Reinertsen’s [*Iteration vs. Batch Size*](https://www.leanproductflow.com/iteration-vs-batch-size/) describes the trade-off between transaction costs and holding costs. For software releases, completed changes waiting to ship and delayed feedback also have a cost. Repeating build and deployment work more often can be worthwhile if smaller releases reduce that waiting.
 
