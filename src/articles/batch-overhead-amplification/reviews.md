@@ -205,3 +205,15 @@ Architecture and JTBD reviews passed before editing. Voice review passed the exa
 The static build passed, and the exported HTML contains the revised subtitle, applicability paragraph and closing heading. The pipeline assessment scored commit, push and release-preview risk at 5/25, within the current policy. Production publication remains held. Historical review receipts above retain their original scope.
 
 Reviewed article SHA-256: `12db6d7c461c5b70dea7b3f7b6ee9d7a74c8bedda93e790aedbd5532cf179847`.
+
+## Release-process scope and critic iteration (2026-11-16)
+
+Tom requested software release processes as an explicit application, then added cold-read and Pascal-inspired brevity critics to the cognitive accessibility, Reinertsen perspective, Yip perspective, performance and technical-writing reviews. The perspective reviews do not imply review or endorsement by Reinertsen, Yip or Pascal.
+
+The first round identified a misclassification of per-event construction as transaction overhead, missing release waiting/feedback costs, an insufficiently scoped page-size approximation, ambiguous stable-counter guidance and avoidable repetition. The revision resolves those issues, distinguishes the separate batching layers and experiments, and makes clear that the observed operating settings were not established optima. The context-reuse implementation is condensed to its mechanism, safety conditions and results.
+
+All seven final critics returned READY. The second cold reader and brevity critic were new agents without conversation or review history. Their remaining suggestions were optional; the unexplained identity-hashing aside was removed. The approved opening, throughput grounding, all three figures, meaningful numerical results, failed cursor trials and requested production observation remain. Duplicate table rows and repeated conclusions were removed. Word count fell from 2,187 in the first review draft to 1,714.
+
+Architecture and JTBD reviews passed the editorial scope before revision. Final voice and scoped source-accessibility reviews passed the exact article below. An independent content-risk review passed all five axes (factual, reputational, claims, attribution and reader-respect), and pipeline risk scored 5/25 for commit, push and preview delivery. The static build passed. Historical receipts retain their original scope; production publication remains held.
+
+Reviewed article SHA-256: `d070003b6dad188b7ae770327a95e7959fdbedee7fa2621fe7f30066487ad6bf`.
