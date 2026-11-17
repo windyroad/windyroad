@@ -231,3 +231,13 @@ Reviewed article SHA-256: `f330adc89d75ecd7d40dbd178fd3419a4b05424986295404ca6fe
 Removed the Jason Yip sentence at Tom's request. The earlier Ohno attribution and the Goldratt setup-cost example remain; no new historical claim is introduced. Architecture, JTBD and exact-deletion voice reviews passed. Independent content-risk review passed all five axes for the bounded deletion. The static build passed, and the exported article retains Ohno and Goldratt without the removed sentence. Historical reviews retain their original scope; production publication remains held.
 
 Reviewed article SHA-256: `d86e23e7b32d12c6e13d19ace2feb2b0d81a85285329abb13284affd9b92c8ee`.
+
+## Lead with the matched performance result (2026-11-18)
+
+The opening now leads with the later account-list improvement, then returns to the 469-event diagnostic. A new section explains the matched comparison: the same 51,015 source records and HTTP route took 35,469.160333 ms before output reuse and 3,804.494083 ms afterwards. Repeated reconstruction read 867,255 records across 17 passes; the prototype read the source once. The subsequent version with an encoded-output retention cap took 4,510.555625 ms. These were individual local synthetic runs of a proposed repair, not a production speedup measurement. The earlier production observation retains its separate scope.
+
+Architecture and JTBD edit reviews passed before editing. The independent performance critic checked the three recorded runs and test construction, including complete output and account-result assertions. Exact-copy voice review, a fresh introduction editor and the scoped cognitive-accessibility review passed. The stale reference to the opening example in the formula qualification now names the 469-event diagnostic. No benchmark was rerun.
+
+Independent content-risk verdict: factual=low, reputational=low, claims=low, attribution=low, reader-respect=low; PASS with no flags. The static build passed on the supported retry after Next.js displayed a dependency security advisory. The exported HTML contains the new opening and follow-up. No dependency or build-policy change was made as part of this editorial revision. Historical reviews retain their original scope; production publication remains held.
+
+Reviewed article SHA-256: `9cdfb4c96120ec249310e10b6da69020811ddae7b0ee32d93482f358edd2d54b`.

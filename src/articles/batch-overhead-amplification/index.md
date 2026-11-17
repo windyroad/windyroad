@@ -7,9 +7,11 @@ tags: ['performance', 'lean', 'batch size', 'software delivery']
 draft: false
 ---
 
-To find out where a banking app spent its time rebuilding a balance, we deliberately made the rebuild slower. We split the same 469 events across 30 pages, making the server repeat work that was easy to miss when the history fitted on one page.
+A banking app’s account-list load fell from **35.5 seconds to 3.80 seconds** in a local test of a proposed repair. The same **51,015 source records** were processed at more than **13,000 source records per second**. The repair stopped the app rebuilding the entire account history for every page of results.
 
-The banking app reconstructs the balance from the account’s event history. After a warm-up run, we timed a fresh rebuild on the server. That included fetching the events, looking up keys, decrypting payloads and replaying the events to produce the balance.
+Earlier in the investigation, we deliberately slowed a much smaller rebuild by splitting the same 469 events across 30 pages. That made the server repeat work that was easy to miss when the history fitted on one page.
+
+The app reconstructs balances from the account’s stored events. After a warm-up run, we timed a fresh server rebuild of that 469-event history, including event fetching, key lookups, payload decryption and replay to produce the balance.
 
 With a limit of 1,024 events per page, the rebuild took 1.055 seconds, or about 445 events per second. At 16 events per page it took 9.040 seconds, or about 52 events per second. Key lookups rose from one to 28, while applying the events still took about 10 milliseconds.
 
@@ -49,7 +51,7 @@ For event pages, a simple model shows how the two costs scale:
   </mrow>
 </math></p>
 
-This approximation assumes many mostly full pages and roughly constant overhead per page. It describes the scaling effect, rather than predicting the opening example’s timings. Hold the event count fixed and reduce the page size: if per-event work stays stable, page overhead takes a larger share of the total.
+This approximation assumes many mostly full pages and roughly constant overhead per page. It describes the scaling effect, rather than predicting the 469-event diagnostic timings. Hold the event count fixed and reduce the page size: if per-event work stays stable, page overhead takes a larger share of the total.
 
 Count the suspected work: query starts, key lookups or processor setup. Elapsed time alone cannot identify the cause, because page size can also change caching, concurrency and memory behaviour.
 
@@ -108,6 +110,14 @@ In a separate browser comparison, we varied the number of events per REST respon
 Moving from 1,024 to 2,048 saved about 0.17 seconds while the median longest pause rose from 158 to 276 milliseconds. At 512, completion time was almost unchanged from 1,024, with substantially shorter pauses. REST pages remained at 1,024 in that iteration; the comparison exposed the trade-off without establishing an optimal operating size.
 
 We also observed substantially faster account loading in everyday production use after the optimisation work.
+
+## When each page rebuilt the whole history
+
+The later account-list test behind the opening result used 51,015 source records, representing 17,004 complete provider messages and producing 17,005 account updates. The HTTP route returned the account list after processing those updates in pages of 1,024. Each page restarted reconstruction from the beginning: 17 passes read 867,255 source records and took **35.5 seconds**.
+
+The prototype reconstructed the history once and reused its outputs across successive pages. It read all 51,015 source records once, processed every account update and returned the expected balance, recording time and purpose in **3.80 seconds**. That is about **9.3 times faster**, or **89% less elapsed time**, for the same fixture through the same HTTP route.
+
+A subsequent version capped the amount of output retained between pages and completed the same test in **4.51 seconds**. These were individual local synthetic test runs of a proposed repair, which had not yet been deployed. The lesson carries through from the small-page diagnostic: count what each page causes the system to do. Here, a page boundary was repeating the entire reconstruction.
 
 ## Use batch size to choose the next experiment
 
