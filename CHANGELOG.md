@@ -1,5 +1,11 @@
 # windy-road
 
+## 2.13.7
+
+### Patch Changes
+
+- fb5a34f: Add Batch Overhead Amplification, with a worked performance investigation, charts, article subtitles and linked tags.
+
 ## 2.13.6
 
 ### Patch Changes

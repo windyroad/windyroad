@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1014" viewBox="0 0 600 507" role="img" aria-labelledby="title desc">
+<title id="title">Database queries and application pages</title><desc id="desc">The existing reader opens a new query for each application page. In the prototype one bounded query opens a cursor. The cursor fetches database batches that feed several eight-event application pages.</desc>
+<rect width="600" height="507" fill="#0F172A"/>
+<g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#F8FAFC" font-size="22">
+<text x="40" y="46" font-size="25" font-weight="700">Database queries and application pages</text>
+<path d="M40 63H560" stroke="#334155"/><text x="40" y="91" fill="#93C5FD" font-weight="700">Existing reader</text>
+<rect x="40" y="106" width="160" height="49" rx="8" fill="#1E293B" stroke="#3B82F6"/><text x="120" y="138" text-anchor="middle">Query 1</text>
+<rect x="220" y="106" width="160" height="49" rx="8" fill="#1E293B" stroke="#3B82F6"/><text x="300" y="138" text-anchor="middle">Query 2</text>
+<rect x="400" y="106" width="160" height="49" rx="8" fill="#1E293B" stroke="#3B82F6"/><text x="480" y="138" text-anchor="middle">Query 3</text>
+<path d="M120 158v26m-6 -6l6 6 6 -6" stroke="#94A3B8" stroke-width="3" fill="none"/>
+<path d="M300 158v26m-6 -6l6 6 6 -6" stroke="#94A3B8" stroke-width="3" fill="none"/>
+<path d="M480 158v26m-6 -6l6 6 6 -6" stroke="#94A3B8" stroke-width="3" fill="none"/>
+<rect x="40" y="190" width="160" height="49" rx="8" fill="#1E293B" stroke="#22C55E"/><text x="120" y="222" text-anchor="middle">Page 1</text>
+<rect x="220" y="190" width="160" height="49" rx="8" fill="#1E293B" stroke="#22C55E"/><text x="300" y="222" text-anchor="middle">Page 2</text>
+<rect x="400" y="190" width="160" height="49" rx="8" fill="#1E293B" stroke="#22C55E"/><text x="480" y="222" text-anchor="middle">Page 3</text>
+
+<path d="M40 260H560" stroke="#64748B"/>
+<text x="40" y="297" fill="#86EFAC" font-weight="700">Cursor prototype</text>
+<rect x="40" y="311" width="520" height="70" rx="8" fill="#1E293B" stroke="#3B82F6"/>
+<text x="300" y="340" text-anchor="middle" font-weight="600">One query opens a cursor</text>
+<text x="300" y="367" text-anchor="middle">The cursor fetches database batches</text>
+<path d="M120 384v26m-6 -6l6 6 6 -6" stroke="#94A3B8" stroke-width="3" fill="none"/>
+<path d="M300 384v26m-6 -6l6 6 6 -6" stroke="#94A3B8" stroke-width="3" fill="none"/>
+<path d="M480 384v26m-6 -6l6 6 6 -6" stroke="#94A3B8" stroke-width="3" fill="none"/>
+<rect x="40" y="416" width="160" height="49" rx="8" fill="#1E293B" stroke="#22C55E"/><text x="120" y="448" text-anchor="middle">Page 1</text>
+<rect x="220" y="416" width="160" height="49" rx="8" fill="#1E293B" stroke="#22C55E"/><text x="300" y="448" text-anchor="middle">Page 2</text>
+<rect x="400" y="416" width="160" height="49" rx="8" fill="#1E293B" stroke="#22C55E"/><text x="480" y="448" text-anchor="middle">Page 3</text>
+
+<text x="300" y="490" text-anchor="middle">Eight events per application page</text>
+</g>
+</svg>

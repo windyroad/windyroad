@@ -30,6 +30,12 @@ Personal consulting site for Tom Howard, built with Next.js 15 (static export).
 
 This project enforces quality through existing deterministic gates. Do not bypass them.
 
+For cognitive-accessibility reviews, pass `.claude/agents/cognitive-accessibility.md` to the reviewer and require it to apply that repository guidance alongside its specialist instructions.
+
+For blog cold-read reviews, use a fresh subagent and the same guide's **First-encounter Comprehension** section. Supply the article and its figures without the conversation, author rationale or earlier verdicts. Require findings in reading order, including visible chart labels at their first appearance; later explanations must not erase an earlier comprehension gap.
+
+For blog concept or structure changes, also invoke a fresh reviewer using `.claude/agents/wr-blog-article-critic.md` and its owned rubric. Supply the whole article and its linked figures for an editorial review of the argument and placement of ideas. For the initial review, do not supply the drafter's rationale or instructions to preserve existing paragraph positions. Keep this verdict separate from the cold-read comprehension verdict, and record the actual coverage of each in the article's review receipt.
+
 **Build:**
 
 - `npm run build` — Next.js static export (produces `out/` directory)
