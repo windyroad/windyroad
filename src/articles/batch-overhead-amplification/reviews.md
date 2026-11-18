@@ -295,3 +295,26 @@ Architecture, JTBD and exact-copy voice reviews passed before editing. Independe
 The static build passed on the supported unchanged retry after the existing Next.js advisory, and the whitespace check passed. No benchmark was rerun. Production publication remains held.
 
 Reviewed article SHA-256: `f56b62153874d1ce6c1729ae0f5c12f05e8a1233b08236c7923eb56d873aa677`.
+
+## Keep the concept together and restore editorial review (2026-11-19)
+
+Tom identified the Ohno attribution as disconnected from the technique introduction and the applicability list as sounding exhaustive. The attribution now sits beside the definition, with its comparison expressed in general batch terms. Applicability states the relevant condition before explicitly illustrative examples. All measurements and figures are unchanged.
+
+The previous revision's scoped comprehension and technical reviews did not provide a whole-article editorial verdict. The drafter also told a pre-edit reviewer to preserve the attribution's existing position. Those choices constrained the review around the draft's structure. AGENTS.md now explicitly routes conceptual and structural revisions through the existing editorial critic as well as the separate cold reader. Its owned rubric asks for whole-argument cohesion, useful placement of sources and clear scope; it adds no new critic or numbered checklist.
+
+The behavioural check used fresh sessions without the conversation, complaints, intended fixes or prior verdicts:
+
+- `structure_probe_a_1911` reviewed the original article from commit `8869ea860c4fcf5245b109c98c86cb48ab40a6d1`, SHA-256 `f56b62153874d1ce6c1729ae0f5c12f05e8a1233b08236c7923eb56d873aa677`, with the revised rubric and unchanged linked figures. Verdict: WEAKNESSES_FOUND. It explicitly found that the Ohno paragraph interrupted the reader's question about the slower 469-event rebuild. It also questioned the separated Goldratt/operating-size discussion, delayed headline experiment qualifications and missing pull quote. It did not flag the original applicability list.
+- `structure_editor_b_1911` independently reviewed the corrected article, SHA-256 `de037864cf0e7f3485c89e16a952823bdb4655575e0728110c05b008e7434931`. It recognised the definition and conditional applicability as coherent and the examples as non-exhaustive. Verdict: WEAKNESSES_FOUND for three other concerns: unclear status of the 64-event operating choice, the detached production observation, and the missing early pull quote.
+- The operating choice now reads as a working setting with inconclusive timing evidence. The unchanged production observation accompanies retained server optimisation, separately from the later undeployed prototype. The pull quote remains omitted for a genre-specific reason: the opening benefit chart and immediately following method definition already provide emphasis, and another callout would interrupt that short transition.
+- Fresh round-two reviewer `structure_editor_final_1911` read the full revised article and figures, with the previous weaknesses and remediation notes allowed by the existing critic contract. Verdict: PASS, no weaknesses or overrides. It accepted the operating-choice clarification, production-observation placement and reason for omitting the pull quote.
+
+These are observed reviewer judgements, not a controlled comparison with the old rubric or proof of universal detection. In particular, the original-list omission remains part of the evaluation record rather than being claimed as a detected defect.
+
+Architecture, JTBD and exact-copy voice reviews passed. Fresh content-risk review passed all five axes. The separate fresh cold reader recorded findings in order for lines 1–50 and the first two figures and passed comprehension; it inspected visible SVG text and geometry, not rendered layout. Its optional suggestion to remove the throughput figures was not applied because Tom requested them. The later editorial refinement leaves this opening excerpt unchanged.
+
+The final static build passed on the supported unchanged retry after the existing Next.js advisory; the whitespace check passed. No benchmark was rerun and no dependency or build-policy change was made. Production publication remains held.
+
+Reviewed article SHA-256: `ba0190765c774e223cdb8f605610160b5b0dc56599bb809607451f10ee6309f4`.
+
+Editorial rubric SHA-256: `8dc336662d8a2d8f19ecb817ee38d32b3594c5cb09ba2133f24d7e298e9f7e26`.

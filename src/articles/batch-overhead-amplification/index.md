@@ -17,7 +17,9 @@ We cut a banking app’s account-list loading time by **almost 90%**, from **35.
 
 **Batch Overhead Amplification** makes those costs easier to spot. Keep the workload fixed and deliberately use smaller batches. Work repeated for each batch becomes more prominent, revealing where to investigate. Reduce avoidable overhead, then choose a batch size for normal operation.
 
-The diagnostic applies to database reads, API requests, file imports, message processing and software release processes.
+The diagnostic draws on Taiichi Ohno’s analogy of lowering the water to expose the rocks. In Ohno’s example, reducing inventory exposes problems on the production line. Smaller batches similarly expose the overhead of handling each batch. [Lean Enterprise Institute on Ohno’s analogy](https://www.lean.org/the-lean-post/articles/once-again-heres-why-jit-matters/).
+
+The diagnostic can help wherever work is batched and handling each batch adds overhead. Examples include database reads, API requests, file imports, message processing and software release processes.
 
 ## A smaller batch exposed the cost
 
@@ -28,8 +30,6 @@ We deliberately split the same history across 30 pages. That made the server rep
 With a limit of 1,024 events per page, the rebuild took 1.055 seconds, or about 445 events per second. At 16 events per page it took 9.040 seconds, or about 52 events per second. Key lookups rose from one to 28, while applying the events still took about 10 milliseconds.
 
 ![Rebuild time rose from 1.055 to 9.040 seconds for the same 469 events when the page limit fell from 1,024 to 16.](/img/social/batch-overhead-amplification-results.svg)
-
-The diagnostic draws on Taiichi Ohno’s analogy of lowering the water to expose the rocks. In Ohno’s example, reducing inventory exposes problems on the production line. In this experiment, smaller pages expose the work the server repeats for each page. [Lean Enterprise Institute on Ohno’s analogy](https://www.lean.org/the-lean-post/articles/once-again-heres-why-jit-matters/).
 
 ## What the slowdown told us
 
@@ -104,7 +104,9 @@ The table shows median elapsed times. The candidate was faster in 11 of 12 pairs
 
 ## Tune the page size after reducing overhead
 
-Context reuse reduced per-event work. After further simplification, we tuned the server application page size. In this later local, synthetic 50,000-event benchmark, 64-event pages took a median **4.92 seconds**, about **10,160 events per second**, compared with 5.07 seconds at 256. We adopted 64, although the small timing difference did not establish a clear winner.
+Context reuse reduced per-event work. After further simplification, we tuned the server application page size. In this later local, synthetic 50,000-event benchmark, 64-event pages took a median **4.92 seconds**, about **10,160 events per second**, compared with 5.07 seconds at 256. We adopted 64 as the working setting, while treating the small timing difference as inconclusive.
+
+We also observed substantially faster account loading in everyday production use after the optimisation work.
 
 ### Browser pages introduce a responsiveness trade-off
 
@@ -120,8 +122,6 @@ Larger browser responses barely shortened the rebuild but produced much longer p
 | 2,048 | 6.07 | 276 |
 
 Moving from 1,024 to 2,048 saved about 0.17 seconds while the median longest pause rose from 158 to 276 milliseconds. At 512, completion time was almost unchanged from 1,024, with substantially shorter pauses. REST pages remained at 1,024 in that iteration; the comparison exposed the trade-off without establishing an optimal operating size.
-
-We also observed substantially faster account loading in everyday production use after the optimisation work.
 
 ## When each page rebuilt the whole history
 
