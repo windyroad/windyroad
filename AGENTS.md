@@ -32,6 +32,8 @@ This project enforces quality through existing deterministic gates. Do not bypas
 
 For cognitive-accessibility reviews, pass `.claude/agents/cognitive-accessibility.md` to the reviewer and require it to apply that repository guidance alongside its specialist instructions.
 
+For blog cold-read reviews, use a fresh subagent and the same guide's **First-encounter Comprehension** section. Supply the article and its figures without the conversation, author rationale or earlier verdicts. Require findings in reading order, including visible chart labels at their first appearance; later explanations must not erase an earlier comprehension gap.
+
 **Build:**
 
 - `npm run build` — Next.js static export (produces `out/` directory)

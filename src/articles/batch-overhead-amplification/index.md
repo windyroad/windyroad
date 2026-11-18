@@ -7,9 +7,9 @@ tags: ['performance', 'lean', 'batch size', 'software delivery']
 draft: false
 ---
 
-A proposed repair cut a banking app’s account-list loading time from **more than half a minute to a few seconds** in a local test. The repair reconstructed the account history once, instead of starting again for every page of results.
+A proposed repair cut a banking app’s account-list loading time from **more than half a minute to a few seconds** in a local test.
 
-![The same 51,015 source records took 35.5 seconds before the repair, 3.80 seconds with output reuse and 4.51 seconds in the later version that limited the results kept between pages. These were individual local synthetic runs.](/img/social/batch-overhead-amplification-account-list.svg)
+![Loading the account list from the same 51,015 source records took 35.5 seconds before optimisation and 3.80 seconds afterwards. Individual local synthetic test runs.](/img/social/batch-overhead-amplification-account-list.svg)
 
 Earlier in the investigation, we deliberately slowed a much smaller rebuild by splitting the same 469 events across 30 pages. That made the server repeat work that was easy to miss when the history fitted on one page.
 

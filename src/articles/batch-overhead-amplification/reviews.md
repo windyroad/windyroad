@@ -257,3 +257,19 @@ Reviewed article SHA-256: `bd709ab03b84d3ad8b6ac3ece8ced21a338fc647e4acdaa0839c6
 Account-list SVG SHA-256: `c9abbfc8ac9fc11e755d6f42dc58926d66edd549f15a100cf7ffc1c84b23f640`.
 
 Browser SVG SHA-256: `a3bc777ced8d264ca59206e4960a1451d24f028ae76ee43eb3b4f5fe0ff1d555`.
+
+## First-encounter clarity correction (2026-11-18)
+
+Tom identified two opening-chart labels that the previous cold reviews had missed: “Output reuse” and “Stored results limited”. Those passes did not establish that the visible labels made sense before the later implementation explanation. The cognitive-accessibility guide now requires first-encounter reading across prose and figures, distinguishes visible labels from unseen alt text, and preserves early findings when explanations arrive later. AGENTS.md routes fresh cold readers to that guidance.
+
+Blind behavioural evaluation on six excerpts found the original label defect and an analogous release-process defect, while accepting four clear controls, including the same labels after prior explanation. A continuation with the later mechanism explanation preserved the original finding. Inputs, guidance and reviewer responses are recorded in `.claude/agents/evals/cognitive-accessibility/first-encounter/results.md`. This demonstrates the exercised cases, not universal reviewer reliability.
+
+The opening now states the benefit without the premature reconstruction explanation. Its chart compares “Before optimisation” and “After optimisation” using the same 35.5-second and 3.80-second measurements. The subsequent 4.51-second version remains in the detailed section where its change is explained. A fresh cold reader passed the corrected excerpt. Architecture, JTBD, exact-copy voice, style and scoped accessibility reviews passed.
+
+The static build passed on the supported retry after the existing Next.js advisory. Chrome showed the revised figure at desktop width and 390 by 844 pixels; all five figures loaded and the mobile document had no horizontal overflow. No benchmark was rerun and no whole-page or assistive-technology conformance is claimed. Production publication remains held.
+
+Reviewed article SHA-256: `a993b149110295130c92a34fc052863d9058ef787d1335a8bbac707794322221`.
+
+Account-list SVG SHA-256: `69a1e31684d355c250baf7b98956a3519b99c2aa97d61c8850322a431426ba67`.
+
+Cognitive-accessibility guide SHA-256: `d6abc33957bb274764f30265ed28bb8be3775254dbe754decce41a9b39f1c9ef`.
