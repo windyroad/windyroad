@@ -11,17 +11,25 @@ We cut a banking app’s account-list loading time by **almost 90%**, from **35.
 
 ![Loading the account list from the same 51,015 source records took 35.5 seconds before optimisation and 3.80 seconds afterwards: almost 90% less loading time.](/img/social/batch-overhead-amplification-account-list.svg)
 
-Earlier in the investigation, we deliberately slowed a much smaller rebuild by splitting the same 469 events across 30 pages. That made the server repeat work that was easy to miss when the history fitted on one page.
+## Optimising batch overhead
 
-The app reconstructs balances from the account’s stored events. After a warm-up run, we timed a fresh server rebuild of that 469-event history, including event fetching, key lookups, payload decryption and replay to produce the balance.
+**Batch overhead** is the work needed to handle a batch, beyond the work on its individual items. It might include starting a database query, checking permissions or preparing a software release. Larger batches spread that overhead across more items.
+
+**Batch Overhead Amplification** makes those costs easier to spot. Keep the workload fixed and deliberately use smaller batches. Work repeated for each batch becomes more prominent, revealing where to investigate. Reduce avoidable overhead, then choose a batch size for normal operation.
+
+The diagnostic applies to database reads, API requests, file imports, message processing and software release processes.
+
+## A smaller batch exposed the cost
+
+The banking app reconstructs balances from an account’s stored events, fetched in pages. We used a 469-event history for an earlier experiment. After a warm-up run, we timed a fresh server rebuild, including event fetching, key lookups, payload decryption and replay to produce the balance.
+
+We deliberately split the same history across 30 pages. That made the server repeat work that was easy to miss when the history fitted on one page.
 
 With a limit of 1,024 events per page, the rebuild took 1.055 seconds, or about 445 events per second. At 16 events per page it took 9.040 seconds, or about 52 events per second. Key lookups rose from one to 28, while applying the events still took about 10 milliseconds.
 
 ![Rebuild time rose from 1.055 to 9.040 seconds for the same 469 events when the page limit fell from 1,024 to 16.](/img/social/batch-overhead-amplification-results.svg)
 
-We call this diagnostic **Batch Overhead Amplification**. It draws on Taiichi Ohno’s analogy of lowering the water to expose the rocks. In Ohno’s example, reducing inventory exposes problems on the production line. In this experiment, smaller pages expose the work the server repeats for each page. [Lean Enterprise Institute on Ohno’s analogy](https://www.lean.org/the-lean-post/articles/once-again-heres-why-jit-matters/).
-
-The same diagnostic can be used with database reads, API requests, file imports, message processing and software release processes. In the banking example, the batches are pages of events; in a release process, they are groups of changes shipped together.
+The diagnostic draws on Taiichi Ohno’s analogy of lowering the water to expose the rocks. In Ohno’s example, reducing inventory exposes problems on the production line. In this experiment, smaller pages expose the work the server repeats for each page. [Lean Enterprise Institute on Ohno’s analogy](https://www.lean.org/the-lean-post/articles/once-again-heres-why-jit-matters/).
 
 ## What the slowdown told us
 

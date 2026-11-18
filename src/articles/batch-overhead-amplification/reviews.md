@@ -285,3 +285,13 @@ The static build passed on the supported retry after the existing Next.js adviso
 Reviewed article SHA-256: `b2da32b8053db5cfb9a6a908d5d47c754b1eeb68c23b36bee7a6fbfdbe53dac7`.
 
 Account-list SVG SHA-256: `3eaf6f411162b52f95f5f410f4cd0df6c2946be75e4aa75bb4ba47b23306a311`.
+
+## Introduce the optimisation approach before the example (2026-11-19)
+
+Tom requested an introduction to batch overhead optimisation immediately after the benefit chart. The new section defines batch overhead, explains how deliberately smaller batches expose it, distinguishes diagnostic and operating sizes, and establishes applications including software release processes. The banking example follows under its own heading, with events and pages introduced before the 469-event measurements. The benefit-led opening, all measured values, figures and Ohno attribution are preserved.
+
+Architecture, JTBD and exact-copy voice reviews passed before editing. Independent technical/brevity and scoped accessibility reviews passed the final source. An initial cold reviewer reported reading ahead before figure inspection; that verdict was excluded from the cold-read gate. A replacement fresh reviewer read only lines 1–12 and the first figure, then 14–20, then 22–30 and the second figure, recording findings before each next block; it finished with lines 32–50. Its scoped verdict was PASS with no material comprehension weaknesses.
+
+The static build passed on the supported unchanged retry after the existing Next.js advisory, and the whitespace check passed. No benchmark was rerun. Production publication remains held.
+
+Reviewed article SHA-256: `f56b62153874d1ce6c1729ae0f5c12f05e8a1233b08236c7923eb56d873aa677`.
