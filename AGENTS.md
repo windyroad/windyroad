@@ -30,6 +30,8 @@ Personal consulting site for Tom Howard, built with Next.js 15 (static export).
 
 This project enforces quality through existing deterministic gates. Do not bypass them.
 
+For cognitive-accessibility reviews, pass `.claude/agents/cognitive-accessibility.md` to the reviewer and require it to apply that repository guidance alongside its specialist instructions.
+
 **Build:**
 
 - `npm run build` — Next.js static export (produces `out/` directory)

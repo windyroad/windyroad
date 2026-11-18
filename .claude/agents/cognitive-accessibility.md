@@ -191,6 +191,17 @@ For complex tasks or multi-step flows:
 
 Flag any interaction that requires the user to remember information from one screen to apply on another, without that information being visible or easily retrievable.
 
+### Numerical Comparisons
+
+Check whether readers can see the significance of an important comparison without calculating differences, ratios or percentages, or holding several values in memory. This applies to article openings, results, trends and choices as well as UI copy.
+
+- Flag important comparisons presented only as numbers when a simple visual would make their scale clearer. Bold numbers, a multiplier or a percentage do not automatically solve this: they are still numbers to interpret. Recommend an appropriate visual beside the claim, such as aligned bars for before-and-after values or a line chart for a trend. A chart elsewhere showing a different comparison does not resolve the finding.
+- State the takeaway in plain language alongside the evidence. Flag number-heavy passages where totals, rates and timings compete with the main result, or where the meaning appears much later. Keep supporting precision available without making it the reader's first task.
+- Preserve what is being compared: consistent units, a clear baseline and comparable workloads or populations. For length-encoded bars, use a common zero baseline. Do not invent a speedup from unlike measurements or confuse percentage changes with percentage-point differences.
+- Keep the visual's meaning available in text, with labelled values and units; do not rely on colour alone. Recommend the smallest presentation that helps. Isolated quantities, trivial differences and already-clear comparisons do not need a chart by default.
+
+Quote the passage, explain the comprehension burden and give a concrete presentation fix. Distinguish a material comprehension defect from an optional preference for a different chart style. Report this as COGA guidance; absence of a chart alone is not a WCAG failure.
+
 ### Distraction and Attention
 
 - Auto-playing content (video, animation, audio) must have a pause/stop mechanism
