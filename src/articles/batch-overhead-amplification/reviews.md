@@ -273,3 +273,15 @@ Reviewed article SHA-256: `a993b149110295130c92a34fc052863d9058ef787d1335a8bbac7
 Account-list SVG SHA-256: `69a1e31684d355c250baf7b98956a3519b99c2aa97d61c8850322a431426ba67`.
 
 Cognitive-accessibility guide SHA-256: `d6abc33957bb274764f30265ed28bb8be3775254dbe754decce41a9b39f1c9ef`.
+
+## Lead with the measured benefit (2026-11-18)
+
+Tom asked for the opening to sell the observed benefit and diagnostic approach. It now states the almost 90% reduction in loading time, from 35.5 seconds to 3.80 seconds, then explains that deliberately shrinking batches made the overhead stand out. The chart repeats the benefit. The detailed results retain the individual local synthetic test conditions, the measurement's deployment status and the later 4.51-second result. The underlying observations and comparison are unchanged.
+
+Architecture, JTBD, exact-copy voice and style reviews passed before editing. A fresh cold reader, given only the opening and first figure plus the repository's comprehension guidance, passed the revised excerpt: the outcome is immediate, the diagnostic provides a reason to continue, and the proportional chart makes the scale visible. That verdict is scoped to comprehension and does not independently substantiate the measurements.
+
+The static build passed on the supported retry after the existing Next.js advisory. The SVG was rendered and visually inspected; the replacement line fits without changing fonts, colours, spacing or bar geometry. No benchmark was rerun. Production publication remains held.
+
+Reviewed article SHA-256: `b2da32b8053db5cfb9a6a908d5d47c754b1eeb68c23b36bee7a6fbfdbe53dac7`.
+
+Account-list SVG SHA-256: `3eaf6f411162b52f95f5f410f4cd0df6c2946be75e4aa75bb4ba47b23306a311`.

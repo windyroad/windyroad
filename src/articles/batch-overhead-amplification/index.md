@@ -7,9 +7,9 @@ tags: ['performance', 'lean', 'batch size', 'software delivery']
 draft: false
 ---
 
-A proposed repair cut a banking app’s account-list loading time from **more than half a minute to a few seconds** in a local test.
+We cut a banking app’s account-list loading time by **almost 90%**, from **35.5 seconds to 3.80 seconds**. We found where to optimise by deliberately shrinking batches until the overhead stood out.
 
-![Loading the account list from the same 51,015 source records took 35.5 seconds before optimisation and 3.80 seconds afterwards. Individual local synthetic test runs.](/img/social/batch-overhead-amplification-account-list.svg)
+![Loading the account list from the same 51,015 source records took 35.5 seconds before optimisation and 3.80 seconds afterwards: almost 90% less loading time.](/img/social/batch-overhead-amplification-account-list.svg)
 
 Earlier in the investigation, we deliberately slowed a much smaller rebuild by splitting the same 469 events across 30 pages. That made the server repeat work that was easy to miss when the history fitted on one page.
 
