@@ -166,6 +166,15 @@ Sizes: default (0.75rem 2rem padding) and large (1rem 2.5rem padding).
 - Tag links wrap with a 0.5rem gap. Use 0.2em 0.6em padding, a 4px radius, a 1.75rem minimum height, and the tag background tokens above. Underline on hover and show a 2px `--color-accent-on-dark` focus outline with a 2px offset.
 - Display formulas are centred when they fit. Wider formulas scroll horizontally within their container without shrinking the formula or widening the page.
 
+### Article SVG charts
+
+Standalone article SVG images embed their own colours and fonts because they do not inherit the page's CSS tokens. Follow the existing article illustrations: navy `#0F172A` background, sky `#38BDF8` and amber `#FBBF24` bars, primary text `#F8FAFC` and secondary text `#CBD5E1`. This exception applies to standalone article images, not page or component styles.
+
+- Use Inter with system sans-serif fallbacks and a 600-unit-wide viewBox. Start with 22-unit labels and 25-unit titles; enlarge or wrap where needed for narrow article widths.
+- Label values and units directly. Use a common zero baseline for bars, and separate labelled panels for different units rather than dual axes.
+- Use navy text inside sky or amber bars, or light text outside them. Do not rely on colour to identify a series.
+- Preserve aspect ratio. Check narrow-screen legibility and provide a text equivalent of the chart's meaning and values.
+
 ### Lists
 
 - No bullet points (`list-style: none`)

@@ -7,7 +7,9 @@ tags: ['performance', 'lean', 'batch size', 'software delivery']
 draft: false
 ---
 
-A banking app’s account-list load fell from **35.5 seconds to 3.80 seconds** in a local test of a proposed repair. The same **51,015 source records** were processed at more than **13,000 source records per second**. The repair stopped the app rebuilding the entire account history for every page of results.
+A proposed repair cut a banking app’s account-list loading time from **more than half a minute to a few seconds** in a local test. The repair reconstructed the account history once, instead of starting again for every page of results.
+
+![The same 51,015 source records took 35.5 seconds before the repair, 3.80 seconds with output reuse and 4.51 seconds in the later version that limited the results kept between pages. These were individual local synthetic runs.](/img/social/batch-overhead-amplification-account-list.svg)
 
 Earlier in the investigation, we deliberately slowed a much smaller rebuild by splitting the same 469 events across 30 pages. That made the server repeat work that was easy to miss when the history fitted on one page.
 
@@ -98,7 +100,9 @@ Context reuse reduced per-event work. After further simplification, we tuned the
 
 ### Browser pages introduce a responsiveness trade-off
 
-In a separate browser comparison, we varied the number of events per REST response and timed the full 50,000-event synthetic replay through the dashboard. We also recorded each run’s longest main-thread pause; the table reports the median of those pauses.
+Larger browser responses barely shortened the rebuild but produced much longer pauses during which the browser could not respond. In this separate comparison, we varied the number of events per REST response and timed the full 50,000-event synthetic replay through the dashboard. We also recorded each run’s longest main-thread pause.
+
+![Across REST page sizes of 256, 512, 1,024 and 2,048 events, median rebuild times stayed close at 6.42, 6.28, 6.24 and 6.07 seconds. Median longest main-thread pauses rose from 51 to 87, 158 and 276 milliseconds. The panels use separate zero-based scales; exact values follow in the table.](/img/social/batch-overhead-amplification-browser.svg)
 
 | REST page size (events) | Median rebuild time (seconds) | Median longest main-thread pause (milliseconds) |
 | ---: | ---: | ---: |
@@ -113,9 +117,9 @@ We also observed substantially faster account loading in everyday production use
 
 ## When each page rebuilt the whole history
 
-The later account-list test behind the opening result used 51,015 source records, representing 17,004 complete provider messages and producing 17,005 account updates. The HTTP route returned the account list after processing those updates in pages of 1,024. Each page restarted reconstruction from the beginning: 17 passes read 867,255 source records and took **35.5 seconds**.
+The later account-list test behind the opening result used 51,015 source records and produced 17,005 account updates. The HTTP route returned the account list after processing those updates in pages of 1,024. Each page restarted reconstruction from the beginning: 17 passes read 867,255 source records and took **35.5 seconds**.
 
-The prototype reconstructed the history once and reused its outputs across successive pages. It read all 51,015 source records once, processed every account update and returned the expected balance, recording time and purpose in **3.80 seconds**. That is about **9.3 times faster**, or **89% less elapsed time**, for the same fixture through the same HTTP route.
+The prototype reconstructed the history once and reused its outputs across successive pages. It read all 51,015 source records once, processed every account update and returned the expected balance and account details in **3.80 seconds**. That is about **9.3 times faster**, processing more than **13,000 source records per second**, for the same fixture through the same HTTP route.
 
 A subsequent version capped the amount of output retained between pages and completed the same test in **4.51 seconds**. These were individual local synthetic test runs of a proposed repair, which had not yet been deployed. The lesson carries through from the small-page diagnostic: count what each page causes the system to do. Here, a page boundary was repeating the entire reconstruction.
 

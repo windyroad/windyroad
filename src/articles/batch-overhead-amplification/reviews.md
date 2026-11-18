@@ -241,3 +241,19 @@ Architecture and JTBD edit reviews passed before editing. The independent perfor
 Independent content-risk verdict: factual=low, reputational=low, claims=low, attribution=low, reader-respect=low; PASS with no flags. The static build passed on the supported retry after Next.js displayed a dependency security advisory. The exported HTML contains the new opening and follow-up. No dependency or build-policy change was made as part of this editorial revision. Historical reviews retain their original scope; production publication remains held.
 
 Reviewed article SHA-256: `9cdfb4c96120ec249310e10b6da69020811ddae7b0ee32d93482f358edd2d54b`.
+
+## Numerical comprehension and visual comparisons (2026-11-18)
+
+The updated cognitive-accessibility critic identified two material comprehension defects: the numerical opening left readers to calculate the benefit, and the browser table required comparison across two units and four settings. The revision adds an adjacent, proportional account-list chart and separate aligned browser panels. The opening states the practical benefit; throughput moves to the detailed account-list example. The capped-output version remains visible beside the first prototype. All four browser settings, the complete table and the adopted setting remain explicit.
+
+The cognitive, cold-read, Pascal-inspired brevity, Reinertsen-perspective, Yip-perspective, performance and technical-writing critics all returned READY after revision. The final cold reader and brevity reviewer were fresh agents. These perspectives do not imply endorsement by the named people. Optional suggestions to remove throughput and the production observation were not applied because Tom requested both. The 469-event example, failed cursor experiment, formula, general release-process applicability and attribution remain intact.
+
+Architecture and JTBD pre-edit reviews passed, including a style-guide clarification documenting the existing standalone SVG palette. Final voice, style and scoped accessibility reviews passed. Independent content-risk review passed all five axes: factual, reputational, claims, attribution and reader-respect. No benchmark was rerun.
+
+Chrome showed the revised article at desktop width and at 390 by 844 pixels. All five figures loaded; the mobile document and viewport were both 390 pixels wide. Direct labels and both comparison panels were readable. The static build passed on the supported retry after the existing Next.js dependency advisory; the export contains the revised opening and both new assets. No dependency or gate changes were made. No assistive-technology or whole-page WCAG conformance claim is made. Production publication remains held.
+
+Reviewed article SHA-256: `bd709ab03b84d3ad8b6ac3ece8ced21a338fc647e4acdaa0839c65c6c7d95afd`.
+
+Account-list SVG SHA-256: `c9abbfc8ac9fc11e755d6f42dc58926d66edd549f15a100cf7ffc1c84b23f640`.
+
+Browser SVG SHA-256: `a3bc777ced8d264ca59206e4960a1451d24f028ae76ee43eb3b4f5fe0ff1d555`.
